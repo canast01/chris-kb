@@ -12,28 +12,6 @@ Operational scripts for EVS: daily health check, host add/remove workflow, vSAN 
 </div>
 ![Amazon EVS — Scripts](../../../../assets/cloud-aws-evs-operations-scripts.svg)
 
-
-
-
-```d2
-direction: right
-
-hub: "AWS EVS\nOperations" {shape: hexagon}
-healthchecksh: "health-check.sh" {shape: rectangle}
-vsancapacityps1: "vsan-capacity.ps1" {shape: rectangle}
-hcxstatussh: "hcx-status.sh" {shape: rectangle}
-hostremovesh: "host-remove.sh" {shape: rectangle}
-vcfpasswordrotatesh: "vcf-password-rotate.sh" {shape: rectangle}
-evscapacityreportsh: "evs-capacity-report.sh" {shape: rectangle}
-
-hub -> healthchecksh
-hub -> vsancapacityps1
-hub -> hcxstatussh
-hub -> hostremovesh
-hub -> vcfpasswordrotatesh
-hub -> evscapacityreportsh
-```
-
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

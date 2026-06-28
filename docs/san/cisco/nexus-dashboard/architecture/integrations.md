@@ -6,7 +6,6 @@ tags:
 # Cisco Nexus Dashboard — Architecture Integrations
 ![Cisco Nexus Dashboard — Architecture Integrations](../../../../assets/san-cisco-nexus-dashboard-architecture-integrations.svg)
 
-
 ```bash
 # SSH to any ND cluster node
 ssh ndadmin@nd-node1.corp.example.com
@@ -16,26 +15,6 @@ acs system syslog add --server 10.10.3.50 --port 514 --protocol udp
 
 # Verify
 acs system syslog show
-```
-
-
-```d2
-direction: right
-
-center: "Nexus Dashboard" {shape: hexagon}
-aci_apic_integration: "ACI APIC Integration" {shape: rectangle}
-servicenow_itsm_integration: "ServiceNow ITSM Integration" {shape: rectangle}
-aaa_ldap_integration: "AAA / LDAP Integration" {shape: rectangle}
-smtp_notifications: "SMTP Notifications" {shape: rectangle}
-aria_operations_integration: "Aria Operations Integration" {shape: rectangle}
-integration_summary: "Integration Summary" {shape: rectangle}
-
-center -> aci_apic_integration
-center -> servicenow_itsm_integration
-center -> aaa_ldap_integration
-center -> smtp_notifications
-center -> aria_operations_integration
-center -> integration_summary
 ```
 
 ## Overview

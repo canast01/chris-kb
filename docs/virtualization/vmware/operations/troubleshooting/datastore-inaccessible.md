@@ -7,16 +7,11 @@ search:
 ---
 # Datastore Issues
 
-
 <div class="kb-summary">
 Diagnosing inaccessible datastores across VMFS, NFS, and vSAN — APD/PDL states, HBA path failures, NFS mount errors, and vSAN component health.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Datastore Issues](../../../../assets/virtualization-vmware-operations-troubleshooting-datastore-i.svg)
-
-
-
 
 ---
 

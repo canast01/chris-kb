@@ -5,7 +5,6 @@ tags:
 ---
 # MDS — Procedures
 
-
 <div class="kb-summary">
 Cisco MDS procedures: `show flogi database`, zone member management with `zone name`, port activation, `copy running-config startup-config`, and SUP switchover.
 
@@ -13,25 +12,6 @@ Cisco MDS procedures: `show flogi database`, zone member management with `zone n
 </div>
 
 ---
-
-```d2
-direction: right
-
-hub: "Cisco MDS\nOperations" {shape: hexagon}
-change_readiness: "Change Readiness" {shape: rectangle}
-maintenance_window: "Maintenance Window" {shape: rectangle}
-postchange_validation: "Post-Change Validation" {shape: rectangle}
-zoning: "Zoning" {shape: rectangle}
-add_a_new_switch_to_an_existing_vsan: "Add a New Switch to an Existing VSAN" {shape: rectangle}
-create_a_device_alias: "Create a Device Alias" {shape: rectangle}
-
-hub -> change_readiness
-hub -> maintenance_window
-hub -> postchange_validation
-hub -> zoning
-hub -> add_a_new_switch_to_an_existing_vsan
-hub -> create_a_device_alias
-```
 
 ## Before you begin
 
@@ -113,7 +93,6 @@ flowchart TD
   class A,B,C,D,E,F,G,H,I step
   class J verify
 ```
-
 
 ### Device Aliases
 

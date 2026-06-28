@@ -5,32 +5,11 @@ tags:
 ---
 # Unity — Health Checks
 
-
 <div class="kb-summary">
 Daily and pre/post-change health checks for Dell Unity storage systems.
 
 *Applies to: Unity XT*
 </div>
-
-
-```d2
-direction: right
-
-hub: "Unity XT\nOperations" {shape: hexagon}
-run_this_routine: "Run This Routine" {shape: rectangle}
-daily_checks: "Daily Checks" {shape: rectangle}
-health_check: "Health Check" {shape: rectangle}
-system_status_commands: "System Status Commands" {shape: rectangle}
-alerts_and_events: "Alerts and Events" {shape: rectangle}
-hardware: "Hardware" {shape: rectangle}
-
-hub -> run_this_routine
-hub -> daily_checks
-hub -> health_check
-hub -> system_status_commands
-hub -> alerts_and_events
-hub -> hardware
-```
 
 ## Before you begin
 

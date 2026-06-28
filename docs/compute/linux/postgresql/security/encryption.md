@@ -12,29 +12,6 @@ PostgreSQL encryption — SSL/TLS for connections, pgcrypto for column-level enc
 </div>
 ![PostgreSQL — Encryption](../../../../assets/compute-linux-postgresql-security-encryption.svg)
 
-
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-ssltls_for_connections: "SSL/TLS for Connections" {shape: rectangle}
-require_ssl_for_all_connections: "Require SSL for All Connections" {shape: rectangle}
-pgcrypto_columnlevel_encryption: "pgcrypto — Column-Level Encryption" {shape: rectangle}
-wal_encryption: "WAL Encryption" {shape: rectangle}
-transparent_data_encryption: "Transparent Data Encryption" {shape: rectangle}
-core: "PostgreSQL Core" {shape: hexagon}
-
-external -> ssltls_for_connections: traffic in
-ssltls_for_connections -> require_ssl_for_all_connections
-require_ssl_for_all_connections -> pgcrypto_columnlevel_encryption
-pgcrypto_columnlevel_encryption -> wal_encryption
-wal_encryption -> transparent_data_encryption
-transparent_data_encryption -> core: secured path
-```
-
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

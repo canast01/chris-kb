@@ -4,16 +4,11 @@ tags:
 ---
 # VMware Tagging Standards
 
-
 <div class="kb-summary">
 Consistent tagging supports ownership, billing, backup policy, patch scheduling, and compliance.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![VMware Tagging Standards](../../../../assets/virtualization-vmware-reference-standards-tagging-standards.svg)
-
-
-
 
 ```d2
 direction: down

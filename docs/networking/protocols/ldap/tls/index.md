@@ -6,32 +6,11 @@ tags:
 
 # TLS (LDAP)
 
-
 <div class="kb-summary">
 TLS (LDAP) reference covering Overview, Certificate Requirements for LDAPS, Configuring LDAPS on Active Directory, Channel Binding and LDAP Signing, LdapClientIntegrity (Client Side) and 1 more sections.
 </div>
-![TLS (LDAP)](../../../../assets/networking-protocols-ldap-tls-index.svg)
-
 
         STARTTLS vs LDAPS
-
-
-```d2
-direction: right
-
-center: "LDAP" {shape: hexagon}
-certificate_requirements_for_ldaps: "Certificate Requirements for LDAPS" {shape: rectangle}
-configuring_ldaps_on_active_director: "Configuring LDAPS on Active Directory" {shape: rectangle}
-channel_binding_and_ldap_signing: "Channel Binding and LDAP Signing" {shape: rectangle}
-ldapclientintegrity_client_side: "LdapClientIntegrity (Client Side)" {shape: rectangle}
-testing_tls_configuration: "Testing TLS Configuration" {shape: rectangle}
-
-center -> certificate_requirements_for_ldaps
-center -> configuring_ldaps_on_active_director
-center -> channel_binding_and_ldap_signing
-center -> ldapclientintegrity_client_side
-center -> testing_tls_configuration
-```
 
 ## Overview
 

@@ -7,10 +7,6 @@ tags:
 # VMware Cloud Foundation — Design Standards
 ![VMware Cloud Foundation — Design Standards](../../../../assets/virtualization-vmware-vmware-cloud-foundation-architecture-d.svg)
 
-
-
-
-
 ```powershell
 ┌───────────────────────────── VMware Cloud Foundation — Design Standards ──────────────────────────────┐
 │                                                                                                       │
@@ -57,19 +53,6 @@ tags:
 │  Upgrade order = VCF prescribes sequence; SDDC Mgr → vCenter → ESXi → NSX                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-```d2
-direction: right
-
-center: "VMware Cloud Foundation" {shape: hexagon}
-component_a: "Component A" {shape: rectangle}
-component_b: "Component B" {shape: rectangle}
-component_c: "Component C" {shape: rectangle}
-
-center -> component_a
-center -> component_b
-center -> component_c
 ```
 
 ## See also

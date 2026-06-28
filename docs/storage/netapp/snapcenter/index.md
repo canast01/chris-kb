@@ -9,10 +9,6 @@ NetApp SnapCenter knowledge base — architecture, operations, security, and tro
 
 *Applies to: SnapCenter 5.x*
 </div>
-![NetApp SnapCenter](../../../assets/storage-netapp-snapcenter-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="architecture/"><strong>Architecture</strong><span>Topology, HA options, components, connectivity ports, plugin model, and sizing guidelines.</span></a>

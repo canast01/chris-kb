@@ -6,7 +6,6 @@ tags:
 ---
 # Aria Operations — CLI Reference
 
-
 <div class="kb-summary">
 CLI Reference reference covering vracli Commands, chkconfig (Legacy / Service Enable/Disable), Useful Paths, REST API Quick Reference, Related Sections.
 
@@ -14,29 +13,7 @@ CLI Reference reference covering vracli Commands, chkconfig (Legacy / Service En
 </div>
 ![Aria Operations — CLI Reference](../../../../assets/virtualization-vmware-aria-operations-operations-cli-referen.svg)
 
-
 Aria Operations — CLI Command Reference Map
-
-
-
-```d2
-direction: right
-
-hub: "Aria Operations\nOperations" {shape: hexagon}
-vcopsadmin_cli: "vcops-admin CLI" {shape: rectangle}
-chkconfig_legacy_service_enabledisab: "chkconfig (Legacy / Service Enable/Disable)" {shape: rectangle}
-useful_paths: "Useful Paths" {shape: rectangle}
-rest_api_quick_reference: "REST API Quick Reference" {shape: rectangle}
-related_sections: "Related Sections" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> vcopsadmin_cli
-hub -> chkconfig_legacy_service_enabledisab
-hub -> useful_paths
-hub -> rest_api_quick_reference
-hub -> related_sections
-hub -> verify
-```
 
 ## vcops-admin CLI
 

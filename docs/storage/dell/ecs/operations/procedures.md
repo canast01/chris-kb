@@ -5,33 +5,11 @@ tags:
 ---
 # Dell ECS — Procedures
 
-
 <div class="kb-summary">
 Dell ECS operational procedures — namespace and bucket provisioning, IAM user and policy management, S3 access configuration, replication, retention policy, change readiness, and incident triage.
 
 *Applies to: ECS 3.x*
 </div>
-
-
-
-```d2
-direction: right
-
-hub: "ECS\nOperations" {shape: hexagon}
-change_readiness: "Change Readiness" {shape: rectangle}
-maintenance_window: "Maintenance Window" {shape: rectangle}
-postchange_validation: "Post-Change Validation" {shape: rectangle}
-provisioning_flow_namespace_bucket_i: "Provisioning Flow: Namespace → Bucket → IAM User" {shape: rectangle}
-creating_a_namespace: "Creating a Namespace" {shape: rectangle}
-creating_a_bucket: "Creating a Bucket" {shape: rectangle}
-
-hub -> change_readiness
-hub -> maintenance_window
-hub -> postchange_validation
-hub -> provisioning_flow_namespace_bucket_i
-hub -> creating_a_namespace
-hub -> creating_a_bucket
-```
 
 ## Before you begin
 

@@ -12,18 +12,6 @@ SQL Server backup: `BACKUP DATABASE TO DISK`, full/diff/log chain, Ola Hallengre
 </div>
 ![SQL Server — Backup Restore](../../../../assets/compute-windows-server-sql-server-operations-backup-restore.svg)
 
-
-```d2
-direction: right
-
-hub: "SQL Server\nOperations" {shape: hexagon}
-database_backup_validation: "Database — Backup Validation" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> database_backup_validation
-hub -> verify
-```
-
 ## Before you begin
 
 - **Access:** Local Administrator or Domain Admin on target hosts

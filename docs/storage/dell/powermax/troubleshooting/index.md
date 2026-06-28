@@ -12,9 +12,6 @@ Diagnosing PowerMax SRDF failures, provisioning errors, host connectivity issues
 
 *Applies to: PowerMax 2500 / 8500*
 </div>
-![PowerMax — Troubleshooting](../../../../assets/storage-dell-powermax-troubleshooting-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

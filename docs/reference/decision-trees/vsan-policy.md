@@ -9,10 +9,6 @@ tags:
 <div class="kb-summary">
 Choose the right vSAN storage policy: FTT level, RAID type (mirror vs erasure coding), encryption, and dedup/compression based on cluster size and requirements.
 </div>
-![vSAN Storage Policy Decision Tree](../../assets/reference-decision-trees-vsan-policy.svg)
-
-
-
 
 ```mermaid
 flowchart TD
@@ -44,17 +40,6 @@ flowchart TD
     L -->|Hybrid or skip| O([No dedup/compression\nSimplest configuration\nHighest raw capacity usage])
     M --> P([Policy defined — apply via SPBM\nin vCenter Storage Policies])
     N --> P
-```
-
-```d2
-direction: right
-
-center: "Decision Trees" {shape: hexagon}
-quick_reference: "Quick reference" {shape: rectangle}
-key_rules: "Key rules" {shape: rectangle}
-
-center -> quick_reference
-center -> key_rules
 ```
 
 ## Quick reference

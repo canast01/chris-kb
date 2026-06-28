@@ -37,15 +37,10 @@ run_first_backup -> validate
 ---
 
 # SnapCenter — Initial Deployment
-![SnapCenter — Initial Deployment](../../../../assets/storage-netapp-snapcenter-deploy-index.svg)
-
-
-
 
 This guide covers deploying NetApp SnapCenter Server from prerequisites through running and validating a first backup. SnapCenter centralizes application-consistent backup and restore for SQL Server, Oracle, SAP HANA, VMware VMs, and file systems backed by ONTAP.
 
 ---
-
 
 ```mermaid
 flowchart TD

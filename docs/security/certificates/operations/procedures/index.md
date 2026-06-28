@@ -5,33 +5,9 @@ tags:
 ---
 # Certificates — Procedures
 
-
 <div class="kb-summary">
 Procedures reference covering Certificate Renewal and Revocation Workflow, Renewal, Inventory, TLS Validation.
 </div>
-![Certificates — Procedures](../../../../assets/security-certificates-operations-procedures-index.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "Procedures\nOperations" {shape: hexagon}
-certificate_renewal_and_revocation_w: "Certificate Renewal and Revocation Workflow" {shape: rectangle}
-renewal: "Renewal" {shape: rectangle}
-inventory: "Inventory" {shape: rectangle}
-tls_validation: "TLS Validation" {shape: rectangle}
-request_a_certificate_via_web_enroll: "Request a Certificate via Web Enrollment" {shape: rectangle}
-export_a_certificate_with_private_ke: "Export a Certificate with Private Key (PFX)" {shape: rectangle}
-
-hub -> certificate_renewal_and_revocation_w
-hub -> renewal
-hub -> inventory
-hub -> tls_validation
-hub -> request_a_certificate_via_web_enroll
-hub -> export_a_certificate_with_private_ke
-```
 
 ## Before you begin
 

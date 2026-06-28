@@ -5,32 +5,11 @@ tags:
 ---
 # Veeam — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Overview, Architecture, Supported Platforms, Retention Schedule, Sizing Guidelines and 1 more sections.
 
 *Applies to: Veeam Backup & Replication 12.x*
 </div>
-![Veeam — How It Works](../../../../assets/backup-veeam-architecture-how-it-works-index.svg)
-
-
-
-```d2
-direction: right
-
-center: "Veeam" {shape: hexagon}
-architecture: "Architecture" {shape: rectangle}
-supported_platforms: "Supported Platforms" {shape: rectangle}
-retention_schedule: "Retention Schedule" {shape: rectangle}
-sizing_guidelines: "Sizing Guidelines" {shape: rectangle}
-instant_vm_recovery_rto_targets: "Instant VM Recovery RTO Targets" {shape: rectangle}
-
-center -> architecture
-center -> supported_platforms
-center -> retention_schedule
-center -> sizing_guidelines
-center -> instant_vm_recovery_rto_targets
-```
 
 ## Overview
 

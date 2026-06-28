@@ -5,39 +5,13 @@ tags:
 ---
 # VxRail Security
 
-
 <div class="kb-summary">
 VxRail security: vCenter SSO integration, VxRail Manager account lockout policy, TLS 1.2 enforcement, SCG certificate management, and role separation for VxRail Admin.
 
 *Applies to: VxRail 7.x / 8.x*
 </div>
-![VxRail Security](../../../../assets/virtualization-vmware-vxrail-security-index.svg)
-
-
-
 
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-hardening_checklist: "Hardening Checklist" {shape: rectangle}
-idrac_hardening: "iDRAC Hardening" {shape: rectangle}
-esxi_lockdown_mode: "ESXi Lockdown Mode" {shape: rectangle}
-vsan_encryption: "vSAN Encryption" {shape: rectangle}
-certificate_management: "Certificate Management" {shape: rectangle}
-vcenter_rbac: "vCenter RBAC" {shape: rectangle}
-core: "VxRail Core" {shape: hexagon}
-
-external -> hardening_checklist: traffic in
-hardening_checklist -> idrac_hardening
-idrac_hardening -> esxi_lockdown_mode
-esxi_lockdown_mode -> vsan_encryption
-vsan_encryption -> certificate_management
-certificate_management -> vcenter_rbac
-vcenter_rbac -> core: secured path
-```
 
 ## Before you begin
 

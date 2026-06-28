@@ -5,7 +5,6 @@ tags:
 ---
 # CloudIQ — Install & Upgrade
 
-
 <div class="kb-summary">
 Install & Upgrade reference covering Platform Updates, API Token Management, Secure Connect Gateway Compatibility, Supported Systems, Renewal and Subscription.
 
@@ -13,31 +12,9 @@ Install & Upgrade reference covering Platform Updates, API Token Management, Sec
 </div>
 ![CloudIQ — Install & Upgrade](../../../../assets/storage-dell-cloudiq-operations-install-upgrade.svg)
 
-
-
-
 > Part of the [CloudIQ](../index.md) reference.
 
 ---
-
-```d2
-direction: right
-
-hub: "CloudIQ\nOperations" {shape: hexagon}
-platform_updates: "Platform Updates" {shape: rectangle}
-api_token_management: "API Token Management" {shape: rectangle}
-secure_connect_gateway_compatibility: "Secure Connect Gateway Compatibility" {shape: rectangle}
-supported_systems: "Supported Systems" {shape: rectangle}
-renewal_and_subscription: "Renewal and Subscription" {shape: rectangle}
-platform_update_model: "Platform Update Model" {shape: rectangle}
-
-hub -> platform_updates
-hub -> api_token_management
-hub -> secure_connect_gateway_compatibility
-hub -> supported_systems
-hub -> renewal_and_subscription
-hub -> platform_update_model
-```
 
 ## Before you begin
 

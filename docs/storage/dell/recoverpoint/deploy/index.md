@@ -37,17 +37,12 @@ create_consistency_groups -> validate
 ---
 
 # RecoverPoint — Initial Deployment
-![RecoverPoint — Initial Deployment](../../../../assets/storage-dell-recoverpoint-deploy-index.svg)
-
-
-
 
 This guide covers deploying Dell EMC RecoverPoint from bare metal appliance
 installation through RPA cluster formation, storage array attachment, consistency
 group creation, and first replication validation.
 
 ---
-
 
 ```mermaid
 flowchart TD

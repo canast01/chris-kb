@@ -9,10 +9,6 @@ Pure Storage Pure1 cloud-based management and analytics — SaaS architecture, A
 
 *Applies to: Pure1*
 </div>
-![Pure1](../../../assets/storage-pure-pure1-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-5">
 <a class="kb-card" href="architecture/"><strong>Architecture</strong><span>SaaS data pipeline, phone-home architecture, Pure1 Meta analytics engine, and fleet topology.</span></a>

@@ -5,35 +5,12 @@ tags:
 ---
 # PowerPath — Backup & Restore
 
-
 <div class="kb-summary">
 Backup & Restore reference covering Overview, Configuration File Location, Configuration Backup, Configuration Restore, Post-Restore Validation and 3 more sections.
 
 *Applies to: PowerPath*
 </div>
 ![PowerPath — Backup & Restore](../../../../assets/storage-dell-powerpath-operations-backup-restore.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "PowerPath\nOperations" {shape: hexagon}
-configuration_file_location: "Configuration File Location" {shape: rectangle}
-configuration_backup: "Configuration Backup" {shape: rectangle}
-configuration_restore: "Configuration Restore" {shape: rectangle}
-postrestore_validation: "Post-Restore Validation" {shape: rectangle}
-backup_frequency_and_retention: "Backup Frequency and Retention" {shape: rectangle}
-disaster_recovery_consideration: "Disaster Recovery Consideration" {shape: rectangle}
-
-hub -> configuration_file_location
-hub -> configuration_backup
-hub -> configuration_restore
-hub -> postrestore_validation
-hub -> backup_frequency_and_retention
-hub -> disaster_recovery_consideration
-```
 
 ## Before you begin
 

@@ -13,7 +13,6 @@ Enterprise certificate lifecycle management — TPP enforces policy, integrates 
 
 ![Venafi — Architecture — Diagram](../../../assets/security-venafi-architecture-diagram.svg)
 
-
 ![Venafi Architecture](../../../assets/venafi-architecture-overview.svg)
 
 <div class="kb-grid kb-grid-3">
@@ -34,17 +33,6 @@ Enterprise certificate lifecycle management — TPP enforces policy, integrates 
 </a>
 
 </div>
-
-```d2
-direction: right
-
-center: "Architecture" {shape: hexagon}
-component_overview: "Component Overview" {shape: rectangle}
-trust_protection_platform_topology: "Trust Protection Platform Topology" {shape: rectangle}
-
-center -> component_overview
-center -> trust_protection_platform_topology
-```
 
 ## Component Overview
 

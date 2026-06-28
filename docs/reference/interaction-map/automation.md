@@ -15,21 +15,6 @@ How Aria Automation, Aria Operations, Aria Logs, Aria Networks, Tanzu, and Horiz
 
 ![Automation Domain Interaction Map](../../assets/interaction-map-automation.svg)
 
-```d2
-direction: right
-
-center: "Interaction Map" {shape: hexagon}
-integration_summary: "Integration summary" {shape: rectangle}
-aria_product_api_authentication: "Aria product API authentication" {shape: rectangle}
-tanzu_architecture_layers: "Tanzu architecture layers" {shape: rectangle}
-horizon_provisioning_flow: "Horizon provisioning flow" {shape: rectangle}
-
-center -> integration_summary
-center -> aria_product_api_authentication
-center -> tanzu_architecture_layers
-center -> horizon_provisioning_flow
-```
-
 ## Integration summary
 
 | From | To | Protocol / API | Notes |

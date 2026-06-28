@@ -4,8 +4,6 @@ tags:
   - operations
 ---
 # RecoverPoint — Health Checks
-![RecoverPoint — Health Checks](../../../../assets/storage-dell-recoverpoint-operations-health-checks.svg)
-
 
 ```bash
 # SSH to RPA cluster management IP
@@ -31,18 +29,6 @@ links statistics
 
 # Cluster quorum state
 cluster quorum check
-```
-
-
-```d2
-direction: right
-
-hub: "RecoverPoint\nOperations" {shape: hexagon}
-run_this_routine: "Run This Routine" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> run_this_routine
-hub -> verify
 ```
 
 ## Before you begin

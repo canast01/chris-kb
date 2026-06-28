@@ -7,29 +7,7 @@ tags:
 # Aria Operations Scripts
 ![Aria Operations Scripts](../../../../assets/virtualization-vmware-aria-operations-operations-scripts.svg)
 
-
-
-
 ```powershell
-
-```d2
-direction: right
-
-hub: "Aria Operations\nOperations" {shape: hexagon}
-export_cluster_capacity_summary_via_: "Export cluster capacity summary via REST API" {shape: rectangle}
-get_all_cluster_compute_resources: "Get all cluster compute resources" {shape: rectangle}
-quick_aria_operations_cluster_health: "Quick Aria Operations cluster health check" {shape: rectangle}
-get_token: "Get token" {shape: rectangle}
-export_active_alerts: "Export active alerts" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> export_cluster_capacity_summary_via_
-hub -> get_all_cluster_compute_resources
-hub -> quick_aria_operations_cluster_health
-hub -> get_token
-hub -> export_active_alerts
-hub -> verify
-```
 
 ## Before you begin
 

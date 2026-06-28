@@ -16,11 +16,6 @@ unnecessary data rebuilds while the witness is being restored.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![vSAN 2-Node — Witness Host Unreachable](../../../../assets/virtualization-vmware-topics-scenarios-vsan-witness-unreacha.svg)
-
-
-
-
 
 ```mermaid
 graph TD
@@ -42,25 +37,6 @@ graph TD
     LOST --> RISK[Risk window: if one data node fails<br/>quorum lost — objects inaccessible]:::degraded
     LOST --> ACTION[Restore witness connectivity<br/>or restart witness VM/host]:::action
     ACTION --> HEAL[vSAN self-heals on reconnect<br/>no manual rebuild needed]:::healthy
-```
-
-```d2
-direction: right
-
-center: "Scenarios" {shape: hexagon}
-symptoms: "Symptoms" {shape: rectangle}
-1_confirm_witness_is_disconnected: "1. Confirm Witness Is Disconnected" {shape: rectangle}
-2_check_network_connectivity_to_witn: "2. Check Network Connectivity to Witness" {shape: rectangle}
-3_audit_affected_objects: "3. Audit Affected Objects" {shape: rectangle}
-4_review_witness_logs: "4. Review Witness Logs" {shape: rectangle}
-5_resolution: "5. Resolution" {shape: rectangle}
-
-center -> symptoms
-center -> 1_confirm_witness_is_disconnected
-center -> 2_check_network_connectivity_to_witn
-center -> 3_audit_affected_objects
-center -> 4_review_witness_logs
-center -> 5_resolution
 ```
 
 ## Symptoms

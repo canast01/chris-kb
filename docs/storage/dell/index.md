@@ -7,13 +7,6 @@ tags:
 <div class="kb-summary">
 Dell enterprise storage portfolio — block, file, object, and data protection platforms. Coverage includes architecture, provisioning, multipathing, replication, and operational procedures for each product.
 </div>
-![Dell Storage](../../assets/storage-dell-index.svg)
-
-
-
-
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="powermax/"><strong>PowerMax</strong><span>High-end all-flash array — SRDF replication, NVMe, multicloud, and enterprise performance.</span></a>

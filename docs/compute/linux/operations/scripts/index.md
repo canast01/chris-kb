@@ -5,37 +5,15 @@ tags:
 ---
 # Linux — Scripts
 
-
 <div class="kb-summary">
 Automation scripts and reusable code. Scripts stored in the team's Git repository. All are idempotent and safe to run on production systems. Output logged to `/var/log/ops/` and forwarded to the central logging platform.
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>
-![Linux — Scripts](../../../../assets/compute-linux-operations-scripts-index.svg)
-
 
 Automation scripts and reusable code.
 
 Scripts stored in the team's Git repository. All are idempotent and safe to run on production systems. Output logged to `/var/log/ops/` and forwarded to the central logging platform.
-
-```d2
-direction: right
-
-center: "Linux" {shape: rectangle}
-script_deployment_flow: "Script Deployment Flow" {shape: rectangle}
-patchstatusreportsh: "patch-status-report.sh" {shape: rectangle}
-userauditsh: "user-audit.sh" {shape: rectangle}
-diskalertsh: "disk-alert.sh" {shape: rectangle}
-deployment: "Deployment" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> script_deployment_flow
-center -> patchstatusreportsh
-center -> userauditsh
-center -> diskalertsh
-center -> deployment
-center -> verify
-```
 
 ## Before you begin
 
@@ -59,7 +37,6 @@ flowchart LR
 
     gitRepo --> ansible --> copy --> cron --> output --> siem
 ```
-
 
 ## patch-status-report.sh
 

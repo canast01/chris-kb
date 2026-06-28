@@ -5,16 +5,11 @@ tags:
 ---
 # MDS — Security
 
-
 <div class="kb-summary">
 Cisco MDS hardening — AAA, SSH, port security, fabric binding, RBAC, and VSAN access control.
 
 *Applies to: Cisco MDS · Nexus*
 </div>
-![MDS — Security](../../../../assets/san-cisco-mds-security-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

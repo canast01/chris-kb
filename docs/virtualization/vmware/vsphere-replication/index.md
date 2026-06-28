@@ -10,13 +10,6 @@ vSphere Replication knowledge base — deploy, architecture, operations, CLI ref
 
 *Applies to: vSphere Replication 8.x*
 </div>
-![vSphere Replication](../../../assets/virtualization-vmware-vsphere-replication-index.svg)
-
-
-
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

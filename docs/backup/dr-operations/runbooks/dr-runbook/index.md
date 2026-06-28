@@ -4,30 +4,9 @@ tags:
 ---
 # Disaster Recovery Runbook
 
-
 <div class="kb-summary">
 Disaster Recovery Runbook reference covering Overview, Activation Criteria, Communication Tree, Phased Recovery Procedure, Validation Checklist and 1 more sections.
 </div>
-![Disaster Recovery Runbook](../../../../assets/backup-dr-operations-runbooks-dr-runbook-index.svg)
-
-
-
-```d2
-direction: right
-
-center: "DR Operations" {shape: hexagon}
-activation_criteria: "Activation Criteria" {shape: rectangle}
-communication_tree: "Communication Tree" {shape: rectangle}
-phased_recovery_procedure: "Phased Recovery Procedure" {shape: rectangle}
-validation_checklist: "Validation Checklist" {shape: rectangle}
-returntonormal_checklist_failback: "Return-to-Normal Checklist (Failback)" {shape: rectangle}
-
-center -> activation_criteria
-center -> communication_tree
-center -> phased_recovery_procedure
-center -> validation_checklist
-center -> returntonormal_checklist_failback
-```
 
 ## Overview
 

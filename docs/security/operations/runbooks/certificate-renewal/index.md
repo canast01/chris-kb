@@ -5,12 +5,9 @@ tags:
 ---
 # Certificate Renewal Runbook
 
-
 <div class="kb-summary">
 | Field | Value | |---|---| | Risk | Medium | | Approval | Standard change for planned renewals; emergency change if < 7 days to expiry | | Estimated time | 30–60 minutes | | Impact | Brief service interruption during hot-swap (seconds); expired cert causes full outage |
 </div>
-![Certificate Renewal Runbook](../../../../assets/security-operations-runbooks-certificate-renewal-index.svg)
-
 
 | Field | Value |
 |---|---|
@@ -18,25 +15,6 @@ tags:
 | Approval | Standard change for planned renewals; emergency change if < 7 days to expiry |
 | Estimated time | 30–60 minutes |
 | Impact | Brief service interruption during hot-swap (seconds); expired cert causes full outage |
-
-```d2
-direction: right
-
-center: "Certificate Renewal" {shape: hexagon}
-renewal_timeline: "Renewal Timeline" {shape: rectangle}
-step_2_generate_private_key_and_csr: "Step 2 — Generate Private Key and CSR" {shape: rectangle}
-step_3_submit_to_ca: "Step 3 — Submit to CA" {shape: rectangle}
-step_4_install_certificate: "Step 4 — Install Certificate" {shape: rectangle}
-step_5_postrenewal_validation: "Step 5 — Post-Renewal Validation" {shape: rectangle}
-rollback: "Rollback" {shape: rectangle}
-
-center -> renewal_timeline
-center -> step_2_generate_private_key_and_csr
-center -> step_3_submit_to_ca
-center -> step_4_install_certificate
-center -> step_5_postrenewal_validation
-center -> rollback
-```
 
 ## Before you begin
 
@@ -48,7 +26,6 @@ center -> rollback
 ---
 
 ## Renewal Timeline
-
 
 **Capture:** CN, SANs, issuing CA, expiry date, key algorithm.
 

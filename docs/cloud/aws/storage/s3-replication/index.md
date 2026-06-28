@@ -4,34 +4,11 @@ tags:
 ---
 # AWS S3 Replication
 
-
 <div class="kb-summary">
 AWS S3 Replication reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 
 *Applies to: AWS*
 </div>
-![AWS S3 Replication](../../../../assets/cloud-aws-storage-s3-replication-index.svg)
-
-
-
-```d2
-direction: right
-
-center: "AWS" {shape: hexagon}
-where_it_fits: "Where It Fits" {shape: rectangle}
-daily_checks: "Daily Checks" {shape: rectangle}
-health_commands: "Health Commands" {shape: rectangle}
-common_issues: "Common Issues" {shape: rectangle}
-operational_tasks: "Operational Tasks" {shape: rectangle}
-upgrade_notes: "Upgrade Notes" {shape: rectangle}
-
-center -> where_it_fits
-center -> daily_checks
-center -> health_commands
-center -> common_issues
-center -> operational_tasks
-center -> upgrade_notes
-```
 
 ## Overview
 

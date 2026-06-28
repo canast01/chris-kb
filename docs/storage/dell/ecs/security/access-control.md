@@ -5,33 +5,12 @@ tags:
 ---
 # Dell ECS — Access Control
 
-
 <div class="kb-summary">
 Access Control reference covering RBAC, Namespace Isolation, Compliance, Access Review Procedure.
 
 *Applies to: ECS 3.x*
 </div>
 ![Dell ECS — Access Control](../../../../assets/storage-dell-ecs-security-access-control.svg)
-
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-rbac: "RBAC" {shape: rectangle}
-namespace_isolation: "Namespace Isolation" {shape: rectangle}
-compliance: "Compliance" {shape: rectangle}
-access_review_procedure: "Access Review Procedure" {shape: rectangle}
-core: "ECS Core" {shape: hexagon}
-
-external -> rbac: traffic in
-rbac -> namespace_isolation
-namespace_isolation -> compliance
-compliance -> access_review_procedure
-access_review_procedure -> core: secured path
-```
 
 ## Before you begin
 

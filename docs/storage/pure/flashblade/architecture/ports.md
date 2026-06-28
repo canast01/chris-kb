@@ -15,26 +15,6 @@ Firewall port reference for Pure Storage FlashBlade. FlashBlade provides unified
 </div>
 ![Pure Storage FlashBlade — Ports and Network Requirements](../../../../assets/storage-pure-flashblade-architecture-ports.svg)
 
-
-```d2
-direction: right
-
-center: "FlashBlade" {shape: hexagon}
-network_zones: "Network Zones" {shape: rectangle}
-management_inbound: "Management (Inbound)" {shape: rectangle}
-data_access_protocols: "Data Access Protocols" {shape: rectangle}
-replication_flashblade_to_flashblade: "Replication (FlashBlade to FlashBlade)" {shape: rectangle}
-pure1_cloud_telemetry_outbound: "Pure1 Cloud Telemetry (Outbound)" {shape: rectangle}
-vsphere_integration_optional: "vSphere Integration (Optional)" {shape: rectangle}
-
-center -> network_zones
-center -> management_inbound
-center -> data_access_protocols
-center -> replication_flashblade_to_flashblade
-center -> pure1_cloud_telemetry_outbound
-center -> vsphere_integration_optional
-```
-
 ## Network Zones
 
 ```

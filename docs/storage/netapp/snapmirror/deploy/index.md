@@ -37,15 +37,10 @@ configure_schedule -> validate
 ---
 
 # SnapMirror — Initial Configuration
-![SnapMirror — Initial Configuration](../../../../assets/storage-netapp-snapmirror-deploy-index.svg)
-
-
-
 
 This guide covers configuring NetApp SnapMirror replication from initial cluster prerequisites through a validated first relationship with a scheduled RPO. Applies to ONTAP 9.10 and later.
 
 ---
-
 
 ```mermaid
 flowchart TD

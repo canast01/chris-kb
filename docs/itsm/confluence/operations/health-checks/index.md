@@ -5,14 +5,11 @@ tags:
 ---
 # Confluence — Health Checks
 
-
 <div class="kb-summary">
 This page defines the daily health check procedure for Confluence Data Center. Run these checks as part of a morning operational routine or automate them with a monitoring script.
 
 *Applies to: Confluence Cloud / Data Center*
 </div>
-![Confluence — Health Checks](../../../../assets/itsm-confluence-operations-health-checks-index.svg)
-
 
 ---
 
@@ -71,7 +68,6 @@ flowchart TD
     L -- Yes --> M[Review scheduled jobs\nfor failures]
     M --> N([Health Check Complete\nLog result])
 ```
-
 
 ## Run This Routine
 

@@ -7,9 +7,6 @@ tags:
 <div class="kb-summary">
 Security Monitoring reference covering Daily Review Checklist, Key Windows Security Events, Linux Security Monitoring, Correlation Rules (SIEM Examples), Threat Detection Sources and 1 more sections.
 </div>
-![Security Monitoring](../../assets/security-security-monitoring-index.svg)
-
-
 
 <div class="kb-grid">
   <a class="kb-card" href="operations/">
@@ -18,25 +15,6 @@ Security Monitoring reference covering Daily Review Checklist, Key Windows Secur
     <div class="kb-card-desc">Daily review checklist, SIEM correlation rules, alerting thresholds, threat detection</div>
   </a>
 </div>
-
-```d2
-direction: right
-
-center: "Security Monitoring" {shape: hexagon}
-daily_review_checklist: "Daily Review Checklist" {shape: rectangle}
-key_windows_security_events: "Key Windows Security Events" {shape: rectangle}
-linux_security_monitoring: "Linux Security Monitoring" {shape: rectangle}
-correlation_rules_siem_examples: "Correlation Rules (SIEM Examples)" {shape: rectangle}
-threat_detection_sources: "Threat Detection Sources" {shape: rectangle}
-alerting_thresholds: "Alerting Thresholds" {shape: rectangle}
-
-center -> daily_review_checklist
-center -> key_windows_security_events
-center -> linux_security_monitoring
-center -> correlation_rules_siem_examples
-center -> threat_detection_sources
-center -> alerting_thresholds
-```
 
 ## Daily Review Checklist
 

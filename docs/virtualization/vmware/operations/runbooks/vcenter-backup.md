@@ -18,10 +18,6 @@ tags:
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![vCenter File-Based Backup Runbook](../../../../assets/virtualization-vmware-operations-runbooks-vcenter-backup.svg)
-
-
-
 
 ```plantuml
 @startuml

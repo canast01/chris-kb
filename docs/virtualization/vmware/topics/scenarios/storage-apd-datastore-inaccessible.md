@@ -13,29 +13,6 @@ restoring paths, and recovering VMs that were force-powered-off by VMCP.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Storage APD — Datastore Inaccessible](../../../../assets/virtualization-vmware-topics-scenarios-storage-apd-datastore.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Scenarios" {shape: hexagon}
-products_involved: "Products Involved" {shape: rectangle}
-1_confirm_the_scope_how_many_hosts_a: "1. Confirm the Scope — How Many Hosts and Datastores Affecte" {shape: rectangle}
-2_check_path_state_on_esxi_apd_vs_pd: "2. Check Path State on ESXi — APD vs PDL" {shape: rectangle}
-3_read_vmkernellog_for_path_loss_eve: "3. Read vmkernel.log for Path Loss Events" {shape: rectangle}
-4_check_the_fabric_fc_iscsi_or_nfs_r: "4. Check the Fabric — FC, iSCSI, or NFS Root Cause" {shape: rectangle}
-5_vmcp_policy_apd_timeout_behaviour: "5. VMCP Policy — APD Timeout Behaviour" {shape: rectangle}
-
-center -> products_involved
-center -> 1_confirm_the_scope_how_many_hosts_a
-center -> 2_check_path_state_on_esxi_apd_vs_pd
-center -> 3_read_vmkernellog_for_path_loss_eve
-center -> 4_check_the_fabric_fc_iscsi_or_nfs_r
-center -> 5_vmcp_policy_apd_timeout_behaviour
-```
 
 ## Products Involved
 

@@ -4,35 +4,11 @@ tags:
 ---
 # DRS and vMotion Behavior
 
-
 <div class="kb-summary">
 DRS and vMotion Behavior reference covering DRS Modes, vMotion Requirements, EVC (Enhanced vMotion Compatibility), vMotion Validation, Common vMotion Failure Causes and 2 more sections.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![DRS and vMotion Behavior](../../../../assets/virtualization-vmware-topics-drs-vmotion-behavior-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Drs Vmotion Behavior" {shape: hexagon}
-drs_modes: "DRS Modes" {shape: rectangle}
-vmotion_requirements: "vMotion Requirements" {shape: rectangle}
-evc_enhanced_vmotion_compatibility: "EVC (Enhanced vMotion Compatibility)" {shape: rectangle}
-vmotion_validation: "vMotion Validation" {shape: rectangle}
-common_vmotion_failure_causes: "Common vMotion Failure Causes" {shape: rectangle}
-drs_antiaffinity_affinity_rules: "DRS Anti-Affinity / Affinity Rules" {shape: rectangle}
-
-center -> drs_modes
-center -> vmotion_requirements
-center -> evc_enhanced_vmotion_compatibility
-center -> vmotion_validation
-center -> common_vmotion_failure_causes
-center -> drs_antiaffinity_affinity_rules
-```
 
 ## DRS Modes
 

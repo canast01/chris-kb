@@ -9,9 +9,6 @@ PowerShell automation knowledge base covering execution engine internals, pipeli
 
 *Applies to: PowerShell 7.x*
 </div>
-![PowerShell](../../assets/automation-powershell-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

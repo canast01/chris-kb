@@ -5,39 +5,15 @@ tags:
 ---
 # CloudIQ — Procedures
 
-
 <div class="kb-summary">
 CloudIQ operational procedures: scheduling maintenance windows to suppress alerts, tag management for filtering, custom threshold configuration, and report export.
 
 *Applies to: CloudIQ*
 </div>
-![CloudIQ — Procedures](../../../../assets/storage-dell-cloudiq-operations-procedures.svg)
-
-
-
 
 > Part of the [CloudIQ](../index.md) reference.
 
 ---
-
-```d2
-direction: right
-
-hub: "CloudIQ\nOperations" {shape: hexagon}
-maintenance_window: "Maintenance Window" {shape: rectangle}
-connect_a_storage_system_to_cloudiq: "Connect a Storage System to CloudIQ" {shape: rectangle}
-acknowledge_an_alert: "Acknowledge an Alert" {shape: rectangle}
-create_a_custom_capacity_report: "Create a Custom Capacity Report" {shape: rectangle}
-configure_thresholdbased_notificatio: "Configure Threshold-Based Notifications" {shape: rectangle}
-review_performance_anomaly: "Review Performance Anomaly" {shape: rectangle}
-
-hub -> maintenance_window
-hub -> connect_a_storage_system_to_cloudiq
-hub -> acknowledge_an_alert
-hub -> create_a_custom_capacity_report
-hub -> configure_thresholdbased_notificatio
-hub -> review_performance_anomaly
-```
 
 ## Before you begin
 

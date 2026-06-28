@@ -4,8 +4,6 @@ tags:
   - operations
 ---
 # Linux Operations — Procedures
-![Linux Operations — Procedures](../../../../assets/compute-linux-operations-procedures-index.svg)
-
 
 ```bash
 # Confirm system is healthy before making changes
@@ -336,25 +334,6 @@ diff /tmp/pre-patch-packages.txt /tmp/post-patch-packages.txt
 ```
 
 ---
-
-```d2
-direction: right
-
-hub: "Linux\nOperations" {shape: hexagon}
-add_a_user_account: "Add a User Account" {shape: rectangle}
-configure_sudo_access: "Configure Sudo Access" {shape: rectangle}
-configure_network_interface_nmcli: "Configure Network Interface (nmcli)" {shape: rectangle}
-mount_a_filesystem_permanently: "Mount a Filesystem Permanently" {shape: rectangle}
-configure_ntp_chrony: "Configure NTP (chrony)" {shape: rectangle}
-extend_an_lvm_volume: "Extend an LVM Volume" {shape: rectangle}
-
-hub -> add_a_user_account
-hub -> configure_sudo_access
-hub -> configure_network_interface_nmcli
-hub -> mount_a_filesystem_permanently
-hub -> configure_ntp_chrony
-hub -> extend_an_lvm_volume
-```
 
 ## Before you begin
 

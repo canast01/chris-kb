@@ -20,17 +20,6 @@ Cisco MDS 9000 series FC switches running NX-OS. Core isolation mechanism is the
 <a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Dual-fabric design, VSAN allocation, zoning model, and ISL standards.</span></a>
 </div>
 
-```d2
-direction: right
-
-center: "Cisco MDS" {shape: hexagon}
-platform_reference: "Platform Reference" {shape: rectangle}
-dualfabric_topology: "Dual-Fabric Topology" {shape: rectangle}
-
-center -> platform_reference
-center -> dualfabric_topology
-```
-
 ## Platform Reference
 
 | Model | Type | Max FC Ports | Notes |

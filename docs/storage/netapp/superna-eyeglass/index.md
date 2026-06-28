@@ -9,10 +9,6 @@ Superna Eyeglass DR orchestration for NetApp PowerScale — automates SyncIQ fai
 
 *Applies to: Superna Eyeglass*
 </div>
-![Superna Eyeglass](../../../assets/storage-netapp-superna-eyeglass-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

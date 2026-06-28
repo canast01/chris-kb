@@ -5,35 +5,12 @@ tags:
 ---
 # PowerMax — Access Control
 
-
 <div class="kb-summary">
 Access Control reference covering Overview, Unisphere Role-Based Access Control (RBAC), Solutions Enabler CLI Access Control, Data Plane Access Control — Masking Views, Access Control Reviews and 1 more sections.
 
 *Applies to: PowerMax 2500 / 8500*
 </div>
 ![PowerMax — Access Control](../../../../assets/storage-dell-powermax-security-access-control.svg)
-
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-unisphere_rolebased_access_control_r: "Unisphere Role-Based Access Control (RBAC)" {shape: rectangle}
-solutions_enabler_cli_access_control: "Solutions Enabler CLI Access Control" {shape: rectangle}
-data_plane_access_control_masking_vi: "Data Plane Access Control — Masking Views" {shape: rectangle}
-access_control_reviews: "Access Control Reviews" {shape: rectangle}
-service_account_management: "Service Account Management" {shape: rectangle}
-core: "PowerMax Core" {shape: hexagon}
-
-external -> unisphere_rolebased_access_control_r: traffic in
-unisphere_rolebased_access_control_r -> solutions_enabler_cli_access_control
-solutions_enabler_cli_access_control -> data_plane_access_control_masking_vi
-data_plane_access_control_masking_vi -> access_control_reviews
-access_control_reviews -> service_account_management
-service_account_management -> core: secured path
-```
 
 ## Before you begin
 

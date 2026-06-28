@@ -11,25 +11,7 @@ Common questions about VMware Aria Operations for Networks operations, configura
 </div>
 ![VMware Aria Operations for Networks — Frequently Asked Questions](../../../../assets/virtualization-vmware-aria-operations-for-networks-operation.svg)
 
-
 ![VMware Aria Operations for Networks FAQ](../../../../assets/virtualization-vmware-aria-operations-for-networks-operations-faq.svg)
-
-```d2
-direction: right
-
-hub: "Aria Operations for Networks\nOperations" {shape: hexagon}
-general: "General" {shape: rectangle}
-configuration: "Configuration" {shape: rectangle}
-operations: "Operations" {shape: rectangle}
-troubleshooting: "Troubleshooting" {shape: rectangle}
-backup_and_recovery: "Backup and Recovery" {shape: rectangle}
-
-hub -> general
-hub -> configuration
-hub -> operations
-hub -> troubleshooting
-hub -> backup_and_recovery
-```
 
 ## General
 

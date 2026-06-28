@@ -5,35 +5,11 @@ tags:
 ---
 # CyberArk — Procedures
 
-
 <div class="kb-summary">
 Operational procedures for account management, password rotation, session management, and audit tasks.
 
 *Applies to: CyberArk PAM*
 </div>
-![CyberArk — Procedures](../../../../assets/security-cyberark-operations-procedures-index.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "Procedures\nOperations" {shape: hexagon}
-password_rotation_workflow: "Password Rotation Workflow" {shape: rectangle}
-account_management: "Account Management" {shape: rectangle}
-password_rotation: "Password Rotation" {shape: rectangle}
-session_management: "Session Management" {shape: rectangle}
-audit: "Audit" {shape: rectangle}
-add_a_platform_for_a_new_account_typ: "Add a Platform for a New Account Type" {shape: rectangle}
-
-hub -> password_rotation_workflow
-hub -> account_management
-hub -> password_rotation
-hub -> session_management
-hub -> audit
-hub -> add_a_platform_for_a_new_account_typ
-```
 
 ## Before you begin
 

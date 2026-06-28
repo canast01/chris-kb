@@ -12,28 +12,6 @@ VxRail Post-Change Validation reference covering Overview, Where It Fits, Daily 
 </div>
 ![VxRail Post-Change Validation](../../../../assets/virtualization-vmware-vxrail-operations-post-change-validati.svg)
 
-
-
-
-```d2
-direction: right
-
-hub: "VxRail\nOperations" {shape: hexagon}
-where_it_fits: "Where It Fits" {shape: rectangle}
-daily_checks: "Daily Checks" {shape: rectangle}
-health_commands: "Health Commands" {shape: rectangle}
-common_issues: "Common Issues" {shape: rectangle}
-operational_tasks: "Operational Tasks" {shape: rectangle}
-upgrade_notes: "Upgrade Notes" {shape: rectangle}
-
-hub -> where_it_fits
-hub -> daily_checks
-hub -> health_commands
-hub -> common_issues
-hub -> operational_tasks
-hub -> upgrade_notes
-```
-
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

@@ -13,29 +13,7 @@ Complete command reference for VxRail operations: VxRail Manager REST API, esxcl
 </div>
 ![VxRail — CLI Reference](../../../../assets/virtualization-vmware-vxrail-operations-cli-reference.svg)
 
-
-
-
 ---
-
-```d2
-direction: right
-
-hub: "VxRail\nOperations" {shape: hexagon}
-vxrail_manager_login_and_access: "VxRail Manager — Login and Access" {shape: rectangle}
-vxrail_manager_rest_api: "VxRail Manager REST API" {shape: rectangle}
-esxcli_vsan_commands: "esxcli — vSAN Commands" {shape: rectangle}
-esxcli_network_commands: "esxcli — Network Commands" {shape: rectangle}
-esxcli_hardware_sensors: "esxcli — Hardware Sensors" {shape: rectangle}
-idrac_racadm_commands: "iDRAC RACADM Commands" {shape: rectangle}
-
-hub -> vxrail_manager_login_and_access
-hub -> vxrail_manager_rest_api
-hub -> esxcli_vsan_commands
-hub -> esxcli_network_commands
-hub -> esxcli_hardware_sensors
-hub -> idrac_racadm_commands
-```
 
 ## Before you begin
 

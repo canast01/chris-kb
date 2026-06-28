@@ -6,35 +6,12 @@ tags:
 ---
 # vSphere Replication — Integrations
 
-
 <div class="kb-summary">
 Integrations reference covering vCenter Integration, SRM Integration, Network Requirements, Cross-vCenter Replication, Multi-Target Replication (Fan-Out) and 1 more sections.
 
 *Applies to: vSphere Replication 8.x*
 </div>
 ![vSphere Replication — Integrations](../../../../assets/virtualization-vmware-vsphere-replication-architecture-integ.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "vSphere Replication" {shape: hexagon}
-vcenter_integration: "vCenter Integration" {shape: rectangle}
-srm_integration: "SRM Integration" {shape: rectangle}
-network_requirements: "Network Requirements" {shape: rectangle}
-crossvcenter_replication: "Cross-vCenter Replication" {shape: rectangle}
-multitarget_replication_fanout: "Multi-Target Replication (Fan-Out)" {shape: rectangle}
-storage_compatibility: "Storage Compatibility" {shape: rectangle}
-
-center -> vcenter_integration
-center -> srm_integration
-center -> network_requirements
-center -> crossvcenter_replication
-center -> multitarget_replication_fanout
-center -> storage_compatibility
-```
 
 ## vCenter Integration
 

@@ -32,17 +32,6 @@ Dell PowerProtect DD (Data Domain) is a purpose-built backup appliance with inli
   </a>
 </div>
 
-```d2
-direction: right
-
-center: "Data Domain" {shape: hexagon}
-protocol_access: "Protocol Access" {shape: rectangle}
-topology: "Topology" {shape: rectangle}
-
-center -> protocol_access
-center -> topology
-```
-
 ## Protocol Access
 
 | Protocol | Port | Use Case |

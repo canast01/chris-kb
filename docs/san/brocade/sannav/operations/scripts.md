@@ -6,7 +6,6 @@ tags:
 # Brocade SANnav — Operations Scripts
 ![Brocade SANnav — Operations Scripts](../../../../assets/san-brocade-sannav-operations-scripts.svg)
 
-
 ```bash
 #!/usr/bin/env bash
 # sannav-auth.sh — obtain and export a SANnav API token
@@ -192,15 +191,6 @@ else:
 req = urllib.request.Request(HOST + "/rest/logout", method="DELETE",
       headers={"Authorization": f"Bearer {TOKEN}"})
 urllib.request.urlopen(req, context=ctx).close()
-```
-
-```d2
-direction: right
-
-hub: "SANnav\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

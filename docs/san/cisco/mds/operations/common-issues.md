@@ -6,7 +6,6 @@ tags:
 # Cisco MDS 9000 — Common Operational Issues
 ![Cisco MDS 9000 — Common Operational Issues](../../../../assets/san-cisco-mds-operations-common-issues.svg)
 
-
 ```bash
 # Identify the port and check detailed status
 show interface fc1/3
@@ -183,15 +182,6 @@ checkpoint pre-change
 ```bash
 show startup-config | head -20
 # Confirm timestamp matches the last intended save
-```
-
-```d2
-direction: right
-
-hub: "Cisco MDS\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

@@ -7,35 +7,12 @@ tags:
 ---
 # vSAN — Backup & Restore
 
-
 <div class="kb-summary">
 Backup & Restore reference covering Supported Backup Methods, vSAN Configuration Backup, Restore Procedures, Backup Validation and Testing, Recovery Point and Recovery Time Objectives.
 
 *Applies to: vSAN 7.x / 8.x*
 </div>
 ![vSAN — Backup & Restore](../../../../assets/virtualization-vmware-vsan-operations-backup-restore.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "vSAN\nOperations" {shape: hexagon}
-backup_tool_integration: "Backup Tool Integration" {shape: rectangle}
-vsan_configuration_backup: "vSAN Configuration Backup" {shape: rectangle}
-restore_procedures: "Restore Procedures" {shape: rectangle}
-backup_validation_and_testing: "Backup Validation and Testing" {shape: rectangle}
-recovery_point_and_recovery_time_obj: "Recovery Point and Recovery Time Objectives" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> backup_tool_integration
-hub -> vsan_configuration_backup
-hub -> restore_procedures
-hub -> backup_validation_and_testing
-hub -> recovery_point_and_recovery_time_obj
-hub -> verify
-```
 
 ## Backup Tool Integration
 

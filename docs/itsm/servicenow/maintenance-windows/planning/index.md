@@ -4,33 +4,11 @@ tags:
 ---
 # Maintenance Window Planning
 
-
 <div class="kb-summary">
 Maintenance Window Planning reference covering Overview, Planning Checklist, Window Scheduling Guidance, Dependency Mapping, Risk Review and 1 more sections.
 
 *Applies to: ServiceNow*
 </div>
-![Maintenance Window Planning](../../../../assets/itsm-servicenow-maintenance-windows-planning-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "ServiceNow" {shape: hexagon}
-planning_checklist: "Planning Checklist" {shape: rectangle}
-window_scheduling_guidance: "Window Scheduling Guidance" {shape: rectangle}
-dependency_mapping: "Dependency Mapping" {shape: rectangle}
-risk_review: "Risk Review" {shape: rectangle}
-prewindow_communication_schedule: "Pre-Window Communication Schedule" {shape: rectangle}
-
-center -> planning_checklist
-center -> window_scheduling_guidance
-center -> dependency_mapping
-center -> risk_review
-center -> prewindow_communication_schedule
-```
 
 ## Overview
 

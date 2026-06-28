@@ -4,16 +4,11 @@ tags:
 ---
 # Incident Response Runbook
 
-
 <div class="kb-summary">
 Incident Response Runbook reference covering Steps, Evidence to Capture.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Incident Response Runbook](../../../../assets/virtualization-vmware-operations-runbooks-incident-response.svg)
-
-
-
 
 ```plantuml
 @startuml

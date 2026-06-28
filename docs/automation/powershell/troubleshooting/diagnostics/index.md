@@ -12,10 +12,6 @@ PowerShell diagnostic techniques: inspect the $Error automatic variable for exce
 
 *Applies to: PowerShell 7.x / Windows PowerShell 5.1*
 </div>
-![PowerShell — Diagnostics](../../../../assets/automation-powershell-troubleshooting-diagnostics-index.svg)
-
-
-
 
 ```mermaid
 graph TD

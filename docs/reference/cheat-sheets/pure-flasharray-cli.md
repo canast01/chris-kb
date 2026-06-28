@@ -13,25 +13,6 @@ Essential Pure Storage FlashArray CLI commands for array status, volume manageme
 
 ![Pure Storage FlashArray CLI Cheat Sheet](../../assets/reference-cheat-sheets-pure-flasharray-cli.svg)
 
-```d2
-direction: right
-
-center: "Cheat Sheets" {shape: rectangle}
-array_status: "Array Status" {shape: rectangle}
-volumes: "Volumes" {shape: rectangle}
-snapshots: "Snapshots" {shape: rectangle}
-hosts_connections: "Hosts & Connections" {shape: rectangle}
-protection_groups: "Protection Groups" {shape: rectangle}
-performance: "Performance" {shape: rectangle}
-
-center -> array_status
-center -> volumes
-center -> snapshots
-center -> hosts_connections
-center -> protection_groups
-center -> performance
-```
-
 ## Array Status
 
 | Command | Description | Example |

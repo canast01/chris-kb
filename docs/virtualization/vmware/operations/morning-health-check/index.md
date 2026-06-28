@@ -17,31 +17,8 @@ Start-of-shift health check sequence for a VMware SDDC environment. Run these ch
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![VMware — Morning Health Check](../../../../assets/virtualization-vmware-operations-morning-health-check-index.svg)
-
-
-
 
 ---
-
-```d2
-direction: right
-
-center: "Morning Health Check" {shape: hexagon}
-1_vcenter: "1. vCenter" {shape: rectangle}
-2_esxi_cluster: "2. ESXi Cluster" {shape: rectangle}
-3_vsan: "3. vSAN" {shape: rectangle}
-4_nsx: "4. NSX" {shape: rectangle}
-5_aria_operations: "5. Aria Operations" {shape: rectangle}
-signoff_checklist: "Sign-off Checklist" {shape: rectangle}
-
-center -> 1_vcenter
-center -> 2_esxi_cluster
-center -> 3_vsan
-center -> 4_nsx
-center -> 5_aria_operations
-center -> signoff_checklist
-```
 
 ## Before you begin
 

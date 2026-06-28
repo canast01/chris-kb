@@ -5,17 +5,13 @@ tags:
 ---
 # FlashArray — Operations
 
-
 <div class="kb-summary">
 FlashArray — Operations reference: Health Checks, Procedures, CLI Reference, Install & Upgrade, and 2 more.
 
 *Applies to: FlashArray Purity 6.x*
 </div>
-![FlashArray — Operations](../../../../assets/storage-pure-flasharray-operations-index.svg)
-
 
 FlashArray Day-to-Day Operations Flow
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>

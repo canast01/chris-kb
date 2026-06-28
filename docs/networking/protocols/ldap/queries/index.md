@@ -4,31 +4,9 @@ tags:
 ---
 # LDAP Queries
 
-
 <div class="kb-summary">
 LDAP Queries reference covering Overview, Filter Syntax, Common AD Attributes, PowerShell: Get-ADObject, Search Scope and Base and 1 more sections.
 </div>
-![LDAP Queries](../../../../assets/networking-protocols-ldap-queries-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "LDAP" {shape: hexagon}
-filter_syntax: "Filter Syntax" {shape: rectangle}
-common_ad_attributes: "Common AD Attributes" {shape: rectangle}
-powershell_getadobject: "PowerShell: Get-ADObject" {shape: rectangle}
-search_scope_and_base: "Search Scope and Base" {shape: rectangle}
-paging_large_result_sets: "Paging Large Result Sets" {shape: rectangle}
-
-center -> filter_syntax
-center -> common_ad_attributes
-center -> powershell_getadobject
-center -> search_scope_and_base
-center -> paging_large_result_sets
-```
 
 ## Overview
 

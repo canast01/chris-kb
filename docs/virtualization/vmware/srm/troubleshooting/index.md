@@ -13,9 +13,6 @@ Diagnosing SRM replication failures, protection group errors, inventory mapping 
 
 *Applies to: SRM 8.x / 9.x*
 </div>
-![Site Recovery Manager — Troubleshooting](../../../../assets/virtualization-vmware-srm-troubleshooting-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

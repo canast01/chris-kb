@@ -3,8 +3,6 @@ tags:
   - servicenow
 ---
 # Change Communication
-![Change Communication](../../../../assets/itsm-servicenow-change-management-change-communication-index.svg)
-
 
 ```yaml
 Subject: [Planned Maintenance] <Service Name> — <Date> <Start Time> UTC

@@ -5,7 +5,6 @@ tags:
 ---
 # PowerScale — CLI Reference
 
-
 <div class="kb-summary">
 Commonly used `isi` commands for managing Dell PowerScale (formerly Isilon) scale-out NAS clusters. All commands run from the cluster CLI — log in via SSH to any node. > Use `isi --help` or `isi <subcommand> --help` for full option lists.
 
@@ -13,31 +12,9 @@ Commonly used `isi` commands for managing Dell PowerScale (formerly Isilon) scal
 </div>
 ![PowerScale — CLI Reference](../../../../assets/storage-dell-powerscale-operations-cli-reference.svg)
 
-
-
-
 Commonly used `isi` commands for managing Dell PowerScale (formerly Isilon) scale-out NAS clusters. All commands run from the cluster CLI — log in via SSH to any node.
 
 > Use `isi --help` or `isi <subcommand> --help` for full option lists.
-
-```d2
-direction: right
-
-hub: "PowerScale (Isilon)\nOperations" {shape: hexagon}
-cluster_status_identity: "Cluster Status & Identity" {shape: rectangle}
-nodes: "Nodes" {shape: rectangle}
-storage_pools_tiers: "Storage Pools & Tiers" {shape: rectangle}
-file_system_quotas: "File System & Quotas" {shape: rectangle}
-nfs_exports: "NFS Exports" {shape: rectangle}
-smb_shares: "SMB Shares" {shape: rectangle}
-
-hub -> cluster_status_identity
-hub -> nodes
-hub -> storage_pools_tiers
-hub -> file_system_quotas
-hub -> nfs_exports
-hub -> smb_shares
-```
 
 ## Before you begin
 

@@ -6,8 +6,6 @@ search:
   boost: 1.5
 ---
 # ServiceNow Common Issues
-![ServiceNow Common Issues](../../../../assets/itsm-servicenow-troubleshooting-common-issues-index.svg)
-
 
 ```javascript
 // To find long-running transactions, run in Background Scripts:

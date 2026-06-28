@@ -5,16 +5,11 @@ tags:
 ---
 # SANnav — Security
 
-
 <div class="kb-summary">
 SANnav hardening — RBAC, TLS configuration, user management, and secure communication with managed switches.
 
 *Applies to: Brocade FOS 9.x*
 </div>
-![SANnav — Security](../../../../assets/san-brocade-sannav-security-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

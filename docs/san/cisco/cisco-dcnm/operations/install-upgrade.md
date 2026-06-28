@@ -6,7 +6,6 @@ tags:
 # Cisco DCNM — Install and Upgrade
 ![Cisco DCNM — Install and Upgrade](../../../../assets/san-cisco-cisco-dcnm-operations-install-upgrade.svg)
 
-
 ```bash
 # On the primary (active) DCNM node
 ssh root@dcnm-dc1-active.corp.example.com
@@ -41,15 +40,6 @@ no logging server <dcnm-ip>
 
 # Remove DCNM service account
 no username dcnm_mgmt
-```
-
-```d2
-direction: right
-
-hub: "Cisco DCNM\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

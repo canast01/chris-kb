@@ -3,8 +3,6 @@ tags:
   - netapp
 ---
 # NetApp Keystone — CLI Reference
-![NetApp Keystone — CLI Reference](../../../../assets/storage-netapp-keystone-cli-reference-index.svg)
-
 
 ```bash
 # Exchange client credentials for a bearer token
@@ -80,19 +78,6 @@ curl -s "https://api.bluexp.netapp.com/marketplace/api/v1/subscriptions" \
 # Check capacity pool status
 curl -s "https://api.bluexp.netapp.com/marketplace/api/v1/capacity-pools" \
   -H "Authorization: Bearer $BLUEXP_TOKEN" | python3 -m json.tool
-```
-
-```d2
-direction: right
-
-center: "Keystone STaaS" {shape: rectangle}
-component_a: "Component A" {shape: rectangle}
-component_b: "Component B" {shape: rectangle}
-component_c: "Component C" {shape: rectangle}
-
-center -> component_a
-center -> component_b
-center -> component_c
 ```
 
 ## See also

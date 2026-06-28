@@ -6,35 +6,12 @@ tags:
 ---
 # Tanzu — Design Standards
 
-
 <div class="kb-summary">
 Design Standards reference covering Supervisor Cluster Sizing, TKG Workload Cluster Sizing, Namespace Design, Network CIDR Planning, Storage Policy Mapping and 4 more sections.
 
 *Applies to: Tanzu 2.x*
 </div>
 ![Tanzu — Design Standards](../../../../assets/virtualization-vmware-tanzu-architecture-design-standards.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Tanzu" {shape: hexagon}
-supervisor_cluster_sizing: "Supervisor Cluster Sizing" {shape: rectangle}
-tkg_workload_cluster_sizing: "TKG Workload Cluster Sizing" {shape: rectangle}
-namespace_design: "Namespace Design" {shape: rectangle}
-network_cidr_planning: "Network CIDR Planning" {shape: rectangle}
-storage_policy_mapping: "Storage Policy Mapping" {shape: rectangle}
-harbor_sizing: "Harbor Sizing" {shape: rectangle}
-
-center -> supervisor_cluster_sizing
-center -> tkg_workload_cluster_sizing
-center -> namespace_design
-center -> network_cidr_planning
-center -> storage_policy_mapping
-center -> harbor_sizing
-```
 
 ## Supervisor Cluster Sizing
 

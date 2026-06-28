@@ -4,35 +4,11 @@ tags:
 ---
 # Recovery Behavior Expectations
 
-
 <div class="kb-summary">
 Understanding what normal recovery looks like prevents unnecessary intervention during incidents.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Recovery Behavior Expectations](../../../../assets/virtualization-vmware-topics-recovery-behavior-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Recovery Behavior" {shape: hexagon}
-after_host_failure: "After Host Failure" {shape: rectangle}
-after_storage_failure: "After Storage Failure" {shape: rectangle}
-after_network_failure: "After Network Failure" {shape: rectangle}
-after_vsan_component_failure: "After vSAN Component Failure" {shape: rectangle}
-recovery_performance_impact: "Recovery Performance Impact" {shape: rectangle}
-when_to_escalate: "When to Escalate" {shape: rectangle}
-
-center -> after_host_failure
-center -> after_storage_failure
-center -> after_network_failure
-center -> after_vsan_component_failure
-center -> recovery_performance_impact
-center -> when_to_escalate
-```
 
 ## After Host Failure
 

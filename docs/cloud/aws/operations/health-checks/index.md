@@ -4,8 +4,6 @@ tags:
   - operations
 ---
 # AWS — Health Checks
-![AWS — Health Checks](../../../../assets/cloud-aws-operations-health-checks-index.svg)
-
 
 ```d2
 direction: right
@@ -93,7 +91,6 @@ aws support describe-trusted-advisor-check-summaries \
   --query 'summaries[].{Name:categorySpecificSummary,Status:status}' \
   --output table
 ```
-
 
 | Status | Meaning | Action |
 |---|---|---|

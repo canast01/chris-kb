@@ -5,23 +5,11 @@ tags:
 ---
 # Python Automation — Integrations
 
-
 <div class="kb-summary">
 Python automation integrations: REST API call patterns, retry-with-backoff wrappers, `requests` session management, Ansible Python API, and Terraform subprocess automation.
 
 *Applies to: Python 3.x*
 </div>
-![Python Automation — Integrations](../../../../assets/automation-python-architecture-integrations-index.svg)
-
-
-```d2
-direction: right
-
-center: "Python" {shape: hexagon}
-api_call_and_retry_flow: "API Call and Retry Flow" {shape: rectangle}
-
-center -> api_call_and_retry_flow
-```
 
 ## API Call and Retry Flow
 
@@ -46,7 +34,6 @@ graph LR
     checkRetry -->|No| raiseAlert
     checkStatus -->|ConnectionError\nTimeout| checkRetry
 ```
-
 
 ### Pagination
 

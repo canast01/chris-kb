@@ -5,14 +5,11 @@ tags:
 ---
 # Veeam — Install & Upgrade
 
-
 <div class="kb-summary">
 Install & Upgrade reference covering Release Cadence, Decommission Procedure.
 
 *Applies to: Veeam 12.x*
 </div>
-![Veeam — Install & Upgrade](../../../../assets/backup-veeam-operations-install-upgrade-index.svg)
-
 
 ```d2
 direction: right
@@ -67,7 +64,6 @@ flowchart TD
     class jobCheck decision
     class start,done terminal
 ```
-
 
 Store the config backup off the Backup Server — it is useless if the server hosting it is lost.
 

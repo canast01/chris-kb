@@ -6,8 +6,6 @@ search:
   boost: 1.5
 ---
 # InsightIQ — Troubleshooting
-![InsightIQ — Troubleshooting](../../../../assets/storage-netapp-insightiq-troubleshooting-index.svg)
-
 
 ```bash
 # Verify InsightIQ can reach the PowerScale API from the appliance
@@ -26,7 +24,6 @@ sudo tail -f /var/log/insightiq/collector.log
 # Restart the collector if it has stopped
 sudo systemctl restart iiq-collector
 ```
-
 
 ```d2
 direction: down

@@ -4,33 +4,9 @@ tags:
 ---
 # AI Model Concepts
 
-
 <div class="kb-summary">
 AI Model Concepts reference covering Transformers and Attention Mechanisms, Embeddings, Tokens and Tokenization, Fine-Tuning vs. RAG vs. Prompting, Generation Parameters and 1 more sections.
 </div>
-![AI Model Concepts](../../../../assets/cloud-ai-certifications-model-concepts-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Model Concepts" {shape: hexagon}
-transformers_and_attention_mechanism: "Transformers and Attention Mechanisms" {shape: rectangle}
-embeddings: "Embeddings" {shape: rectangle}
-tokens_and_tokenization: "Tokens and Tokenization" {shape: rectangle}
-finetuning_vs_rag_vs_prompting: "Fine-Tuning vs. RAG vs. Prompting" {shape: rectangle}
-generation_parameters: "Generation Parameters" {shape: rectangle}
-study_checklist: "Study Checklist" {shape: rectangle}
-
-center -> transformers_and_attention_mechanism
-center -> embeddings
-center -> tokens_and_tokenization
-center -> finetuning_vs_rag_vs_prompting
-center -> generation_parameters
-center -> study_checklist
-```
 
 ## Transformers and Attention Mechanisms
 

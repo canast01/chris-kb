@@ -7,14 +7,11 @@ search:
 ---
 # Terraform — Common Issues
 
-
 <div class="kb-summary">
 Common Issues reference covering Terraform Troubleshooting Decision Flow, Refresh and Reconciliation Issues, Workspace Issues, Common Error Reference.
 
 *Applies to: Terraform 1.x*
 </div>
-![Terraform — Common Issues](../../../../assets/automation-terraform-troubleshooting-common-issues-index.svg)
-
 
 ```d2
 direction: down
@@ -96,7 +93,6 @@ flowchart TD
     errType -->|Unknown| enableDebug["TF_LOG=DEBUG\nTF_LOG_PATH=debug.log"]
     enableDebug --> reviewLog["Review provider\nAPI call trace"]
 ```
-
 
 ## Workspace Issues
 

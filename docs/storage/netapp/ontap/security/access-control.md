@@ -5,35 +5,12 @@ tags:
 ---
 # ONTAP — Access Control
 
-
 <div class="kb-summary">
 Access Control reference covering RBAC Scope Model, RBAC, Custom Roles, User Login Management, Audit Logging.
 
 *Applies to: ONTAP 9.x*
 </div>
 ![ONTAP — Access Control](../../../../assets/storage-netapp-ontap-security-access-control.svg)
-
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-rbac_scope_model: "RBAC Scope Model" {shape: rectangle}
-rbac: "RBAC" {shape: rectangle}
-custom_roles: "Custom Roles" {shape: rectangle}
-user_login_management: "User Login Management" {shape: rectangle}
-audit_logging: "Audit Logging" {shape: rectangle}
-core: "NetApp ONTAP Core" {shape: hexagon}
-
-external -> rbac_scope_model: traffic in
-rbac_scope_model -> rbac
-rbac -> custom_roles
-custom_roles -> user_login_management
-user_login_management -> audit_logging
-audit_logging -> core: secured path
-```
 
 ## Before you begin
 

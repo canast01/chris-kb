@@ -12,10 +12,6 @@ Landing Zone deployment guide: Management Group hierarchy, Azure Policy, Defende
 
 *Applies to: Azure / Entra ID*
 </div>
-![Azure — Subscription and Landing Zone Setup](../../../assets/cloud-azure-deploy-index.svg)
-
-
-
 
 ```mermaid
 flowchart TD
@@ -64,9 +60,6 @@ configure_entra_id_azure_ad_baseline -> validate
 - **Logging:** record every IP address, hostname, and credential set assigned during this deployment
 
 ---
-
-
-
 
 This guide covers building an Azure Landing Zone from scratch: Management Group hierarchy, Azure Policy, Defender for Cloud, Log Analytics, Sentinel, Entra ID baseline, Hub VNet, Azure Backup, and deployment validation.
 

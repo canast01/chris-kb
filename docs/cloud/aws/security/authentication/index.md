@@ -4,8 +4,6 @@ tags:
   - security
 ---
 # AWS Authentication — SSO, MFA & Credentials
-![AWS Authentication — SSO, MFA & Credentials](../../../../assets/cloud-aws-security-authentication-index.svg)
-
 
 ```bash
 # List permission sets

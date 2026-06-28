@@ -5,33 +5,12 @@ tags:
 ---
 # PowerScale — Integrations
 
-
 <div class="kb-summary">
 Integrations reference covering VMware Integration, Backup Integration, CloudIQ Monitoring, Active Directory / LDAP, REST API.
 
 *Applies to: PowerScale (Isilon) 9.x*
 </div>
 ![PowerScale — Integrations](../../../../assets/storage-dell-powerscale-architecture-integrations.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "PowerScale (Isilon)" {shape: hexagon}
-vmware_integration: "VMware Integration" {shape: rectangle}
-backup_integration: "Backup Integration" {shape: rectangle}
-cloudiq_monitoring: "CloudIQ Monitoring" {shape: rectangle}
-active_directory_ldap: "Active Directory / LDAP" {shape: rectangle}
-rest_api: "REST API" {shape: rectangle}
-
-center -> vmware_integration
-center -> backup_integration
-center -> cloudiq_monitoring
-center -> active_directory_ldap
-center -> rest_api
-```
 
 ## VMware Integration
 

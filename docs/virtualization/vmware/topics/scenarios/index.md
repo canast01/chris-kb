@@ -10,21 +10,6 @@ Cross-product VMware scenarios: reactive troubleshooting and planned operational
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Scenarios](../../../../assets/virtualization-vmware-topics-scenarios-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Scenarios" {shape: hexagon}
-issues: "Issues" {shape: rectangle}
-tasks: "Tasks" {shape: rectangle}
-
-center -> issues
-center -> tasks
-```
 
 ## Issues
 

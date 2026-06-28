@@ -4,8 +4,6 @@ tags:
   - security
 ---
 # Ansible — Hardening
-![Ansible — Hardening](../../../../assets/automation-ansible-security-hardening-index.svg)
-
 
 ```bash
 # Dedicated control node — no shared use

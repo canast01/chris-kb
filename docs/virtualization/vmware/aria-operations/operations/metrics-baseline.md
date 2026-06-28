@@ -6,16 +6,11 @@ tags:
 ---
 # Performance Metrics Baseline
 
-
 <div class="kb-summary">
 Performance Metrics Baseline reference covering Documenting the Baseline, Setting Thresholds from Baseline, Baseline Review Cadence.
 
 *Applies to: Aria Ops 8.x*
 </div>
-![Performance Metrics Baseline](../../../../assets/virtualization-vmware-aria-operations-operations-metrics-bas.svg)
-
-
-
 
 **NetApp ONTAP — workload stats:**
 ```bash
@@ -27,21 +22,6 @@ statistics show -object system -counter total_ops,read_ops,write_ops,latency
 ```bash
 purecli array get --mirrored
 purecli volume list --performance    # per-volume latency, IOPS, BW
-```
-
-```d2
-direction: right
-
-hub: "Aria Operations\nOperations" {shape: hexagon}
-documenting_the_baseline: "Documenting the Baseline" {shape: rectangle}
-setting_thresholds_from_baseline: "Setting Thresholds from Baseline" {shape: rectangle}
-baseline_review_cadence: "Baseline Review Cadence" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> documenting_the_baseline
-hub -> setting_thresholds_from_baseline
-hub -> baseline_review_cadence
-hub -> verify
 ```
 
 ## Before you begin

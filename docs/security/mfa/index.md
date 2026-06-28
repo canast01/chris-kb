@@ -6,13 +6,9 @@ tags:
 
 # Multi-Factor Authentication (MFA)
 
-
 <div class="kb-summary">
 Multi-Factor Authentication (MFA) reference covering Overview, MFA Authentication Flow, TOTP vs Push Comparison, Daily Checks, Health Commands and 1 more sections.
 </div>
-![Multi-Factor Authentication (MFA)](../../assets/security-mfa-index.svg)
-
-
 
 ![Multi-Factor Authentication (MFA) — Diagram](../../assets/security-mfa-diagram.svg)
 
@@ -26,25 +22,11 @@ Multi-Factor Authentication (MFA) reference covering Overview, MFA Authenticatio
   </a>
 </div>
 
-```d2
-direction: right
-
-center: "Mfa" {shape: hexagon}
-daily_checks: "Daily Checks" {shape: rectangle}
-health_commands: "Health Commands" {shape: rectangle}
-upgrade_workflow: "Upgrade Workflow" {shape: rectangle}
-
-center -> daily_checks
-center -> health_commands
-center -> upgrade_workflow
-```
-
 ## Overview
 
 MFA adds an additional authentication factor beyond passwords to protect accounts and systems from unauthorized access.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|

@@ -10,8 +10,6 @@ tags:
 Structured response playbooks for the most common infrastructure incidents. Each playbook follows the same Triage → Isolate → Diagnose → Fix → Verify → Document structure.
 </div>
 
-![Incident Response](../../assets/reference-incident-response-index.svg)
-
 <div class="kb-grid">
 <a class="kb-card" href="vcenter-unreachable/">
 <strong>INC-001: vCenter Server Unreachable</strong><br>

@@ -10,20 +10,6 @@ Top-10 NSX commands for transport nodes, segments, T0/T1 gateways, and DFW via t
 </div>
 ![NSX Cheat Sheet](../../assets/reference-cheat-sheets-nsx.svg)
 
-
-
-
-```d2
-direction: right
-
-center: "Cheat Sheets" {shape: rectangle}
-nsx_manager_cli_ssh_to_nsx_manager: "NSX Manager CLI (SSH to NSX Manager)" {shape: rectangle}
-rest_api_curl_examples: "REST API (curl examples)" {shape: rectangle}
-
-center -> nsx_manager_cli_ssh_to_nsx_manager
-center -> rest_api_curl_examples
-```
-
 ## NSX Manager CLI (SSH to NSX Manager)
 
 ```bash

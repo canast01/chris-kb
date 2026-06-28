@@ -5,14 +5,11 @@ tags:
 ---
 # Jira — Health Checks
 
-
 <div class="kb-summary">
 Health Checks reference covering Health Check Overview, 2. Log Review, 3. Disk Space, 4. Database Connectivity, 5. Search Index Status and 3 more sections.
 
 *Applies to: Jira 9.x / Cloud*
 </div>
-![Jira — Health Checks](../../../../assets/itsm-jira-operations-health-checks-index.svg)
-
 
 ```d2
 direction: right
@@ -88,7 +85,6 @@ flowchart TD
     style ALERT_CLUSTER fill:#c0392b,color:#fff
     style ALERT_PERF fill:#e67e22,color:#fff
 ```
-
 
 ## Run This Routine
 

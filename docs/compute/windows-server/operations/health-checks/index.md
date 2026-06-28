@@ -5,14 +5,11 @@ tags:
 ---
 # Windows Server — Health Checks
 
-
 <div class="kb-summary">
 Routine checks, service validation, and status verification.
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
-![Windows Server — Health Checks](../../../../assets/compute-windows-server-operations-health-checks-index.svg)
-
 
 ```d2
 direction: right
@@ -81,7 +78,6 @@ Get-NetFirewallProfile | Select-Object Name, Enabled
 # 10. Last Windows Updates installed
 Get-HotFix | Sort-Object InstalledOn -Descending | Select-Object -First 5
 ```
-
 
 ### Disk Space
 

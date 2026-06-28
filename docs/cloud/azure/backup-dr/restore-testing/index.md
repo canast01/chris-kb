@@ -4,35 +4,13 @@ tags:
 ---
 # Restore Testing
 
-
 <div class="kb-summary">
 Restore testing validates that backup data is usable and that recovery procedures work as documented.
 
 *Applies to: Azure*
 </div>
-![Restore Testing](../../../../assets/cloud-azure-backup-dr-restore-testing-index.svg)
-
-
-
 
 ---
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-restore_a_vm_to_a_new_vm_full_restor: "Restore a VM to a New VM (Full Restore)" {shape: rectangle}
-restore_to_original_location_overwri: "Restore to Original Location (Overwrite Existing VM)" {shape: rectangle}
-filelevel_recovery: "File-Level Recovery" {shape: rectangle}
-validating_a_restored_vm: "Validating a Restored VM" {shape: rectangle}
-restore_test_checklist: "Restore Test Checklist" {shape: rectangle}
-
-center -> restore_a_vm_to_a_new_vm_full_restor
-center -> restore_to_original_location_overwri
-center -> filelevel_recovery
-center -> validating_a_restored_vm
-center -> restore_test_checklist
-```
 
 ## Restore a VM to a New VM (Full Restore)
 

@@ -19,20 +19,34 @@ Integrations reference covering VMware Integration, Backup Integration, CloudIQ 
 ```d2
 direction: right
 
-center: "PowerMax" {shape: hexagon}
-vmware_integration: "VMware Integration" {shape: rectangle}
-backup_integration: "Backup Integration" {shape: rectangle}
-cloudiq_monitoring: "CloudIQ Monitoring" {shape: rectangle}
-active_directory_ldap: "Active Directory / LDAP" {shape: rectangle}
-integration_topology: "Integration Topology" {shape: rectangle}
-rest_api: "REST API" {shape: rectangle}
+powermax: PowerMax {
+  uni: Unisphere :8443\nREST API {shape: rectangle}
+  array: Array {shape: cylinder}
+  uni -> array
+}
 
-center -> vmware_integration
-center -> backup_integration
-center -> cloudiq_monitoring
-center -> active_directory_ldap
-center -> integration_topology
-center -> rest_api
+vmware: VMware {
+  vc: vCenter\nSPBM / SRM {shape: rectangle}
+  esx: ESXi Hosts\nVMFS / vVols {shape: rectangle}
+}
+
+backup: Backup {
+  vbr: Veeam / NetBackup\nCommVault {shape: rectangle}
+}
+
+monitor: Monitoring {
+  ciq: CloudIQ\n(SaaS) {shape: rectangle}
+}
+
+directory: Directory {
+  ad: Active Directory\n/ LDAP {shape: rectangle}
+}
+
+vmware.vc -> powermax.uni: VASA / SRA
+vmware.esx -> powermax.array: FC / NVMe-oF
+backup.vbr -> powermax.uni: REST API
+monitor.ciq -> powermax.uni: telemetry
+directory.ad -> powermax.uni: LDAPS :636
 ```
 
 ## VMware Integration
@@ -79,74 +93,72 @@ Unisphere for PowerMax supports LDAP and Active Directory for administrator auth
 
 ## Integration Topology
 
-```mermaid
-flowchart LR
-    subgraph "VMware Layer"
-        VC["vCenter\n(SPBM / SRM)"]
-        ESX["ESXi Hosts\n(VMFS / vVols)"]
-        VASA["VASA Provider\n(Dell)"]
-        SRA["SRA Adapter\n(SRM failover)"]
-    end
-    subgraph "Backup Layer"
-        VBR["Veeam / NetBackup\n/ CommVault"]
-        PROXY["Backup Proxy\n(linked clone mount)"]
-    end
-    subgraph "Monitoring Layer"
-        CIQ["CloudIQ\n(SaaS — dell.com)"]
-        SA["SupportAssist\n(auto SR creation)"]
-    end
-    subgraph "Directory Layer"
-        AD["Active Directory\n/ LDAP"]
-    end
-    subgraph "PowerMax Array"
-        UNI["Unisphere\nREST API :8443"]
-        ARRAY[("PowerMax\nArray")]
-        SNAPVX["SnapVX\nEngine"]
-        UNI --> ARRAY
-        ARRAY --> SNAPVX
-    end
+```d2
+direction: right
 
-    VC -->|"VASA capabilities"| VASA --> UNI
-    ESX -->|"FC / NVMe-oF"| ARRAY
-    SRA -->|"REST API"| UNI
-    VBR -->|"REST API\nsnap establish/link"| UNI
-    PROXY -->|"FC / iSCSI\nlinked clone"| ARRAY
-    UNI -->|"HTTPS telemetry"| CIQ
-    UNI -->|"SupportAssist\ncall-home"| SA
-    AD -->|"LDAPS :636\nbind + group lookup"| UNI
+vmware: VMware Layer {
+  vc: vCenter\n(SPBM / SRM) {shape: rectangle}
+  esx: ESXi Hosts\n(VMFS / vVols) {shape: rectangle}
+  vasa: VASA Provider\n(Dell) {shape: rectangle}
+  sra: SRA Adapter\n(SRM failover) {shape: rectangle}
+}
 
-    classDef vmw fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef bkp fill:#7c3aed,stroke:#6d28d9,color:#fff
-    classDef mon fill:#0f766e,stroke:#0d9488,color:#fff
-    classDef dir fill:#92400e,stroke:#78350f,color:#fff
-    classDef arr fill:#be123c,stroke:#9f1239,color:#fff
-    class VC,ESX,VASA,SRA vmw
-    class VBR,PROXY bkp
-    class CIQ,SA mon
-    class AD dir
-    class UNI,ARRAY,SNAPVX arr
+backup: Backup Layer {
+  vbr: Veeam / NetBackup\n/ CommVault {shape: rectangle}
+  proxy: Backup Proxy\n(linked clone) {shape: rectangle}
+}
+
+monitor: Monitoring Layer {
+  ciq: CloudIQ\n(SaaS — dell.com) {shape: rectangle}
+  sa: SupportAssist\n(auto SR creation) {shape: rectangle}
+}
+
+directory: Directory Layer {
+  ad: Active Directory\n/ LDAP {shape: rectangle}
+}
+
+powermax: PowerMax Array {
+  uni: Unisphere\nREST API :8443 {shape: rectangle}
+  array: PowerMax Array {shape: cylinder}
+  snapvx: SnapVX Engine {shape: rectangle}
+  uni -> array
+  array -> snapvx
+}
+
+vmware.vc -> vmware.vasa: VASA capabilities
+vmware.vasa -> powermax.uni
+vmware.esx -> powermax.array: FC / NVMe-oF
+vmware.sra -> powermax.uni: REST API
+backup.vbr -> powermax.uni: REST API\nsnap establish/link
+backup.proxy -> powermax.array: FC / iSCSI\nlinked clone
+powermax.uni -> monitor.ciq: HTTPS telemetry
+powermax.uni -> monitor.sa: call-home
+directory.ad -> powermax.uni: LDAPS :636
 ```
 
 ## REST API
 
 PowerMax exposes a REST API through Unisphere for PowerMax (RESTAPI):
 
-```mermaid
-sequenceDiagram
-    participant Client as Automation Client
-    participant UNI as Unisphere :8443
-    participant ARRAY as PowerMax Array
+```plantuml
+@startuml
+participant "Automation Client" as Client
+participant "Unisphere :8443" as UNI
+participant "PowerMax Array" as ARRAY
 
-    Client->>UNI: POST /restapi/system/Version<br/>(Basic Auth: admin:password)
-    UNI-->>Client: 200 OK + session cookie
-    Client->>UNI: GET /restapi/91/system/symmetrix<br/>(cookie)
-    UNI->>ARRAY: query array list
-    ARRAY-->>UNI: SID list
-    UNI-->>Client: 200 OK + symmetrixId[]
-    Client->>UNI: POST /sloprovisioning/symmetrix/{SID}/storagegroup<br/>{storageGroupId, slo, srp}
-    UNI->>ARRAY: create storage group
-    ARRAY-->>UNI: created
-    UNI-->>Client: 201 Created
+Client -> UNI : POST /restapi/system/Version\n(Basic Auth)
+UNI --> Client : 200 OK + session cookie
+
+Client -> UNI : GET /restapi/91/system/symmetrix\n(cookie)
+UNI -> ARRAY : query array list
+ARRAY --> UNI : SID list
+UNI --> Client : 200 OK + symmetrixId[]
+
+Client -> UNI : POST /sloprovisioning/symmetrix/{SID}/storagegroup\n{storageGroupId, slo, srp}
+UNI -> ARRAY : create storage group
+ARRAY --> UNI : created
+UNI --> Client : 201 Created
+@enduml
 ```
 
 ```bash

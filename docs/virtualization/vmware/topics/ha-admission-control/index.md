@@ -4,35 +4,11 @@ tags:
 ---
 # HA Admission Control
 
-
 <div class="kb-summary">
 HA Admission Control reference covering Purpose, Admission Control Policies, Checking Admission Control Status, Configure Admission Control, Admission Control and Overcommit and 3 more sections.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![HA Admission Control](../../../../assets/virtualization-vmware-topics-ha-admission-control-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Ha Admission Control" {shape: hexagon}
-purpose: "Purpose" {shape: rectangle}
-admission_control_policies: "Admission Control Policies" {shape: rectangle}
-checking_admission_control_status: "Checking Admission Control Status" {shape: rectangle}
-configure_admission_control: "Configure Admission Control" {shape: rectangle}
-admission_control_and_overcommit: "Admission Control and Overcommit" {shape: rectangle}
-risk_indicators: "Risk Indicators" {shape: rectangle}
-
-center -> purpose
-center -> admission_control_policies
-center -> checking_admission_control_status
-center -> configure_admission_control
-center -> admission_control_and_overcommit
-center -> risk_indicators
-```
 
 ## Purpose
 

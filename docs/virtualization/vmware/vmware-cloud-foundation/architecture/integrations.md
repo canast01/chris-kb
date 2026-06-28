@@ -7,9 +7,6 @@ tags:
 # VMware Cloud Foundation — Integrations
 ![VMware Cloud Foundation — Integrations](../../../../assets/virtualization-vmware-vmware-cloud-foundation-architecture-i.svg)
 
-
-
-
 ```bash
 ldapsearch -H ldaps://<dc-ip>:636 -x -D "<bind-account-dn>" -W \
   -b "dc=domain,dc=com" "(sAMAccountName=<test-user>)"
@@ -23,15 +20,6 @@ SDDC Manager → Administration → Syslog → Add Syslog Server
 → Protocol: TLS (recommended) or UDP/TCP → Port: 6514 or 514
 ```
 ```powershell
-
-```d2
-direction: right
-
-center: "VMware Cloud Foundation" {shape: hexagon}
-configure_syslog_forwarding_on_all_e: "Configure syslog forwarding on all ESXi hosts in a cluster" {shape: rectangle}
-
-center -> configure_syslog_forwarding_on_all_e
-```
 
 ## Configure syslog forwarding on all ESXi hosts in a cluster
 Get-Cluster "ClusterName" | Get-VMHost | ForEach-Object {

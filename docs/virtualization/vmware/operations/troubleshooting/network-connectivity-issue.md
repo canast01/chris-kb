@@ -7,16 +7,11 @@ search:
 ---
 # Network Connectivity Issues
 
-
 <div class="kb-summary">
 Troubleshooting VM network connectivity failures — vSwitch/vDS configuration, portgroup VLAN mismatches, VMkernel routing, NSX segment issues, and physical uplink failures.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Network Connectivity Issues](../../../../assets/virtualization-vmware-operations-troubleshooting-network-con.svg)
-
-
-
 
 ---
 

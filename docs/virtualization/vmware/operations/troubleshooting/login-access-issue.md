@@ -7,16 +7,11 @@ search:
 ---
 # Login and Access Issues
 
-
 <div class="kb-summary">
 Troubleshooting vCenter and ESXi login failures — SSO token errors, locked AD accounts, LDAP connectivity, NTP drift breaking Kerberos, and certificate validation failures.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Login and Access Issues](../../../../assets/virtualization-vmware-operations-troubleshooting-login-acces.svg)
-
-
-
 
 ---
 

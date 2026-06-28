@@ -5,16 +5,12 @@ tags:
 ---
 # Pure1 Operations
 
-
 <div class="kb-summary">
 Pure1 operations: fleet health dashboard review, predictive analytics alert configuration, capacity and performance trending, and support case creation from Pure1.
 
 *Applies to: Pure1*
   <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
-![Pure1 Operations](../../../../assets/storage-pure-pure1-operations-index.svg)
-
-
 
 Daily operations begin with logging into the Pure1 dashboard and checking all arrays for health status (green/yellow/red), reviewing active alerts by severity, and checking the capacity trend line for any array approaching 80% used. Stale or missing array data should be investigated immediately by checking the last-seen timestamp and array outbound connectivity. Weekly tasks include exporting the capacity forecast report and distributing it to the storage and capacity planning teams.
 
@@ -29,15 +25,6 @@ Daily operations begin with logging into the Pure1 dashboard and checking all ar
 
 - Export capacity forecast report from Pure1 and distribute to team
 - Review Pure1 Meta anomaly and workload recommendations
-
-```d2
-direction: right
-
-hub: "Pure1\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
-```
 
 ## Before you begin
 

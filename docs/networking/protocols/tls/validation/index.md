@@ -4,33 +4,9 @@ tags:
 ---
 # TLS Validation
 
-
 <div class="kb-summary">
 Use these commands to verify TLS configuration on servers, check certificate validity, diagnose handshake failures, and confirm correct chain presentation.
 </div>
-![TLS Validation](../../../../assets/networking-protocols-tls-validation-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "TLS" {shape: hexagon}
-quick_validation_live_endpoint: "Quick Validation — Live Endpoint" {shape: rectangle}
-certificate_validity_checks: "Certificate Validity Checks" {shape: rectangle}
-chain_validation: "Chain Validation" {shape: rectangle}
-protocol_and_cipher_checks: "Protocol and Cipher Checks" {shape: rectangle}
-curl_validation: "curl Validation" {shape: rectangle}
-validating_a_certificate_file: "Validating a Certificate File" {shape: rectangle}
-
-center -> quick_validation_live_endpoint
-center -> certificate_validity_checks
-center -> chain_validation
-center -> protocol_and_cipher_checks
-center -> curl_validation
-center -> validating_a_certificate_file
-```
 
 ## Quick Validation — Live Endpoint
 

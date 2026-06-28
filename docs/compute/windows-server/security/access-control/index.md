@@ -4,8 +4,6 @@ tags:
   - windows
 ---
 # Windows Server — Access Control
-![Windows Server — Access Control](../../../../assets/compute-windows-server-security-access-control-index.svg)
-
 
 ```powershell
 # Create a Global group for a role
@@ -183,26 +181,6 @@ Get-ADGroupMember "Domain Admins" -Recursive |
 Get-ADUser -Filter {PasswordNeverExpires -eq $true -and Enabled -eq $true} `
   -Properties PasswordNeverExpires, Description |
   Select-Object Name, SamAccountName, Description
-```
-
-```d2
-direction: down
-
-root: "Windows Server\nAccess Control" {shape: hexagon}
-administrator: "Administrator" {shape: rectangle}
-operator: "Operator" {shape: rectangle}
-auditor: "Auditor" {shape: rectangle}
-readonly: "Read-Only" {shape: rectangle}
-resources: Protected Resources {shape: cylinder}
-
-root -> administrator: role
-administrator -> resources: scoped
-root -> operator: role
-operator -> resources: scoped
-root -> auditor: role
-auditor -> resources: scoped
-root -> readonly: role
-readonly -> resources: scoped
 ```
 
 ## Before you begin

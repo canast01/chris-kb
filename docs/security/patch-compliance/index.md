@@ -7,9 +7,6 @@ tags:
 <div class="kb-summary">
 Patch Compliance Monitoring reference covering Patch Classification, Windows Patch Compliance, Linux Patch Compliance, SCCM / Endpoint Manager (Windows fleet), Patch Reporting and 2 more sections.
 </div>
-![Patch Compliance Monitoring](../../assets/security-patch-compliance-index.svg)
-
-
 
 <div class="kb-grid">
   <a class="kb-card" href="operations/">
@@ -18,25 +15,6 @@ Patch Compliance Monitoring reference covering Patch Classification, Windows Pat
     <div class="kb-card-desc">Patch scanning, SLA tracking, WSUS/SCCM management, exception handling</div>
   </a>
 </div>
-
-```d2
-direction: right
-
-center: "Patch Compliance" {shape: hexagon}
-patch_classification: "Patch Classification" {shape: rectangle}
-windows_patch_compliance: "Windows Patch Compliance" {shape: rectangle}
-linux_patch_compliance: "Linux Patch Compliance" {shape: rectangle}
-sccm_endpoint_manager_windows_fleet: "SCCM / Endpoint Manager (Windows fleet)" {shape: rectangle}
-patch_reporting: "Patch Reporting" {shape: rectangle}
-compliance_checks_by_tool: "Compliance Checks by Tool" {shape: rectangle}
-
-center -> patch_classification
-center -> windows_patch_compliance
-center -> linux_patch_compliance
-center -> sccm_endpoint_manager_windows_fleet
-center -> patch_reporting
-center -> compliance_checks_by_tool
-```
 
 ## Patch Classification
 

@@ -3,31 +3,9 @@ tags:
   - networking
 ---
 # iSCSI — Sessions
-![iSCSI — Sessions](../../../../assets/networking-protocols-iscsi-sessions-index.svg)
-
-
 
 ```text
 Each session can carry multiple connections (TCP streams) for performance.
-
-```d2
-direction: right
-
-center: "iSCSI" {shape: hexagon}
-session_lifecycle: "Session Lifecycle" {shape: rectangle}
-session_establishment_and_multipath_: "Session Establishment and Multipath Data Flow" {shape: rectangle}
-list_all_active_sessions_brief: "List all active sessions (brief)" {shape: rectangle}
-detailed_session_info_connections_st: "Detailed session info (connections, state, target IQN)" {shape: rectangle}
-show_session_parameters_timeouts_que: "Show session parameters (timeouts, queue depth)" {shape: rectangle}
-session_stats_bytes_txrx_retries: "Session stats (bytes tx/rx, retries)" {shape: rectangle}
-
-center -> session_lifecycle
-center -> session_establishment_and_multipath_
-center -> list_all_active_sessions_brief
-center -> detailed_session_info_connections_st
-center -> show_session_parameters_timeouts_que
-center -> session_stats_bytes_txrx_retries
-```
 
 ## Session Lifecycle
 

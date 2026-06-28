@@ -12,9 +12,6 @@ NetApp Keystone Troubleshooting reference covering Common Issues, Diagnostic, Lo
 
 *Applies to: Keystone STaaS*
 </div>
-![NetApp Keystone Troubleshooting](../../../../assets/storage-netapp-keystone-troubleshooting-index.svg)
-
-
 
 ```d2
 direction: down

@@ -7,33 +7,12 @@ tags:
 
 # PowerPath — Install & Upgrade
 
-
 <div class="kb-summary">
 Install & Upgrade reference covering Version and Release Matrix, Upgrade and Update Paths, EOL and Renewal Tracking, Replacement and Decommission Planning.
 
 *Applies to: PowerPath*
 </div>
 ![PowerPath — Install & Upgrade](../../../../assets/storage-dell-powerpath-operations-install-upgrade.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "PowerPath\nOperations" {shape: hexagon}
-version_and_release_matrix: "Version and Release Matrix" {shape: rectangle}
-upgrade_and_update_paths: "Upgrade and Update Paths" {shape: rectangle}
-eol_and_renewal_tracking: "EOL and Renewal Tracking" {shape: rectangle}
-replacement_and_decommission_plannin: "Replacement and Decommission Planning" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> version_and_release_matrix
-hub -> upgrade_and_update_paths
-hub -> eol_and_renewal_tracking
-hub -> replacement_and_decommission_plannin
-hub -> verify
-```
 
 ## Before you begin
 

@@ -6,7 +6,6 @@ tags:
 ---
 # Aria Suite Lifecycle — CLI Reference
 
-
 <div class="kb-summary">
 CLI Reference reference covering Services, Certificates, Proxy & Network, NTP & Time, Logs.
 
@@ -14,27 +13,9 @@ CLI Reference reference covering Services, Certificates, Proxy & Network, NTP & 
 </div>
 ![Aria Suite Lifecycle — CLI Reference](../../../../assets/virtualization-vmware-aria-suite-lifecycle-operations-cli-re.svg)
 
-
   LCM CLI Coverage (SSH to LCM as root)
 
 ---
-
-```d2
-direction: right
-
-hub: "Aria Suite Lifecycle\nOperations" {shape: hexagon}
-certificates: "Certificates" {shape: rectangle}
-proxy_network: "Proxy & Network" {shape: rectangle}
-ntp_time: "NTP & Time" {shape: rectangle}
-logs: "Logs" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> certificates
-hub -> proxy_network
-hub -> ntp_time
-hub -> logs
-hub -> verify
-```
 
 ## Before you begin
 

@@ -4,33 +4,11 @@ tags:
 ---
 # Data Retention Policy
 
-
 <div class="kb-summary">
 This policy defines mandatory retention periods, storage tier assignments, and deletion procedures for all data types across the enterprise. Retention decisions are driven by business need, legal obligation, and regulatory requirement — not storage cost alone.
 </div>
-![Data Retention Policy](../../../assets/security-data-protection-data-retention-policy-index.svg)
-
 
 ---
-
-```d2
-direction: right
-
-center: "Data Retention Policy" {shape: hexagon}
-data_lifecycle_overview: "Data Lifecycle Overview" {shape: rectangle}
-log_retention_implementation: "Log Retention Implementation" {shape: rectangle}
-legal_hold_process: "Legal Hold Process" {shape: rectangle}
-secure_data_deletion_procedure: "Secure Data Deletion Procedure" {shape: rectangle}
-retention_compliance_monitoring: "Retention Compliance Monitoring" {shape: rectangle}
-exceptions_and_escalation: "Exceptions and Escalation" {shape: rectangle}
-
-center -> data_lifecycle_overview
-center -> log_retention_implementation
-center -> legal_hold_process
-center -> secure_data_deletion_procedure
-center -> retention_compliance_monitoring
-center -> exceptions_and_escalation
-```
 
 ## Before you begin
 
@@ -60,7 +38,6 @@ flowchart LR
     D -- Long-term archive --> J[Cold / Archive Storage\nTape / Object Storage]
     J --> G
 ```
-
 
 ---
 

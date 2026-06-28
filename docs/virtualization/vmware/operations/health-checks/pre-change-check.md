@@ -4,15 +4,11 @@ tags:
 ---
 # Pre-Change Checks
 
-
 <div class="kb-summary">
 Pre-change checks confirm the platform is healthy before maintenance begins. Run these before any host maintenance, upgrade, or configuration change.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Pre-Change Checks](../../../../assets/virtualization-vmware-operations-health-checks-pre-change-ch.svg)
-
-
 
 ```d2
 direction: right

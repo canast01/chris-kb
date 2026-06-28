@@ -10,9 +10,6 @@ Data Domain — Security reference: Authentication, Access Control, Encryption, 
 
 *Applies to: Data Domain DD OS 7.x*
 </div>
-![Data Domain — Security](../../../../assets/storage-dell-data-domain-security-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="authentication/"><strong>Authentication</strong><span>SSO, LDAP, local accounts, and identity sources.</span></a>

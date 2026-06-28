@@ -9,10 +9,6 @@ MySQL and MariaDB relational database for Linux — InnoDB, replication, backup,
 
 *Applies to: MySQL 8.x · MariaDB 10.x*
 </div>
-![MySQL / MariaDB](../../../assets/compute-linux-mysql-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-5">
   <a class="kb-card" href="architecture/">Architecture</a>

@@ -5,35 +5,13 @@ tags:
 ---
 # Pure Storage Operations — Alerts
 
-
 <div class="kb-summary">
 Alerts reference covering Viewing Alerts, Alert Severity Levels, Common Alert Types, Pure1 Phone-Home Connectivity, Alert Notifications and 2 more sections.
 
 *Applies to: FlashArray Purity 6.x*
 </div>
-![Pure Storage Operations — Alerts](../../../../assets/storage-pure-operations-alerts-index.svg)
-
 
 ![Pure Storage Operations — Alerts — Diagram](../../../../assets/storage-pure-operations-alerts-diagram.svg)
-
-```d2
-direction: right
-
-center: "Alerts" {shape: hexagon}
-viewing_alerts: "Viewing Alerts" {shape: rectangle}
-alert_severity_levels: "Alert Severity Levels" {shape: rectangle}
-common_alert_types: "Common Alert Types" {shape: rectangle}
-pure1_phonehome_connectivity: "Pure1 Phone-Home Connectivity" {shape: rectangle}
-alert_notifications: "Alert Notifications" {shape: rectangle}
-acknowledge_and_close_alerts: "Acknowledge and Close Alerts" {shape: rectangle}
-
-center -> viewing_alerts
-center -> alert_severity_levels
-center -> common_alert_types
-center -> pure1_phonehome_connectivity
-center -> alert_notifications
-center -> acknowledge_and_close_alerts
-```
 
 ## Before you begin
 

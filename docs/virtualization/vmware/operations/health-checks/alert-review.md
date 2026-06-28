@@ -4,16 +4,11 @@ tags:
 ---
 # Alert Health Check
 
-
 <div class="kb-summary">
 Alert Health Check reference covering Active Alerts Review, Aria Operations Alerts, Hardware Alerts, Backup Alerts, Repeat Alerts and 2 more sections.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Alert Health Check](../../../../assets/virtualization-vmware-operations-health-checks-alert-review.svg)
-
-
-
 
 ```d2
 direction: right

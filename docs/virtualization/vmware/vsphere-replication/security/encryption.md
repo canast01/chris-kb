@@ -6,7 +6,6 @@ tags:
 ---
 # vSphere Replication — Encryption
 
-
 <div class="kb-summary">
 Encryption reference covering Data in Transit, Replication Data Encryption (Per-VM), Encryption at Rest on Target Datastore, KMS Consideration for Encrypted VMs, Certificate Management for VRA and 1 more sections.
 
@@ -14,32 +13,9 @@ Encryption reference covering Data in Transit, Replication Data Encryption (Per-
 </div>
 ![vSphere Replication — Encryption](../../../../assets/virtualization-vmware-vsphere-replication-security-encryptio.svg)
 
-
   VR Encryption Coverage
 
-
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-data_in_transit: "Data in Transit" {shape: rectangle}
-replication_data_encryption_pervm: "Replication Data Encryption (Per-VM)" {shape: rectangle}
-encryption_at_rest_on_target_datasto: "Encryption at Rest on Target Datastore" {shape: rectangle}
-kms_consideration_for_encrypted_vms: "KMS Consideration for Encrypted VMs" {shape: rectangle}
-certificate_management_for_vra: "Certificate Management for VRA" {shape: rectangle}
-tls_hardening_on_vra: "TLS Hardening on VRA" {shape: rectangle}
-core: "vSphere Replication Core" {shape: hexagon}
-
-external -> data_in_transit: traffic in
-data_in_transit -> replication_data_encryption_pervm
-replication_data_encryption_pervm -> encryption_at_rest_on_target_datasto
-encryption_at_rest_on_target_datasto -> kms_consideration_for_encrypted_vms
-kms_consideration_for_encrypted_vms -> certificate_management_for_vra
-certificate_management_for_vra -> tls_hardening_on_vra
-tls_hardening_on_vra -> core: secured path
-```
 
 ## Before you begin
 

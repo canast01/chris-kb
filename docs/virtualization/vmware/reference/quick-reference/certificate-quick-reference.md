@@ -4,35 +4,11 @@ tags:
 ---
 # VMware Certificate Quick Reference
 
-
 <div class="kb-summary">
 VMware Certificate Quick Reference reference covering Check Expiration Quickly, Identify Certificate Type, Review Trusted Root Chain, Check STS Certificate, Validate After Replacement and 1 more sections.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![VMware Certificate Quick Reference](../../../../assets/virtualization-vmware-reference-quick-reference-certificate-.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Quick Reference" {shape: rectangle}
-check_expiration_quickly: "Check Expiration Quickly" {shape: rectangle}
-identify_certificate_type: "Identify Certificate Type" {shape: rectangle}
-review_trusted_root_chain: "Review Trusted Root Chain" {shape: rectangle}
-check_sts_certificate: "Check STS Certificate" {shape: rectangle}
-validate_after_replacement: "Validate After Replacement" {shape: rectangle}
-escalate_if: "Escalate If" {shape: rectangle}
-
-center -> check_expiration_quickly
-center -> identify_certificate_type
-center -> review_trusted_root_chain
-center -> check_sts_certificate
-center -> validate_after_replacement
-center -> escalate_if
-```
 
 ## Check Expiration Quickly
 

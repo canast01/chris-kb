@@ -6,7 +6,6 @@ tags:
 ---
 # SRM — Scripts
 
-
 <div class="kb-summary">
 SRM automation scripts: PowerCLI `Get-SrmRecoveryPlan`, `Start-SrmRecoveryPlan -PlanMode Test`, REST API for replication lag reporting, and failover pre-flight checks.
 
@@ -14,18 +13,7 @@ SRM automation scripts: PowerCLI `Get-SrmRecoveryPlan`, `Start-SrmRecoveryPlan -
 </div>
 ![SRM — Scripts](../../../../assets/virtualization-vmware-srm-operations-scripts.svg)
 
-
   SRM Automation via PowerCLI + REST API
-
-
-```d2
-direction: right
-
-hub: "Site Recovery Manager\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
-```
 
 ## Before you begin
 

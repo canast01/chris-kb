@@ -5,35 +5,12 @@ tags:
 ---
 # Dell ECS — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Overview, Scale-Out Object Storage Topology, Erasure Coding, Virtual Data Centers (VDC), Replication Groups and Geo-Distribution and 3 more sections.
 
 *Applies to: ECS 3.x*
 </div>
 ![Dell ECS — How It Works](../../../../assets/storage-dell-ecs-architecture-how-it-works.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "ECS" {shape: hexagon}
-scaleout_object_storage_topology: "Scale-Out Object Storage Topology" {shape: rectangle}
-erasure_coding: "Erasure Coding" {shape: rectangle}
-virtual_data_centers_vdc: "Virtual Data Centers (VDC)" {shape: rectangle}
-replication_groups_and_geodistributi: "Replication Groups and Geo-Distribution" {shape: rectangle}
-namespace_and_bucket_hierarchy: "Namespace and Bucket Hierarchy" {shape: rectangle}
-supported_api_protocols: "Supported API Protocols" {shape: rectangle}
-
-center -> scaleout_object_storage_topology
-center -> erasure_coding
-center -> virtual_data_centers_vdc
-center -> replication_groups_and_geodistributi
-center -> namespace_and_bucket_hierarchy
-center -> supported_api_protocols
-```
 
 ```plantuml
 @startuml

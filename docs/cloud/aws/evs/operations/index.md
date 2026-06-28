@@ -12,8 +12,6 @@ EVS day-2 operations: cluster health, host management, vSAN capacity, lifecycle 
 
 *Applies to: Amazon EVS*
 </div>
-![Amazon EVS — Operations](../../../../assets/cloud-aws-evs-operations-index.svg)
-
 
 ![Amazon EVS — Operations — Diagram](../../../../assets/cloud-aws-evs-operations-diagram.svg)
 <div class="kb-grid">

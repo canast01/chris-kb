@@ -12,16 +12,10 @@ NetApp ONTAP cluster initial setup: first boot through validated host connectivi
 
 *Applies to: ONTAP 9.12+*
 </div>
-![NetApp ONTAP — Getting Started](../../../assets/storage-netapp-deploy-index.svg)
-
-
-
-
 
 This guide covers the initial setup of a NetApp ONTAP cluster from first boot through validated host connectivity and replication. Applies to AFF A-series, C-series, and FAS platforms running ONTAP 9.12 and later.
 
 ---
-
 
 ```mermaid
 flowchart TD

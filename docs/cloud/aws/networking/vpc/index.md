@@ -10,30 +10,8 @@ An AWS Virtual Private Cloud (VPC) is your own isolated private network inside A
 
 *Applies to: AWS*
 </div>
-![AWS VPC](../../../../assets/cloud-aws-networking-vpc-index.svg)
-
-
-```d2
-direction: right
-
-center: "AWS" {shape: hexagon}
-vpc_anatomy: "VPC Anatomy" {shape: rectangle}
-daily_checks: "Daily Checks" {shape: rectangle}
-common_issues: "Common Issues" {shape: rectangle}
-vpc_subnet_architecture: "VPC Subnet Architecture" {shape: rectangle}
-aws_network_connectivity_options: "AWS Network Connectivity Options" {shape: rectangle}
-route_53_routing_policies: "Route 53 Routing Policies" {shape: rectangle}
-
-center -> vpc_anatomy
-center -> daily_checks
-center -> common_issues
-center -> vpc_subnet_architecture
-center -> aws_network_connectivity_options
-center -> route_53_routing_policies
-```
 
 ## VPC Anatomy
-
 
 ---
 
@@ -76,19 +54,11 @@ aws ec2 describe-vpn-connections --query 'VpnConnections[*].[VpnConnectionId,Sta
 
 ## VPC Subnet Architecture
 
-
-
-
-
 ---
 
 ## AWS Network Connectivity Options
 
-
-
-
 ---
 
 ## Route 53 Routing Policies
-
 

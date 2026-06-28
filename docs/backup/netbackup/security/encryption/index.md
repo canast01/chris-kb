@@ -5,16 +5,11 @@ tags:
 ---
 # NetBackup — Encryption
 
-
 <div class="kb-summary">
 NetBackup encryption: KMS server configuration, backup data encryption policy settings, client-side encryption, and encryption key lifecycle management.
 
 *Applies to: NetBackup 10.x*
 </div>
-![NetBackup — Encryption](../../../../assets/backup-netbackup-security-encryption-index.svg)
-
-
-
 
 | Encryption Mode | Location | CPU Impact |
 |---|---|---|

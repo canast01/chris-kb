@@ -9,26 +9,8 @@ tags:
 <div class="kb-summary">
 iSCSI (Internet Small Computer Systems Interface) encapsulates SCSI commands over TCP/IP, delivering block storage across standard Ethernet on port 3260. Coverage includes initiator IQN naming, target discovery, CHAP authentication, multipathing (dm-multipath/MPIO), and network tuning for storage VLANs.
 </div>
-![iSCSI](../../../assets/networking-protocols-iscsi-index.svg)
-
 
         iSCSI END-TO-END ARCHITECTURE
-
-
-```d2
-direction: right
-
-center: "iSCSI" {shape: hexagon}
-iscsi_session_establishment: "iSCSI Session Establishment" {shape: rectangle}
-quick_reference: "Quick Reference" {shape: rectangle}
-common_commands_config: "Common Commands / Config" {shape: rectangle}
-troubleshooting: "Troubleshooting" {shape: rectangle}
-
-center -> iscsi_session_establishment
-center -> quick_reference
-center -> common_commands_config
-center -> troubleshooting
-```
 
 ## iSCSI Session Establishment
 

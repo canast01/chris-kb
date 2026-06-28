@@ -50,17 +50,6 @@ graph TB
   </a>
 </div>
 
-```d2
-direction: right
-
-center: "PowerStore" {shape: hexagon}
-families: "Families" {shape: rectangle}
-topology: "Topology" {shape: rectangle}
-
-center -> families
-center -> topology
-```
-
 ## Families
 
 | Family | Models | Key Differentiator |
@@ -71,5 +60,4 @@ center -> topology
 Both families use the same NVMe-based architecture and PowerStoreOS. X-series does not support cluster scale-out.
 
 ## Topology
-
 

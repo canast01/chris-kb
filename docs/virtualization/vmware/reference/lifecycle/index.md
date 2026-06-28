@@ -13,9 +13,6 @@ Version lifecycle and End of General Support (EOGS) / End of Technical Guidance 
 
 *Source: [Broadcom Product Lifecycle Policy](https://support.broadcom.com/lifecycle-policy) — verify dates before planning upgrades.*
 </div>
-![VMware Product Lifecycle and End of Life Reference](../../../../assets/virtualization-vmware-reference-lifecycle-index.svg)
-
-
 
 ```d2
 direction: right

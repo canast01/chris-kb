@@ -4,33 +4,11 @@ tags:
 ---
 # Asset Lifecycle Management
 
-
 <div class="kb-summary">
 Asset Lifecycle Management reference covering Overview, Lifecycle Stages, Refresh Cycles, EOL Tracking, Budget Planning and 1 more sections.
 
 *Applies to: ServiceNow*
 </div>
-![Asset Lifecycle Management](../../../../assets/itsm-servicenow-asset-inventory-asset-lifecycle-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "ServiceNow" {shape: hexagon}
-lifecycle_stages: "Lifecycle Stages" {shape: rectangle}
-refresh_cycles: "Refresh Cycles" {shape: rectangle}
-eol_tracking: "EOL Tracking" {shape: rectangle}
-budget_planning: "Budget Planning" {shape: rectangle}
-roles_and_responsibilities: "Roles and Responsibilities" {shape: rectangle}
-
-center -> lifecycle_stages
-center -> refresh_cycles
-center -> eol_tracking
-center -> budget_planning
-center -> roles_and_responsibilities
-```
 
 ## Overview
 

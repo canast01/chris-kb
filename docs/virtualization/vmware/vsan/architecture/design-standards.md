@@ -7,33 +7,12 @@ tags:
 ---
 # vSAN — Design Standards
 
-
 <div class="kb-summary">
 Design Standards reference covering Cluster Configuration, Stretched Cluster Architecture, Storage Policy Baseline, Naming Conventions, Capacity Management.
 
 *Applies to: vSAN 7.x · 8.x*
 </div>
 ![vSAN — Design Standards](../../../../assets/virtualization-vmware-vsan-architecture-design-standards.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "vSAN" {shape: hexagon}
-cluster_configuration: "Cluster Configuration" {shape: rectangle}
-storage_policy_baseline: "Storage Policy Baseline" {shape: rectangle}
-naming_conventions: "Naming Conventions" {shape: rectangle}
-capacity_management: "Capacity Management" {shape: rectangle}
-sizing_guidance: "Sizing Guidance" {shape: rectangle}
-
-center -> cluster_configuration
-center -> storage_policy_baseline
-center -> naming_conventions
-center -> capacity_management
-center -> sizing_guidance
-```
 
 ```vegalite
 {

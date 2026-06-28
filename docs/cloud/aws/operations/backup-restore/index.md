@@ -5,15 +5,11 @@ tags:
 ---
 # AWS — Backup & Restore
 
-
 <div class="kb-summary">
 Backup & Restore reference covering EBS Snapshot — Manual, Restore EC2 from EBS Snapshot, RDS Restore, S3 — Restore a Deleted Object (Versioning), AWS Backup — Restore Job and 1 more sections.
 
 *Applies to: AWS*
 </div>
-![AWS — Backup & Restore](../../../../assets/cloud-aws-operations-backup-restore-index.svg)
-
-
 
 ---
 

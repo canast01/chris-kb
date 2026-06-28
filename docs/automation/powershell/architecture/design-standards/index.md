@@ -4,8 +4,6 @@ tags:
   - powershell
 ---
 # PowerShell — Design Standards
-![PowerShell — Design Standards](../../../../assets/automation-powershell-architecture-design-standards-index.svg)
-
 
 ```powershell
 # List all approved verbs

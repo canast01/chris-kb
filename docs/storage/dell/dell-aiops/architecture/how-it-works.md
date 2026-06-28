@@ -5,7 +5,6 @@ tags:
 ---
 # Dell AIOps — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Architecture, Component Roles, AIOps Capabilities, Telemetry Sources, Data Flow.
 
@@ -13,28 +12,9 @@ How It Works reference covering Architecture, Component Roles, AIOps Capabilitie
 </div>
 ![Dell AIOps — How It Works](../../../../assets/storage-dell-dell-aiops-architecture-how-it-works.svg)
 
-
-
 Dell AIOps (delivered via CloudIQ / APEX AIOps) is Dell's AI-driven IT operations platform providing anomaly detection, root cause analysis, and predictive recommendations across the Dell storage estate. The platform is fully SaaS-delivered — the only customer-managed component is the Secure Connect Gateway (SCG) virtual appliance.
 
 ---
-
-```d2
-direction: right
-
-center: "Dell AIOps" {shape: hexagon}
-architecture: "Architecture" {shape: rectangle}
-component_roles: "Component Roles" {shape: rectangle}
-aiops_capabilities: "AIOps Capabilities" {shape: rectangle}
-telemetry_sources: "Telemetry Sources" {shape: rectangle}
-data_flow: "Data Flow" {shape: rectangle}
-
-center -> architecture
-center -> component_roles
-center -> aiops_capabilities
-center -> telemetry_sources
-center -> data_flow
-```
 
 ```plantuml
 @startuml

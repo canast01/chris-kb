@@ -6,25 +6,7 @@ tags:
 # FlashBlade — Encryption
 ![FlashBlade — Encryption](../../../../assets/storage-pure-flashblade-security-encryption.svg)
 
-
-
-
 ![FlashBlade — Encryption — Diagram](../../../../assets/storage-pure-flashblade-security-encryption-diagram.svg)
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-smb_share_encryption: "SMB share encryption" {shape: rectangle}
-audit_log_forwarding_syslog: "Audit log forwarding (syslog)" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-core: "FlashBlade Core" {shape: hexagon}
-
-external -> smb_share_encryption: traffic in
-smb_share_encryption -> audit_log_forwarding_syslog
-audit_log_forwarding_syslog -> verify
-verify -> core: secured path
-```
 
 ## Before you begin
 

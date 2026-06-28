@@ -5,37 +5,15 @@ tags:
 ---
 # AWS Cloud Practitioner CLF-C02 — 14-Day Study Plan
 
-
 <div class="kb-summary">
 **3 hrs/day · 50 Q&A per day · May 2026** AWS CLOUD PRACTITIONER CLF-C02 14-DAY STUDY PLAN  |  3 HRS/DAY  |  50 Q&A PER DAY Christos Anastasiadis  |  May 2026
 </div>
-![AWS Cloud Practitioner CLF-C02 — 14-Day Study Plan](../../../../assets/cloud-aws-certifications-cloud-practitioner-index.svg)
-
 
 **3 hrs/day · 50 Q&A per day · May 2026**
 
 AWS CLOUD PRACTITIONER CLF-C02
 14-DAY STUDY PLAN  |  3 HRS/DAY  |  50 Q&A PER DAY
 Christos Anastasiadis  |  May 2026
-
-```d2
-direction: right
-
-center: "AWS" {shape: hexagon}
-exam_facts: "Exam Facts" {shape: rectangle}
-exam_domains: "Exam Domains" {shape: rectangle}
-day_1_cloud_concepts_aws_global_infr: "Day 1 — CLOUD CONCEPTS & AWS GLOBAL INFRASTRUCTURE" {shape: rectangle}
-day_2_shared_responsibility_model_ia: "Day 2 — SHARED RESPONSIBILITY MODEL & IAM" {shape: rectangle}
-day_3_core_compute_services: "Day 3 — CORE COMPUTE SERVICES" {shape: rectangle}
-day_4_storage_services: "Day 4 — STORAGE SERVICES" {shape: rectangle}
-
-center -> exam_facts
-center -> exam_domains
-center -> day_1_cloud_concepts_aws_global_infr
-center -> day_2_shared_responsibility_model_ia
-center -> day_3_core_compute_services
-center -> day_4_storage_services
-```
 
 ## Exam Facts
 
@@ -115,7 +93,6 @@ center -> day_4_storage_services
 - Private cloud  — Resources on your own data center
 - Hybrid cloud   — Mix of public and private
 
-
 #### Hour 2: Aws Global Infrastructure
 
 **Regions:**
@@ -144,7 +121,6 @@ center -> day_4_storage_services
 **AWS Outposts:**
 - AWS hardware installed in YOUR data center
 - Run AWS services on-premises
-
 
 ### Questions & Answers — Day 1
 
@@ -656,7 +632,6 @@ DAY 1 COMPLETE
 - S3:     AWS secures infrastructure; customer manages bucket policies
 - Lambda: AWS manages all infrastructure; customer manages code and IAM
 
-
 #### Hour 2: Iam
 
 **IAM is FREE and GLOBAL (not region-specific).**
@@ -673,7 +648,6 @@ DAY 1 COMPLETE
 **MFA: Password + device. Virtual (Google Authenticator) or hardware key.**
 
 **DENY ALWAYS OVERRIDES ALLOW — the golden IAM rule.**
-
 
 ### Questions & Answers — Day 2
 
@@ -1023,7 +997,6 @@ DAY 2 COMPLETE
 - Dedicated Hosts:   Physical server for you, BYOL compliance
 - Dedicated Instances: Dedicated hardware, share with same account only
 
-
 #### Hour 2: Other Compute
 
 **Auto Scaling Group (ASG): Add/remove EC2 based on demand**
@@ -1034,7 +1007,6 @@ DAY 2 COMPLETE
 **EKS: Managed Kubernetes on AWS**
 **Fargate: Serverless containers, no EC2 to manage**
 **Lightsail: Simple VPS, fixed pricing, beginners**
-
 
 ### Questions & Answers — Day 3
 

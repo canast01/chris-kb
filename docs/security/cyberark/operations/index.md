@@ -5,16 +5,11 @@ tags:
 ---
 # CyberArk — Operations
 
-
 <div class="kb-summary">
 CyberArk day-to-day operations — safe management, account onboarding, session recording, CPM rotation, and vault health.
 
 *Applies to: CyberArk PAM*
 </div>
-![CyberArk — Operations](../../../assets/security-cyberark-operations-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

@@ -9,9 +9,6 @@ Terraform infrastructure-as-code knowledge base covering provider plugin archite
 
 *Applies to: Terraform 1.x*
 </div>
-![Terraform](../../assets/automation-terraform-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

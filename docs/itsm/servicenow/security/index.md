@@ -5,16 +5,11 @@ tags:
 ---
 # ServiceNow — Security
 
-
-
 <div class="kb-summary">
 ServiceNow hardening — ACLs, role-based access, MID server security, SSO configuration, and audit logging.
 
 *Applies to: ServiceNow (Washington / Xanadu)*
 </div>
-![ServiceNow — Security](../../../assets/itsm-servicenow-security-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

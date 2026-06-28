@@ -4,8 +4,6 @@ tags:
   - terraform
 ---
 # Terraform — Install & Upgrade
-![Terraform — Install & Upgrade](../../../../assets/automation-terraform-operations-install-upgrade-index.svg)
-
 
 ```bash
 # Ubuntu / Debian — via HashiCorp apt repo
@@ -54,17 +52,6 @@ terraform {
     }
   }
 }
-```
-
-```d2
-direction: right
-
-plan: "Plan" {shape: oval}
-verify: "Verify" {shape: rectangle}
-validate: "Validate" {shape: oval}
-
-plan -> verify
-verify -> validate
 ```
 
 ## Before you begin

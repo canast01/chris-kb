@@ -9,13 +9,6 @@ Veritas NetBackup enterprise backup — three-tier architecture with Primary Ser
 
 *Applies to: NetBackup 10.x*
 </div>
-![NetBackup](../../assets/backup-netbackup-index.svg)
-
-
-
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

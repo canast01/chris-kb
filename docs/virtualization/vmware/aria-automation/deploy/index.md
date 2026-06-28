@@ -13,13 +13,8 @@ End-to-end deployment guide for VMware Aria Automation (on-premises). Covers pre
 
 *Applies to: Aria Automation 8.x*
 </div>
-![Aria Automation — Deploy](../../../../assets/virtualization-vmware-aria-automation-deploy-index.svg)
-
-
-
 
 ---
-
 
 ```mermaid
 flowchart TD

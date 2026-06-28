@@ -4,15 +4,11 @@ tags:
 ---
 # Cluster Standard
 
-
 <div class="kb-summary">
 Cluster Standard reference covering Overview, Minimum Host Count, vSphere HA, DRS, EVC (Enhanced vMotion Compatibility) and 3 more sections.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Cluster Standard](../../../../assets/virtualization-vmware-reference-standards-cluster-standard.svg)
-
-
 
 > Part of the [Standards](index.md) reference.
 

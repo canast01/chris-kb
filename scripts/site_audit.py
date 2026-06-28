@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-KB site audit — 37 checks.
+KB site audit — 41 checks.
 
 Usage:
     python3 scripts/site_audit.py               # run all checks, print summary
@@ -852,6 +852,57 @@ else:
         results[38]['bad_pages'] = len(_bad_pages)
     except Exception as _e:
         warn(issues, f'Failed to parse videos.yml: {_e}')
+
+
+# ── Check 39: Hub-and-spoke D2 blocks ────────────────────────────────────────
+issues = check(39, 'No hub-and-spoke D2 blocks (center node with only outgoing edges)')
+_D2_BLOCK = re.compile(r'```d2\n.*?\n```', re.DOTALL)
+for _md in all_md():
+    _txt = open(_md).read()
+    if '```d2' not in _txt:
+        continue
+    for _blk in _D2_BLOCK.findall(_txt):
+        if re.search(r'^center:', _blk, re.MULTILINE):
+            warn(issues, os.path.relpath(_md, DOCS))
+            break
+
+# ── Check 40: Section Overview SVG references ─────────────────────────────────
+issues = check(40, 'No Section Overview SVG references in pages')
+_SEC_OV = re.compile(r'!\[[^\]]*\]\([^)]*\.svg\)|<img\s[^>]*src="[^"]*\.svg"')
+_bad_svgs = set()
+for _svg in os.listdir(ASSETS):
+    if not _svg.endswith('.svg'):
+        continue
+    try:
+        if 'Section Overview' in open(os.path.join(ASSETS, _svg)).read():
+            _bad_svgs.add(_svg)
+    except Exception:
+        pass
+if _bad_svgs:
+    warn(issues, f'{len(_bad_svgs)} Section Overview SVG files still in assets/')
+for _md in all_md():
+    _txt = open(_md).read()
+    for _m in _SEC_OV.finditer(_txt):
+        _ref = _m.group(0)
+        if any(b in _ref for b in _bad_svgs):
+            warn(issues, os.path.relpath(_md, DOCS))
+            break
+
+# ── Check 41: Trivial generic D2 diagrams ────────────────────────────────────
+issues = check(41, 'No trivial generic D2 diagrams (stage_N templates, hexagon hubs)')
+for _md in all_md():
+    _txt = open(_md).read()
+    if '```d2' not in _txt:
+        continue
+    for _blk in _D2_BLOCK.findall(_txt):
+        _nodes = re.findall(r'^(\w+):', _blk, re.MULTILINE)
+        if any('stage_' in n for n in _nodes):
+            warn(issues, f'{os.path.relpath(_md, DOCS)} — stage_N template')
+            break
+        if '{shape: hexagon}' in _blk or re.search(r'shape:\s*hexagon', _blk):
+            if re.search(r'^center:', _blk, re.MULTILINE):
+                warn(issues, f'{os.path.relpath(_md, DOCS)} — hexagon hub')
+                break
 
 
 # ── Report ────────────────────────────────────────────────────────────────────

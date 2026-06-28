@@ -11,25 +11,7 @@ Common questions about CyberArk PAM operations, configuration, and troubleshooti
 </div>
 ![CyberArk PAM — Frequently Asked Questions](../../../assets/security-cyberark-operations-faq.svg)
 
-
 ![CyberArk PAM FAQ](../../../assets/security-cyberark-operations-faq.svg)
-
-```d2
-direction: right
-
-hub: "Operations\nOperations" {shape: hexagon}
-general: "General" {shape: rectangle}
-configuration: "Configuration" {shape: rectangle}
-operations: "Operations" {shape: rectangle}
-troubleshooting: "Troubleshooting" {shape: rectangle}
-backup_and_recovery: "Backup and Recovery" {shape: rectangle}
-
-hub -> general
-hub -> configuration
-hub -> operations
-hub -> troubleshooting
-hub -> backup_and_recovery
-```
 
 ## General
 

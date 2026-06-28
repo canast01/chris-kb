@@ -11,9 +11,6 @@ vSphere Replication hardening — certificate management, RBAC, and secure commu
 
 *Applies to: vSphere Replication 8.x*
 </div>
-![vSphere Replication — Security](../../../../assets/virtualization-vmware-vsphere-replication-security-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

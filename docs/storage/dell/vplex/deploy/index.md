@@ -12,10 +12,6 @@ Dell VPLEX initial deployment: physical installation, backend array connection, 
 
 *Applies to: VPLEX 6.x*
 </div>
-![Dell VPLEX — Initial Deployment](../../../../assets/storage-dell-vplex-deploy-index.svg)
-
-
-
 
 ```mermaid
 flowchart TD
@@ -63,9 +59,6 @@ create_virtual_volumes -> validate
 - **Logging:** record every IP address, hostname, and credential set assigned during this deployment
 
 ---
-
-
-
 
 This guide covers the initial deployment of a Dell VPLEX (Local or Metro) from physical installation through validated host access to virtual volumes. VPLEX provides storage federation — presenting storage from backend arrays as virtual volumes to hosts, with optional Metro mirroring across two sites.
 

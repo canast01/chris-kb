@@ -13,25 +13,6 @@ Essential NSX-T CLI commands for NSX Manager, transport nodes, logical networkin
 
 ![NSX-T CLI Cheat Sheet](../../assets/reference-cheat-sheets-nsx-cli.svg)
 
-```d2
-direction: right
-
-center: "Cheat Sheets" {shape: rectangle}
-nsx_manager_cli_ssh_to_nsx_manager: "NSX Manager CLI (SSH to NSX Manager)" {shape: rectangle}
-transport_nodes: "Transport Nodes" {shape: rectangle}
-logical_networking: "Logical Networking" {shape: rectangle}
-distributed_firewall: "Distributed Firewall" {shape: rectangle}
-rest_api_examples_curl: "REST API Examples (curl)" {shape: rectangle}
-edge_node: "Edge Node" {shape: rectangle}
-
-center -> nsx_manager_cli_ssh_to_nsx_manager
-center -> transport_nodes
-center -> logical_networking
-center -> distributed_firewall
-center -> rest_api_examples_curl
-center -> edge_node
-```
-
 ## NSX Manager CLI (SSH to NSX Manager)
 
 | Command | Description | Example |

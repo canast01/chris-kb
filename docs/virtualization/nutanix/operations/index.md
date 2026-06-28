@@ -5,10 +5,6 @@ Day-to-day operations for Nutanix HCI — health monitoring, administrative proc
 
 *Applies to: AOS 6.x · AHV*
 </div>
-![Nutanix — Operations](../../../assets/virtualization-nutanix-operations-index.svg)
-
-
-
 
 <div class="kb-grid">
   <a class="kb-card" href="health-checks/">

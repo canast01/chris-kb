@@ -3,8 +3,6 @@ tags:
   - pure
 ---
 # Pure1 — CLI and API Reference
-![Pure1 — CLI and API Reference](../../../../assets/storage-pure-pure1-cli-reference-index.svg)
-
 
 ```bash
 # Generate RSA key pair for Pure1 API auth
@@ -46,19 +44,6 @@ for a in arrays.items:
 alerts = client.get_alerts(filter="state='open'")
 for alert in alerts.items:
     print(alert.summary, alert.severity)
-```
-
-```d2
-direction: right
-
-center: "Pure1" {shape: rectangle}
-component_a: "Component A" {shape: rectangle}
-component_b: "Component B" {shape: rectangle}
-component_c: "Component C" {shape: rectangle}
-
-center -> component_a
-center -> component_b
-center -> component_c
 ```
 
 ## See also

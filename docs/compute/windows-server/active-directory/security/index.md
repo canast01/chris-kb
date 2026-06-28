@@ -5,16 +5,11 @@ tags:
 ---
 # Active Directory — Security
 
-
 <div class="kb-summary">
 AD hardening — tiered admin model, Protected Users group, privileged access workstations, Kerberos settings, and audit policies.
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
-![Active Directory — Security](../../../../assets/compute-windows-server-active-directory-security-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-4">
 

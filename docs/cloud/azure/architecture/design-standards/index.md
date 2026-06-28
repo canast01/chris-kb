@@ -4,8 +4,6 @@ tags:
   - azure
 ---
 # Azure Architecture — Design Standards
-![Azure Architecture — Design Standards](../../../../assets/cloud-azure-architecture-design-standards-index.svg)
-
 
 ```bash
 # Verify tag compliance

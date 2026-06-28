@@ -10,10 +10,6 @@ PostgreSQL security: `pg_hba.conf` authentication rules, role-based access, SSL 
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>
-![PostgreSQL — Security](../../../../assets/compute-linux-postgresql-security-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-4">
   <a class="kb-card" href="access-control/">Access Control</a>

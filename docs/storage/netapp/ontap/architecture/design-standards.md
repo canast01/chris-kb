@@ -5,31 +5,12 @@ tags:
 ---
 # ONTAP — Standards
 
-
 <div class="kb-summary">
 Standards reference covering Naming Conventions, Build Baseline, Sizing Guidelines, Configuration Checklist.
 
 *Applies to: ONTAP 9.x*
 </div>
 ![ONTAP — Standards](../../../../assets/storage-netapp-ontap-architecture-design-standards.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "NetApp ONTAP" {shape: hexagon}
-naming_conventions: "Naming Conventions" {shape: rectangle}
-build_baseline: "Build Baseline" {shape: rectangle}
-sizing_guidelines: "Sizing Guidelines" {shape: rectangle}
-configuration_checklist: "Configuration Checklist" {shape: rectangle}
-
-center -> naming_conventions
-center -> build_baseline
-center -> sizing_guidelines
-center -> configuration_checklist
-```
 
 ## Naming Conventions
 

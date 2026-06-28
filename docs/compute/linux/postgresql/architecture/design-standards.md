@@ -12,26 +12,6 @@ PostgreSQL design standards — HA patterns (streaming + Patroni), connection po
 </div>
 ![PostgreSQL — Design Standards](../../../../assets/compute-linux-postgresql-architecture-design-standards.svg)
 
-
-
-
-```d2
-direction: right
-
-center: "PostgreSQL" {shape: hexagon}
-highavailability_topologies: "High-Availability Topologies" {shape: rectangle}
-connection_pooling_required_in_produ: "Connection Pooling (Required in Production)" {shape: rectangle}
-sizing_guidelines: "Sizing Guidelines" {shape: rectangle}
-naming_conventions: "Naming Conventions" {shape: rectangle}
-backup_requirements: "Backup Requirements" {shape: rectangle}
-
-center -> highavailability_topologies
-center -> connection_pooling_required_in_produ
-center -> sizing_guidelines
-center -> naming_conventions
-center -> backup_requirements
-```
-
 ## High-Availability Topologies
 
 | Pattern | Description | Use case |

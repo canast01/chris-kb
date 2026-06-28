@@ -9,10 +9,6 @@ Cisco MDS 9000 series switches knowledge base covering fabric architecture, zoni
 
 *Applies to: Cisco MDS · Nexus*
 </div>
-![Cisco MDS](../../../assets/san-cisco-mds-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-2">
 
@@ -44,17 +40,6 @@ Cisco MDS 9000 series switches knowledge base covering fabric architecture, zoni
 </div>
 
 ---
-
-```d2
-direction: right
-
-center: "Cisco MDS" {shape: hexagon}
-upgrade_workflow_summary: "Upgrade Workflow Summary" {shape: rectangle}
-operational_reference: "Operational Reference" {shape: rectangle}
-
-center -> upgrade_workflow_summary
-center -> operational_reference
-```
 
 ## Upgrade Workflow Summary
 

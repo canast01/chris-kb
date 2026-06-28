@@ -10,10 +10,6 @@ MySQL/MariaDB security: `CREATE USER`, `GRANT`, `FLUSH PRIVILEGES`, TLS connecti
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>
-![MySQL / MariaDB — Security](../../../../assets/compute-linux-mysql-security-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-4">
   <a class="kb-card" href="access-control/">Access Control</a>

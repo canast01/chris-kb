@@ -5,16 +5,12 @@ tags:
 ---
 # Dell VPLEX — Encryption
 
-
 <div class="kb-summary">
 VPLEX itself is a virtualisation and federation layer and does not natively encrypt data in transit between hosts and the directors (Fibre Channel does not provide encryption at the SAN layer). Encryption at rest is delegated to the back-end arrays.
 
 *Applies to: VPLEX*
 </div>
 ![Dell VPLEX — Encryption](../../../../assets/storage-dell-vplex-security-encryption.svg)
-
-
-
 
  Management traffic encryption is handled via TLS and SSH on the management plane.
 
@@ -32,25 +28,6 @@ flowchart LR
     vplex <-->|"ICL — not encrypted at VPLEX\nMACsec / IPsec at network layer"| iclLink
     vms -->|"SSH TLS — encrypted"| vplex
     host -->|"HTTPS TLS — encrypted"| vms
-```
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-encryption_scope_summary: "Encryption Scope Summary" {shape: rectangle}
-data_at_rest: "Data at Rest" {shape: rectangle}
-management_traffic_encryption: "Management Traffic Encryption" {shape: rectangle}
-fibre_channel_layer_encryption: "Fibre Channel Layer Encryption" {shape: rectangle}
-icl_encryption_metro: "ICL Encryption (Metro)" {shape: rectangle}
-core: "VPLEX Core" {shape: hexagon}
-
-external -> encryption_scope_summary: traffic in
-encryption_scope_summary -> data_at_rest
-data_at_rest -> management_traffic_encryption
-management_traffic_encryption -> fibre_channel_layer_encryption
-fibre_channel_layer_encryption -> icl_encryption_metro
-icl_encryption_metro -> core: secured path
 ```
 
 ## Before you begin

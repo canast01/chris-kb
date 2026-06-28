@@ -4,15 +4,11 @@ tags:
 ---
 # VM Lifecycle Runbook
 
-
 <div class="kb-summary">
 VM Lifecycle Runbook reference covering Overview, Pre-Checks, Steps, Validation, Rollback and 1 more sections.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![VM Lifecycle Runbook](../../../../assets/virtualization-vmware-operations-runbooks-vm-lifecycle.svg)
-
-
 
 ```plantuml
 @startuml

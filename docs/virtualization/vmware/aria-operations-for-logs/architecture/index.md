@@ -21,15 +21,6 @@ Log analytics platform collecting syslog and LI Agent data from VMware infrastru
 <a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Sizing guidelines, HA design, and ingestion protocol best practices.</span></a>
 </div>
 
-```d2
-direction: right
-
-center: "Aria Operations for Logs" {shape: hexagon}
-cluster_topology: "Cluster Topology" {shape: rectangle}
-
-center -> cluster_topology
-```
-
 ## Cluster Topology
 
 | Node Role | Description |

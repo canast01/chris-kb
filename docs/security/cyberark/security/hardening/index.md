@@ -4,16 +4,11 @@ tags:
 ---
 # CyberArk — Hardening
 
-
 <div class="kb-summary">
 The Digital Vault server must follow the CyberArk-supplied Windows Server hardening baseline and the Vault-specific firewall policy, which permits only the exact ports required by each component; no general internet access or RDP from non-PAW hosts is permitted.
 
 *Applies to: CyberArk PAM*
 </div>
-![CyberArk — Hardening](../../../../assets/security-cyberark-security-hardening-index.svg)
-
-
-
 
 | Control | Implementation |
 |---|---|

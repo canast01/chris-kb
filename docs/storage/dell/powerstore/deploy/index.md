@@ -42,15 +42,10 @@ configure_host_connectivity -> validate
 ---
 
 # Dell PowerStore — Initial Deployment
-![Dell PowerStore — Initial Deployment](../../../../assets/storage-dell-powerstore-deploy-index.svg)
-
-
-
 
 This guide covers initial deployment of a Dell PowerStore appliance from physical installation through validated connectivity. Applies to PowerStore T-series (500T, 1000T, 3000T, 5000T, 9000T) running PowerStoreOS 3.x.
 
 ---
-
 
 ```mermaid
 flowchart TD

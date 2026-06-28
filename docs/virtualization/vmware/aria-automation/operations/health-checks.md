@@ -6,31 +6,11 @@ tags:
 ---
 # Aria Automation — Health Checks
 
-
 <div class="kb-summary">
 Health Checks reference covering Daily Checks, Weekly Checks, Pre-Maintenance Checks, Platform Service Health Commands.
 
 *Applies to: Aria Automation 8.x*
 </div>
-
-```d2
-direction: right
-
-hub: "Aria Automation\nOperations" {shape: hexagon}
-daily_checks: "Daily Checks" {shape: rectangle}
-run_this_routine: "Run This Routine" {shape: rectangle}
-weekly_checks: "Weekly Checks" {shape: rectangle}
-premaintenance_checks: "Pre-Maintenance Checks" {shape: rectangle}
-platform_service_health_commands: "Platform Service Health Commands" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> daily_checks
-hub -> run_this_routine
-hub -> weekly_checks
-hub -> premaintenance_checks
-hub -> platform_service_health_commands
-hub -> verify
-```
 
 ## Before you begin
 
@@ -50,7 +30,6 @@ hub -> verify
 ![Cloud Account Status](../../../../assets/virtualization-vmware-aria-automation-hc-cloud-account-status.svg)
 
 All vCenter and NSX cloud accounts must show a green status indicator:
-
 
 ## Run This Routine
 

@@ -5,29 +5,9 @@ tags:
 ---
 # Log Retention Policy
 
-
 <div class="kb-summary">
 Log Retention Policy reference covering journald Retention, Centralised Log Retention (SIEM / Graylog / Splunk), Archive to Object Storage, Validation Checklist.
 </div>
-![Log Retention Policy](../../../assets/security-operations-log-retention-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Log Retention" {shape: hexagon}
-centralised_log_retention_siem_grayl: "Centralised Log Retention (SIEM / Graylog / Splunk)" {shape: rectangle}
-archive_to_object_storage: "Archive to Object Storage" {shape: rectangle}
-validation_checklist: "Validation Checklist" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> centralised_log_retention_siem_grayl
-center -> archive_to_object_storage
-center -> validation_checklist
-center -> verify
-```
 
 ## Before you begin
 

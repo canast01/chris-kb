@@ -5,35 +5,12 @@ tags:
 ---
 # PowerStore — Scripts
 
-
 <div class="kb-summary">
 Scripts reference covering Authentication Helper, Daily Health Check Script, Volume Inventory Report, Replication Status Reporter, Snapshot Cleanup Script and 2 more sections.
 
 *Applies to: PowerStore 3.x*
 </div>
 ![PowerStore — Scripts](../../../../assets/storage-dell-powerstore-operations-scripts.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "PowerStore\nOperations" {shape: hexagon}
-authentication_helper: "Authentication Helper" {shape: rectangle}
-daily_health_check_script: "Daily Health Check Script" {shape: rectangle}
-volume_inventory_report: "Volume Inventory Report" {shape: rectangle}
-replication_status_reporter: "Replication Status Reporter" {shape: rectangle}
-snapshot_cleanup_script: "Snapshot Cleanup Script" {shape: rectangle}
-capacity_forecast_report: "Capacity Forecast Report" {shape: rectangle}
-
-hub -> authentication_helper
-hub -> daily_health_check_script
-hub -> volume_inventory_report
-hub -> replication_status_reporter
-hub -> snapshot_cleanup_script
-hub -> capacity_forecast_report
-```
 
 ## Before you begin
 

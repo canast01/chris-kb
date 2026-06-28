@@ -10,9 +10,6 @@ PowerScale day-to-day operations — SMB/NFS share management, SyncIQ replicatio
 
 *Applies to: PowerScale (Isilon) 9.x*
 </div>
-![PowerScale — Operations](../../../../assets/storage-dell-powerscale-operations-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

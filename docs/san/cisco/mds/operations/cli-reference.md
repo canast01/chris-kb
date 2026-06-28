@@ -6,7 +6,6 @@ tags:
 # Cisco MDS 9000 — CLI Reference
 ![Cisco MDS 9000 — CLI Reference](../../../../assets/san-cisco-mds-operations-cli-reference.svg)
 
-
 ```bash
 show version           # NX-OS version, uptime, hardware model
 show inventory         # chassis, modules, transceivers with serial numbers
@@ -312,15 +311,6 @@ show snmp community
 
 # Create SNMPv3 user
 snmp-server user <user> <group> v3 auth sha <auth_pass> priv aes 128 <priv_pass>
-```
-
-```d2
-direction: right
-
-hub: "Cisco MDS\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

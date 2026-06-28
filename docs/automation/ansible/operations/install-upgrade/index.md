@@ -4,8 +4,6 @@ tags:
   - operations
 ---
 # Ansible — Install & Upgrade
-![Ansible — Install & Upgrade](../../../../assets/automation-ansible-operations-install-upgrade-index.svg)
-
 
 ```bash
 dnf install -y epel-release
@@ -128,17 +126,6 @@ sudo -u ansible ssh-keygen -t ed25519 \
 ansible all -i inventory/ -m ansible.posix.authorized_key \
   -a "user=ansible key={{ lookup('file', '/home/ansible/.ssh/ansible_ed25519.pub') }}" \
   --become --user root
-```
-
-```d2
-direction: right
-
-plan: "Plan" {shape: oval}
-verify: "Verify" {shape: rectangle}
-validate: "Validate" {shape: oval}
-
-plan -> verify
-verify -> validate
 ```
 
 ## Before you begin

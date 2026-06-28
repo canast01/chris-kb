@@ -4,38 +4,17 @@ tags:
 ---
 # AWS Cost Explorer
 
-
 <div class="kb-summary">
 AWS Cost Explorer reference covering Overview, Daily Checks, Operational Tasks, Common Issues, Maintenance Notes.
 
 *Applies to: AWS*
 </div>
-![AWS Cost Explorer](../../../../assets/cloud-aws-cost-cost-explorer-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "AWS" {shape: hexagon}
-daily_checks: "Daily Checks" {shape: rectangle}
-operational_tasks: "Operational Tasks" {shape: rectangle}
-common_issues: "Common Issues" {shape: rectangle}
-maintenance_notes: "Maintenance Notes" {shape: rectangle}
-
-center -> daily_checks
-center -> operational_tasks
-center -> common_issues
-center -> maintenance_notes
-```
 
 ## Overview
 
 AWS Cost Explorer is a core cloud infrastructure service used for production operations, automation, monitoring, and platform support.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -46,7 +25,6 @@ AWS Cost Explorer is a core cloud infrastructure service used for production ope
 | Review recent configuration changes |  |  |
 
 ## Operational Tasks
-
 
 | Task | Command |
 |---|---|

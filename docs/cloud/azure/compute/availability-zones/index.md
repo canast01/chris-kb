@@ -4,37 +4,13 @@ tags:
 ---
 # Availability Zones
 
-
 <div class="kb-summary">
 Availability Zones are physically separate datacenters within an Azure region, each with independent power, cooling, and networking. Deploying VMs across zones provides 99.99% SLA and protection against datacenter-level failures.
 
 *Applies to: Azure*
 </div>
-![Availability Zones](../../../../assets/cloud-azure-compute-availability-zones-index.svg)
-
-
-
 
 ---
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-availability_zone_architecture: "Availability Zone Architecture" {shape: rectangle}
-core_concepts: "Core Concepts" {shape: rectangle}
-checking_zone_support: "Checking Zone Support" {shape: rectangle}
-deploying_zonepinned_vms: "Deploying Zone-Pinned VMs" {shape: rectangle}
-zoneredundant_managed_disks: "Zone-Redundant Managed Disks" {shape: rectangle}
-zoneredundant_load_balancer: "Zone-Redundant Load Balancer" {shape: rectangle}
-
-center -> availability_zone_architecture
-center -> core_concepts
-center -> checking_zone_support
-center -> deploying_zonepinned_vms
-center -> zoneredundant_managed_disks
-center -> zoneredundant_load_balancer
-```
 
 ## Availability Zone Architecture
 

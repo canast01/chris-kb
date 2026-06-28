@@ -3,8 +3,6 @@ tags:
   - servicenow
 ---
 # Change Validation
-![Change Validation](../../../../assets/itsm-servicenow-change-management-change-validation-index.svg)
-
 
 ```bash
 # Service running
@@ -32,23 +30,6 @@ curl -s http://alertmanager:9093/api/v2/alerts | jq '[.[] | select(.status.state
 # - Error rate spike
 # - Latency increase > 20% above baseline
 # - Resource utilisation jump (CPU, memory, disk I/O)
-```
-
-```d2
-direction: right
-
-center: "ServiceNow" {shape: hexagon}
-validation_principles: "Validation Principles" {shape: rectangle}
-standard_validation_checklist: "Standard Validation Checklist" {shape: rectangle}
-validation_by_change_type: "Validation by Change Type" {shape: rectangle}
-monitoring_observation_period: "Monitoring Observation Period" {shape: rectangle}
-signoff: "Sign-Off" {shape: rectangle}
-
-center -> validation_principles
-center -> standard_validation_checklist
-center -> validation_by_change_type
-center -> monitoring_observation_period
-center -> signoff
 ```
 
 ## Overview

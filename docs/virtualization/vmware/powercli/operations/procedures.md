@@ -12,27 +12,6 @@ Common operational procedures using PowerCLI: VM lifecycle, bulk operations, sto
 *Applies to: PowerCLI 13.x*
 </div>
 
-
-
-```d2
-direction: right
-
-hub: "PowerCLI\nOperations" {shape: hexagon}
-put_host_in_maintenance_mode: "Put Host in Maintenance Mode" {shape: rectangle}
-bulk_snapshot_cleanup: "Bulk Snapshot Cleanup" {shape: rectangle}
-vm_clone_from_template: "VM Clone from Template" {shape: rectangle}
-create_a_vm_from_scratch: "Create a VM from Scratch" {shape: rectangle}
-resize_vm_hardware_cpu_and_memory: "Resize VM Hardware (CPU and Memory)" {shape: rectangle}
-bulk_vm_power_operations: "Bulk VM Power Operations" {shape: rectangle}
-
-hub -> put_host_in_maintenance_mode
-hub -> bulk_snapshot_cleanup
-hub -> vm_clone_from_template
-hub -> create_a_vm_from_scratch
-hub -> resize_vm_hardware_cpu_and_memory
-hub -> bulk_vm_power_operations
-```
-
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

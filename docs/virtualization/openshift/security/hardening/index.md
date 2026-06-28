@@ -9,10 +9,6 @@ OpenShift hardening: Security Context Constraints (SCC), Pod Security Admission,
 
 *Applies to: OpenShift 4.x*
 </div>
-![OpenShift — Hardening](../../../../assets/virtualization-openshift-security-hardening-index.svg)
-
-
-
 
 ```mermaid
 graph TD

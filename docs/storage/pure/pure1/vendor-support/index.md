@@ -4,15 +4,11 @@ tags:
 ---
 # Pure1 Vendor Support
 
-
 <div class="kb-summary">
 Pure1 vendor support: opening cases via the Pure1 portal, diagnostic bundle collection with `purediag`, phone escalation numbers, and remote session authorisation.
 
 *Applies to: Pure1*
 </div>
-![Pure1 Vendor Support](../../../../assets/storage-pure-pure1-vendor-support-index.svg)
-
-
 
 Pure Storage support is accessed via the support portal at support.purestorage.com. Support cases (SRs) can be created directly from Pure1 for array issues, and Pure support engineers can pull remote support bundles (log collections) directly from the array via the Pure1 connection without requiring on-site access.
 

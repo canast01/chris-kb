@@ -5,27 +5,11 @@ tags:
 ---
 # NetBackup Integration
 
-
 <div class="kb-summary">
 NetBackup Integration reference covering Integration Architecture, SIEM Integration, CyberArk Integration, OpsCenter / IT Analytics.
 
 *Applies to: NetBackup 10.x*
 </div>
-![NetBackup Integration](../../../../assets/backup-netbackup-architecture-integrations-index.svg)
-
-
-```d2
-direction: right
-
-center: "NetBackup" {shape: hexagon}
-integration_architecture: "Integration Architecture" {shape: rectangle}
-cyberark_integration: "CyberArk Integration" {shape: rectangle}
-opscenter_it_analytics: "OpsCenter / IT Analytics" {shape: rectangle}
-
-center -> integration_architecture
-center -> cyberark_integration
-center -> opscenter_it_analytics
-```
 
 ## Integration Architecture
 
@@ -68,7 +52,6 @@ flowchart TD
     class vadp,cyberark source
     class opscenter,siem ops
 ```
-
 
 Alert on: `backup failed`, `policy modified`, `client deleted`, `catalog backup failed`.
 

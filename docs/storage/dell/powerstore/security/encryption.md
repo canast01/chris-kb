@@ -5,31 +5,12 @@ tags:
 ---
 # PowerStore — Encryption
 
-
 <div class="kb-summary">
 Encryption reference covering Data-at-Rest Encryption (D@RE), Encryption in Transit, Encryption Compliance Summary.
 
 *Applies to: PowerStore 3.x*
 </div>
 ![PowerStore — Encryption](../../../../assets/storage-dell-powerstore-security-encryption.svg)
-
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-dataatrest_encryption_dre: "Data-at-Rest Encryption (D@RE)" {shape: rectangle}
-encryption_in_transit: "Encryption in Transit" {shape: rectangle}
-encryption_compliance_summary: "Encryption Compliance Summary" {shape: rectangle}
-core: "PowerStore Core" {shape: hexagon}
-
-external -> dataatrest_encryption_dre: traffic in
-dataatrest_encryption_dre -> encryption_in_transit
-encryption_in_transit -> encryption_compliance_summary
-encryption_compliance_summary -> core: secured path
-```
 
 ## Before you begin
 

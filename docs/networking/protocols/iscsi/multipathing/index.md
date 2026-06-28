@@ -4,35 +4,13 @@ tags:
 ---
 # iSCSI Multipathing
 
-
 <div class="kb-summary">
 iSCSI multipathing uses multiple network paths between initiator and target for redundancy and load distribution.
 </div>
-![iSCSI Multipathing](../../../../assets/networking-protocols-iscsi-multipathing-index.svg)
-
 
         iSCSI MULTIPATH TOPOLOGY
 
 On Linux, DM-Multipath handles this; on Windows, MPIO; on ESXi, NMP with PSP.
-
-```d2
-direction: right
-
-center: "iSCSI" {shape: hexagon}
-recommended_network_layout: "Recommended Network Layout" {shape: rectangle}
-linux_dmmultipath: "Linux — DM-Multipath" {shape: rectangle}
-windows_mpio: "Windows — MPIO" {shape: rectangle}
-vmware_esxi_nmp: "VMware ESXi — NMP" {shape: rectangle}
-load_balance_policies: "Load Balance Policies" {shape: rectangle}
-common_issues: "Common Issues" {shape: rectangle}
-
-center -> recommended_network_layout
-center -> linux_dmmultipath
-center -> windows_mpio
-center -> vmware_esxi_nmp
-center -> load_balance_policies
-center -> common_issues
-```
 
 ## Recommended Network Layout
 

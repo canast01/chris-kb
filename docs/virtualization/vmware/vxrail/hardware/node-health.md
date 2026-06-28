@@ -9,29 +9,6 @@ VxRail Node Health reference covering Overview, Where It Fits, Daily Checks, Hea
 
 *Applies to: VxRail 7.x · 8.x*
 </div>
-![VxRail Node Health](../../../../assets/virtualization-vmware-vxrail-hardware-node-health.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "VxRail" {shape: hexagon}
-where_it_fits: "Where It Fits" {shape: rectangle}
-daily_checks: "Daily Checks" {shape: rectangle}
-health_commands: "Health Commands" {shape: rectangle}
-common_issues: "Common Issues" {shape: rectangle}
-operational_tasks: "Operational Tasks" {shape: rectangle}
-upgrade_notes: "Upgrade Notes" {shape: rectangle}
-
-center -> where_it_fits
-center -> daily_checks
-center -> health_commands
-center -> common_issues
-center -> operational_tasks
-center -> upgrade_notes
-```
 
 ## Overview
 

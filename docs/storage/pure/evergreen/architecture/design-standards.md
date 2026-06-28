@@ -5,7 +5,6 @@ tags:
 ---
 # Evergreen — Design Standards
 
-
 <div class="kb-summary">
 Design Standards reference covering Naming Conventions, Build Baseline, Subscription Checklist, Controller Refresh Pre-checks.
 
@@ -13,24 +12,7 @@ Design Standards reference covering Naming Conventions, Build Baseline, Subscrip
 </div>
 ![Evergreen — Design Standards](../../../../assets/storage-pure-evergreen-architecture-design-standards.svg)
 
-
 Evergreen Subscription Design Checklist
-
-
-```d2
-direction: right
-
-center: "Evergreen" {shape: hexagon}
-naming_conventions: "Naming Conventions" {shape: rectangle}
-build_baseline: "Build Baseline" {shape: rectangle}
-subscription_checklist: "Subscription Checklist" {shape: rectangle}
-controller_refresh_prechecks: "Controller Refresh Pre-checks" {shape: rectangle}
-
-center -> naming_conventions
-center -> build_baseline
-center -> subscription_checklist
-center -> controller_refresh_prechecks
-```
 
 ## Naming Conventions
 

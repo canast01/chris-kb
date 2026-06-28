@@ -6,16 +6,11 @@ search:
 ---
 # Ollama Troubleshooting
 
-
 <div class="kb-summary">
 Common Ollama issues include model load failures, slow inference, GPU not being detected, port conflicts, and service startup problems.
 
 *Applies to: Ollama*
 </div>
-![Ollama Troubleshooting](../../../../assets/compute-local-ai-ollama-troubleshooting-index.svg)
-
-
-
 
 ```d2
 direction: down

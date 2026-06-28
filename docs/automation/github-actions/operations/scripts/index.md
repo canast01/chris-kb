@@ -4,8 +4,6 @@ tags:
   - operations
 ---
 # GitHub Actions — Scripts
-![GitHub Actions — Scripts](../../../../assets/automation-github-actions-operations-scripts-index.svg)
-
 
 ```bash
 #!/bin/bash
@@ -138,15 +136,6 @@ sudo ./svc.sh start github-runner
 sudo ./svc.sh status github-runner
 
 echo "Runner $RUNNER_NAME registered and started."
-```
-
-```d2
-direction: right
-
-center: "GitHub Actions" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> verify
 ```
 
 ## Before you begin

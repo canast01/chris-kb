@@ -12,10 +12,6 @@ VxRail LCM Failures reference covering Overview, Where It Fits, Daily Checks, He
 
 *Applies to: VxRail 7.x / 8.x*
 </div>
-![VxRail LCM Failures](../../../../assets/virtualization-vmware-vxrail-troubleshooting-lcm-failures.svg)
-
-
-
 
 ```d2
 direction: down

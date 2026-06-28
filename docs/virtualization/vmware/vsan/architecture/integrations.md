@@ -7,16 +7,12 @@ tags:
 ---
 # vSAN — Integrations
 
-
 <div class="kb-summary">
 Integrations reference covering NSX Integration, Stretched Cluster Witness, File Services, Aria Operations.
 
 *Applies to: vSAN 7.x · 8.x*
 </div>
 ![vSAN — Integrations](../../../../assets/virtualization-vmware-vsan-architecture-integrations.svg)
-
-
-
 
 Key vCenter-managed vSAN functions:
 
@@ -28,21 +24,6 @@ Key vCenter-managed vSAN functions:
 - vSAN upgrade via vLCM
 
 If vCenter is unavailable, existing VMs continue running (vSAN data plane is independent of vCenter), but no configuration changes can be made and health monitoring is unavailable.
-
-```d2
-direction: right
-
-center: "vSAN" {shape: hexagon}
-nsx_integration: "NSX Integration" {shape: rectangle}
-stretched_cluster_witness: "Stretched Cluster Witness" {shape: rectangle}
-file_services: "File Services" {shape: rectangle}
-aria_operations: "Aria Operations" {shape: rectangle}
-
-center -> nsx_integration
-center -> stretched_cluster_witness
-center -> file_services
-center -> aria_operations
-```
 
 ## NSX Integration
 

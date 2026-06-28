@@ -12,27 +12,6 @@ PostgreSQL architecture — process model, shared buffer cache, WAL, MVCC, autov
 </div>
 ![PostgreSQL — How It Works](../../../../assets/compute-linux-postgresql-architecture-how-it-works.svg)
 
-
-
-
-
-```d2
-direction: right
-
-center: "PostgreSQL" {shape: hexagon}
-process_model: "Process Model" {shape: rectangle}
-shared_buffer_cache: "Shared Buffer Cache" {shape: rectangle}
-wal_writeahead_log: "WAL (Write-Ahead Log)" {shape: rectangle}
-mvcc_and_autovacuum: "MVCC and Autovacuum" {shape: rectangle}
-key_configuration_parameters: "Key Configuration Parameters" {shape: rectangle}
-
-center -> process_model
-center -> shared_buffer_cache
-center -> wal_writeahead_log
-center -> mvcc_and_autovacuum
-center -> key_configuration_parameters
-```
-
 ```plantuml
 @startuml
 skinparam sequenceArrowThickness 1.5

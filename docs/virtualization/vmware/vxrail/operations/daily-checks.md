@@ -5,35 +5,11 @@ tags:
 ---
 # VxRail Daily Checks
 
-
 <div class="kb-summary">
 VxRail Daily Checks reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 
 *Applies to: VxRail 7.x / 8.x*
 </div>
-![VxRail Daily Checks](../../../../assets/virtualization-vmware-vxrail-operations-daily-checks.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "VxRail\nOperations" {shape: hexagon}
-where_it_fits: "Where It Fits" {shape: rectangle}
-daily_checks: "Daily Checks" {shape: rectangle}
-health_commands: "Health Commands" {shape: rectangle}
-common_issues: "Common Issues" {shape: rectangle}
-operational_tasks: "Operational Tasks" {shape: rectangle}
-upgrade_notes: "Upgrade Notes" {shape: rectangle}
-
-hub -> where_it_fits
-hub -> daily_checks
-hub -> health_commands
-hub -> common_issues
-hub -> operational_tasks
-hub -> upgrade_notes
-```
 
 ## Before you begin
 
@@ -53,7 +29,6 @@ Daily VxRail cluster checks across VxRail Manager, vCenter, ESXi, vSAN, and hard
 Use this page for VxRail operations, support checks, lifecycle work, troubleshooting, and change validation.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -82,7 +57,6 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review cluster health. |  |
@@ -101,7 +75,6 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 - Run post-upgrade checks.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

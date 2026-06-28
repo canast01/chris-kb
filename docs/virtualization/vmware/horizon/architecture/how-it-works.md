@@ -6,31 +6,12 @@ tags:
 ---
 # Horizon — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Component Overview, Connection Flow, Blast Extreme vs PCoIP, Session Broker Role, Security Server Deprecation and 1 more sections.
 
 *Applies to: Horizon 8.x*
 </div>
 ![Horizon — How It Works](../../../../assets/virtualization-vmware-horizon-architecture-how-it-works.svg)
-
-
-```d2
-direction: right
-
-center: "Horizon" {shape: hexagon}
-component_overview: "Component Overview" {shape: rectangle}
-blast_extreme_vs_pcoip: "Blast Extreme vs PCoIP" {shape: rectangle}
-session_broker_role: "Session Broker Role" {shape: rectangle}
-security_server_deprecation: "Security Server Deprecation" {shape: rectangle}
-instant_clone_technology_detail: "Instant Clone Technology Detail" {shape: rectangle}
-
-center -> component_overview
-center -> blast_extreme_vs_pcoip
-center -> session_broker_role
-center -> security_server_deprecation
-center -> instant_clone_technology_detail
-```
 
 ```plantuml
 @startuml
@@ -74,8 +55,6 @@ VMware Horizon is a broker-based VDI and published application delivery platform
 | Composer (deprecated) | Linked-clone pool management | Replaced by Instant Clone Engine |
 
 ### Component Interaction Diagram (text)
-
-
 
 ### External Client via UAG
 

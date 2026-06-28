@@ -4,17 +4,13 @@ tags:
 ---
 # VxRail Firmware
 
-
 <div class="kb-summary">
 VxRail Firmware reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 
 *Applies to: VxRail 7.x · 8.x*
 </div>
-![VxRail Firmware](../../../../assets/virtualization-vmware-vxrail-lifecycle-firmware.svg)
-
 
 VxRail Firmware Stack (bottom to top)
-
 
 ```d2
 direction: right
@@ -47,7 +43,6 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## Daily Checks
 
-
 | Check | Command | Notes |
 |---|---|---|
 | Review VxRail Manager health. |  |  |
@@ -75,7 +70,6 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review cluster health. |  |
@@ -94,7 +88,6 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 - Run post-upgrade checks.
 
 ## Best Practices
-
 
 | Recommendation | Detail |
 |---|---|

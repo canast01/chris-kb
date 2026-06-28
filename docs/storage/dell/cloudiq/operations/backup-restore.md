@@ -6,7 +6,6 @@ tags:
 # Dell CloudIQ Backup and Restore
 ![Dell CloudIQ Backup and Restore](../../../../assets/storage-dell-cloudiq-operations-backup-restore.svg)
 
-
 ```bash
 # Verify your secrets vault has the following stored per API client:
 # - Client ID (shown on the API Access page)
@@ -76,15 +75,6 @@ curl -s -X POST "${BASE}/notification-rules" \
 # Send a test notification to validate
 curl -s -X POST "${BASE}/notification-rules/<rule-id>/test" \
   -H "Authorization: Bearer ${TOKEN}"
-```
-
-```d2
-direction: right
-
-hub: "CloudIQ\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

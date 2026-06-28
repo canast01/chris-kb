@@ -8,10 +8,6 @@ tags:
 <div class="kb-summary">
 Top-10 CLI and PowerCLI commands for each VMware product — one screenful per product, printable.
 </div>
-![Cheat Sheets](../../assets/reference-cheat-sheets-index.svg)
-
-
-
 
 <div class="kb-grid">
 <a class="kb-card" href="esxi/">

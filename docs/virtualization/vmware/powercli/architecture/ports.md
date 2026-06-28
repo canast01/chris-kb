@@ -17,25 +17,6 @@ Firewall port reference for VMware PowerCLI. PowerCLI is a scripting client with
 </div>
 ![PowerCLI — Ports and Network Requirements](../../../../assets/virtualization-vmware-powercli-architecture-ports.svg)
 
-
-
-
-
-```d2
-direction: right
-
-center: "PowerCLI" {shape: hexagon}
-powercli_to_vsphere_infrastructure: "PowerCLI to vSphere Infrastructure" {shape: rectangle}
-common_scenarios: "Common Scenarios" {shape: rectangle}
-firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> powercli_to_vsphere_infrastructure
-center -> common_scenarios
-center -> firewall_zone_summary
-center -> verify
-```
-
 ## Before you begin
 
 - PowerCLI has no listening ports — it is a PowerShell module that connects outbound to VMware APIs

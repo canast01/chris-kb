@@ -5,31 +5,11 @@ tags:
 ---
 # NetBackup CLI Reference
 
-
 <div class="kb-summary">
 NetBackup CLI Reference reference covering Master → Media → Client Topology, Restore Operations, Catalog & Media, Client & Policy Management, Error & Log Analysis.
 
 *Applies to: NetBackup 10.x*
 </div>
-![NetBackup CLI Reference](../../../../assets/backup-netbackup-operations-cli-reference-index.svg)
-
-
-```d2
-direction: right
-
-center: "NetBackup" {shape: rectangle}
-master_media_client_topology: "Master → Media → Client Topology" {shape: rectangle}
-catalog_media: "Catalog & Media" {shape: rectangle}
-client_policy_management: "Client & Policy Management" {shape: rectangle}
-error_log_analysis: "Error & Log Analysis" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> master_media_client_topology
-center -> catalog_media
-center -> client_policy_management
-center -> error_log_analysis
-center -> verify
-```
 
 ## Before you begin
 
@@ -91,7 +71,6 @@ flowchart TD
     class vmHost,dbHost,nasHost client
     class dd,msdp,s3 storage
 ```
-
 
 Run restores from the CLI. Always verify client name, backup time, and policy before executing.
 

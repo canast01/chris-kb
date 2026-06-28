@@ -4,27 +4,9 @@ tags:
 ---
 # Network Design
 
-
 <div class="kb-summary">
 ![Network Design Overview](../../assets/network-design-overview.svg)
 </div>
-
-```d2
-direction: right
-
-center: "Network Design" {shape: hexagon}
-enterprise_network_tier_model: "Enterprise Network Tier Model" {shape: rectangle}
-load_balancer_placement: "Load Balancer Placement" {shape: rectangle}
-cloud_connectivity: "Cloud Connectivity" {shape: rectangle}
-mtu_and_jumbo_frame_considerations: "MTU and Jumbo Frame Considerations" {shape: rectangle}
-network_design_validation_checklist: "Network Design Validation Checklist" {shape: rectangle}
-
-center -> enterprise_network_tier_model
-center -> load_balancer_placement
-center -> cloud_connectivity
-center -> mtu_and_jumbo_frame_considerations
-center -> network_design_validation_checklist
-```
 
 ## Overview
 

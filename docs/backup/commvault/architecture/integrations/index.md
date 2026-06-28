@@ -5,15 +5,11 @@ tags:
 ---
 # Commvault — Integrations
 
-
 <div class="kb-summary">
 Commvault integration with VMware vSphere, storage arrays, LDAP, SMTP, and third-party monitoring platforms.
 
 *Applies to: Commvault 11.x*
 </div>
-![Commvault — Integrations](../../../../assets/backup-commvault-architecture-integrations-index.svg)
-
-
 
 Commvault integrates with virtualisation, storage, cloud, and identity platforms through a combination of native agents and vendor-certified plugins. VMware integration uses the Virtual Server Agent (VSA) deployed on a proxy with vCenter credentials, leveraging VADP for snapshot-based VM backups. IntelliSnap integrates with certified storage arrays to orchestrate hardware snapshots as backup sources, dramatically reducing backup windows and production impact.
 
@@ -30,19 +26,6 @@ Commvault integrates with virtualisation, storage, cloud, and identity platforms
 | SIEM (Splunk, etc.) | Audit log export / syslog | CommServe audit trail forwarded via syslog |
 
 ---
-
-```d2
-direction: right
-
-center: "Commvault" {shape: hexagon}
-component_a: "Component A" {shape: rectangle}
-component_b: "Component B" {shape: rectangle}
-component_c: "Component C" {shape: rectangle}
-
-center -> component_a
-center -> component_b
-center -> component_c
-```
 
 ## See also
 

@@ -5,35 +5,11 @@ tags:
 ---
 # Azure — Private Link
 
-
 <div class="kb-summary">
 Azure Private Link enables private connectivity to Azure PaaS services (Storage, Key Vault, SQL, etc.) over a private endpoint in your VNet — eliminating exposure to the public internet.
 
 *Applies to: Azure*
 </div>
-![Azure — Private Link](../../../../assets/cloud-azure-security-private-link-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-concepts: "Concepts" {shape: rectangle}
-traffic_flow: "Traffic Flow" {shape: rectangle}
-creating_a_private_endpoint: "Creating a Private Endpoint" {shape: rectangle}
-dns_configuration: "DNS Configuration" {shape: rectangle}
-private_dns_zones_by_service: "Private DNS Zones by Service" {shape: rectangle}
-validating_connectivity: "Validating Connectivity" {shape: rectangle}
-
-center -> concepts
-center -> traffic_flow
-center -> creating_a_private_endpoint
-center -> dns_configuration
-center -> private_dns_zones_by_service
-center -> validating_connectivity
-```
 
 ## Before you begin
 

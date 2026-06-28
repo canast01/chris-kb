@@ -8,7 +8,6 @@ tags:
 # NSX — CLI Reference
 ![NSX — CLI Reference](../../../../assets/virtualization-vmware-nsx-operations-cli-reference.svg)
 
-
 ```bash
 nsxcli
 
@@ -504,15 +503,6 @@ get backup status
 set backup schedule daily time 02:00
 backup manual
 get backup history
-```
-
-```d2
-direction: right
-
-hub: "NSX-T\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

@@ -7,11 +7,6 @@ tags:
 # Aria Operations Integrations
 ![Aria Operations Integrations](../../../../assets/virtualization-vmware-aria-operations-architecture-integrati.svg)
 
-
-
-
-
-
 ```powershell
 ┌──────────────────────────────────── Aria Operations Integrations ─────────────────────────────────────┐
 │                                                                                                       │
@@ -71,21 +66,6 @@ Administration > Outbound Settings > Add Plugin > REST Notification Plugin
 ```
 ```text
 Administration > Solutions > Log Insight Adapter
-```
-
-```d2
-direction: right
-
-center: "Aria Operations" {shape: hexagon}
-vcenter_integration: "vCenter Integration" {shape: rectangle}
-aria_logs_integration: "Aria Logs Integration" {shape: rectangle}
-thirdparty_management_pack_summary: "Third-Party Management Pack Summary" {shape: rectangle}
-credential_management: "Credential Management" {shape: rectangle}
-
-center -> vcenter_integration
-center -> aria_logs_integration
-center -> thirdparty_management_pack_summary
-center -> credential_management
 ```
 
 ## Overview

@@ -21,7 +21,6 @@ End-to-end deployment guide for VMware vCenter Server Appliance (VCSA). Covers p
 
 ---
 
-
 ```mermaid
 flowchart TD
     s0["Before you begin"]
@@ -34,27 +33,6 @@ flowchart TD
     s7["✓ Verify"]
     s0 --> s1 --> s2 --> s3 --> s4 --> s5 --> s6 --> s7
     style s7 fill:#2e7d32,color:#fff,stroke:#1b5e20
-```
-
-```d2
-direction: right
-
-plan: "Plan" {shape: oval}
-phase_1_predeployment_checks: "Phase 1 — Pre-Deployment Checks" {shape: rectangle}
-phase_2_vcsa_deployment_stage_1: "Phase 2 — VCSA Deployment: Stage 1" {shape: rectangle}
-phase_3_vcsa_configuration_stage_2: "Phase 3 — VCSA Configuration: Stage 2" {shape: rectangle}
-phase_4_active_directory_integration: "Phase 4 — Active Directory Integration" {shape: rectangle}
-phase_5_inventory_build: "Phase 5 — Inventory Build" {shape: rectangle}
-phase_6_postdeployment_hardening_and: "Phase 6 — Post-Deployment Hardening and Validation" {shape: rectangle}
-validate: "Validate" {shape: oval}
-
-plan -> phase_1_predeployment_checks
-phase_1_predeployment_checks -> phase_2_vcsa_deployment_stage_1
-phase_2_vcsa_deployment_stage_1 -> phase_3_vcsa_configuration_stage_2
-phase_3_vcsa_configuration_stage_2 -> phase_4_active_directory_integration
-phase_4_active_directory_integration -> phase_5_inventory_build
-phase_5_inventory_build -> phase_6_postdeployment_hardening_and
-phase_6_postdeployment_hardening_and -> validate
 ```
 
 ## Before you begin

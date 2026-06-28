@@ -11,10 +11,6 @@ High-end all-flash enterprise array — SRDF synchronous and asynchronous replic
 
 *Applies to: PowerMax 2500 / 8500*
 </div>
-![Dell PowerMax](../../../assets/storage-dell-powermax-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

@@ -7,14 +7,9 @@ search:
 ---
 # FC Troubleshooting
 
-
 <div class="kb-summary">
 FC Troubleshooting reference covering Diagnostic Flow, Quick Diagnostics, Common Issues Reference, Error Counter Interpretation (Brocade), Log Locations.
 </div>
-![FC Troubleshooting](../../../../assets/networking-protocols-fibre-channel-troubleshooting-index.svg)
-
-
-
 
 ```d2
 direction: down

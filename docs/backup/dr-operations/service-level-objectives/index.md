@@ -4,31 +4,9 @@ tags:
 ---
 # Service Level Objectives (SLO)
 
-
 <div class="kb-summary">
 SLOs define quantitative targets for service reliability and performance. They form the basis for alerting thresholds, capacity decisions, and on-call escalation.
 </div>
-![Service Level Objectives (SLO)](../../../assets/backup-dr-operations-service-level-objectives-index.svg)
-
-
-```d2
-direction: right
-
-center: "DR Operations" {shape: hexagon}
-slo_vs_sla_vs_sli: "SLO vs SLA vs SLI" {shape: rectangle}
-common_slos_for_infrastructure: "Common SLOs for Infrastructure" {shape: rectangle}
-error_budget: "Error Budget" {shape: rectangle}
-slo_dashboard_requirements: "SLO Dashboard Requirements" {shape: rectangle}
-alerting_from_slos: "Alerting from SLOs" {shape: rectangle}
-slo_review_cadence: "SLO Review Cadence" {shape: rectangle}
-
-center -> slo_vs_sla_vs_sli
-center -> common_slos_for_infrastructure
-center -> error_budget
-center -> slo_dashboard_requirements
-center -> alerting_from_slos
-center -> slo_review_cadence
-```
 
 ## SLO vs SLA vs SLI
 
@@ -53,7 +31,6 @@ Set SLOs internally; only publish SLAs externally when commercially required.
 | DNS | Resolution success | ≥ 99.99% |
 
 ## Error Budget
-
 
 **Azure Monitor — availability metric:**
 ```bash

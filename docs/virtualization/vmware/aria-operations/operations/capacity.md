@@ -6,29 +6,12 @@ tags:
 ---
 # Aria Operations: Capacity Analytics and Rightsizing
 
-
 <div class="kb-summary">
 Aria Operations: Capacity Analytics and Rightsizing reference covering Rightsizing Recommendations, Reclaim Workflow, Capacity Planning Reports, Common Capacity Issues.
 
 *Applies to: Aria Ops 8.x*
 </div>
 ![Aria Operations: Capacity Analytics and Rightsizing](../../../../assets/virtualization-vmware-aria-operations-operations-capacity.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "Aria Operations\nOperations" {shape: hexagon}
-capacity_planning_reports: "Capacity Planning Reports" {shape: rectangle}
-common_capacity_issues: "Common Capacity Issues" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> capacity_planning_reports
-hub -> common_capacity_issues
-hub -> verify
-```
 
 ## Before you begin
 

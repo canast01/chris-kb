@@ -12,24 +12,6 @@ Lifecycle reference covering Entitlement Lifecycle, COD Entitlement Review Caden
 </div>
 ![COD — Lifecycle](../../../../assets/storage-dell-cod-operations-install-upgrade.svg)
 
-
-```d2
-direction: right
-
-hub: "Cloud On Demand\nOperations" {shape: hexagon}
-entitlement_lifecycle: "Entitlement Lifecycle" {shape: rectangle}
-cod_entitlement_review_cadence: "COD Entitlement Review Cadence" {shape: rectangle}
-frame_decommission_cod_implications: "Frame Decommission — COD Implications" {shape: rectangle}
-cod_vs_standard_capacity_purchase: "COD vs. Standard Capacity Purchase" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> entitlement_lifecycle
-hub -> cod_entitlement_review_cadence
-hub -> frame_decommission_cod_implications
-hub -> cod_vs_standard_capacity_purchase
-hub -> verify
-```
-
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)
@@ -42,7 +24,6 @@ hub -> verify
 ## Entitlement Lifecycle
 
 COD entitlements are tracked in the Dell License Management Portal and are tied to a specific PowerMax frame serial number (SID). The lifecycle of a COD entitlement follows this path:
-
 
 Cross-reference this output against the Dell License Management Portal to confirm the portal record matches what the array reports. Discrepancies must be resolved with Dell before the next capacity review.
 

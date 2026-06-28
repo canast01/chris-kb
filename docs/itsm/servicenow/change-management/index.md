@@ -9,10 +9,6 @@ ServiceNow change management procedures — change request lifecycle, CAB proces
 
 *Applies to: ServiceNow*
 </div>
-![ServiceNow — Change Management](../../../assets/itsm-servicenow-change-management-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

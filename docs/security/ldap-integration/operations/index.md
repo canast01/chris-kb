@@ -9,29 +9,6 @@ tags:
 Step-by-step procedures for connecting, configuring, and troubleshooting LDAP identity sources across vCenter, Aria Operations, and other enterprise platforms.
   <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
-![LDAP Integration — Procedures](../../../assets/security-ldap-integration-operations-index.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "Operations\nOperations" {shape: hexagon}
-test_ldap_connectivity: "Test LDAP Connectivity" {shape: rectangle}
-configure_ldap_bind_account: "Configure LDAP Bind Account" {shape: rectangle}
-add_ldap_identity_source_to_vcenter: "Add LDAP Identity Source to vCenter" {shape: rectangle}
-configure_ldap_in_aria_operations: "Configure LDAP in Aria Operations" {shape: rectangle}
-troubleshoot_ldap_authentication_fai: "Troubleshoot LDAP Authentication Failures" {shape: rectangle}
-rotate_ldap_bind_account_password: "Rotate LDAP Bind Account Password" {shape: rectangle}
-
-hub -> test_ldap_connectivity
-hub -> configure_ldap_bind_account
-hub -> add_ldap_identity_source_to_vcenter
-hub -> configure_ldap_in_aria_operations
-hub -> troubleshoot_ldap_authentication_fai
-hub -> rotate_ldap_bind_account_password
-```
 
 ## Before you begin
 

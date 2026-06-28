@@ -5,16 +5,11 @@ tags:
 ---
 # PowerShell — Security
 
-
-
 <div class="kb-summary">
 PowerShell hardening — execution policy, JEA, script signing, constrained language mode, and script block logging.
 
 *Applies to: PowerShell 7.x*
 </div>
-![PowerShell — Security](../../../assets/automation-powershell-security-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

@@ -11,9 +11,6 @@ Aria Automation day-to-day operations — blueprint publishing, request manageme
 
 *Applies to: Aria Automation 8.x*
 </div>
-![Aria Automation — Operations](../../../../assets/virtualization-vmware-aria-automation-operations-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

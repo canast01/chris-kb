@@ -7,16 +7,11 @@ search:
 ---
 # Cisco Nexus Dashboard — Troubleshooting
 
-
 <div class="kb-summary">
 Diagnosing Nexus Dashboard site onboarding failures, fabric health alerts, flow collection gaps, and connectivity issues.
 
 *Applies to: Cisco MDS · Nexus*
 </div>
-![Cisco Nexus Dashboard — Troubleshooting](../../../../assets/san-cisco-nexus-dashboard-troubleshooting-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

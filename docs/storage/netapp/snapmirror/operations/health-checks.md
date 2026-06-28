@@ -5,32 +5,11 @@ tags:
 ---
 # SnapMirror — Health Checks
 
-
 <div class="kb-summary">
 SnapMirror health checks: `snapmirror show -fields lag-time,health`, relationship state review, last-transfer-size trend, and broken-off relationship count.
 
 *Applies to: SnapMirror*
 </div>
-
-
-```d2
-direction: right
-
-hub: "SnapMirror\nOperations" {shape: hexagon}
-run_this_routine: "Run This Routine" {shape: rectangle}
-daily_checks: "Daily Checks" {shape: rectangle}
-health_check: "Health Check" {shape: rectangle}
-relationship_states: "Relationship States" {shape: rectangle}
-lag_time: "Lag Time" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> run_this_routine
-hub -> daily_checks
-hub -> health_check
-hub -> relationship_states
-hub -> lag_time
-hub -> verify
-```
 
 ## Before you begin
 

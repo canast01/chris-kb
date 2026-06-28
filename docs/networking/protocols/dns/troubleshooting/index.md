@@ -7,14 +7,9 @@ search:
 ---
 # DNS Troubleshooting
 
-
 <div class="kb-summary">
 DNS Troubleshooting reference covering Overview, Resolution Failure Triage, dcdiag /test:dns, Cache Poisoning Checks, Replication Issues and 2 more sections.
 </div>
-![DNS Troubleshooting](../../../../assets/networking-protocols-dns-troubleshooting-index.svg)
-
-
-
 
 ```d2
 direction: down

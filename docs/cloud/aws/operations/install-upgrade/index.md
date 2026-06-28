@@ -4,8 +4,6 @@ tags:
   - operations
 ---
 # AWS Operations — Install & Upgrade
-![AWS Operations — Install & Upgrade](../../../../assets/cloud-aws-operations-install-upgrade-index.svg)
-
 
 ```bash
 # View patch compliance status
@@ -51,17 +49,6 @@ aws ce get-reservation-utilization --time-period Start=2026-01-01,End=2026-01-31
 # List expiring RIs
 aws ec2 describe-reserved-instances --filters "Name=state,Values=active" \
     --query "ReservedInstances[?End<='$(date -d '+90 days' +%Y-%m-%d)T23:59:59'].[ReservedInstancesId,InstanceType,End]"
-```
-
-```d2
-direction: right
-
-plan: "Plan" {shape: oval}
-verify: "Verify" {shape: rectangle}
-validate: "Validate" {shape: oval}
-
-plan -> verify
-verify -> validate
 ```
 
 ## Before you begin

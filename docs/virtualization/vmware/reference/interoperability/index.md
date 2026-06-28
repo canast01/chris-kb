@@ -12,28 +12,6 @@ Interoperability reference for VMware product combinations. Use this page before
 
 *Applies to: vSphere 7.x / 8.x, NSX 4.x, VCF 5.x, Aria Suite 8.x*
 </div>
-![VMware Interoperability and Compatibility Matrix](../../../../assets/virtualization-vmware-reference-interoperability-index.svg)
-
-
-
-```d2
-direction: right
-
-center: "Interoperability" {shape: hexagon}
-vsphere_80_component_compatibility: "vSphere 8.0 — Component Compatibility" {shape: rectangle}
-vsphere_70_component_compatibility: "vSphere 7.0 — Component Compatibility" {shape: rectangle}
-vcf_5x_bom_bill_of_materials: "VCF 5.x BOM (Bill of Materials)" {shape: rectangle}
-nsx_interoperability: "NSX Interoperability" {shape: rectangle}
-hardware_compatibility_hcl: "Hardware Compatibility (HCL)" {shape: rectangle}
-key_interoperability_rules: "Key Interoperability Rules" {shape: rectangle}
-
-center -> vsphere_80_component_compatibility
-center -> vsphere_70_component_compatibility
-center -> vcf_5x_bom_bill_of_materials
-center -> nsx_interoperability
-center -> hardware_compatibility_hcl
-center -> key_interoperability_rules
-```
 
 ## Before you begin
 

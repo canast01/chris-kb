@@ -5,14 +5,9 @@ tags:
 ---
 # SAN Certification Review Plan
 
-
 <div class="kb-summary">
 SAN Certification Review Plan reference covering Target Certifications, Study Resources, 8-Week SAN Study Plan, Hands-On Lab Options, Study Checklist.
 </div>
-![SAN Certification Review Plan](../../../assets/certifications-san-review-plan-index.svg)
-
-
-
 
 ```d2
 direction: right

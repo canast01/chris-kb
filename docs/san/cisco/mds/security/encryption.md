@@ -6,7 +6,6 @@ tags:
 # Cisco MDS — Security Encryption
 ![Cisco MDS — Security Encryption](../../../../assets/san-cisco-mds-security-encryption.svg)
 
-
 ```bash
 # Verify SSH is enabled
 show feature | include ssh
@@ -162,21 +161,6 @@ interface fcip 1
 show crypto ike sa
 show crypto ipsec sa
 show interface fcip 1
-```
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-perimeter_controls: "Perimeter Controls" {shape: rectangle}
-identity_access: "Identity & Access" {shape: rectangle}
-audit_logging: "Audit & Logging" {shape: rectangle}
-core: "Cisco MDS Core" {shape: hexagon}
-
-external -> perimeter_controls: traffic in
-perimeter_controls -> identity_access
-identity_access -> audit_logging
-audit_logging -> core: secured path
 ```
 
 ## Before you begin

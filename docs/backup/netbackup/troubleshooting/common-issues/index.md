@@ -6,8 +6,6 @@ search:
   boost: 1.5
 ---
 # NetBackup — Common Issues
-![NetBackup — Common Issues](../../../../assets/backup-netbackup-troubleshooting-common-issues-index.svg)
-
 
 ```bash
 # Check bpcd is running on the client

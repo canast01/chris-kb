@@ -7,31 +7,9 @@ search:
 ---
 # Network Connectivity Troubleshooting
 
-
 <div class="kb-summary">
 Network Connectivity Troubleshooting reference covering Overview, Failure Classification by OSI Layer, Diagnostic Flowchart, VLAN and Trunk Verification, Routing Table Verification and 6 more sections.
 </div>
-![Network Connectivity Troubleshooting](../../../assets/networking-troubleshooting-network-connectivity-index.svg)
-
-
-```d2
-direction: right
-
-center: "Network Connectivity" {shape: hexagon}
-failure_classification_by_osi_layer: "Failure Classification by OSI Layer" {shape: rectangle}
-diagnostic_flowchart: "Diagnostic Flowchart" {shape: rectangle}
-vlan_and_trunk_verification: "VLAN and Trunk Verification" {shape: rectangle}
-routing_table_verification: "Routing Table Verification" {shape: rectangle}
-firewall_rule_testing: "Firewall Rule Testing" {shape: rectangle}
-mtu_and_jumbo_frame_issues: "MTU and Jumbo Frame Issues" {shape: rectangle}
-
-center -> failure_classification_by_osi_layer
-center -> diagnostic_flowchart
-center -> vlan_and_trunk_verification
-center -> routing_table_verification
-center -> firewall_rule_testing
-center -> mtu_and_jumbo_frame_issues
-```
 
 ## Before you begin
 
@@ -88,7 +66,6 @@ flowchart TD
     Q -- No --> R[See DNS Resolution guide]
     Q -- Yes --> S[Application-layer issue\nCheck service on destination\nopenssl s_client / curl -v]
 ```
-
 
 ---
 

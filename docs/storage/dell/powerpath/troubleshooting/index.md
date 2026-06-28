@@ -12,9 +12,6 @@ PowerPath — Troubleshooting navigation for Common Issues, Diagnostics, Escalat
 
 *Applies to: PowerPath*
 </div>
-![PowerPath — Troubleshooting](../../../../assets/storage-dell-powerpath-troubleshooting-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="common-issues/"><strong>Common Issues</strong><span>Quick reference for common problems and resolutions.</span></a>

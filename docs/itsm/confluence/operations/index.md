@@ -5,16 +5,11 @@ tags:
 ---
 # Confluence — Operations
 
-
-
 <div class="kb-summary">
 Confluence day-to-day operations — space administration, permissions, content maintenance, and user management.
 
 *Applies to: Confluence Cloud / Data Center*
 </div>
-![Confluence — Operations](../../../assets/itsm-confluence-operations-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

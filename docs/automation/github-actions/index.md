@@ -9,9 +9,6 @@ GitHub Actions knowledge base covering event-driven workflow architecture, runne
 
 *Applies to: GitHub Actions*
 </div>
-![GitHub Actions](../../assets/automation-github-actions-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

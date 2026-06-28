@@ -4,27 +4,9 @@ tags:
 ---
 # IRE — Restore
 
-
 <div class="kb-summary">
 Restoration in the IRE follows a staged process: identify the latest clean backup within the retention window that predates the compromise event, retrieve and mount it in isolation, restore to isolated staging, validate in the clean room, then reintroduce to production only after sign-off. Retention windows of 30–90 days are typical for ransomware scenarios.
 </div>
-![IRE — Restore](../../../../assets/backup-dr-operations-ire-restore-index.svg)
-
-
-```d2
-direction: right
-
-center: "DR Operations" {shape: hexagon}
-restore_workflow: "Restore Workflow" {shape: rectangle}
-reintroduction_to_production: "Reintroduction to Production" {shape: rectangle}
-restore_time_estimates: "Restore Time Estimates" {shape: rectangle}
-common_issues: "Common Issues" {shape: rectangle}
-
-center -> restore_workflow
-center -> reintroduction_to_production
-center -> restore_time_estimates
-center -> common_issues
-```
 
 ## Restore Workflow
 
@@ -45,7 +27,6 @@ flowchart TD
     K --> L[Reintroduce to production\nIRE isolation maintained until complete]
     L --> M([IRE stand-down])
 ```
-
 
 ### Database Restore
 

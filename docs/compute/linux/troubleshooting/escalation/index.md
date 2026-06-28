@@ -12,10 +12,6 @@ How to escalate Linux OS issues to Red Hat or Canonical support: what data to co
 
 *Applies to: RHEL 8/9 · Ubuntu 22.04 / 24.04 LTS*
 </div>
-![Linux — Escalation](../../../../assets/compute-linux-troubleshooting-escalation-index.svg)
-
-
-
 
 ---
 

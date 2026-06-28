@@ -4,14 +4,9 @@ tags:
 ---
 # Certificates — Authentication
 
-
 <div class="kb-summary">
 Authentication reference covering Root CA Lifecycle — Offline Operation Flow, Root CA Offline Procedure, Certificate Transparency (CT).
 </div>
-![Certificates — Authentication](../../../../assets/security-certificates-security-authentication-index.svg)
-
-
-
 
 ```plantuml
 @startuml

@@ -8,10 +8,6 @@ tags:
 <div class="kb-summary">
 Incident handling operational procedures: incident classification, triage workflows, evidence collection, escalation, and post-incident review.
 </div>
-![Incident Handling — Operations](../../../assets/security-incident-handling-operations-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-1">
 

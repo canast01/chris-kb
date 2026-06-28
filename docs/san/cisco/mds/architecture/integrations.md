@@ -5,7 +5,6 @@ tags:
 ---
 # MDS — Integrations
 
-
 <div class="kb-summary">
 Cisco MDS integrations: DCNM fabric management, vCenter SAN adapter plugin, UCS service profile SAN boot, and SNMP/syslog target configuration.
 
@@ -13,25 +12,7 @@ Cisco MDS integrations: DCNM fabric management, vCenter SAN adapter plugin, UCS 
 </div>
 ![MDS — Integrations](../../../../assets/san-cisco-mds-architecture-integrations.svg)
 
-
 ---
-
-```d2
-direction: right
-
-center: "Cisco MDS" {shape: hexagon}
-nexus_dashboard_fabric_controller_nd: "Nexus Dashboard Fabric Controller (NDFC)" {shape: rectangle}
-vmware_fc_connectivity: "VMware FC Connectivity" {shape: rectangle}
-dell_powermax_integration: "Dell PowerMax Integration" {shape: rectangle}
-pure_storage_flasharray_integration: "Pure Storage FlashArray Integration" {shape: rectangle}
-snmp_and_syslog: "SNMP and Syslog" {shape: rectangle}
-
-center -> nexus_dashboard_fabric_controller_nd
-center -> vmware_fc_connectivity
-center -> dell_powermax_integration
-center -> pure_storage_flasharray_integration
-center -> snmp_and_syslog
-```
 
 ## Nexus Dashboard Fabric Controller (NDFC)
 
@@ -77,7 +58,6 @@ sequenceDiagram
   ESXi->>FA: PLOGI + PRLI to CT1 via Fabric B
   FA-->>ESXi: Volumes visible via both paths (ALUA)
 ```
-
 
 ---
 

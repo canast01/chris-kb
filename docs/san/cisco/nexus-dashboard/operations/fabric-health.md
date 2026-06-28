@@ -5,16 +5,11 @@ tags:
 ---
 # Nexus Dashboard: Fabric Health Score, Endpoint Reachability, and Flow Telemetry
 
-
 <div class="kb-summary">
 Nexus Dashboard: Fabric Health Score, Endpoint Reachability, and Flow Telemetry reference covering Interpreting Health Score Changes, Endpoint Reachability, Flow Telemetry, Using Flow Data for Troubleshooting, Common Fabric Health Issues.
 
 *Applies to: Cisco MDS · Nexus*
 </div>
-![Nexus Dashboard: Fabric Health Score, Endpoint Reachability, and Flow Telemetry](../../../../assets/san-cisco-nexus-dashboard-operations-fabric-health.svg)
-
-
-
 
 Flow telemetry fields:
 
@@ -26,19 +21,6 @@ Flow telemetry fields:
 | `bytes` | Total bytes transferred |
 | `latency_us` | Fabric latency in microseconds |
 | `drop_count` | Packets dropped in fabric |
-
-```d2
-direction: right
-
-hub: "Nexus Dashboard\nOperations" {shape: hexagon}
-using_flow_data_for_troubleshooting: "Using Flow Data for Troubleshooting" {shape: rectangle}
-common_fabric_health_issues: "Common Fabric Health Issues" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> using_flow_data_for_troubleshooting
-hub -> common_fabric_health_issues
-hub -> verify
-```
 
 ## Before you begin
 

@@ -42,15 +42,10 @@ create_first_storage_group_and_maski -> validate
 ---
 
 # Dell PowerMax — Initial Deployment
-![Dell PowerMax — Initial Deployment](../../../../assets/storage-dell-powermax-deploy-index.svg)
-
-
-
 
 This guide walks through deploying a Dell PowerMax array from physical installation through validated host connectivity. Steps apply to PowerMax 2000 and 8000 series running Enginuity/PowerMaxOS.
 
 ---
-
 
 ```mermaid
 flowchart TD

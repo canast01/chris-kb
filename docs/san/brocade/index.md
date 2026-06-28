@@ -9,13 +9,6 @@ Brocade SAN knowledge base covering Fabric OS switches and SANnav management. In
 
 *Applies to: Brocade FOS 9.x*
 </div>
-![Brocade SAN](../../assets/san-brocade-index.svg)
-
-
-
-
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="fabric-os/"><strong>Fabric OS</strong><span>Brocade switch OS — zoning, fabric configuration, CLI, health checks, and troubleshooting.</span></a>

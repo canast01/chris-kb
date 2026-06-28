@@ -9,19 +9,6 @@ Azure Governance articles, operational checks, troubleshooting notes, and refere
 
 *Applies to: Azure*
 </div>
-![Azure Governance](../../../assets/cloud-azure-governance-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-articles: "Articles" {shape: rectangle}
-
-center -> articles
-```
 
 ## Articles
 

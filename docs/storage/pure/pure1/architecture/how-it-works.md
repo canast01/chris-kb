@@ -5,7 +5,6 @@ tags:
 ---
 # Pure1 — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Architecture, High Availability.
 
@@ -13,22 +12,9 @@ How It Works reference covering Architecture, High Availability.
 </div>
 ![Pure1 — How It Works](../../../../assets/storage-pure-pure1-architecture-how-it-works.svg)
 
-
-
 Pure1 is Pure Storage's cloud-based management and analytics platform for FlashArray and FlashBlade systems. It requires no on-premises management infrastructure — each array connects to Pure1 directly via outbound HTTPS. Pure1 provides AI-driven analytics (Pure1 Meta), capacity forecasting, health scoring, and a REST API for programmatic fleet management.
 
 ---
-
-```d2
-direction: right
-
-center: "Pure1" {shape: hexagon}
-architecture: "Architecture" {shape: rectangle}
-high_availability: "High Availability" {shape: rectangle}
-
-center -> architecture
-center -> high_availability
-```
 
 ```plantuml
 @startuml

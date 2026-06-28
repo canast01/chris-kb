@@ -37,17 +37,12 @@ create_a_storage_policy -> validate
 ---
 
 # CommVault — Initial Deployment
-![CommVault — Initial Deployment](../../../assets/backup-commvault-deploy-index.svg)
-
 
 This guide covers deploying a CommVault CommCell environment from scratch — from
 CommServe installation through MediaAgent configuration, client onboarding, policy
 creation, and first-backup validation.
 
-
-
 ---
-
 
 ```mermaid
 flowchart TD

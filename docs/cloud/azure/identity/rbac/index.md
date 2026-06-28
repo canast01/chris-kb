@@ -6,35 +6,11 @@ tags:
 
 # Azure — RBAC
 
-
 <div class="kb-summary">
 Azure Role-Based Access Control (RBAC) is the authorisation system for Azure resources. Every access decision evaluates: **who** (principal) has **what** (role) on **which** (scope).
 
 *Applies to: Azure*
 </div>
-![Azure — RBAC](../../../../assets/cloud-azure-identity-rbac-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-rbac_model: "RBAC Model" {shape: rectangle}
-key_concepts: "Key Concepts" {shape: rectangle}
-builtin_roles_common_ones: "Built-in Roles — Common Ones" {shape: rectangle}
-managing_role_assignments: "Managing Role Assignments" {shape: rectangle}
-custom_role_definitions: "Custom Role Definitions" {shape: rectangle}
-data_plane_vs_control_plane: "Data Plane vs Control Plane" {shape: rectangle}
-
-center -> rbac_model
-center -> key_concepts
-center -> builtin_roles_common_ones
-center -> managing_role_assignments
-center -> custom_role_definitions
-center -> data_plane_vs_control_plane
-```
 
 ## RBAC Model
 

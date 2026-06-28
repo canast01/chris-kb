@@ -4,8 +4,6 @@ tags:
   - security
 ---
 # Confluence — Hardening
-![Confluence — Hardening](../../../../assets/itsm-confluence-security-hardening-index.svg)
-
 
 ```yaml
 Administrator account policy:

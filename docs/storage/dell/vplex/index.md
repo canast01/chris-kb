@@ -9,10 +9,6 @@ Storage federation and virtualization platform — active-active LUN access (VPL
 
 *Applies to: VPLEX*
 </div>
-![Dell VPLEX](../../../assets/storage-dell-vplex-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

@@ -12,29 +12,6 @@ the exact CLI commands and vCenter checks to isolate and fix each one.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![vMotion Failing](../../../../assets/virtualization-vmware-topics-scenarios-vmotion-failing.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Scenarios" {shape: hexagon}
-products_involved: "Products Involved" {shape: rectangle}
-1_read_the_error_message_first: "1. Read the Error Message First" {shape: rectangle}
-2_evc_mode_check_cpu_incompatibility: "2. EVC Mode Check (CPU Incompatibility Errors)" {shape: rectangle}
-3_vmkernel_mtu_check_most_common_cau: "3. VMkernel MTU Check (Most Common Cause)" {shape: rectangle}
-4_vmkernel_routing_check: "4. VMkernel Routing Check" {shape: rectangle}
-5_nic_and_driver_validation: "5. NIC and Driver Validation" {shape: rectangle}
-
-center -> products_involved
-center -> 1_read_the_error_message_first
-center -> 2_evc_mode_check_cpu_incompatibility
-center -> 3_vmkernel_mtu_check_most_common_cau
-center -> 4_vmkernel_routing_check
-center -> 5_nic_and_driver_validation
-```
 
 ## Products Involved
 

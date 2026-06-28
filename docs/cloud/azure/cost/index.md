@@ -9,19 +9,6 @@ Azure Cost articles, operational checks, troubleshooting notes, and references.
 
 *Applies to: Azure*
 </div>
-![Azure Cost](../../../assets/cloud-azure-cost-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-articles: "Articles" {shape: rectangle}
-
-center -> articles
-```
 
 ## Articles
 

@@ -4,37 +4,13 @@ tags:
 ---
 # Azure Site Recovery
 
-
 <div class="kb-summary">
 Azure Site Recovery (ASR) orchestrates replication, failover, and failback for Azure VMs and on-premises workloads. It enables business continuity with RPO targets as low as 30 seconds for Azure-to-Azure replication.
 
 *Applies to: Azure*
 </div>
-![Azure Site Recovery](../../../../assets/cloud-azure-backup-dr-azure-site-recovery-index.svg)
-
-
-
 
 ---
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-asr_replication_flow: "ASR Replication Flow" {shape: rectangle}
-prerequisites_and_vault_setup: "Prerequisites and Vault Setup" {shape: rectangle}
-enabling_replication_azuretoazure: "Enabling Replication (Azure-to-Azure)" {shape: rectangle}
-replication_policy: "Replication Policy" {shape: rectangle}
-test_failover: "Test Failover" {shape: rectangle}
-planned_failover: "Planned Failover" {shape: rectangle}
-
-center -> asr_replication_flow
-center -> prerequisites_and_vault_setup
-center -> enabling_replication_azuretoazure
-center -> replication_policy
-center -> test_failover
-center -> planned_failover
-```
 
 ## ASR Replication Flow
 

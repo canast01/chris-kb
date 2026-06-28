@@ -7,34 +7,12 @@ tags:
 ---
 # vSAN Operations — CLI Reference
 
-
 <div class="kb-summary">
 Commonly used ESXi shell and PowerCLI commands for managing and troubleshooting vSAN clusters. vSAN is VMware's hyper-converged storage solution — it pools the local disks of multiple ESXi hosts into a shared datastore.
 
 *Applies to: vSAN 7.x / 8.x*
 </div>
 ![vSAN Operations — CLI Reference](../../../../assets/virtualization-vmware-vsan-operations-cli-reference.svg)
-
-
-
-```d2
-direction: right
-
-hub: "vSAN\nOperations" {shape: hexagon}
-quick_reference: "Quick Reference" {shape: rectangle}
-skyline_health: "Skyline Health" {shape: rectangle}
-health_diagnostics: "Health & Diagnostics" {shape: rectangle}
-disk_groups: "Disk Groups" {shape: rectangle}
-networking_vsan_vmkernel: "Networking (vSAN VMkernel)" {shape: rectangle}
-powercli_vsan: "PowerCLI — vSAN" {shape: rectangle}
-
-hub -> quick_reference
-hub -> skyline_health
-hub -> health_diagnostics
-hub -> disk_groups
-hub -> networking_vsan_vmkernel
-hub -> powercli_vsan
-```
 
 ## Before you begin
 

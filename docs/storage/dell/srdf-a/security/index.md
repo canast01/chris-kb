@@ -5,16 +5,11 @@ tags:
 ---
 # SRDF/A — Security
 
-
-
 <div class="kb-summary">
 SRDF/A security controls — management access restrictions, SRDF encryption, and Unisphere for PowerMax hardening.
 
 *Applies to: SRDF/A*
 </div>
-![SRDF/A — Security](../../../../assets/storage-dell-srdf-a-security-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

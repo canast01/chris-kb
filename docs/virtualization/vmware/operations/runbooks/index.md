@@ -4,15 +4,11 @@ tags:
 ---
 # Virtualization Runbooks
 
-
 <div class="kb-summary">
 Practical runbooks for incidents, maintenance, lifecycle work, validation, evidence collection, and RCA follow-up.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Virtualization Runbooks](../../../../assets/virtualization-vmware-operations-runbooks-index.svg)
-
-
 
 <div class="kb-grid kb-grid-5">
 
@@ -65,7 +61,6 @@ Practical runbooks for incidents, maintenance, lifecycle work, validation, evide
   <strong>RCA Template</strong>
   <span>Use this after a virtualization incident or recurring problem.</span>
 </a>
-
 
 <a class="kb-card" href="backup-failure/">
   <strong>Backup Failure</strong>

@@ -5,33 +5,11 @@ tags:
 ---
 # AWS — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Overview, Account Structure, IAM Structure, High Availability, Disaster Recovery.
 
 *Applies to: AWS*
 </div>
-![AWS — How It Works](../../../../assets/cloud-aws-architecture-how-it-works-index.svg)
-
-
-```d2
-direction: right
-
-center: "AWS" {shape: hexagon}
-account_structure: "Account Structure" {shape: rectangle}
-high_availability: "High Availability" {shape: rectangle}
-disaster_recovery: "Disaster Recovery" {shape: rectangle}
-aws_global_infrastructure: "AWS Global Infrastructure" {shape: rectangle}
-aws_shared_responsibility_model: "AWS Shared Responsibility Model" {shape: rectangle}
-aws_wellarchitected_framework_6_pill: "AWS Well-Architected Framework — 6 Pillars" {shape: rectangle}
-
-center -> account_structure
-center -> high_availability
-center -> disaster_recovery
-center -> aws_global_infrastructure
-center -> aws_shared_responsibility_model
-center -> aws_wellarchitected_framework_6_pill
-```
 
 ## Overview
 
@@ -57,7 +35,6 @@ graph TB
   class IGW,TGW cloud
 ```
 
-
 - **Humans**: IAM Identity Center — no direct IAM users in member accounts
 - **Machines**: IAM Roles with instance profiles or OIDC federation
 - **Break-glass**: IAM user in management account with credentials in CyberArk
@@ -80,36 +57,21 @@ graph TB
 
 ## AWS Global Infrastructure
 
-
-
-
-
 ---
 
 ## AWS Shared Responsibility Model
-
-
-
 
 ---
 
 ## AWS Well-Architected Framework — 6 Pillars
 
-
-
-
 ---
 
 ## AWS Cloud Adoption Framework — 6 Perspectives
 
-
-
-
 ---
 
 ## AWS Migration Strategies — 7 Rs
-
-
 
 ---
 

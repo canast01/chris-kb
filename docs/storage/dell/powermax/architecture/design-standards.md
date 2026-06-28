@@ -19,16 +19,27 @@ Standards reference covering Naming Conventions, Build Baseline, Configuration C
 ```d2
 direction: right
 
-center: "PowerMax" {shape: hexagon}
-naming_conventions: "Naming Conventions" {shape: rectangle}
-build_baseline: "Build Baseline" {shape: rectangle}
-configuration_checklist: "Configuration Checklist" {shape: rectangle}
-sizing_guidelines: "Sizing Guidelines" {shape: rectangle}
+hosts: Production Hosts {
+  h1: Open Systems\n(FC / iSCSI / NVMe) {shape: rectangle}
+  h2: Mainframe\n(FICON) {shape: rectangle}
+}
 
-center -> naming_conventions
-center -> build_baseline
-center -> configuration_checklist
-center -> sizing_guidelines
+array: PowerMax 2500 / 8500 {
+  fa: FA Directors\n(Masking Views) {shape: rectangle}
+  slo: Service Level Objectives\nDiamond · Platinum · Gold {shape: rectangle}
+  sg: Storage Groups\n(app containers + SLO) {shape: rectangle}
+  srp: SRP — NVMe capacity pool {shape: cylinder}
+  srdf: RDF Directors\nSRDF/S · SRDF/A {shape: rectangle}
+  fa -> slo: SLO enforced
+  slo -> sg
+  sg -> srp: thin allocation
+}
+
+remote: Remote PowerMax\n(DR site) {shape: rectangle}
+
+hosts.h1 -> array.fa: FC / iSCSI
+hosts.h2 -> array.fa: FICON
+array.srdf -> remote: SRDF replication
 ```
 
 ## Naming Conventions
@@ -78,8 +89,8 @@ Every new PowerMax deployment should meet the following baseline before handover
 
 | Dimension | Guidance |
 |---|---|
-| Model selection | PowerMax 2000 for up to ~8 PB effective capacity and moderate I/O; PowerMax 8000 for up to ~4 PB raw / 350+ PB effective with data reduction |
-| Global memory | 1.5 TB (2000) to 16 TB (8000); more memory improves write-cache hit rate and reduces drive latency |
+| Model selection | PowerMax 2500 for mid-enterprise tier-1 (up to ~4 PB raw); PowerMax 8500 for large enterprise requiring more engines, SRDF metro, or mainframe (up to ~9 PB raw) |
+| Global memory | 1.5 TB (2500) to 16 TB (8500); more memory improves write-cache hit rate and reduces drive latency |
 | Drive count | Scale drives per engine based on workload IOPS and capacity requirements; target <70% of raw capacity used |
 | SRDF bandwidth | Size SRDF links at 120% of peak write throughput for SRDF/S; use SRDF/A delta set size to estimate bandwidth for async |
 | Thin provisioning | Allow 2:1 to 3:1 oversubscription for general-purpose workloads; monitor subscribed vs. consumed capacity weekly |

@@ -4,15 +4,11 @@ tags:
 ---
 # Datastore Standard
 
-
 <div class="kb-summary">
 Datastore Standard reference covering Overview, Naming, VMFS Version, Maximum Datastore Size, Mounting and 3 more sections.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Datastore Standard](../../../../assets/virtualization-vmware-reference-standards-datastore-standard.svg)
-
-
 
 > Part of the [Standards](index.md) reference.
 

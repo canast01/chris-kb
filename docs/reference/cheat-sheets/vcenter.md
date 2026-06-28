@@ -10,20 +10,6 @@ Top-10 vCenter commands for appliance management, inventory queries, and service
 </div>
 ![vCenter Cheat Sheet](../../assets/reference-cheat-sheets-vcenter.svg)
 
-
-
-
-```d2
-direction: right
-
-center: "Cheat Sheets" {shape: rectangle}
-common_commands: "Common commands" {shape: rectangle}
-appliance_vcsa_shell: "Appliance (VCSA shell)" {shape: rectangle}
-
-center -> common_commands
-center -> appliance_vcsa_shell
-```
-
 ## Common commands
 
 ```bash

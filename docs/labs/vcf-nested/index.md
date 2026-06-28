@@ -10,23 +10,6 @@ tags:
 <div class="kb-summary">
 Deploy a VMware Cloud Foundation management domain using Cloud Builder on nested ESXi. The most resource-intensive lab — requires 256 GB+ RAM on the physical host. Estimated time: 4–6 hours.
 </div>
-![Lab 4 — VCF on Nested ESXi](../../assets/labs-vcf-nested-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Vcf Nested" {shape: hexagon}
-prerequisites: "Prerequisites" {shape: rectangle}
-vcf_network_requirements_5_port_grou: "VCF network requirements (5 port groups on physical host)" {shape: rectangle}
-phases: "Phases" {shape: rectangle}
-
-center -> prerequisites
-center -> vcf_network_requirements_5_port_grou
-center -> phases
-```
 
 ## Prerequisites
 

@@ -6,29 +6,12 @@ tags:
 ---
 # VCF — Hardening
 
-
 <div class="kb-summary">
 Hardening reference covering Hardening Checklist, Network Access Controls.
 
 *Applies to: VCF 4.x / 5.x*
 </div>
 ![VCF — Hardening](../../../../assets/virtualization-vmware-vmware-cloud-foundation-security-harde.svg)
-
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-hardening_checklist: "Hardening Checklist" {shape: rectangle}
-network_access_controls: "Network Access Controls" {shape: rectangle}
-core: "VMware Cloud Foundation Core" {shape: hexagon}
-
-external -> hardening_checklist: traffic in
-hardening_checklist -> network_access_controls
-network_access_controls -> core: secured path
-```
 
 ## Before you begin
 

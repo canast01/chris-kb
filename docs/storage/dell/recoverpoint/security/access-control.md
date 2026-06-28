@@ -5,31 +5,12 @@ tags:
 ---
 # RecoverPoint — Access Control
 
-
 <div class="kb-summary">
 Access Control reference covering Role-Based Access Control.
 
 *Applies to: RecoverPoint 5.x*
 </div>
 ![RecoverPoint — Access Control](../../../../assets/storage-dell-recoverpoint-security-access-control.svg)
-
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-perimeter_controls: "Perimeter Controls" {shape: rectangle}
-identity_access: "Identity & Access" {shape: rectangle}
-audit_logging: "Audit & Logging" {shape: rectangle}
-core: "RecoverPoint Core" {shape: hexagon}
-
-external -> perimeter_controls: traffic in
-perimeter_controls -> identity_access
-identity_access -> audit_logging
-audit_logging -> core: secured path
-```
 
 ## Before you begin
 

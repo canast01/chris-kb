@@ -5,7 +5,6 @@ tags:
 ---
 # SRDF/S — Health Checks
 
-
 <div class="kb-summary">
 SRDF/S health checks: `symrdf query -synchronous` link status, invalid track count review, SRDF pair consistency validation, and RDF group hop count check.
 
@@ -54,26 +53,6 @@ flowchart TD
     style investigateRTT fill:#be123c,color:#fff
     style investigateDir fill:#be123c,color:#fff
     style investigateLink fill:#b45309,color:#fff
-```
-
-
-```d2
-direction: right
-
-hub: "SRDF/S\nOperations" {shape: hexagon}
-run_this_routine: "Run This Routine" {shape: rectangle}
-configuration_consistency_check: "Configuration Consistency Check" {shape: rectangle}
-health_check_summary_table: "Health Check Summary Table" {shape: rectangle}
-known_issues_and_field_notes: "Known Issues and Field Notes" {shape: rectangle}
-validation: "Validation" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> run_this_routine
-hub -> configuration_consistency_check
-hub -> health_check_summary_table
-hub -> known_issues_and_field_notes
-hub -> validation
-hub -> verify
 ```
 
 ```vegalite

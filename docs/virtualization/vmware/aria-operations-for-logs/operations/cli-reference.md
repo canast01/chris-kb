@@ -7,7 +7,6 @@ tags:
 # Aria Operations for Logs — CLI Reference
 ![Aria Operations for Logs — CLI Reference](../../../../assets/virtualization-vmware-aria-operations-for-logs-operations-cl.svg)
 
-
 ```bash
 # SSH to the Log Insight appliance
 ssh admin@<li-appliance-fqdn>
@@ -79,15 +78,6 @@ curl -k -X GET https://<li-fqdn>/api/v1/alerts?active=true \
 # Verify agent connectivity
 curl -k -X GET https://<li-fqdn>/api/v1/agents \
   -H "Authorization: Bearer <sessionId>"
-```
-
-```d2
-direction: right
-
-hub: "Aria Operations for Logs\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

@@ -4,16 +4,11 @@ tags:
 ---
 # Incident Escalation
 
-
 <div class="kb-summary">
 Incident Escalation reference covering Overview, Priority Definitions, Escalation Matrix, P1/P2 Escalation Checklist, Vendor Escalation and 1 more sections.
 
 *Applies to: ServiceNow*
 </div>
-![Incident Escalation](../../../../assets/itsm-servicenow-incident-management-escalation-index.svg)
-
-
-
 
 ```plantuml
 @startuml

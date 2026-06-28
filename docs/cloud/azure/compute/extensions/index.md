@@ -4,37 +4,13 @@ tags:
 ---
 # VM Extensions
 
-
 <div class="kb-summary">
 Azure VM Extensions are small applications that perform post-deployment configuration and automation tasks on Azure VMs. They are managed by the Azure VM Agent and can be deployed at VM creation time or added afterward.
 
 *Applies to: Azure*
 </div>
-![VM Extensions](../../../../assets/cloud-azure-compute-extensions-index.svg)
-
-
-
 
 ---
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-vm_extension_deployment_model: "VM Extension Deployment Model" {shape: rectangle}
-extension_architecture: "Extension Architecture" {shape: rectangle}
-listing_extensions: "Listing Extensions" {shape: rectangle}
-custom_script_extension: "Custom Script Extension" {shape: rectangle}
-azure_monitor_agent_ama_extension: "Azure Monitor Agent (AMA) Extension" {shape: rectangle}
-diagnostic_extension_lad_wad: "Diagnostic Extension (LAD / WAD)" {shape: rectangle}
-
-center -> vm_extension_deployment_model
-center -> extension_architecture
-center -> listing_extensions
-center -> custom_script_extension
-center -> azure_monitor_agent_ama_extension
-center -> diagnostic_extension_lad_wad
-```
 
 ## VM Extension Deployment Model
 

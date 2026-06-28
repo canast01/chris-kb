@@ -5,37 +5,12 @@ tags:
 ---
 # Unity — Authentication
 
-
 <div class="kb-summary">
 Authentication reference covering Authentication Overview, Unisphere — Active Directory Integration, NAS Server — Active Directory Domain Join, NAS Server — NFS with Kerberos, LDAP for NFS UID/GID Mapping and 4 more sections.
 
 *Applies to: Unity XT*
 </div>
 ![Unity — Authentication](../../../../assets/storage-dell-unity-security-authentication.svg)
-
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-authentication_overview: "Authentication Overview" {shape: rectangle}
-unisphere_active_directory_integrati: "Unisphere — Active Directory Integration" {shape: rectangle}
-nas_server_active_directory_domain_j: "NAS Server — Active Directory Domain Join" {shape: rectangle}
-nas_server_nfs_with_kerberos: "NAS Server — NFS with Kerberos" {shape: rectangle}
-ldap_for_nfs_uidgid_mapping: "LDAP for NFS UID/GID Mapping" {shape: rectangle}
-local_authentication: "Local Authentication" {shape: rectangle}
-core: "Unity XT Core" {shape: hexagon}
-
-external -> authentication_overview: traffic in
-authentication_overview -> unisphere_active_directory_integrati
-unisphere_active_directory_integrati -> nas_server_active_directory_domain_j
-nas_server_active_directory_domain_j -> nas_server_nfs_with_kerberos
-nas_server_nfs_with_kerberos -> ldap_for_nfs_uidgid_mapping
-ldap_for_nfs_uidgid_mapping -> local_authentication
-local_authentication -> core: secured path
-```
 
 ## Before you begin
 

@@ -6,14 +6,12 @@ tags:
 ---
 # Aria Suite Lifecycle — Standards
 
-
 <div class="kb-summary">
 Standards reference covering Pre-Deployment Checklist, Deployment Size Reference, Certificate Standards, Upgrade Sequence Rules, Version Matrix Compliance.
 
 *Applies to: Aria Suite Lifecycle 8.x*
 </div>
 ![Aria Suite Lifecycle — Standards](../../../../assets/virtualization-vmware-aria-suite-lifecycle-architecture-desi.svg)
-
 
   LCM Design Standards at a Glance
 
@@ -26,23 +24,6 @@ Standards reference covering Pre-Deployment Checklist, Deployment Size Reference
 | Aria Log Insight | vrli | `vrli-prod-01.example.local` |
 
 Node numbering: `-01`, `-02`, `-03` for clustered deployments.
-
-```d2
-direction: right
-
-center: "Aria Suite Lifecycle" {shape: hexagon}
-predeployment_checklist: "Pre-Deployment Checklist" {shape: rectangle}
-deployment_size_reference: "Deployment Size Reference" {shape: rectangle}
-certificate_standards: "Certificate Standards" {shape: rectangle}
-upgrade_sequence_rules: "Upgrade Sequence Rules" {shape: rectangle}
-version_matrix_compliance: "Version Matrix Compliance" {shape: rectangle}
-
-center -> predeployment_checklist
-center -> deployment_size_reference
-center -> certificate_standards
-center -> upgrade_sequence_rules
-center -> version_matrix_compliance
-```
 
 ## Pre-Deployment Checklist
 

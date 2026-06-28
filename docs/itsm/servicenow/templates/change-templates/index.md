@@ -9,7 +9,4 @@ Change request templates — standard, normal, and emergency change record templ
 
 *Applies to: ServiceNow*
 </div>
-![ServiceNow — Change Templates](../../../../assets/itsm-servicenow-templates-change-templates-index.svg)
-
-
 

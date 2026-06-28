@@ -10,8 +10,6 @@ IRE security controls: enforce two-person integrity for all vault access, use IR
 
 *Applies to: IRE (Isolated Recovery Environment)*
 </div>
-![IRE Security](../../../../assets/backup-dr-operations-ire-security-index.svg)
-
 
 ```powershell
 # Verify IRE local admin accounts are not shared with production
@@ -42,21 +40,6 @@ az vm delete --resource-group ire-rg --name <ire-vm> --yes --no-wait
 $newPass = [System.Web.Security.Membership]::GeneratePassword(32, 6)
 Set-ADAccountPassword -Identity ire-breakglass -NewPassword (ConvertTo-SecureString $newPass -AsPlainText -Force)
 # Print and seal in envelope — never store in digital form
-```
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-perimeter_controls: "Perimeter Controls" {shape: rectangle}
-identity_access: "Identity & Access" {shape: rectangle}
-audit_logging: "Audit & Logging" {shape: rectangle}
-core: "DR Operations Core" {shape: hexagon}
-
-external -> perimeter_controls: traffic in
-perimeter_controls -> identity_access
-identity_access -> audit_logging
-audit_logging -> core: secured path
 ```
 
 ## Before you begin

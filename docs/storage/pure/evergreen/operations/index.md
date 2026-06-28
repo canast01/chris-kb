@@ -5,16 +5,11 @@ tags:
 ---
 # Evergreen — Operations
 
-
 <div class="kb-summary">
 Evergreen — Operations reference: Health Checks, Procedures, Common Issues, CLI Reference, and 3 more.
 
 *Applies to: Evergreen*
 </div>
-![Evergreen — Operations](../../../../assets/storage-pure-evergreen-operations-index.svg)
-
-
-
 
 ![Evergreen — Operations — Diagram](../../../../assets/storage-pure-evergreen-operations-diagram.svg)
 

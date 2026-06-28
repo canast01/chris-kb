@@ -11,25 +11,7 @@ Common questions about Cisco DCNM operations, configuration, and troubleshooting
 </div>
 ![Cisco DCNM — Frequently Asked Questions](../../../../assets/san-cisco-cisco-dcnm-operations-faq.svg)
 
-
 ![Cisco DCNM FAQ](../../../../assets/san-cisco-cisco-dcnm-operations-faq.svg)
-
-```d2
-direction: right
-
-hub: "Cisco DCNM\nOperations" {shape: hexagon}
-general: "General" {shape: rectangle}
-configuration: "Configuration" {shape: rectangle}
-operations: "Operations" {shape: rectangle}
-troubleshooting: "Troubleshooting" {shape: rectangle}
-backup_and_recovery: "Backup and Recovery" {shape: rectangle}
-
-hub -> general
-hub -> configuration
-hub -> operations
-hub -> troubleshooting
-hub -> backup_and_recovery
-```
 
 ## General
 

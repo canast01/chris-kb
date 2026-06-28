@@ -4,8 +4,6 @@ tags:
   - operations
 ---
 # Confluence — Operations Scripts
-![Confluence — Operations Scripts](../../../../assets/itsm-confluence-operations-scripts-index.svg)
-
 
 ```bash
 # Common variables — set these in your shell or CI/CD environment
@@ -246,15 +244,6 @@ while IFS=$'\t' read -r key name; do
 done <<< "$spaces"
 
 echo "Permission audit: $OUTPUT ($(wc -l < "$OUTPUT") rows)"
-```
-
-```d2
-direction: right
-
-center: "Scripts" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> verify
 ```
 
 ## Before you begin

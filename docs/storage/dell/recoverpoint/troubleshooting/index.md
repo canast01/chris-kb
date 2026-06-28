@@ -7,16 +7,11 @@ search:
 ---
 # RecoverPoint — Troubleshooting
 
-
-
 <div class="kb-summary">
 Diagnosing RecoverPoint replication failures, consistency group errors, splitter connectivity, and RPO violations.
 
 *Applies to: RecoverPoint 5.x*
 </div>
-![RecoverPoint — Troubleshooting](../../../../assets/storage-dell-recoverpoint-troubleshooting-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

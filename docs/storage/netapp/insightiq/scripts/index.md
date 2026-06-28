@@ -3,8 +3,6 @@ tags:
   - netapp
 ---
 # InsightIQ — Scripts Reference
-![InsightIQ — Scripts Reference](../../../../assets/storage-netapp-insightiq-scripts-index.svg)
-
 
 ```python
 import requests
@@ -47,19 +45,6 @@ def email_report(report_bytes: bytes, filename: str, recipients: list):
 curl -sk -u svc-insightiq https://<cluster-ip>:8080/platform/1/statistics/summary/drive | jq .
 curl -sk -u svc-insightiq https://<cluster-ip>:8080/platform/3/statistics/current \
   -G --data-urlencode 'keys=node.ifs.bytes.in.rate,node.ifs.bytes.out.rate' | jq .
-```
-
-```d2
-direction: right
-
-center: "InsightIQ" {shape: rectangle}
-component_a: "Component A" {shape: rectangle}
-component_b: "Component B" {shape: rectangle}
-component_c: "Component C" {shape: rectangle}
-
-center -> component_a
-center -> component_b
-center -> component_c
 ```
 
 ## See also

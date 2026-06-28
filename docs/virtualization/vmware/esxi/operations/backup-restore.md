@@ -7,7 +7,6 @@ tags:
 ---
 # ESXi Backup & Restore
 
-
 <div class="kb-summary">
 ESXi backup and restore: VM-level backup via vStorage APIs for Data Protection, ESXi host config backup with `vim-cmd hostsvc/firmware/backup_config`, and restore procedure.
 
@@ -15,21 +14,9 @@ ESXi backup and restore: VM-level backup via vStorage APIs for Data Protection, 
 </div>
 ![ESXi Backup & Restore](../../../../assets/virtualization-vmware-esxi-operations-backup-restore.svg)
 
-
 ESXi Backup & Restore Flow
 
 The configuration bundle includes network settings, storage policies, service state, and advanced settings. It does not include VMFS datastores or VM data.
-
-```d2
-direction: right
-
-hub: "ESXi\nOperations" {shape: hexagon}
-vmlevel_backup: "VM-Level Backup" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> vmlevel_backup
-hub -> verify
-```
 
 ## Before you begin
 

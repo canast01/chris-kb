@@ -12,10 +12,6 @@ Git diagnostic techniques: enable GIT_TRACE environment variables for protocol-l
 
 *Applies to: Git 2.x*
 </div>
-![Git — Diagnostics](../../../../assets/itsm-git-troubleshooting-diagnostics-index.svg)
-
-
-
 
 ```mermaid
 graph TD

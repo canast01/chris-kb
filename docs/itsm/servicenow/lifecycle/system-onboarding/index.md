@@ -4,33 +4,11 @@ tags:
 ---
 # System Onboarding Procedure
 
-
 <div class="kb-summary">
 Brings a new physical server, VM, or cloud instance into full production management — covering identity, networking, security, monitoring, backup, and documentation.
 
 *Applies to: ServiceNow*
 </div>
-![System Onboarding Procedure](../../../../assets/itsm-servicenow-lifecycle-system-onboarding-index.svg)
-
-
-```d2
-direction: right
-
-center: "ServiceNow" {shape: hexagon}
-onboarding_stages: "Onboarding Stages" {shape: rectangle}
-2_os_hardening_and_security_baseline: "2. OS Hardening and Security Baseline" {shape: rectangle}
-3_monitoring_and_logging: "3. Monitoring and Logging" {shape: rectangle}
-4_backup_configuration: "4. Backup Configuration" {shape: rectangle}
-5_ansible_inventory_registration: "5. Ansible Inventory Registration" {shape: rectangle}
-6_cmdb_entry: "6. CMDB Entry" {shape: rectangle}
-
-center -> onboarding_stages
-center -> 2_os_hardening_and_security_baseline
-center -> 3_monitoring_and_logging
-center -> 4_backup_configuration
-center -> 5_ansible_inventory_registration
-center -> 6_cmdb_entry
-```
 
 ## Onboarding Stages
 
@@ -43,7 +21,6 @@ flowchart LR
     E --> F[CMDB &\nDocumentation]
     F --> G[Handover to\nApp / Ops Team]
 ```
-
 
 ## 2. OS Hardening and Security Baseline
 

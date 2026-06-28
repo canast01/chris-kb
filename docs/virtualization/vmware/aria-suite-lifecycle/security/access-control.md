@@ -6,7 +6,6 @@ tags:
 ---
 # Aria Suite Lifecycle — Access Control
 
-
 <div class="kb-summary">
 Access Control reference covering Service Account for API Automation, Separation of Duties, Auditing Access.
 
@@ -14,25 +13,11 @@ Access Control reference covering Service Account for API Automation, Separation
 </div>
 ![Aria Suite Lifecycle — Access Control](../../../../assets/virtualization-vmware-aria-suite-lifecycle-security-access-c.svg)
 
-
   LCM RBAC — AD Groups → LCM Roles
 
 Assign the minimum role required for the automation task — use `LCM_CONTENT_DEVELOPER` for scripts that only query health; use `LCM_ADMIN` only for scripts that trigger upgrades or certificate replacements.
 
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-separation_of_duties: "Separation of Duties" {shape: rectangle}
-auditing_access: "Auditing Access" {shape: rectangle}
-core: "Aria Suite Lifecycle Core" {shape: hexagon}
-
-external -> separation_of_duties: traffic in
-separation_of_duties -> auditing_access
-auditing_access -> core: secured path
-```
 
 ## Before you begin
 

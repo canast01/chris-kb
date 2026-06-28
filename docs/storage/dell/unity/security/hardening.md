@@ -5,37 +5,12 @@ tags:
 ---
 # Unity — Hardening
 
-
 <div class="kb-summary">
 Hardening reference covering Hardening Overview, Hardening Checklist, Credentials, Transport Security, Protocol Restrictions and 5 more sections.
 
 *Applies to: Unity XT*
 </div>
 ![Unity — Hardening](../../../../assets/storage-dell-unity-security-hardening.svg)
-
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-hardening_overview: "Hardening Overview" {shape: rectangle}
-hardening_checklist: "Hardening Checklist" {shape: rectangle}
-credentials: "Credentials" {shape: rectangle}
-transport_security: "Transport Security" {shape: rectangle}
-protocol_restrictions: "Protocol Restrictions" {shape: rectangle}
-management_access_restrictions: "Management Access Restrictions" {shape: rectangle}
-core: "Unity XT Core" {shape: hexagon}
-
-external -> hardening_overview: traffic in
-hardening_overview -> hardening_checklist
-hardening_checklist -> credentials
-credentials -> transport_security
-transport_security -> protocol_restrictions
-protocol_restrictions -> management_access_restrictions
-management_access_restrictions -> core: secured path
-```
 
 ## Before you begin
 

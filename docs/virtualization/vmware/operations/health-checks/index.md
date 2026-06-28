@@ -4,15 +4,11 @@ tags:
 ---
 # Virtualization Health Checks
 
-
 <div class="kb-summary">
 Virtualization health checks: ESXi host connectivity, cluster HA/DRS status, datastore space, vSAN health, and vCenter service status — reusable across VMware products.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Virtualization Health Checks](../../../../assets/virtualization-vmware-operations-health-checks-index.svg)
-
-
 
 ```d2
 direction: right

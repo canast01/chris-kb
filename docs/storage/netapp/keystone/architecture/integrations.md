@@ -5,7 +5,6 @@ tags:
 ---
 # Keystone — Integrations
 
-
 <div class="kb-summary">
 Integrations reference covering ActiveIQ Digital Advisor, Keystone Collector, REST API, ITSM Integration, CloudOps Integration.
 
@@ -13,21 +12,7 @@ Integrations reference covering ActiveIQ Digital Advisor, Keystone Collector, RE
 </div>
 ![Keystone — Integrations](../../../../assets/storage-netapp-keystone-architecture-integrations.svg)
 
-
-
-
 Authenticate via ActiveIQ API tokens generated in the BlueXP portal. Tokens are scoped to the customer account and expire on a configurable schedule.
-
-```d2
-direction: right
-
-center: "Keystone STaaS" {shape: hexagon}
-itsm_integration: "ITSM Integration" {shape: rectangle}
-cloudops_integration: "CloudOps Integration" {shape: rectangle}
-
-center -> itsm_integration
-center -> cloudops_integration
-```
 
 ## ITSM Integration
 

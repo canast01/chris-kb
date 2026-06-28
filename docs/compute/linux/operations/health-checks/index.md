@@ -5,14 +5,11 @@ tags:
 ---
 # Linux — Health Checks
 
-
 <div class="kb-summary">
 Routine checks, service validation, and status verification.
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>
-![Linux — Health Checks](../../../../assets/compute-linux-operations-health-checks-index.svg)
-
 
 ```d2
 direction: right
@@ -85,7 +82,6 @@ yum check-update --security 2>/dev/null | wc -l
 # Ubuntu/Debian:
 # apt list --upgradable 2>/dev/null | wc -l
 ```
-
 
 ## CPU and Load
 

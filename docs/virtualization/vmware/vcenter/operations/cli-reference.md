@@ -7,7 +7,6 @@ tags:
 ---
 # vCenter — CLI Reference (PowerCLI & DCLI)
 
-
 <div class="kb-summary">
 CLI Reference (PowerCLI & DCLI) reference covering Hosts, Clusters, Virtual Machines, Snapshots, Datastores and 3 more sections.
 
@@ -15,28 +14,7 @@ CLI Reference (PowerCLI & DCLI) reference covering Hosts, Clusters, Virtual Mach
 </div>
 ![vCenter — CLI Reference (PowerCLI & DCLI)](../../../../assets/virtualization-vmware-vcenter-operations-cli-reference.svg)
 
-
-
 ---
-
-```d2
-direction: right
-
-hub: "vCenter Server\nOperations" {shape: hexagon}
-clusters: "Clusters" {shape: rectangle}
-virtual_machines: "Virtual Machines" {shape: rectangle}
-snapshots: "Snapshots" {shape: rectangle}
-datastores: "Datastores" {shape: rectangle}
-alarms_events: "Alarms & Events" {shape: rectangle}
-permissions_roles: "Permissions & Roles" {shape: rectangle}
-
-hub -> clusters
-hub -> virtual_machines
-hub -> snapshots
-hub -> datastores
-hub -> alarms_events
-hub -> permissions_roles
-```
 
 ## Before you begin
 

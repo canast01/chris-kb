@@ -4,8 +4,6 @@ tags:
   - security
 ---
 # Linux — Authentication
-![Linux — Authentication](../../../../assets/compute-linux-security-authentication-index.svg)
-
 
 ```bash
 # Create a service account (no login shell, no home directory)

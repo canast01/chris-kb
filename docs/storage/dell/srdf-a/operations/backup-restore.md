@@ -6,7 +6,6 @@ tags:
 # SRDF/A — Backup & Restore
 ![SRDF/A — Backup & Restore](../../../../assets/storage-dell-srdf-a-operations-backup-restore.svg)
 
-
 ```bash
 # Set the Symmetrix/VMAX SID (array serial number)
 export SYMCLI_SID=000123456789
@@ -91,15 +90,6 @@ symrdf -g PROD_RDF_GROUP verify -consistent
 
 # Alert if RPO exceeds threshold
 symrdf -g PROD_RDF_GROUP query | grep -E "RPO|Mode"
-```
-
-```d2
-direction: right
-
-hub: "SRDF/A\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

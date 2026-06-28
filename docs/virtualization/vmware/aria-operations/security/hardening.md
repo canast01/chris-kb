@@ -7,7 +7,6 @@ tags:
 # Aria Operations Security Hardening
 ![Aria Operations Security Hardening](../../../../assets/virtualization-vmware-aria-operations-security-hardening.svg)
 
-
 ```bash
 # Verify current certificate subject and expiry
 echo | openssl s_client -connect vrops-prod-01.example.local:443 2>/dev/null | \
@@ -37,21 +36,6 @@ systemctl restart rsyslog
 ```bash
 # View authentication and admin action logs on the appliance
 tail -f /data/vcops/log/casa.log | grep -i "login\|logout\|admin\|role"
-```
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-perimeter_controls: "Perimeter Controls" {shape: rectangle}
-identity_access: "Identity & Access" {shape: rectangle}
-audit_logging: "Audit & Logging" {shape: rectangle}
-core: "Aria Operations Core" {shape: hexagon}
-
-external -> perimeter_controls: traffic in
-perimeter_controls -> identity_access
-identity_access -> audit_logging
-audit_logging -> core: secured path
 ```
 
 ## Before you begin

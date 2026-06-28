@@ -7,16 +7,11 @@ search:
 ---
 # Cisco DCNM — Troubleshooting
 
-
 <div class="kb-summary">
 Diagnosing DCNM fabric sync issues, template deployment failures, connectivity errors, and common DCNM problems.
 
 *Applies to: Cisco MDS · Nexus*
 </div>
-![Cisco DCNM — Troubleshooting](../../../../assets/san-cisco-cisco-dcnm-troubleshooting-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

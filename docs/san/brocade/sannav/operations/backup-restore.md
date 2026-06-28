@@ -6,7 +6,6 @@ tags:
 # Brocade SANnav — Backup and Restore
 ![Brocade SANnav — Backup and Restore](../../../../assets/san-brocade-sannav-operations-backup-restore.svg)
 
-
 ```bash
 ssh admin@sannav-dc1.corp.example.com
 
@@ -22,16 +21,6 @@ ls -lh /opt/sannav/backups/
 # Copy backup to remote server (if not using SANnav's built-in remote transfer)
 scp /opt/sannav/backups/sannav-backup-20260506.tar.gz \
     bkp-user@backup-server.corp.example.com:/backups/sannav/dc1/
-```
-
-
-```d2
-direction: right
-
-hub: "SANnav\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

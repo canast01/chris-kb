@@ -9,8 +9,6 @@ tags:
 First-day orientation guides for the most common infrastructure platforms. Each guide takes 30–60 minutes and gets you to a working baseline.
 </div>
 
-![Quick-Start Guides](../../assets/reference-quick-start-index.svg)
-
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="vsphere-day1/">
 <strong>vSphere Day 1</strong><br>

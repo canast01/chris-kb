@@ -5,31 +5,12 @@ tags:
 ---
 # PowerPath — Standards
 
-
 <div class="kb-summary">
 Standards reference covering Naming Conventions, Sizing and Path Count Model, Build and Deployment Baseline, Configuration Checklist.
 
 *Applies to: PowerPath*
 </div>
 ![PowerPath — Standards](../../../../assets/storage-dell-powerpath-architecture-design-standards.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "PowerPath" {shape: hexagon}
-naming_conventions: "Naming Conventions" {shape: rectangle}
-sizing_and_path_count_model: "Sizing and Path Count Model" {shape: rectangle}
-build_and_deployment_baseline: "Build and Deployment Baseline" {shape: rectangle}
-configuration_checklist: "Configuration Checklist" {shape: rectangle}
-
-center -> naming_conventions
-center -> sizing_and_path_count_model
-center -> build_and_deployment_baseline
-center -> configuration_checklist
-```
 
 ## Naming Conventions
 

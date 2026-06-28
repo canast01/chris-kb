@@ -5,35 +5,12 @@ tags:
 ---
 # SnapMirror — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Overview, Replication Types, Components, Connectivity, Key Commands and 2 more sections.
 
 *Applies to: SnapMirror*
 </div>
 ![SnapMirror — How It Works](../../../../assets/storage-netapp-snapmirror-architecture-how-it-works.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "SnapMirror" {shape: hexagon}
-replication_types: "Replication Types" {shape: rectangle}
-components: "Components" {shape: rectangle}
-connectivity: "Connectivity" {shape: rectangle}
-key_commands: "Key Commands" {shape: rectangle}
-dr_failover_sequence: "DR Failover Sequence" {shape: rectangle}
-svmlevel_replication: "SVM-Level Replication" {shape: rectangle}
-
-center -> replication_types
-center -> components
-center -> connectivity
-center -> key_commands
-center -> dr_failover_sequence
-center -> svmlevel_replication
-```
 
 ```plantuml
 @startuml

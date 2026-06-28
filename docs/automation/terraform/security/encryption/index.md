@@ -5,14 +5,11 @@ tags:
 ---
 # Terraform — Encryption
 
-
 <div class="kb-summary">
 Encryption reference covering Secrets and Encryption Architecture, Secrets Management with Terraform, Sensitive Variable Handling, Encryption Reference.
 
 *Applies to: Terraform 1.x*
 </div>
-![Terraform — Encryption](../../../../assets/automation-terraform-security-encryption-index.svg)
-
 
 ```d2
 direction: down
@@ -56,7 +53,6 @@ graph TD
     tfApply --> stateFile
     stateFile --> s3Encrypted
 ```
-
 
 ```hcl
 # Read a parameter from AWS SSM Parameter Store

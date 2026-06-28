@@ -6,7 +6,6 @@ tags:
 ---
 # Aria Operations for Networks — Authentication
 
-
 <div class="kb-summary">
 Authentication reference covering Authentication Methods, Local Authentication, SAML / VMware Identity Manager, API Token Authentication, Session Management and 3 more sections.
 
@@ -14,29 +13,7 @@ Authentication reference covering Authentication Methods, Local Authentication, 
 </div>
 ![Aria Operations for Networks — Authentication](../../../../assets/virtualization-vmware-aria-operations-for-networks-security-.svg)
 
-
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-authentication_methods: "Authentication Methods" {shape: rectangle}
-local_authentication: "Local Authentication" {shape: rectangle}
-api_token_authentication: "API Token Authentication" {shape: rectangle}
-session_management: "Session Management" {shape: rectangle}
-ldap_certificate_trust_ldaps: "LDAP Certificate Trust (LDAPS)" {shape: rectangle}
-token_rotation_policy: "Token Rotation Policy" {shape: rectangle}
-core: "Aria Operations for Networks Core" {shape: hexagon}
-
-external -> authentication_methods: traffic in
-authentication_methods -> local_authentication
-local_authentication -> api_token_authentication
-api_token_authentication -> session_management
-session_management -> ldap_certificate_trust_ldaps
-ldap_certificate_trust_ldaps -> token_rotation_policy
-token_rotation_policy -> core: secured path
-```
 
 ## Before you begin
 

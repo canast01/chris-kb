@@ -15,23 +15,6 @@ Pure Storage Evergreen is a commercial subscription program — it is not a sepa
 </div>
 ![Pure Storage Evergreen — Ports and Network Requirements](../../../../assets/storage-pure-evergreen-architecture-ports.svg)
 
-
-
-
-
-```d2
-direction: right
-
-center: "Evergreen" {shape: hexagon}
-how_it_works: "How It Works" {shape: rectangle}
-relevant_port_pages: "Relevant Port Pages" {shape: rectangle}
-upgraderelated_connectivity_outbound: "Upgrade-Related Connectivity (Outbound)" {shape: rectangle}
-
-center -> how_it_works
-center -> relevant_port_pages
-center -> upgraderelated_connectivity_outbound
-```
-
 ## How It Works
 
 Evergreen is Pure Storage's non-disruptive upgrade and subscription licensing model. Customers receive ongoing controller and software upgrades as part of their subscription — no separate Evergreen management plane or appliance is deployed on-premises.

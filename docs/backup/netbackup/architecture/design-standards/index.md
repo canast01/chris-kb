@@ -5,15 +5,11 @@ tags:
 ---
 # NetBackup Standards
 
-
 <div class="kb-summary">
 NetBackup Standards reference covering Naming Conventions, Retention Schedule, Backup Policy to Job Flow, Encryption Standard, Test Restore Standard.
 
 *Applies to: NetBackup 10.x*
 </div>
-![NetBackup Standards](../../../../assets/backup-netbackup-architecture-design-standards-index.svg)
-
-
 
 ```d2
 direction: down
@@ -52,8 +48,6 @@ encryption_standard -> test_restore_standard: hardens
 Compliance requirements may extend yearly retention to 10 years for regulated data.
 
 ## Backup Policy to Job Flow
-
-
 
 ## Encryption Standard
 

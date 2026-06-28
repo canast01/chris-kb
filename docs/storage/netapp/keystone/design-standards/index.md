@@ -3,8 +3,6 @@ tags:
   - netapp
 ---
 # NetApp Keystone — Design Standards
-![NetApp Keystone — Design Standards](../../../../assets/storage-netapp-keystone-design-standards-index.svg)
-
 
 ```bash
 # Set a volume comment to identify application owner and Keystone tier

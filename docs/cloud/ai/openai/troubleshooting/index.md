@@ -6,16 +6,11 @@ search:
 ---
 # OpenAI API — Troubleshooting
 
-
 <div class="kb-summary">
 Troubleshooting reference covering Error Code Reference, Rate Limit Troubleshooting, Token Limit Issues, Authentication Issues, Timeout and Latency and 3 more sections.
 
 *Applies to: OpenAI API*
 </div>
-![OpenAI API — Troubleshooting](../../../../assets/cloud-ai-openai-troubleshooting-index.svg)
-
-
-
 
 ```d2
 direction: down

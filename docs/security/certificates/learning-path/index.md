@@ -8,31 +8,12 @@ tags:
 <div class="kb-summary">
 Recommended reading order for PKI and certificate management. Follow these stages in order to build a complete mental model before working with it in production.
 </div>
-![PKI & Certificates — Learning Path](../../../assets/security-certificates-learning-path-index.svg)
-
-
-
 
 ```mermaid
 graph LR
   S1[Architecture] --> S2[Deploy] --> S3[Operations] --> S4[Security] --> S5[Troubleshoot]
   classDef stage fill:#1e3a5f,stroke:#2563eb,color:#fff
   class S1,S2,S3,S4,S5 stage
-```
-
-```d2
-direction: right
-
-stage_1_architecture: "Stage 1 — Architecture" {shape: rectangle}
-stage_2_deployment: "Stage 2 — Deployment" {shape: rectangle}
-stage_3_operations: "Stage 3 — Operations" {shape: rectangle}
-stage_4_security: "Stage 4 — Security" {shape: rectangle}
-stage_5_troubleshooting: "Stage 5 — Troubleshooting" {shape: rectangle}
-
-stage_1_architecture -> stage_2_deployment: next
-stage_2_deployment -> stage_3_operations: next
-stage_3_operations -> stage_4_security: next
-stage_4_security -> stage_5_troubleshooting: next
 ```
 
 ## Before you begin

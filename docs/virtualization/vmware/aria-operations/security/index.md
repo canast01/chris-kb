@@ -11,9 +11,6 @@ Aria Operations hardening — SSO configuration, RBAC, adapter credential manage
 
 *Applies to: Aria Ops 8.x*
 </div>
-![Aria Operations — Security](../../../../assets/virtualization-vmware-aria-operations-security-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

@@ -9,9 +9,6 @@ ServiceNow knowledge base covering multi-instance SaaS architecture, ITSM/CMDB p
 
 *Applies to: ServiceNow*
 </div>
-![ServiceNow](../../assets/itsm-servicenow-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

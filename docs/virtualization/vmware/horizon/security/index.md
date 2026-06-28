@@ -11,9 +11,6 @@ Horizon security controls — AD authentication, RSA SecurID and SAML MFA, Conne
 
 *Applies to: Horizon 8.x*
 </div>
-![Horizon (VDI) — Security](../../../../assets/virtualization-vmware-horizon-security-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

@@ -13,13 +13,8 @@ End-to-end deployment guide for vSphere Replication. Covers VRA OVA deployment a
 
 *Applies to: vSphere Replication 8.x*
 </div>
-![vSphere Replication — Deploy](../../../../assets/virtualization-vmware-vsphere-replication-deploy-index.svg)
-
-
-
 
 ---
-
 
 ```mermaid
 flowchart TD

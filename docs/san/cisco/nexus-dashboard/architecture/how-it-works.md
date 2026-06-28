@@ -5,35 +5,12 @@ tags:
 ---
 # Nexus Dashboard — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Overview, Key Hosted Applications, Deployment Topology, Node Types, Network Interfaces Per Node and 3 more sections.
 
 *Applies to: Cisco MDS · Nexus*
 </div>
 ![Nexus Dashboard — How It Works](../../../../assets/san-cisco-nexus-dashboard-architecture-how-it-works.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Nexus Dashboard" {shape: hexagon}
-software_versioning: "Software Versioning" {shape: rectangle}
-multisite_fabric_management: "Multi-Site Fabric Management" {shape: rectangle}
-nexus_dashboard_fabric_controller_nd: "Nexus Dashboard Fabric Controller (NDFC)" {shape: rectangle}
-nexus_dashboard_insights: "Nexus Dashboard Insights" {shape: rectangle}
-nexus_dashboard_orchestrator: "Nexus Dashboard Orchestrator" {shape: rectangle}
-high_availability_architecture: "High Availability Architecture" {shape: rectangle}
-
-center -> software_versioning
-center -> multisite_fabric_management
-center -> nexus_dashboard_fabric_controller_nd
-center -> nexus_dashboard_insights
-center -> nexus_dashboard_orchestrator
-center -> high_availability_architecture
-```
 
 ```plantuml
 @startuml

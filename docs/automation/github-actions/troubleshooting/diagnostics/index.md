@@ -12,10 +12,6 @@ GitHub Actions diagnostic commands: enable step-level debug logging, inspect run
 
 *Applies to: GitHub Actions (Cloud and self-hosted runners)*
 </div>
-![GitHub Actions — Diagnostics](../../../../assets/automation-github-actions-troubleshooting-diagnostics-index.svg)
-
-
-
 
 ```mermaid
 graph TD

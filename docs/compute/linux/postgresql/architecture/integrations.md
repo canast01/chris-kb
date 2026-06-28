@@ -12,26 +12,6 @@ PostgreSQL integration points — application connectors (JDBC, psycopg2, asyncp
 </div>
 ![PostgreSQL — Integrations](../../../../assets/compute-linux-postgresql-architecture-integrations.svg)
 
-
-
-
-```d2
-direction: right
-
-center: "PostgreSQL" {shape: hexagon}
-application_connectors: "Application Connectors" {shape: rectangle}
-pgbouncer_integration: "PgBouncer Integration" {shape: rectangle}
-monitoring_integration: "Monitoring Integration" {shape: rectangle}
-logical_replication: "Logical Replication" {shape: rectangle}
-backup_tools: "Backup Tools" {shape: rectangle}
-
-center -> application_connectors
-center -> pgbouncer_integration
-center -> monitoring_integration
-center -> logical_replication
-center -> backup_tools
-```
-
 ## Application Connectors
 
 | Language | Library | Notes |

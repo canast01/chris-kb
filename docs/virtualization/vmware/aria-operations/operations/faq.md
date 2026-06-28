@@ -11,25 +11,7 @@ Common questions about VMware Aria Operations operations, configuration, and tro
 </div>
 ![VMware Aria Operations — Frequently Asked Questions](../../../../assets/virtualization-vmware-aria-operations-operations-faq.svg)
 
-
 ![VMware Aria Operations FAQ](../../../../assets/virtualization-vmware-aria-operations-operations-faq.svg)
-
-```d2
-direction: right
-
-hub: "Aria Operations\nOperations" {shape: hexagon}
-general: "General" {shape: rectangle}
-configuration: "Configuration" {shape: rectangle}
-operations: "Operations" {shape: rectangle}
-troubleshooting: "Troubleshooting" {shape: rectangle}
-backup_and_recovery: "Backup and Recovery" {shape: rectangle}
-
-hub -> general
-hub -> configuration
-hub -> operations
-hub -> troubleshooting
-hub -> backup_and_recovery
-```
 
 ## General
 

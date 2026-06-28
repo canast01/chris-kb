@@ -5,35 +5,11 @@ tags:
 ---
 # Azure OpenAI Model Access
 
-
 <div class="kb-summary">
 Azure OpenAI model availability varies by region and subscription tier. Some models require explicit access approval. This page covers checking availability, requesting quota, and managing rate limits.
 
 *Applies to: Azure OpenAI*
 </div>
-![Azure OpenAI Model Access](../../../../assets/cloud-ai-azure-openai-model-access-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Azure OpenAI" {shape: hexagon}
-model_availability_by_region: "Model Availability by Region" {shape: rectangle}
-requesting_access_for_gated_models: "Requesting Access for Gated Models" {shape: rectangle}
-quota_and_rate_limits: "Quota and Rate Limits" {shape: rectangle}
-rate_limit_headers: "Rate Limit Headers" {shape: rectangle}
-multiregion_strategy: "Multi-Region Strategy" {shape: rectangle}
-common_access_issues: "Common Access Issues" {shape: rectangle}
-
-center -> model_availability_by_region
-center -> requesting_access_for_gated_models
-center -> quota_and_rate_limits
-center -> rate_limit_headers
-center -> multiregion_strategy
-center -> common_access_issues
-```
 
 ## Model Availability by Region
 

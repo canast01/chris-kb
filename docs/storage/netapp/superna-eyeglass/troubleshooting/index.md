@@ -7,16 +7,11 @@ search:
 ---
 # Superna Eyeglass — Troubleshooting
 
-
-
 <div class="kb-summary">
 Diagnosing Superna Eyeglass replication failures, configuration sync errors, DR orchestration issues, and Eyeglass connectivity.
 
 *Applies to: Superna Eyeglass*
 </div>
-![Superna Eyeglass — Troubleshooting](../../../../assets/storage-netapp-superna-eyeglass-troubleshooting-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

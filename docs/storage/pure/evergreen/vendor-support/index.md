@@ -4,16 +4,11 @@ tags:
 ---
 # Pure Storage Evergreen Vendor Support
 
-
 <div class="kb-summary">
 Pure Storage Evergreen Vendor Support reference covering Support Portal, Opening a Case, Information to Collect, SLA Tiers, Escalation Path.
 
 *Applies to: Evergreen*
 </div>
-![Pure Storage Evergreen Vendor Support](../../../../assets/storage-pure-evergreen-vendor-support-index.svg)
-
-
-
 
 ![Pure Storage Evergreen Vendor Support — Diagram](../../../../assets/storage-pure-evergreen-vendor-support-diagram.svg)
 

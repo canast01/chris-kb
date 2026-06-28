@@ -7,16 +7,11 @@ search:
 ---
 # Confluence — Troubleshooting
 
-
-
 <div class="kb-summary">
 Diagnosing Confluence performance issues, indexing failures, login problems, macro errors, and sync failures.
 
 *Applies to: Confluence Cloud / Data Center*
 </div>
-![Confluence — Troubleshooting](../../../assets/itsm-confluence-troubleshooting-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

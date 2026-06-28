@@ -16,28 +16,6 @@ Firewall port reference for VMware Aria Operations (formerly vRealize Operations
 </div>
 ![Aria Operations — Ports and Network Requirements](../../../../assets/virtualization-vmware-aria-operations-architecture-ports.svg)
 
-
-
-
-```d2
-direction: right
-
-center: "Aria Operations" {shape: hexagon}
-inbound_client_to_aria_operations_cl: "Inbound — Client to Aria Operations Cluster" {shape: rectangle}
-remote_collector_to_analytics_cluste: "Remote Collector to Analytics Cluster" {shape: rectangle}
-aria_operations_analytics_cluster_ad: "Aria Operations Analytics Cluster — Adapter Connections" {shape: rectangle}
-aria_operations_internal_cluster_por: "Aria Operations — Internal Cluster Ports" {shape: rectangle}
-outbound_external_services: "Outbound — External Services" {shape: rectangle}
-firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
-
-center -> inbound_client_to_aria_operations_cl
-center -> remote_collector_to_analytics_cluste
-center -> aria_operations_analytics_cluster_ad
-center -> aria_operations_internal_cluster_por
-center -> outbound_external_services
-center -> firewall_zone_summary
-```
-
 ## Before you begin
 
 - Aria Operations analytics cluster runs as 3 nodes (master, replica, data) — all nodes share a cluster VIP; open ports to the VIP and all node IPs

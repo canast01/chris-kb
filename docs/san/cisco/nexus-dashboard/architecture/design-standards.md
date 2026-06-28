@@ -5,7 +5,6 @@ tags:
 ---
 # Nexus Dashboard — Standards
 
-
 <div class="kb-summary">
 Standards reference covering Overview, Cluster Naming, Network Interface Standards, Sizing Guidelines, Site Registration Standards and 6 more sections.
 
@@ -13,31 +12,9 @@ Standards reference covering Overview, Cluster Naming, Network Interface Standar
 </div>
 ![Nexus Dashboard — Standards](../../../../assets/san-cisco-nexus-dashboard-architecture-design-standards.svg)
 
-
-
-
 > Part of the [Nexus Dashboard](../index.md) reference.
 
 ---
-
-```d2
-direction: right
-
-center: "Nexus Dashboard" {shape: hexagon}
-cluster_naming: "Cluster Naming" {shape: rectangle}
-network_interface_standards: "Network Interface Standards" {shape: rectangle}
-sizing_guidelines: "Sizing Guidelines" {shape: rectangle}
-site_registration_standards: "Site Registration Standards" {shape: rectangle}
-application_version_compatibility_st: "Application Version Compatibility Standards" {shape: rectangle}
-ndfc_san_configuration_baselines: "NDFC SAN Configuration Baselines" {shape: rectangle}
-
-center -> cluster_naming
-center -> network_interface_standards
-center -> sizing_guidelines
-center -> site_registration_standards
-center -> application_version_compatibility_st
-center -> ndfc_san_configuration_baselines
-```
 
 ## Overview
 

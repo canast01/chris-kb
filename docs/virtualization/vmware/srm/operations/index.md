@@ -11,9 +11,6 @@ Site Recovery Manager daily operations — protection group management, replicat
 
 *Applies to: SRM 8.x / 9.x*
 </div>
-![Site Recovery Manager — Operations](../../../../assets/virtualization-vmware-srm-operations-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

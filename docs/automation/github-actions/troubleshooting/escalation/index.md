@@ -12,10 +12,6 @@ GitHub Actions escalation: when to escalate to GitHub Enterprise Support, how to
 
 *Applies to: GitHub Actions (cloud + self-hosted runners)*
 </div>
-![GitHub Actions — Escalation](../../../../assets/automation-github-actions-troubleshooting-escalation-index.svg)
-
-
-
 
 ```plantuml
 @startuml

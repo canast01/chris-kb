@@ -4,32 +4,15 @@ tags:
 ---
 # Cluster Inventory
 
-
 <div class="kb-summary">
 Cluster Inventory reference covering Overview, Cluster Inventory Table, Fields Reference, Cluster Configuration Checklist.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Cluster Inventory](../../../../assets/virtualization-vmware-reference-inventory-cluster-inventory.svg)
-
-
 
 > Part of the [Inventory](index.md) reference.
 
 ---
-
-```d2
-direction: right
-
-center: "Inventory" {shape: rectangle}
-cluster_inventory_table: "Cluster Inventory Table" {shape: rectangle}
-fields_reference: "Fields Reference" {shape: rectangle}
-cluster_configuration_checklist: "Cluster Configuration Checklist" {shape: rectangle}
-
-center -> cluster_inventory_table
-center -> fields_reference
-center -> cluster_configuration_checklist
-```
 
 ## Overview
 

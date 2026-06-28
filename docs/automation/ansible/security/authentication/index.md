@@ -4,8 +4,6 @@ tags:
   - security
 ---
 # Ansible — Authentication
-![Ansible — Authentication](../../../../assets/automation-ansible-security-authentication-index.svg)
-
 
 ```bash
 # ED25519 — preferred (faster, smaller, equally secure)

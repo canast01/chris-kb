@@ -5,35 +5,13 @@ tags:
 ---
 # AWS — Integrations
 
-
 <div class="kb-summary">
 AWS integration patterns: Active Directory Connector, VPC peering and PrivateLink, API Gateway service mesh, EventBridge routing, and on-premises Direct Connect.
 
 *Applies to: AWS*
 </div>
-![AWS — Integrations](../../../../assets/cloud-aws-architecture-integrations-index.svg)
-
 
 ---
-
-```d2
-direction: right
-
-center: "AWS" {shape: hexagon}
-s3_object_lifecycle: "S3 Object Lifecycle" {shape: rectangle}
-iam_identity_center_sso: "IAM Identity Center (SSO)" {shape: rectangle}
-cloudtrail_to_siem: "CloudTrail to SIEM" {shape: rectangle}
-aws_backup: "AWS Backup" {shape: rectangle}
-cloudformation_stack_lifecycle: "CloudFormation Stack Lifecycle" {shape: rectangle}
-github_actions_oidc: "GitHub Actions + OIDC" {shape: rectangle}
-
-center -> s3_object_lifecycle
-center -> iam_identity_center_sso
-center -> cloudtrail_to_siem
-center -> aws_backup
-center -> cloudformation_stack_lifecycle
-center -> github_actions_oidc
-```
 
 ## S3 Object Lifecycle
 
@@ -47,7 +25,6 @@ flowchart LR
 
     upload -->|"Lifecycle rule"| ia -->|"Lifecycle rule"| glacier -->|"Lifecycle rule"| deepArchive -->|"Lifecycle rule"| expire
 ```
-
 
 **AD Connector** (proxy authentication to on-premises AD without replication):
 ```bash

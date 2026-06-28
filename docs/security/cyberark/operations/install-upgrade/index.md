@@ -5,16 +5,11 @@ tags:
 ---
 # CyberArk Lifecycle
 
-
 <div class="kb-summary">
 CyberArk follows a structured upgrade sequence to preserve Vault integrity: the Digital Vault is upgraded first, followed by CPM, then PSM, then PVWA; upgrading out of order is unsupported and may result in component incompatibility.
 
 *Applies to: CyberArk PAM*
 </div>
-![CyberArk Lifecycle](../../../../assets/security-cyberark-operations-install-upgrade-index.svg)
-
-
-
 
  The DR Vault must also be upgraded and its replication link verified after each major upgrade. CyberArk supports a rolling EOL model where each major version receives 5 years of support, with extended support available under a separate agreement.
 
@@ -32,17 +27,6 @@ CyberArk follows a structured upgrade sequence to preserve Vault integrity: the 
 - Snapshot all Windows VMs hosting PAM components
 - Review CyberArk release notes for breaking changes
 - Verify licence count covers current account inventory
-
-```d2
-direction: right
-
-plan: "Plan" {shape: oval}
-verify: "Verify" {shape: rectangle}
-validate: "Validate" {shape: oval}
-
-plan -> verify
-verify -> validate
-```
 
 ## Before you begin
 

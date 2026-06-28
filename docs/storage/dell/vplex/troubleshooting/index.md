@@ -12,9 +12,6 @@ Dell VPLEX — Troubleshooting navigation for Common Issues, Diagnostics, Escala
 
 *Applies to: VPLEX*
 </div>
-![Dell VPLEX — Troubleshooting](../../../../assets/storage-dell-vplex-troubleshooting-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="common-issues/"><strong>Common Issues</strong><span>Quick reference for common problems and resolutions.</span></a>

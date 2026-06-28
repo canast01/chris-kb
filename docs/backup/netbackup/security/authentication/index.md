@@ -4,8 +4,6 @@ tags:
   - security
 ---
 # NetBackup — Authentication
-![NetBackup — Authentication](../../../../assets/backup-netbackup-security-authentication-index.svg)
-
 
 ```bash
 # List all certificates in the NetBackup CA

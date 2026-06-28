@@ -4,24 +4,10 @@ tags:
   - servicenow
 ---
 # ServiceNow Access Control
-![ServiceNow Access Control](../../../../assets/itsm-servicenow-security-access-control-index.svg)
-
-
 
 ```text
 
 ---
-
-```d2
-direction: down
-
-root: "ServiceNow\nAccess Control" {shape: hexagon}
-access_control_lists_acls: "Access Control Lists (ACLs)" {shape: rectangle}
-resources: Protected Resources {shape: cylinder}
-
-root -> access_control_lists_acls: role
-access_control_lists_acls -> resources: scoped
-```
 
 ## Before you begin
 

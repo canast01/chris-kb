@@ -12,21 +12,6 @@ PowerCLI health check routines for vSphere platform health: host connection stat
 *Applies to: PowerCLI 13.x*
 </div>
 
-
-
-```d2
-direction: right
-
-hub: "PowerCLI\nOperations" {shape: hexagon}
-run_this_routine: "Run This Routine" {shape: rectangle}
-individual_checks: "Individual Checks" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> run_this_routine
-hub -> individual_checks
-hub -> verify
-```
-
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

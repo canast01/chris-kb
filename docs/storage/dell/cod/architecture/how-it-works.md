@@ -5,33 +5,12 @@ tags:
 ---
 # Capacity on Demand — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Overview, Capacity Model, Object Storage Data Model, Data Protection Architecture, Multi-Site and Geo Replication, Access Control and Authentication, Namespace and Metadata Service, HA and Redundancy, Activation Flow, DR Site COD Architecture.
 
 *Applies to: Cloud for Desktop (COD)*
 </div>
 ![Capacity on Demand — How It Works](../../../../assets/storage-dell-cod-architecture-how-it-works.svg)
-
-
-```d2
-direction: right
-
-center: "Cloud On Demand" {shape: hexagon}
-capacity_model: "Capacity Model" {shape: rectangle}
-object_storage_data_model: "Object Storage Data Model" {shape: rectangle}
-data_protection_architecture: "Data Protection Architecture" {shape: rectangle}
-multisite_and_geo_replication: "Multi-Site and Geo Replication" {shape: rectangle}
-access_control_and_authentication: "Access Control and Authentication" {shape: rectangle}
-namespace_and_metadata_service: "Namespace and Metadata Service" {shape: rectangle}
-
-center -> capacity_model
-center -> object_storage_data_model
-center -> data_protection_architecture
-center -> multisite_and_geo_replication
-center -> access_control_and_authentication
-center -> namespace_and_metadata_service
-```
 
 ```plantuml
 @startuml
@@ -74,7 +53,6 @@ graph LR
   class APEX,BILL cloud
   class ADMIN host
 ```
-
 
 ## Object Storage Data Model
 

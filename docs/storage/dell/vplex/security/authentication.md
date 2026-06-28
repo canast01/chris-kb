@@ -5,16 +5,12 @@ tags:
 ---
 # Dell VPLEX — Authentication
 
-
 <div class="kb-summary">
 Authentication for VPLEX management is split across two interfaces: SSH-based `vplexcli` access (local VMS accounts only) and the Unisphere for VPLEX web GUI (local accounts or LDAP/AD-integrated accounts).
 
 *Applies to: VPLEX*
 </div>
 ![Dell VPLEX — Authentication](../../../../assets/storage-dell-vplex-security-authentication.svg)
-
-
-
 
 ```mermaid
 flowchart LR
@@ -34,25 +30,6 @@ flowchart LR
     jumpHost -->|"SSH key\ned25519"| vms --> vplexcli
     browser --> unisphere
     unisphere -->|"LDAP bind\ngroup-to-role mapping"| ldap
-```
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-local_accounts: "Local Accounts" {shape: rectangle}
-ldap_active_directory_integration: "LDAP / Active Directory Integration" {shape: rectangle}
-audit_logging: "Audit Logging" {shape: rectangle}
-session_management: "Session Management" {shape: rectangle}
-related_reference: "Related Reference" {shape: rectangle}
-core: "VPLEX Core" {shape: hexagon}
-
-external -> local_accounts: traffic in
-local_accounts -> ldap_active_directory_integration
-ldap_active_directory_integration -> audit_logging
-audit_logging -> session_management
-session_management -> related_reference
-related_reference -> core: secured path
 ```
 
 ## Before you begin

@@ -5,16 +5,11 @@ tags:
 ---
 # Jira — Security
 
-
-
 <div class="kb-summary">
 Jira hardening — permission schemes, project roles, application access, and Jira Software security configuration.
 
 *Applies to: Jira 9.x / Cloud*
 </div>
-![Jira — Security](../../../assets/itsm-jira-security-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

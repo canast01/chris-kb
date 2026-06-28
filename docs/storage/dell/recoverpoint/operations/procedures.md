@@ -5,7 +5,6 @@ tags:
 ---
 # RecoverPoint — Procedures
 
-
 <div class="kb-summary">
 RecoverPoint procedures: adding consistency groups, bookmarking for CDP recovery, image access (enable test copy), failover, and image disable procedure.
 
@@ -13,25 +12,6 @@ RecoverPoint procedures: adding consistency groups, bookmarking for CDP recovery
 </div>
 
 ---
-
-```d2
-direction: right
-
-hub: "RecoverPoint\nOperations" {shape: hexagon}
-change_readiness: "Change Readiness" {shape: rectangle}
-incident_triage: "Incident Triage" {shape: rectangle}
-maintenance_window: "Maintenance Window" {shape: rectangle}
-postchange_validation: "Post-Change Validation" {shape: rectangle}
-failover: "Failover" {shape: rectangle}
-recovery: "Recovery" {shape: rectangle}
-
-hub -> change_readiness
-hub -> incident_triage
-hub -> maintenance_window
-hub -> postchange_validation
-hub -> failover
-hub -> recovery
-```
 
 ## Before you begin
 
@@ -169,7 +149,6 @@ flowchart TD
     style disableImageAccess fill:#b45309,color:#fff
     style confirmActive fill:#15803d,color:#fff
 ```
-
 
 ### Post-Failover Validation
 

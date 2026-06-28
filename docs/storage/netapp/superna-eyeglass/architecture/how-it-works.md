@@ -5,27 +5,12 @@ tags:
 ---
 # Superna Eyeglass — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Overview, Component Topology, Connectivity, Key CLI Commands, Sizing and 1 more sections.
 
 *Applies to: Superna Eyeglass*
 </div>
 ![Superna Eyeglass — How It Works](../../../../assets/storage-netapp-superna-eyeglass-architecture-how-it-works.svg)
-
-
-```d2
-direction: right
-
-center: "Superna Eyeglass" {shape: hexagon}
-component_topology: "Component Topology" {shape: rectangle}
-sizing: "Sizing" {shape: rectangle}
-rpo_tiers: "RPO Tiers" {shape: rectangle}
-
-center -> component_topology
-center -> sizing
-center -> rpo_tiers
-```
 
 ```plantuml
 @startuml
@@ -73,7 +58,6 @@ graph LR
   class EG mgmt
   class ADMIN,DNS host
 ```
-
 
 ## Sizing
 

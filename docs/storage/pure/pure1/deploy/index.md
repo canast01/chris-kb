@@ -12,10 +12,6 @@ Step-by-step guide to enabling Phone Home on Pure Storage FlashArray and FlashBl
 
 *Applies to: Pure1*
 </div>
-![Pure1 — Initial Setup](../../../../assets/storage-pure-pure1-deploy-index.svg)
-
-
-
 
 ```mermaid
 flowchart TD
@@ -61,9 +57,6 @@ configure_alert_notifications -> validate
 - **Logging:** record every IP address, hostname, and credential set assigned during this deployment
 
 ---
-
-
-
 
 ## Prerequisites
 

@@ -7,13 +7,6 @@ tags:
 <div class="kb-summary">
 Pure Storage knowledge base covering FlashArray and FlashBlade — including ActiveDR, ActiveCluster, Evergreen, and Pure1. Includes architecture references, operational procedures, CLI commands, replication, and troubleshooting guides.
 </div>
-![Pure Storage](../../assets/storage-pure-index.svg)
-
-
-
-
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="deploy/"><strong>Deploy</strong><span>FlashArray and FlashBlade initial deployment, Purity setup, and host connectivity procedures.</span></a>

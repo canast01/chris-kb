@@ -5,14 +5,11 @@ tags:
 ---
 # PowerShell — Authentication
 
-
 <div class="kb-summary">
 PowerShell authentication: credential objects, `Get-Credential`, service account management, certificate-based auth, and `-UseDefaultCredentials` with Kerberos.
 
 *Applies to: PowerShell 7.x*
 </div>
-![PowerShell — Authentication](../../../../assets/automation-powershell-security-authentication-index.svg)
-
 
 ---
 
@@ -79,7 +76,6 @@ graph TD
     azKeyVault --> psCred
     psCred --> cmdlet
 ```
-
 
 ## Authentication Reference
 

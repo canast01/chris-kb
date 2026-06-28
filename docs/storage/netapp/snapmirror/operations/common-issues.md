@@ -5,7 +5,6 @@ tags:
 ---
 # SnapMirror — Known Issues
 
-
 <div class="kb-summary">
 SnapMirror known issues: lagging relationships, abort after transfer, source volume offline, missing common snapshot causing initialize failure, and ONTAP version mismatch.
 
@@ -13,23 +12,7 @@ SnapMirror known issues: lagging relationships, abort after transfer, source vol
 </div>
 ![SnapMirror — Known Issues](../../../../assets/storage-netapp-snapmirror-operations-common-issues.svg)
 
-
-
-
 ---
-
-```d2
-direction: right
-
-hub: "SnapMirror\nOperations" {shape: hexagon}
-incident_triage: "Incident Triage" {shape: rectangle}
-common_issues_reference: "Common Issues Reference" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> incident_triage
-hub -> common_issues_reference
-hub -> verify
-```
 
 ## Before you begin
 

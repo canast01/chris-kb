@@ -5,33 +5,12 @@ tags:
 ---
 # Data Domain — Standards
 
-
 <div class="kb-summary">
 Standards reference covering Sizing Considerations, MTree Naming Convention, DD Boost Storage Unit Naming, Replication Context Naming, MTree Quota Standards and 4 more sections.
 
 *Applies to: Data Domain DD OS 7.x*
 </div>
 ![Data Domain — Standards](../../../../assets/storage-dell-data-domain-architecture-design-standards.svg)
-
-
-```d2
-direction: right
-
-center: "Data Domain" {shape: hexagon}
-sizing_considerations: "Sizing Considerations" {shape: rectangle}
-mtree_naming_convention: "MTree Naming Convention" {shape: rectangle}
-replication_context_naming: "Replication Context Naming" {shape: rectangle}
-mtree_quota_standards: "MTree Quota Standards" {shape: rectangle}
-retention_lock_settings: "Retention Lock Settings" {shape: rectangle}
-dd_boost_user_naming: "DD Boost User Naming" {shape: rectangle}
-
-center -> sizing_considerations
-center -> mtree_naming_convention
-center -> replication_context_naming
-center -> mtree_quota_standards
-center -> retention_lock_settings
-center -> dd_boost_user_naming
-```
 
 ## Sizing Considerations
 
@@ -59,7 +38,6 @@ graph TD
     nbOracle -->|"DD Boost SU"| suNB["Storage Unit: su-netbackup-ora\nUser: ddboost-netbackup"]
     cvSQL -->|"DD Boost SU"| suCV["Storage Unit: su-commvault-sql\nUser: ddboost-commvault"]
 ```
-
 
 Each storage unit maps to exactly one MTree. Create the MTree first, then create the storage unit pointing at it.
 

@@ -10,9 +10,6 @@ FOD — Security reference: Authentication, Access Control, Encryption, Hardenin
 
 *Applies to: Dell FOD*
 </div>
-![FOD — Security](../../../../assets/storage-dell-fod-security-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="authentication/"><strong>Authentication</strong><span>SSO, LDAP, local accounts, and identity sources.</span></a>

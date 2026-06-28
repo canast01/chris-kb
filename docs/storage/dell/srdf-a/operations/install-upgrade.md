@@ -6,7 +6,6 @@ tags:
 # SRDF/A — Install & Upgrade
 ![SRDF/A — Install & Upgrade](../../../../assets/storage-dell-srdf-a-operations-install-upgrade.svg)
 
-
 ```bash
 # Step 1 — Suspend SRDF/A replication on the device group
 symrdf -g <dgname> -sid <r1_sid> suspend -noprompt
@@ -25,16 +24,6 @@ symrdf -g <dgname> -sid <r1_sid> resume -noprompt
 # Step 6 — Verify pair state returns to Consistent
 symrdf -g <dgname> -sid <r1_sid> query
 # Wait for SyncInProg → Consistent transition before closing the change window
-```
-
-
-```d2
-direction: right
-
-hub: "SRDF/A\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

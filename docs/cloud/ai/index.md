@@ -3,10 +3,6 @@
 <div class="kb-summary">
 Cloud-hosted AI and LLM API services — AWS Bedrock, Azure OpenAI, and the OpenAI API. Covers model access, authentication, private networking, cost management, and security for enterprise AI integration.
 </div>
-![Cloud AI](../../assets/cloud-ai-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="aws-bedrock/">

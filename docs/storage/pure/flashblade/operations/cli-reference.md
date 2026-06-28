@@ -5,16 +5,12 @@ tags:
 ---
 # FlashBlade — CLI Reference
 
-
 <div class="kb-summary">
 CLI Reference reference covering Array Hardware, File Systems (NFS / SMB), Network, Object Store (S3), Replication (ActiveDR) and 3 more sections.
 
 *Applies to: FlashBlade Purity//FB 4.x*
 </div>
 ![FlashBlade — CLI Reference](../../../../assets/storage-pure-flashblade-operations-cli-reference.svg)
-
-
-
 
 ![FlashBlade — CLI Reference — Diagram](../../../../assets/storage-pure-flashblade-operations-cli-reference-diagram.svg)
 
@@ -25,25 +21,6 @@ Commonly used `purefb` commands for managing Pure Storage FlashBlade arrays. Fla
 > Connect via SSH to the FlashBlade management IP, or use `purefb` from a host with the CLI installed and configured.
 
 ---
-
-```d2
-direction: right
-
-hub: "FlashBlade\nOperations" {shape: hexagon}
-array_hardware: "Array Hardware" {shape: rectangle}
-file_systems_nfs_smb: "File Systems (NFS / SMB)" {shape: rectangle}
-network: "Network" {shape: rectangle}
-object_store_s3: "Object Store (S3)" {shape: rectangle}
-replication_activedr: "Replication (ActiveDR)" {shape: rectangle}
-snapshots: "Snapshots" {shape: rectangle}
-
-hub -> array_hardware
-hub -> file_systems_nfs_smb
-hub -> network
-hub -> object_store_s3
-hub -> replication_activedr
-hub -> snapshots
-```
 
 ## Before you begin
 

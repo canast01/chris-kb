@@ -11,25 +11,7 @@ Common questions about VMware ESXi operations, configuration, and troubleshootin
 </div>
 ![VMware ESXi — Frequently Asked Questions](../../../../assets/virtualization-vmware-esxi-operations-faq.svg)
 
-
 ![VMware ESXi FAQ](../../../../assets/virtualization-vmware-esxi-operations-faq.svg)
-
-```d2
-direction: right
-
-hub: "ESXi\nOperations" {shape: hexagon}
-general: "General" {shape: rectangle}
-configuration: "Configuration" {shape: rectangle}
-operations: "Operations" {shape: rectangle}
-troubleshooting: "Troubleshooting" {shape: rectangle}
-backup_and_recovery: "Backup and Recovery" {shape: rectangle}
-
-hub -> general
-hub -> configuration
-hub -> operations
-hub -> troubleshooting
-hub -> backup_and_recovery
-```
 
 ## General
 

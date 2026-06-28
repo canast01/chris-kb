@@ -9,7 +9,4 @@ VMware certification study plan — weekly review schedule, topic weighting by e
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Virtualization — Review Plan](../../../../assets/virtualization-vmware-reference-certification-review-plan.svg)
-
-
 

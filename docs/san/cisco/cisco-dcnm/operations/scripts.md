@@ -6,7 +6,6 @@ tags:
 # Cisco DCNM — Operations Scripts
 ![Cisco DCNM — Operations Scripts](../../../../assets/san-cisco-cisco-dcnm-operations-scripts.svg)
 
-
 ```bash
 #!/usr/bin/env bash
 # dcnm-auth.sh — obtain a DCNM session cookie
@@ -138,15 +137,6 @@ try:
 finally:
     req = urllib.request.Request(HOST + "/rest/logout", method="POST")
     opener.open(req)
-```
-
-```d2
-direction: right
-
-hub: "Cisco DCNM\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

@@ -5,15 +5,11 @@ tags:
 ---
 # NetBackup — Backup & Restore
 
-
 <div class="kb-summary">
 Backup & Restore reference covering Purpose, Common checks, Incident notes, Change notes, Useful commands and 2 more sections.
 
 *Applies to: NetBackup 10.x*
 </div>
-![NetBackup — Backup & Restore](../../../../assets/backup-netbackup-operations-backup-restore-index.svg)
-
-
 
 ```plantuml
 @startuml
@@ -107,8 +103,6 @@ Add known issues here as they come up.
 ## Catalog
 
 ### MSDP Architecture and Dedup Pool Flow
-
-
 
 Use this section for practical NetBackup Catalog notes, checks, troubleshooting, commands, change notes, and field references.
 

@@ -3,8 +3,6 @@ tags:
   - netapp
 ---
 # InsightIQ — Workload Analysis
-![InsightIQ — Workload Analysis](../../../../assets/storage-netapp-insightiq-workloads-index.svg)
-
 
 ```bash
 # On PowerScale OneFS — real-time top clients by total throughput

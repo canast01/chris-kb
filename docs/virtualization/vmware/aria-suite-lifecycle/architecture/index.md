@@ -69,15 +69,6 @@ Central management appliance for deploying and upgrading the full VMware Aria Su
 <a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Pre-requisite checklist, upgrade sequencing, and DNS/NTP requirements.</span></a>
 </div>
 
-```d2
-direction: right
-
-center: "Aria Suite Lifecycle" {shape: hexagon}
-core_components: "Core Components" {shape: rectangle}
-
-center -> core_components
-```
-
 ## Core Components
 
 | Component | Role |

@@ -5,16 +5,11 @@ tags:
 ---
 # Jira — Operations
 
-
-
 <div class="kb-summary">
 Jira day-to-day operations — project administration, workflow configuration, board management, and user provisioning.
 
 *Applies to: Jira 9.x / Cloud*
 </div>
-![Jira — Operations](../../../assets/itsm-jira-operations-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

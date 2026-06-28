@@ -4,15 +4,11 @@ tags:
 ---
 # Access Standard
 
-
 <div class="kb-summary">
 Access Standard reference covering Overview, Core Principles, vCenter Role Definitions, AD Group Mapping, Service Accounts and 5 more sections.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Access Standard](../../../../assets/virtualization-vmware-reference-standards-access-standard.svg)
-
-
 
 > Part of the [Standards](index.md) reference.
 

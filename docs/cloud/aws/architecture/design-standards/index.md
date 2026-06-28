@@ -5,14 +5,11 @@ tags:
 ---
 # AWS — Standards
 
-
 <div class="kb-summary">
 AWS architecture design standards: multi-account landing zone layout, VPC CIDR allocation, transit gateway design, IAM boundary policies, and tagging strategy.
 
 *Applies to: AWS*
 </div>
-![AWS — Standards](../../../../assets/cloud-aws-architecture-design-standards-index.svg)
-
 
 ---
 
@@ -86,7 +83,6 @@ flowchart LR
     glacier -->|"Transition rule\n≥ 180 days"| deepArchive
     deepArchive -->|"Expiration rule"| expire
 ```
-
 
 ## Security Standards
 

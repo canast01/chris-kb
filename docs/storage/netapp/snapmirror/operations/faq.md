@@ -11,25 +11,7 @@ Common questions about NetApp SnapMirror operations, configuration, and troubles
 </div>
 ![NetApp SnapMirror — Frequently Asked Questions](../../../../assets/storage-netapp-snapmirror-operations-faq.svg)
 
-
 ![NetApp SnapMirror FAQ](../../../../assets/storage-netapp-snapmirror-operations-faq.svg)
-
-```d2
-direction: right
-
-hub: "SnapMirror\nOperations" {shape: hexagon}
-general: "General" {shape: rectangle}
-configuration: "Configuration" {shape: rectangle}
-operations: "Operations" {shape: rectangle}
-troubleshooting: "Troubleshooting" {shape: rectangle}
-backup_and_recovery: "Backup and Recovery" {shape: rectangle}
-
-hub -> general
-hub -> configuration
-hub -> operations
-hub -> troubleshooting
-hub -> backup_and_recovery
-```
 
 ## General
 

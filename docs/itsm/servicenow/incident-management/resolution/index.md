@@ -4,33 +4,11 @@ tags:
 ---
 # Incident Resolution
 
-
 <div class="kb-summary">
 Incident Resolution reference covering Overview, Resolution vs Workaround, Resolution Steps Process, RCA Triggers, Post-Resolution Monitoring and 1 more sections.
 
 *Applies to: ServiceNow*
 </div>
-![Incident Resolution](../../../../assets/itsm-servicenow-incident-management-resolution-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "ServiceNow" {shape: hexagon}
-resolution_vs_workaround: "Resolution vs Workaround" {shape: rectangle}
-resolution_steps_process: "Resolution Steps Process" {shape: rectangle}
-rca_triggers: "RCA Triggers" {shape: rectangle}
-postresolution_monitoring: "Post-Resolution Monitoring" {shape: rectangle}
-incident_closure_checklist: "Incident Closure Checklist" {shape: rectangle}
-
-center -> resolution_vs_workaround
-center -> resolution_steps_process
-center -> rca_triggers
-center -> postresolution_monitoring
-center -> incident_closure_checklist
-```
 
 ## Overview
 

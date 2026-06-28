@@ -5,39 +5,15 @@ tags:
 ---
 # CyberArk — How It Works
 
-
 <div class="kb-summary">
 CyberArk Privileged Access Manager (PAM) is built around the Digital Vault, an encrypted hardened credential store that is the sole authoritative source for managed passwords and SSH keys.
 
 *Applies to: CyberArk PAM*
 </div>
-![CyberArk — How It Works](../../../../assets/security-cyberark-architecture-how-it-works-index.svg)
-
-
-
 
  The Central Policy Manager (CPM) rotates credentials automatically, the Privileged Session Manager (PSM) proxies and records sessions, and the Password Vault Web Access (PVWA) provides the web UI and REST API gateway.
 
 ---
-
-```d2
-direction: right
-
-center: "How It Works" {shape: hexagon}
-component_overview: "Component Overview" {shape: rectangle}
-pam_component_topology: "PAM Component Topology" {shape: rectangle}
-network_topology: "Network Topology" {shape: rectangle}
-credential_checkout_sequence: "Credential Checkout Sequence" {shape: rectangle}
-high_availability_and_dr: "High Availability and DR" {shape: rectangle}
-dr_activation_flow: "DR Activation Flow" {shape: rectangle}
-
-center -> component_overview
-center -> pam_component_topology
-center -> network_topology
-center -> credential_checkout_sequence
-center -> high_availability_and_dr
-center -> dr_activation_flow
-```
 
 ## Before you begin
 

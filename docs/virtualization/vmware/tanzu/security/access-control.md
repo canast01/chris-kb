@@ -6,7 +6,6 @@ tags:
 ---
 # Tanzu — Access Control
 
-
 <div class="kb-summary">
 Access Control reference covering Supervisor / vSphere Namespace RBAC, Kubernetes RBAC (Workload Clusters), Harbor RBAC, Network Policy (Namespace Isolation), Pod Security Admission and 1 more sections.
 
@@ -14,31 +13,7 @@ Access Control reference covering Supervisor / vSphere Namespace RBAC, Kubernete
 </div>
 ![Tanzu — Access Control](../../../../assets/virtualization-vmware-tanzu-security-access-control.svg)
 
-
-
-
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-supervisor_vsphere_namespace_rbac: "Supervisor / vSphere Namespace RBAC" {shape: rectangle}
-kubernetes_rbac_workload_clusters: "Kubernetes RBAC (Workload Clusters)" {shape: rectangle}
-harbor_rbac: "Harbor RBAC" {shape: rectangle}
-network_policy_namespace_isolation: "Network Policy (Namespace Isolation)" {shape: rectangle}
-pod_security_admission: "Pod Security Admission" {shape: rectangle}
-opa_gatekeeper_policies: "OPA Gatekeeper Policies" {shape: rectangle}
-core: "Tanzu Core" {shape: hexagon}
-
-external -> supervisor_vsphere_namespace_rbac: traffic in
-supervisor_vsphere_namespace_rbac -> kubernetes_rbac_workload_clusters
-kubernetes_rbac_workload_clusters -> harbor_rbac
-harbor_rbac -> network_policy_namespace_isolation
-network_policy_namespace_isolation -> pod_security_admission
-pod_security_admission -> opa_gatekeeper_policies
-opa_gatekeeper_policies -> core: secured path
-```
 
 ## Before you begin
 

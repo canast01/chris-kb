@@ -5,7 +5,6 @@ tags:
 ---
 # SRDF/S — Integrations
 
-
 <div class="kb-summary">
 SRDF/S integrations: SRDF/Star three-site topology, Microsoft Cluster Services with SRDF/S, Oracle RAC extended cluster, and VMware Metro Storage Cluster.
 
@@ -13,19 +12,7 @@ SRDF/S integrations: SRDF/Star three-site topology, Microsoft Cluster Services w
 </div>
 ![SRDF/S — Integrations](../../../../assets/storage-dell-srdf-s-architecture-integrations.svg)
 
-
 ---
-
-```d2
-direction: right
-
-center: "SRDF/S" {shape: hexagon}
-vmsc_and_srm_integration_topology: "vMSC and SRM Integration Topology" {shape: rectangle}
-backup_from_r2: "Backup from R2" {shape: rectangle}
-
-center -> vmsc_and_srm_integration_topology
-center -> backup_from_r2
-```
 
 ## vMSC and SRM Integration Topology
 
@@ -58,7 +45,6 @@ graph TD
     sra1 --> r1
     sra2 --> r2
 ```
-
 
 ---
 

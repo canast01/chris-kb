@@ -11,25 +11,7 @@ Common questions about GitHub Actions operations, configuration, and troubleshoo
 </div>
 ![GitHub Actions — Frequently Asked Questions](../../../assets/automation-github-actions-operations-faq.svg)
 
-
 ![GitHub Actions FAQ](../../../assets/automation-github-actions-operations-faq.svg)
-
-```d2
-direction: right
-
-hub: "GitHub Actions\nOperations" {shape: hexagon}
-general: "General" {shape: rectangle}
-configuration: "Configuration" {shape: rectangle}
-operations: "Operations" {shape: rectangle}
-troubleshooting: "Troubleshooting" {shape: rectangle}
-backup_and_recovery: "Backup and Recovery" {shape: rectangle}
-
-hub -> general
-hub -> configuration
-hub -> operations
-hub -> troubleshooting
-hub -> backup_and_recovery
-```
 
 ## General
 

@@ -10,9 +10,6 @@ PowerMax day-to-day operations — SRDF management, storage group provisioning, 
 
 *Applies to: PowerMax 2500 / 8500*
 </div>
-![PowerMax — Operations](../../../../assets/storage-dell-powermax-operations-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

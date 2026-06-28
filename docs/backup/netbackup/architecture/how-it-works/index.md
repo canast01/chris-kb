@@ -5,26 +5,11 @@ tags:
 ---
 # NetBackup — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Overview, Three-Tier Topology, Domain Sizing Guidelines.
 
 *Applies to: NetBackup 10.x*
 </div>
-![NetBackup — How It Works](../../../../assets/backup-netbackup-architecture-how-it-works-index.svg)
-
-
-
-```d2
-direction: right
-
-center: "NetBackup" {shape: hexagon}
-threetier_topology: "Three-Tier Topology" {shape: rectangle}
-domain_sizing_guidelines: "Domain Sizing Guidelines" {shape: rectangle}
-
-center -> threetier_topology
-center -> domain_sizing_guidelines
-```
 
 ## Overview
 

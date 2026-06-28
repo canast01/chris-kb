@@ -9,8 +9,6 @@ DR failover procedure: verify backup schedule currency and RPO compliance before
 
 *Applies to: all products with DR replication*
 </div>
-![DR Failover Procedure](../../../../assets/backup-dr-operations-runbooks-failover-index.svg)
-
 
 ```bash
 symrdf -g <rdfgroup> query
@@ -49,19 +47,6 @@ Get-Service | Where-Object { $_.Status -ne 'Running' -and $_.StartType -eq 'Auto
 
 # Test connectivity
 Test-NetConnection -ComputerName <dr-app-server> -Port 443
-```
-
-```d2
-direction: right
-
-center: "DR Operations" {shape: hexagon}
-component_a: "Component A" {shape: rectangle}
-component_b: "Component B" {shape: rectangle}
-component_c: "Component C" {shape: rectangle}
-
-center -> component_a
-center -> component_b
-center -> component_c
 ```
 
 ## See also

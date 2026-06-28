@@ -4,31 +4,11 @@ tags:
 ---
 # Azure — Groups
 
-
 <div class="kb-summary">
 Entra ID (Azure AD) groups are the primary mechanism for managing access at scale.
 
 *Applies to: Azure*
 </div>
-![Azure — Groups](../../../../assets/cloud-azure-identity-groups-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-powershell: "PowerShell" {shape: rectangle}
-dynamic_membership_rules: "Dynamic Membership Rules" {shape: rectangle}
-nested_groups: "Nested Groups" {shape: rectangle}
-common_issues: "Common Issues" {shape: rectangle}
-
-center -> powershell
-center -> dynamic_membership_rules
-center -> nested_groups
-center -> common_issues
-```
 
 ## PowerShell
 

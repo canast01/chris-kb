@@ -4,35 +4,11 @@ tags:
 ---
 # VM Performance Quick Checks
 
-
 <div class="kb-summary">
 VM performance quick checks: CPU ready %, memory balloon/swap, storage latency via `esxtop`, network packet drops, and vSAN resync — run in this order for slow VM triage.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![VM Performance Quick Checks](../../../../assets/virtualization-vmware-reference-quick-reference-vm-performan.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Quick Reference" {shape: rectangle}
-cpu: "CPU" {shape: rectangle}
-memory: "Memory" {shape: rectangle}
-storage: "Storage" {shape: rectangle}
-network: "Network" {shape: rectangle}
-recent_changes: "Recent Changes" {shape: rectangle}
-quick_commands_from_esxi: "Quick Commands from ESXi" {shape: rectangle}
-
-center -> cpu
-center -> memory
-center -> storage
-center -> network
-center -> recent_changes
-center -> quick_commands_from_esxi
-```
 
 ## CPU
 

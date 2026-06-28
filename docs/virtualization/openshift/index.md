@@ -5,8 +5,6 @@ Red Hat OpenShift Container Platform — Kubernetes-based container orchestratio
 
 *Applies to: OpenShift 4.x*
 </div>
-![OpenShift](../../assets/virtualization-openshift-index.svg)
-
 
 ![OpenShift — Diagram](../../assets/virtualization-openshift-diagram.svg)
 

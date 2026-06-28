@@ -7,9 +7,6 @@ tags:
 <div class="kb-summary">
 Security Incident Handling reference covering Severity Classification, Phase 1 — Identify and Triage, Phase 2 — Contain, Phase 3 — Investigate, Phase 4 — Eradicate and Recover and 3 more sections.
 </div>
-![Security Incident Handling](../../assets/security-incident-handling-index.svg)
-
-
 
 <div class="kb-grid">
   <a class="kb-card" href="operations/">
@@ -18,25 +15,6 @@ Security Incident Handling reference covering Severity Classification, Phase 1 �
     <div class="kb-card-desc">Incident lifecycle, containment, eradication, recovery procedures</div>
   </a>
 </div>
-
-```d2
-direction: right
-
-center: "Incident Handling" {shape: hexagon}
-severity_classification: "Severity Classification" {shape: rectangle}
-phase_1_identify_and_triage: "Phase 1 — Identify and Triage" {shape: rectangle}
-phase_2_contain: "Phase 2 — Contain" {shape: rectangle}
-phase_3_investigate: "Phase 3 — Investigate" {shape: rectangle}
-phase_4_eradicate_and_recover: "Phase 4 — Eradicate and Recover" {shape: rectangle}
-phase_5_postincident: "Phase 5 — Post-Incident" {shape: rectangle}
-
-center -> severity_classification
-center -> phase_1_identify_and_triage
-center -> phase_2_contain
-center -> phase_3_investigate
-center -> phase_4_eradicate_and_recover
-center -> phase_5_postincident
-```
 
 ## Severity Classification
 

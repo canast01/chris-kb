@@ -10,10 +10,6 @@ tags:
 <div class="kb-summary">
 Hands-on walkthroughs for building a VMware nested homelab from bare metal through vSAN, NSX-T, and VCF. Each lab builds on the previous one — start with Lab 1 if you are new to nested virtualisation.
 </div>
-![Lab Guides](../assets/labs-index.svg)
-
-
-
 
 <div class="kb-grid">
 <a class="kb-card" href="nested-esxi/">
@@ -33,17 +29,6 @@ Deploys NSX Manager, prepares transport nodes, creates segments and basic DFW ru
 Full VCF management domain using Cloud Builder. Requires 256 GB+ RAM. Most demanding lab.
 </a>
 </div>
-
-```d2
-direction: right
-
-center: "Labs" {shape: hexagon}
-hardware_sizing_summary: "Hardware sizing summary" {shape: rectangle}
-common_requirements_for_all_labs: "Common requirements for all labs" {shape: rectangle}
-
-center -> hardware_sizing_summary
-center -> common_requirements_for_all_labs
-```
 
 ## Hardware sizing summary
 

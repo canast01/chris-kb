@@ -5,33 +5,9 @@ tags:
 ---
 # SAN Zoning
 
-
 <div class="kb-summary">
 SAN Zoning reference covering Zone Types, Hard vs Soft Zoning, Zone Sets, Single-Initiator Zoning, Cisco VSAN vs Brocade Virtual Fabric and 1 more sections.
 </div>
-![SAN Zoning](../../../assets/certifications-san-zoning-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Zoning" {shape: hexagon}
-zone_types: "Zone Types" {shape: rectangle}
-hard_vs_soft_zoning: "Hard vs Soft Zoning" {shape: rectangle}
-zone_sets: "Zone Sets" {shape: rectangle}
-singleinitiator_zoning: "Single-Initiator Zoning" {shape: rectangle}
-cisco_vsan_vs_brocade_virtual_fabric: "Cisco VSAN vs Brocade Virtual Fabric" {shape: rectangle}
-study_checklist: "Study Checklist" {shape: rectangle}
-
-center -> zone_types
-center -> hard_vs_soft_zoning
-center -> zone_sets
-center -> singleinitiator_zoning
-center -> cisco_vsan_vs_brocade_virtual_fabric
-center -> study_checklist
-```
 
 ## Zone Types
 

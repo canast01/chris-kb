@@ -5,14 +5,11 @@ tags:
 ---
 # Jira — Architecture Standards
 
-
 <div class="kb-summary">
 Architecture Standards reference covering Project Naming Conventions, Workflow State Standards, Field Configuration Standards, Permission Scheme Standards, Notification Scheme Standards and 1 more sections.
 
 *Applies to: Jira Cloud / Data Center*
 </div>
-![Jira — Architecture Standards](../../../../assets/itsm-jira-architecture-design-standards-index.svg)
-
 
 ```d2
 direction: down
@@ -55,7 +52,6 @@ Consistent project keys and names reduce confusion, simplify JQL queries, and en
 | Internal tooling | `TOOL` | Internal Tooling |
 
 ### Project Name Format
-
 
 | Status | Category | Description |
 |---|---|---|

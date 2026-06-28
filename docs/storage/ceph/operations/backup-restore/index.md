@@ -5,15 +5,11 @@ tags:
 ---
 # Ceph — Backup & Restore
 
-
-
 <div class="kb-summary">
 Ceph backup: RBD snapshot export for VM disks, CephFS snapshots for file data, RGW bucket replication for objects, cluster configuration backup, and MON data recovery.
 
 *Applies to: Ceph Reef / Squid*
 </div>
-![Ceph — Backup & Restore](../../../../assets/storage-ceph-operations-backup-restore-index.svg)
-
 
 ```mermaid
 graph TD

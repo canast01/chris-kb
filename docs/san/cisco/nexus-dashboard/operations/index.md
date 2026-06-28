@@ -5,16 +5,11 @@ tags:
 ---
 # Nexus Dashboard — Operations
 
-
 <div class="kb-summary">
 Nexus Dashboard daily operations — fabric health monitoring, flow visibility, alert management, and operational runbooks.
 
 *Applies to: Cisco MDS · Nexus*
 </div>
-![Nexus Dashboard — Operations](../../../../assets/san-cisco-nexus-dashboard-operations-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

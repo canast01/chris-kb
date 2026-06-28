@@ -9,19 +9,6 @@ Azure Storage articles, operational checks, troubleshooting notes, and reference
 
 *Applies to: Azure*
 </div>
-![Azure Storage](../../../assets/cloud-azure-storage-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-articles: "Articles" {shape: rectangle}
-
-center -> articles
-```
 
 ## Articles
 

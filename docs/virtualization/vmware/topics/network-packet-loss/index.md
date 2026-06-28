@@ -4,35 +4,11 @@ tags:
 ---
 # Network Packet Loss Validation
 
-
 <div class="kb-summary">
 Network Packet Loss Validation reference covering Symptoms, NIC Statistics, vmkping — Reachability and MTU Testing, PowerCLI Network Checks, Common Causes and Fixes and 1 more sections.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Network Packet Loss Validation](../../../../assets/virtualization-vmware-topics-network-packet-loss-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Network Packet Loss" {shape: hexagon}
-symptoms: "Symptoms" {shape: rectangle}
-nic_statistics: "NIC Statistics" {shape: rectangle}
-vmkping_reachability_and_mtu_testing: "vmkping — Reachability and MTU Testing" {shape: rectangle}
-powercli_network_checks: "PowerCLI Network Checks" {shape: rectangle}
-common_causes_and_fixes: "Common Causes and Fixes" {shape: rectangle}
-ongoing_monitoring: "Ongoing Monitoring" {shape: rectangle}
-
-center -> symptoms
-center -> nic_statistics
-center -> vmkping_reachability_and_mtu_testing
-center -> powercli_network_checks
-center -> common_causes_and_fixes
-center -> ongoing_monitoring
-```
 
 ## Symptoms
 

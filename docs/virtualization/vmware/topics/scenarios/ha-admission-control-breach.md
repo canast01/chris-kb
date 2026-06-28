@@ -14,29 +14,6 @@ to allow restarts, recovering the cluster, and preventing a recurrence through p
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![HA Admission Control Breach / Failover Storm](../../../../assets/virtualization-vmware-topics-scenarios-ha-admission-control-.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Scenarios" {shape: hexagon}
-products_involved: "Products Involved" {shape: rectangle}
-1_confirm_the_breach_how_many_hosts_: "1. Confirm the Breach — How Many Hosts Failed and What Remai" {shape: rectangle}
-2_triage_which_vms_are_critical: "2. Triage — Which VMs Are Critical" {shape: rectangle}
-3_assess_remaining_cluster_resources: "3. Assess Remaining Cluster Resources" {shape: rectangle}
-4_option_a_recover_a_failed_host_bes: "4. Option A — Recover a Failed Host (Best Path)" {shape: rectangle}
-5_option_b_temporarily_lower_admissi: "5. Option B — Temporarily Lower Admission Control Reservatio" {shape: rectangle}
-
-center -> products_involved
-center -> 1_confirm_the_breach_how_many_hosts_
-center -> 2_triage_which_vms_are_critical
-center -> 3_assess_remaining_cluster_resources
-center -> 4_option_a_recover_a_failed_host_bes
-center -> 5_option_b_temporarily_lower_admissi
-```
 
 ## Products Involved
 

@@ -12,31 +12,8 @@ Reference for managing ESXi host lifecycle at scale. Covers vSphere Lifecycle Ma
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![vSphere Lifecycle Management — vLCM, Host Profiles, and Upgrades](../../../../assets/virtualization-vmware-internals-vsphere-lifecycle-index.svg)
-
-
-
 
 ---
-
-```d2
-direction: right
-
-center: "Vsphere Lifecycle" {shape: hexagon}
-vsphere_lifecycle_manager_vlcm: "vSphere Lifecycle Manager (vLCM)" {shape: rectangle}
-cluster_images: "Cluster Images" {shape: rectangle}
-update_planner: "Update Planner" {shape: rectangle}
-quick_boot: "Quick Boot" {shape: rectangle}
-secure_boot_for_esxi: "Secure Boot for ESXi" {shape: rectangle}
-host_profiles: "Host Profiles" {shape: rectangle}
-
-center -> vsphere_lifecycle_manager_vlcm
-center -> cluster_images
-center -> update_planner
-center -> quick_boot
-center -> secure_boot_for_esxi
-center -> host_profiles
-```
 
 ## vSphere Lifecycle Manager (vLCM)
 

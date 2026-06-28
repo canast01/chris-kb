@@ -17,28 +17,6 @@ Firewall port reference for Dell Data Domain (EMC Data Domain / PowerProtect DD)
 </div>
 ![Dell Data Domain — Ports and Network Requirements](../../../../assets/storage-dell-data-domain-architecture-ports.svg)
 
-
-
-
-```d2
-direction: right
-
-center: "Data Domain" {shape: hexagon}
-inbound_management_traffic: "Inbound — Management Traffic" {shape: rectangle}
-outbound_array_to_external: "Outbound — Array to External" {shape: rectangle}
-dd_boost_backup_software_integration: "DD Boost (Backup Software Integration)" {shape: rectangle}
-nfs_backup_clients_via_nfs_share: "NFS (Backup Clients via NFS Share)" {shape: rectangle}
-smb_cifs_backup_clients_via_smb_shar: "SMB / CIFS (Backup Clients via SMB Share)" {shape: rectangle}
-ndmp_tape_or_nas_integration: "NDMP (Tape or NAS Integration)" {shape: rectangle}
-
-center -> inbound_management_traffic
-center -> outbound_array_to_external
-center -> dd_boost_backup_software_integration
-center -> nfs_backup_clients_via_nfs_share
-center -> smb_cifs_backup_clients_via_smb_shar
-center -> ndmp_tape_or_nas_integration
-```
-
 ## Before you begin
 
 - DD Boost (port 2052) is the primary backup software integration protocol — used by Veeam, Commvault, NetBackup, and most enterprise backup tools

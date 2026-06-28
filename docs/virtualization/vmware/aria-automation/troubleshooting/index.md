@@ -13,9 +13,6 @@ Diagnosing Aria Automation deployment failures, vRO workflow errors, integration
 
 *Applies to: Aria Automation 8.x*
 </div>
-![Aria Automation — Troubleshooting](../../../../assets/virtualization-vmware-aria-automation-troubleshooting-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

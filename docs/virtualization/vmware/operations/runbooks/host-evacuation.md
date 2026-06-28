@@ -4,15 +4,11 @@ tags:
 ---
 # ESXi Host Failure Runbook
 
-
 <div class="kb-summary">
 ESXi Host Failure Runbook reference covering Confirm Impact, Check Power State, Check Management Network, Check Hardware Management Interface, Review vCenter Alarms and 4 more sections.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![ESXi Host Failure Runbook](../../../../assets/virtualization-vmware-operations-runbooks-host-evacuation.svg)
-
-
 
 ```plantuml
 @startuml

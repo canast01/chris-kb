@@ -6,7 +6,6 @@ tags:
 # Brocade Fabric OS — Scripts
 ![Brocade Fabric OS — Scripts](../../../../assets/san-brocade-fabric-os-operations-scripts.svg)
 
-
 ```bash
 #!/bin/bash
 # brocade_fabric_health.sh
@@ -119,7 +118,6 @@ WARN_PERCENT = 70
 
 SPEED_MAP = {"1G": 1, "2G": 2, "4G": 4, "8G": 8, "16G": 16, "32G": 32, "64G": 64}
 
-
 def ssh_run(host, cmd):
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -129,7 +127,6 @@ def ssh_run(host, cmd):
     client.close()
     return out
 
-
 def get_isl_ports(islshow_out):
     ports = []
     for line in islshow_out.splitlines():
@@ -137,7 +134,6 @@ def get_isl_ports(islshow_out):
         if m:
             ports.append(m.group(1))
     return ports
-
 
 def parse_portperf(portperf_out):
     result = {}
@@ -147,7 +143,6 @@ def parse_portperf(portperf_out):
             result[m.group(1)] = (int(m.group(2)), int(m.group(3)))
     return result
 
-
 def get_port_speed(switchshow_out, port):
     for line in switchshow_out.splitlines():
         if re.match(rf'^\s*{port}\s+', line):
@@ -156,11 +151,9 @@ def get_port_speed(switchshow_out, port):
                     return SPEED_MAP[sp]
     return 16
 
-
 def util_pct(kbps, speed_gbps):
     capacity_kbps = speed_gbps * 1024 * 1024 / 8
     return round(kbps / capacity_kbps * 100, 2)
-
 
 print(f"{'Switch':<20} {'Port':<6} {'Speed':>6} {'TX MB/s':>9} {'TX%':>7} {'RX MB/s':>9} {'RX%':>7} {'Status':<10}")
 print("-" * 85)
@@ -496,15 +489,6 @@ foreach ($p in $ports | Sort-Object { [int]$_.Port }) {
     $color    = if ($hasError) { "Red" } else { "Green" }
     Write-Host ("{0,-6} {1,-8} {2,-12} {3,-10} {4,-8} {5,-8} {6}" -f $p.Port,$p.Speed,$p.State,$p.Mode,$enc,$lossSync,$linkFail) -ForegroundColor $color
 }
-```
-
-```d2
-direction: right
-
-hub: "Brocade Fabric OS\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

@@ -45,15 +45,5 @@ Unlike Evergreen//Forever — where the customer owns the subscription and hardw
 
 ---
 
-```d2
-direction: right
-
-center: "Evergreen//One" {shape: hexagon}
-staas_delivery_model: "STaaS Delivery Model" {shape: rectangle}
-
-center -> staas_delivery_model
-```
-
 ## STaaS Delivery Model
-
 

@@ -5,32 +5,11 @@ tags:
 ---
 # FOD — Health Checks
 
-
 <div class="kb-summary">
 Dell FoD health checks: SCG connectivity status, entitlement consumption review in CloudIQ, capacity threshold alerts, and monthly usage validation.
 
 *Applies to: Dell FOD*
 </div>
-
-
-```d2
-direction: right
-
-hub: "Flex On Demand\nOperations" {shape: hexagon}
-run_this_routine: "Run This Routine" {shape: rectangle}
-daily_checks: "Daily Checks" {shape: rectangle}
-health_check_commands: "Health Check Commands" {shape: rectangle}
-change_readiness: "Change Readiness" {shape: rectangle}
-postchange_validation: "Post-Change Validation" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> run_this_routine
-hub -> daily_checks
-hub -> health_check_commands
-hub -> change_readiness
-hub -> postchange_validation
-hub -> verify
-```
 
 ## Before you begin
 

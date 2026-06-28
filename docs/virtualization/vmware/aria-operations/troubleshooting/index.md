@@ -13,9 +13,6 @@ Diagnosing Aria Operations adapter failures, data collection gaps, alert storms,
 
 *Applies to: Aria Ops 8.x*
 </div>
-![Aria Operations — Troubleshooting](../../../../assets/virtualization-vmware-aria-operations-troubleshooting-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

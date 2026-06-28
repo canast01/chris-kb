@@ -5,16 +5,12 @@ tags:
 ---
 # APEX Storage as a Service — Install & Upgrade
 
-
 <div class="kb-summary">
 APEX STaaS install and upgrade: SCG registration for telemetry, software stack upgrade workflow via CloudIQ portal, and post-upgrade health validation.
 
 *Applies to: APEX Storage-as-a-Service*
 </div>
 ![APEX Storage as a Service — Install & Upgrade](../../../../assets/storage-dell-apex-storage-as-a-service-operations-install-up.svg)
-
-
-
 
 > Part of the [APEX Storage as a Service](../index.md) reference.
 
@@ -28,15 +24,6 @@ Hardware firmware and lifecycle upgrades for APEX STaaS are Dell's responsibilit
 | 2 | Monitor the APEX Console for Dell-initiated maintenance notifications; Dell will schedule maintenance windows and communicate via the Console |
 | 3 | Confirm Secure Connect Gateway is at the current recommended version — SCG upgrades can be triggered from the APEX Console or SCG management interface |
 | 4 | After any Dell-initiated maintenance, verify all subscriptions show healthy status in APEX Console and confirm on-premises platform availability from the host side |
-
-```d2
-direction: right
-
-hub: "APEX Storage\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
-```
 
 ## Before you begin
 

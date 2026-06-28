@@ -4,31 +4,11 @@ tags:
 ---
 # Azure Cost Management
 
-
 <div class="kb-summary">
 Azure Cost Management reference covering Overview, Daily Checks, Operational Tasks, Common Issues, Maintenance Notes.
 
 *Applies to: Azure*
 </div>
-![Azure Cost Management](../../../../assets/cloud-azure-cost-cost-management-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-daily_checks: "Daily Checks" {shape: rectangle}
-operational_tasks: "Operational Tasks" {shape: rectangle}
-common_issues: "Common Issues" {shape: rectangle}
-maintenance_notes: "Maintenance Notes" {shape: rectangle}
-
-center -> daily_checks
-center -> operational_tasks
-center -> common_issues
-center -> maintenance_notes
-```
 
 ## Overview
 

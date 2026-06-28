@@ -10,31 +10,8 @@ tags:
 <div class="kb-summary">
 Maps VCP-DCV 8 exam objectives (exam code 2V0-21.23) to KB content pages. Use this page to navigate from each exam section to the relevant technical reference. Includes a sample question analysis section that explains correct answers and the reasoning behind them.
 </div>
-![VCP-DCV 8 — Exam Reference (2V0-21.23)](../../../../assets/virtualization-vmware-certifications-vcp-dcv-index.svg)
-
-
-
 
 ---
-
-```d2
-direction: right
-
-center: "Vcp Dcv" {shape: hexagon}
-exam_overview: "Exam Overview" {shape: rectangle}
-section_1_architecture_and_technolog: "Section 1 — Architecture and Technologies" {shape: rectangle}
-section_2_products_and_solutions: "Section 2 — Products and Solutions" {shape: rectangle}
-section_4_installing_configuring_and: "Section 4 — Installing, Configuring, and Setup" {shape: rectangle}
-section_5_performance_and_upgrades: "Section 5 — Performance and Upgrades" {shape: rectangle}
-section_6_troubleshooting: "Section 6 — Troubleshooting" {shape: rectangle}
-
-center -> exam_overview
-center -> section_1_architecture_and_technolog
-center -> section_2_products_and_solutions
-center -> section_4_installing_configuring_and
-center -> section_5_performance_and_upgrades
-center -> section_6_troubleshooting
-```
 
 ## Exam Overview
 

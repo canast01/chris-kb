@@ -4,14 +4,11 @@ tags:
 ---
 # VxRail Standards
 
-
 <div class="kb-summary">
 VxRail design standards: node count and cluster size limits, vSAN-backed storage requirements, witness node placement, dual-switch topology rules, and L2 network requirements.
 
 *Applies to: VxRail 7.x · 8.x*
 </div>
-![VxRail Standards](../../../../assets/virtualization-vmware-vxrail-design-standards-index.svg)
-
 
 VxRail Design Requirements — Key Standards
 ```text

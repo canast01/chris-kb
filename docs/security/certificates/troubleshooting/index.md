@@ -7,14 +7,9 @@ search:
 ---
 # Certificates — Troubleshooting
 
-
 <div class="kb-summary">
 Diagnosing expired certificates, chain validation errors, revocation failures, and TLS handshake issues.
 </div>
-![Certificates — Troubleshooting](../../../assets/security-certificates-troubleshooting-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

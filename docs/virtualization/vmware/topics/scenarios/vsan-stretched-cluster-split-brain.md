@@ -16,29 +16,6 @@ is restored.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![vSAN Stretched Cluster Split-Brain](../../../../assets/virtualization-vmware-topics-scenarios-vsan-stretched-cluste.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Scenarios" {shape: hexagon}
-products_involved: "Products Involved" {shape: rectangle}
-1_identify_the_failure_what_does_vce: "1. Identify the Failure — What Does vCenter Show?" {shape: rectangle}
-2_check_witness_appliance_reachabili: "2. Check Witness Appliance Reachability" {shape: rectangle}
-3_confirm_the_preferred_site_configu: "3. Confirm the Preferred Site Configuration" {shape: rectangle}
-4_determine_current_quorum_state: "4. Determine Current Quorum State" {shape: rectangle}
-5_check_intersite_vsan_network_path: "5. Check Inter-Site vSAN Network Path" {shape: rectangle}
-
-center -> products_involved
-center -> 1_identify_the_failure_what_does_vce
-center -> 2_check_witness_appliance_reachabili
-center -> 3_confirm_the_preferred_site_configu
-center -> 4_determine_current_quorum_state
-center -> 5_check_intersite_vsan_network_path
-```
 
 ## Products Involved
 

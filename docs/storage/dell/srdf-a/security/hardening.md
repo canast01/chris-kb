@@ -5,7 +5,6 @@ tags:
 ---
 # SRDF/A — Hardening
 
-
 <div class="kb-summary">
 Hardening reference covering Network Port Requirements, Audit Logging.
 
@@ -13,27 +12,9 @@ Hardening reference covering Network Port Requirements, Audit Logging.
 </div>
 ![SRDF/A — Hardening](../../../../assets/storage-dell-srdf-a-security-hardening.svg)
 
-
-
-
 Forward to SIEM via syslog:
 - Configure Unisphere: Settings → Notifications → Syslog → add SIEM IP, port 514 (UDP) or 6514 (TLS)
 - Alert on event types: `SRDF Split`, `SRDF Failover`, `SRDF Suspend`, `SRDF Establish`
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-perimeter_controls: "Perimeter Controls" {shape: rectangle}
-identity_access: "Identity & Access" {shape: rectangle}
-audit_logging: "Audit & Logging" {shape: rectangle}
-core: "SRDF/A Core" {shape: hexagon}
-
-external -> perimeter_controls: traffic in
-perimeter_controls -> identity_access
-identity_access -> audit_logging
-audit_logging -> core: secured path
-```
 
 ## Before you begin
 

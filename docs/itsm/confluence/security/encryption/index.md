@@ -4,8 +4,6 @@ tags:
   - security
 ---
 # Confluence — Encryption
-![Confluence — Encryption](../../../../assets/itsm-confluence-security-encryption-index.svg)
-
 
 ```nginx
 # /etc/nginx/conf.d/confluence.conf

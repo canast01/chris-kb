@@ -7,16 +7,11 @@ search:
 ---
 # Azure — Escalation
 
-
 <div class="kb-summary">
 What to collect before opening a support case and how to engage Microsoft support.
 
 *Applies to: Azure*
 </div>
-![Azure — Escalation](../../../../assets/cloud-azure-troubleshooting-escalation-index.svg)
-
-
-
 
 ---
 

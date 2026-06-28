@@ -5,7 +5,6 @@ tags:
 ---
 # FabricOS — Encryption
 
-
 <div class="kb-summary">
 FabricOS encryption: in-flight data encryption via FC-SP-2, IPsec for FCIP tunnels, certificate management with `seccertmgmt`, and key lifecycle policy.
 
@@ -13,29 +12,7 @@ FabricOS encryption: in-flight data encryption via FC-SP-2, IPsec for FCIP tunne
 </div>
 ![FabricOS — Encryption](../../../../assets/san-brocade-fabric-os-security-encryption.svg)
 
-
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-management_plane_encryption_stack: "Management Plane Encryption Stack" {shape: rectangle}
-ssh_configuration: "SSH Configuration" {shape: rectangle}
-https_tls_configuration: "HTTPS / TLS Configuration" {shape: rectangle}
-disable_unused_protocols: "Disable Unused Protocols" {shape: rectangle}
-encryption_standards_summary: "Encryption Standards Summary" {shape: rectangle}
-related_configuration: "Related Configuration" {shape: rectangle}
-core: "Brocade Fabric OS Core" {shape: hexagon}
-
-external -> management_plane_encryption_stack: traffic in
-management_plane_encryption_stack -> ssh_configuration
-ssh_configuration -> https_tls_configuration
-https_tls_configuration -> disable_unused_protocols
-disable_unused_protocols -> encryption_standards_summary
-encryption_standards_summary -> related_configuration
-related_configuration -> core: secured path
-```
 
 ## Before you begin
 
@@ -71,7 +48,6 @@ graph TB
     backupServer["Backup Server"] --> scp
     monSystem["Monitoring Platform"] --> snmp3
 ```
-
 
 ### Test SNMP v3 from Monitoring Server
 

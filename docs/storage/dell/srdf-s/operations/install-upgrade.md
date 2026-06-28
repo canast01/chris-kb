@@ -6,7 +6,6 @@ tags:
 # SRDF/S — Install & Upgrade
 ![SRDF/S — Install & Upgrade](../../../../assets/storage-dell-srdf-s-operations-install-upgrade.svg)
 
-
 ```bash
 symcfg list -v | grep "Microcode"
 ```
@@ -36,15 +35,6 @@ flowchart TD
     style convertAsync fill:#b45309,color:#fff
     style convertSync fill:#2563eb,color:#fff
     style closeChange fill:#15803d,color:#fff
-```
-
-```d2
-direction: right
-
-hub: "SRDF/S\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

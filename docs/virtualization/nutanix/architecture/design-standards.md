@@ -13,30 +13,7 @@ Cluster sizing rules, node type selection, replication factor decisions, network
 </div>
 ![Nutanix — Design Standards](../../../assets/virtualization-nutanix-architecture-design-standards.svg)
 
-
-
-
-
 ---
-
-```d2
-direction: right
-
-center: "Nutanix AHV" {shape: hexagon}
-cluster_minimum_requirements: "Cluster Minimum Requirements" {shape: rectangle}
-node_type_selection: "Node Type Selection" {shape: rectangle}
-replication_factor_rf_selection: "Replication Factor (RF) Selection" {shape: rectangle}
-storage_container_design: "Storage Container Design" {shape: rectangle}
-network_design: "Network Design" {shape: rectangle}
-block_awareness_fault_domains: "Block Awareness (Fault Domains)" {shape: rectangle}
-
-center -> cluster_minimum_requirements
-center -> node_type_selection
-center -> replication_factor_rf_selection
-center -> storage_container_design
-center -> network_design
-center -> block_awareness_fault_domains
-```
 
 ## Before you begin
 

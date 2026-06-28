@@ -14,28 +14,7 @@ Standard alert thresholds for compute, storage, network, and backup infrastructu
 
 # Monitoring & Alert Thresholds Reference
 
-![Monitoring Thresholds](../../assets/reference-monitoring-thresholds-index.svg)
-
 ---
-
-```d2
-direction: right
-
-center: "Monitoring Thresholds" {shape: hexagon}
-vmware_vsphere: "VMware vSphere" {shape: rectangle}
-ontap: "ONTAP" {shape: rectangle}
-pure_flasharray: "Pure FlashArray" {shape: rectangle}
-veeam_backup: "Veeam Backup" {shape: rectangle}
-network_nsx: "Network / NSX" {shape: rectangle}
-fc_san: "FC / SAN" {shape: rectangle}
-
-center -> vmware_vsphere
-center -> ontap
-center -> pure_flasharray
-center -> veeam_backup
-center -> network_nsx
-center -> fc_san
-```
 
 ## VMware vSphere
 

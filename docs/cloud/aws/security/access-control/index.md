@@ -4,8 +4,6 @@ tags:
   - security
 ---
 # AWS Access Control — Least-Privilege IAM Design
-![AWS Access Control — Least-Privilege IAM Design](../../../../assets/cloud-aws-security-access-control-index.svg)
-
 
 ```json
 {
@@ -127,26 +125,6 @@ aws iam list-roles --query 'Roles[*].RoleName' --output text | \
       --query 'AttachedPolicies[*].PolicyArn' --output text 2>/dev/null)
     echo "$role: $POLICIES"
   done
-```
-
-```d2
-direction: down
-
-root: "AWS\nAccess Control" {shape: hexagon}
-administrator: "Administrator" {shape: rectangle}
-operator: "Operator" {shape: rectangle}
-auditor: "Auditor" {shape: rectangle}
-readonly: "Read-Only" {shape: rectangle}
-resources: Protected Resources {shape: cylinder}
-
-root -> administrator: role
-administrator -> resources: scoped
-root -> operator: role
-operator -> resources: scoped
-root -> auditor: role
-auditor -> resources: scoped
-root -> readonly: role
-readonly -> resources: scoped
 ```
 
 ## Before you begin

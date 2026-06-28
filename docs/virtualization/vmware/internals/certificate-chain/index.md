@@ -10,10 +10,6 @@ VMware Certificate Authority (VMCA) issues all vCenter machine SSL and solution 
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Certificate Chain](../../../../assets/virtualization-vmware-internals-certificate-chain-index.svg)
-
-
-
 
 ```mermaid
 graph TB
@@ -42,25 +38,6 @@ graph TB
     VMCA --> SOL4
     VMCA --> STS
     VMCA --> ESXI
-```
-
-```d2
-direction: right
-
-center: "Certificate Chain" {shape: hexagon}
-vmca_vmware_certificate_authority: "VMCA: VMware Certificate Authority" {shape: rectangle}
-trust_hierarchy: "Trust Hierarchy" {shape: rectangle}
-certificate_stores_vecs: "Certificate Stores (VECS)" {shape: rectangle}
-sts_security_token_service_certifica: "STS (Security Token Service) Certificate" {shape: rectangle}
-certificate_renewal_order_critical: "Certificate Renewal Order (Critical)" {shape: rectangle}
-esxi_certificate_management: "ESXi Certificate Management" {shape: rectangle}
-
-center -> vmca_vmware_certificate_authority
-center -> trust_hierarchy
-center -> certificate_stores_vecs
-center -> sts_security_token_service_certifica
-center -> certificate_renewal_order_critical
-center -> esxi_certificate_management
 ```
 
 ## VMCA: VMware Certificate Authority

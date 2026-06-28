@@ -4,14 +4,9 @@ tags:
 ---
 # Storage — Certifications
 
-
 <div class="kb-summary">
 Storage certifications tracker: NetApp NCSA, Pure Storage PSE, Dell SC, and related exam objectives with study plans and progress notes.
 </div>
-![Storage — Certifications](../../assets/certifications-storage-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-5">
 

@@ -5,33 +5,13 @@ tags:
 ---
 # Confluence — Integrations
 
-
 <div class="kb-summary">
 Confluence integrates with a wide range of external systems. This page covers the most common enterprise integrations: Jira, SCM platforms, LDAP/Active Directory, SMTP, webhooks, and the REST API.
 
 *Applies to: Confluence Cloud / Data Center*
 </div>
-![Confluence — Integrations](../../../../assets/itsm-confluence-architecture-integrations-index.svg)
-
 
 ---
-
-```d2
-direction: right
-
-center: "Integrations" {shape: hexagon}
-jira_integration: "Jira Integration" {shape: rectangle}
-ldap_active_directory_authentication: "LDAP / Active Directory Authentication" {shape: rectangle}
-smtp_email_configuration: "SMTP Email Configuration" {shape: rectangle}
-webhooks: "Webhooks" {shape: rectangle}
-rest_api_overview: "REST API Overview" {shape: rectangle}
-
-center -> jira_integration
-center -> ldap_active_directory_authentication
-center -> smtp_email_configuration
-center -> webhooks
-center -> rest_api_overview
-```
 
 ## Jira Integration
 
@@ -43,7 +23,6 @@ The Confluence–Jira integration is Atlassian's flagship integration and runs b
 2. Enter the Jira base URL and click **Create new link**
 3. On the Jira side, accept the incoming link and grant **Trusted Application** or **OAuth** authentication
 4. Choose **2-legged OAuth (2LO)** for service-account-style access without per-user consent
-
 
 For live repository content, install the **Bitbucket for Confluence** app (Marketplace) which renders repository files inline with diffs and blame views.
 

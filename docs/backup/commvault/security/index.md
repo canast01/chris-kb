@@ -5,16 +5,11 @@ tags:
 ---
 # Commvault — Security
 
-
-
 <div class="kb-summary">
 Commvault hardening — RBAC, encryption keys, audit logging, CommServe access control, and network security configuration.
 
 *Applies to: Commvault 2024.x*
 </div>
-![Commvault — Security](../../../assets/backup-commvault-security-index.svg)
-
-
 
 <div class="kb-grid kb-grid-4">
 

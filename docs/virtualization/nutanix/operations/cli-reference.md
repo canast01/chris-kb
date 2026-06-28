@@ -16,30 +16,7 @@ Complete reference for Nutanix CLIs: ncli (cluster management), acli (AHV VM man
 </div>
 ![Nutanix — CLI Reference](../../../assets/virtualization-nutanix-operations-cli-reference.svg)
 
-
-
-
-
 ---
-
-```d2
-direction: right
-
-hub: "Nutanix AHV\nOperations" {shape: hexagon}
-cli_access: "CLI Access" {shape: rectangle}
-ncli_cluster_management: "ncli — Cluster Management" {shape: rectangle}
-acli_ahv_vm_management: "acli — AHV VM Management" {shape: rectangle}
-ncc_nutanix_cluster_check: "ncc — Nutanix Cluster Check" {shape: rectangle}
-allssh_multicvm_commands: "allssh — Multi-CVM Commands" {shape: rectangle}
-genesis_aos_service_manager: "genesis — AOS Service Manager" {shape: rectangle}
-
-hub -> cli_access
-hub -> ncli_cluster_management
-hub -> acli_ahv_vm_management
-hub -> ncc_nutanix_cluster_check
-hub -> allssh_multicvm_commands
-hub -> genesis_aos_service_manager
-```
 
 ## Before you begin
 
@@ -348,8 +325,6 @@ zeus_config_printer | head -50
 
 ---
 
-
-
 ---
 
 ## Verify
@@ -358,7 +333,6 @@ zeus_config_printer | head -50
 - `acli vm.list` lists VMs without error — AHV API is responding
 - `ncc --health_checks run_all` completes with no failures on a healthy cluster
 - `genesis status` on any CVM shows all services as `UP`
-
 
 ---
 

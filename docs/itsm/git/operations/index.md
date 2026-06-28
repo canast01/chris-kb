@@ -5,16 +5,11 @@ tags:
 ---
 # Git — Operations
 
-
-
 <div class="kb-summary">
 Day-to-day Git operations — branching strategy, merging, rebase, stash, hooks, and repository maintenance procedures.
 
 *Applies to: Git 2.x*
 </div>
-![Git — Operations](../../../assets/itsm-git-operations-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

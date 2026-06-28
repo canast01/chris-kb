@@ -4,35 +4,11 @@ tags:
 ---
 # Azure Monitor
 
-
 <div class="kb-summary">
 Azure Monitor is the unified observability platform for Azure. It collects metrics and logs from Azure resources, operating systems, applications, and custom sources, then provides tools for analysis, alerting, and visualisation.
 
 *Applies to: Azure*
 </div>
-![Azure Monitor](../../../../assets/cloud-azure-monitoring-azure-monitor-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-azure_monitor_data_flow: "Azure Monitor Data Flow" {shape: rectangle}
-metrics_vs_logs: "Metrics vs Logs" {shape: rectangle}
-data_collection_rules_dcrs: "Data Collection Rules (DCRs)" {shape: rectangle}
-azure_monitor_agents: "Azure Monitor Agents" {shape: rectangle}
-diagnostics_settings_pipeline: "Diagnostics Settings Pipeline" {shape: rectangle}
-key_azure_monitor_components: "Key Azure Monitor Components" {shape: rectangle}
-
-center -> azure_monitor_data_flow
-center -> metrics_vs_logs
-center -> data_collection_rules_dcrs
-center -> azure_monitor_agents
-center -> diagnostics_settings_pipeline
-center -> key_azure_monitor_components
-```
 
 ## Azure Monitor Data Flow
 

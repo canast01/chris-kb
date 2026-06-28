@@ -12,10 +12,6 @@ Ansible escalation: when to open a Red Hat support case for AAP, how to file a c
 
 *Applies to: Ansible 2.14+ / AWX / Ansible Automation Platform (AAP)*
 </div>
-![Ansible — Escalation](../../../../assets/automation-ansible-troubleshooting-escalation-index.svg)
-
-
-
 
 ```mermaid
 flowchart LR

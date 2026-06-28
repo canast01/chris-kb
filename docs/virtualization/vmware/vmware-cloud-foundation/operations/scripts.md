@@ -7,10 +7,6 @@ tags:
 # VMware Cloud Foundation — Operational Scripts
 ![VMware Cloud Foundation — Operational Scripts](../../../../assets/virtualization-vmware-vmware-cloud-foundation-operations-scr.svg)
 
-
-
-
-
 ```powershell
 ┌──────────────────────────── VMware Cloud Foundation — Operational Scripts ────────────────────────────┐
 │                                                                                                       │
@@ -57,15 +53,6 @@ tags:
 │  Task ID       = async operation ID; poll with Get-VCFTask until complete                             │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-```d2
-direction: right
-
-hub: "VMware Cloud Foundation\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

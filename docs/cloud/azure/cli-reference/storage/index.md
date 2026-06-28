@@ -4,16 +4,11 @@ tags:
 ---
 # Storage Accounts & Blobs
 
-
 <div class="kb-summary">
 Azure storage CLI: `az storage account create`, `az storage blob upload/download`, `az storage container create`, `az storage copy`, and lifecycle management.
 
 *Applies to: Azure*
 </div>
-![Storage Accounts & Blobs](../../../../assets/cloud-azure-cli-reference-storage-index.svg)
-
-
-
 
 > Part of the Azure CLI Reference.
 
@@ -39,19 +34,6 @@ az storage blob delete --account-name <account> --container-name <container> --n
 # SAS token
 az storage container generate-sas --account-name <account> --name <container> \
   --permissions rwdl --expiry 2025-12-31
-```
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-component_a: "Component A" {shape: rectangle}
-component_b: "Component B" {shape: rectangle}
-component_c: "Component C" {shape: rectangle}
-
-center -> component_a
-center -> component_b
-center -> component_c
 ```
 
 ## See also

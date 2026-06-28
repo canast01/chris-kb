@@ -12,30 +12,6 @@ SQL Server hardening — surface area reduction, disabling xp_cmdshell, SQL Brow
 </div>
 ![SQL Server — Hardening](../../../../assets/compute-windows-server-sql-server-security-hardening.svg)
 
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-surface_area_reduction: "Surface Area Reduction" {shape: rectangle}
-disable_sql_server_browser: "Disable SQL Server Browser" {shape: rectangle}
-remove_dangerous_logins: "Remove Dangerous Logins" {shape: rectangle}
-restrict_sysadmin_membership: "Restrict sysadmin Membership" {shape: rectangle}
-enable_sql_server_audit: "Enable SQL Server Audit" {shape: rectangle}
-cis_benchmark_key_controls: "CIS Benchmark Key Controls" {shape: rectangle}
-core: "SQL Server Core" {shape: hexagon}
-
-external -> surface_area_reduction: traffic in
-surface_area_reduction -> disable_sql_server_browser
-disable_sql_server_browser -> remove_dangerous_logins
-remove_dangerous_logins -> restrict_sysadmin_membership
-restrict_sysadmin_membership -> enable_sql_server_audit
-enable_sql_server_audit -> cis_benchmark_key_controls
-cis_benchmark_key_controls -> core: secured path
-```
-
 ## Before you begin
 
 - **Access:** Local Administrator or Domain Admin on target hosts

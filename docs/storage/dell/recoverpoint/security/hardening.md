@@ -5,7 +5,6 @@ tags:
 ---
 # RecoverPoint — Hardening
 
-
 <div class="kb-summary">
 Hardening reference covering Hardening Checklist, Network Port Reference.
 
@@ -13,24 +12,9 @@ Hardening reference covering Hardening Checklist, Network Port Reference.
 </div>
 ![RecoverPoint — Hardening](../../../../assets/storage-dell-recoverpoint-security-hardening.svg)
 
-
-
 > Part of the [RecoverPoint](../index.md) > [Security](index.md) reference.
 
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-hardening_checklist: "Hardening Checklist" {shape: rectangle}
-network_port_reference: "Network Port Reference" {shape: rectangle}
-core: "RecoverPoint Core" {shape: hexagon}
-
-external -> hardening_checklist: traffic in
-hardening_checklist -> network_port_reference
-network_port_reference -> core: secured path
-```
 
 ## Before you begin
 

@@ -7,30 +7,12 @@ tags:
 ---
 # vSAN — Install & Upgrade
 
-
 <div class="kb-summary">
 Install & Upgrade reference covering ESA Migration, Driver and Firmware.
 
 *Applies to: vSAN 7.x / 8.x*
 </div>
 ![vSAN — Install & Upgrade](../../../../assets/virtualization-vmware-vsan-operations-install-upgrade.svg)
-
-
-
-```d2
-direction: right
-
-hub: "vSAN\nOperations" {shape: hexagon}
-upgrade_procedure: "Upgrade Procedure" {shape: rectangle}
-esa_migration: "ESA Migration" {shape: rectangle}
-driver_and_firmware: "Driver and Firmware" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> upgrade_procedure
-hub -> esa_migration
-hub -> driver_and_firmware
-hub -> verify
-```
 
 ## Before you begin
 

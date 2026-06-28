@@ -10,10 +10,6 @@ Ceph cluster design: node and disk sizing, OSD-to-MON-to-MGR ratios, network sep
 
 *Applies to: Red Hat Ceph Storage · Upstream Ceph*
 </div>
-![Ceph — Design Standards](../../../../assets/storage-ceph-architecture-design-standards-index.svg)
-
-
-
 
 ```mermaid
 graph TB

@@ -4,33 +4,11 @@ tags:
 ---
 # VMware Backup Coverage Inventory
 
-
 <div class="kb-summary">
 Live register of all VMs, their backup policy, and last verified restore test. Review monthly.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![VMware Backup Coverage Inventory](../../../../assets/virtualization-vmware-reference-inventory-backup-coverage.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Inventory" {shape: rectangle}
-coverage_register: "Coverage Register" {shape: rectangle}
-criticality_definitions: "Criticality Definitions" {shape: rectangle}
-coverage_review_checklist_monthly: "Coverage Review Checklist (Monthly)" {shape: rectangle}
-unprotected_vms_log: "Unprotected VMs Log" {shape: rectangle}
-restore_test_log: "Restore Test Log" {shape: rectangle}
-
-center -> coverage_register
-center -> criticality_definitions
-center -> coverage_review_checklist_monthly
-center -> unprotected_vms_log
-center -> restore_test_log
-```
 
 ## Coverage Register
 

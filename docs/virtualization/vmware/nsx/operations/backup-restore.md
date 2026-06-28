@@ -8,7 +8,6 @@ tags:
 # NSX — Backup and Restore
 ![NSX — Backup and Restore](../../../../assets/virtualization-vmware-nsx-operations-backup-restore.svg)
 
-
 ```bash
 # Configure backup via API
 curl -sk -u 'admin:password' \
@@ -96,15 +95,6 @@ if backups:
 else:
     print('No backups found')
 "
-```
-
-```d2
-direction: right
-
-hub: "NSX-T\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

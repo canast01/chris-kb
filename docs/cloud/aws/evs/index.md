@@ -11,8 +11,6 @@ Amazon Elastic VMware Service (EVS): VMware Cloud Foundation on AWS bare-metal â
 
 *Applies to: Amazon EVS*
 </div>
-![Amazon EVS](../../../assets/cloud-aws-evs-index.svg)
-
 
 ![Amazon EVS â€” Diagram](../../../assets/cloud-aws-evs-diagram.svg)
 <div class="kb-grid">

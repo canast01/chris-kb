@@ -4,33 +4,11 @@ tags:
 ---
 # VMware Logs Quick Reference
 
-
 <div class="kb-summary">
 VMware Logs Quick Reference reference covering ESXi Log Locations, vCenter Appliance Log Locations, Collecting a vCenter Support Bundle, Collecting an ESXi Support Bundle, Using Aria Operations for Logs.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![VMware Logs Quick Reference](../../../../assets/virtualization-vmware-reference-quick-reference-logs-quick-r.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Quick Reference" {shape: rectangle}
-esxi_log_locations: "ESXi Log Locations" {shape: rectangle}
-vcenter_appliance_log_locations: "vCenter Appliance Log Locations" {shape: rectangle}
-collecting_a_vcenter_support_bundle: "Collecting a vCenter Support Bundle" {shape: rectangle}
-collecting_an_esxi_support_bundle: "Collecting an ESXi Support Bundle" {shape: rectangle}
-using_aria_operations_for_logs: "Using Aria Operations for Logs" {shape: rectangle}
-
-center -> esxi_log_locations
-center -> vcenter_appliance_log_locations
-center -> collecting_a_vcenter_support_bundle
-center -> collecting_an_esxi_support_bundle
-center -> using_aria_operations_for_logs
-```
 
 ## ESXi Log Locations
 

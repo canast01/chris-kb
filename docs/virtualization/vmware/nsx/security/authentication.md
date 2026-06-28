@@ -8,7 +8,6 @@ tags:
 # NSX — Authentication
 ![NSX — Authentication](../../../../assets/virtualization-vmware-nsx-security-authentication.svg)
 
-
 ```bash
 curl -sk -u 'admin:password' \
   -X PUT \
@@ -116,21 +115,6 @@ set service syslog exporter siem-01 level info protocol TLS server 10.0.0.100 po
 ```bash
 # View recent auth events on NSX Manager node
 tail -100 /var/log/vmware/nsx-manager/audit.log | grep -i "login\|auth\|role"
-```
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-perimeter_controls: "Perimeter Controls" {shape: rectangle}
-identity_access: "Identity & Access" {shape: rectangle}
-audit_logging: "Audit & Logging" {shape: rectangle}
-core: "NSX-T Core" {shape: hexagon}
-
-external -> perimeter_controls: traffic in
-perimeter_controls -> identity_access
-identity_access -> audit_logging
-audit_logging -> core: secured path
 ```
 
 ## Before you begin

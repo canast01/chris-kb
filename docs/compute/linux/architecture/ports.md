@@ -15,28 +15,6 @@ Firewall port reference for Linux servers in a managed enterprise environment. C
 </div>
 ![Linux — Ports and Network Requirements](../../../assets/compute-linux-architecture-ports.svg)
 
-
-
-
-```d2
-direction: right
-
-center: "Linux" {shape: hexagon}
-inbound_management_access: "Inbound — Management Access" {shape: rectangle}
-inbound_monitoring_agents: "Inbound — Monitoring Agents" {shape: rectangle}
-outbound_monitoring_and_event_report: "Outbound — Monitoring and Event Reporting" {shape: rectangle}
-outbound_time_dns_and_updates: "Outbound — Time, DNS, and Updates" {shape: rectangle}
-application_ports: "Application Ports" {shape: rectangle}
-firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
-
-center -> inbound_management_access
-center -> inbound_monitoring_agents
-center -> outbound_monitoring_and_event_report
-center -> outbound_time_dns_and_updates
-center -> application_ports
-center -> firewall_zone_summary
-```
-
 ## Before you begin
 
 - SSH (22) is the primary management channel — restrict to jump host source IPs in firewall rules and `/etc/ssh/sshd_config`

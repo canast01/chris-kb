@@ -4,39 +4,15 @@ tags:
 ---
 # Evergreen — Scripts
 
-
 <div class="kb-summary">
 Pure Evergreen automation scripts: REST API calls for entitlement status, Python client for capacity trending, and automated alert integration.
 
 *Applies to: Evergreen*
 </div>
-![Evergreen — Scripts](../../../../assets/storage-pure-evergreen-scripts-index.svg)
-
-
-
 
 ![Evergreen — Scripts — Diagram](../../../../assets/storage-pure-evergreen-scripts-diagram.svg)
 
 ---
-
-```d2
-direction: right
-
-center: "Evergreen" {shape: rectangle}
-preupgrade_path_validation_bash: "Pre-Upgrade Path Validation (Bash)" {shape: rectangle}
-upgrade_readiness_check_python: "Upgrade Readiness Check (Python)" {shape: rectangle}
-ansible_preupgrade_playbook: "Ansible Pre-Upgrade Playbook" {shape: rectangle}
-windows_evergreenone_usage_report_vi: "Windows: Evergreen//One Usage Report via Pure1 REST API (Pow" {shape: rectangle}
-daily_check_script_python: "Daily Check Script (Python)" {shape: rectangle}
-incident_triage_script_python: "Incident Triage Script (Python)" {shape: rectangle}
-
-center -> preupgrade_path_validation_bash
-center -> upgrade_readiness_check_python
-center -> ansible_preupgrade_playbook
-center -> windows_evergreenone_usage_report_vi
-center -> daily_check_script_python
-center -> incident_triage_script_python
-```
 
 ## Pre-Upgrade Path Validation (Bash)
 
@@ -874,14 +850,12 @@ HEALTH_WARN          = 90
 RED = "\033[0;31m"; GRN = "\033[0;32m"; YEL = "\033[0;33m"; NC = "\033[0m"
 overall = 0
 
-
 def get_pure1_token():
     with open(PURE1_PRIVATE_KEY_FILE) as f:
         key = f.read()
     payload = {"iss": PURE1_APP_ID, "iat": int(time.time()), "exp": int(time.time()) + 3600}
     tok = jwt.encode(payload, key, algorithm="RS256")
     return tok if isinstance(tok, str) else tok.decode()
-
 
 def get_access_token(jwt_tok):
     resp = requests.post(
@@ -893,7 +867,6 @@ def get_access_token(jwt_tok):
     )
     resp.raise_for_status()
     return resp.json()["access_token"]
-
 
 print(f"\n=== Evergreen Daily Check ===")
 print(f"Generated: {__import__('datetime').datetime.now():%Y-%m-%d %H:%M}\n")
@@ -982,14 +955,12 @@ if not PURE1_APP_ID or not PURE1_PRIVATE_KEY_FILE:
 TS  = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 OUT = f"evergreen_triage_{TS}.json"
 
-
 def get_pure1_token():
     with open(PURE1_PRIVATE_KEY_FILE) as f:
         key = f.read()
     payload = {"iss": PURE1_APP_ID, "iat": int(time.time()), "exp": int(time.time()) + 3600}
     tok = jwt.encode(payload, key, algorithm="RS256")
     return tok if isinstance(tok, str) else tok.decode()
-
 
 def get_access_token(jwt_tok):
     resp = requests.post(
@@ -1001,7 +972,6 @@ def get_access_token(jwt_tok):
     )
     resp.raise_for_status()
     return resp.json()["access_token"]
-
 
 token   = get_access_token(get_pure1_token())
 headers = {"Authorization": f"Bearer {token}"}
@@ -1247,14 +1217,12 @@ HEALTH_WARN            = 90
 if not PURE1_APP_ID or not PURE1_PRIVATE_KEY_FILE:
     sys.exit("Set PURE1_APP_ID and PURE1_PRIVATE_KEY_FILE")
 
-
 def get_pure1_token():
     with open(PURE1_PRIVATE_KEY_FILE) as f:
         key = f.read()
     payload = {"iss": PURE1_APP_ID, "iat": int(time.time()), "exp": int(time.time()) + 3600}
     tok = jwt.encode(payload, key, algorithm="RS256")
     return tok if isinstance(tok, str) else tok.decode()
-
 
 def get_access_token(jwt_tok):
     resp = requests.post(
@@ -1266,7 +1234,6 @@ def get_access_token(jwt_tok):
     )
     resp.raise_for_status()
     return resp.json()["access_token"]
-
 
 try:
     token   = get_access_token(get_pure1_token())

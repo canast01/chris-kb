@@ -12,31 +12,8 @@ Reference for vSphere observability. Covers performance chart metrics (CPU Ready
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![vSphere Monitoring — Performance, Logs, and Skyline](../../../../assets/virtualization-vmware-internals-vsphere-monitoring-index.svg)
-
-
-
 
 ---
-
-```d2
-direction: right
-
-center: "Vsphere Monitoring" {shape: hexagon}
-performance_charts: "Performance Charts" {shape: rectangle}
-cpu_metrics: "CPU Metrics" {shape: rectangle}
-memory_metrics: "Memory Metrics" {shape: rectangle}
-disk_and_network_metrics: "Disk and Network Metrics" {shape: rectangle}
-log_files: "Log Files" {shape: rectangle}
-log_bundle_generation: "Log Bundle Generation" {shape: rectangle}
-
-center -> performance_charts
-center -> cpu_metrics
-center -> memory_metrics
-center -> disk_and_network_metrics
-center -> log_files
-center -> log_bundle_generation
-```
 
 ```vegalite
 {

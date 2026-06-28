@@ -11,9 +11,6 @@ Tanzu day-to-day operations — cluster lifecycle management, namespace administ
 
 *Applies to: Tanzu 3.x*
 </div>
-![Tanzu — Operations](../../../../assets/virtualization-vmware-tanzu-operations-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

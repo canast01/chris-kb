@@ -6,7 +6,6 @@ tags:
 ---
 # Tanzu — Backup and Restore
 
-
 <div class="kb-summary">
 Backup and Restore reference covering What to Back Up, Back Up vCenter VCSA (Supervisor), Install and Configure Velero, Schedule Cluster Backups with Velero, Restore from Velero Backup and 3 more sections.
 
@@ -14,29 +13,7 @@ Backup and Restore reference covering What to Back Up, Back Up vCenter VCSA (Sup
 </div>
 ![Tanzu — Backup and Restore](../../../../assets/virtualization-vmware-tanzu-operations-backup-restore.svg)
 
-
-
-
 ---
-
-```d2
-direction: right
-
-hub: "Tanzu\nOperations" {shape: hexagon}
-what_to_back_up: "What to Back Up" {shape: rectangle}
-back_up_vcenter_vcsa_supervisor: "Back Up vCenter VCSA (Supervisor)" {shape: rectangle}
-install_and_configure_velero: "Install and Configure Velero" {shape: rectangle}
-schedule_cluster_backups_with_velero: "Schedule Cluster Backups with Velero" {shape: rectangle}
-restore_from_velero_backup: "Restore from Velero Backup" {shape: rectangle}
-pvc_backup_with_csi_snapshots: "PVC Backup with CSI Snapshots" {shape: rectangle}
-
-hub -> what_to_back_up
-hub -> back_up_vcenter_vcsa_supervisor
-hub -> install_and_configure_velero
-hub -> schedule_cluster_backups_with_velero
-hub -> restore_from_velero_backup
-hub -> pvc_backup_with_csi_snapshots
-```
 
 ## Before you begin
 

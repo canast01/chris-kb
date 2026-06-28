@@ -20,17 +20,6 @@ Cisco Nexus Dashboard is an app-hosting platform for Cisco data centre managemen
 <a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Cluster sizing, form factor selection, and multi-site design standards.</span></a>
 </div>
 
-```d2
-direction: right
-
-center: "Nexus Dashboard" {shape: hexagon}
-hosted_applications: "Hosted Applications" {shape: rectangle}
-cluster_topology: "Cluster Topology" {shape: rectangle}
-
-center -> hosted_applications
-center -> cluster_topology
-```
-
 ## Hosted Applications
 
 | Application | Abbreviation | Role |

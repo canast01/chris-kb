@@ -5,8 +5,6 @@ tags:
   - vmware
 ---
 # Performance — Baselining
-![Performance — Baselining](../../../../assets/virtualization-vmware-aria-operations-operations-performance.svg)
-
 
 ```bash
 # CPU — 30 days from sar
@@ -40,15 +38,6 @@ Network (eth0): avg 180 Mbps | peak 620 Mbps
 App requests:   avg 340 req/min | peak 1,200
 Response (P95): avg 85ms | peak 340ms
 Error rate:     avg 0.02%
-```
-
-```d2
-direction: right
-
-hub: "Aria Operations\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

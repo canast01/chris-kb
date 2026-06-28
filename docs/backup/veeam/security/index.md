@@ -5,16 +5,11 @@ tags:
 ---
 # Veeam — Security
 
-
-
 <div class="kb-summary">
 Veeam hardening — RBAC, immutable repositories, backup encryption, Linux hardened repository, and access controls.
 
 *Applies to: Veeam 12.x*
 </div>
-![Veeam — Security](../../../assets/backup-veeam-security-index.svg)
-
-
 
 <div class="kb-grid kb-grid-4">
 

@@ -4,8 +4,6 @@ tags:
   - operations
 ---
 # Git — Backup and Restore
-![Git — Backup and Restore](../../../../assets/itsm-git-operations-backup-restore-index.svg)
-
 
 ```bash
 # Initial mirror clone

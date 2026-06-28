@@ -9,10 +9,6 @@ Evergreen//One Storage-as-a-Service — Pure-owned and managed hardware on-premi
 
 *Applies to: Evergreen//One*
 </div>
-![Pure Storage Evergreen//One](../../../assets/storage-pure-evergreen-one-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

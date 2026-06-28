@@ -5,33 +5,12 @@ tags:
 ---
 # Data Domain — Common Issues (Operations)
 
-
 <div class="kb-summary">
 Common Issues (Operations) reference covering Overview, Incident Triage — First Response, Issue: Replication Context in Error State, Issue: Replication Lag Growing, Issue: DDBoost Client Authentication Failure and 7 more sections.
 
 *Applies to: Data Domain DD OS 7.x*
 </div>
 ![Data Domain — Common Issues (Operations)](../../../../assets/storage-dell-data-domain-operations-common-issues.svg)
-
-
-```d2
-direction: right
-
-hub: "Data Domain\nOperations" {shape: hexagon}
-incident_triage_first_response: "Incident Triage — First Response" {shape: rectangle}
-issue_replication_lag_growing: "Issue: Replication Lag Growing" {shape: rectangle}
-issue_ddboost_client_authentication_: "Issue: DDBoost Client Authentication Failure" {shape: rectangle}
-issue_low_deduplication_ratio: "Issue: Low Deduplication Ratio" {shape: rectangle}
-issue_filesystem_disabled_after_rebo: "Issue: Filesystem Disabled After Reboot" {shape: rectangle}
-issue_vtl_tape_import_failure: "Issue: VTL Tape Import Failure" {shape: rectangle}
-
-hub -> incident_triage_first_response
-hub -> issue_replication_lag_growing
-hub -> issue_ddboost_client_authentication_
-hub -> issue_low_deduplication_ratio
-hub -> issue_filesystem_disabled_after_rebo
-hub -> issue_vtl_tape_import_failure
-```
 
 ## Before you begin
 
@@ -62,7 +41,6 @@ flowchart TD
     I -->|No| K["Check backup app logs\nfor specific error code"]
     D & F & H & J & K --> L(["Open Dell support case\nif unresolved"])
 ```
-
 
 ### Recovery Steps
 

@@ -7,14 +7,9 @@ tags:
 
 # SAN — Certifications
 
-
 <div class="kb-summary">
 SAN certifications tracker: Brocade BCSM, Cisco CCNP Storage, and related SAN-track certifications with exam objectives, study resources, and progress notes.
 </div>
-![SAN — Certifications](../../assets/certifications-san-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-5">
 

@@ -6,8 +6,6 @@ search:
   boost: 1.5
 ---
 # Jira — Common Issues
-![Jira — Common Issues](../../../../assets/itsm-jira-troubleshooting-common-issues-index.svg)
-
 
 ```bash
 # Check for OOM events in the last 24h

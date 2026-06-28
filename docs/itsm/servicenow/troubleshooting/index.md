@@ -7,16 +7,11 @@ search:
 ---
 # ServiceNow — Troubleshooting
 
-
-
 <div class="kb-summary">
 Diagnosing ServiceNow outages, workflow errors, integration failures, MID server connectivity, and slow performance.
 
 *Applies to: ServiceNow (Washington / Xanadu)*
 </div>
-![ServiceNow — Troubleshooting](../../../assets/itsm-servicenow-troubleshooting-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

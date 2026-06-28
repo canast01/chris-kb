@@ -5,15 +5,11 @@ tags:
 ---
 # NetBackup — Install & Upgrade
 
-
 <div class="kb-summary">
 Install & Upgrade reference covering Release Cadence, Upgrade Order, Migration: Physical Master to Appliance, License Lifecycle.
 
 *Applies to: NetBackup 10.x*
 </div>
-![NetBackup — Install & Upgrade](../../../../assets/backup-netbackup-operations-install-upgrade-index.svg)
-
-
 
 ```d2
 direction: right
@@ -58,8 +54,6 @@ Check lifecycle dates at: [sort.veritas.com](https://sort.veritas.com) → EOL d
 ## Upgrade Order
 
 ### Upgrade Dependency Chain
-
-
 
 ## Migration: Physical Master to Appliance
 

@@ -5,29 +5,12 @@ tags:
 ---
 # CloudIQ: Capacity Forecasting and Pool Utilisation
 
-
 <div class="kb-summary">
 CloudIQ: Capacity Forecasting and Pool Utilisation reference covering Capacity Forecasting, Pool and Volume Utilisation, Threshold Alerts for Capacity, Common Capacity Issues.
 
 *Applies to: CloudIQ*
 </div>
 ![CloudIQ: Capacity Forecasting and Pool Utilisation](../../../../assets/storage-dell-cloudiq-operations-capacity.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "CloudIQ\nOperations" {shape: hexagon}
-threshold_alerts_for_capacity: "Threshold Alerts for Capacity" {shape: rectangle}
-common_capacity_issues: "Common Capacity Issues" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> threshold_alerts_for_capacity
-hub -> common_capacity_issues
-hub -> verify
-```
 
 ## Before you begin
 

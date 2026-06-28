@@ -5,7 +5,6 @@ tags:
 ---
 # FabricOS — Authentication
 
-
 <div class="kb-summary">
 FabricOS authentication: RADIUS and LDAP server configuration with `aaaconfig`, local account fallback policy, and SSH key-based admin access.
 
@@ -13,29 +12,7 @@ FabricOS authentication: RADIUS and LDAP server configuration with `aaaconfig`, 
 </div>
 ![FabricOS — Authentication](../../../../assets/san-brocade-fabric-os-security-authentication.svg)
 
-
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-authentication_flow: "Authentication Flow" {shape: rectangle}
-tacacs_authentication: "TACACS+ Authentication" {shape: rectangle}
-local_accounts: "Local Accounts" {shape: rectangle}
-ssh_configuration: "SSH Configuration" {shape: rectangle}
-ntp_requirement: "NTP Requirement" {shape: rectangle}
-authentication_troubleshooting: "Authentication Troubleshooting" {shape: rectangle}
-core: "Brocade Fabric OS Core" {shape: hexagon}
-
-external -> authentication_flow: traffic in
-authentication_flow -> tacacs_authentication
-tacacs_authentication -> local_accounts
-local_accounts -> ssh_configuration
-ssh_configuration -> ntp_requirement
-ntp_requirement -> authentication_troubleshooting
-authentication_troubleshooting -> core: secured path
-```
 
 ## Before you begin
 
@@ -66,7 +43,6 @@ flowchart TD
     localAuth -->|No| reject3["Login denied"]
     vsaRole & tacacsRole & localRole --> session["CLI / Web session\nopened with assigned role"]
 ```
-
 
 If RADIUS authentication fails, the fallback to `LOCAL` authentication ensures break-glass access remains available. Always test RADIUS before relying on it.
 

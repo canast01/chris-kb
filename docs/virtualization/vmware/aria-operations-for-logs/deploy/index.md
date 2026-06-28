@@ -13,13 +13,8 @@ End-to-end deployment guide for VMware Aria Operations for Logs (vRLI). Covers p
 
 *Applies to: Aria Logs 8.x*
 </div>
-![Aria Operations for Logs — Deploy](../../../../assets/virtualization-vmware-aria-operations-for-logs-deploy-index.svg)
-
-
-
 
 ---
-
 
 ```mermaid
 flowchart TD

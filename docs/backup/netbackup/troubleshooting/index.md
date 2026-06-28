@@ -7,16 +7,11 @@ search:
 ---
 # NetBackup — Troubleshooting
 
-
-
 <div class="kb-summary">
 Diagnosing NetBackup job failures, status codes, media server errors, client connectivity, and catalog issues.
 
 *Applies to: NetBackup 10.x*
 </div>
-![NetBackup — Troubleshooting](../../../assets/backup-netbackup-troubleshooting-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

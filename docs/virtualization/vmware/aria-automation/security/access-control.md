@@ -6,33 +6,12 @@ tags:
 ---
 # Aria Automation — Access Control
 
-
 <div class="kb-summary">
 Access Control reference covering RBAC Model, Configuring AD Group Role Assignments, Content Sharing (Service Broker), Approval Policies, Reviewing Role Assignments via API and 1 more sections.
 
 *Applies to: Aria Automation 8.x*
 </div>
 ![Aria Automation — Access Control](../../../../assets/virtualization-vmware-aria-automation-security-access-contro.svg)
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-rbac_model: "RBAC Model" {shape: rectangle}
-configuring_ad_group_role_assignment: "Configuring AD Group Role Assignments" {shape: rectangle}
-approval_policies: "Approval Policies" {shape: rectangle}
-reviewing_role_assignments_via_api: "Reviewing Role Assignments via API" {shape: rectangle}
-least_privilege_for_service_accounts: "Least Privilege for Service Accounts" {shape: rectangle}
-core: "Aria Automation Core" {shape: hexagon}
-
-external -> rbac_model: traffic in
-rbac_model -> configuring_ad_group_role_assignment
-configuring_ad_group_role_assignment -> approval_policies
-approval_policies -> reviewing_role_assignments_via_api
-reviewing_role_assignments_via_api -> least_privilege_for_service_accounts
-least_privilege_for_service_accounts -> core: secured path
-```
 
 ## Before you begin
 
@@ -69,7 +48,6 @@ Aria Automation uses a **project-based access control** model. All resource prov
 Roles are assigned to groups (AD groups synced via VIDM), not individuals.
 
 **Add a group to a project:**
-
 
 - Source: select the Assembler content source (or a git-backed content source)
 - Target: select the project(s) to share with

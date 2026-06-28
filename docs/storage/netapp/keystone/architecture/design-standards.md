@@ -5,7 +5,6 @@ tags:
 ---
 # Keystone — Standards
 
-
 <div class="kb-summary">
 Standards reference covering Service Level Selection, Naming Conventions, Capacity Management.
 
@@ -13,24 +12,9 @@ Standards reference covering Service Level Selection, Naming Conventions, Capaci
 </div>
 ![Keystone — Standards](../../../../assets/storage-netapp-keystone-architecture-design-standards.svg)
 
-
-
 > Part of the [Keystone Architecture](index.md) reference.
 
 ---
-
-```d2
-direction: right
-
-center: "Keystone STaaS" {shape: hexagon}
-service_level_selection: "Service Level Selection" {shape: rectangle}
-naming_conventions: "Naming Conventions" {shape: rectangle}
-capacity_management: "Capacity Management" {shape: rectangle}
-
-center -> service_level_selection
-center -> naming_conventions
-center -> capacity_management
-```
 
 ## Service Level Selection
 

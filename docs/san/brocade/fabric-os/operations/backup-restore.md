@@ -5,7 +5,6 @@ tags:
 ---
 # FabricOS — Backup & Restore
 
-
 <div class="kb-summary">
 FabricOS backup and restore: `configupload` to FTP/SCP, `firmwaredownload` staging, disaster recovery from a saved config, and switch replacement procedure.
 
@@ -13,27 +12,7 @@ FabricOS backup and restore: `configupload` to FTP/SCP, `firmwaredownload` stagi
 </div>
 ![FabricOS — Backup & Restore](../../../../assets/san-brocade-fabric-os-operations-backup-restore.svg)
 
-
 ---
-
-```d2
-direction: right
-
-hub: "Brocade Fabric OS\nOperations" {shape: hexagon}
-backup_and_restore_flow: "Backup and Restore Flow" {shape: rectangle}
-zone_database_backup_cfgsave: "Zone Database Backup (cfgsave)" {shape: rectangle}
-backup_schedule_and_retention: "Backup Schedule and Retention" {shape: rectangle}
-automated_backup_with_ansible: "Automated Backup with Ansible" {shape: rectangle}
-manual_backup_procedure: "Manual Backup Procedure" {shape: rectangle}
-restore_validation: "Restore Validation" {shape: rectangle}
-
-hub -> backup_and_restore_flow
-hub -> zone_database_backup_cfgsave
-hub -> backup_schedule_and_retention
-hub -> automated_backup_with_ansible
-hub -> manual_backup_procedure
-hub -> restore_validation
-```
 
 ## Before you begin
 
@@ -65,7 +44,6 @@ flowchart TD
     style change fill:#2563eb,color:#fff
     style failure fill:#dc2626,color:#fff
 ```
-
 
 ### Restore Notes
 

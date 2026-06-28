@@ -12,28 +12,6 @@ Two-tier PKI hierarchy deployment: offline standalone Root CA and domain-joined 
 
 *Applies to: Windows Server 2019 / 2022 CA role*
 </div>
-![PKI — CA Hierarchy Initial Deployment](../../../../assets/security-certificates-deploy-pki-deployment-index.svg)
-
-
-
-```d2
-direction: right
-
-center: "Pki Deployment" {shape: hexagon}
-prerequisites: "Prerequisites" {shape: rectangle}
-deploy_the_offline_root_ca: "Deploy the Offline Root CA" {shape: rectangle}
-configure_root_ca_cdp_and_aia: "Configure Root CA CDP and AIA" {shape: rectangle}
-deploy_the_intermediateissuing_ca: "Deploy the Intermediate/Issuing CA" {shape: rectangle}
-publish_root_ca_certificate_to_ad: "Publish Root CA Certificate to AD" {shape: rectangle}
-configure_certificate_templates: "Configure Certificate Templates" {shape: rectangle}
-
-center -> prerequisites
-center -> deploy_the_offline_root_ca
-center -> configure_root_ca_cdp_and_aia
-center -> deploy_the_intermediateissuing_ca
-center -> publish_root_ca_certificate_to_ad
-center -> configure_certificate_templates
-```
 
 ## Before you begin
 
@@ -43,9 +21,6 @@ center -> configure_certificate_templates
 - **Logging:** record every IP address, hostname, and credential set assigned during this deployment
 
 ---
-
-
-
 
 This guide covers deploying a two-tier PKI hierarchy: an offline standalone Root CA and a domain-joined Enterprise Issuing CA. This is the recommended Microsoft PKI pattern for enterprise environments.
 

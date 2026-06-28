@@ -10,10 +10,6 @@ tags:
 <div class="kb-summary">
 Flowcharts for common VMware infrastructure design decisions — storage policy, NSX topology, DR tool selection, and Aria product selection.
 </div>
-![Decision Trees](../../assets/reference-decision-trees-index.svg)
-
-
-
 
 <div class="kb-grid">
 <a class="kb-card" href="vsan-policy/">
@@ -35,17 +31,6 @@ Which Aria product fits your need — monitoring, logging, automation, network v
 </div>
 
 ---
-
-```d2
-direction: right
-
-center: "Decision Trees" {shape: hexagon}
-product_comparison_tables: "Product Comparison Tables" {shape: rectangle}
-usecase_to_product_recommendation_gu: "Use-Case to Product Recommendation Guide" {shape: rectangle}
-
-center -> product_comparison_tables
-center -> usecase_to_product_recommendation_gu
-```
 
 ## Product Comparison Tables
 

@@ -4,8 +4,6 @@ tags:
   - operations
 ---
 # Confluence — Install and Upgrade
-![Confluence — Install and Upgrade](../../../../assets/itsm-confluence-operations-install-upgrade-index.svg)
-
 
 ```bash
 # Record current version
@@ -155,17 +153,6 @@ pg_restore \
 
 # 6. Verify service returns to RUNNING state
 curl -s "https://confluence.example.com/status" | jq '.state'
-```
-
-```d2
-direction: right
-
-plan: "Plan" {shape: oval}
-verify: "Verify" {shape: rectangle}
-validate: "Validate" {shape: oval}
-
-plan -> verify
-verify -> validate
 ```
 
 ## Before you begin

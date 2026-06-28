@@ -6,7 +6,6 @@ tags:
 # Cisco MDS 9000 — Backup and Restore
 ![Cisco MDS 9000 — Backup and Restore](../../../../assets/san-cisco-mds-operations-backup-restore.svg)
 
-
 ```bash
 # Save running to startup config
 copy running-config startup-config
@@ -19,16 +18,6 @@ copy running-config tftp://<server>/<filename>
 
 # Display full running config (for manual capture)
 show running-config
-```
-
-
-```d2
-direction: right
-
-hub: "Cisco MDS\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

@@ -5,7 +5,6 @@ tags:
 ---
 # COD — Standards
 
-
 <div class="kb-summary">
 Standards reference covering COD License Naming, COD Inventory Tracking, Threshold Alerting, Change Management Process for COD Activation, Post-Activation Checklist.
 
@@ -13,25 +12,7 @@ Standards reference covering COD License Naming, COD Inventory Tracking, Thresho
 </div>
 ![COD — Standards](../../../../assets/storage-dell-cod-architecture-design-standards.svg)
 
-
-
-
 Store license files in a secure, backed-up location — a secrets vault or a protected network share accessible only to storage admins. Lost license files require re-issuance from the Dell License Portal, which can cause delays during emergency activations.
-
-```d2
-direction: right
-
-center: "Cloud On Demand" {shape: hexagon}
-cod_inventory_tracking: "COD Inventory Tracking" {shape: rectangle}
-threshold_alerting: "Threshold Alerting" {shape: rectangle}
-change_management_process_for_cod_ac: "Change Management Process for COD Activation" {shape: rectangle}
-postactivation_checklist: "Post-Activation Checklist" {shape: rectangle}
-
-center -> cod_inventory_tracking
-center -> threshold_alerting
-center -> change_management_process_for_cod_ac
-center -> postactivation_checklist
-```
 
 ## COD Inventory Tracking
 

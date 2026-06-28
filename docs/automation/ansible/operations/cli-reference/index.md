@@ -5,39 +5,17 @@ tags:
 ---
 # Ansible — CLI Reference
 
-
 <div class="kb-summary">
 Ansible CLI reference: `ansible`, `ansible-playbook`, `ansible-vault`, `ansible-galaxy`, `ansible-inventory`, and `ansible-doc` command syntax with common flags.
 
 *Applies to: Ansible 2.14+*
 </div>
-![Ansible — CLI Reference](../../../../assets/automation-ansible-operations-cli-reference-index.svg)
-
 
 > Part of the [Ansible Operations](../index.md) reference.
 
 Ansible is an agentless automation tool — it connects to remote hosts over SSH and runs tasks defined in YAML playbooks. There's nothing to install on the managed hosts. The control node (where you run `ansible` and `ansible-playbook`) needs Python and the Ansible package.
 
 > Install with `pip install ansible` or your distro's package manager. Requires SSH access to managed hosts and a valid inventory file.
-
-```d2
-direction: right
-
-center: "Ansible" {shape: rectangle}
-control_node_and_inventory_topology: "Control Node and Inventory Topology" {shape: rectangle}
-ansibleplaybook: "ansible-playbook" {shape: rectangle}
-ansibleinventory: "ansible-inventory" {shape: rectangle}
-ansiblegalaxy: "ansible-galaxy" {shape: rectangle}
-ansiblevault: "ansible-vault" {shape: rectangle}
-tools_lint_config: "Tools, Lint & Config" {shape: rectangle}
-
-center -> control_node_and_inventory_topology
-center -> ansibleplaybook
-center -> ansibleinventory
-center -> ansiblegalaxy
-center -> ansiblevault
-center -> tools_lint_config
-```
 
 ## Before you begin
 
@@ -71,7 +49,6 @@ graph TD
     groupDB -->|SSH| db02["db02"]
     groupNet -->|SSH| router01["router01"]
 ```
-
 
 ---
 

@@ -17,28 +17,6 @@ Firewall port reference for VMware vSAN. Covers intra-cluster data plane, health
 </div>
 ![vSAN — Ports and Network Requirements](../../../../assets/virtualization-vmware-vsan-architecture-ports.svg)
 
-
-
-
-```d2
-direction: right
-
-center: "vSAN" {shape: hexagon}
-intracluster_traffic_esxi_host_to_es: "Intra-Cluster Traffic (ESXi host to ESXi host)" {shape: rectangle}
-stretched_cluster_witness_appliance_: "Stretched Cluster — Witness Appliance Traffic" {shape: rectangle}
-stretched_cluster_intersite_traffic: "Stretched Cluster — Inter-Site Traffic" {shape: rectangle}
-vsan_health_service: "vSAN Health Service" {shape: rectangle}
-vsan_iscsi_target_optional: "vSAN iSCSI Target (Optional)" {shape: rectangle}
-hci_mesh_crosscluster_storage_vsan_7: "HCI Mesh — Cross-Cluster Storage (vSAN 7.0+)" {shape: rectangle}
-
-center -> intracluster_traffic_esxi_host_to_es
-center -> stretched_cluster_witness_appliance_
-center -> stretched_cluster_intersite_traffic
-center -> vsan_health_service
-center -> vsan_iscsi_target_optional
-center -> hci_mesh_crosscluster_storage_vsan_7
-```
-
 ## Before you begin
 
 - For standard vSAN clusters, place all vSAN VMkernel adapters on a dedicated L2 network (same VLAN, no firewall) — L3 filtering between nodes introduces latency variance that can impact performance

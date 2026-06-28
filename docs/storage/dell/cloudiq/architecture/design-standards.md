@@ -5,35 +5,12 @@ tags:
 ---
 # CloudIQ — Standards
 
-
 <div class="kb-summary">
 Standards reference covering Sizing and Capacity Model, Naming Conventions, Build and Deployment Baseline, Configuration Checklist.
 
 *Applies to: CloudIQ*
 </div>
 ![CloudIQ — Standards](../../../../assets/storage-dell-cloudiq-architecture-design-standards.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "CloudIQ" {shape: hexagon}
-sizing_and_capacity_model: "Sizing and Capacity Model" {shape: rectangle}
-naming_conventions: "Naming Conventions" {shape: rectangle}
-build_and_deployment_baseline: "Build and Deployment Baseline" {shape: rectangle}
-configuration_checklist: "Configuration Checklist" {shape: rectangle}
-health_score_thresholds: "Health Score Thresholds" {shape: rectangle}
-alert_notification_routing: "Alert Notification Routing" {shape: rectangle}
-
-center -> sizing_and_capacity_model
-center -> naming_conventions
-center -> build_and_deployment_baseline
-center -> configuration_checklist
-center -> health_score_thresholds
-center -> alert_notification_routing
-```
 
 ```vegalite
 {

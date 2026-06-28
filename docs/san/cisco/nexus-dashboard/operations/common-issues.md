@@ -6,7 +6,6 @@ tags:
 # Cisco Nexus Dashboard — Operations Common Issues
 ![Cisco Nexus Dashboard — Operations Common Issues](../../../../assets/san-cisco-nexus-dashboard-operations-common-issues.svg)
 
-
 ```bash
 ssh ndadmin@nd-dc1-1.corp.example.com
 
@@ -35,15 +34,6 @@ acs backup status
 
 # Check backup logs
 acs system logs --component backup --tail 50
-```
-
-```d2
-direction: right
-
-hub: "Nexus Dashboard\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

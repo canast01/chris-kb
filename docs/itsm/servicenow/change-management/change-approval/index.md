@@ -4,35 +4,11 @@ tags:
 ---
 # Change Approval Process
 
-
 <div class="kb-summary">
 Change Approval Process reference covering Change Types and Approval Requirements, CAB Approval Workflow, Risk Classification Matrix, ITSM Approval Fields, Approval Checklist and 1 more sections.
 
 *Applies to: ServiceNow*
 </div>
-![Change Approval Process](../../../../assets/itsm-servicenow-change-management-change-approval-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "ServiceNow" {shape: hexagon}
-risk_classification_matrix: "Risk Classification Matrix" {shape: rectangle}
-itsm_approval_fields: "ITSM Approval Fields" {shape: rectangle}
-approval_checklist: "Approval Checklist" {shape: rectangle}
-common_rejection_reasons: "Common Rejection Reasons" {shape: rectangle}
-approval_tiers: "Approval Tiers" {shape: rectangle}
-cab_process: "CAB Process" {shape: rectangle}
-
-center -> risk_classification_matrix
-center -> itsm_approval_fields
-center -> approval_checklist
-center -> common_rejection_reasons
-center -> approval_tiers
-center -> cab_process
-```
 
 ## Risk Classification Matrix
 

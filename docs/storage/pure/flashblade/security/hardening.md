@@ -5,16 +5,12 @@ tags:
 ---
 # FlashBlade — Hardening
 
-
 <div class="kb-summary">
 Hardening reference covering Hardening Checklist, Step-by-Step Controls, Post-Hardening Verification.
 
 *Applies to: FlashBlade Purity//FB 4.x*
 </div>
 ![FlashBlade — Hardening](../../../../assets/storage-pure-flashblade-security-hardening.svg)
-
-
-
 
 ![FlashBlade — Hardening — Diagram](../../../../assets/storage-pure-flashblade-security-hardening-diagram.svg)
 
@@ -25,21 +21,6 @@ Hardening reference covering Hardening Checklist, Step-by-Step Controls, Post-Ha
 This page covers the ordered hardening steps to apply on every new FlashBlade before it enters production. Apply these steps after initial network and identity configuration and before connecting production NFS, SMB, or S3 clients.
 
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-hardening_checklist: "Hardening Checklist" {shape: rectangle}
-stepbystep_controls: "Step-by-Step Controls" {shape: rectangle}
-posthardening_verification: "Post-Hardening Verification" {shape: rectangle}
-core: "FlashBlade Core" {shape: hexagon}
-
-external -> hardening_checklist: traffic in
-hardening_checklist -> stepbystep_controls
-stepbystep_controls -> posthardening_verification
-posthardening_verification -> core: secured path
-```
 
 ## Before you begin
 

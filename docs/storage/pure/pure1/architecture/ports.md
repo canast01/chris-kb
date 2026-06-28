@@ -16,27 +16,6 @@ Firewall port reference for Pure1 (Pure Storage cloud management and analytics S
 </div>
 ![Pure1 — Ports and Network Requirements](../../../../assets/storage-pure-pure1-architecture-ports.svg)
 
-
-
-
-
-```d2
-direction: right
-
-center: "Pure1" {shape: hexagon}
-how_it_works: "How It Works" {shape: rectangle}
-outbound_arrays_to_pure1_cloud_requi: "Outbound — Arrays to Pure1 Cloud (Required)" {shape: rectangle}
-admin_access_saas: "Admin Access (SaaS)" {shape: rectangle}
-firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> how_it_works
-center -> outbound_arrays_to_pure1_cloud_requi
-center -> admin_access_saas
-center -> firewall_zone_summary
-center -> verify
-```
-
 ## How It Works
 
 Pure1 is a fully SaaS-based cloud management platform. Each FlashArray and FlashBlade array ships with a built-in phone-home agent that establishes an **outbound-only** TLS connection to Pure's cloud. Administrators access Pure1 via browser at `pure1.purestorage.com` — no on-premises software is needed.

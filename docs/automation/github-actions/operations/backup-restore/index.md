@@ -4,8 +4,6 @@ tags:
   - operations
 ---
 # GitHub Actions — Backup & Restore
-![GitHub Actions — Backup & Restore](../../../../assets/automation-github-actions-operations-backup-restore-index.svg)
-
 
 ```bash
 # Mirror repository to backup location

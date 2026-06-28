@@ -5,16 +5,11 @@ tags:
 ---
 # VMware Platform Upgrade Procedure
 
-
 <div class="kb-summary">
 This procedure covers a full VMware platform upgrade including vCenter, ESXi, vSAN, NSX, and VCF-related components.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![VMware Platform Upgrade Procedure](../../../../assets/virtualization-vmware-reference-upgrade-readiness-vmware-pla.svg)
-
-
-
 
 ```d2
 direction: right

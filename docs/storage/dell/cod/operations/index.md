@@ -10,9 +10,6 @@ COD — Operations reference: CLI Reference, Health Checks, Procedures, Install 
 
 *Applies to: Cloud for Desktop (COD)*
 </div>
-![COD — Operations](../../../../assets/storage-dell-cod-operations-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="cli-reference/"><strong>CLI Reference</strong><span>Commands, syntax, and quick reference.</span></a>

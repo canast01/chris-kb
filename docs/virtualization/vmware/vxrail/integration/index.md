@@ -4,37 +4,13 @@ tags:
 ---
 # VxRail Integration
 
-
 <div class="kb-summary">
 VxRail integrations: vCenter plug-in installation, VxRail Manager API registration, Dell EMC CloudIQ telemetry, and SupportAssist automatic log collection.
 
 *Applies to: VxRail 7.x · 8.x*
 </div>
-![VxRail Integration](../../../../assets/virtualization-vmware-vxrail-integration-index.svg)
-
-
-
 
 ---
-
-```d2
-direction: right
-
-center: "VxRail" {shape: hexagon}
-vcenter_integration: "vCenter Integration" {shape: rectangle}
-nsx_integration: "NSX Integration" {shape: rectangle}
-aria_operations_integration: "Aria Operations Integration" {shape: rectangle}
-dell_srs_supportassist: "Dell SRS / SupportAssist" {shape: rectangle}
-dell_openmanage_integration: "Dell OpenManage Integration" {shape: rectangle}
-backup_integration: "Backup Integration" {shape: rectangle}
-
-center -> vcenter_integration
-center -> nsx_integration
-center -> aria_operations_integration
-center -> dell_srs_supportassist
-center -> dell_openmanage_integration
-center -> backup_integration
-```
 
 ## vCenter Integration
 

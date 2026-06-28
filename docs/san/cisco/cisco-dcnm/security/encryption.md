@@ -6,7 +6,6 @@ tags:
 # Cisco DCNM — Encryption
 ![Cisco DCNM — Encryption](../../../../assets/san-cisco-cisco-dcnm-security-encryption.svg)
 
-
 ```bash
 ssh root@dcnm-dc1.corp.example.com
 
@@ -77,21 +76,6 @@ d = re.search(r'notAfter=(.*)', cert).group(1).strip()
 exp = datetime.strptime(d, '%b %d %H:%M:%S %Y %Z')
 print(f'Expires in {(exp-datetime.utcnow()).days} days: {exp.date()}')
 "
-```
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-perimeter_controls: "Perimeter Controls" {shape: rectangle}
-identity_access: "Identity & Access" {shape: rectangle}
-audit_logging: "Audit & Logging" {shape: rectangle}
-core: "Cisco DCNM Core" {shape: hexagon}
-
-external -> perimeter_controls: traffic in
-perimeter_controls -> identity_access
-identity_access -> audit_logging
-audit_logging -> core: secured path
 ```
 
 ## Before you begin

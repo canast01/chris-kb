@@ -3,8 +3,6 @@ tags:
   - linux
 ---
 # Integration — Directory Integration (LDAP / Active Directory)
-![Integration — Directory Integration (LDAP / Active Directory)](../../../assets/compute-linux-directory-integration-index.svg)
-
 
 ```bash
 # Install required packages (RHEL/Rocky)

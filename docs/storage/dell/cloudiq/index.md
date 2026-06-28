@@ -9,10 +9,6 @@ Dell CloudIQ — cloud-native AIOps SaaS for Dell storage. ML-driven health scor
 
 *Applies to: CloudIQ*
 </div>
-![CloudIQ](../../../assets/storage-dell-cloudiq-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="architecture/"><strong>Architecture</strong><span>How it works, integrations, and design standards.</span></a>

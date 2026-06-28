@@ -4,14 +4,11 @@ tags:
 ---
 # Pure Storage Evergreen Standards
 
-
 <div class="kb-summary">
 Pure Storage Evergreen Standards reference covering Naming Conventions, Build Baseline, Subscription Checklist.
 
 *Applies to: Evergreen*
 </div>
-![Pure Storage Evergreen Standards](../../../../assets/storage-pure-evergreen-standards-index.svg)
-
 
 Evergreen Standards — Object Naming and Design
 

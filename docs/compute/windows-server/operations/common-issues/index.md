@@ -5,14 +5,11 @@ tags:
 ---
 # Windows Server — Known Issues
 
-
 <div class="kb-summary">
 Quick reference for common problems and resolutions. Structured approach to diagnosing common Windows Server issues.
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
-![Windows Server — Known Issues](../../../../assets/compute-windows-server-operations-common-issues-index.svg)
-
 
 Quick reference for common problems and resolutions.
 
@@ -82,7 +79,6 @@ flowchart TD
     resourceOk -- Yes --> svcOk
     svcOk --> resolve
 ```
-
 
 ## High Memory
 

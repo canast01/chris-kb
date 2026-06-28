@@ -7,14 +7,11 @@ search:
 ---
 # Pure Storage Evergreen Troubleshooting
 
-
 <div class="kb-summary">
 Pure Storage Evergreen Troubleshooting reference covering Common Issues, Diagnostic Commands, Log Locations, Before Calling Support.
 
 *Applies to: Evergreen*
 </div>
-![Pure Storage Evergreen Troubleshooting](../../../../assets/storage-pure-evergreen-troubleshooting-index.svg)
-
 
 ![Pure Storage Evergreen Troubleshooting — Diagram](../../../../assets/storage-pure-evergreen-troubleshooting-diagram.svg)
 

@@ -6,29 +6,12 @@ tags:
 ---
 # Aria Operations for Networks — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Deployment Model, Application Discovery Mechanism, Flow Data Retention Defaults, Internal Service Architecture.
 
 *Applies to: Aria Operations for Networks 6.x*
 </div>
 ![Aria Operations for Networks — How It Works](../../../../assets/virtualization-vmware-aria-operations-for-networks-architect.svg)
-
-
-```d2
-direction: right
-
-center: "Aria Operations for Networks" {shape: hexagon}
-deployment_model: "Deployment Model" {shape: rectangle}
-application_discovery_mechanism: "Application Discovery Mechanism" {shape: rectangle}
-flow_data_retention_defaults: "Flow Data Retention Defaults" {shape: rectangle}
-internal_service_architecture: "Internal Service Architecture" {shape: rectangle}
-
-center -> deployment_model
-center -> application_discovery_mechanism
-center -> flow_data_retention_defaults
-center -> internal_service_architecture
-```
 
 ```plantuml
 @startuml
@@ -63,10 +46,6 @@ Aria Operations for Networks (AON, formerly vRealize Network Insight / VRNi) con
 | **Collector VM** | Data collection agent — communicates with data sources | 1–N (one per NSX-T/vCenter site recommended) |
 
 Collectors maintain a persistent TLS connection back to the Platform VM on TCP 443. All raw flow data, API-pulled topology, and parsed configs are shipped from Collector to Platform for indexing. The Platform VM is the sole persistent data store — Collectors hold no long-term state.
-
-
-
-
 
 ### AON Flow Data Pipeline
 

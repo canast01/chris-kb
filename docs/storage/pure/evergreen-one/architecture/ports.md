@@ -16,25 +16,6 @@ Pure Storage Evergreen//One is a Storage as a Service (STaaS) consumption model 
 </div>
 ![Pure Storage Evergreen//One — Ports and Network Requirements](../../../../assets/storage-pure-evergreen-one-architecture-ports.svg)
 
-
-
-
-
-```d2
-direction: right
-
-center: "Evergreen//One" {shape: hexagon}
-how_it_works: "How It Works" {shape: rectangle}
-port_requirements_same_as_underlying: "Port Requirements — Same as Underlying Array" {shape: rectangle}
-evergreenone_specific_pure_cloud_con: "Evergreen//One Specific — Pure Cloud Connectivity (Required)" {shape: rectangle}
-firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
-
-center -> how_it_works
-center -> port_requirements_same_as_underlying
-center -> evergreenone_specific_pure_cloud_con
-center -> firewall_zone_summary
-```
-
 ## How It Works
 
 Evergreen//One deploys Pure hardware on-premises under a consumption billing model. Pure Storage manages the hardware lifecycle, capacity planning, and upgrades. The array runs standard Purity software — the only operational difference is that Pure personnel access the system for maintenance via the Pure1 cloud (outbound-only from the array).

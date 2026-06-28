@@ -4,31 +4,11 @@ tags:
 ---
 # Pure1 — Capacity
 
-
 <div class="kb-summary">
 Capacity reference covering Capacity via Pure1 API, Capacity Alerts, Capacity Planning, Snapshot Space Management, Common Capacity Issues.
 
 *Applies to: Pure1*
 </div>
-![Pure1 — Capacity](../../../../assets/storage-pure-pure1-capacity-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Pure1" {shape: hexagon}
-capacity_alerts: "Capacity Alerts" {shape: rectangle}
-capacity_planning: "Capacity Planning" {shape: rectangle}
-snapshot_space_management: "Snapshot Space Management" {shape: rectangle}
-common_capacity_issues: "Common Capacity Issues" {shape: rectangle}
-
-center -> capacity_alerts
-center -> capacity_planning
-center -> snapshot_space_management
-center -> common_capacity_issues
-```
 
 ```vegalite
 {

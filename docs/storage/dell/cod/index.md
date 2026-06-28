@@ -9,10 +9,6 @@ Dell Capacity on Demand — software-defined capacity licensing for PowerMax and
 
 *Applies to: Cloud for Desktop (COD)*
 </div>
-![Dell Capacity on Demand](../../../assets/storage-dell-cod-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="architecture/"><strong>Architecture</strong><span>How it works, integrations, and design standards.</span></a>

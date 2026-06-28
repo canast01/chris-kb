@@ -5,16 +5,12 @@ tags:
 ---
 # Dell VPLEX — CLI Reference (vplexcli)
 
-
 <div class="kb-summary">
 `vplexcli` is the primary management interface for Dell VPLEX. Connect to the VPLEX Management Server (VMS) via SSH, then launch the shell with `vplexcli`. Commands follow a filesystem-like navigation model: objects are addressed as paths (e.g.
 
 *Applies to: VPLEX*
 </div>
 ![Dell VPLEX — CLI Reference (vplexcli)](../../../../assets/storage-dell-vplex-operations-cli-reference.svg)
-
-
-
 
  `/clusters/cluster-1/`) and `ll` (list-long) is the standard inspection command.
 
@@ -38,25 +34,6 @@ flowchart LR
 ```
 
 ---
-
-```d2
-direction: right
-
-hub: "VPLEX\nOperations" {shape: hexagon}
-quickreference_command_table: "Quick-Reference Command Table" {shape: rectangle}
-cluster_and_director_status: "Cluster and Director Status" {shape: rectangle}
-virtual_volume_management: "Virtual Volume Management" {shape: rectangle}
-distributed_device_operations_vplex_: "Distributed Device Operations (VPLEX Metro)" {shape: rectangle}
-storage_views_host_masking: "Storage Views (Host Masking)" {shape: rectangle}
-data_migration: "Data Migration" {shape: rectangle}
-
-hub -> quickreference_command_table
-hub -> cluster_and_director_status
-hub -> virtual_volume_management
-hub -> distributed_device_operations_vplex_
-hub -> storage_views_host_masking
-hub -> data_migration
-```
 
 ## Before you begin
 

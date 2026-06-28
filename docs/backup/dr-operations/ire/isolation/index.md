@@ -4,29 +4,11 @@ tags:
 ---
 # IRE — Isolation
 
-
 <div class="kb-summary">
 The Isolated Recovery Environment (IRE) is a network-isolated, air-gapped environment used for recovering from ransomware and other destructive attacks. Network isolation must be established before any backup retrieval or restore operations; confirm daily that all air-gap controls are active when the IRE is in standby.
 </div>
-![IRE — Isolation](../../../../assets/backup-dr-operations-ire-isolation-index.svg)
-
 
  Isolation is the foundational control: the IRE must never share network paths, credentials, or management planes with the production environment.
-
-```d2
-direction: right
-
-center: "DR Operations" {shape: hexagon}
-why_isolation_matters: "Why Isolation Matters" {shape: rectangle}
-network_isolation_architecture: "Network Isolation Architecture" {shape: rectangle}
-isolation_verification_checklist: "Isolation Verification Checklist" {shape: rectangle}
-common_issues: "Common Issues" {shape: rectangle}
-
-center -> why_isolation_matters
-center -> network_isolation_architecture
-center -> isolation_verification_checklist
-center -> common_issues
-```
 
 ## Why Isolation Matters
 
@@ -53,7 +35,6 @@ graph TB
     STORE --> IRE
     IRE -.->|No route back to PROD| PROD
 ```
-
 
 ## Isolation Verification Checklist
 

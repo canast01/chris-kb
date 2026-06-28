@@ -5,30 +5,13 @@ tags:
 ---
 # PowerShell — Access Control
 
-
 <div class="kb-summary">
 PowerShell access control: execution policy enforcement, JEA (Just Enough Administration) configuration, module signing requirements, and constrained language mode.
 
 *Applies to: PowerShell 7.x*
 </div>
-![PowerShell — Access Control](../../../../assets/automation-powershell-security-access-control-index.svg)
-
 
 ---
-
-```d2
-direction: down
-
-root: "PowerShell\nAccess Control" {shape: hexagon}
-powershell_access_control_architectu: "PowerShell Access Control Architecture" {shape: rectangle}
-least_privilege_reference: "Least Privilege Reference" {shape: rectangle}
-resources: Protected Resources {shape: cylinder}
-
-root -> powershell_access_control_architectu: role
-powershell_access_control_architectu -> resources: scoped
-root -> least_privilege_reference: role
-least_privilege_reference -> resources: scoped
-```
 
 ## Before you begin
 
@@ -60,7 +43,6 @@ graph TD
     adGroup -->|Member| svcAccount
     svcAccount --> transcript
 ```
-
 
 ## Least Privilege Reference
 

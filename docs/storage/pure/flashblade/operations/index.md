@@ -5,16 +5,11 @@ tags:
 ---
 # FlashBlade — Operations
 
-
 <div class="kb-summary">
 FlashBlade — Operations reference: Health Checks, Procedures, Common Issues, CLI Reference, and 3 more.
 
 *Applies to: FlashBlade Purity//FB 4.x*
 </div>
-![FlashBlade — Operations](../../../../assets/storage-pure-flashblade-operations-index.svg)
-
-
-
 
 ![FlashBlade — Operations — Diagram](../../../../assets/storage-pure-flashblade-operations-diagram.svg)
 

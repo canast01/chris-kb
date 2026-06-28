@@ -5,28 +5,11 @@ tags:
 ---
 # SnapCenter — Health Checks
 
-
 <div class="kb-summary">
 SnapCenter health checks: `Get-SmJob -State Failed`, plugin service status, repository database connectivity, SnapMirror lag, and storage capacity via `Get-SmStorageResources`.
 
 *Applies to: SnapCenter 5.x*
 </div>
-
-
-```d2
-direction: right
-
-hub: "SnapCenter\nOperations" {shape: hexagon}
-run_this_routine: "Run This Routine" {shape: rectangle}
-daily_checks: "Daily Checks" {shape: rectangle}
-health_check: "Health Check" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> run_this_routine
-hub -> daily_checks
-hub -> health_check
-hub -> verify
-```
 
 ## Before you begin
 

@@ -12,10 +12,6 @@ ServiceNow escalation: how to collect stats.do output and sys_log entries, open 
 
 *Applies to: ServiceNow (SaaS — any release)*
 </div>
-![ServiceNow — Escalation](../../../../assets/itsm-servicenow-troubleshooting-escalation-index.svg)
-
-
-
 
 ```plantuml
 @startuml

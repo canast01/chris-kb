@@ -10,27 +10,6 @@ Dell AIOps Security reference covering Access Control (RBAC), SSO Integration, A
 
 *Applies to: Dell AIOps*
 </div>
-![Dell AIOps Security](../../../../assets/storage-dell-dell-aiops-security-index.svg)
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-access_control_rbac: "Access Control (RBAC)" {shape: rectangle}
-sso_integration: "SSO Integration" {shape: rectangle}
-data_sovereignty: "Data Sovereignty" {shape: rectangle}
-network_security: "Network Security" {shape: rectangle}
-security_hardening_checklist: "Security Hardening Checklist" {shape: rectangle}
-core: "Dell AIOps Core" {shape: hexagon}
-
-external -> access_control_rbac: traffic in
-access_control_rbac -> sso_integration
-sso_integration -> data_sovereignty
-data_sovereignty -> network_security
-network_security -> security_hardening_checklist
-security_hardening_checklist -> core: secured path
-```
 
 ## Before you begin
 
@@ -57,7 +36,6 @@ Apply the principle of least privilege. Operations staff reviewing dashboards an
 ## SSO Integration
 
 Dell AIOps authentication is handled through CloudIQ SSO, which supports SAML 2.0 integration with enterprise IdPs.
-
 
 Key events to review in audit log:
 - User login/logout (especially failed logins or logins from unexpected locations)

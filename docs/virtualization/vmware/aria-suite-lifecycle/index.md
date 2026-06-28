@@ -10,13 +10,6 @@ Technical and operational reference for VMware Aria Suite Lifecycle Manager. Cov
 
 *Applies to: Aria Suite Lifecycle 8.x*
 </div>
-![Aria Suite Lifecycle](../../../assets/virtualization-vmware-aria-suite-lifecycle-index.svg)
-
-
-
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

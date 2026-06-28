@@ -4,35 +4,11 @@ tags:
 ---
 # Cost Management and Billing
 
-
 <div class="kb-summary">
 Azure Cost Management + Billing is the central hub for understanding, analysing, and optimising Azure spend. It covers cost analysis, invoices, billing exports, and the Cost Management REST API.
 
 *Applies to: Azure*
 </div>
-![Cost Management and Billing](../../../../assets/cloud-azure-cost-cost-management-billing-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-cost_management_flow: "Cost Management Flow" {shape: rectangle}
-cost_analysis_views: "Cost Analysis Views" {shape: rectangle}
-invoice_sections: "Invoice Sections" {shape: rectangle}
-billing_exports: "Billing Exports" {shape: rectangle}
-cost_management_api: "Cost Management API" {shape: rectangle}
-key_metrics_to_track: "Key Metrics to Track" {shape: rectangle}
-
-center -> cost_management_flow
-center -> cost_analysis_views
-center -> invoice_sections
-center -> billing_exports
-center -> cost_management_api
-center -> key_metrics_to_track
-```
 
 ## Cost Management Flow
 

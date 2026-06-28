@@ -15,28 +15,6 @@ Firewall port reference for Ceph. Covers monitor (MON) messaging, OSD data and h
 </div>
 ![Ceph — Ports and Network Requirements](../../../assets/storage-ceph-architecture-ports.svg)
 
-
-
-
-```d2
-direction: right
-
-center: "Ceph" {shape: hexagon}
-monitor_mon_client_zone_to_cluster: "Monitor (MON) — Client Zone to Cluster" {shape: rectangle}
-osd_client_zone_public_network: "OSD — Client Zone (Public Network)" {shape: rectangle}
-osd_cluster_network_replication: "OSD — Cluster Network (Replication)" {shape: rectangle}
-mds_cephfs_metadata_server: "MDS (CephFS Metadata Server)" {shape: rectangle}
-rados_gateway_rgw_s3_compatible_api: "RADOS Gateway (RGW / S3 Compatible API)" {shape: rectangle}
-cephfs_nfs_via_nfs_ganesha_optional: "CephFS — NFS via NFS Ganesha (Optional)" {shape: rectangle}
-
-center -> monitor_mon_client_zone_to_cluster
-center -> osd_client_zone_public_network
-center -> osd_cluster_network_replication
-center -> mds_cephfs_metadata_server
-center -> rados_gateway_rgw_s3_compatible_api
-center -> cephfs_nfs_via_nfs_ganesha_optional
-```
-
 ## Before you begin
 
 - Ceph uses two networks: **public** (client-facing, MON, OSD client I/O) and **cluster** (OSD replication and heartbeat, ideally a separate NIC)

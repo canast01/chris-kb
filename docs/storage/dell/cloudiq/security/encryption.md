@@ -5,16 +5,12 @@ tags:
 ---
 # CloudIQ — Encryption
 
-
 <div class="kb-summary">
 CloudIQ data encryption settings, key management integration, and encryption compliance reporting.
 
 *Applies to: CloudIQ*
 </div>
 ![CloudIQ — Encryption](../../../../assets/storage-dell-cloudiq-security-encryption.svg)
-
-
-
 
 > Part of the [CloudIQ](../index.md) reference.
 
@@ -28,21 +24,6 @@ CloudIQ data encryption settings, key management integration, and encryption com
 | Data content | Telemetry contains configuration metadata and performance statistics only — no user data, file contents, or host data is transmitted |
 
 CloudIQ telemetry does not include: file names, directory paths, user credentials, application data, or any content stored on the managed arrays.
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-perimeter_controls: "Perimeter Controls" {shape: rectangle}
-identity_access: "Identity & Access" {shape: rectangle}
-audit_logging: "Audit & Logging" {shape: rectangle}
-core: "CloudIQ Core" {shape: hexagon}
-
-external -> perimeter_controls: traffic in
-perimeter_controls -> identity_access
-identity_access -> audit_logging
-audit_logging -> core: secured path
-```
 
 ## Before you begin
 

@@ -16,29 +16,6 @@ Firewall port reference for VMware vSphere Replication (VR). Covers the VR Appli
 </div>
 ![vSphere Replication — Ports and Network Requirements](../../../../assets/virtualization-vmware-vsphere-replication-architecture-ports.svg)
 
-
-
-
-
-```d2
-direction: right
-
-center: "vSphere Replication" {shape: hexagon}
-inbound_admin_to_vr_appliance: "Inbound — Admin to VR Appliance" {shape: rectangle}
-vr_appliance_within_site: "VR Appliance Within Site" {shape: rectangle}
-vr_appliance_intersite_cross_wan_fir: "VR Appliance — Inter-Site (Cross WAN Firewall)" {shape: rectangle}
-vm_replication_data_esxi_to_esxi_cro: "VM Replication Data — ESXi to ESXi (Cross WAN Firewall)" {shape: rectangle}
-firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> inbound_admin_to_vr_appliance
-center -> vr_appliance_within_site
-center -> vr_appliance_intersite_cross_wan_fir
-center -> vm_replication_data_esxi_to_esxi_cro
-center -> firewall_zone_summary
-center -> verify
-```
-
 ## Before you begin
 
 - The most critical firewall entry is ESXi → ESXi port 31031 TCP across the inter-site WAN firewall — this carries the actual VM replication data

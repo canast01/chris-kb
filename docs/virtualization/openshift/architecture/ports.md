@@ -16,28 +16,6 @@ Firewall port reference for Red Hat OpenShift Container Platform (OCP). Covers t
 </div>
 ![OpenShift — Ports and Network Requirements](../../../assets/virtualization-openshift-architecture-ports.svg)
 
-
-
-
-```d2
-direction: right
-
-center: "OpenShift" {shape: hexagon}
-inbound_admin_and_user_access: "Inbound — Admin and User Access" {shape: rectangle}
-control_plane_internal: "Control Plane Internal" {shape: rectangle}
-worker_node_communication: "Worker Node Communication" {shape: rectangle}
-ovnkubernetes_overlay_network: "OVN-Kubernetes Overlay Network" {shape: rectangle}
-nodeport_services: "NodePort Services" {shape: rectangle}
-monitoring_stack_openshift_monitorin: "Monitoring Stack (OpenShift Monitoring)" {shape: rectangle}
-
-center -> inbound_admin_and_user_access
-center -> control_plane_internal
-center -> worker_node_communication
-center -> ovnkubernetes_overlay_network
-center -> nodeport_services
-center -> monitoring_stack_openshift_monitorin
-```
-
 ## Before you begin
 
 - OpenShift uses OVN-Kubernetes as the default CNI in OCP 4.x — overlay traffic uses Geneve (UDP 6081), not VXLAN

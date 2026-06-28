@@ -5,29 +5,13 @@ tags:
 ---
 # Terraform — How It Works
 
-
 <div class="kb-summary">
 Terraform is a declarative infrastructure-as-code tool that manages resources across hundreds of providers via a consistent workflow. All execution is driven by a single CLI binary — there are no separate agents.
 
 *Applies to: Terraform 1.x*
 </div>
-![Terraform — How It Works](../../../../assets/automation-terraform-architecture-how-it-works-index.svg)
-
 
 ---
-
-```d2
-direction: right
-
-center: "How It Works" {shape: hexagon}
-highlevel_architecture: "High-Level Architecture" {shape: rectangle}
-module_registry: "Module Registry" {shape: rectangle}
-core_workflow: "Core Workflow" {shape: rectangle}
-
-center -> highlevel_architecture
-center -> module_registry
-center -> core_workflow
-```
 
 ## High-Level Architecture
 
@@ -60,7 +44,6 @@ flowchart TD
     style STATE fill:#1565c0,color:#fff
     style LOCK fill:#c62828,color:#fff
 ```
-
 
 ---
 

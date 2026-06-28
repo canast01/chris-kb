@@ -4,8 +4,6 @@ tags:
   - security
 ---
 # GitHub Actions — Access Control
-![GitHub Actions — Access Control](../../../../assets/automation-github-actions-security-access-control-index.svg)
-
 
 ```mermaid
 flowchart TD
@@ -26,32 +24,6 @@ flowchart TD
 ```
 
 ```text
-
-```d2
-direction: down
-
-root: "GitHub Actions\nAccess Control" {shape: hexagon}
-workflow_permissions: "Workflow Permissions" {shape: rectangle}
-minimal_permissions_default_deny_gra: "Minimal permissions — default deny, grant explicitly" {shape: rectangle}
-never_use: "Never use:" {shape: rectangle}
-permissions_writeall: "permissions: write-all" {shape: rectangle}
-workflow_reference_environment_to_tr: "Workflow — reference environment to trigger protection" {shape: rectangle}
-restrict_githubtoken_to_readonly_by_: "Restrict GITHUB_TOKEN to read-only by default (org or repo s" {shape: rectangle}
-resources: Protected Resources {shape: cylinder}
-
-root -> workflow_permissions: role
-workflow_permissions -> resources: scoped
-root -> minimal_permissions_default_deny_gra: role
-minimal_permissions_default_deny_gra -> resources: scoped
-root -> never_use: role
-never_use -> resources: scoped
-root -> permissions_writeall: role
-permissions_writeall -> resources: scoped
-root -> workflow_reference_environment_to_tr: role
-workflow_reference_environment_to_tr -> resources: scoped
-root -> restrict_githubtoken_to_readonly_by_: role
-restrict_githubtoken_to_readonly_by_ -> resources: scoped
-```
 
 ## Before you begin
 

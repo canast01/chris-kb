@@ -16,28 +16,6 @@ Firewall port reference for Brocade Fabric OS (FOS) SAN switches. Covers managem
 </div>
 ![Brocade Fabric OS — Ports and Network Requirements](../../../../assets/san-brocade-fabric-os-architecture-ports.svg)
 
-
-
-
-```d2
-direction: right
-
-center: "Brocade Fabric OS" {shape: hexagon}
-inbound_admin_access_to_switch_manag: "Inbound — Admin Access to Switch Management Port" {shape: rectangle}
-outbound_switch_to_external_services: "Outbound — Switch to External Services" {shape: rectangle}
-authentication_radius_and_ldap: "Authentication — RADIUS and LDAP" {shape: rectangle}
-sannav_to_switch_communication: "SANnav to Switch Communication" {shape: rectangle}
-inbound_sannav_admin_access: "Inbound — SANnav Admin Access" {shape: rectangle}
-firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
-
-center -> inbound_admin_access_to_switch_manag
-center -> outbound_switch_to_external_services
-center -> authentication_radius_and_ldap
-center -> sannav_to_switch_communication
-center -> inbound_sannav_admin_access
-center -> firewall_zone_summary
-```
-
 ## Before you begin
 
 - All management traffic uses the dedicated Ethernet management port (eth0) — physically separate from FC ports

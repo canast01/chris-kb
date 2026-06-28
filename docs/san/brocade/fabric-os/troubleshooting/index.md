@@ -7,16 +7,11 @@ search:
 ---
 # FabricOS — Troubleshooting
 
-
 <div class="kb-summary">
 Diagnosing FabricOS fabric errors, port faults, FLOGI failures, zone conflicts, and principal switch elections.
 
 *Applies to: Brocade FOS 9.x*
 </div>
-![FabricOS — Troubleshooting](../../../../assets/san-brocade-fabric-os-troubleshooting-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

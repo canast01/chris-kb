@@ -7,16 +7,11 @@ search:
 ---
 # Venafi Vendor Support
 
-
 <div class="kb-summary">
 Procedures for raising support cases with Venafi, collecting diagnostic data, and escalating critical incidents.
 
 *Applies to: Venafi TLS Protect*
 </div>
-![Venafi Vendor Support](../../../../assets/security-venafi-troubleshooting-escalation-index.svg)
-
-
-
 
 ---
 

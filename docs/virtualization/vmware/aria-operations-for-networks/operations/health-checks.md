@@ -12,27 +12,6 @@ Health checks for Aria Operations for Networks (vRNI) — collector connectivity
 *Applies to: Aria Networks 6.x*
 </div>
 
-
-
-```d2
-direction: right
-
-hub: "Aria Operations for Networks\nOperations" {shape: hexagon}
-run_this_routine: "Run This Routine" {shape: rectangle}
-collector_api_status_check: "Collector API Status Check" {shape: rectangle}
-flow_queries_aon_natural_language: "Flow Queries (AON Natural Language)" {shape: rectangle}
-collector_flow_ingestion_check: "Collector Flow Ingestion Check" {shape: rectangle}
-platform_disk_usage: "Platform Disk Usage" {shape: rectangle}
-certificate_expiry_check: "Certificate Expiry Check" {shape: rectangle}
-
-hub -> run_this_routine
-hub -> collector_api_status_check
-hub -> flow_queries_aon_natural_language
-hub -> collector_flow_ingestion_check
-hub -> platform_disk_usage
-hub -> certificate_expiry_check
-```
-
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

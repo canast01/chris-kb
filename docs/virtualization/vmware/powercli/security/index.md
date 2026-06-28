@@ -11,10 +11,6 @@ PowerCLI security: RBAC and role management, credential and certificate handling
 
 *Applies to: PowerCLI 13.x*
 </div>
-![PowerCLI — Security](../../../../assets/virtualization-vmware-powercli-security-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

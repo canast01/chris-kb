@@ -11,32 +11,8 @@ Common Nutanix operational procedures — adding and removing nodes, entering ma
 
 *Applies to: AOS 6.x · AHV*
 </div>
-![Nutanix — Procedures](../../../assets/virtualization-nutanix-operations-procedures.svg)
-
-
-
-
 
 ---
-
-```d2
-direction: right
-
-hub: "Nutanix AHV\nOperations" {shape: hexagon}
-enter_host_maintenance_mode: "Enter Host Maintenance Mode" {shape: rectangle}
-aos_ahv_upgrade_via_lcm: "AOS / AHV Upgrade via LCM" {shape: rectangle}
-add_a_node_to_an_existing_cluster: "Add a Node to an Existing Cluster" {shape: rectangle}
-remove_a_node_from_cluster: "Remove a Node from Cluster" {shape: rectangle}
-expand_storage_add_disks: "Expand Storage (Add Disks)" {shape: rectangle}
-clone_a_vm: "Clone a VM" {shape: rectangle}
-
-hub -> enter_host_maintenance_mode
-hub -> aos_ahv_upgrade_via_lcm
-hub -> add_a_node_to_an_existing_cluster
-hub -> remove_a_node_from_cluster
-hub -> expand_storage_add_disks
-hub -> clone_a_vm
-```
 
 ## Before you begin
 
@@ -277,8 +253,6 @@ ncli ctr edit name=<container-name> advertised-capacity=<size-in-bytes>
 
 ---
 
-
-
 ---
 
 ## Verify
@@ -287,7 +261,6 @@ ncli ctr edit name=<container-name> advertised-capacity=<size-in-bytes>
 - LCM upgrade: version shown in Prism matches intended target; NCC post-upgrade run is clean
 - Node expansion: new node appears in `ncli host ls` and shows `State: NORMAL`
 - Container expansion: new capacity reflected in `ncli storage-pool ls`
-
 
 ---
 

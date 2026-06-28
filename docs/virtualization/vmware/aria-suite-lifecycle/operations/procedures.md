@@ -6,35 +6,13 @@ tags:
 ---
 # Aria Suite Lifecycle — Procedures
 
-
 <div class="kb-summary">
 Procedures reference for Aria Suite Lifecycle Manager. Covers password and certificate rotation, product and environment lifecycle (add, upgrade, decommission, restore), HA configuration, proxy setup, and recovering from failed upgrades.
 
 *Applies to: Aria LCM 8.x*
 </div>
 
-
-
 ---
-
-```d2
-direction: right
-
-hub: "Aria Suite Lifecycle\nOperations" {shape: hexagon}
-rotate_a_password_in_locker: "Rotate a Password in Locker" {shape: rectangle}
-add_a_vcenter_server_to_lcm: "Add a vCenter Server to LCM" {shape: rectangle}
-content_migration_between_environmen: "Content Migration Between Environments" {shape: rectangle}
-register_vidm_workspace_one_access: "Register VIDM (Workspace ONE Access)" {shape: rectangle}
-decommission_a_product_from_lcm: "Decommission a Product from LCM" {shape: rectangle}
-add_a_product_to_an_existing_environ: "Add a Product to an Existing Environment" {shape: rectangle}
-
-hub -> rotate_a_password_in_locker
-hub -> add_a_vcenter_server_to_lcm
-hub -> content_migration_between_environmen
-hub -> register_vidm_workspace_one_access
-hub -> decommission_a_product_from_lcm
-hub -> add_a_product_to_an_existing_environ
-```
 
 ## Before you begin
 

@@ -6,7 +6,6 @@ tags:
 ---
 # Aria Automation — Backup & Restore
 
-
 <div class="kb-summary">
 Aria Automation backup uses a built-in tool that exports the platform configuration and deployment state to an external NFS or SFTP target. The backup does not include running VMs or cloud resources — those are managed by vCenter and the respective cloud providers.
 
@@ -14,27 +13,7 @@ Aria Automation backup uses a built-in tool that exports the platform configurat
 </div>
 ![Aria Automation — Backup & Restore](../../../../assets/virtualization-vmware-aria-automation-operations-backup-rest.svg)
 
-
 ---
-
-```d2
-direction: right
-
-hub: "Aria Automation\nOperations" {shape: hexagon}
-what_is_and_is_not_backed_up: "What Is and Is Not Backed Up" {shape: rectangle}
-configuring_the_backup_target: "Configuring the Backup Target" {shape: rectangle}
-restore_procedure: "Restore Procedure" {shape: rectangle}
-postrestore_validation: "Post-Restore Validation" {shape: rectangle}
-vmlevel_backup_for_disaster_recovery: "VM-Level Backup for Disaster Recovery" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> what_is_and_is_not_backed_up
-hub -> configuring_the_backup_target
-hub -> restore_procedure
-hub -> postrestore_validation
-hub -> vmlevel_backup_for_disaster_recovery
-hub -> verify
-```
 
 ## Before you begin
 
@@ -70,7 +49,6 @@ hub -> verify
 **Via VAMI (appliance management UI):**
 
 Open `https://<vra-fqdn>:5480` in a browser.
-
 
 Recommended:
 - Frequency: Daily

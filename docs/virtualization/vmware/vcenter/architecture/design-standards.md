@@ -7,33 +7,12 @@ tags:
 ---
 # vCenter — Design Standards
 
-
 <div class="kb-summary">
 Design Standards reference covering Naming Conventions, Cluster Configuration Baseline, vSAN Cluster Baseline (where applicable), vCenter Configuration Checklist, VM Template Standards and 6 more sections.
 
 *Applies to: vSphere 7.x · 8.x*
 </div>
 ![vCenter — Design Standards](../../../../assets/virtualization-vmware-vcenter-architecture-design-standards.svg)
-
-
-```d2
-direction: right
-
-center: "vCenter Server" {shape: hexagon}
-naming_conventions: "Naming Conventions" {shape: rectangle}
-cluster_configuration_baseline: "Cluster Configuration Baseline" {shape: rectangle}
-vnic_type_and_network_configuration: "vNIC Type and Network Configuration" {shape: rectangle}
-disk_provisioning_standards: "Disk Provisioning Standards" {shape: rectangle}
-snapshot_policy: "Snapshot Policy" {shape: rectangle}
-resource_and_drs_configuration: "Resource and DRS Configuration" {shape: rectangle}
-
-center -> naming_conventions
-center -> cluster_configuration_baseline
-center -> vnic_type_and_network_configuration
-center -> disk_provisioning_standards
-center -> snapshot_policy
-center -> resource_and_drs_configuration
-```
 
 ## Naming Conventions
 
@@ -76,7 +55,6 @@ Consistent naming across the vSphere inventory is critical for readability, auto
 | VM Overrides | Per business requirement | Document in CMDB |
 
 ### vSphere HA Advanced Options (production)
-
 
 Tools must report `running` status in vCenter. A stale or not-running Tools status blocks live migration.
 

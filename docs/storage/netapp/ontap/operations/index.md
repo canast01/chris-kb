@@ -5,16 +5,11 @@ tags:
 ---
 # ONTAP — Operations
 
-
 <div class="kb-summary">
 ONTAP — Operations reference: Health Checks, Procedures, CLI Reference, Install & Upgrade, and 2 more.
 
 *Applies to: ONTAP 9.x*
 </div>
-![ONTAP — Operations](../../../../assets/storage-netapp-ontap-operations-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>

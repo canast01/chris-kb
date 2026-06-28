@@ -7,14 +7,11 @@ search:
 ---
 # Linux — Common Issues
 
-
 <div class="kb-summary">
 Quick reference for common problems and resolutions. Structured approach to diagnosing common Linux server issues.
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>
-![Linux — Common Issues](../../../../assets/compute-linux-troubleshooting-common-issues-index.svg)
-
 
 Quick reference for common problems and resolutions.
 
@@ -107,7 +104,6 @@ flowchart TD
     portOpen -- Yes --> fwBlock
     fwBlock --> resolved
 ```
-
 
 ## High Disk I/O or Latency
 

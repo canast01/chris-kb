@@ -6,7 +6,6 @@ tags:
 # Cisco DCNM — Security Hardening
 ![Cisco DCNM — Security Hardening](../../../../assets/san-cisco-cisco-dcnm-security-hardening.svg)
 
-
 ```bash
 ssh root@dcnm-dc1.corp.example.com
 
@@ -90,21 +89,6 @@ systemctl restart rsyslog
 
 # Test
 logger -t dcnm-test "Syslog forwarding test message"
-```
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-perimeter_controls: "Perimeter Controls" {shape: rectangle}
-identity_access: "Identity & Access" {shape: rectangle}
-audit_logging: "Audit & Logging" {shape: rectangle}
-core: "Cisco DCNM Core" {shape: hexagon}
-
-external -> perimeter_controls: traffic in
-perimeter_controls -> identity_access
-identity_access -> audit_logging
-audit_logging -> core: secured path
 ```
 
 ## Before you begin

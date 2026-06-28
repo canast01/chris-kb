@@ -5,7 +5,6 @@ tags:
 ---
 # FlashBlade — Known Issues
 
-
 <div class="kb-summary">
 Known Issues reference covering Incident Triage, Common Issues Reference.
 
@@ -13,25 +12,11 @@ Known Issues reference covering Incident Triage, Common Issues Reference.
 </div>
 ![FlashBlade — Known Issues](../../../../assets/storage-pure-flashblade-operations-common-issues.svg)
 
-
 ![FlashBlade — Known Issues — Diagram](../../../../assets/storage-pure-flashblade-operations-common-issues-diagram.svg)
 
 > Part of the [FlashBlade Operations](index.md) reference.
 
 ---
-
-```d2
-direction: right
-
-hub: "FlashBlade\nOperations" {shape: hexagon}
-incident_triage: "Incident Triage" {shape: rectangle}
-common_issues_reference: "Common Issues Reference" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> incident_triage
-hub -> common_issues_reference
-hub -> verify
-```
 
 ## Before you begin
 

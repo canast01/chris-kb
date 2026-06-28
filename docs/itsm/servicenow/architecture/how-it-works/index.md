@@ -5,27 +5,13 @@ tags:
 ---
 # ServiceNow — How It Works
 
-
 <div class="kb-summary">
 ServiceNow is delivered as a multi-instance SaaS platform running on dedicated infrastructure per customer. Each customer receives isolated database, application, and storage layers — there is no shared compute between tenants.
 
 *Applies to: ServiceNow*
 </div>
-![ServiceNow — How It Works](../../../../assets/itsm-servicenow-architecture-how-it-works-index.svg)
-
 
 ---
-
-```d2
-direction: right
-
-center: "ServiceNow" {shape: hexagon}
-multiinstance_cloud_model: "Multi-Instance Cloud Model" {shape: rectangle}
-instance_hierarchy: "Instance Hierarchy" {shape: rectangle}
-
-center -> multiinstance_cloud_model
-center -> instance_hierarchy
-```
 
 ## Multi-Instance Cloud Model
 
@@ -60,7 +46,6 @@ flowchart LR
         TEST
     end
 ```
-
 
 | Phase | Owner | Duration |
 |---|---|---|

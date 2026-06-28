@@ -4,16 +4,11 @@ tags:
 ---
 # AWS CLI Reference
 
-
 <div class="kb-summary">
 AWS CLI Reference reference covering EC2 — Instances, EC2 — Images, Volumes & Snapshots, S3, VPC & Networking, CloudWatch and 5 more sections.
 
 *Applies to: AWS*
 </div>
-![AWS CLI Reference](../../../assets/cloud-aws-cli-reference-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 
@@ -75,25 +70,6 @@ AWS CLI Reference reference covering EC2 — Instances, EC2 — Images, Volumes 
 </div>
 
 ---
-
-```d2
-direction: right
-
-center: "AWS" {shape: rectangle}
-s3: "S3" {shape: rectangle}
-vpc_networking: "VPC & Networking" {shape: rectangle}
-cloudwatch: "CloudWatch" {shape: rectangle}
-cloudformation: "CloudFormation" {shape: rectangle}
-rds: "RDS" {shape: rectangle}
-eks: "EKS" {shape: rectangle}
-
-center -> s3
-center -> vpc_networking
-center -> cloudwatch
-center -> cloudformation
-center -> rds
-center -> eks
-```
 
 ## S3
 

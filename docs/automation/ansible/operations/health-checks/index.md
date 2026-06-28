@@ -5,14 +5,11 @@ tags:
 ---
 # Ansible — Health Checks
 
-
 <div class="kb-summary">
 Health Checks reference covering Inventory Health, Connectivity, Vault and Secrets, AWX / Automation Platform.
 
 *Applies to: Ansible 2.14+*
 </div>
-![Ansible — Health Checks](../../../../assets/automation-ansible-operations-health-checks-index.svg)
-
 
 ```d2
 direction: right
@@ -71,7 +68,6 @@ ansible <host> -m setup -a 'filter=ansible_distribution' -i <inventory>
 # 8. Collection versions
 ansible-galaxy collection list
 ```
-
 
 **Count hosts per group**
 

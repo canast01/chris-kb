@@ -6,8 +6,6 @@ search:
   boost: 1.5
 ---
 # AWS Troubleshooting — Common Issues
-![AWS Troubleshooting — Common Issues](../../../../assets/cloud-aws-troubleshooting-common-issues-index.svg)
-
 
 ```bash
 # View the stack events to identify the failed resource
@@ -21,7 +19,6 @@ aws cloudformation continue-update-rollback \
   --stack-name my-stack \
   --resources-to-skip LogicalResourceId1 LogicalResourceId2
 ```
-
 
 ```d2
 direction: down

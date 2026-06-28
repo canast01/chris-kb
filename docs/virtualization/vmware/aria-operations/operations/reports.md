@@ -6,29 +6,12 @@ tags:
 ---
 # Aria Operations: Scheduled Reports and PDF Export
 
-
 <div class="kb-summary">
 Aria Operations: Scheduled Reports and PDF Export reference covering Scheduling Reports, Downloading Generated Reports, Report Output Formats, Common Report Issues.
 
 *Applies to: Aria Ops 8.x*
 </div>
 ![Aria Operations: Scheduled Reports and PDF Export](../../../../assets/virtualization-vmware-aria-operations-operations-reports.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "Aria Operations\nOperations" {shape: hexagon}
-report_output_formats: "Report Output Formats" {shape: rectangle}
-common_report_issues: "Common Report Issues" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> report_output_formats
-hub -> common_report_issues
-hub -> verify
-```
 
 ## Before you begin
 

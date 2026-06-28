@@ -6,7 +6,6 @@ tags:
 # Brocade SANnav — Encryption
 ![Brocade SANnav — Encryption](../../../../assets/san-brocade-sannav-security-encryption.svg)
 
-
 ```bash
 ssh admin@sannav-dc1.corp.example.com
 
@@ -31,22 +30,6 @@ sudo systemctl reload nginx
 # Verify the new certificate is served
 openssl s_client -connect sannav-dc1.corp.example.com:443 -servername sannav-dc1.corp.example.com \
   </dev/null 2>/dev/null | openssl x509 -noout -subject -issuer -dates
-```
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-perimeter_controls: "Perimeter Controls" {shape: rectangle}
-identity_access: "Identity & Access" {shape: rectangle}
-audit_logging: "Audit & Logging" {shape: rectangle}
-core: "SANnav Core" {shape: hexagon}
-
-external -> perimeter_controls: traffic in
-perimeter_controls -> identity_access
-identity_access -> audit_logging
-audit_logging -> core: secured path
 ```
 
 ## Before you begin

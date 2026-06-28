@@ -5,14 +5,11 @@ tags:
 ---
 # PowerShell — Hardening
 
-
 <div class="kb-summary">
 PowerShell hardening: `Set-ExecutionPolicy AllSigned`, ScriptBlock logging, module logging, AMSI integration, and PowerShell 7 constrained language mode enforcement.
 
 *Applies to: PowerShell 7.x*
 </div>
-![PowerShell — Hardening](../../../../assets/automation-powershell-security-hardening-index.svg)
-
 
 ---
 
@@ -57,7 +54,6 @@ graph TD
     scriptBlock --> siem
     moduleAllow --> siem
 ```
-
 
 ## Audit and Event Log
 

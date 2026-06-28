@@ -11,10 +11,6 @@ NetApp ONTAP knowledge base — architecture, operations, security, and troubles
 
 *Applies to: ONTAP 9.x*
 </div>
-![NetApp ONTAP](../../../assets/storage-netapp-ontap-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="architecture/"><strong>Architecture</strong><span>How it works, integrations, and design standards.</span></a>

@@ -11,9 +11,6 @@ Aria Automation hardening — RBAC configuration, endpoint credentials, certific
 
 *Applies to: Aria Automation 8.x*
 </div>
-![Aria Automation — Security](../../../../assets/virtualization-vmware-aria-automation-security-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

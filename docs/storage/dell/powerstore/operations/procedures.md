@@ -5,33 +5,11 @@ tags:
 ---
 # PowerStore — Procedures
 
-
 <div class="kb-summary">
 PowerStore operational procedures — block volume and NAS file system provisioning, snapshot management, host management, replication configuration, Metro volume operations, and performance monitoring.
 
 *Applies to: PowerStore 3.x*
 </div>
-
-
-
-```d2
-direction: right
-
-hub: "PowerStore\nOperations" {shape: hexagon}
-provisioning_a_block_volume: "Provisioning a Block Volume" {shape: rectangle}
-provisioning_a_nas_file_system_nfs: "Provisioning a NAS File System (NFS)" {shape: rectangle}
-snapshot_operations: "Snapshot Operations" {shape: rectangle}
-host_management: "Host Management" {shape: rectangle}
-replication_management: "Replication Management" {shape: rectangle}
-metro_volume_operations: "Metro Volume Operations" {shape: rectangle}
-
-hub -> provisioning_a_block_volume
-hub -> provisioning_a_nas_file_system_nfs
-hub -> snapshot_operations
-hub -> host_management
-hub -> replication_management
-hub -> metro_volume_operations
-```
 
 ## Before you begin
 

@@ -6,23 +6,12 @@ tags:
 ---
 # Aria Suite Lifecycle — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Overview, Product Management Topology.
 
 *Applies to: Aria Suite Lifecycle 8.x*
 </div>
 ![Aria Suite Lifecycle — How It Works](../../../../assets/virtualization-vmware-aria-suite-lifecycle-architecture-how-.svg)
-
-
-```d2
-direction: right
-
-center: "Aria Suite Lifecycle" {shape: hexagon}
-product_management_topology: "Product Management Topology" {shape: rectangle}
-
-center -> product_management_topology
-```
 
 ```plantuml
 @startuml
@@ -71,9 +60,6 @@ graph TB
   class VROPS,VRLI,VRA,VRNI ctrl
   class ADMIN host
 ```
-
-
-
 
 | API Path | Purpose |
 |---|---|

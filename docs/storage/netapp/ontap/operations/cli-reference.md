@@ -5,7 +5,6 @@ tags:
 ---
 # ONTAP — CLI Reference
 
-
 <div class="kb-summary">
 NetApp ONTAP is the operating system that runs on NetApp storage arrays (AFF, FAS, ONTAP Select). The CLI uses a dot-separated namespace — `storage aggregate show`, `network interface create` — and runs at the `cluster::>` prompt.
 
@@ -13,33 +12,11 @@ NetApp ONTAP is the operating system that runs on NetApp storage arrays (AFF, FA
 </div>
 ![ONTAP — CLI Reference](../../../../assets/storage-netapp-ontap-operations-cli-reference.svg)
 
-
-
-
  Most data access configuration (NFS, CIFS, iSCSI, FC) happens at the SVM (Storage Virtual Machine) level — each SVM is an isolated data access instance within the cluster.
 
 > SSH to the cluster management IP and log in as `admin`. Use `cluster-name::>` as your prompt. Commands that affect a specific SVM typically require `-vserver <svm>`.
 
 ---
-
-```d2
-direction: right
-
-hub: "NetApp ONTAP\nOperations" {shape: hexagon}
-cluster_nodes: "Cluster & Nodes" {shape: rectangle}
-system_health_events: "System Health & Events" {shape: rectangle}
-storage_aggregates_disks: "Storage — Aggregates & Disks" {shape: rectangle}
-volumes: "Volumes" {shape: rectangle}
-snapshots: "Snapshots" {shape: rectangle}
-svms_storage_virtual_machines: "SVMs (Storage Virtual Machines)" {shape: rectangle}
-
-hub -> cluster_nodes
-hub -> system_health_events
-hub -> storage_aggregates_disks
-hub -> volumes
-hub -> snapshots
-hub -> svms_storage_virtual_machines
-```
 
 ## Before you begin
 

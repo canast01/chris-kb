@@ -18,10 +18,6 @@ tags:
 
 *Applies to: vSAN 7.x / 8.x*
 </div>
-![vSAN Capacity Review Runbook](../../../../assets/virtualization-vmware-operations-runbooks-vsan-capacity-chec.svg)
-
-
-
 
 ```plantuml
 @startuml

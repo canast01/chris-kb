@@ -5,16 +5,11 @@ tags:
 ---
 # NetBackup — Security
 
-
-
 <div class="kb-summary">
 NetBackup hardening — access control, certificate management, encryption at rest and in transit, and audit logging.
 
 *Applies to: NetBackup 10.x*
 </div>
-![NetBackup — Security](../../../assets/backup-netbackup-security-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

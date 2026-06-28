@@ -5,7 +5,6 @@ tags:
 ---
 # FabricOS — Access Control
 
-
 <div class="kb-summary">
 FabricOS access control: RBAC role assignment, `userconfig` CLI, default account password policy, and chassis-level admin vs. operator permissions.
 
@@ -13,27 +12,7 @@ FabricOS access control: RBAC role assignment, `userconfig` CLI, default account
 </div>
 ![FabricOS — Access Control](../../../../assets/san-brocade-fabric-os-security-access-control.svg)
 
-
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-access_control_architecture: "Access Control Architecture" {shape: rectangle}
-secure_fabric_os_policies: "Secure Fabric OS Policies" {shape: rectangle}
-fabric_binding: "Fabric Binding" {shape: rectangle}
-access_control_standards: "Access Control Standards" {shape: rectangle}
-troubleshooting_access_control: "Troubleshooting Access Control" {shape: rectangle}
-core: "Brocade Fabric OS Core" {shape: hexagon}
-
-external -> access_control_architecture: traffic in
-access_control_architecture -> secure_fabric_os_policies
-secure_fabric_os_policies -> fabric_binding
-fabric_binding -> access_control_standards
-access_control_standards -> troubleshooting_access_control
-troubleshooting_access_control -> core: secured path
-```
 
 ## Before you begin
 
@@ -67,7 +46,6 @@ graph TB
     switches["Switches / ISLs"] --> scc
     devices["Host HBAs\nStorage Targets"] --> dcc
 ```
-
 
 > **Warning:** Always verify your management workstation's source IP is in the permitted range before activating an IPfilter policy. An incorrect policy will lock you out of the switch — recovery requires console access.
 

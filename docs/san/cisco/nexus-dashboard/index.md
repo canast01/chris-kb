@@ -9,10 +9,6 @@ Cisco Nexus Dashboard knowledge base covering fabric health, flow telemetry, pol
 
 *Applies to: Cisco MDS · Nexus*
 </div>
-![Nexus Dashboard](../../../assets/san-cisco-nexus-dashboard-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

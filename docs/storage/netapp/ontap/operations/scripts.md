@@ -5,35 +5,12 @@ tags:
 ---
 # ONTAP — Scripts
 
-
 <div class="kb-summary">
 Scripts reference covering Cluster Health Check (Perl), SnapMirror Lag Monitor (Bash), Volume Capacity Reporter (Python), Ansible ONTAP Health Playbook, Aggregate Space Alert (Perl) and 7 more sections.
 
 *Applies to: ONTAP 9.x*
 </div>
 ![ONTAP — Scripts](../../../../assets/storage-netapp-ontap-operations-scripts.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "NetApp ONTAP\nOperations" {shape: hexagon}
-cluster_health_check_perl: "Cluster Health Check (Perl)" {shape: rectangle}
-snapmirror_lag_monitor_bash: "SnapMirror Lag Monitor (Bash)" {shape: rectangle}
-volume_capacity_reporter_python: "Volume Capacity Reporter (Python)" {shape: rectangle}
-ansible_ontap_health_playbook: "Ansible ONTAP Health Playbook" {shape: rectangle}
-aggregate_space_alert_perl: "Aggregate Space Alert (Perl)" {shape: rectangle}
-windows_ontap_cluster_health_via_res: "Windows: ONTAP Cluster Health via REST API (PowerShell)" {shape: rectangle}
-
-hub -> cluster_health_check_perl
-hub -> snapmirror_lag_monitor_bash
-hub -> volume_capacity_reporter_python
-hub -> ansible_ontap_health_playbook
-hub -> aggregate_space_alert_perl
-hub -> windows_ontap_cluster_health_via_res
-```
 
 ## Before you begin
 

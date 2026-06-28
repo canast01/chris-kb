@@ -5,16 +5,12 @@ tags:
 ---
 # Dell VPLEX — Integrations
 
-
 <div class="kb-summary">
 Integration with back-end storage arrays, hypervisors, replication systems, and monitoring platforms.
 
 *Applies to: VPLEX*
 </div>
 ![Dell VPLEX — Integrations](../../../../assets/storage-dell-vplex-architecture-integrations.svg)
-
-
-
 
 ```mermaid
 flowchart TB
@@ -44,25 +40,6 @@ flowchart TB
     vms -->|"management"| dirB
     vms -->|"telemetry"| cloudiq
     vms -->|"syslog"| siem
-```
-
-```d2
-direction: right
-
-center: "VPLEX" {shape: hexagon}
-backend_storage_arrays: "Back-End Storage Arrays" {shape: rectangle}
-vmware_vsphere: "VMware vSphere" {shape: rectangle}
-dell_recoverpoint_vplex_geo: "Dell RecoverPoint (VPLEX Geo)" {shape: rectangle}
-unisphere_for_vplex_web_gui: "Unisphere for VPLEX (Web GUI)" {shape: rectangle}
-dell_cloudiq_apex_aiops: "Dell CloudIQ / APEX AIOps" {shape: rectangle}
-snmp_and_syslog_alerting: "SNMP and Syslog Alerting" {shape: rectangle}
-
-center -> backend_storage_arrays
-center -> vmware_vsphere
-center -> dell_recoverpoint_vplex_geo
-center -> unisphere_for_vplex_web_gui
-center -> dell_cloudiq_apex_aiops
-center -> snmp_and_syslog_alerting
 ```
 
 ## Back-End Storage Arrays

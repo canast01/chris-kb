@@ -9,9 +9,6 @@ Ansible automation knowledge base covering agentless architecture, inventory and
 
 *Applies to: Ansible 2.x*
 </div>
-![Ansible](../../assets/automation-ansible-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

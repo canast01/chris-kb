@@ -14,10 +14,6 @@ VxRail vSAN Alerts reference covering Overview, Where It Fits, Daily Checks, Hea
 
 *Applies to: vSAN 7.x / 8.x*
 </div>
-![VxRail vSAN Alerts](../../../../assets/virtualization-vmware-vxrail-troubleshooting-vsan-alerts.svg)
-
-
-
 
 ```d2
 direction: down

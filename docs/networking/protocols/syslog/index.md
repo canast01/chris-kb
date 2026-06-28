@@ -4,14 +4,9 @@ tags:
 ---
 # Syslog and Centralized Logging
 
-
 <div class="kb-summary">
 Syslog and Centralized Logging reference covering Syslog Service Health, Configure rsyslog to Forward to Central Collector, journald to Syslog Bridge, Windows Event Forwarding, Syslog Severity Levels (RFC 5424) and 2 more sections.
 </div>
-![Syslog and Centralized Logging](../../../assets/networking-protocols-syslog-index.svg)
-
-
-
 
 ```bash
 # Apply after editing
@@ -19,23 +14,6 @@ systemctl restart rsyslog
 
 # Test
 logger -t TEST "Forwarding test from $(hostname)"
-```
-
-```d2
-direction: right
-
-center: "Syslog" {shape: hexagon}
-journald_to_syslog_bridge: "journald to Syslog Bridge" {shape: rectangle}
-windows_event_forwarding: "Windows Event Forwarding" {shape: rectangle}
-syslog_severity_levels_rfc_5424: "Syslog Severity Levels (RFC 5424)" {shape: rectangle}
-querying_logs: "Querying Logs" {shape: rectangle}
-troubleshooting_logs_not_arriving: "Troubleshooting — Logs Not Arriving" {shape: rectangle}
-
-center -> journald_to_syslog_bridge
-center -> windows_event_forwarding
-center -> syslog_severity_levels_rfc_5424
-center -> querying_logs
-center -> troubleshooting_logs_not_arriving
 ```
 
 ## journald to Syslog Bridge

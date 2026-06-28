@@ -22,17 +22,6 @@ Confluence Data Center runs as an active-active Java cluster sharing a single Po
 
 ---
 
-```d2
-direction: right
-
-center: "Architecture" {shape: hexagon}
-deployment_models: "Deployment Models" {shape: rectangle}
-data_center_topology: "Data Center Topology" {shape: rectangle}
-
-center -> deployment_models
-center -> data_center_topology
-```
-
 ## Deployment Models
 
 | Model | Hosting | HA | Clustering | Atlassian Managed |

@@ -7,33 +7,11 @@ tags:
 ---
 # vSAN — Procedures
 
-
 <div class="kb-summary">
 Operational how-to guides for day-to-day vSAN management. Each section covers a specific task area with concrete steps, commands, and validation.
 
 *Applies to: vSAN 7.x / 8.x*
 </div>
-
-
-
-```d2
-direction: right
-
-hub: "vSAN\nOperations" {shape: hexagon}
-disk_group_management: "Disk Group Management" {shape: rectangle}
-storage_policies: "Storage Policies" {shape: rectangle}
-resync_and_object_health: "Resync and Object Health" {shape: rectangle}
-capacity_management: "Capacity Management" {shape: rectangle}
-stretched_cluster_operations: "Stretched Cluster Operations" {shape: rectangle}
-performance_service: "Performance Service" {shape: rectangle}
-
-hub -> disk_group_management
-hub -> storage_policies
-hub -> resync_and_object_health
-hub -> capacity_management
-hub -> stretched_cluster_operations
-hub -> performance_service
-```
 
 ## Before you begin
 
@@ -130,7 +108,6 @@ Removing the cache SSD removes the entire group. vSAN will start rebuilding all 
     esxcli vsan storage remove -s <failed_cache_ssd_naa>
     ```
 
-
 **Step 3 — Replace the physical cache SSD**
 
 Follow vendor hardware replacement procedure. Confirm the new SSD model is on the vSAN HCL.
@@ -150,7 +127,6 @@ esxcli storage core device list | grep <new_naa>
     ```bash
     esxcli vsan storage add -s <new_cache_ssd_naa> -d <capacity_naa1> -d <capacity_naa2>
     ```
-
 
 **Step 6 — Monitor resync to completion**
 
@@ -209,7 +185,6 @@ esxcli vsan debug resync summary get
     ```powershell
     Set-VMHost -VMHost $host -State Connected
     ```
-
 
 Confirm the host rejoins the cluster:
 
@@ -441,7 +416,6 @@ Get-SpbmEntityConfiguration | Where-Object { $_.ComplianceStatus -ne "compliant"
     Get-HardDisk -VM $vm | Set-SpbmEntityConfiguration -StoragePolicy $policy
     ```
 
-
 **Step 3 — Monitor resync**
 
 ```bash
@@ -536,7 +510,6 @@ Confirm host model, NIC, SSD, and NVMe devices are on the [VMware Compatibility 
     Add-VMHost -Name esxi-new.example.com -Location (Get-Cluster "VSAN-LON-01") `
         -User root -Password <password> -Force
     ```
-
 
 **Step 3 — Claim disks**
 
@@ -916,7 +889,6 @@ esxcli system ntp set --enabled true
         -User root -Password <password> -Force
     ```
 
-
 **Step 4 — Configure vSAN VMkernel**
 
 The new host needs a vSAN-tagged vmkernel before disk claim. Verify the tag:
@@ -990,7 +962,6 @@ Decommissioning removes a host from the cluster and redistributes all its data. 
         -State Maintenance -VsanDataMigrationMode Full
     ```
 
-
 Monitor evacuation — do not proceed until resync is at zero:
 
 ```bash
@@ -1010,7 +981,6 @@ watch -n 30 "esxcli vsan debug resync summary get"
     esxcli vsan storage remove -s <cache_ssd_naa>
     ```
 
-
 **Step 3 — Remove Host from Cluster**
 
 === "vCenter UI"
@@ -1020,7 +990,6 @@ watch -n 30 "esxcli vsan debug resync summary get"
     ```powershell
     Remove-VMHost -VMHost (Get-VMHost esxi-decom.example.com) -Confirm:$false
     ```
-
 
 **Step 4 — Verify No Orphaned Objects**
 
@@ -1342,7 +1311,6 @@ Cluster → Configure → vSAN → Fault Domains → Add Fault Domain
     New-VsanFaultDomain -Name "Rack-C" -VMHost (Get-VMHost esxi-05, esxi-06) -Cluster $cluster
     ```
 
-
 **Step 3 — Monitor rebalance**
 
 ```bash
@@ -1625,7 +1593,6 @@ A 2-node vSAN cluster uses a witness appliance at a third site to form quorum. T
 
 ![Architecture](../../../../assets/vsan-proc-architecture.svg)
 
-
 - Each data node holds a full copy of all objects (effective RAID-1 across 2 nodes).
 - The witness holds metadata only — no VM data. It provides quorum when one data node fails.
 - If either data node fails, the surviving node + witness form a majority and VMs continue running.
@@ -1751,7 +1718,6 @@ vmkping -I vmk2 <witness_vsan_vmk_ip>
     ```bash
     watch -n 60 "esxcli vsan debug resync summary get"
     ```
-
 
 ---
 

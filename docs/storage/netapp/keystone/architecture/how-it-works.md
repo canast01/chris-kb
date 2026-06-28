@@ -5,33 +5,12 @@ tags:
 ---
 # Keystone — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Overview, STaaS Consumption Model, Capacity Management Thresholds.
 
 *Applies to: Keystone STaaS*
 </div>
 ![Keystone — How It Works](../../../../assets/storage-netapp-keystone-architecture-how-it-works.svg)
-
-
-```d2
-direction: right
-
-center: "Keystone STaaS" {shape: hexagon}
-staas_consumption_model: "STaaS Consumption Model" {shape: rectangle}
-service_tiers_and_performance_slas: "Service Tiers and Performance SLAs" {shape: rectangle}
-consumption_and_billing_model: "Consumption and Billing Model" {shape: rectangle}
-keystone_collector_and_telemetry: "Keystone Collector and Telemetry" {shape: rectangle}
-data_management_with_bluexp: "Data Management with BlueXP" {shape: rectangle}
-evergreen_storage_hardware_refresh: "Evergreen Storage (Hardware Refresh)" {shape: rectangle}
-
-center -> staas_consumption_model
-center -> service_tiers_and_performance_slas
-center -> consumption_and_billing_model
-center -> keystone_collector_and_telemetry
-center -> data_management_with_bluexp
-center -> evergreen_storage_hardware_refresh
-```
 
 ```plantuml
 @startuml
@@ -78,7 +57,6 @@ graph TB
   class KS,COMMIT,BURST,BILL cloud
   class ADMIN host
 ```
-
 
 ## Service Tiers and Performance SLAs
 

@@ -16,11 +16,6 @@ edge cases where VCHA gets stuck in Isolated state.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![vCenter HA — Passive Node Failover](../../../../assets/virtualization-vmware-topics-scenarios-vcenter-ha-failover.svg)
-
-
-
-
 
 ```mermaid
 sequenceDiagram
@@ -38,25 +33,6 @@ sequenceDiagram
     P-->>C: vCenter API available on promoted node
     C->>P: Client reconnects (~4 min total outage)
     Note over P,W: Old active becomes new passive candidate
-```
-
-```d2
-direction: right
-
-center: "Scenarios" {shape: hexagon}
-symptoms: "Symptoms" {shape: rectangle}
-1_confirm_vcha_state_after_failover: "1. Confirm VCHA State After Failover" {shape: rectangle}
-2_check_vchalog_for_promotion_entry: "2. Check vcha.log for Promotion Entry" {shape: rectangle}
-3_verify_db_sync_lag_was_acceptable: "3. Verify DB Sync Lag Was Acceptable" {shape: rectangle}
-4_verify_witness_connectivity: "4. Verify Witness Connectivity" {shape: rectangle}
-5_resolution_paths: "5. Resolution Paths" {shape: rectangle}
-
-center -> symptoms
-center -> 1_confirm_vcha_state_after_failover
-center -> 2_check_vchalog_for_promotion_entry
-center -> 3_verify_db_sync_lag_was_acceptable
-center -> 4_verify_witness_connectivity
-center -> 5_resolution_paths
 ```
 
 ## Symptoms

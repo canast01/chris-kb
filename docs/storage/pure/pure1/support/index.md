@@ -4,27 +4,11 @@ tags:
 ---
 # Pure1 — Support
 
-
 <div class="kb-summary">
 Support reference covering Diagnostic Bundle Collection, Severity Definitions, Evergreen Support — What's Covered, Proactive Support Features, Escalation Path and 1 more sections.
 
 *Applies to: Pure1*
 </div>
-![Pure1 — Support](../../../../assets/storage-pure-pure1-support-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Pure1" {shape: hexagon}
-escalation_path: "Escalation Path" {shape: rectangle}
-common_support_scenarios: "Common Support Scenarios" {shape: rectangle}
-
-center -> escalation_path
-center -> common_support_scenarios
-```
 
 ## Escalation Path
 

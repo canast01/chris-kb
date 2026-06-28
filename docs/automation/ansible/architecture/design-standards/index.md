@@ -5,14 +5,11 @@ tags:
 ---
 # Ansible — Standards
 
-
 <div class="kb-summary">
 Ansible design standards: directory layout, role naming, variable precedence rules, vault encryption policy, and idempotency requirements for production playbooks.
 
 *Applies to: Ansible 2.x*
 </div>
-![Ansible — Standards](../../../../assets/automation-ansible-architecture-design-standards-index.svg)
-
 
 ```d2
 direction: down
@@ -32,7 +29,6 @@ tags -> testing_with_molecule: hardens
 ```
 
 ## Project Layout
-
 
 ## Module Standards
 

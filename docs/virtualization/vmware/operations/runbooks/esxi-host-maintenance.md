@@ -18,10 +18,6 @@ tags:
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![ESXi Host Maintenance Mode Runbook](../../../../assets/virtualization-vmware-operations-runbooks-esxi-host-maintena.svg)
-
-
-
 
 ```plantuml
 @startuml

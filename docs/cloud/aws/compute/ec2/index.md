@@ -4,34 +4,11 @@ tags:
 ---
 # AWS EC2
 
-
 <div class="kb-summary">
 AWS EC2 reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 
 *Applies to: AWS*
 </div>
-![AWS EC2](../../../../assets/cloud-aws-compute-ec2-index.svg)
-
-
-
-```d2
-direction: right
-
-center: "AWS" {shape: hexagon}
-where_it_fits: "Where It Fits" {shape: rectangle}
-daily_checks: "Daily Checks" {shape: rectangle}
-health_commands: "Health Commands" {shape: rectangle}
-common_issues: "Common Issues" {shape: rectangle}
-operational_tasks: "Operational Tasks" {shape: rectangle}
-upgrade_notes: "Upgrade Notes" {shape: rectangle}
-
-center -> where_it_fits
-center -> daily_checks
-center -> health_commands
-center -> common_issues
-center -> operational_tasks
-center -> upgrade_notes
-```
 
 ## Overview
 
@@ -92,26 +69,15 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## EC2 Purchase Options
 
-
-
-
-
 ---
 
 ## EC2 Instance Type Families
-
-
-
 
 ---
 
 ## Compute Services Comparison
 
-
-
-
 ---
 
 ## EC2 Auto Scaling and Load Balancing
-
 

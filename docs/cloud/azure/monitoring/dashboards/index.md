@@ -4,16 +4,11 @@ tags:
 ---
 # Dashboards
 
-
 <div class="kb-summary">
 Azure Dashboards provide a shared, customisable view of Azure resource telemetry. A minimal dashboard JSON skeleton:
 
 *Applies to: Azure*
 </div>
-![Dashboards](../../../../assets/cloud-azure-monitoring-dashboards-index.svg)
-
-
-
 
 Azure Dashboards provide a shared, customisable view of Azure resource telemetry.
 
@@ -43,23 +38,6 @@ A minimal dashboard JSON skeleton:
   "location": "eastus",
   "tags": { "hidden-title": "Ops Overview Dashboard" }
 }
-```
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-pinning_metrics_charts: "Pinning Metrics Charts" {shape: rectangle}
-common_dashboard_tile_types: "Common Dashboard Tile Types" {shape: rectangle}
-sharing_dashboards: "Sharing Dashboards" {shape: rectangle}
-exporting_and_importing_dashboard_js: "Exporting and Importing Dashboard JSON" {shape: rectangle}
-dashboard_governance: "Dashboard Governance" {shape: rectangle}
-
-center -> pinning_metrics_charts
-center -> common_dashboard_tile_types
-center -> sharing_dashboards
-center -> exporting_and_importing_dashboard_js
-center -> dashboard_governance
 ```
 
 ## Pinning Metrics Charts

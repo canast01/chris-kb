@@ -37,15 +37,10 @@ set_up_performance_monitoring -> validate
 ---
 
 # SANnav — Initial Deployment
-![SANnav — Initial Deployment](../../../../assets/san-brocade-sannav-deploy-index.svg)
-
-
-
 
 This guide covers deploying Brocade SANnav Management Portal from installation through validated fabric discovery and monitoring. SANnav replaces the legacy Brocade Network Advisor (BNA) and provides centralized SAN management, zoning, analytics, and alert handling.
 
 ---
-
 
 ```mermaid
 flowchart TD

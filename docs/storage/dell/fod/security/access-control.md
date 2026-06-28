@@ -5,7 +5,6 @@ tags:
 ---
 # FOD — Access Control
 
-
 <div class="kb-summary">
 Access Control reference covering APEX Console RBAC Roles, API Service Account Configuration, SCG Access Controls, CloudIQ User Roles, General Controls.
 
@@ -13,31 +12,9 @@ Access Control reference covering APEX Console RBAC Roles, API Service Account C
 </div>
 ![FOD — Access Control](../../../../assets/storage-dell-fod-security-access-control.svg)
 
-
-
-
 > Part of the [Flex on Demand](../index.md) reference.
 
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-apex_console_rbac_roles: "APEX Console RBAC Roles" {shape: rectangle}
-api_service_account_configuration: "API Service Account Configuration" {shape: rectangle}
-scg_access_controls: "SCG Access Controls" {shape: rectangle}
-cloudiq_user_roles: "CloudIQ User Roles" {shape: rectangle}
-general_controls: "General Controls" {shape: rectangle}
-core: "Flex On Demand Core" {shape: hexagon}
-
-external -> apex_console_rbac_roles: traffic in
-apex_console_rbac_roles -> api_service_account_configuration
-api_service_account_configuration -> scg_access_controls
-scg_access_controls -> cloudiq_user_roles
-cloudiq_user_roles -> general_controls
-general_controls -> core: secured path
-```
 
 ## Before you begin
 

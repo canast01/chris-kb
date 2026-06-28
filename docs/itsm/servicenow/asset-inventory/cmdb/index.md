@@ -4,33 +4,11 @@ tags:
 ---
 # CMDB Data Quality and Management
 
-
 <div class="kb-summary">
 CMDB Data Quality and Management reference covering Overview, Core Data Quality Dimensions, CI Relationships, Import Sources and Integration, ServiceNow Integration Notes and 1 more sections.
 
 *Applies to: ServiceNow*
 </div>
-![CMDB Data Quality and Management](../../../../assets/itsm-servicenow-asset-inventory-cmdb-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "ServiceNow" {shape: hexagon}
-core_data_quality_dimensions: "Core Data Quality Dimensions" {shape: rectangle}
-ci_relationships: "CI Relationships" {shape: rectangle}
-import_sources_and_integration: "Import Sources and Integration" {shape: rectangle}
-servicenow_integration_notes: "ServiceNow Integration Notes" {shape: rectangle}
-governance_and_review_cadence: "Governance and Review Cadence" {shape: rectangle}
-
-center -> core_data_quality_dimensions
-center -> ci_relationships
-center -> import_sources_and_integration
-center -> servicenow_integration_notes
-center -> governance_and_review_cadence
-```
 
 ## Overview
 

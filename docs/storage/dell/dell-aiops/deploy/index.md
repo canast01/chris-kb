@@ -7,17 +7,11 @@ search:
 ---
 # Dell APEX AIOps — Initial Setup
 
-
-
 <div class="kb-summary">
 Step-by-step guide to setting up Dell APEX AIOps, connecting storage arrays, enabling AI-driven recommendations, and configuring dashboards and capacity alerts.
 
 *Applies to: Dell AIOps*
 </div>
-![Dell APEX AIOps — Initial Setup](../../../../assets/storage-dell-dell-aiops-deploy-index.svg)
-
-
-
 
 ```mermaid
 flowchart TD

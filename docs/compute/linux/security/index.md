@@ -5,16 +5,11 @@ tags:
 ---
 # Linux — Security
 
-
-
 <div class="kb-summary">
 Linux hardening — PAM configuration, sudoers, SSH controls, SELinux/AppArmor, auditd logging, and CIS benchmark compliance.
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>
-![Linux — Security](../../../assets/compute-linux-security-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

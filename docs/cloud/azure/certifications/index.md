@@ -5,15 +5,9 @@ tags:
 ---
 # Azure Certification
 
-
-
 <div class="kb-summary">
 Azure Certification reference covering Overview, Core Certification Paths, Daily Study Focus, Useful Commands, Renewal Notes.
 </div>
-![Azure Certification](../../../assets/cloud-azure-certifications-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-1">
 
@@ -36,21 +30,6 @@ Azure Certification reference covering Overview, Core Certification Paths, Daily
 <a class="kb-card" href="services/"><strong>Services</strong><span>Per-service study notes — Entra ID, VMs, VNet, Blob Storage, AKS, and more.</span></a>
 
 </div>
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-core_certification_paths: "Core Certification Paths" {shape: rectangle}
-daily_study_focus: "Daily Study Focus" {shape: rectangle}
-useful_commands: "Useful Commands" {shape: rectangle}
-renewal_notes: "Renewal Notes" {shape: rectangle}
-
-center -> core_certification_paths
-center -> daily_study_focus
-center -> useful_commands
-center -> renewal_notes
-```
 
 ## Overview
 

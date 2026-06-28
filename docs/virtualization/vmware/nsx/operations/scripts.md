@@ -8,7 +8,6 @@ tags:
 # NSX — Scripts
 ![NSX — Scripts](../../../../assets/virtualization-vmware-nsx-operations-scripts.svg)
 
-
 ```python
 #!/usr/bin/env python3
 """
@@ -649,15 +648,6 @@ echo === NSX-T check complete ===
 ```bash
 cd C:\Users\YourName\Desktop
 nsxt_plink_check.bat
-```
-
-```d2
-direction: right
-
-hub: "NSX-T\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

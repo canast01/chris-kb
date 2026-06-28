@@ -12,9 +12,6 @@ Dell ECS — Troubleshooting navigation for Common Issues, Diagnostics, Escalati
 
 *Applies to: ECS 3.x*
 </div>
-![Dell ECS — Troubleshooting](../../../../assets/storage-dell-ecs-troubleshooting-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="common-issues/"><strong>Common Issues</strong><span>Quick reference for common problems and resolutions.</span></a>

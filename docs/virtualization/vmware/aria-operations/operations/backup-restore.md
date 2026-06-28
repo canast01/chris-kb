@@ -7,30 +7,8 @@ tags:
 # Aria Operations Backup & Restore
 ![Aria Operations Backup & Restore](../../../../assets/virtualization-vmware-aria-operations-operations-backup-rest.svg)
 
-
-
-
 ```bash
 ssh admin@vrops-prod-01.example.local
-
-```d2
-direction: right
-
-hub: "Aria Operations\nOperations" {shape: hexagon}
-trigger_an_immediate_backup_using_th: "Trigger an immediate backup using the vracli tool" {shape: rectangle}
-backupid_is_the_id_of_the_configured: "<backup-id> is the ID of the configured external location (v" {shape: rectangle}
-list_configured_backup_locations: "List configured backup locations" {shape: rectangle}
-check_backup_status: "Check backup status" {shape: rectangle}
-authenticate: "Authenticate" {shape: rectangle}
-list_backup_configurations: "List backup configurations" {shape: rectangle}
-
-hub -> trigger_an_immediate_backup_using_th
-hub -> backupid_is_the_id_of_the_configured
-hub -> list_configured_backup_locations
-hub -> check_backup_status
-hub -> authenticate
-hub -> list_backup_configurations
-```
 
 ## Before you begin
 

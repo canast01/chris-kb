@@ -5,27 +5,12 @@ tags:
 ---
 # SRDF/A — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Overview, Delta Set Mechanics, Lag Reference, Connectivity.
 
 *Applies to: SRDF/A*
 </div>
 ![SRDF/A — How It Works](../../../../assets/storage-dell-srdf-a-architecture-how-it-works.svg)
-
-
-```d2
-direction: right
-
-center: "SRDF/A" {shape: hexagon}
-delta_set_mechanics: "Delta Set Mechanics" {shape: rectangle}
-lag_reference: "Lag Reference" {shape: rectangle}
-connectivity: "Connectivity" {shape: rectangle}
-
-center -> delta_set_mechanics
-center -> lag_reference
-center -> connectivity
-```
 
 ```plantuml
 @startuml
@@ -79,7 +64,6 @@ flowchart TD
     style dse fill:#be123c,color:#fff
     style rpoReset fill:#15803d,color:#fff
 ```
-
 
 ## Lag Reference
 

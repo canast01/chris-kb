@@ -13,28 +13,6 @@ PowerCLI integrates with the full VMware product stack. Each product family has 
 </div>
 ![PowerCLI — Integrations](../../../../assets/virtualization-vmware-powercli-architecture-integrations.svg)
 
-
-
-
-```d2
-direction: right
-
-center: "PowerCLI" {shape: hexagon}
-nsxt_integration: "NSX-T Integration" {shape: rectangle}
-vsan_integration: "vSAN Integration" {shape: rectangle}
-site_recovery_manager_srm: "Site Recovery Manager (SRM)" {shape: rectangle}
-hcx_migration_integration: "HCX Migration Integration" {shape: rectangle}
-vrops_aria_operations: "vROps / Aria Operations" {shape: rectangle}
-cicd_pipeline_integration: "CI/CD Pipeline Integration" {shape: rectangle}
-
-center -> nsxt_integration
-center -> vsan_integration
-center -> site_recovery_manager_srm
-center -> hcx_migration_integration
-center -> vrops_aria_operations
-center -> cicd_pipeline_integration
-```
-
 ## NSX-T Integration
 
 ```powershell

@@ -4,8 +4,6 @@ tags:
   - servicenow
 ---
 # ServiceNow — Operations Scripts
-![ServiceNow — Operations Scripts](../../../../assets/itsm-servicenow-operations-scripts-index.svg)
-
 
 ```bash
 # Set environment variables before running any script
@@ -254,15 +252,6 @@ MID Server Status Report — 2026-05-08 08:00 UTC
   mid-nyc-prod-01                Down       validated=true  v=8.4.0.100      ip=10.20.1.200  <<< STATUS NOT UP
 
 Total MID Servers: 3 | Issues: 1
-```
-
-```d2
-direction: right
-
-center: "ServiceNow" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> verify
 ```
 
 ## Before you begin

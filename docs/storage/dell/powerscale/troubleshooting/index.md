@@ -12,9 +12,6 @@ Diagnosing PowerScale replication failures, protocol errors, quota violations, n
 
 *Applies to: PowerScale (Isilon) 9.x*
 </div>
-![PowerScale — Troubleshooting](../../../../assets/storage-dell-powerscale-troubleshooting-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

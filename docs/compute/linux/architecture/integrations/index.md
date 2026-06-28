@@ -5,33 +5,11 @@ tags:
 ---
 # Linux — Integrations
 
-
 <div class="kb-summary">
 Linux integration patterns: LDAP/AD authentication via SSSD, PAM configuration, NFS/CIFS mount management, Ansible automation hooks, and syslog forwarding to SIEM.
 
 *Applies to: RHEL 8.x / 9.x · Ubuntu 22.04 / 24.04*
 </div>
-![Linux — Integrations](../../../../assets/compute-linux-architecture-integrations-index.svg)
-
-
-```d2
-direction: right
-
-center: "Linux" {shape: hexagon}
-active_directory_authentication_flow: "Active Directory Authentication Flow" {shape: rectangle}
-sudo_configuration_for_ad_groups: "Sudo Configuration for AD Groups" {shape: rectangle}
-backup_agent_integration: "Backup Agent Integration" {shape: rectangle}
-monitoring_integration: "Monitoring Integration" {shape: rectangle}
-iscsi_storage_connectivity: "iSCSI Storage Connectivity" {shape: rectangle}
-san_multipath_data_path: "SAN Multipath Data Path" {shape: rectangle}
-
-center -> active_directory_authentication_flow
-center -> sudo_configuration_for_ad_groups
-center -> backup_agent_integration
-center -> monitoring_integration
-center -> iscsi_storage_connectivity
-center -> san_multipath_data_path
-```
 
 ## Active Directory Authentication Flow
 
@@ -52,7 +30,6 @@ sequenceDiagram
     sssd-->>pam: Authentication success
     pam-->>user: Shell granted
 ```
-
 
 **Troubleshoot AD authentication:**
 

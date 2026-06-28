@@ -12,10 +12,6 @@ tags:
 <div class="kb-summary">
 Choose the right Aria product for your need: performance monitoring, log management, infrastructure automation, network visibility, or lifecycle management of the Aria Suite itself.
 </div>
-![Aria Product Selection Decision Tree](../../assets/reference-decision-trees-aria-selection.svg)
-
-
-
 
 ```mermaid
 flowchart TD
@@ -41,17 +37,6 @@ flowchart TD
     J -->|No — standalone only| L([Deploy product directly\nLocal admin auth\nOVA or LCM-managed])
 
     K --> M([Full Aria Suite stack\nLCM + Workspace ONE Access\n+ chosen Aria products])
-```
-
-```d2
-direction: right
-
-center: "Decision Trees" {shape: hexagon}
-product_summary: "Product summary" {shape: rectangle}
-deployment_order_when_installing_the: "Deployment order when installing the full suite" {shape: rectangle}
-
-center -> product_summary
-center -> deployment_order_when_installing_the
 ```
 
 ## Product summary

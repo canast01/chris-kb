@@ -6,13 +6,9 @@ search:
 ---
 # Storage — Troubleshooting
 
-
-
 <div class="kb-summary">
 Storage troubleshooting — APD/PDL conditions, multipath failures, replication lag, snapshot failures, host I/O errors, and array health alerts.
 </div>
-![Storage — Troubleshooting](../../assets/storage-troubleshooting-index.svg)
-
 
 <div class="kb-grid kb-grid-2">
 <a class="kb-card" href="replication-failures/"><strong>Replication Failures</strong><span>Storage replication failure diagnosis — lag thresholds, link state, and consistency group checks.</span></a>

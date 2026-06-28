@@ -13,10 +13,6 @@ Diagnosing and resolving PowerCLI issues: connection failures, module conflicts,
 
 *Applies to: PowerCLI 13.x*
 </div>
-![PowerCLI — Troubleshooting](../../../../assets/virtualization-vmware-powercli-troubleshooting-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

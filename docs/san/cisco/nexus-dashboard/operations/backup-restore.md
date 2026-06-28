@@ -6,7 +6,6 @@ tags:
 # Cisco Nexus Dashboard — Operations Backup & Restore
 ![Cisco Nexus Dashboard — Operations Backup & Restore](../../../../assets/san-cisco-nexus-dashboard-operations-backup-restore.svg)
 
-
 ```bash
 ssh ndadmin@nd-dc1-1.corp.example.com
 
@@ -22,16 +21,6 @@ acs backup status
 
 # List available backups
 acs backup list
-```
-
-
-```d2
-direction: right
-
-hub: "Nexus Dashboard\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

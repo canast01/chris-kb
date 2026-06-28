@@ -9,9 +9,6 @@ VxRail Health Checks reference covering Overview, Where It Fits, Daily Checks, H
 
 *Applies to: VxRail 7.x · 8.x*
 </div>
-![VxRail Health Checks](../../../../assets/virtualization-vmware-vxrail-health-checks-index.svg)
-
-
 
 ```d2
 direction: right

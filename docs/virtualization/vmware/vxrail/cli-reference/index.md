@@ -4,35 +4,13 @@ tags:
 ---
 # VxRail CLI Reference
 
-
 <div class="kb-summary">
 VxRail CLI reference: `vxrail-upgrade`, `vxrail-health-check`, `vxrail-lcm-status`, `mystic` health API queries, and `vc-maint-mode` commands.
 
 *Applies to: VxRail 7.x · 8.x*
 </div>
-![VxRail CLI Reference](../../../../assets/virtualization-vmware-vxrail-cli-reference-index.svg)
-
-
-
 
 ---
-
-```d2
-direction: right
-
-center: "VxRail" {shape: rectangle}
-vxrail_manager_rest_api: "VxRail Manager REST API" {shape: rectangle}
-vxrail_manager_ssh_cli: "VxRail Manager SSH CLI" {shape: rectangle}
-powercli_vxrail_module: "PowerCLI + VxRail Module" {shape: rectangle}
-esxcli_on_vxrail_nodes: "ESXCLI on VxRail Nodes" {shape: rectangle}
-idrac_racadm_hardware_health: "iDRAC / RACADM (Hardware Health)" {shape: rectangle}
-
-center -> vxrail_manager_rest_api
-center -> vxrail_manager_ssh_cli
-center -> powercli_vxrail_module
-center -> esxcli_on_vxrail_nodes
-center -> idrac_racadm_hardware_health
-```
 
 ## Overview
 

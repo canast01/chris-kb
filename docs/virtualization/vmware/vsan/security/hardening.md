@@ -7,34 +7,12 @@ tags:
 ---
 # vSAN — Hardening
 
-
 <div class="kb-summary">
 vSAN hardening covers the security baseline configuration applied to the ESXi hosts that form the vSAN cluster, the vCenter managing the cluster, and the vSAN-specific settings. References: VMware vSphere Security Configuration Guide (Broadcom), DISA STIG for vSphere ESXi.
 
 *Applies to: vSAN 7.x / 8.x*
 </div>
 ![vSAN — Hardening](../../../../assets/virtualization-vmware-vsan-security-hardening.svg)
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-esxi_host_hardening: "ESXi Host Hardening" {shape: rectangle}
-vcenter_hardening: "vCenter Hardening" {shape: rectangle}
-vsanspecific_hardening_settings: "vSAN-Specific Hardening Settings" {shape: rectangle}
-compliance_and_auditing: "Compliance and Auditing" {shape: rectangle}
-host_profile_enforcement: "Host Profile Enforcement" {shape: rectangle}
-core: "vSAN Core" {shape: hexagon}
-
-external -> esxi_host_hardening: traffic in
-esxi_host_hardening -> vcenter_hardening
-vcenter_hardening -> vsanspecific_hardening_settings
-vsanspecific_hardening_settings -> compliance_and_auditing
-compliance_and_auditing -> host_profile_enforcement
-host_profile_enforcement -> core: secured path
-```
 
 ## Before you begin
 

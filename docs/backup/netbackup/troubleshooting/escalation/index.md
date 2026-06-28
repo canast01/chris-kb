@@ -12,10 +12,6 @@ NetBackup support escalation: how to collect the nbsu log bundle, open a Veritas
 
 *Applies to: NetBackup 10.x*
 </div>
-![NetBackup — Escalation](../../../../assets/backup-netbackup-troubleshooting-escalation-index.svg)
-
-
-
 
 ```plantuml
 @startuml

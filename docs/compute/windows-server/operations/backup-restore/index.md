@@ -4,8 +4,6 @@ tags:
   - windows
 ---
 # Windows Server — Backup and Restore
-![Windows Server — Backup and Restore](../../../../assets/compute-windows-server-operations-backup-restore-index.svg)
-
 
 ```powershell
 # Silent installation of Veeam Agent for Windows

@@ -4,37 +4,13 @@ tags:
 ---
 # Failover
 
-
 <div class="kb-summary">
 Azure Site Recovery supports three types of failover: test failover (non-disruptive validation), planned failover (zero data loss), and unplanned failover (best-effort, used during real incidents). All failovers move protected workloads to the recovery region.
 
 *Applies to: Azure*
 </div>
-![Failover](../../../../assets/cloud-azure-backup-dr-failover-index.svg)
-
-
-
 
 ---
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-failover_decision_flow: "Failover Decision Flow" {shape: rectangle}
-failover_types_compared: "Failover Types Compared" {shape: rectangle}
-prefailover_checks: "Pre-Failover Checks" {shape: rectangle}
-test_failover: "Test Failover" {shape: rectangle}
-planned_failover: "Planned Failover" {shape: rectangle}
-unplanned_failover: "Unplanned Failover" {shape: rectangle}
-
-center -> failover_decision_flow
-center -> failover_types_compared
-center -> prefailover_checks
-center -> test_failover
-center -> planned_failover
-center -> unplanned_failover
-```
 
 ## Failover Decision Flow
 

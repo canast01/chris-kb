@@ -5,33 +5,11 @@ tags:
 ---
 # Dell VPLEX — Procedures
 
-
 <div class="kb-summary">
 Procedures reference covering Change Readiness, Maintenance Window, Post-Change Validation, Consistency Groups, Metro Operations.
 
 *Applies to: VPLEX*
 </div>
-
-
-
-```d2
-direction: right
-
-hub: "VPLEX\nOperations" {shape: hexagon}
-change_readiness: "Change Readiness" {shape: rectangle}
-maintenance_window: "Maintenance Window" {shape: rectangle}
-postchange_validation: "Post-Change Validation" {shape: rectangle}
-consistency_groups: "Consistency Groups" {shape: rectangle}
-metro_operations: "Metro Operations" {shape: rectangle}
-create_a_virtual_volume: "Create a Virtual Volume" {shape: rectangle}
-
-hub -> change_readiness
-hub -> maintenance_window
-hub -> postchange_validation
-hub -> consistency_groups
-hub -> metro_operations
-hub -> create_a_virtual_volume
-```
 
 ## Before you begin
 

@@ -6,8 +6,6 @@ search:
   boost: 1.5
 ---
 # Pure1 — Troubleshooting
-![Pure1 — Troubleshooting](../../../../assets/storage-pure-pure1-troubleshooting-index.svg)
-
 
 ```bash
 # Step 1: Check array connectivity from Purity CLI

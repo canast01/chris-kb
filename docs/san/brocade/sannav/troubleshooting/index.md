@@ -7,16 +7,11 @@ search:
 ---
 # SANnav — Troubleshooting
 
-
 <div class="kb-summary">
 Diagnosing SANnav connectivity issues, fabric discovery failures, certificate errors, and alert configuration problems.
 
 *Applies to: Brocade FOS 9.x*
 </div>
-![SANnav — Troubleshooting](../../../../assets/san-brocade-sannav-troubleshooting-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

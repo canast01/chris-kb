@@ -10,9 +10,6 @@ Pure Storage operations — Pure1 cloud portal management, hardware and capacity
 
 *Applies to: FlashArray Purity 6.x*
 </div>
-![Pure Operations](../../../assets/storage-pure-operations-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

@@ -12,8 +12,6 @@ EVS security controls: AWS IAM for cluster management, vSphere RBAC, NSX-T micro
 
 *Applies to: Amazon EVS*
 </div>
-![Amazon EVS — Security](../../../../assets/cloud-aws-evs-security-index.svg)
-
 
 ![Amazon EVS — Security — Diagram](../../../../assets/cloud-aws-evs-security-diagram.svg)
 <div class="kb-grid">

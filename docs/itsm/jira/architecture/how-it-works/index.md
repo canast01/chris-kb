@@ -5,31 +5,11 @@ tags:
 ---
 # Jira — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Deployment Models, Data Center Reference Architecture, Clustering, Port Reference, Cloud Architecture (Reference).
 
 *Applies to: Jira Cloud / Data Center*
 </div>
-![Jira — How It Works](../../../../assets/itsm-jira-architecture-how-it-works-index.svg)
-
-
-```d2
-direction: right
-
-center: "Jira" {shape: hexagon}
-deployment_models: "Deployment Models" {shape: rectangle}
-data_center_reference_architecture: "Data Center Reference Architecture" {shape: rectangle}
-clustering: "Clustering" {shape: rectangle}
-port_reference: "Port Reference" {shape: rectangle}
-cloud_architecture_reference: "Cloud Architecture (Reference)" {shape: rectangle}
-
-center -> deployment_models
-center -> data_center_reference_architecture
-center -> clustering
-center -> port_reference
-center -> cloud_architecture_reference
-```
 
 ## Deployment Models
 
@@ -102,7 +82,6 @@ graph TB
     N2 --> NFS
     N3 --> NFS
 ```
-
 
 NFS mount options:
 

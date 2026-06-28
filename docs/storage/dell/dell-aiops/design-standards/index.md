@@ -4,15 +4,11 @@ tags:
 ---
 # Dell AIOps Standards
 
-
 <div class="kb-summary">
 Dell AIOps Standards reference covering System Tagging Requirements, Recommendation Priority and Response SLA, Alert Routing, Change Management Requirements, Deferral Policy and 3 more sections.
 
 *Applies to: Dell AIOps*
 </div>
-![Dell AIOps Standards](../../../../assets/storage-dell-dell-aiops-design-standards-index.svg)
-
-
 
 ```d2
 direction: down

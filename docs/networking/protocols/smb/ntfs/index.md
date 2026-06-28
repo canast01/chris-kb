@@ -4,31 +4,9 @@ tags:
 ---
 # NTFS Permissions
 
-
 <div class="kb-summary">
 NTFS Permissions reference covering Overview, NTFS Permission Types, icacls Reference, Inheritance, Effective Permissions and 1 more sections.
 </div>
-![NTFS Permissions](../../../../assets/networking-protocols-smb-ntfs-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "SMB" {shape: hexagon}
-ntfs_permission_types: "NTFS Permission Types" {shape: rectangle}
-icacls_reference: "icacls Reference" {shape: rectangle}
-inheritance: "Inheritance" {shape: rectangle}
-effective_permissions: "Effective Permissions" {shape: rectangle}
-ownership_and_auditing: "Ownership and Auditing" {shape: rectangle}
-
-center -> ntfs_permission_types
-center -> icacls_reference
-center -> inheritance
-center -> effective_permissions
-center -> ownership_and_auditing
-```
 
 ## Overview
 

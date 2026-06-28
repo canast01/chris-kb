@@ -5,15 +5,11 @@ tags:
 ---
 # Veeam — Hardening
 
-
 <div class="kb-summary">
 Hardening reference covering Network Security, Security Hardening Checklist.
 
 *Applies to: Veeam 12.x*
 </div>
-![Veeam — Hardening](../../../../assets/backup-veeam-security-hardening-index.svg)
-
-
 
 ```d2
 direction: down

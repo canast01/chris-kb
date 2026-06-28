@@ -5,17 +5,12 @@ tags:
 ---
 # FlashArray — Integrations
 
-
 <div class="kb-summary">
 Integrations reference covering VMware Integration, Backup Integration, Pure1 Monitoring, Authentication, REST API.
 
 *Applies to: FlashArray Purity 6.x*
 </div>
 ![FlashArray — Integrations](../../../../assets/storage-pure-flasharray-architecture-integrations.svg)
-
-
-
-
 
 **Generate an API token for a service account:**
 
@@ -45,19 +40,6 @@ GET /api/2.x/arrays?space=true
 Full API reference: [Pure Storage API documentation](https://support.purestorage.com/bundle/m_fa_rest_api)
 
 ---
-
-```d2
-direction: right
-
-center: "FlashArray" {shape: hexagon}
-component_a: "Component A" {shape: rectangle}
-component_b: "Component B" {shape: rectangle}
-component_c: "Component C" {shape: rectangle}
-
-center -> component_a
-center -> component_b
-center -> component_c
-```
 
 ## See also
 

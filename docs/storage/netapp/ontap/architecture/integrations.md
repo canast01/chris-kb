@@ -5,35 +5,12 @@ tags:
 ---
 # ONTAP — Integrations
 
-
 <div class="kb-summary">
 Integrations reference covering VMware, SnapCenter Plugin, Active Directory / CIFS Authentication, Veeam Storage Integration (VeeamON / Direct Storage Access), ONTAP REST API and 2 more sections.
 
 *Applies to: ONTAP 9.x*
 </div>
 ![ONTAP — Integrations](../../../../assets/storage-netapp-ontap-architecture-integrations.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "NetApp ONTAP" {shape: hexagon}
-vmware: "VMware" {shape: rectangle}
-snapcenter_plugin: "SnapCenter Plugin" {shape: rectangle}
-active_directory_cifs_authentication: "Active Directory / CIFS Authentication" {shape: rectangle}
-veeam_storage_integration_veeamon_di: "Veeam Storage Integration (VeeamON / Direct Storage Access)" {shape: rectangle}
-ontap_rest_api: "ONTAP REST API" {shape: rectangle}
-cloud_volumes_ontap_integration: "Cloud Volumes ONTAP Integration" {shape: rectangle}
-
-center -> vmware
-center -> snapcenter_plugin
-center -> active_directory_cifs_authentication
-center -> veeam_storage_integration_veeamon_di
-center -> ontap_rest_api
-center -> cloud_volumes_ontap_integration
-```
 
 ## VMware
 

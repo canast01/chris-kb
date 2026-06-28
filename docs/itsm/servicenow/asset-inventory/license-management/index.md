@@ -3,8 +3,6 @@ tags:
   - servicenow
 ---
 # Inventory — License Management
-![Inventory — License Management](../../../../assets/itsm-servicenow-asset-inventory-license-management-index.svg)
-
 
 ```bash
 # Debian / Ubuntu — list installed packages

@@ -5,14 +5,12 @@ tags:
 ---
 # Evergreen — Common Issues
 
-
 <div class="kb-summary">
 Common Issues reference covering Incident Triage Checklist, Common Issues Reference, Controller Upgrade Issues in Detail, Capacity Management Issues, Subscription and Lifecycle Issues and 2 more sections.
 
 *Applies to: Evergreen*
 </div>
 ![Evergreen — Common Issues](../../../../assets/storage-pure-evergreen-operations-common-issues.svg)
-
 
 ![Evergreen — Common Issues — Diagram](../../../../assets/storage-pure-evergreen-operations-common-issues-diagram.svg)
 
@@ -23,25 +21,6 @@ Common Issues reference covering Incident Triage Checklist, Common Issues Refere
 This page covers the most common operational issues encountered with arrays running under an Evergreen subscription — covering controller upgrade problems, host path failures, capacity concerns, subscription management issues, and replication incidents.
 
 ---
-
-```d2
-direction: right
-
-hub: "Evergreen\nOperations" {shape: hexagon}
-incident_triage_checklist: "Incident Triage Checklist" {shape: rectangle}
-common_issues_reference: "Common Issues Reference" {shape: rectangle}
-controller_upgrade_issues_in_detail: "Controller Upgrade Issues in Detail" {shape: rectangle}
-capacity_management_issues: "Capacity Management Issues" {shape: rectangle}
-subscription_and_lifecycle_issues: "Subscription and Lifecycle Issues" {shape: rectangle}
-diagnostic_commands_summary: "Diagnostic Commands Summary" {shape: rectangle}
-
-hub -> incident_triage_checklist
-hub -> common_issues_reference
-hub -> controller_upgrade_issues_in_detail
-hub -> capacity_management_issues
-hub -> subscription_and_lifecycle_issues
-hub -> diagnostic_commands_summary
-```
 
 ## Before you begin
 

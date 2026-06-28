@@ -5,23 +5,11 @@ tags:
 ---
 # Veeam — Encryption
 
-
 <div class="kb-summary">
 Veeam encryption: backup job-level encryption, encryption key management in the Veeam console, tape encryption, and password rotation procedures.
 
 *Applies to: Veeam 12.x*
 </div>
-![Veeam — Encryption](../../../../assets/backup-veeam-security-encryption-index.svg)
-
-
-
-
-```d2
-direction: down
-
-immutable_repository_configuration: "Immutable Repository Configuration" {shape: rectangle}
-
-```
 
 ## Immutable Repository Configuration
 

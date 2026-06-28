@@ -5,31 +5,11 @@ tags:
 ---
 # Subnets
 
-
 <div class="kb-summary">
 Subnets segment a Virtual Network address space into smaller ranges.
 
 *Applies to: Azure*
 </div>
-![Subnets](../../../../assets/cloud-azure-networking-subnets-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-service_endpoints: "Service Endpoints" {shape: rectangle}
-subnet_delegation: "Subnet Delegation" {shape: rectangle}
-nsg_and_route_table_association: "NSG and Route Table Association" {shape: rectangle}
-private_endpoint_network_policies: "Private Endpoint Network Policies" {shape: rectangle}
-
-center -> service_endpoints
-center -> subnet_delegation
-center -> nsg_and_route_table_association
-center -> private_endpoint_network_policies
-```
 
 ## Service Endpoints
 

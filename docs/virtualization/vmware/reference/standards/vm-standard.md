@@ -4,15 +4,11 @@ tags:
 ---
 # VM Standard
 
-
 <div class="kb-summary">
 VM Standard reference covering Overview, Templates, VMware Tools, Hardware Version, CPU and 5 more sections.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![VM Standard](../../../../assets/virtualization-vmware-reference-standards-vm-standard.svg)
-
-
 
 > Part of the [Standards](index.md) reference.
 

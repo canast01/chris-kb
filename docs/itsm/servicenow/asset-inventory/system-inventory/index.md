@@ -4,28 +4,11 @@ tags:
 ---
 # System Inventory Management
 
-
 <div class="kb-summary">
 System Inventory Management reference covering Overview, Required Fields, Daily Checks, Workflow.
 
 *Applies to: ServiceNow*
 </div>
-![System Inventory Management](../../../../assets/itsm-servicenow-asset-inventory-system-inventory-index.svg)
-
-
-
-```d2
-direction: right
-
-center: "ServiceNow" {shape: hexagon}
-required_fields: "Required Fields" {shape: rectangle}
-daily_checks: "Daily Checks" {shape: rectangle}
-workflow: "Workflow" {shape: rectangle}
-
-center -> required_fields
-center -> daily_checks
-center -> workflow
-```
 
 ## Overview
 

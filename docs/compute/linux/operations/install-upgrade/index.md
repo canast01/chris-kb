@@ -5,14 +5,11 @@ tags:
 ---
 # Linux — Install & Upgrade
 
-
 <div class="kb-summary">
 Linux install and upgrade: kickstart/preseed PXE setup, OS patching with `yum update` or `apt upgrade`, kernel module management, and decommission steps.
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>
-![Linux — Install & Upgrade](../../../../assets/compute-linux-operations-install-upgrade-index.svg)
-
 
 ```d2
 direction: right
@@ -58,7 +55,6 @@ flowchart TD
 
     bios --> grub --> kernelInit --> initrd --> systemdInit --> targets --> services
 ```
-
 
 ## In-Place Upgrade (RHEL 8 → 9)
 

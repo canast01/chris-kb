@@ -5,15 +5,11 @@ tags:
 ---
 # Ceph — Procedures
 
-
-
 <div class="kb-summary">
 Ceph operational procedures: add/replace/decommission OSDs, reweight for capacity balance, scrub management, PG repair, and controlled cluster maintenance with noout/norebalance flags.
 
 *Applies to: Ceph Reef / Squid*
 </div>
-![Ceph — Procedures](../../../../assets/storage-ceph-operations-procedures-index.svg)
-
 
 ```mermaid
 graph TD
@@ -38,25 +34,6 @@ graph TD
     CAP[Capacity Management]:::cap
     CAP --> RWU[reweight-by-utilization<br/>move data off full OSDs]:::step
     CAP --> ADDNODE[Add new node<br/>ceph orch host add]:::step
-```
-
-```d2
-direction: right
-
-hub: "Ceph\nOperations" {shape: hexagon}
-add_a_new_osd_single_device: "Add a New OSD (Single Device)" {shape: rectangle}
-replace_a_failed_osd: "Replace a Failed OSD" {shape: rectangle}
-decommission_a_host_remove_all_its_o: "Decommission a Host (Remove All Its OSDs)" {shape: rectangle}
-reweight_osds_to_balance_capacity: "Reweight OSDs to Balance Capacity" {shape: rectangle}
-manage_scrub_operations: "Manage Scrub Operations" {shape: rectangle}
-repair_an_inconsistent_pg: "Repair an Inconsistent PG" {shape: rectangle}
-
-hub -> add_a_new_osd_single_device
-hub -> replace_a_failed_osd
-hub -> decommission_a_host_remove_all_its_o
-hub -> reweight_osds_to_balance_capacity
-hub -> manage_scrub_operations
-hub -> repair_an_inconsistent_pg
 ```
 
 ## Before you begin

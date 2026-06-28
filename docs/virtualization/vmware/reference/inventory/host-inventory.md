@@ -4,34 +4,15 @@ tags:
 ---
 # Host Inventory
 
-
 <div class="kb-summary">
 Host Inventory reference covering Overview, Host Inventory Table, Fields Reference, Host Lifecycle Events, Adding a Host.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Host Inventory](../../../../assets/virtualization-vmware-reference-inventory-host-inventory.svg)
-
-
 
 > Part of the [Inventory](index.md) reference.
 
 ---
-
-```d2
-direction: right
-
-center: "Inventory" {shape: rectangle}
-host_inventory_table: "Host Inventory Table" {shape: rectangle}
-fields_reference: "Fields Reference" {shape: rectangle}
-host_lifecycle_events: "Host Lifecycle Events" {shape: rectangle}
-adding_a_host: "Adding a Host" {shape: rectangle}
-
-center -> host_inventory_table
-center -> fields_reference
-center -> host_lifecycle_events
-center -> adding_a_host
-```
 
 ## Overview
 

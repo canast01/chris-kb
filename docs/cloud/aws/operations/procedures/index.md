@@ -4,8 +4,6 @@ tags:
   - operations
 ---
 # AWS Operations — Procedures & Runbooks
-![AWS Operations — Procedures & Runbooks](../../../../assets/cloud-aws-operations-procedures-index.svg)
-
 
 ```bash
 # List RDS instances
@@ -41,27 +39,7 @@ aws rds stop-db-instance --db-instance-identifier <db-id>
 aws rds start-db-instance --db-instance-identifier <db-id>
 ```
 
-
 ---
-
-```d2
-direction: right
-
-hub: "AWS\nOperations" {shape: hexagon}
-launch_an_ec2_instance_aws_cli: "Launch an EC2 Instance (AWS CLI)" {shape: rectangle}
-create_and_attach_an_ebs_volume: "Create and Attach an EBS Volume" {shape: rectangle}
-create_an_s3_bucket_and_set_policy: "Create an S3 Bucket and Set Policy" {shape: rectangle}
-create_a_security_group_rule: "Create a Security Group Rule" {shape: rectangle}
-create_a_vpc_peering_connection: "Create a VPC Peering Connection" {shape: rectangle}
-configure_an_iam_role_and_policy: "Configure an IAM Role and Policy" {shape: rectangle}
-
-hub -> launch_an_ec2_instance_aws_cli
-hub -> create_and_attach_an_ebs_volume
-hub -> create_an_s3_bucket_and_set_policy
-hub -> create_a_security_group_rule
-hub -> create_a_vpc_peering_connection
-hub -> configure_an_iam_role_and_policy
-```
 
 ## Before you begin
 

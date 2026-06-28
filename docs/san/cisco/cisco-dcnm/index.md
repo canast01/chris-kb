@@ -9,10 +9,6 @@ Cisco Data Center Network Manager knowledge base covering SAN fabric management,
 
 *Applies to: Cisco MDS · Nexus*
 </div>
-![Cisco DCNM](../../../assets/san-cisco-cisco-dcnm-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

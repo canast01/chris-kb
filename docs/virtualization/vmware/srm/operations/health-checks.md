@@ -6,34 +6,11 @@ tags:
 ---
 # SRM — Health Checks
 
-
 <div class="kb-summary">
 SRM health checks: `Get-SrmRecoveryPlan`, site pair connectivity test, VM protection group status, replication lag review, and RPO compliance validation.
 
 *Applies to: SRM 8.x / 9.x*
 </div>
-
-
-
-
-```d2
-direction: right
-
-hub: "Site Recovery Manager\nOperations" {shape: hexagon}
-run_this_routine: "Run This Routine" {shape: rectangle}
-rpo_compliance_check: "RPO Compliance Check" {shape: rectangle}
-sra_status_arraybased_replication: "SRA Status (Array-Based Replication)" {shape: rectangle}
-placeholder_vms_at_recovery_site: "Placeholder VMs at Recovery Site" {shape: rectangle}
-recovery_plan_precheck: "Recovery Plan Pre-Check" {shape: rectangle}
-certificate_expiry: "Certificate Expiry" {shape: rectangle}
-
-hub -> run_this_routine
-hub -> rpo_compliance_check
-hub -> sra_status_arraybased_replication
-hub -> placeholder_vms_at_recovery_site
-hub -> recovery_plan_precheck
-hub -> certificate_expiry
-```
 
 ## Before you begin
 
@@ -282,7 +259,6 @@ Document test results and any issues found. Track trend of test durations — in
 | vSphere Replication health | vSphere Replication UI → Monitor | No replication errors |
 | Recovery plan status | SRM UI → Recovery Plans | All plans `Ready` |
 | Failed protection jobs | SRM UI → Tasks & Events | No failed jobs in last 7 days |
-
 
 ## Quarterly
 

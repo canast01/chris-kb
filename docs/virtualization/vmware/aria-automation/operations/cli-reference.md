@@ -16,28 +16,6 @@ Complete CLI reference for Aria Automation: vracli appliance management, kubectl
 </div>
 ![Aria Automation — CLI Reference](../../../../assets/virtualization-vmware-aria-automation-operations-cli-referen.svg)
 
-
-
-
-```d2
-direction: right
-
-hub: "Aria Automation\nOperations" {shape: hexagon}
-vracli_appliance_management: "vracli — Appliance Management" {shape: rectangle}
-kubectl_kubernetes_diagnostics: "kubectl — Kubernetes Diagnostics" {shape: rectangle}
-rest_api_authentication_and_token: "REST API — Authentication and Token" {shape: rectangle}
-rest_api_deployments: "REST API — Deployments" {shape: rectangle}
-rest_api_blueprints_and_catalog: "REST API — Blueprints and Catalog" {shape: rectangle}
-rest_api_projects_and_cloud_accounts: "REST API — Projects and Cloud Accounts" {shape: rectangle}
-
-hub -> vracli_appliance_management
-hub -> kubectl_kubernetes_diagnostics
-hub -> rest_api_authentication_and_token
-hub -> rest_api_deployments
-hub -> rest_api_blueprints_and_catalog
-hub -> rest_api_projects_and_cloud_accounts
-```
-
 ## Before you begin
 
 - **Access:** SSH to vRA appliance as `root`; REST API requires an Aria Automation admin account

@@ -42,15 +42,10 @@ configure_iscsi_or_fc_host_access -> validate
 ---
 
 # Dell Unity XT — Initial Deployment
-![Dell Unity XT — Initial Deployment](../../../../assets/storage-dell-unity-deploy-index.svg)
-
-
-
 
 This guide covers the initial deployment of a Dell Unity XT array from physical installation through validated host access. Applies to Unity XT 380, 480, 680, and 880 models running OE 5.x.
 
 ---
-
 
 ```mermaid
 flowchart TD

@@ -5,27 +5,12 @@ tags:
 ---
 # SRDF/S — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Overview, Write Commit Model, RTT Requirements, Recovery Time Standards.
 
 *Applies to: SRDF/S*
 </div>
 ![SRDF/S — How It Works](../../../../assets/storage-dell-srdf-s-architecture-how-it-works.svg)
-
-
-```d2
-direction: right
-
-center: "SRDF/S" {shape: hexagon}
-write_commit_model: "Write Commit Model" {shape: rectangle}
-rtt_requirements: "RTT Requirements" {shape: rectangle}
-recovery_time_standards: "Recovery Time Standards" {shape: rectangle}
-
-center -> write_commit_model
-center -> rtt_requirements
-center -> recovery_time_standards
-```
 
 ```plantuml
 @startuml
@@ -67,7 +52,6 @@ graph LR
   class HA host
   class HB dr
 ```
-
 
 ## RTT Requirements
 

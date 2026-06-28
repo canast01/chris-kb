@@ -3,10 +3,6 @@
 <div class="kb-summary">
 Cross-platform storage operational runbooks — volume expansion, LUN provisioning, replication failover, snapshot management, and host connectivity validation.
 </div>
-![Storage — Runbooks](../../assets/storage-runbooks-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-1">
 <a class="kb-card" href="volume-expansion/"><strong>Volume Expansion</strong><span>End-to-end volume expansion runbook — array LUN resize, host rescan, partition extension, and filesystem grow across Linux, Windows, LVM, and ESXi.</span></a>

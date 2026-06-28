@@ -10,9 +10,6 @@ PowerPath — Security reference: Authentication, Access Control, Encryption, Ha
 
 *Applies to: PowerPath*
 </div>
-![PowerPath — Security](../../../../assets/storage-dell-powerpath-security-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="authentication/"><strong>Authentication</strong><span>SSO, LDAP, local accounts, and identity sources.</span></a>

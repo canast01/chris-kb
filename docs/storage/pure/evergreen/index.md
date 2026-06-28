@@ -9,10 +9,6 @@ Pure Storage Evergreen hardware subscription model — non-disruptive controller
 
 *Applies to: Evergreen*
 </div>
-![Pure Storage Evergreen](../../../assets/storage-pure-evergreen-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

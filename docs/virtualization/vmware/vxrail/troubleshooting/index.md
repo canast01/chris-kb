@@ -7,15 +7,11 @@ search:
 ---
 # VxRail Troubleshooting
 
-
 <div class="kb-summary">
 VxRail troubleshooting notes for lifecycle failures, manager issues, host alerts, vSAN alerts, bundles, and network alerts.
 
 *Applies to: VxRail 7.x / 8.x*
 </div>
-![VxRail Troubleshooting](../../../../assets/virtualization-vmware-vxrail-troubleshooting-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

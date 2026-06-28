@@ -5,16 +5,11 @@ tags:
 ---
 # Azure — Install & Upgrade
 
-
 <div class="kb-summary">
 VM image management, patching via Azure Update Manager, and service upgrades.
 
 *Applies to: Azure*
 </div>
-![Azure — Install & Upgrade](../../../../assets/cloud-azure-operations-install-upgrade-index.svg)
-
-
-
 
 ---
 

@@ -4,35 +4,11 @@ tags:
 ---
 # Pre-Maintenance Checks
 
-
 <div class="kb-summary">
 Pre-Maintenance Checks reference covering Overview, Pre-Check Timeline, Environment Health Checklist, Backup Verification, Rollback Readiness and 2 more sections.
 
 *Applies to: ServiceNow*
 </div>
-![Pre-Maintenance Checks](../../../../assets/itsm-servicenow-maintenance-windows-pre-checks-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "ServiceNow" {shape: hexagon}
-precheck_timeline: "Pre-Check Timeline" {shape: rectangle}
-environment_health_checklist: "Environment Health Checklist" {shape: rectangle}
-backup_verification: "Backup Verification" {shape: rectangle}
-rollback_readiness: "Rollback Readiness" {shape: rectangle}
-team_and_access_readiness: "Team and Access Readiness" {shape: rectangle}
-final_go_nogo: "Final Go / No-Go" {shape: rectangle}
-
-center -> precheck_timeline
-center -> environment_health_checklist
-center -> backup_verification
-center -> rollback_readiness
-center -> team_and_access_readiness
-center -> final_go_nogo
-```
 
 ## Overview
 

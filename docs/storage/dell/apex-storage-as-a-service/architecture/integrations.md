@@ -5,16 +5,12 @@ tags:
 ---
 # APEX Storage as a Service — Integrations
 
-
 <div class="kb-summary">
 Integrations reference covering Notes on APEX Management Boundaries.
 
 *Applies to: APEX Storage-as-a-Service*
 </div>
 ![APEX Storage as a Service — Integrations](../../../../assets/storage-dell-apex-storage-as-a-service-architecture-integrat.svg)
-
-
-
 
 > Part of the [APEX Storage as a Service](../index.md) reference.
 
@@ -27,15 +23,6 @@ Integrations reference covering Notes on APEX Management Boundaries.
 | CloudIQ | Health scoring and alerting for APEX systems; APEX systems appear in CloudIQ by underlying hardware model |
 | Secure Connect Gateway (SCG) | Telemetry pipeline from on-premises hardware to CloudIQ and Dell support |
 | Dell field service | Hardware replacement and capacity additions are Dell-managed via APEX Console service requests |
-
-```d2
-direction: right
-
-center: "APEX Storage" {shape: hexagon}
-notes_on_apex_management_boundaries: "Notes on APEX Management Boundaries" {shape: rectangle}
-
-center -> notes_on_apex_management_boundaries
-```
 
 ## Notes on APEX Management Boundaries
 

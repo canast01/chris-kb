@@ -5,37 +5,12 @@ tags:
 ---
 # Unity — Encryption
 
-
 <div class="kb-summary">
 Encryption reference covering Encryption Layers, Data at Rest Encryption (D@RE), External Key Management (KMIP), Management Channel Encryption (TLS), iSCSI CHAP Authentication and 4 more sections.
 
 *Applies to: Unity XT*
 </div>
 ![Unity — Encryption](../../../../assets/storage-dell-unity-security-encryption.svg)
-
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-encryption_layers: "Encryption Layers" {shape: rectangle}
-data_at_rest_encryption_dre: "Data at Rest Encryption (D@RE)" {shape: rectangle}
-external_key_management_kmip: "External Key Management (KMIP)" {shape: rectangle}
-management_channel_encryption_tls: "Management Channel Encryption (TLS)" {shape: rectangle}
-iscsi_chap_authentication: "iSCSI CHAP Authentication" {shape: rectangle}
-nfs_kerberos_encryption: "NFS Kerberos Encryption" {shape: rectangle}
-core: "Unity XT Core" {shape: hexagon}
-
-external -> encryption_layers: traffic in
-encryption_layers -> data_at_rest_encryption_dre
-data_at_rest_encryption_dre -> external_key_management_kmip
-external_key_management_kmip -> management_channel_encryption_tls
-management_channel_encryption_tls -> iscsi_chap_authentication
-iscsi_chap_authentication -> nfs_kerberos_encryption
-nfs_kerberos_encryption -> core: secured path
-```
 
 ## Before you begin
 

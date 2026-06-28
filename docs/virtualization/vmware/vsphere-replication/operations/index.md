@@ -11,9 +11,6 @@ vSphere Replication daily operations — RPO monitoring, replication group manag
 
 *Applies to: vSphere Replication 8.x*
 </div>
-![vSphere Replication — Operations](../../../../assets/virtualization-vmware-vsphere-replication-operations-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

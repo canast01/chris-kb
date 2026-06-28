@@ -6,16 +6,11 @@ tags:
 ---
 # Infrastructure Health Monitoring
 
-
 <div class="kb-summary">
 Infrastructure Health Monitoring reference covering Server Health (Windows), Storage Array Health, Network Health, Monitoring Agent Validation, Escalation Thresholds (reference).
 
 *Applies to: Aria Ops 8.x*
 </div>
-![Infrastructure Health Monitoring](../../../../assets/virtualization-vmware-aria-operations-operations-health-moni.svg)
-
-
-
 
 **Pure FlashArray:**
 ```bash
@@ -33,21 +28,6 @@ symsys -sid <sid> list -failed
 # Unity — CLI
 uemcli -d <ip> /sys/general show
 uemcli -d <ip> /sys/alert show
-```
-
-```d2
-direction: right
-
-hub: "Aria Operations\nOperations" {shape: hexagon}
-network_health: "Network Health" {shape: rectangle}
-monitoring_agent_validation: "Monitoring Agent Validation" {shape: rectangle}
-escalation_thresholds_reference: "Escalation Thresholds (reference)" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> network_health
-hub -> monitoring_agent_validation
-hub -> escalation_thresholds_reference
-hub -> verify
 ```
 
 ## Before you begin

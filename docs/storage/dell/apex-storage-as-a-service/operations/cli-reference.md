@@ -5,16 +5,12 @@ tags:
 ---
 # APEX Storage as a Service — API Reference
 
-
 <div class="kb-summary">
 APEX STaaS API reference: CloudIQ REST API for capacity reporting, `GET /v1/storage-objects`, snapshot management endpoints, and OAuth2 authentication.
 
 *Applies to: APEX Storage-as-a-Service*
 </div>
 ![APEX Storage as a Service — API Reference](../../../../assets/storage-dell-apex-storage-as-a-service-operations-cli-refere.svg)
-
-
-
 
 ---
 
@@ -28,25 +24,6 @@ APEX Block Storage surfaces in CloudIQ for performance and health monitoring —
 > **API documentation**: developer.dell.com
 
 ---
-
-```d2
-direction: right
-
-hub: "APEX Storage\nOperations" {shape: hexagon}
-quickreference_table: "Quick-Reference Table" {shape: rectangle}
-dell_api_authentication: "Dell API Authentication" {shape: rectangle}
-apex_systems_api: "APEX Systems API" {shape: rectangle}
-subscription_api: "Subscription API" {shape: rectangle}
-metrics_api: "Metrics API" {shape: rectangle}
-cloudiq_integration: "CloudIQ Integration" {shape: rectangle}
-
-hub -> quickreference_table
-hub -> dell_api_authentication
-hub -> apex_systems_api
-hub -> subscription_api
-hub -> metrics_api
-hub -> cloudiq_integration
-```
 
 ## Before you begin
 

@@ -5,35 +5,12 @@ tags:
 ---
 # Data Domain — Install & Upgrade
 
-
 <div class="kb-summary">
 Install & Upgrade reference covering DDOS Version Matrix, Backup Software Compatibility, Hardware Model Lifecycle, Upgrade Procedure — Single Node (In-Service), Upgrade Procedure — HA Active-Standby Pair (Rolling) and 2 more sections.
 
 *Applies to: Data Domain DD OS 7.x*
 </div>
 ![Data Domain — Install & Upgrade](../../../../assets/storage-dell-data-domain-operations-install-upgrade.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "Data Domain\nOperations" {shape: hexagon}
-ddos_version_matrix: "DDOS Version Matrix" {shape: rectangle}
-backup_software_compatibility: "Backup Software Compatibility" {shape: rectangle}
-hardware_model_lifecycle: "Hardware Model Lifecycle" {shape: rectangle}
-upgrade_procedure_single_node_inserv: "Upgrade Procedure — Single Node (In-Service)" {shape: rectangle}
-upgrade_procedure_ha_activestandby_p: "Upgrade Procedure — HA Active-Standby Pair (Rolling)" {shape: rectangle}
-eol_tracking: "EOL Tracking" {shape: rectangle}
-
-hub -> ddos_version_matrix
-hub -> backup_software_compatibility
-hub -> hardware_model_lifecycle
-hub -> upgrade_procedure_single_node_inserv
-hub -> upgrade_procedure_ha_activestandby_p
-hub -> eol_tracking
-```
 
 ## Before you begin
 

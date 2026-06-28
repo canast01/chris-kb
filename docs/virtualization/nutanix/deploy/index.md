@@ -13,13 +13,8 @@ End-to-end Nutanix cluster deployment — Foundation imaging, IPMI/iDRAC pre-fli
 
 *Applies to: AOS 6.x · AHV*
 </div>
-![Nutanix — Deploy](../../../assets/virtualization-nutanix-deploy-index.svg)
-
-
-
 
 ---
-
 
 ```mermaid
 flowchart TD

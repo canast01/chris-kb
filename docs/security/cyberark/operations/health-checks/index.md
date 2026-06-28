@@ -5,15 +5,11 @@ tags:
 ---
 # CyberArk — Health Checks
 
-
 <div class="kb-summary">
 Daily operations focus on confirming that the Vault service is running, CPM is successfully rotating passwords, PSM is brokering sessions without errors, and no critical accounts are in a failed rotation state.
 
 *Applies to: CyberArk PAM*
 </div>
-![CyberArk — Health Checks](../../../../assets/security-cyberark-operations-health-checks-index.svg)
-
-
 
 ```d2
 direction: right

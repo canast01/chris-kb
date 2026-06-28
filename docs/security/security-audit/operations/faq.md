@@ -11,25 +11,7 @@ Common questions about Security Audit operations, configuration, and troubleshoo
 </div>
 ![Security Audit — Frequently Asked Questions](../../../assets/security-security-audit-operations-faq.svg)
 
-
 ![Security Audit FAQ](../../../assets/security-security-audit-operations-faq.svg)
-
-```d2
-direction: right
-
-hub: "Operations\nOperations" {shape: hexagon}
-general: "General" {shape: rectangle}
-configuration: "Configuration" {shape: rectangle}
-operations: "Operations" {shape: rectangle}
-troubleshooting: "Troubleshooting" {shape: rectangle}
-backup_and_recovery: "Backup and Recovery" {shape: rectangle}
-
-hub -> general
-hub -> configuration
-hub -> operations
-hub -> troubleshooting
-hub -> backup_and_recovery
-```
 
 ## General
 

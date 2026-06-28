@@ -10,20 +10,6 @@ Top-10 SRM commands for protection groups, recovery plans, test failover, and fa
 </div>
 ![SRM Cheat Sheet](../../assets/reference-cheat-sheets-srm.svg)
 
-
-
-
-```d2
-direction: right
-
-center: "Cheat Sheets" {shape: rectangle}
-powercli: "PowerCLI" {shape: rectangle}
-rest_api: "REST API" {shape: rectangle}
-
-center -> powercli
-center -> rest_api
-```
-
 ## PowerCLI
 
 ```powershell

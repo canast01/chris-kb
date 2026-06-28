@@ -12,28 +12,6 @@ EVS backup strategy: SDDC Manager configuration backup, vCenter VAMI backup, NSX
 </div>
 ![Amazon EVS — Backup & Restore](../../../../assets/cloud-aws-evs-operations-backup-restore.svg)
 
-
-
-
-```d2
-direction: right
-
-hub: "AWS EVS\nOperations" {shape: hexagon}
-backup_architecture: "Backup Architecture" {shape: rectangle}
-sddc_manager_configuration_backup: "SDDC Manager Configuration Backup" {shape: rectangle}
-vcenter_db_backup: "vCenter DB Backup" {shape: rectangle}
-nsxt_config_backup: "NSX-T Config Backup" {shape: rectangle}
-vm_workload_backup: "VM Workload Backup" {shape: rectangle}
-restore_procedures: "Restore Procedures" {shape: rectangle}
-
-hub -> backup_architecture
-hub -> sddc_manager_configuration_backup
-hub -> vcenter_db_backup
-hub -> nsxt_config_backup
-hub -> vm_workload_backup
-hub -> restore_procedures
-```
-
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

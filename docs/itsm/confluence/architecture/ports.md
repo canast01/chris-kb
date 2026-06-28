@@ -16,29 +16,6 @@ Firewall port reference for Confluence (Data Center, self-hosted). Covers web UI
 </div>
 ![Confluence — Ports and Network Requirements](../../../assets/itsm-confluence-architecture-ports.svg)
 
-
-
-
-
-```d2
-direction: right
-
-center: "Architecture" {shape: hexagon}
-inbound_client_access: "Inbound — Client Access" {shape: rectangle}
-confluence_data_center_cluster: "Confluence Data Center Cluster" {shape: rectangle}
-confluence_to_database: "Confluence to Database" {shape: rectangle}
-confluence_outbound_services: "Confluence Outbound Services" {shape: rectangle}
-firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> inbound_client_access
-center -> confluence_data_center_cluster
-center -> confluence_to_database
-center -> confluence_outbound_services
-center -> firewall_zone_summary
-center -> verify
-```
-
 ## Inbound — Client Access
 
 | Port | Protocol | Source | Purpose |

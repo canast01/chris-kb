@@ -5,12 +5,9 @@ tags:
 ---
 # Storage Volume Expansion Runbook
 
-
 <div class="kb-summary">
 | Field | Value | |---|---| | Risk | Medium | | Approval | Change ticket required; confirm array pool capacity before expanding | | Estimated time | 20–40 minutes | | Impact | No downtime for online expansion; brief I/O pause during partition resize on some platforms |
 </div>
-![Storage Volume Expansion Runbook](../../../assets/storage-runbooks-volume-expansion-index.svg)
-
 
 | Field | Value |
 |---|---|
@@ -19,27 +16,7 @@ tags:
 | Estimated time | 20–40 minutes |
 | Impact | No downtime for online expansion; brief I/O pause during partition resize on some platforms |
 
-```d2
-direction: right
-
-center: "Volume Expansion" {shape: hexagon}
-process_flow: "Process Flow" {shape: rectangle}
-step_2_rescan_storage_on_the_host: "Step 2 — Rescan Storage on the Host" {shape: rectangle}
-step_3a_resize_partition: "Step 3a — Resize Partition" {shape: rectangle}
-step_3b_resize_filesystem_lv: "Step 3b — Resize Filesystem / LV" {shape: rectangle}
-step_4_validate: "Step 4 — Validate" {shape: rectangle}
-rollback: "Rollback" {shape: rectangle}
-
-center -> process_flow
-center -> step_2_rescan_storage_on_the_host
-center -> step_3a_resize_partition
-center -> step_3b_resize_filesystem_lv
-center -> step_4_validate
-center -> rollback
-```
-
 ## Process Flow
-
 
 **Dell PowerMax (Solutions Enabler):**
 ```bash

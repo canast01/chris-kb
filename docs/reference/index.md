@@ -8,10 +8,6 @@ tags:
 <div class="kb-summary">
 Quick-reference material for VMware infrastructure: cheat sheets, interaction maps, decision trees, glossaries, and version matrices.
 </div>
-![Quick Reference](../assets/reference-index.svg)
-
-
-
 
 <div class="kb-grid">
 <a class="kb-card" href="cheat-sheets/">

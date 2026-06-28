@@ -7,16 +7,11 @@ search:
 ---
 # Venafi — Troubleshooting
 
-
 <div class="kb-summary">
 Diagnosing Venafi discovery failures, CA connector errors, policy violations, and certificate renewal workflow issues.
 
 *Applies to: Venafi TLS Protect*
 </div>
-![Venafi — Troubleshooting](../../../assets/security-venafi-troubleshooting-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

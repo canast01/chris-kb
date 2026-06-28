@@ -14,19 +14,6 @@ What to do in your first hour with a new NSX-T environment. Covers manager orien
 
 ---
 
-```d2
-direction: right
-
-center: "Quick Start" {shape: hexagon}
-1_orient: "1. Orient" {shape: rectangle}
-2_first_health_checks: "2. First Health Checks" {shape: rectangle}
-3_common_first_tasks: "3. Common First Tasks" {shape: rectangle}
-
-center -> 1_orient
-center -> 2_first_health_checks
-center -> 3_common_first_tasks
-```
-
 ## 1. Orient
 
 Start in the NSX Manager UI and build a mental map of the overlay network.

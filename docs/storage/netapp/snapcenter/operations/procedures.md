@@ -5,35 +5,13 @@ tags:
 ---
 # SnapCenter — Procedures
 
-
 <div class="kb-summary">
 SnapCenter procedures: adding storage systems, configuring policies and resource groups, scheduling backups, cloning for test/dev, and decommissioning plug-in hosts.
 
 *Applies to: SnapCenter 5.x*
 </div>
 
-
-
 ---
-
-```d2
-direction: right
-
-hub: "SnapCenter\nOperations" {shape: hexagon}
-change_readiness: "Change Readiness" {shape: rectangle}
-maintenance_window: "Maintenance Window" {shape: rectangle}
-postchange_validation: "Post-Change Validation" {shape: rectangle}
-backup_jobs: "Backup Jobs" {shape: rectangle}
-policies: "Policies" {shape: rectangle}
-add_a_host_to_snapcenter: "Add a Host to SnapCenter" {shape: rectangle}
-
-hub -> change_readiness
-hub -> maintenance_window
-hub -> postchange_validation
-hub -> backup_jobs
-hub -> policies
-hub -> add_a_host_to_snapcenter
-```
 
 ## Before you begin
 

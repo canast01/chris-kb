@@ -37,15 +37,10 @@ validate -> validate
 ---
 
 # Nexus Dashboard — Initial Deployment
-![Nexus Dashboard — Initial Deployment](../../../../assets/san-cisco-nexus-dashboard-deploy-index.svg)
-
-
-
 
 This guide covers deploying Cisco Nexus Dashboard (ND) from OVA to a validated 3-node cluster with NDFC and/or NDI services installed and a first site connected. Nexus Dashboard is the unified platform that hosts Cisco's NDFC (formerly DCNM), NDI (Network Insights), and other data center management services.
 
 ---
-
 
 ```mermaid
 flowchart TD

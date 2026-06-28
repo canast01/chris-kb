@@ -11,13 +11,6 @@ Veeam Backup & Replication — Backup Server scheduling, Proxy data movement via
 
 *Applies to: Veeam Backup & Replication 12.x*
 </div>
-![Veeam](../../assets/backup-veeam-index.svg)
-
-
-
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

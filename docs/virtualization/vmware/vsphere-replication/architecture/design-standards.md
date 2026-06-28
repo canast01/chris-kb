@@ -6,7 +6,6 @@ tags:
 ---
 # vSphere Replication — Design Standards
 
-
 <div class="kb-summary">
 Design Standards reference covering VRA Sizing, VRS Sizing, Bandwidth Estimation, RPO Selection, Target Datastore Sizing and 3 more sections.
 
@@ -14,30 +13,9 @@ Design Standards reference covering VRA Sizing, VRS Sizing, Bandwidth Estimation
 </div>
 ![vSphere Replication — Design Standards](../../../../assets/virtualization-vmware-vsphere-replication-architecture-desig.svg)
 
-
   Sizing and Bandwidth Design
 
-
 ---
-
-```d2
-direction: right
-
-center: "vSphere Replication" {shape: hexagon}
-vra_sizing: "VRA Sizing" {shape: rectangle}
-vrs_sizing: "VRS Sizing" {shape: rectangle}
-bandwidth_estimation: "Bandwidth Estimation" {shape: rectangle}
-rpo_selection: "RPO Selection" {shape: rectangle}
-target_datastore_sizing: "Target Datastore Sizing" {shape: rectangle}
-replication_network_design: "Replication Network Design" {shape: rectangle}
-
-center -> vra_sizing
-center -> vrs_sizing
-center -> bandwidth_estimation
-center -> rpo_selection
-center -> target_datastore_sizing
-center -> replication_network_design
-```
 
 ## VRA Sizing
 

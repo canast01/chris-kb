@@ -12,30 +12,6 @@ vCenter SSO configuration, Active Directory integration for vSphere and NSX-T, M
 </div>
 ![Amazon EVS — Authentication](../../../../assets/cloud-aws-evs-security-authentication.svg)
 
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-vcenter_sso_domain: "vCenter SSO Domain" {shape: rectangle}
-adldap_integration: "AD/LDAP Integration" {shape: rectangle}
-nsxt_ldap_integration: "NSX-T LDAP Integration" {shape: rectangle}
-aws_iam_identity_center_integration: "AWS IAM Identity Center Integration" {shape: rectangle}
-service_account_management: "Service Account Management" {shape: rectangle}
-aws_console_mfa_enforcement: "AWS Console MFA Enforcement" {shape: rectangle}
-core: "AWS EVS Core" {shape: hexagon}
-
-external -> vcenter_sso_domain: traffic in
-vcenter_sso_domain -> adldap_integration
-adldap_integration -> nsxt_ldap_integration
-nsxt_ldap_integration -> aws_iam_identity_center_integration
-aws_iam_identity_center_integration -> service_account_management
-service_account_management -> aws_console_mfa_enforcement
-aws_console_mfa_enforcement -> core: secured path
-```
-
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

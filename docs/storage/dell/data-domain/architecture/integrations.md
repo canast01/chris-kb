@@ -5,33 +5,12 @@ tags:
 ---
 # Data Domain — Integrations
 
-
 <div class="kb-summary">
 Integrations reference covering DD Boost Backup Flow, NetBackup (OST with DD Boost), CommVault (SISL + DD Boost), Avamar (RAIN Dedup with DD), NFS — Generic Backup Targets and 5 more sections.
 
 *Applies to: Data Domain DD OS 7.x*
 </div>
 ![Data Domain — Integrations](../../../../assets/storage-dell-data-domain-architecture-integrations.svg)
-
-
-```d2
-direction: right
-
-center: "Data Domain" {shape: hexagon}
-dd_boost_backup_flow: "DD Boost Backup Flow" {shape: rectangle}
-commvault_sisl_dd_boost: "CommVault (SISL + DD Boost)" {shape: rectangle}
-avamar_rain_dedup_with_dd: "Avamar (RAIN Dedup with DD)" {shape: rectangle}
-nfs_generic_backup_targets: "NFS — Generic Backup Targets" {shape: rectangle}
-cifssmb_windows_backup_targets: "CIFS/SMB — Windows Backup Targets" {shape: rectangle}
-rest_api: "REST API" {shape: rectangle}
-
-center -> dd_boost_backup_flow
-center -> commvault_sisl_dd_boost
-center -> avamar_rain_dedup_with_dd
-center -> nfs_generic_backup_targets
-center -> cifssmb_windows_backup_targets
-center -> rest_api
-```
 
 ## DD Boost Backup Flow
 
@@ -52,7 +31,6 @@ graph TD
     sisl --> nvramCache
     nvramCache --> ddfs
 ```
-
 
 ## CommVault (SISL + DD Boost)
 

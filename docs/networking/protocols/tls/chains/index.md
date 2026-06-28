@@ -4,34 +4,11 @@ tags:
 ---
 # TLS Certificate Chains
 
-
 <div class="kb-summary">
 A certificate chain (or chain of trust) links a server certificate back to a trusted root CA through one or more intermediate CAs.
 </div>
-![TLS Certificate Chains](../../../../assets/networking-protocols-tls-chains-index.svg)
-
-
 
 If the chain is broken or incomplete, clients will reject the certificate.
-
-```d2
-direction: right
-
-center: "TLS" {shape: hexagon}
-chain_structure: "Chain Structure" {shape: rectangle}
-why_chains_break: "Why Chains Break" {shape: rectangle}
-checking_the_chain: "Checking the Chain" {shape: rectangle}
-building_a_chain_bundle: "Building a Chain Bundle" {shape: rectangle}
-configuring_chain_in_common_web_serv: "Configuring Chain in Common Web Servers" {shape: rectangle}
-installing_internal_ca_certificates: "Installing Internal CA Certificates" {shape: rectangle}
-
-center -> chain_structure
-center -> why_chains_break
-center -> checking_the_chain
-center -> building_a_chain_bundle
-center -> configuring_chain_in_common_web_serv
-center -> installing_internal_ca_certificates
-```
 
 ## Chain Structure
 

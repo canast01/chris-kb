@@ -11,9 +11,6 @@ Aria Suite Lifecycle daily operations — product upgrades, patch management, lo
 
 *Applies to: Aria LCM 8.x*
 </div>
-![Aria Suite Lifecycle — Operations](../../../../assets/virtualization-vmware-aria-suite-lifecycle-operations-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

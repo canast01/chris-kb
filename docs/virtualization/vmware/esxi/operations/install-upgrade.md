@@ -7,32 +7,12 @@ tags:
 ---
 # ESXi Install & Upgrade
 
-
 <div class="kb-summary">
 ESXi Install & Upgrade reference covering vSphere Update Manager (VUM) — Legacy, Host Upgrade Procedure, ESXi Patch Application (Manual / Standalone), Upgrade and Patching Readiness Checklist, Driver and Firmware Lifecycle and 1 more sections.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
 ![ESXi Install & Upgrade](../../../../assets/virtualization-vmware-esxi-operations-install-upgrade.svg)
-
-
-
-
-
-```d2
-direction: right
-
-hub: "ESXi\nOperations" {shape: hexagon}
-upgrade_and_patching_readiness_check: "Upgrade and Patching Readiness Checklist" {shape: rectangle}
-driver_and_firmware_lifecycle: "Driver and Firmware Lifecycle" {shape: rectangle}
-rollback_considerations: "Rollback Considerations" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> upgrade_and_patching_readiness_check
-hub -> driver_and_firmware_lifecycle
-hub -> rollback_considerations
-hub -> verify
-```
 
 ## Before you begin
 

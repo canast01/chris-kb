@@ -6,7 +6,6 @@ tags:
 # NetApp Keystone — Operations: Backup & Restore
 ![NetApp Keystone — Operations: Backup & Restore](../../../../assets/storage-netapp-keystone-operations-backup-restore.svg)
 
-
 ```bash
 # SSH into Keystone Collector VM
 ssh admin@<keystone-collector-ip>
@@ -29,15 +28,6 @@ keystone-config import --input /tmp/ks-config-<date>.tar.gz
 # Verify after import
 keystone-config validate
 keystone-collector status
-```
-
-```d2
-direction: right
-
-hub: "Keystone STaaS\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

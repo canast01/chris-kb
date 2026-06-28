@@ -4,16 +4,11 @@ tags:
 ---
 # Venafi — Encryption
 
-
 <div class="kb-summary">
 HSM integration protects the CA private keys and Venafi service credentials. Keys for high-value services (CA certificates, wildcard certificates, code signing) must be stored in an HSM or managed within CyberArk with controlled retrieval.
 
 *Applies to: Venafi TLS Protect*
 </div>
-![Venafi — Encryption](../../../../assets/security-venafi-security-encryption-index.svg)
-
-
-
 
 ```d2
 direction: down

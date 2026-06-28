@@ -13,30 +13,6 @@ Managing vSphere encryption via PowerCLI — vSAN encryption enablement and key 
 </div>
 ![PowerCLI — Encryption](../../../../assets/virtualization-vmware-powercli-security-encryption.svg)
 
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-vsan_encryption_via_powercli: "vSAN Encryption via PowerCLI" {shape: rectangle}
-vm_encryption_vsphere_vmcrypt: "VM Encryption (vSphere VMcrypt)" {shape: rectangle}
-kms_cluster_management: "KMS Cluster Management" {shape: rectangle}
-encrypted_credential_files: "Encrypted Credential Files" {shape: rectangle}
-tls_and_certificate_settings: "TLS and Certificate Settings" {shape: rectangle}
-audit_encryption_state: "Audit Encryption State" {shape: rectangle}
-core: "PowerCLI Core" {shape: hexagon}
-
-external -> vsan_encryption_via_powercli: traffic in
-vsan_encryption_via_powercli -> vm_encryption_vsphere_vmcrypt
-vm_encryption_vsphere_vmcrypt -> kms_cluster_management
-kms_cluster_management -> encrypted_credential_files
-encrypted_credential_files -> tls_and_certificate_settings
-tls_and_certificate_settings -> audit_encryption_state
-audit_encryption_state -> core: secured path
-```
-
 ## Before you begin
 
 - **Access:** vCenter Administrator role

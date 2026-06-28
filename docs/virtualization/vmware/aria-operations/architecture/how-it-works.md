@@ -6,36 +6,12 @@ tags:
 ---
 # Aria Operations — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Overview, Cluster Topology, Node Roles, Sizing, Core Internal Services and 3 more sections.
 
 *Applies to: Aria Operations 8.x*
 </div>
 ![Aria Operations — How It Works](../../../../assets/virtualization-vmware-aria-operations-architecture-how-it-wo.svg)
-
-
-
-
-
-```d2
-direction: right
-
-center: "Aria Operations" {shape: hexagon}
-cluster_topology: "Cluster Topology" {shape: rectangle}
-node_roles: "Node Roles" {shape: rectangle}
-sizing: "Sizing" {shape: rectangle}
-core_internal_services: "Core Internal Services" {shape: rectangle}
-adapters: "Adapters" {shape: rectangle}
-persistent_storage: "Persistent Storage" {shape: rectangle}
-
-center -> cluster_topology
-center -> node_roles
-center -> sizing
-center -> core_internal_services
-center -> adapters
-center -> persistent_storage
-```
 
 ```plantuml
 @startuml

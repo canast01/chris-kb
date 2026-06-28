@@ -12,25 +12,6 @@ Array naming standards, team access model, alert threshold configuration, and op
 </div>
 ![Pure1 — Design Standards](../../../../assets/storage-pure-pure1-architecture-design-standards.svg)
 
-
-
-```d2
-direction: right
-
-center: "Pure1" {shape: hexagon}
-array_naming_standards: "Array Naming Standards" {shape: rectangle}
-access_model: "Access Model" {shape: rectangle}
-alert_threshold_baselines: "Alert Threshold Baselines" {shape: rectangle}
-operational_standards: "Operational Standards" {shape: rectangle}
-configuration_checklist: "Configuration Checklist" {shape: rectangle}
-
-center -> array_naming_standards
-center -> access_model
-center -> alert_threshold_baselines
-center -> operational_standards
-center -> configuration_checklist
-```
-
 ## Array Naming Standards
 
 Array names in Pure1 are inherited from the array's configured hostname. Enforce the hostname standard at array deployment — it cannot be changed without array rename.

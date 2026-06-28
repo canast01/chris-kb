@@ -5,33 +5,11 @@ tags:
 ---
 # Windows Server — Procedures
 
-
 <div class="kb-summary">
 Windows Server operational procedures: disk management, role and feature install, IIS/MSMQ configuration, performance counter review, and patching runbook.
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
-![Windows Server — Procedures](../../../../assets/compute-windows-server-operations-procedures-index.svg)
-
-
-```d2
-direction: right
-
-hub: "Windows Server\nOperations" {shape: hexagon}
-key_infrastructure_service_dependenc: "Key Infrastructure Service Dependencies" {shape: rectangle}
-service_management: "Service Management" {shape: rectangle}
-patching: "Patching" {shape: rectangle}
-install_a_windows_server_role: "Install a Windows Server Role" {shape: rectangle}
-configure_ntp: "Configure NTP" {shape: rectangle}
-add_a_disk_and_format: "Add a Disk and Format" {shape: rectangle}
-
-hub -> key_infrastructure_service_dependenc
-hub -> service_management
-hub -> patching
-hub -> install_a_windows_server_role
-hub -> configure_ntp
-hub -> add_a_disk_and_format
-```
 
 ## Before you begin
 
@@ -60,7 +38,6 @@ flowchart TD
     w32time --> netlogon
     bfe --> winrm
 ```
-
 
 ---
 

@@ -4,16 +4,11 @@ tags:
 ---
 # InsightIQ: Scheduled Reports, CSV Export, and SLA Reporting
 
-
 <div class="kb-summary">
 InsightIQ: Scheduled Reports, CSV Export, and SLA Reporting reference covering CSV Export for Analysis, SLA Reporting, Common Report Issues.
 
 *Applies to: InsightIQ*
 </div>
-![InsightIQ: Scheduled Reports, CSV Export, and SLA Reporting](../../../../assets/storage-netapp-insightiq-reports-index.svg)
-
-
-
 
 Typical SLA thresholds for NAS workloads:
 
@@ -23,15 +18,6 @@ Typical SLA thresholds for NAS workloads:
 | Home directories (SMB) | < 20 ms average | > 500 MB/s |
 | Analytics (HDFS) | < 100 ms average | > 5 GB/s |
 | Archive (cold NFS) | < 200 ms | Best effort |
-
-```d2
-direction: right
-
-center: "InsightIQ" {shape: hexagon}
-common_report_issues: "Common Report Issues" {shape: rectangle}
-
-center -> common_report_issues
-```
 
 ## Common Report Issues
 

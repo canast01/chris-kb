@@ -5,33 +5,11 @@ tags:
 ---
 # VxRail Node Health Review
 
-
 <div class="kb-summary">
 VxRail Node Health Review reference covering Overview, Pre-Checks, Steps, Validation, Rollback and 1 more sections.
 
 *Applies to: VxRail 7.x / 8.x*
 </div>
-![VxRail Node Health Review](../../../../assets/virtualization-vmware-vxrail-operations-node-health-review.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "VxRail\nOperations" {shape: hexagon}
-prechecks: "Pre-Checks" {shape: rectangle}
-steps: "Steps" {shape: rectangle}
-validation: "Validation" {shape: rectangle}
-rollback: "Rollback" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> prechecks
-hub -> steps
-hub -> validation
-hub -> rollback
-hub -> verify
-```
 
 ## Before you begin
 

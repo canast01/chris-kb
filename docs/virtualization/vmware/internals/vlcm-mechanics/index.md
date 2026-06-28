@@ -10,8 +10,6 @@ vSphere Lifecycle Manager (vLCM) introduces image-based management as the replac
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![vLCM Mechanics](../../../../assets/virtualization-vmware-internals-vlcm-mechanics-index.svg)
-
 
 ```mermaid
 graph TD
@@ -42,25 +40,6 @@ graph TD
     REM --> REBOOT
     REBOOT --> REJOIN
     REJOIN -->|Next host| MM
-```
-
-```d2
-direction: right
-
-center: "Vlcm Mechanics" {shape: hexagon}
-imagebased_vs_baselinebased_manageme: "Image-Based vs Baseline-Based Management" {shape: rectangle}
-cluster_image_components: "Cluster Image Components" {shape: rectangle}
-depot_configuration: "Depot Configuration" {shape: rectangle}
-compliance_scan_and_drift_detection: "Compliance Scan and Drift Detection" {shape: rectangle}
-remediation_coordination_with_drs: "Remediation Coordination with DRS" {shape: rectangle}
-rolling_remediation: "Rolling Remediation" {shape: rectangle}
-
-center -> imagebased_vs_baselinebased_manageme
-center -> cluster_image_components
-center -> depot_configuration
-center -> compliance_scan_and_drift_detection
-center -> remediation_coordination_with_drs
-center -> rolling_remediation
 ```
 
 ## Image-Based vs Baseline-Based Management
@@ -139,8 +118,6 @@ If DRS cannot evacuate all VMs (e.g., anti-affinity prevents it, admission contr
 ## Rolling Remediation
 
 By default, vLCM remediates one host at a time (sequential). Parallelism is configurable:
-
-
 
 | Setting | Behavior | Risk |
 |---------|----------|------|

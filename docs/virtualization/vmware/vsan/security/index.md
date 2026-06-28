@@ -12,10 +12,6 @@ Security reference for VMware vSAN. Covers vCenter SSO authentication, role-base
 
 *Applies to: vSAN 7.x / 8.x*
 </div>
-![vSAN — Security](../../../../assets/virtualization-vmware-vsan-security-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

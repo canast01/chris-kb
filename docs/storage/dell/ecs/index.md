@@ -9,10 +9,6 @@ Scale-out software-defined object storage — S3, Swift, and CAS APIs, geo-distr
 
 *Applies to: ECS 3.x*
 </div>
-![Dell ECS](../../../assets/storage-dell-ecs-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 
@@ -37,25 +33,6 @@ Scale-out software-defined object storage — S3, Swift, and CAS APIs, geo-distr
 </a>
 
 </div>
-
-```d2
-direction: right
-
-center: "ECS" {shape: hexagon}
-where_it_fits: "Where It Fits" {shape: rectangle}
-daily_checks: "Daily Checks" {shape: rectangle}
-health_commands: "Health Commands" {shape: rectangle}
-common_issues: "Common Issues" {shape: rectangle}
-operational_tasks: "Operational Tasks" {shape: rectangle}
-upgrade_notes: "Upgrade Notes" {shape: rectangle}
-
-center -> where_it_fits
-center -> daily_checks
-center -> health_commands
-center -> common_issues
-center -> operational_tasks
-center -> upgrade_notes
-```
 
 ## Overview
 

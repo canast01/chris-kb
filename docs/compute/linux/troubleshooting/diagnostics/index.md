@@ -12,10 +12,6 @@ Linux diagnostic commands: query journald for service errors, read dmesg for har
 
 *Applies to: RHEL 8/9 · Ubuntu 22.04/24.04 LTS*
 </div>
-![Linux — Diagnostics](../../../../assets/compute-linux-troubleshooting-diagnostics-index.svg)
-
-
-
 
 ```mermaid
 graph TD

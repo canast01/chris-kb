@@ -4,8 +4,6 @@ tags:
   - servicenow
 ---
 # ServiceNow — Operations Procedures
-![ServiceNow — Operations Procedures](../../../../assets/itsm-servicenow-operations-procedures-index.svg)
-
 
 ```yaml
 New → In Progress → On Hold → Resolved → Closed
@@ -282,25 +280,6 @@ done
 ```
 
 ---
-
-```d2
-direction: right
-
-hub: "ServiceNow\nOperations" {shape: hexagon}
-create_an_incident: "Create an Incident" {shape: rectangle}
-escalate_an_incident: "Escalate an Incident" {shape: rectangle}
-create_a_change_request: "Create a Change Request" {shape: rectangle}
-approve_or_reject_a_change: "Approve or Reject a Change" {shape: rectangle}
-create_a_problem_record: "Create a Problem Record" {shape: rectangle}
-configure_a_business_rule_or_workflo: "Configure a Business Rule or Workflow" {shape: rectangle}
-
-hub -> create_an_incident
-hub -> escalate_an_incident
-hub -> create_a_change_request
-hub -> approve_or_reject_a_change
-hub -> create_a_problem_record
-hub -> configure_a_business_rule_or_workflo
-```
 
 ## Before you begin
 

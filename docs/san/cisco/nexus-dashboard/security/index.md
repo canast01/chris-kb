@@ -5,16 +5,11 @@ tags:
 ---
 # Nexus Dashboard — Security
 
-
 <div class="kb-summary">
 Nexus Dashboard hardening — RBAC, TLS certificate management, user access controls, and secure API configuration.
 
 *Applies to: Cisco MDS · Nexus*
 </div>
-![Nexus Dashboard — Security](../../../../assets/san-cisco-nexus-dashboard-security-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

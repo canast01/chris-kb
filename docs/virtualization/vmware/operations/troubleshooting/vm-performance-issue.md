@@ -7,16 +7,11 @@ search:
 ---
 # VM Performance Issues
 
-
 <div class="kb-summary">
 Diagnosing VM performance degradation across the VMware stack — CPU ready, memory balloon, storage latency, and network saturation. Covers esxtop analysis, vSAN I/O queues, and NSX DFW overhead.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![VM Performance Issues](../../../../assets/virtualization-vmware-operations-troubleshooting-vm-performa.svg)
-
-
-
 
 ---
 

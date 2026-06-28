@@ -7,16 +7,11 @@ search:
 ---
 # Commvault — Troubleshooting
 
-
-
 <div class="kb-summary">
 Diagnosing Commvault job failures, media agent connectivity, subclient errors, schedule issues, and restore failures.
 
 *Applies to: Commvault 2024.x*
 </div>
-![Commvault — Troubleshooting](../../../assets/backup-commvault-troubleshooting-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

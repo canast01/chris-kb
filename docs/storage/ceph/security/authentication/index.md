@@ -10,11 +10,6 @@ CephX shared-secret authentication protocol, how clients authenticate to MONs an
 
 *Applies to: Ceph Reef / Squid*
 </div>
-![Ceph — Authentication](../../../../assets/storage-ceph-security-authentication-index.svg)
-
-
-
-
 
 ```plantuml
 @startuml

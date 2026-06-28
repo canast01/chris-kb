@@ -12,10 +12,6 @@ PowerShell escalation: when to escalate to Microsoft support, how to file a Powe
 
 *Applies to: PowerShell 5.1 / PowerShell 7.x*
 </div>
-![PowerShell — Escalation](../../../../assets/automation-powershell-troubleshooting-escalation-index.svg)
-
-
-
 
 ```plantuml
 @startuml

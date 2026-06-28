@@ -7,16 +7,11 @@ search:
 ---
 # CyberArk — Troubleshooting
 
-
 <div class="kb-summary">
 Diagnosing CyberArk vault connectivity, PSM session failures, CPM rotation errors, and credential reconciliation issues.
 
 *Applies to: CyberArk PAM*
 </div>
-![CyberArk — Troubleshooting](../../../assets/security-cyberark-troubleshooting-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

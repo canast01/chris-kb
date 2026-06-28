@@ -9,10 +9,6 @@ Standards, inventory, upgrade readiness checklists, and quick reference material
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Reference](../../../assets/virtualization-vmware-reference-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-5">
 

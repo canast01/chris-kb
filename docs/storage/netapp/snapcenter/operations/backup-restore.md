@@ -5,7 +5,6 @@ tags:
 ---
 # SnapCenter — Backup & Restore
 
-
 <div class="kb-summary">
 SnapCenter backup and restore: creating resource groups, on-demand Protect Now, restore to original location, clone from backup, and SnapVault restore procedure.
 
@@ -13,29 +12,7 @@ SnapCenter backup and restore: creating resource groups, on-demand Protect Now, 
 </div>
 ![SnapCenter — Backup & Restore](../../../../assets/storage-netapp-snapcenter-operations-backup-restore.svg)
 
-
-
-
 ---
-
-```d2
-direction: right
-
-hub: "SnapCenter\nOperations" {shape: hexagon}
-restore_from_snapcenter_ui: "Restore from SnapCenter UI" {shape: rectangle}
-sql_server_database_restore: "SQL Server Database Restore" {shape: rectangle}
-oracle_database_restore: "Oracle Database Restore" {shape: rectangle}
-file_system_restore: "File System Restore" {shape: rectangle}
-single_file_restore: "Single File Restore" {shape: rectangle}
-alternate_location_restore: "Alternate Location Restore" {shape: rectangle}
-
-hub -> restore_from_snapcenter_ui
-hub -> sql_server_database_restore
-hub -> oracle_database_restore
-hub -> file_system_restore
-hub -> single_file_restore
-hub -> alternate_location_restore
-```
 
 ## Before you begin
 

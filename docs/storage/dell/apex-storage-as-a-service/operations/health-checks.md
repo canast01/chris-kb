@@ -5,32 +5,11 @@ tags:
 ---
 # APEX Storage as a Service — Health Checks
 
-
 <div class="kb-summary">
 APEX STaaS health checks: CloudIQ health score review, capacity threshold alerts, latency trending, and `dcicli` command verification from SCG.
 
 *Applies to: APEX Storage-as-a-Service*
 </div>
-
-
-```d2
-direction: right
-
-hub: "APEX Storage\nOperations" {shape: hexagon}
-run_this_routine: "Run This Routine" {shape: rectangle}
-daily_checks: "Daily Checks" {shape: rectangle}
-health_check_commands: "Health Check Commands" {shape: rectangle}
-change_readiness: "Change Readiness" {shape: rectangle}
-postchange_validation: "Post-Change Validation" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> run_this_routine
-hub -> daily_checks
-hub -> health_check_commands
-hub -> change_readiness
-hub -> postchange_validation
-hub -> verify
-```
 
 ## Before you begin
 

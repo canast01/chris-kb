@@ -4,8 +4,6 @@ tags:
   - security
 ---
 # Jira — Hardening
-![Jira — Hardening](../../../../assets/itsm-jira-security-hardening-index.svg)
-
 
 ```bash
 # Audit current Jira administrators

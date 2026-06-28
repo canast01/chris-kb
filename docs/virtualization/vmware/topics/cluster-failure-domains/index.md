@@ -4,35 +4,13 @@ tags:
 ---
 # Cluster Failure Domains
 
-
 <div class="kb-summary">
 A failure domain is the blast radius of a single fault: the set of hosts, storage, or network paths that share a common point of failure. Correctly mapping and configuring failure domains is the foundation of vSAN resilience, HA placement, and maintenance safety.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Cluster Failure Domains](../../../../assets/virtualization-vmware-topics-cluster-failure-domains-index.svg)
-
-
-
 
 ---
-
-```d2
-direction: right
-
-center: "Cluster Failure Domains" {shape: hexagon}
-failure_domain_taxonomy: "Failure Domain Taxonomy" {shape: rectangle}
-vsan_ftt_and_raid_policy_mapping: "vSAN FTT and RAID Policy Mapping" {shape: rectangle}
-vsan_fault_domain_configuration: "vSAN Fault Domain Configuration" {shape: rectangle}
-vmhost_affinity_and_antiaffinity_rul: "VM-Host Affinity and Anti-Affinity Rules" {shape: rectangle}
-failure_domain_verification_table: "Failure Domain Verification Table" {shape: rectangle}
-
-center -> failure_domain_taxonomy
-center -> vsan_ftt_and_raid_policy_mapping
-center -> vsan_fault_domain_configuration
-center -> vmhost_affinity_and_antiaffinity_rul
-center -> failure_domain_verification_table
-```
 
 ## Failure Domain Taxonomy
 

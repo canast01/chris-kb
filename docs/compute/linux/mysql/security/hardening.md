@@ -12,28 +12,6 @@ MySQL hardening — removing defaults, binding to specific interfaces, disabling
 </div>
 ![MySQL / MariaDB — Hardening](../../../../assets/compute-linux-mysql-security-hardening.svg)
 
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-postinstall_hardening_steps: "Post-Install Hardening Steps" {shape: rectangle}
-configuration_hardening_mysqldcnf: "Configuration Hardening (`mysqld.cnf`)" {shape: rectangle}
-oslevel_controls: "OS-Level Controls" {shape: rectangle}
-audit_logging: "Audit Logging" {shape: rectangle}
-key_cis_benchmark_controls: "Key CIS Benchmark Controls" {shape: rectangle}
-core: "Linux Core" {shape: hexagon}
-
-external -> postinstall_hardening_steps: traffic in
-postinstall_hardening_steps -> configuration_hardening_mysqldcnf
-configuration_hardening_mysqldcnf -> oslevel_controls
-oslevel_controls -> audit_logging
-audit_logging -> key_cis_benchmark_controls
-key_cis_benchmark_controls -> core: secured path
-```
-
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

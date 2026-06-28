@@ -5,14 +5,11 @@ tags:
 ---
 # Azure — Health Checks
 
-
 <div class="kb-summary">
 Azure daily health checks — runnable CLI routine covering service health incidents, VM power states and provisioning failures, load balancer backend pool health, storage capacity, NSG flow log validation, and Monitor alert review.
 
 *Applies to: Azure*
 </div>
-![Azure — Health Checks](../../../../assets/cloud-azure-operations-health-checks-index.svg)
-
 
 ```d2
 direction: right
@@ -324,8 +321,6 @@ az network public-ip list \
 > To set a budget alert: use `az consumption budget create` or configure in the Azure Portal under **Cost Management + Billing → Budgets**. Set both an actual-spend threshold (e.g., 80%, 100%) and a forecast threshold to catch trends before they breach the limit.
 
 ---
-
-
 
 > Service health, VM status, load balancer health, and monitor alert review.
 

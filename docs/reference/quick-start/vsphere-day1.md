@@ -15,23 +15,6 @@ What to do in your first hour with a new vSphere environment. Complete these ste
 
 ---
 
-```d2
-direction: right
-
-center: "Quick Start" {shape: hexagon}
-1_orient: "1. Orient" {shape: rectangle}
-2_first_health_checks: "2. First Health Checks" {shape: rectangle}
-3_key_commands: "3. Key Commands" {shape: rectangle}
-4_know_your_alerts: "4. Know Your Alerts" {shape: rectangle}
-5_common_first_tasks: "5. Common First Tasks" {shape: rectangle}
-
-center -> 1_orient
-center -> 2_first_health_checks
-center -> 3_key_commands
-center -> 4_know_your_alerts
-center -> 5_common_first_tasks
-```
-
 ## 1. Orient
 
 Get your bearings in the vCenter UI before touching anything.

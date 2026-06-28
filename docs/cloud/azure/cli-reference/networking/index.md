@@ -5,16 +5,11 @@ tags:
 ---
 # Azure CLI — Networking
 
-
 <div class="kb-summary">
 Azure CLI commands for networking — VNet, subnets, NSGs, route tables, VNet peering, Private Endpoints, and DNS zones.
 
 *Applies to: Azure*
 </div>
-![Azure CLI — Networking](../../../../assets/cloud-azure-cli-reference-networking-index.svg)
-
-
-
 
 > Part of the Azure CLI Reference.
 
@@ -42,19 +37,6 @@ az network public-ip create --resource-group <rg> --name <pip> --allocation-meth
 
 # Load balancer
 az network lb list --output table
-```
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-component_a: "Component A" {shape: rectangle}
-component_b: "Component B" {shape: rectangle}
-component_c: "Component C" {shape: rectangle}
-
-center -> component_a
-center -> component_b
-center -> component_c
 ```
 
 ## See also

@@ -6,7 +6,6 @@ tags:
 ---
 # Horizon — Access Control
 
-
 <div class="kb-summary">
 Access Control reference covering Pool-Level Admin Delegation, Desktop Pool Entitlements, App Volumes Permission Model, UAG Access Control, Service Account for vCenter and 1 more sections.
 
@@ -14,31 +13,11 @@ Access Control reference covering Pool-Level Admin Delegation, Desktop Pool Enti
 </div>
 ![Horizon — Access Control](../../../../assets/virtualization-vmware-horizon-security-access-control.svg)
 
-
   RBAC: AD Groups → Entitlements → Pools
 
 This limits the admin to only the pools in the assigned Access Group.
 
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-desktop_pool_entitlements: "Desktop Pool Entitlements" {shape: rectangle}
-app_volumes_permission_model: "App Volumes Permission Model" {shape: rectangle}
-uag_access_control: "UAG Access Control" {shape: rectangle}
-service_account_for_vcenter: "Service Account for vCenter" {shape: rectangle}
-audit_log_access: "Audit Log Access" {shape: rectangle}
-core: "Horizon Core" {shape: hexagon}
-
-external -> desktop_pool_entitlements: traffic in
-desktop_pool_entitlements -> app_volumes_permission_model
-app_volumes_permission_model -> uag_access_control
-uag_access_control -> service_account_for_vcenter
-service_account_for_vcenter -> audit_log_access
-audit_log_access -> core: secured path
-```
 
 ## Before you begin
 

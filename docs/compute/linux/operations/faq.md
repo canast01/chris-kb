@@ -11,25 +11,7 @@ Common questions about Linux operations, configuration, and troubleshooting. For
 </div>
 ![Linux — Frequently Asked Questions](../../../assets/compute-linux-operations-faq.svg)
 
-
 ![Linux FAQ](../../../assets/compute-linux-operations-faq.svg)
-
-```d2
-direction: right
-
-hub: "Linux\nOperations" {shape: hexagon}
-general: "General" {shape: rectangle}
-configuration: "Configuration" {shape: rectangle}
-operations: "Operations" {shape: rectangle}
-troubleshooting: "Troubleshooting" {shape: rectangle}
-backup_and_recovery: "Backup and Recovery" {shape: rectangle}
-
-hub -> general
-hub -> configuration
-hub -> operations
-hub -> troubleshooting
-hub -> backup_and_recovery
-```
 
 ## General
 

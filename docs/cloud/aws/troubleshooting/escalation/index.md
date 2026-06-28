@@ -12,10 +12,6 @@ AWS support case creation, severity level selection, data collection with AWS CL
 
 *Applies to: AWS (all services)*
 </div>
-![AWS — Escalation](../../../../assets/cloud-aws-troubleshooting-escalation-index.svg)
-
-
-
 
 ```plantuml
 @startuml

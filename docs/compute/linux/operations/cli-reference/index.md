@@ -5,37 +5,15 @@ tags:
 ---
 # Linux — CLI Reference
 
-
 <div class="kb-summary">
 Commands, syntax, and quick reference. Commonly used Linux administration commands, grouped by category. Applies to RHEL 8/9 and Ubuntu 22.04 unless noted.
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>
-![Linux — CLI Reference](../../../../assets/compute-linux-operations-cli-reference-index.svg)
-
 
 Commands, syntax, and quick reference.
 
 Commonly used Linux administration commands, grouped by category. Applies to RHEL 8/9 and Ubuntu 22.04 unless noted.
-
-```d2
-direction: right
-
-center: "Linux" {shape: rectangle}
-command_categories: "Command Categories" {shape: rectangle}
-process_management: "Process Management" {shape: rectangle}
-disk_and_filesystem: "Disk and Filesystem" {shape: rectangle}
-lvm: "LVM" {shape: rectangle}
-networking: "Networking" {shape: rectangle}
-logging_journalctl: "Logging (journalctl)" {shape: rectangle}
-
-center -> command_categories
-center -> process_management
-center -> disk_and_filesystem
-center -> lvm
-center -> networking
-center -> logging_journalctl
-```
 
 ## Before you begin
 
@@ -69,7 +47,6 @@ flowchart LR
         auditCmds["ausearch · aureport\nauditd"]
     end
 ```
-
 
 ## Process Management
 

@@ -7,10 +7,6 @@ tags:
 <div class="kb-summary">
 Dynamic Host Configuration Protocol (DHCP) automates IP address assignment using a four-step DORA handshake (Discover, Offer, Request, Ack) over UDP — client broadcasts on port 68, server listens on port 67. The primary operational concerns are scope design, lease time tuning, option correctness (gateway, DNS, domain), and failover configuration for high availability, as DHCP failure renders an entire subnet unreachable without static fallback.
 </div>
-![DHCP](../../../assets/networking-protocols-dhcp-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-5">
 
@@ -40,19 +36,6 @@ Dynamic Host Configuration Protocol (DHCP) automates IP address assignment using
 </a>
 
 </div>
-
-```d2
-direction: right
-
-center: "DHCP" {shape: hexagon}
-quick_reference: "Quick Reference" {shape: rectangle}
-common_commands_config: "Common Commands / Config" {shape: rectangle}
-troubleshooting: "Troubleshooting" {shape: rectangle}
-
-center -> quick_reference
-center -> common_commands_config
-center -> troubleshooting
-```
 
 ## Quick Reference
 

@@ -6,7 +6,6 @@ tags:
 ---
 # Tanzu — Hardening
 
-
 <div class="kb-summary">
 Hardening reference covering Pod Security Admission, Default Deny Network Policy, Disallow Privileged Containers (OPA Gatekeeper), Require Resource Limits, Harbor Vulnerability Scanning Policy and 4 more sections.
 
@@ -14,31 +13,7 @@ Hardening reference covering Pod Security Admission, Default Deny Network Policy
 </div>
 ![Tanzu — Hardening](../../../../assets/virtualization-vmware-tanzu-security-hardening.svg)
 
-
-
-
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-pod_security_admission: "Pod Security Admission" {shape: rectangle}
-default_deny_network_policy: "Default Deny Network Policy" {shape: rectangle}
-disallow_privileged_containers_opa_g: "Disallow Privileged Containers (OPA Gatekeeper)" {shape: rectangle}
-require_resource_limits: "Require Resource Limits" {shape: rectangle}
-harbor_vulnerability_scanning_policy: "Harbor Vulnerability Scanning Policy" {shape: rectangle}
-restrict_registry_to_harbor_only: "Restrict Registry to Harbor Only" {shape: rectangle}
-core: "Tanzu Core" {shape: hexagon}
-
-external -> pod_security_admission: traffic in
-pod_security_admission -> default_deny_network_policy
-default_deny_network_policy -> disallow_privileged_containers_opa_g
-disallow_privileged_containers_opa_g -> require_resource_limits
-require_resource_limits -> harbor_vulnerability_scanning_policy
-harbor_vulnerability_scanning_policy -> restrict_registry_to_harbor_only
-restrict_registry_to_harbor_only -> core: secured path
-```
 
 ## Before you begin
 

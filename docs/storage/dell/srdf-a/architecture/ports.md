@@ -18,27 +18,6 @@ Firewall port reference for Dell SRDF/A (Symmetrix Remote Data Facility / Asynch
 </div>
 ![Dell SRDF/A — Ports and Network Requirements](../../../../assets/storage-dell-srdf-a-architecture-ports.svg)
 
-
-
-
-
-```d2
-direction: right
-
-center: "SRDF/A" {shape: hexagon}
-srdf_data_path_fc_no_ip_rules_needed: "SRDF Data Path — FC (No IP Rules Needed)" {shape: rectangle}
-srdf_data_path_ip_gige_iscsi_links: "SRDF Data Path — IP (GigE / iSCSI Links)" {shape: rectangle}
-unisphere_management: "Unisphere Management" {shape: rectangle}
-firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> srdf_data_path_fc_no_ip_rules_needed
-center -> srdf_data_path_ip_gige_iscsi_links
-center -> unisphere_management
-center -> firewall_zone_summary
-center -> verify
-```
-
 ## SRDF Data Path — FC (No IP Rules Needed)
 
 When SRDF uses Fibre Channel ISL links between arrays (most common), no IP firewall rules are required. FC traffic flows through the FC fabric zoning.

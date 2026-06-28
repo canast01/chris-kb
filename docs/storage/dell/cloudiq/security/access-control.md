@@ -5,16 +5,12 @@ tags:
 ---
 # CloudIQ — Access Control
 
-
 <div class="kb-summary">
 CloudIQ role-based access control — user management, RBAC configuration, and access policy enforcement.
 
 *Applies to: CloudIQ*
 </div>
 ![CloudIQ — Access Control](../../../../assets/storage-dell-cloudiq-security-access-control.svg)
-
-
-
 
 > Part of the [CloudIQ](../index.md) reference.
 
@@ -29,21 +25,6 @@ CloudIQ provides role-based access control to limit what each user can view and 
 | Viewer | Read-only access to dashboards, health scores, capacity, and alerts; cannot modify settings or acknowledge alerts |
 
 Assign roles under **Settings > Users**. Apply the principle of least privilege — most operational users should be Viewer or System Admin; CloudIQ Admin should be restricted to a small number of named individuals.
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-perimeter_controls: "Perimeter Controls" {shape: rectangle}
-identity_access: "Identity & Access" {shape: rectangle}
-audit_logging: "Audit & Logging" {shape: rectangle}
-core: "CloudIQ Core" {shape: hexagon}
-
-external -> perimeter_controls: traffic in
-perimeter_controls -> identity_access
-identity_access -> audit_logging
-audit_logging -> core: secured path
-```
 
 ## Before you begin
 

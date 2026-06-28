@@ -4,15 +4,11 @@ tags:
 ---
 # VxRail Lifecycle
 
-
 <div class="kb-summary">
 VxRail lifecycle notes for upgrade planning, pre-checks, bundles, firmware, rollback planning, and validation.
 
 *Applies to: VxRail 7.x · 8.x*
 </div>
-![VxRail Lifecycle](../../../../assets/virtualization-vmware-vxrail-lifecycle-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

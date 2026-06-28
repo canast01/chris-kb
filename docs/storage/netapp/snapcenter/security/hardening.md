@@ -5,7 +5,6 @@ tags:
 ---
 # SnapCenter — Hardening
 
-
 <div class="kb-summary">
 SnapCenter hardening: TLS 1.2 enforcement, disabling unused plug-in ports, Windows Firewall rules, CIS benchmark alignment, and audit log retention.
 
@@ -13,31 +12,7 @@ SnapCenter hardening: TLS 1.2 enforcement, disabling unused plug-in ports, Windo
 </div>
 ![SnapCenter — Hardening](../../../../assets/storage-netapp-snapcenter-security-hardening.svg)
 
-
-
-
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-hardening_checklist: "Hardening Checklist" {shape: rectangle}
-ontap_service_account_hardening: "ONTAP Service Account Hardening" {shape: rectangle}
-windows_server_hardening_baseline_sn: "Windows Server Hardening Baseline (SnapCenter Host)" {shape: rectangle}
-iis_hardening_for_snapcenter: "IIS Hardening for SnapCenter" {shape: rectangle}
-audit_log_configuration_and_review: "Audit Log Configuration and Review" {shape: rectangle}
-quarterly_security_review: "Quarterly Security Review" {shape: rectangle}
-core: "SnapCenter Core" {shape: hexagon}
-
-external -> hardening_checklist: traffic in
-hardening_checklist -> ontap_service_account_hardening
-ontap_service_account_hardening -> windows_server_hardening_baseline_sn
-windows_server_hardening_baseline_sn -> iis_hardening_for_snapcenter
-iis_hardening_for_snapcenter -> audit_log_configuration_and_review
-audit_log_configuration_and_review -> quarterly_security_review
-quarterly_security_review -> core: secured path
-```
 
 ## Before you begin
 

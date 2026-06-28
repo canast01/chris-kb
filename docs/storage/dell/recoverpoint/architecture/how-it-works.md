@@ -5,27 +5,12 @@ tags:
 ---
 # RecoverPoint — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Overview, Topology, Journal Sizing, Journal Monitoring Thresholds, High Availability.
 
 *Applies to: RecoverPoint 5.x*
 </div>
 ![RecoverPoint — How It Works](../../../../assets/storage-dell-recoverpoint-architecture-how-it-works.svg)
-
-
-```d2
-direction: right
-
-center: "RecoverPoint" {shape: hexagon}
-topology: "Topology" {shape: rectangle}
-journal_monitoring_thresholds: "Journal Monitoring Thresholds" {shape: rectangle}
-high_availability: "High Availability" {shape: rectangle}
-
-center -> topology
-center -> journal_monitoring_thresholds
-center -> high_availability
-```
 
 ```plantuml
 @startuml
@@ -188,7 +173,6 @@ graph LR
   class STG_A,STG_B store
   class H_A host
 ```
-
 
 | Environment Write Rate | Minimum Journal Size | Recommended Retention |
 |---|---|---|

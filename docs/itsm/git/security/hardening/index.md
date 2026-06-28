@@ -4,8 +4,6 @@ tags:
   - security
 ---
 # Git — Hardening
-![Git — Hardening](../../../../assets/itsm-git-security-hardening-index.svg)
-
 
 ```bash
 # Install pre-commit

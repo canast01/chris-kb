@@ -5,16 +5,12 @@ tags:
 ---
 # Dell VPLEX — Standards
 
-
 <div class="kb-summary">
 Design standards, sizing guidelines, naming conventions, and configuration baselines for VPLEX deployments.
 
 *Applies to: VPLEX*
 </div>
 ![Dell VPLEX — Standards](../../../../assets/storage-dell-vplex-architecture-design-standards.svg)
-
-
-
 
 ```mermaid
 flowchart TD
@@ -32,25 +28,6 @@ flowchart TD
     vv --> dd
     dd --> ld
     cg -->|"member volumes"| vv
-```
-
-```d2
-direction: right
-
-center: "VPLEX" {shape: hexagon}
-sizing_guidelines: "Sizing Guidelines" {shape: rectangle}
-naming_conventions: "Naming Conventions" {shape: rectangle}
-metro_configuration_standards: "Metro Configuration Standards" {shape: rectangle}
-build_baseline: "Build Baseline" {shape: rectangle}
-configuration_checklist: "Configuration Checklist" {shape: rectangle}
-performance_baselines: "Performance Baselines" {shape: rectangle}
-
-center -> sizing_guidelines
-center -> naming_conventions
-center -> metro_configuration_standards
-center -> build_baseline
-center -> configuration_checklist
-center -> performance_baselines
 ```
 
 ```vegalite

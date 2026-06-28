@@ -4,8 +4,6 @@ tags:
   - security
 ---
 # Git — Encryption
-![Git — Encryption](../../../../assets/itsm-git-security-encryption-index.svg)
-
 
 ```bash
 # Verify SSH cipher negotiated for a Git host

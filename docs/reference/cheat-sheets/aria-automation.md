@@ -10,20 +10,6 @@ Top-10 Aria Automation (vRA) commands for deployment lifecycle, ABX actions, and
 </div>
 ![Aria Automation Cheat Sheet](../../assets/reference-cheat-sheets-aria-automation.svg)
 
-
-
-
-```d2
-direction: right
-
-center: "Cheat Sheets" {shape: rectangle}
-vracli: "vra-cli" {shape: rectangle}
-rest_api: "REST API" {shape: rectangle}
-
-center -> vracli
-center -> rest_api
-```
-
 ## vra-cli
 
 ```bash

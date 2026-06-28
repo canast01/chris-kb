@@ -5,37 +5,15 @@ tags:
 ---
 # Windows Server — CLI Reference
 
-
 <div class="kb-summary">
 Commands, syntax, and quick reference. All commands are PowerShell unless noted as `cmd`.
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
-![Windows Server — CLI Reference](../../../../assets/compute-windows-server-operations-cli-reference-index.svg)
-
 
 Commands, syntax, and quick reference.
 
 All commands are PowerShell unless noted as `cmd`.
-
-```d2
-direction: right
-
-center: "Windows Server" {shape: rectangle}
-powershell_command_categories: "PowerShell Command Categories" {shape: rectangle}
-disk_and_storage: "Disk and Storage" {shape: rectangle}
-networking: "Networking" {shape: rectangle}
-active_directory_and_domain: "Active Directory and Domain" {shape: rectangle}
-process_management: "Process Management" {shape: rectangle}
-performance_counters: "Performance Counters" {shape: rectangle}
-
-center -> powershell_command_categories
-center -> disk_and_storage
-center -> networking
-center -> active_directory_and_domain
-center -> process_management
-center -> performance_counters
-```
 
 ## Before you begin
 
@@ -70,7 +48,6 @@ flowchart LR
         gpoCmds["gpresult\ngpupdate"]
     end
 ```
-
 
 ## Disk and Storage
 

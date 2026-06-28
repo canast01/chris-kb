@@ -9,10 +9,6 @@ tags:
 <div class="kb-summary">
 Domain Name System (DNS) is the foundational naming protocol of IP networks, resolving hostnames to addresses (and vice versa) over UDP and TCP port 53. It is a critical dependency for authentication (Kerberos, LDAP), certificate validation, cloud services, monitoring, and automation — meaning DNS failures cascade across the entire environment. Key operational concerns are zone hygiene, forwarder reliability, recursive vs authoritative role separation, and TTL management.
 </div>
-![DNS](../../../assets/networking-protocols-dns-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-5">
 
@@ -42,19 +38,6 @@ Domain Name System (DNS) is the foundational naming protocol of IP networks, res
 </a>
 
 </div>
-
-```d2
-direction: right
-
-center: "DNS" {shape: hexagon}
-quick_reference: "Quick Reference" {shape: rectangle}
-common_commands_config: "Common Commands / Config" {shape: rectangle}
-troubleshooting: "Troubleshooting" {shape: rectangle}
-
-center -> quick_reference
-center -> common_commands_config
-center -> troubleshooting
-```
 
 ## Quick Reference
 

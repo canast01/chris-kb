@@ -5,31 +5,12 @@ tags:
 ---
 # Data Domain — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Overview, Architecture, Data Path, Components, HA Options and 2 more sections.
 
 *Applies to: Data Domain DD OS 7.x*
 </div>
 ![Data Domain — How It Works](../../../../assets/storage-dell-data-domain-architecture-how-it-works.svg)
-
-
-```d2
-direction: right
-
-center: "Data Domain" {shape: hexagon}
-architecture: "Architecture" {shape: rectangle}
-components: "Components" {shape: rectangle}
-ha_options: "HA Options" {shape: rectangle}
-protocol_access: "Protocol Access" {shape: rectangle}
-key_cli_commands: "Key CLI Commands" {shape: rectangle}
-
-center -> architecture
-center -> components
-center -> ha_options
-center -> protocol_access
-center -> key_cli_commands
-```
 
 ```plantuml
 @startuml
@@ -76,7 +57,6 @@ graph TB
   class CLOUD cloud
   class DDDR dr
 ```
-
 
 DDBoost reduces network traffic by ~50% via source-side deduplication — only unique segments are sent to the DD appliance.
 

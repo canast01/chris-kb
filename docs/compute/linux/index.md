@@ -9,10 +9,6 @@ Linux server infrastructure running RHEL and Ubuntu — systemd service manageme
 
 *Applies to: RHEL 8.x / 9.x · Ubuntu 22.04 / 24.04*
 </div>
-![Linux Server](../../assets/compute-linux-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

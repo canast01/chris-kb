@@ -5,16 +5,11 @@ tags:
 ---
 # Windows Server — Operations
 
-
-
 <div class="kb-summary">
 Windows Server — Operations reference: Health Checks, Procedures, Common Issues, CLI Reference, and 3 more.
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
-![Windows Server — Operations](../../../assets/compute-windows-server-operations-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>

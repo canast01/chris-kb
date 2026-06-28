@@ -8,15 +8,6 @@ Operational tooling reference covering version control, project tracking, docume
 
 ![ITSM — Diagram](../assets/itsm-diagram.svg)
 
-```d2
-direction: right
-
-center: "Itsm" {shape: hexagon}
-main_areas: "Main Areas" {shape: rectangle}
-
-center -> main_areas
-```
-
 ## Main Areas
 
 <div class="kb-grid kb-grid-3">

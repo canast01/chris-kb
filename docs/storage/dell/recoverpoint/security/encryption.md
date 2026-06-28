@@ -5,7 +5,6 @@ tags:
 ---
 # RecoverPoint — Encryption
 
-
 <div class="kb-summary">
 Encryption reference covering Journal Encryption, Network Segmentation, Certificate Management.
 
@@ -13,26 +12,9 @@ Encryption reference covering Journal Encryption, Network Segmentation, Certific
 </div>
 ![RecoverPoint — Encryption](../../../../assets/storage-dell-recoverpoint-security-encryption.svg)
 
-
-
 > Part of the [RecoverPoint](../index.md) > [Security](index.md) reference.
 
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-journal_encryption: "Journal Encryption" {shape: rectangle}
-network_segmentation: "Network Segmentation" {shape: rectangle}
-certificate_management: "Certificate Management" {shape: rectangle}
-core: "RecoverPoint Core" {shape: hexagon}
-
-external -> journal_encryption: traffic in
-journal_encryption -> network_segmentation
-network_segmentation -> certificate_management
-certificate_management -> core: secured path
-```
 
 ## Before you begin
 

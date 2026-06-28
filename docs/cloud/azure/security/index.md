@@ -10,9 +10,6 @@ Azure security posture — Defender for Cloud, Key Vault, Entra ID hardening, NS
 
 *Applies to: Azure*
 </div>
-![Azure — Security](../../../assets/cloud-azure-security-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

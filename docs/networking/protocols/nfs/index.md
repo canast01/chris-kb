@@ -9,25 +9,6 @@ tags:
 <div class="kb-summary">
 Network File System (NFS) allows hosts to mount remote directories over TCP. Coverage includes version selection (NFSv3/4/4.1), export configuration, UID/GID permission mapping, mount option tuning (hard/soft, sync/async, rsize/wsize), and troubleshooting stale handles and mount failures.
 </div>
-![NFS](../../../assets/networking-protocols-nfs-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "NFS" {shape: hexagon}
-nfsv41_session_and_pnfs_data_path: "NFSv4.1 Session and pNFS Data Path" {shape: rectangle}
-quick_reference: "Quick Reference" {shape: rectangle}
-common_commands_config: "Common Commands / Config" {shape: rectangle}
-troubleshooting: "Troubleshooting" {shape: rectangle}
-
-center -> nfsv41_session_and_pnfs_data_path
-center -> quick_reference
-center -> common_commands_config
-center -> troubleshooting
-```
 
 ## NFSv4.1 Session and pNFS Data Path
 

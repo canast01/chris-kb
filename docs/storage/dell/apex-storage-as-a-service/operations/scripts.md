@@ -5,7 +5,6 @@ tags:
 ---
 # Dell Apex STaaS — Scripts
 
-
 <div class="kb-summary">
 APEX STaaS automation scripts: Python REST client for capacity reporting, CloudIQ API polling, and automated alert-to-ticket integration examples.
 
@@ -13,29 +12,7 @@ APEX STaaS automation scripts: Python REST client for capacity reporting, CloudI
 </div>
 ![Dell Apex STaaS — Scripts](../../../../assets/storage-dell-apex-storage-as-a-service-operations-scripts.svg)
 
-
-
-
 ---
-
-```d2
-direction: right
-
-hub: "APEX Storage\nOperations" {shape: hexagon}
-subscription_capacity_monitor: "Subscription Capacity Monitor" {shape: rectangle}
-active_alert_report: "Active Alert Report" {shape: rectangle}
-ansible_apex_health_playbook: "Ansible APEX Health Playbook" {shape: rectangle}
-daily_check_script: "Daily Check Script" {shape: rectangle}
-incident_triage_script: "Incident Triage Script" {shape: rectangle}
-change_precheck_script: "Change Pre-Check Script" {shape: rectangle}
-
-hub -> subscription_capacity_monitor
-hub -> active_alert_report
-hub -> ansible_apex_health_playbook
-hub -> daily_check_script
-hub -> incident_triage_script
-hub -> change_precheck_script
-```
 
 ## Before you begin
 
@@ -76,7 +53,6 @@ if not APEX_CLIENT_ID or not APEX_CLIENT_SECRET:
 
 session = requests.Session()
 
-
 def get_token():
     resp = session.post(
         f"{APEX_BASE}/auth/token",
@@ -86,7 +62,6 @@ def get_token():
     resp.raise_for_status()
     return resp.json()["access_token"]
 
-
 def api_get(token, path):
     resp = session.get(
         f"{APEX_BASE}{path}",
@@ -95,7 +70,6 @@ def api_get(token, path):
     )
     resp.raise_for_status()
     return resp.json()
-
 
 def main():
     exit_code = 0
@@ -155,7 +129,6 @@ def main():
     labels = {0: "OK", 1: "WARNING", 2: "CRITICAL"}
     print(f"\nOverall: {labels.get(exit_code, 'UNKNOWN')}")
     sys.exit(exit_code)
-
 
 if __name__ == "__main__":
     main()
@@ -231,7 +204,6 @@ if not APEX_CLIENT_ID or not APEX_CLIENT_SECRET:
 
 session = requests.Session()
 
-
 def get_token():
     resp = session.post(
         f"{APEX_BASE}/auth/token",
@@ -241,7 +213,6 @@ def get_token():
     resp.raise_for_status()
     return resp.json()["access_token"]
 
-
 def api_get(token, path):
     resp = session.get(
         f"{APEX_BASE}{path}",
@@ -250,7 +221,6 @@ def api_get(token, path):
     )
     resp.raise_for_status()
     return resp.json()
-
 
 def main():
     exit_code = 0
@@ -290,7 +260,6 @@ def main():
     print("-" * 80)
     print(f"\nTotal active alerts: {len(alerts)}")
     sys.exit(exit_code)
-
 
 if __name__ == "__main__":
     main()

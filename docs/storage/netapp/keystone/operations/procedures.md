@@ -5,35 +5,13 @@ tags:
 ---
 # Keystone — Procedures
 
-
 <div class="kb-summary">
 NetApp Keystone procedures: burst capacity activation, storage tier changes, scheduled report export, and capacity rebalancing requests via NetApp support.
 
 *Applies to: Keystone STaaS*
 </div>
 
-
-
 ---
-
-```d2
-direction: right
-
-hub: "Keystone STaaS\nOperations" {shape: hexagon}
-daily_checks: "Daily Checks" {shape: rectangle}
-health_check: "Health Check" {shape: rectangle}
-change_readiness: "Change Readiness" {shape: rectangle}
-maintenance_window: "Maintenance Window" {shape: rectangle}
-postchange_validation: "Post-Change Validation" {shape: rectangle}
-usage_reporting: "Usage Reporting" {shape: rectangle}
-
-hub -> daily_checks
-hub -> health_check
-hub -> change_readiness
-hub -> maintenance_window
-hub -> postchange_validation
-hub -> usage_reporting
-```
 
 ## Before you begin
 

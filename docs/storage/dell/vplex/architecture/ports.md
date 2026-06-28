@@ -17,29 +17,6 @@ Firewall port reference for Dell VPLEX (storage federation / virtualization). Co
 </div>
 ![Dell VPLEX — Ports and Network Requirements](../../../../assets/storage-dell-vplex-architecture-ports.svg)
 
-
-
-
-
-```d2
-direction: right
-
-center: "VPLEX" {shape: hexagon}
-inbound_management: "Inbound — Management" {shape: rectangle}
-outbound_management_server_to_extern: "Outbound — Management Server to External" {shape: rectangle}
-vplex_metro_wan_com_link_between_sit: "VPLEX Metro — WAN COM Link (Between Sites)" {shape: rectangle}
-host_connectivity_iscsi: "Host Connectivity (iSCSI)" {shape: rectangle}
-firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> inbound_management
-center -> outbound_management_server_to_extern
-center -> vplex_metro_wan_com_link_between_sit
-center -> host_connectivity_iscsi
-center -> firewall_zone_summary
-center -> verify
-```
-
 ## Inbound — Management
 
 | Port | Protocol | Source | Purpose |

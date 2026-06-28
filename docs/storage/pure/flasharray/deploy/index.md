@@ -37,15 +37,10 @@ set_up_protection_group -> validate
 ---
 
 # FlashArray — Initial Deployment
-![FlashArray — Initial Deployment](../../../../assets/storage-pure-flasharray-deploy-index.svg)
-
-
-
 
 This guide covers deploying a Pure Storage FlashArray (//X, //C, or //XL series) from physical installation through validated host connectivity. All steps apply to Purity//FA 6.x.
 
 ---
-
 
 ```mermaid
 flowchart TD

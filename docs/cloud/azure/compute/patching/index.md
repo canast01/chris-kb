@@ -4,37 +4,13 @@ tags:
 ---
 # Patching
 
-
 <div class="kb-summary">
 Azure Update Manager (the successor to Azure Automation Update Management) provides centralised OS patch management for Azure VMs, Arc-connected servers, and on-premises machines. This page covers assessments, maintenance windows, and compliance reporting.
 
 *Applies to: Azure*
 </div>
-![Patching](../../../../assets/cloud-azure-compute-patching-index.svg)
-
-
-
 
 ---
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-azure_update_manager_flow: "Azure Update Manager Flow" {shape: rectangle}
-azure_update_manager_overview: "Azure Update Manager Overview" {shape: rectangle}
-checking_update_status: "Checking Update Status" {shape: rectangle}
-patch_modes: "Patch Modes" {shape: rectangle}
-maintenance_configurations: "Maintenance Configurations" {shape: rectangle}
-assigning_vms_to_maintenance_configu: "Assigning VMs to Maintenance Configurations" {shape: rectangle}
-
-center -> azure_update_manager_flow
-center -> azure_update_manager_overview
-center -> checking_update_status
-center -> patch_modes
-center -> maintenance_configurations
-center -> assigning_vms_to_maintenance_configu
-```
 
 ## Azure Update Manager Flow
 

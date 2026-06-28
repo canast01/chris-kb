@@ -10,23 +10,9 @@ Version history and release notes for Incident Handling.
 
 ![Release Notes](../../assets/incident-handling-release-notes.svg)
 
-```d2
-direction: right
-
-center: "Incident Handling" {shape: hexagon}
-version_history: "Version History" {shape: rectangle}
-key_terminology: "Key Terminology" {shape: rectangle}
-upgrade_path: "Upgrade Path" {shape: rectangle}
-
-center -> version_history
-center -> key_terminology
-center -> upgrade_path
-```
-
 ## Before you begin
 
 No special prerequisites — review the version table and cross-reference your deployed version before applying any update.
-
 
 ## Version History
 

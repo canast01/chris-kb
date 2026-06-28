@@ -4,35 +4,11 @@ tags:
 ---
 # VMware Service Account Inventory
 
-
 <div class="kb-summary">
 Service accounts used for VMware platform integrations. All accounts must be vault-managed and reviewed quarterly.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![VMware Service Account Inventory](../../../../assets/virtualization-vmware-reference-inventory-service-accounts.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Inventory" {shape: rectangle}
-account_register: "Account Register" {shape: rectangle}
-permission_role_definitions: "Permission Role Definitions" {shape: rectangle}
-creating_a_service_account_in_ad: "Creating a Service Account in AD" {shape: rectangle}
-assigning_a_custom_vcenter_role: "Assigning a Custom vCenter Role" {shape: rectangle}
-quarterly_review_checklist: "Quarterly Review Checklist" {shape: rectangle}
-detecting_orphaned_accounts: "Detecting Orphaned Accounts" {shape: rectangle}
-
-center -> account_register
-center -> permission_role_definitions
-center -> creating_a_service_account_in_ad
-center -> assigning_a_custom_vcenter_role
-center -> quarterly_review_checklist
-center -> detecting_orphaned_accounts
-```
 
 ## Account Register
 

@@ -5,14 +5,11 @@ tags:
 ---
 # Terraform — Health Checks
 
-
 <div class="kb-summary">
 Health Checks reference covering Drift Detection Flow, Daily Checks.
 
 *Applies to: Terraform 1.x*
 </div>
-![Terraform — Health Checks](../../../../assets/automation-terraform-operations-health-checks-index.svg)
-
 
 ```d2
 direction: right
@@ -71,7 +68,6 @@ terraform validate
 # 8. State lock check — inspect backend for stale locks; this is informational
 terraform force-unlock --help
 ```
-
 
 Compare the output against the expected resource count tracked in your runbook. A sudden drop or spike indicates a state manipulation issue.
 

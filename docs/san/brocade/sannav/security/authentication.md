@@ -6,7 +6,6 @@ tags:
 # Brocade SANnav — Authentication
 ![Brocade SANnav — Authentication](../../../../assets/san-brocade-sannav-security-authentication.svg)
 
-
 ```bash
 # Copy CA cert to SANnav appliance
 scp corp-ca.crt admin@sannav-dc1.corp.example.com:/tmp/
@@ -22,22 +21,6 @@ sudo keytool -import -trustcacerts -alias corp-ldap-ca \
 
 # Restart SANnav to pick up new truststore
 sudo sannav restart
-```
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-perimeter_controls: "Perimeter Controls" {shape: rectangle}
-identity_access: "Identity & Access" {shape: rectangle}
-audit_logging: "Audit & Logging" {shape: rectangle}
-core: "SANnav Core" {shape: hexagon}
-
-external -> perimeter_controls: traffic in
-perimeter_controls -> identity_access
-identity_access -> audit_logging
-audit_logging -> core: secured path
 ```
 
 ## Before you begin

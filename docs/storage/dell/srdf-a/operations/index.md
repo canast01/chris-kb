@@ -5,16 +5,11 @@ tags:
 ---
 # SRDF/A — Operations
 
-
-
 <div class="kb-summary">
 SRDF/A day-to-day operations — cycle monitoring, delta set management, STAR mode, and async replication health checks.
 
 *Applies to: SRDF/A*
 </div>
-![SRDF/A — Operations](../../../../assets/storage-dell-srdf-a-operations-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

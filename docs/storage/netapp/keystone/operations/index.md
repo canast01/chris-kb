@@ -5,16 +5,11 @@ tags:
 ---
 # NetApp Keystone — Operations
 
-
-
 <div class="kb-summary">
 NetApp Keystone — Operations reference: Health Checks, Procedures, Common Issues, CLI Reference, and 3 more.
 
 *Applies to: Keystone STaaS*
 </div>
-![NetApp Keystone — Operations](../../../../assets/storage-netapp-keystone-operations-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>

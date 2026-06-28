@@ -5,35 +5,12 @@ tags:
 ---
 # SnapCenter — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Overview, Topology, HA Options, Components, Connectivity and 2 more sections.
 
 *Applies to: SnapCenter 5.x*
 </div>
 ![SnapCenter — How It Works](../../../../assets/storage-netapp-snapcenter-architecture-how-it-works.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "SnapCenter" {shape: hexagon}
-topology: "Topology" {shape: rectangle}
-ha_options: "HA Options" {shape: rectangle}
-components: "Components" {shape: rectangle}
-connectivity: "Connectivity" {shape: rectangle}
-sizing_guidelines: "Sizing Guidelines" {shape: rectangle}
-plugins: "Plugins" {shape: rectangle}
-
-center -> topology
-center -> ha_options
-center -> components
-center -> connectivity
-center -> sizing_guidelines
-center -> plugins
-```
 
 ```plantuml
 @startuml

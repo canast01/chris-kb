@@ -4,32 +4,11 @@ tags:
 ---
 # EKS
 
-
 <div class="kb-summary">
 EKS reference covering Node Groups, Fargate Profiles, IAM OIDC Provider, Access Entries and Auth Mode, Add-ons and 1 more sections.
 
 *Applies to: AWS*
 </div>
-![EKS](../../../../assets/cloud-aws-cli-reference-eks-index.svg)
-
-
-
-```d2
-direction: right
-
-center: "AWS" {shape: hexagon}
-fargate_profiles: "Fargate Profiles" {shape: rectangle}
-iam_oidc_provider: "IAM OIDC Provider" {shape: rectangle}
-access_entries_and_auth_mode: "Access Entries and Auth Mode" {shape: rectangle}
-addons: "Add-ons" {shape: rectangle}
-pod_identity_associations: "Pod Identity Associations" {shape: rectangle}
-
-center -> fargate_profiles
-center -> iam_oidc_provider
-center -> access_entries_and_auth_mode
-center -> addons
-center -> pod_identity_associations
-```
 
 ## Fargate Profiles
 

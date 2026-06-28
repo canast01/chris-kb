@@ -7,10 +7,6 @@ tags:
 <div class="kb-summary">
 Data protection reference covering classification tiers, encryption standards, key management, governance frameworks, and data retention policy for enterprise environments.
 </div>
-![Security — Data Protection](../../assets/security-data-protection-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

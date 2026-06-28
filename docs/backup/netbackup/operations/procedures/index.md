@@ -5,34 +5,11 @@ tags:
 ---
 # NetBackup — Procedures
 
-
 <div class="kb-summary">
 NetBackup operational procedures: creating and tuning backup policies, storage unit configuration, schedule management, and deduplication pool maintenance.
 
 *Applies to: NetBackup 10.x*
 </div>
-![NetBackup — Procedures](../../../../assets/backup-netbackup-operations-procedures-index.svg)
-
-
-
-```d2
-direction: right
-
-hub: "NetBackup\nOperations" {shape: hexagon}
-backup_policies: "Backup Policies" {shape: rectangle}
-run_an_adhoc_backup: "Run an Ad-Hoc Backup" {shape: rectangle}
-restore_files_bprestore: "Restore Files (bprestore)" {shape: rectangle}
-check_job_status: "Check Job Status" {shape: rectangle}
-expire_a_backup_image: "Expire a Backup Image" {shape: rectangle}
-import_a_backup_from_tape_catalog_re: "Import a Backup from Tape (Catalog Recovery)" {shape: rectangle}
-
-hub -> backup_policies
-hub -> run_an_adhoc_backup
-hub -> restore_files_bprestore
-hub -> check_job_status
-hub -> expire_a_backup_image
-hub -> import_a_backup_from_tape_catalog_re
-```
 
 ## Before you begin
 

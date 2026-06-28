@@ -5,7 +5,6 @@ tags:
 ---
 # SRDF/A — CLI Reference
 
-
 <div class="kb-summary">
 SRDF/A CLI reference: `symrdf list`, `symrdf query`, `symrdf establish`, `symrdf resume`, `symrdf suspend`, and cycle time monitoring commands.
 
@@ -13,25 +12,7 @@ SRDF/A CLI reference: `symrdf list`, `symrdf query`, `symrdf establish`, `symrdf
 </div>
 ![SRDF/A — CLI Reference](../../../../assets/storage-dell-srdf-a-operations-cli-reference.svg)
 
-
 ---
-
-```d2
-direction: right
-
-hub: "SRDF/A\nOperations" {shape: hexagon}
-srdfa_command_decision_map: "SRDF/A Command Decision Map" {shape: rectangle}
-devicelevel_operations: "Device-Level Operations" {shape: rectangle}
-srdfa_consistency_protection: "SRDF/A Consistency Protection" {shape: rectangle}
-unisphere_rest_api: "Unisphere REST API" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> srdfa_command_decision_map
-hub -> devicelevel_operations
-hub -> srdfa_consistency_protection
-hub -> unisphere_rest_api
-hub -> verify
-```
 
 ## Before you begin
 
@@ -82,7 +63,6 @@ flowchart TD
     style need fill:#2563eb,color:#fff
     style cmdFailover fill:#be123c,color:#fff
 ```
-
 
 ---
 

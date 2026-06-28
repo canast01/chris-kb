@@ -7,16 +7,11 @@ search:
 ---
 # CyberArk — Common Issues
 
-
 <div class="kb-summary">
 Known issues and resolution steps for frequent CyberArk problems, covering the Vault, PVWA, PSM, and CPM components.
 
 *Applies to: CyberArk PAM*
 </div>
-![CyberArk — Common Issues](../../../../assets/security-cyberark-troubleshooting-common-issues-index.svg)
-
-
-
 
 ```d2
 direction: down

@@ -11,25 +11,7 @@ Common questions about Dell Unity operations, configuration, and troubleshooting
 </div>
 ![Dell Unity — Frequently Asked Questions](../../../../assets/storage-dell-unity-operations-faq.svg)
 
-
 ![Dell Unity FAQ](../../../../assets/storage-dell-unity-operations-faq.svg)
-
-```d2
-direction: right
-
-hub: "Unity XT\nOperations" {shape: hexagon}
-general: "General" {shape: rectangle}
-configuration: "Configuration" {shape: rectangle}
-operations: "Operations" {shape: rectangle}
-troubleshooting: "Troubleshooting" {shape: rectangle}
-backup_and_recovery: "Backup and Recovery" {shape: rectangle}
-
-hub -> general
-hub -> configuration
-hub -> operations
-hub -> troubleshooting
-hub -> backup_and_recovery
-```
 
 ## General
 

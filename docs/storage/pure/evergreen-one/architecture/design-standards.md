@@ -5,7 +5,6 @@ tags:
 ---
 # Evergreen//One — Design Standards
 
-
 <div class="kb-summary">
 Design Standards reference covering Committed Reserve Sizing, Network Requirements, Protocol Selection, SLA Compliance Requirements, Naming Standards and 1 more sections.
 
@@ -13,29 +12,9 @@ Design Standards reference covering Committed Reserve Sizing, Network Requiremen
 </div>
 ![Evergreen//One — Design Standards](../../../../assets/storage-pure-evergreen-one-architecture-design-standards.svg)
 
-
 ![Evergreen//One — Design Standards — Diagram](../../../../assets/storage-pure-evergreen-one-architecture-design-standards-diagram.svg)
 
 ---
-
-```d2
-direction: right
-
-center: "Evergreen//One" {shape: hexagon}
-committed_reserve_sizing: "Committed Reserve Sizing" {shape: rectangle}
-network_requirements: "Network Requirements" {shape: rectangle}
-protocol_selection: "Protocol Selection" {shape: rectangle}
-sla_compliance_requirements: "SLA Compliance Requirements" {shape: rectangle}
-naming_standards: "Naming Standards" {shape: rectangle}
-change_management: "Change Management" {shape: rectangle}
-
-center -> committed_reserve_sizing
-center -> network_requirements
-center -> protocol_selection
-center -> sla_compliance_requirements
-center -> naming_standards
-center -> change_management
-```
 
 ## Committed Reserve Sizing
 

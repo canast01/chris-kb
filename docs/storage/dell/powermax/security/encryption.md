@@ -5,37 +5,12 @@ tags:
 ---
 # PowerMax — Encryption
 
-
 <div class="kb-summary">
 Encryption reference covering Overview, Data at Rest Encryption (D@RE), Data in Flight Encryption — SRDF Encryption, Management Traffic — TLS Encryption, Encryption Key Rotation and 2 more sections.
 
 *Applies to: PowerMax 2500 / 8500*
 </div>
 ![PowerMax — Encryption](../../../../assets/storage-dell-powermax-security-encryption.svg)
-
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-data_at_rest_encryption_dre: "Data at Rest Encryption (D@RE)" {shape: rectangle}
-data_in_flight_encryption_srdf_encry: "Data in Flight Encryption — SRDF Encryption" {shape: rectangle}
-management_traffic_tls_encryption: "Management Traffic — TLS Encryption" {shape: rectangle}
-encryption_key_rotation: "Encryption Key Rotation" {shape: rectangle}
-compliance_reference: "Compliance Reference" {shape: rectangle}
-encryption_verification_checklist: "Encryption Verification Checklist" {shape: rectangle}
-core: "PowerMax Core" {shape: hexagon}
-
-external -> data_at_rest_encryption_dre: traffic in
-data_at_rest_encryption_dre -> data_in_flight_encryption_srdf_encry
-data_in_flight_encryption_srdf_encry -> management_traffic_tls_encryption
-management_traffic_tls_encryption -> encryption_key_rotation
-encryption_key_rotation -> compliance_reference
-compliance_reference -> encryption_verification_checklist
-encryption_verification_checklist -> core: secured path
-```
 
 ## Before you begin
 

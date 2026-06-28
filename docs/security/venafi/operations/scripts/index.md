@@ -5,16 +5,11 @@ tags:
 ---
 # Venafi — Scripts
 
-
 <div class="kb-summary">
 Automation scripts for Venafi cover certificate expiry reporting, automated renewal via VCert, discovery scan triggering, policy compliance reporting, and ADCS template alignment checking.
 
 *Applies to: Venafi TLS Protect*
 </div>
-![Venafi — Scripts](../../../../assets/security-venafi-operations-scripts-index.svg)
-
-
-
 
  Scripts are maintained in PowerShell (Windows environments) and Python (cross-platform / Linux runners).
 
@@ -37,15 +32,6 @@ $expireBefore = (Get-Date).AddDays(30).ToString("yyyy-MM-ddTHH:mm:ssZ")
 $uri = "$tppUrl/vedsdk/certificates?ValidToLess=$expireBefore"
 $certs = Invoke-RestMethod -Uri $uri -Headers @{ "X-Venafi-Token" = $token }
 $certs.Certificates | Export-Csv -Path "expiring-certs.csv" -NoTypeInformation
-```
-
-```d2
-direction: right
-
-center: "Scripts" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> verify
 ```
 
 ## Before you begin

@@ -7,16 +7,11 @@ search:
 ---
 # PowerShell — Troubleshooting
 
-
-
 <div class="kb-summary">
 Diagnosing script failures, module conflicts, remoting errors, execution policy issues, and common PowerShell problems.
 
 *Applies to: PowerShell 7.x*
 </div>
-![PowerShell — Troubleshooting](../../../assets/automation-powershell-troubleshooting-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

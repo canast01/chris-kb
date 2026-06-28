@@ -5,32 +5,11 @@ tags:
 ---
 # Dell VPLEX — Health Checks
 
-
 <div class="kb-summary">
 Health Checks reference covering Daily Checks, Health Check, Cluster Status, Director Health, Pre-Change Checklist and 1 more sections.
 
 *Applies to: VPLEX*
 </div>
-
-
-```d2
-direction: right
-
-hub: "VPLEX\nOperations" {shape: hexagon}
-run_this_routine: "Run This Routine" {shape: rectangle}
-daily_checks: "Daily Checks" {shape: rectangle}
-health_check: "Health Check" {shape: rectangle}
-cluster_status: "Cluster Status" {shape: rectangle}
-director_health: "Director Health" {shape: rectangle}
-prechange_checklist: "Pre-Change Checklist" {shape: rectangle}
-
-hub -> run_this_routine
-hub -> daily_checks
-hub -> health_check
-hub -> cluster_status
-hub -> director_health
-hub -> prechange_checklist
-```
 
 ## Before you begin
 

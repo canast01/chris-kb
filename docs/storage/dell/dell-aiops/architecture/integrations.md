@@ -12,18 +12,6 @@ Dell AIOps is embedded in CloudIQ — integrations are shared. Supported Dell ar
 </div>
 ![Dell AIOps — Integrations](../../../../assets/storage-dell-dell-aiops-architecture-integrations.svg)
 
-
-
-
-```d2
-direction: right
-
-center: "Dell AIOps" {shape: hexagon}
-integration_with_servicenow_cmdb: "Integration with ServiceNow CMDB" {shape: rectangle}
-
-center -> integration_with_servicenow_cmdb
-```
-
 ## Integration with ServiceNow CMDB
 
 - AIOps anomaly alerts can auto-create ServiceNow incidents linked to the affected CI

@@ -9,9 +9,6 @@ Jira knowledge base covering Data Center cluster architecture, issue management,
 
 *Applies to: Jira Cloud / Data Center*
 </div>
-![Jira](../../assets/itsm-jira-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

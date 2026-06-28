@@ -5,27 +5,11 @@ tags:
 ---
 # CloudIQ: Proactive Recommendations and Implementation Tracking
 
-
 <div class="kb-summary">
 CloudIQ: Proactive Recommendations and Implementation Tracking reference covering Implementing a Recommendation, Energy Savings Recommendations, Tracking Recommendation History, Common Recommendation Issues.
 
 *Applies to: CloudIQ*
 </div>
-![CloudIQ: Proactive Recommendations and Implementation Tracking](../../../../assets/storage-dell-cloudiq-operations-recommendations.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "CloudIQ\nOperations" {shape: hexagon}
-common_recommendation_issues: "Common Recommendation Issues" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> common_recommendation_issues
-hub -> verify
-```
 
 ## Before you begin
 

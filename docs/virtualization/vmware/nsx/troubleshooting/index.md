@@ -14,10 +14,6 @@ Troubleshooting reference for VMware NSX. Covers common overlay, gateway, and DF
 
 *Applies to: NSX-T 3.x / NSX 4.x*
 </div>
-![NSX — Troubleshooting](../../../../assets/virtualization-vmware-nsx-troubleshooting-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

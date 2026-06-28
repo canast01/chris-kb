@@ -10,20 +10,6 @@ Top-10 vSAN commands for cluster health, disk groups, object status, and policy 
 </div>
 ![vSAN Cheat Sheet](../../assets/reference-cheat-sheets-vsan.svg)
 
-
-
-
-```d2
-direction: right
-
-center: "Cheat Sheets" {shape: rectangle}
-common_commands: "Common commands" {shape: rectangle}
-powercli_run_against_vcenter: "PowerCLI (run against vCenter)" {shape: rectangle}
-
-center -> common_commands
-center -> powercli_run_against_vcenter
-```
-
 ## Common commands
 
 ```bash

@@ -5,29 +5,12 @@ tags:
 ---
 # PowerPath — Hardening
 
-
 <div class="kb-summary">
 Hardening reference covering Hardening Checklist, Compliance.
 
 *Applies to: PowerPath*
 </div>
 ![PowerPath — Hardening](../../../../assets/storage-dell-powerpath-security-hardening.svg)
-
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-hardening_checklist: "Hardening Checklist" {shape: rectangle}
-compliance: "Compliance" {shape: rectangle}
-core: "PowerPath Core" {shape: hexagon}
-
-external -> hardening_checklist: traffic in
-hardening_checklist -> compliance
-compliance -> core: secured path
-```
 
 ## Before you begin
 

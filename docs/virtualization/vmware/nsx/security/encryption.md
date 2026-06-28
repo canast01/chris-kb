@@ -8,7 +8,6 @@ tags:
 # NSX — Encryption
 ![NSX — Encryption](../../../../assets/virtualization-vmware-nsx-security-encryption.svg)
 
-
 ```bash
 # From a client machine — test TLS negotiation
 openssl s_client -connect nsx-manager.example.local:443 -tls1   # Should fail (TLS 1.0 rejected)
@@ -117,21 +116,6 @@ curl -sk -u 'admin:password' \
   -H "Content-Type: application/json" \
   -d "{\"pem_encoded\": \"$(cat siem-ca.crt | awk '{printf "%s\\n", $0}')\"}" \
   "https://<nsx-manager>/api/v1/trust-management/certificates?action=import"
-```
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-perimeter_controls: "Perimeter Controls" {shape: rectangle}
-identity_access: "Identity & Access" {shape: rectangle}
-audit_logging: "Audit & Logging" {shape: rectangle}
-core: "NSX-T Core" {shape: hexagon}
-
-external -> perimeter_controls: traffic in
-perimeter_controls -> identity_access
-identity_access -> audit_logging
-audit_logging -> core: secured path
 ```
 
 ## Before you begin

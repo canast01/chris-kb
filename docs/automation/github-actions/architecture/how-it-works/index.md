@@ -5,31 +5,13 @@ tags:
 ---
 # GitHub Actions — How It Works
 
-
 <div class="kb-summary">
 GitHub Actions is an event-driven CI/CD and automation platform embedded directly into GitHub repositories. It executes workflows in response to repository events, schedules, or external triggers.
 
 *Applies to: GitHub Actions*
 </div>
-![GitHub Actions — How It Works](../../../../assets/automation-github-actions-architecture-how-it-works-index.svg)
-
 
 ---
-
-```d2
-direction: right
-
-center: "GitHub Actions" {shape: hexagon}
-core_execution_model: "Core Execution Model" {shape: rectangle}
-concurrency: "Concurrency" {shape: rectangle}
-artifacts: "Artifacts" {shape: rectangle}
-platform_limits: "Platform Limits" {shape: rectangle}
-
-center -> core_execution_model
-center -> concurrency
-center -> artifacts
-center -> platform_limits
-```
 
 ## Core Execution Model
 
@@ -48,7 +30,6 @@ flowchart TD
     S5 --> A
     A --> NOTIFY[Notification / Downstream Jobs]
 ```
-
 
 | Scope | Registration Level | Shared Across |
 |---|---|---|

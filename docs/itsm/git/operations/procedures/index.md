@@ -4,8 +4,6 @@ tags:
   - operations
 ---
 # Git — Operations Procedures
-![Git — Operations Procedures](../../../../assets/itsm-git-operations-procedures-index.svg)
-
 
 ```bash
 # Common prefixes
@@ -141,25 +139,6 @@ git fsck --no-reflogs | grep "dangling commit" | awk '{print $3}' | \
 ```
 
 ---
-
-```d2
-direction: right
-
-hub: "Procedures\nOperations" {shape: hexagon}
-create_a_repository: "Create a Repository" {shape: rectangle}
-clone_a_repository: "Clone a Repository" {shape: rectangle}
-create_and_switch_branches: "Create and Switch Branches" {shape: rectangle}
-commit_and_push_changes: "Commit and Push Changes" {shape: rectangle}
-create_a_merge_request_pull_request: "Create a Merge Request / Pull Request" {shape: rectangle}
-resolve_a_merge_conflict: "Resolve a Merge Conflict" {shape: rectangle}
-
-hub -> create_a_repository
-hub -> clone_a_repository
-hub -> create_and_switch_branches
-hub -> commit_and_push_changes
-hub -> create_a_merge_request_pull_request
-hub -> resolve_a_merge_conflict
-```
 
 ## Before you begin
 

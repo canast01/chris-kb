@@ -5,7 +5,6 @@ tags:
 ---
 # RecoverPoint — Standards
 
-
 <div class="kb-summary">
 RecoverPoint design standards: RPA cluster sizing, consistency group limits, journal volume sizing, supported FC/iSCSI connectivity, and RPO target configuration.
 
@@ -13,23 +12,11 @@ RecoverPoint design standards: RPA cluster sizing, consistency group limits, jou
 </div>
 ![RecoverPoint — Standards](../../../../assets/storage-dell-recoverpoint-architecture-design-standards.svg)
 
-
 ---
-
-```d2
-direction: right
-
-center: "RecoverPoint" {shape: hexagon}
-naming_conventions: "Naming Conventions" {shape: rectangle}
-
-center -> naming_conventions
-```
 
 ## Naming Conventions
 
 ### Consistency Groups
-
-
 
 ---
 

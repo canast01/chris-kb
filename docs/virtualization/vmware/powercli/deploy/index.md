@@ -13,11 +13,6 @@ Installing PowerCLI, first connection to vCenter, service account setup, certifi
 
 *Applies to: PowerCLI 13.x*
 </div>
-![PowerCLI — Deploy](../../../../assets/virtualization-vmware-powercli-deploy-index.svg)
-
-
-
-
 
 ```mermaid
 flowchart TD

@@ -5,23 +5,11 @@ tags:
 ---
 # Azure — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Overview, Management Group Hierarchy, Identity Architecture.
 
 *Applies to: Azure*
 </div>
-![Azure — How It Works](../../../../assets/cloud-azure-architecture-how-it-works-index.svg)
-
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-management_group_hierarchy: "Management Group Hierarchy" {shape: rectangle}
-
-center -> management_group_hierarchy
-```
 
 ## Overview
 
@@ -45,7 +33,6 @@ graph TB
   class SUBP,SUBD cloud
   class HUB,SP1,SP2 net
 ```
-
 
 ---
 

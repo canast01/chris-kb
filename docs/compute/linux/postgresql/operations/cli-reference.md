@@ -12,28 +12,6 @@ PostgreSQL CLI reference — psql meta-commands, pg_dump/pg_restore, pg_baseback
 </div>
 ![PostgreSQL — CLI Reference](../../../../assets/compute-linux-postgresql-operations-cli-reference.svg)
 
-
-
-
-```d2
-direction: right
-
-hub: "PostgreSQL\nOperations" {shape: hexagon}
-psql: "psql" {shape: rectangle}
-pgdump_pgrestore: "pg_dump / pg_restore" {shape: rectangle}
-pgbasebackup: "pg_basebackup" {shape: rectangle}
-vacuumdb_reindexdb: "vacuumdb / reindexdb" {shape: rectangle}
-pgupgrade: "pg_upgrade" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> psql
-hub -> pgdump_pgrestore
-hub -> pgbasebackup
-hub -> vacuumdb_reindexdb
-hub -> pgupgrade
-hub -> verify
-```
-
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

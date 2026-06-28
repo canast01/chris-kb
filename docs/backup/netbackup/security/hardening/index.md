@@ -5,15 +5,11 @@ tags:
 ---
 # NetBackup — Hardening
 
-
 <div class="kb-summary">
 Hardening reference covering NetBackup Security Architecture, Firewall Ports.
 
 *Applies to: NetBackup 10.x*
 </div>
-![NetBackup — Hardening](../../../../assets/backup-netbackup-security-hardening-index.svg)
-
-
 
 ```d2
 direction: down
@@ -34,8 +30,6 @@ netbackup_security_architecture -> firewall_ports: hardens
 ---
 
 ## NetBackup Security Architecture
-
-
 
 Forward to SIEM: configure `nblog` syslog output or use a log shipper agent pointing to `/usr/openv/netbackup/logs/audit/`.
 

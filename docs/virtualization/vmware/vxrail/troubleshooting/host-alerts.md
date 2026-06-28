@@ -12,10 +12,6 @@ VxRail Host Alerts reference covering Overview, Where It Fits, Daily Checks, Hea
 
 *Applies to: VxRail 7.x / 8.x*
 </div>
-![VxRail Host Alerts](../../../../assets/virtualization-vmware-vxrail-troubleshooting-host-alerts.svg)
-
-
-
 
 ```d2
 direction: down

@@ -4,24 +4,9 @@ tags:
 ---
 # Health Checks
 
-
 <div class="kb-summary">
 DR health-check hub: daily, pre-change, post-change, and evidence-collection routines covering RPO compliance, backup job status, and replication lag thresholds.
 </div>
-![Health Checks](../../../assets/backup-dr-operations-health-checks-index.svg)
-
-
-
-```d2
-direction: right
-
-begin_checks: "Begin Checks" {shape: oval}
-run_this_routine: "Run This Routine" {shape: rectangle}
-generate_report: "Generate Report" {shape: oval}
-
-begin_checks -> run_this_routine
-run_this_routine -> generate_report
-```
 
 ## Run This Routine
 

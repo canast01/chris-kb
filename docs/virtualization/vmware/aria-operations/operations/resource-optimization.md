@@ -5,8 +5,6 @@ tags:
   - vmware
 ---
 # Performance — Resource Optimisation
-![Performance — Resource Optimisation](../../../../assets/virtualization-vmware-aria-operations-operations-resource-op.svg)
-
 
 ```bash
 # List processes consuming > 1% CPU
@@ -35,15 +33,6 @@ volume show -percent-used <50 -fields volume,size,used,percent-used
 
 # Large files older than 90 days
 find /data -type f -size +1G -mtime +90 -ls | sort -k7 -rn | head -20
-```
-
-```d2
-direction: right
-
-hub: "Aria Operations\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

@@ -4,8 +4,6 @@ tags:
   - git
 ---
 # Git — Design Standards
-![Git — Design Standards](../../../../assets/itsm-git-architecture-design-standards-index.svg)
-
 
 ```bash
 # Conventional Commits format

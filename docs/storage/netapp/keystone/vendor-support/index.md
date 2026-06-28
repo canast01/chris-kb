@@ -9,10 +9,6 @@ NetApp Keystone Vendor Support reference covering Keystone Success Manager, Supp
 
 *Applies to: Keystone STaaS*
 </div>
-![NetApp Keystone Vendor Support](../../../../assets/storage-netapp-keystone-vendor-support-index.svg)
-
-
-
 
 ```plantuml
 @startuml

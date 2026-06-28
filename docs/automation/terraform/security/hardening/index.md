@@ -5,14 +5,11 @@ tags:
 ---
 # Terraform — Hardening
 
-
 <div class="kb-summary">
 Hardening reference covering Security Scanning Pipeline, Dependency and Provider Security, Hardening Checklist.
 
 *Applies to: Terraform 1.x*
 </div>
-![Terraform — Hardening](../../../../assets/automation-terraform-security-hardening-index.svg)
-
 
 ```d2
 direction: down
@@ -59,7 +56,6 @@ graph LR
     reviewGate -->|Approved| tfApply
     reviewGate -->|Changes| prOpen
 ```
-
 
 ## Dependency and Provider Security
 

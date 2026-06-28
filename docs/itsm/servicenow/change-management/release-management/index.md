@@ -4,29 +4,11 @@ tags:
 ---
 # Release Management
 
-
 <div class="kb-summary">
 Coordinates planning, scheduling, and execution of software and infrastructure releases to minimise risk and ensure controlled delivery.
 
 *Applies to: ServiceNow*
 </div>
-![Release Management](../../../../assets/itsm-servicenow-change-management-release-management-index.svg)
-
-
-```d2
-direction: right
-
-center: "ServiceNow" {shape: hexagon}
-release_types: "Release Types" {shape: rectangle}
-release_lifecycle: "Release Lifecycle" {shape: rectangle}
-go_nogo_decision: "Go / No-Go Decision" {shape: rectangle}
-postrelease_actions: "Post-Release Actions" {shape: rectangle}
-
-center -> release_types
-center -> release_lifecycle
-center -> go_nogo_decision
-center -> postrelease_actions
-```
 
 ## Release Types
 
@@ -38,7 +20,6 @@ center -> postrelease_actions
 | Configuration release | Config-only changes (no code) | Weekly or ad hoc | Standard change |
 
 ## Release Lifecycle
-
 
 ## Go / No-Go Decision
 

@@ -9,8 +9,6 @@ OpenShift security: RBAC, OAuth identity providers, etcd encryption, pod securit
 
 *Applies to: OpenShift 4.x*
 </div>
-![OpenShift — Security](../../../assets/virtualization-openshift-security-index.svg)
-
 
 ![OpenShift — Security — Diagram](../../../assets/virtualization-openshift-security-diagram.svg)
 <div class="kb-grid">

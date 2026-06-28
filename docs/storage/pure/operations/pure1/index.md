@@ -5,37 +5,15 @@ tags:
 ---
 # Pure1 Cloud Management
 
-
 <div class="kb-summary">
 Pure1 Cloud Management reference covering Accessing Pure1, Key Navigation Areas, Capacity Planning, Pure1 AI (Copilot), Phone-Home Connectivity and 2 more sections.
 
 *Applies to: FlashArray Purity 6.x*
 </div>
-![Pure1 Cloud Management](../../../../assets/storage-pure-operations-pure1-index.svg)
-
 
 ![Pure1 Cloud Management — Diagram](../../../../assets/storage-pure-operations-pure1-diagram.svg)
 
 Pure1 is Pure Storage's cloud-based management and monitoring platform. It provides a unified view of all FlashArray and FlashBlade systems.
-
-```d2
-direction: right
-
-center: "Pure1" {shape: hexagon}
-accessing_pure1: "Accessing Pure1" {shape: rectangle}
-key_navigation_areas: "Key Navigation Areas" {shape: rectangle}
-capacity_planning: "Capacity Planning" {shape: rectangle}
-pure1_ai_copilot: "Pure1 AI (Copilot)" {shape: rectangle}
-phonehome_connectivity: "Phone-Home Connectivity" {shape: rectangle}
-rolebased_access_in_pure1: "Role-Based Access in Pure1" {shape: rectangle}
-
-center -> accessing_pure1
-center -> key_navigation_areas
-center -> capacity_planning
-center -> pure1_ai_copilot
-center -> phonehome_connectivity
-center -> rolebased_access_in_pure1
-```
 
 ## Before you begin
 

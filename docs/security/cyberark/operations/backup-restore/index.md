@@ -5,16 +5,11 @@ tags:
 ---
 # CyberArk — Backup & Restore
 
-
 <div class="kb-summary">
 The CyberArk Vault stores credentials that protect the entire organization. Loss of the Vault with no tested backup means total recovery failure.
 
 *Applies to: CyberArk PAM*
 </div>
-![CyberArk — Backup & Restore](../../../../assets/security-cyberark-operations-backup-restore-index.svg)
-
-
-
 
  This page covers Vault server key backup, database-level backup via PACLI, Disaster Recovery Vault configuration, full restore procedures, and DR failover.
 

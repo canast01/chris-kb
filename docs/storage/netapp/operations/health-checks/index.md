@@ -10,9 +10,6 @@ Health Checks reference covering Daily Health Check Workflow, AutoSupport Valida
 
 *Applies to: ONTAP 9.x*
 </div>
-![NetApp Operations — Health Checks](../../../../assets/storage-netapp-operations-health-checks-index.svg)
-
-
 
 ```d2
 direction: right

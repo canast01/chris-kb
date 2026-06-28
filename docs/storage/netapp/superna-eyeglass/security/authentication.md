@@ -5,15 +5,12 @@ tags:
 ---
 # Superna Eyeglass — Authentication
 
-
 <div class="kb-summary">
 Superna Eyeglass authentication — LDAP/AD integration, SSO configuration, and MFA enforcement.
 
 *Applies to: Superna Eyeglass*
 </div>
 ![Superna Eyeglass — Authentication](../../../../assets/storage-netapp-superna-eyeglass-security-authentication.svg)
-
-
 
 Eyeglass admin access is controlled through built-in roles: **admin** (full access including failover initiation) and **read-only** (dashboard and reporting access only).
 
@@ -25,21 +22,6 @@ Eyeglass admin access is controlled through built-in roles: **admin** (full acce
 Enforce least privilege — assign read-only to personnel who only require visibility into DR state without the ability to trigger failover actions.
 
 OneFS API credentials stored in Eyeglass for cluster connectivity should use dedicated service accounts with the minimum required OneFS privileges. See the [Integrations](../architecture/integrations/index.md) page for the required PowerScale role configuration.
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-perimeter_controls: "Perimeter Controls" {shape: rectangle}
-identity_access: "Identity & Access" {shape: rectangle}
-audit_logging: "Audit & Logging" {shape: rectangle}
-core: "Superna Eyeglass Core" {shape: hexagon}
-
-external -> perimeter_controls: traffic in
-perimeter_controls -> identity_access
-identity_access -> audit_logging
-audit_logging -> core: secured path
-```
 
 ## Before you begin
 

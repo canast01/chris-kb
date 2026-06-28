@@ -5,33 +5,11 @@ tags:
 ---
 # CyberArk — Scripts
 
-
 <div class="kb-summary">
 PowerShell automation using the `psPAS` module and the PVWA REST API. All automation uses a dedicated PVWA service account with the minimum required safe-level and administrative permissions. Never use a personal admin account for scheduled automation.
 
 *Applies to: CyberArk PAM*
 </div>
-![CyberArk — Scripts](../../../../assets/security-cyberark-operations-scripts-index.svg)
-
-
-```d2
-direction: right
-
-center: "Scripts" {shape: rectangle}
-automation_workflow: "Automation Workflow" {shape: rectangle}
-prerequisites: "Prerequisites" {shape: rectangle}
-account_onboarding: "Account Onboarding" {shape: rectangle}
-password_retrieval: "Password Retrieval" {shape: rectangle}
-safe_management: "Safe Management" {shape: rectangle}
-cpm_rotation_status_report: "CPM Rotation Status Report" {shape: rectangle}
-
-center -> automation_workflow
-center -> prerequisites
-center -> account_onboarding
-center -> password_retrieval
-center -> safe_management
-center -> cpm_rotation_status_report
-```
 
 ## Before you begin
 
@@ -41,9 +19,6 @@ center -> cpm_rotation_status_report
 - **Logging:** record every IP address, hostname, and credential set assigned during this deployment
 
 ---
-
-
-
 
 ## Automation Workflow
 

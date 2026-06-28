@@ -4,33 +4,13 @@ tags:
 ---
 # WWNs — World Wide Names
 
-
 <div class="kb-summary">
 A World Wide Name (WWN) is a 64-bit globally unique identifier assigned to every Fibre Channel device.
 </div>
-![WWNs — World Wide Names](../../../../assets/networking-protocols-fibre-channel-wwns-index.svg)
-
 
         WWNN vs WWPN STRUCTURE
 
 WWNs are used for zoning, host masking, and fabric registration.
-
-```d2
-direction: right
-
-center: "Fibre Channel" {shape: hexagon}
-wwn_types: "WWN Types" {shape: rectangle}
-wwn_format: "WWN Format" {shape: rectangle}
-finding_wwpns: "Finding WWPNs" {shape: rectangle}
-wwn_standards: "WWN Standards" {shape: rectangle}
-common_issues: "Common Issues" {shape: rectangle}
-
-center -> wwn_types
-center -> wwn_format
-center -> finding_wwpns
-center -> wwn_standards
-center -> common_issues
-```
 
 ## WWN Types
 

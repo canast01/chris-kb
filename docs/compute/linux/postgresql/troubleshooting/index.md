@@ -12,10 +12,6 @@ PostgreSQL troubleshooting hub: replication failures, bloat, lock contention, cr
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>
-![PostgreSQL — Troubleshooting](../../../../assets/compute-linux-postgresql-troubleshooting-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
   <a class="kb-card" href="common-issues/">Common Issues</a>

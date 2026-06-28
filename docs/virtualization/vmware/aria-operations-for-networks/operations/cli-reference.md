@@ -14,28 +14,6 @@ CLI and API reference for Aria Operations for Networks (vRNI): SSH appliance ser
 </div>
 ![Aria Operations for Networks — CLI Reference](../../../../assets/virtualization-vmware-aria-operations-for-networks-operation.svg)
 
-
-
-
-```d2
-direction: right
-
-hub: "Aria Operations for Networks\nOperations" {shape: hexagon}
-ssh_access: "SSH Access" {shape: rectangle}
-platform_service_management: "Platform Service Management" {shape: rectangle}
-collector_service_management: "Collector Service Management" {shape: rectangle}
-disk_usage: "Disk Usage" {shape: rectangle}
-network_connectivity_diagnostics: "Network Connectivity Diagnostics" {shape: rectangle}
-ipfix_netflow_diagnostics: "IPFIX / NetFlow Diagnostics" {shape: rectangle}
-
-hub -> ssh_access
-hub -> platform_service_management
-hub -> collector_service_management
-hub -> disk_usage
-hub -> network_connectivity_diagnostics
-hub -> ipfix_netflow_diagnostics
-```
-
 ## Before you begin
 
 - **Access:** SSH to platform VM as `ubuntu` user; sudo to root for service commands

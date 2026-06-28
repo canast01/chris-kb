@@ -4,8 +4,6 @@ tags:
   - powershell
 ---
 # PowerShell — Install & Upgrade
-![PowerShell — Install & Upgrade](../../../../assets/automation-powershell-operations-install-upgrade-index.svg)
-
 
 ```powershell
 # Using winget (Windows 10/11)
@@ -28,17 +26,6 @@ Get-Module -ListAvailable | Where-Object { $_.RepositorySourceLocation } |
             Write-Warning "Skipped $_: $($_.Exception.Message)"
         }
     }
-```
-
-```d2
-direction: right
-
-plan: "Plan" {shape: oval}
-verify: "Verify" {shape: rectangle}
-validate: "Validate" {shape: oval}
-
-plan -> verify
-verify -> validate
 ```
 
 ## Before you begin

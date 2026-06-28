@@ -3,8 +3,6 @@ tags:
   - dell
 ---
 # Dell AIOps — CLI and API Reference
-![Dell AIOps — CLI and API Reference](../../../../assets/storage-dell-dell-aiops-cli-reference-index.svg)
-
 
 ```bash
 # Obtain access token
@@ -47,19 +45,6 @@ curl -s "https://api.cloudiq.dell.com/cloudiq/rest/v1/recommendations?limit=50&o
 curl -s "https://api.cloudiq.dell.com/cloudiq/rest/v1/recommendations?\
 filter=severity%20eq%20'High'%20and%20state%20eq%20'ACTIVE'&limit=100" \
   -H "Authorization: Bearer ${TOKEN}" | jq '.results[] | {id,title,system_name}'
-```
-
-```d2
-direction: right
-
-center: "Dell AIOps" {shape: rectangle}
-component_a: "Component A" {shape: rectangle}
-component_b: "Component B" {shape: rectangle}
-component_c: "Component C" {shape: rectangle}
-
-center -> component_a
-center -> component_b
-center -> component_c
 ```
 
 ## See also

@@ -7,14 +7,11 @@ search:
 ---
 # Jira — Escalation
 
-
 <div class="kb-summary">
 Escalation reference covering Escalation Matrix, Emergency Contacts, Escalation Communication Template, Post-Incident Review (PIR) Checklist.
 
 *Applies to: Jira 9.x / Cloud*
 </div>
-![Jira — Escalation](../../../../assets/itsm-jira-troubleshooting-escalation-index.svg)
-
 
 ```plantuml
 @startuml
@@ -78,7 +75,6 @@ flowchart TD
     style DONE fill:#2d8a4e,color:#fff
     style VENDOR fill:#c0392b,color:#fff
 ```
-
 
 ## Pre-Escalation Self-Check
 

@@ -5,32 +5,11 @@ tags:
 ---
 # PowerPath — Health Checks
 
-
 <div class="kb-summary">
 Health Checks reference covering Daily Health Check, Pre-Maintenance Health Check, Path State Verification, Port / HBA Check, Policy Verification and 2 more sections.
 
 *Applies to: PowerPath*
 </div>
-
-
-```d2
-direction: right
-
-hub: "PowerPath\nOperations" {shape: hexagon}
-run_this_routine: "Run This Routine" {shape: rectangle}
-daily_health_check: "Daily Health Check" {shape: rectangle}
-premaintenance_health_check: "Pre-Maintenance Health Check" {shape: rectangle}
-path_state_verification: "Path State Verification" {shape: rectangle}
-port_hba_check: "Port / HBA Check" {shape: rectangle}
-policy_verification: "Policy Verification" {shape: rectangle}
-
-hub -> run_this_routine
-hub -> daily_health_check
-hub -> premaintenance_health_check
-hub -> path_state_verification
-hub -> port_hba_check
-hub -> policy_verification
-```
 
 ## Before you begin
 

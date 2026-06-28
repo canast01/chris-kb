@@ -10,10 +10,6 @@ Deep-dive articles on how core vSphere components work internally — cluster se
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![VMware Internals](../../../assets/virtualization-vmware-internals-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

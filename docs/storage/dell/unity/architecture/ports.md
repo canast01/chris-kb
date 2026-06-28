@@ -16,29 +16,6 @@ Firewall port reference for Dell Unity XT storage arrays. Covers Unisphere manag
 </div>
 ![Dell Unity — Ports and Network Requirements](../../../../assets/storage-dell-unity-architecture-ports.svg)
 
-
-
-
-
-```d2
-direction: right
-
-center: "Unity XT" {shape: hexagon}
-inbound_management: "Inbound — Management" {shape: rectangle}
-outbound: "Outbound" {shape: rectangle}
-data_protocols: "Data Protocols" {shape: rectangle}
-replication: "Replication" {shape: rectangle}
-firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> inbound_management
-center -> outbound
-center -> data_protocols
-center -> replication
-center -> firewall_zone_summary
-center -> verify
-```
-
 ## Inbound — Management
 
 | Port | Protocol | Source | Purpose |

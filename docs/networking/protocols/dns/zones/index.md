@@ -4,33 +4,9 @@ tags:
 ---
 # DNS Zones
 
-
 <div class="kb-summary">
 DNS Zones reference covering Overview, Zone Types Reference, Creating Zones, Zone Transfer, Zone Delegation and 2 more sections.
 </div>
-![DNS Zones](../../../../assets/networking-protocols-dns-zones-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "DNS" {shape: hexagon}
-zone_types_reference: "Zone Types Reference" {shape: rectangle}
-creating_zones: "Creating Zones" {shape: rectangle}
-zone_transfer: "Zone Transfer" {shape: rectangle}
-zone_delegation: "Zone Delegation" {shape: rectangle}
-adintegrated_zone_replication_scopes: "AD-Integrated Zone Replication Scopes" {shape: rectangle}
-known_issues: "Known Issues" {shape: rectangle}
-
-center -> zone_types_reference
-center -> creating_zones
-center -> zone_transfer
-center -> zone_delegation
-center -> adintegrated_zone_replication_scopes
-center -> known_issues
-```
 
 ## Overview
 

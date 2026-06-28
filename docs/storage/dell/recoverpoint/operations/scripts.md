@@ -6,7 +6,6 @@ tags:
 # RecoverPoint — Scripts
 ![RecoverPoint — Scripts](../../../../assets/storage-dell-recoverpoint-operations-scripts.svg)
 
-
 ```python
 #!/usr/bin/env python3
 # rp-cg-health.py
@@ -623,15 +622,6 @@ elif [ "$NOT_ACTIVE" -gt 0 ]; then
   exit 1
 fi
 exit 0
-```
-
-```d2
-direction: right
-
-hub: "RecoverPoint\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

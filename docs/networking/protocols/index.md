@@ -7,10 +7,6 @@ tags:
 <div class="kb-summary">
 Reference coverage for the networking and storage protocols used in enterprise infrastructure — Fibre Channel, iSCSI, NFS, SMB, NTP, SNMP, TLS, DNS, DHCP, and LDAP.
 </div>
-![Protocols](../../assets/networking-protocols-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="dhcp/">

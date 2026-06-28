@@ -10,13 +10,6 @@ Technical and operational reference for VMware Aria Operations for Logs. Covers 
 
 *Applies to: Aria Operations for Logs 8.x*
 </div>
-![Aria Operations for Logs](../../../assets/virtualization-vmware-aria-operations-for-logs-index.svg)
-
-
-
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

@@ -4,31 +4,9 @@ tags:
 ---
 # Pre-Change Health Check
 
-
 <div class="kb-summary">
 Pre-Change Health Check reference covering Overview, Pre-Change Check Timeline, Pre-Change Checklist, Go / No-Go Decision, Baseline Snapshot and 1 more sections.
 </div>
-![Pre-Change Health Check](../../../../assets/backup-dr-operations-health-checks-pre-change-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "DR Operations" {shape: hexagon}
-prechange_check_timeline: "Pre-Change Check Timeline" {shape: rectangle}
-prechange_checklist: "Pre-Change Checklist" {shape: rectangle}
-go_nogo_decision: "Go / No-Go Decision" {shape: rectangle}
-baseline_snapshot: "Baseline Snapshot" {shape: rectangle}
-backup_verification: "Backup Verification" {shape: rectangle}
-
-center -> prechange_check_timeline
-center -> prechange_checklist
-center -> go_nogo_decision
-center -> baseline_snapshot
-center -> backup_verification
-```
 
 ## Overview
 

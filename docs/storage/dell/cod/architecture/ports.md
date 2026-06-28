@@ -16,23 +16,6 @@ Firewall port reference for Dell COD (Capacity on Demand). COD is a capacity lic
 </div>
 ![Dell COD — Ports and Network Requirements](../../../../assets/storage-dell-cod-architecture-ports.svg)
 
-
-
-
-
-```d2
-direction: right
-
-center: "Cloud On Demand" {shape: hexagon}
-callhome_esrs_required_for_cod_licen: "Call-Home (ESRS) — Required for COD License Validation" {shape: rectangle}
-unisphere_management: "Unisphere Management" {shape: rectangle}
-firewall_summary: "Firewall Summary" {shape: rectangle}
-
-center -> callhome_esrs_required_for_cod_licen
-center -> unisphere_management
-center -> firewall_summary
-```
-
 ## Call-Home (ESRS) — Required for COD License Validation
 
 | Port | Protocol | Source | Destination | Purpose |

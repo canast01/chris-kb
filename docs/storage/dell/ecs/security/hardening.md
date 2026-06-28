@@ -5,37 +5,12 @@ tags:
 ---
 # Dell ECS — Hardening
 
-
 <div class="kb-summary">
 Hardening reference covering Hardening Checklist, Network Segmentation, Operating System Hardening (Node-Level), Object Lock (WORM) Hardening, Secrets Management Integration and 1 more sections.
 
 *Applies to: ECS 3.x*
 </div>
 ![Dell ECS — Hardening](../../../../assets/storage-dell-ecs-security-hardening.svg)
-
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-hardening_checklist: "Hardening Checklist" {shape: rectangle}
-network_segmentation: "Network Segmentation" {shape: rectangle}
-operating_system_hardening_nodelevel: "Operating System Hardening (Node-Level)" {shape: rectangle}
-object_lock_worm_hardening: "Object Lock (WORM) Hardening" {shape: rectangle}
-secrets_management_integration: "Secrets Management Integration" {shape: rectangle}
-security_validation: "Security Validation" {shape: rectangle}
-core: "ECS Core" {shape: hexagon}
-
-external -> hardening_checklist: traffic in
-hardening_checklist -> network_segmentation
-network_segmentation -> operating_system_hardening_nodelevel
-operating_system_hardening_nodelevel -> object_lock_worm_hardening
-object_lock_worm_hardening -> secrets_management_integration
-secrets_management_integration -> security_validation
-security_validation -> core: secured path
-```
 
 ## Before you begin
 

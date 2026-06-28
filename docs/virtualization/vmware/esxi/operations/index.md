@@ -12,10 +12,6 @@ Day-to-day operational reference for VMware ESXi. Covers CLI commands, health ch
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![ESXi — Operations](../../../../assets/virtualization-vmware-esxi-operations-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

@@ -5,14 +5,11 @@ tags:
 ---
 # GitHub Actions — Hardening
 
-
 <div class="kb-summary">
 GitHub Actions hardening: pinning actions to commit SHAs, restricting workflow triggers, disabling token permissions, branch protection rules, and audit log review.
 
 *Applies to: GitHub Actions*
 </div>
-![GitHub Actions — Hardening](../../../../assets/automation-github-actions-security-hardening-index.svg)
-
 
 ---
 
@@ -53,7 +50,6 @@ flowchart TD
     repo --> secretScan
     repo --> selfHostedIsolate
 ```
-
 
 ## Branch Protection
 

@@ -11,13 +11,6 @@ Operational reference for Dell VxRail HCI. Covers architecture, lifecycle manage
 
 *Applies to: VxRail 7.x · 8.x*
 </div>
-![VxRail](../../../assets/virtualization-vmware-vxrail-index.svg)
-
-
-
-
-
-
 
 <div class="kb-grid kb-grid-5">
 <a class="kb-card" href="architecture/"><strong>Architecture</strong><span>How it works, integrations, and design standards.</span></a>

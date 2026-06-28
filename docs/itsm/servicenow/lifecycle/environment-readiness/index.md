@@ -4,33 +4,11 @@ tags:
 ---
 # Environment Readiness Checklist
 
-
 <div class="kb-summary">
 Validates that infrastructure is prepared to receive a new workload, application deployment, or system migration. Complete before any provisioning begins.
 
 *Applies to: ServiceNow*
 </div>
-![Environment Readiness Checklist](../../../../assets/itsm-servicenow-lifecycle-environment-readiness-index.svg)
-
-
-```d2
-direction: right
-
-center: "ServiceNow" {shape: hexagon}
-readiness_assessment_flow: "Readiness Assessment Flow" {shape: rectangle}
-2_network_readiness: "2. Network Readiness" {shape: rectangle}
-3_security_readiness: "3. Security Readiness" {shape: rectangle}
-4_monitoring_readiness: "4. Monitoring Readiness" {shape: rectangle}
-5_backup_readiness: "5. Backup Readiness" {shape: rectangle}
-6_documentation_and_cmdb: "6. Documentation and CMDB" {shape: rectangle}
-
-center -> readiness_assessment_flow
-center -> 2_network_readiness
-center -> 3_security_readiness
-center -> 4_monitoring_readiness
-center -> 5_backup_readiness
-center -> 6_documentation_and_cmdb
-```
 
 ## Readiness Assessment Flow
 
@@ -45,7 +23,6 @@ flowchart TD
     G -->|Yes| H[Ready — proceed\nwith onboarding]
     G -->|No| I[Remediate blockers\nbefore proceeding]
 ```
-
 
 ## 2. Network Readiness
 

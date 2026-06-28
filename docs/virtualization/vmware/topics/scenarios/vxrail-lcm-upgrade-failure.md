@@ -14,29 +14,6 @@ pre-check failures, handling mid-upgrade node failures, and safely retrying afte
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![VxRail LCM Upgrade Failure](../../../../assets/virtualization-vmware-topics-scenarios-vxrail-lcm-upgrade-fa.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Scenarios" {shape: hexagon}
-products_involved: "Products Involved" {shape: rectangle}
-1_identify_the_failure_phase: "1. Identify the Failure Phase" {shape: rectangle}
-2_precheck_failures: "2. Pre-check Failures" {shape: rectangle}
-3_bundle_download_failure: "3. Bundle Download Failure" {shape: rectangle}
-4_midupgrade_node_failure: "4. Mid-Upgrade Node Failure" {shape: rectangle}
-5_use_rest_api_to_check_status_and_g: "5. Use REST API to Check Status and Generate Support Bundle" {shape: rectangle}
-
-center -> products_involved
-center -> 1_identify_the_failure_phase
-center -> 2_precheck_failures
-center -> 3_bundle_download_failure
-center -> 4_midupgrade_node_failure
-center -> 5_use_rest_api_to_check_status_and_g
-```
 
 ## Products Involved
 

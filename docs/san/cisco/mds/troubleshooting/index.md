@@ -7,16 +7,11 @@ search:
 ---
 # MDS — Troubleshooting
 
-
 <div class="kb-summary">
 Diagnosing MDS VSAN errors, port faults, FCNS registration failures, zone database issues, and FLOGI storms.
 
 *Applies to: Cisco MDS · Nexus*
 </div>
-![MDS — Troubleshooting](../../../../assets/san-cisco-mds-troubleshooting-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

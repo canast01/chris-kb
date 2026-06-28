@@ -7,13 +7,6 @@ tags:
 <div class="kb-summary">
 NetApp storage knowledge base covering ONTAP, SnapMirror, SnapCenter, and Keystone. Includes architecture references, operational procedures, CLI commands, replication, SnapMirror Active Sync, MetroCluster, and troubleshooting guides.
 </div>
-![NetApp Storage](../../assets/storage-netapp-index.svg)
-
-
-
-
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="deploy/"><strong>Deploy</strong><span>ONTAP cluster deployment, SVM configuration, and initial provisioning procedures.</span></a>

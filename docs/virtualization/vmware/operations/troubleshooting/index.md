@@ -7,16 +7,11 @@ search:
 ---
 # Virtualization Troubleshooting
 
-
 <div class="kb-summary">
 Virtualization troubleshooting: VM power-on failures, network port-group misconfiguration, storage access loss, HA admission control issues, and escalation workflows.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Virtualization Troubleshooting](../../../../assets/virtualization-vmware-operations-troubleshooting-index.svg)
-
-
-
 
 ```d2
 direction: down

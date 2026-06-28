@@ -5,29 +5,11 @@ tags:
 ---
 # COD — Health Checks
 
-
 <div class="kb-summary">
 Health Checks reference covering Daily Checks, Health Check Commands, Change Readiness, Post-Change Validation.
 
 *Applies to: Cloud for Desktop (COD)*
 </div>
-
-
-
-```d2
-direction: right
-
-hub: "Cloud On Demand\nOperations" {shape: hexagon}
-run_this_routine: "Run This Routine" {shape: rectangle}
-change_readiness: "Change Readiness" {shape: rectangle}
-postchange_validation: "Post-Change Validation" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> run_this_routine
-hub -> change_readiness
-hub -> postchange_validation
-hub -> verify
-```
 
 ## Before you begin
 

@@ -14,30 +14,7 @@ Reusable scripts for Nutanix operational tasks — cluster health snapshot, stor
 </div>
 ![Nutanix — Scripts](../../../assets/virtualization-nutanix-operations-scripts.svg)
 
-
-
-
-
 ---
-
-```d2
-direction: right
-
-hub: "Nutanix AHV\nOperations" {shape: hexagon}
-daily_health_snapshot: "Daily Health Snapshot" {shape: rectangle}
-ncc_health_check_automation: "NCC Health Check Automation" {shape: rectangle}
-storage_utilisation_report: "Storage Utilisation Report" {shape: rectangle}
-vm_inventory_export: "VM Inventory Export" {shape: rectangle}
-maintenance_mode_helper: "Maintenance Mode Helper" {shape: rectangle}
-rest_api_vm_power_operations: "REST API — VM Power Operations" {shape: rectangle}
-
-hub -> daily_health_snapshot
-hub -> ncc_health_check_automation
-hub -> storage_utilisation_report
-hub -> vm_inventory_export
-hub -> maintenance_mode_helper
-hub -> rest_api_vm_power_operations
-```
 
 ## Before you begin
 
@@ -249,7 +226,6 @@ BASE    = f"https://{PC_HOST}:9440/api/nutanix/v3"
 AUTH    = (PC_USER, PC_PASS)
 HEADERS = {"Content-Type": "application/json"}
 
-
 def list_vms(limit=50):
     """List VMs from Prism Central."""
     payload = {"kind": "vm", "length": limit}
@@ -258,14 +234,12 @@ def list_vms(limit=50):
     r.raise_for_status()
     return r.json().get("entities", [])
 
-
 def get_vm(vm_uuid):
     """Get a VM's full spec."""
     r = requests.get(f"{BASE}/vms/{vm_uuid}",
                      auth=AUTH, headers=HEADERS, verify=False)
     r.raise_for_status()
     return r.json()
-
 
 def power_vm(vm_uuid, action="ON"):
     """Power a VM on or off. action: ON | OFF | POWERCYCLE"""
@@ -277,7 +251,6 @@ def power_vm(vm_uuid, action="ON"):
                      auth=AUTH, headers=HEADERS, verify=False)
     r.raise_for_status()
     return r.json()
-
 
 if __name__ == "__main__":
     vms = list_vms()
@@ -311,8 +284,6 @@ done
 
 ---
 
-
-
 ---
 
 ## Verify
@@ -321,7 +292,6 @@ done
 - Daily health snapshot email arrives with attached JSON report
 - VM inventory CSV contains all expected VMs when opened in a spreadsheet tool
 - REST API Python script returns HTTP 200 and non-empty JSON payload
-
 
 ---
 

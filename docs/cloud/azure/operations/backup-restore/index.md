@@ -5,16 +5,11 @@ tags:
 ---
 # Azure — Backup & Restore
 
-
 <div class="kb-summary">
 Azure Backup and Restore — Recovery Services vault management, VM backup policies, snapshot schedules (hourly/daily/weekly), volume-level and file-level restore procedures, replication to DR site, and quarterly test restore cadence.
 
 *Applies to: Azure*
 </div>
-![Azure — Backup & Restore](../../../../assets/cloud-azure-operations-backup-restore-index.svg)
-
-
-
 
 > Azure Backup jobs, restore procedures, and Recovery Services vault management.
 

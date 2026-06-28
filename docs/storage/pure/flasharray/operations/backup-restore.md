@@ -5,14 +5,12 @@ tags:
 ---
 # FlashArray — Backup & Restore
 
-
 <div class="kb-summary">
 Backup & Restore reference covering Protection Group Snapshot Configuration, Restore Procedures, Backup Validation, Snapshot Capacity Management, Backup Integration with Veeam.
 
 *Applies to: FlashArray Purity 6.x*
 </div>
 ![FlashArray — Backup & Restore](../../../../assets/storage-pure-flasharray-operations-backup-restore.svg)
-
 
 ![FlashArray — Backup & Restore — Diagram](../../../../assets/storage-pure-flasharray-operations-backup-restore-diagram.svg)
 
@@ -27,25 +25,6 @@ FlashArray provides multiple data protection tiers. Choose the tier that matches
 | Application-consistent backup | Veeam / Commvault / NBU via FlashArray snapshot API | RPO of backup schedule | Application-dependent | Long-term retention; offsite backup; compliance archive |
 
 ---
-
-```d2
-direction: right
-
-hub: "FlashArray\nOperations" {shape: hexagon}
-protection_group_snapshot_configurat: "Protection Group Snapshot Configuration" {shape: rectangle}
-restore_procedures: "Restore Procedures" {shape: rectangle}
-backup_validation: "Backup Validation" {shape: rectangle}
-snapshot_capacity_management: "Snapshot Capacity Management" {shape: rectangle}
-backup_integration_with_veeam: "Backup Integration with Veeam" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> protection_group_snapshot_configurat
-hub -> restore_procedures
-hub -> backup_validation
-hub -> snapshot_capacity_management
-hub -> backup_integration_with_veeam
-hub -> verify
-```
 
 ## Before you begin
 

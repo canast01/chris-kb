@@ -12,10 +12,6 @@ How to escalate Commvault backup issues to Commvault support: what data to colle
 
 *Applies to: Commvault 2024.x / CS 11.x*
 </div>
-![Commvault — Escalation](../../../../assets/backup-commvault-troubleshooting-escalation-index.svg)
-
-
-
 
 ---
 

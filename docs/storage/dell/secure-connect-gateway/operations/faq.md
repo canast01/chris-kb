@@ -11,25 +11,7 @@ Common questions about Dell Secure Connect Gateway operations, configuration, an
 </div>
 ![Dell Secure Connect Gateway — Frequently Asked Questions](../../../../assets/storage-dell-secure-connect-gateway-operations-faq.svg)
 
-
 ![Dell Secure Connect Gateway FAQ](../../../../assets/storage-dell-secure-connect-gateway-operations-faq.svg)
-
-```d2
-direction: right
-
-hub: "Secure Connect Gateway\nOperations" {shape: hexagon}
-general: "General" {shape: rectangle}
-configuration: "Configuration" {shape: rectangle}
-operations: "Operations" {shape: rectangle}
-troubleshooting: "Troubleshooting" {shape: rectangle}
-backup_and_recovery: "Backup and Recovery" {shape: rectangle}
-
-hub -> general
-hub -> configuration
-hub -> operations
-hub -> troubleshooting
-hub -> backup_and_recovery
-```
 
 ## General
 

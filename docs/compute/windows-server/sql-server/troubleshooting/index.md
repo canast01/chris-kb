@@ -12,10 +12,6 @@ SQL Server troubleshooting hub: AG health, job failures, deadlocks, tempdb conte
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
-![SQL Server — Troubleshooting](../../../../assets/compute-windows-server-sql-server-troubleshooting-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
   <a class="kb-card" href="common-issues/">Common Issues</a>

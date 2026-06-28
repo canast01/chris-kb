@@ -5,35 +5,13 @@ tags:
 ---
 # SnapMirror — Procedures
 
-
 <div class="kb-summary">
 SnapMirror procedures: creating protection relationships, scheduling updates, quiescing for maintenance, breaking for failover, resyncing after outage, and deleting stale relationships.
 
 *Applies to: SnapMirror*
 </div>
 
-
-
 ---
-
-```d2
-direction: right
-
-hub: "SnapMirror\nOperations" {shape: hexagon}
-change_readiness: "Change Readiness" {shape: rectangle}
-maintenance_window: "Maintenance Window" {shape: rectangle}
-postchange_validation: "Post-Change Validation" {shape: rectangle}
-failover_procedure: "Failover Procedure" {shape: rectangle}
-resync_procedure: "Resync Procedure" {shape: rectangle}
-initialize_a_snapmirror_relationship: "Initialize a SnapMirror Relationship" {shape: rectangle}
-
-hub -> change_readiness
-hub -> maintenance_window
-hub -> postchange_validation
-hub -> failover_procedure
-hub -> resync_procedure
-hub -> initialize_a_snapmirror_relationship
-```
 
 ## Before you begin
 

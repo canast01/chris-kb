@@ -9,13 +9,6 @@ Dell EMC RecoverPoint journal-based continuous data protection — RPA clusters 
 
 *Applies to: RecoverPoint 5.x*
 </div>
-![RecoverPoint](../../../assets/storage-dell-recoverpoint-index.svg)
-
-
-
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

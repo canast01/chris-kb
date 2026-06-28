@@ -9,10 +9,6 @@ Mid-range unified storage — block (FC/iSCSI), file (NFS/SMB), and VMware integ
 
 *Applies to: Unity XT*
 </div>
-![Dell Unity XT](../../../assets/storage-dell-unity-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

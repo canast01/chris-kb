@@ -10,9 +10,6 @@ PowerStore day-to-day operations — volume/file provisioning, native replicatio
 
 *Applies to: PowerStore 3.x*
 </div>
-![PowerStore — Operations](../../../../assets/storage-dell-powerstore-operations-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

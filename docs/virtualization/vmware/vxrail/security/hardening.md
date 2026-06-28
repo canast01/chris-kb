@@ -13,29 +13,7 @@ Hardening checklist and procedures for VxRail in the VMware product context. Cov
 </div>
 ![VxRail — Hardening](../../../../assets/virtualization-vmware-vxrail-security-hardening.svg)
 
-
-
-
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-vxrail_manager_hardening: "VxRail Manager Hardening" {shape: rectangle}
-idrac_hardening_per_node: "iDRAC Hardening (Per Node)" {shape: rectangle}
-vsphereesxi_hardening: "vSphere/ESXi Hardening" {shape: rectangle}
-network_hardening: "Network Hardening" {shape: rectangle}
-supportassist_security_consideration: "SupportAssist Security Considerations" {shape: rectangle}
-core: "VxRail Core" {shape: hexagon}
-
-external -> vxrail_manager_hardening: traffic in
-vxrail_manager_hardening -> idrac_hardening_per_node
-idrac_hardening_per_node -> vsphereesxi_hardening
-vsphereesxi_hardening -> network_hardening
-network_hardening -> supportassist_security_consideration
-supportassist_security_consideration -> core: secured path
-```
 
 ## Before you begin
 

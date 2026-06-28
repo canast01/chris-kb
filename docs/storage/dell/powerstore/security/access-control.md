@@ -5,37 +5,12 @@ tags:
 ---
 # PowerStore — Access Control
 
-
 <div class="kb-summary">
 Access Control reference covering Role-Based Access Control, User Account Management, Host Access Control, NFS Export Access Control, SMB Share Access Control and 1 more sections.
 
 *Applies to: PowerStore 3.x*
 </div>
 ![PowerStore — Access Control](../../../../assets/storage-dell-powerstore-security-access-control.svg)
-
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-rolebased_access_control: "Role-Based Access Control" {shape: rectangle}
-user_account_management: "User Account Management" {shape: rectangle}
-host_access_control: "Host Access Control" {shape: rectangle}
-nfs_export_access_control: "NFS Export Access Control" {shape: rectangle}
-smb_share_access_control: "SMB Share Access Control" {shape: rectangle}
-access_review_checklist_quarterly: "Access Review Checklist (Quarterly)" {shape: rectangle}
-core: "PowerStore Core" {shape: hexagon}
-
-external -> rolebased_access_control: traffic in
-rolebased_access_control -> user_account_management
-user_account_management -> host_access_control
-host_access_control -> nfs_export_access_control
-nfs_export_access_control -> smb_share_access_control
-smb_share_access_control -> access_review_checklist_quarterly
-access_review_checklist_quarterly -> core: secured path
-```
 
 ## Before you begin
 

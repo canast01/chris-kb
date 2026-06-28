@@ -5,16 +5,11 @@ tags:
 ---
 # Superna Eyeglass — Operations
 
-
-
 <div class="kb-summary">
 Superna Eyeglass day-to-day operations — DR orchestration, configuration sync monitoring, and SyncIQ policy management.
 
 *Applies to: Superna Eyeglass*
 </div>
-![Superna Eyeglass — Operations](../../../../assets/storage-netapp-superna-eyeglass-operations-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

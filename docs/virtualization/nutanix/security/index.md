@@ -5,10 +5,6 @@ Security configuration for Nutanix HCI — OS hardening, SSH lockdown, Active Di
 
 *Applies to: AOS 6.x · AHV*
 </div>
-![Nutanix — Security](../../../assets/virtualization-nutanix-security-index.svg)
-
-
-
 
 <div class="kb-grid">
   <a class="kb-card" href="hardening/">

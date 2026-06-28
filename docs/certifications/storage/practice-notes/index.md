@@ -4,33 +4,9 @@ tags:
 ---
 # Storage Practice Notes
 
-
 <div class="kb-summary">
 Storage Practice Notes reference covering RAID Level Quick Reference, Thin vs Thick Provisioning, Deduplication vs Compression, Replication Types, Snapshot vs Clone and 1 more sections.
 </div>
-![Storage Practice Notes](../../../assets/certifications-storage-practice-notes-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Practice Notes" {shape: hexagon}
-raid_level_quick_reference: "RAID Level Quick Reference" {shape: rectangle}
-thin_vs_thick_provisioning: "Thin vs Thick Provisioning" {shape: rectangle}
-deduplication_vs_compression: "Deduplication vs Compression" {shape: rectangle}
-replication_types: "Replication Types" {shape: rectangle}
-snapshot_vs_clone: "Snapshot vs Clone" {shape: rectangle}
-study_checklist: "Study Checklist" {shape: rectangle}
-
-center -> raid_level_quick_reference
-center -> thin_vs_thick_provisioning
-center -> deduplication_vs_compression
-center -> replication_types
-center -> snapshot_vs_clone
-center -> study_checklist
-```
 
 ## RAID Level Quick Reference
 

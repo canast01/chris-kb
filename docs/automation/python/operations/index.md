@@ -5,16 +5,11 @@ tags:
 ---
 # Python Automation — Operations
 
-
-
 <div class="kb-summary">
 Running, scheduling, and maintaining Python automation scripts — virtual environments, dependency management, and job monitoring.
 
 *Applies to: Python 3.x*
 </div>
-![Python Automation — Operations](../../../assets/automation-python-operations-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

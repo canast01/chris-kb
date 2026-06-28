@@ -6,32 +6,11 @@ tags:
 ---
 # Tanzu — Health Checks
 
-
 <div class="kb-summary">
 Health Checks reference covering Supervisor Cluster Health, TKG Cluster Health, Node Resource Utilization, PVC and Storage Health, Load Balancer / Service Health and 3 more sections.
 
 *Applies to: Tanzu 3.x*
 </div>
-
-
-```d2
-direction: right
-
-hub: "Tanzu\nOperations" {shape: hexagon}
-run_this_routine: "Run This Routine" {shape: rectangle}
-supervisor_cluster_health: "Supervisor Cluster Health" {shape: rectangle}
-tkg_cluster_health: "TKG Cluster Health" {shape: rectangle}
-node_resource_utilization: "Node Resource Utilization" {shape: rectangle}
-pvc_and_storage_health: "PVC and Storage Health" {shape: rectangle}
-load_balancer_service_health: "Load Balancer / Service Health" {shape: rectangle}
-
-hub -> run_this_routine
-hub -> supervisor_cluster_health
-hub -> tkg_cluster_health
-hub -> node_resource_utilization
-hub -> pvc_and_storage_health
-hub -> load_balancer_service_health
-```
 
 ## Before you begin
 

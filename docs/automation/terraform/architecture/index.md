@@ -33,17 +33,6 @@ Declarative IaC tool with Go provider plugins for 1000+ APIs; single CLI binary 
 
 </div>
 
-```d2
-direction: right
-
-center: "Architecture" {shape: hexagon}
-state_backends: "State Backends" {shape: rectangle}
-highlevel_architecture: "High-Level Architecture" {shape: rectangle}
-
-center -> state_backends
-center -> highlevel_architecture
-```
-
 ## State Backends
 
 | Backend | State storage | Locking mechanism | Best for |

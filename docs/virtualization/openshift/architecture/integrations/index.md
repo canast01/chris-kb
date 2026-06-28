@@ -9,10 +9,6 @@ vSphere IPI and UPI installation modes, LDAP/Active Directory identity, Quay ima
 
 *Applies to: OpenShift 4.x*
 </div>
-![OpenShift — Integrations](../../../../assets/virtualization-openshift-architecture-integrations-index.svg)
-
-
-
 
 ```mermaid
 graph LR
@@ -43,25 +39,6 @@ graph LR
     class OCP cluster
     class VS,ID,REG,SEC,LOG,MON,CD integration
     class VS1,VS2,ID1,ID2,REG1,REG2,SEC1,SEC2,CD1,CD2 detail
-```
-
-```d2
-direction: right
-
-center: "OpenShift" {shape: hexagon}
-vsphere_ipi_integration: "vSphere IPI Integration" {shape: rectangle}
-ldap_active_directory_identity_provi: "LDAP / Active Directory Identity Provider" {shape: rectangle}
-image_registry_integration: "Image Registry Integration" {shape: rectangle}
-certmanager_integration: "cert-manager Integration" {shape: rectangle}
-argocd_openshift_gitops: "ArgoCD / OpenShift GitOps" {shape: rectangle}
-advanced_cluster_management_acm: "Advanced Cluster Management (ACM)" {shape: rectangle}
-
-center -> vsphere_ipi_integration
-center -> ldap_active_directory_identity_provi
-center -> image_registry_integration
-center -> certmanager_integration
-center -> argocd_openshift_gitops
-center -> advanced_cluster_management_acm
 ```
 
 ## vSphere IPI Integration

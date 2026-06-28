@@ -7,33 +7,12 @@ tags:
 ---
 # NSX — Design Standards
 
-
 <div class="kb-summary">
 Design Standards reference covering Segments (Logical Switches), Design Rules, Configuration Baselines, Version Compatibility Matrix, Change Control Standards.
 
 *Applies to: NSX-T 3.x · NSX 4.x*
 </div>
 ![NSX — Design Standards](../../../../assets/virtualization-vmware-nsx-architecture-design-standards.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "NSX-T" {shape: hexagon}
-topology_design: "Topology Design" {shape: rectangle}
-design_rules: "Design Rules" {shape: rectangle}
-configuration_baselines: "Configuration Baselines" {shape: rectangle}
-version_compatibility_matrix: "Version Compatibility Matrix" {shape: rectangle}
-change_control_standards: "Change Control Standards" {shape: rectangle}
-
-center -> topology_design
-center -> design_rules
-center -> configuration_baselines
-center -> version_compatibility_matrix
-center -> change_control_standards
-```
 
 ## Topology Design
 

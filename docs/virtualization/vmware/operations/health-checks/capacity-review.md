@@ -4,15 +4,11 @@ tags:
 ---
 # Capacity Review
 
-
 <div class="kb-summary">
 Run this check weekly or after any significant workload addition.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Capacity Review](../../../../assets/virtualization-vmware-operations-health-checks-capacity-revi.svg)
-
-
 
 Alert thresholds:
 - > 75% used: review and plan expansion

@@ -4,25 +4,11 @@ tags:
 ---
 # InsightIQ: Throughput, Latency, IOPS, and Protocol Performance Dashboards
 
-
 <div class="kb-summary">
 InsightIQ: Throughput, Latency, IOPS, and Protocol Performance Dashboards reference covering Protocol Performance Breakdown, Identifying Performance Bottlenecks via InsightIQ, Collecting a OneFS Performance Support Bundle, Common Performance Issues.
 
 *Applies to: InsightIQ*
 </div>
-![InsightIQ: Throughput, Latency, IOPS, and Protocol Performance Dashboards](../../../../assets/storage-netapp-insightiq-performance-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "InsightIQ" {shape: hexagon}
-common_performance_issues: "Common Performance Issues" {shape: rectangle}
-
-center -> common_performance_issues
-```
 
 ## Common Performance Issues
 

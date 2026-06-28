@@ -8,10 +8,6 @@ tags:
 <div class="kb-summary">
 Security day-to-day operations — certificate lifecycle, PAM account management, and hardening reviews.
 </div>
-![Security — Operations](../../assets/security-operations-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

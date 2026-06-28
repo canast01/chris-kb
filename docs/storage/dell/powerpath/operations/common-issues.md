@@ -5,35 +5,12 @@ tags:
 ---
 # PowerPath — Known Issues
 
-
 <div class="kb-summary">
 Known Issues reference covering Incident Triage, Dead Paths After Reboot, Paths Not Recovering After SAN Maintenance, Device Not Visible After LUN Provisioning, Unlicensed Paths (unlic State) and 5 more sections.
 
 *Applies to: PowerPath*
 </div>
 ![PowerPath — Known Issues](../../../../assets/storage-dell-powerpath-operations-common-issues.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "PowerPath\nOperations" {shape: hexagon}
-incident_triage: "Incident Triage" {shape: rectangle}
-dead_paths_after_reboot: "Dead Paths After Reboot" {shape: rectangle}
-paths_not_recovering_after_san_maint: "Paths Not Recovering After SAN Maintenance" {shape: rectangle}
-device_not_visible_after_lun_provisi: "Device Not Visible After LUN Provisioning" {shape: rectangle}
-unlicensed_paths_unlic_state: "Unlicensed Paths (unlic State)" {shape: rectangle}
-wrong_load_balancing_policy: "Wrong Load Balancing Policy" {shape: rectangle}
-
-hub -> incident_triage
-hub -> dead_paths_after_reboot
-hub -> paths_not_recovering_after_san_maint
-hub -> device_not_visible_after_lun_provisi
-hub -> unlicensed_paths_unlic_state
-hub -> wrong_load_balancing_policy
-```
 
 ## Before you begin
 

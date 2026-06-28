@@ -6,31 +6,9 @@ tags:
 ---
 # GPU Monitoring
 
-
 <div class="kb-summary">
 Monitoring GPU workloads requires tracking utilisation, memory, temperature, power draw, and errors. nvidia-smi provides instant snapshots; DCGM provides time-series and health checks for production clusters.
 </div>
-![GPU Monitoring](../../../../assets/compute-local-ai-gpu-monitoring-index.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "GPU Compute\nOperations" {shape: hexagon}
-nvidiasmi_basics: "nvidia-smi Basics" {shape: rectangle}
-key_metrics_to_track: "Key Metrics to Track" {shape: rectangle}
-dcgm_for_production_clusters: "DCGM for Production Clusters" {shape: rectangle}
-prometheus_grafana_stack: "Prometheus + Grafana Stack" {shape: rectangle}
-alerts_for_gpu_workloads: "Alerts for GPU Workloads" {shape: rectangle}
-
-hub -> nvidiasmi_basics
-hub -> key_metrics_to_track
-hub -> dcgm_for_production_clusters
-hub -> prometheus_grafana_stack
-hub -> alerts_for_gpu_workloads
-```
 
 ```vegalite
 {

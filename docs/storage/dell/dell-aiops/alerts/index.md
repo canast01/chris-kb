@@ -4,27 +4,11 @@ tags:
 ---
 # Dell AIOps: AI-Generated Alerts, Anomaly Detection, and Correlation
 
-
 <div class="kb-summary">
 Dell AIOps: AI-Generated Alerts, Anomaly Detection, and Correlation reference covering Alert Correlation, Predicted Failure Alerts, Acknowledging and Dismissing AI Alerts, Common AI Alert Issues.
 
 *Applies to: Dell AIOps*
 </div>
-![Dell AIOps: AI-Generated Alerts, Anomaly Detection, and Correlation](../../../../assets/storage-dell-dell-aiops-alerts-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Dell AIOps" {shape: hexagon}
-acknowledging_and_dismissing_ai_aler: "Acknowledging and Dismissing AI Alerts" {shape: rectangle}
-common_ai_alert_issues: "Common AI Alert Issues" {shape: rectangle}
-
-center -> acknowledging_and_dismissing_ai_aler
-center -> common_ai_alert_issues
-```
 
 ## Acknowledging and Dismissing AI Alerts
 

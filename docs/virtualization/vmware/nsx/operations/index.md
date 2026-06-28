@@ -12,10 +12,6 @@ Day-to-day operational reference for VMware NSX. Covers CLI commands, health che
 
 *Applies to: NSX-T 3.x / NSX 4.x*
 </div>
-![NSX — Operations](../../../../assets/virtualization-vmware-nsx-operations-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

@@ -11,9 +11,6 @@ Aria Suite Lifecycle hardening — certificate management, RBAC, locker credenti
 
 *Applies to: Aria LCM 8.x*
 </div>
-![Aria Suite Lifecycle — Security](../../../../assets/virtualization-vmware-aria-suite-lifecycle-security-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

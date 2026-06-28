@@ -12,28 +12,6 @@ PostgreSQL automation scripts — base backup, WAL archiving, replication lag mo
 </div>
 ![PostgreSQL — Scripts](../../../../assets/compute-linux-postgresql-operations-scripts.svg)
 
-
-
-
-```d2
-direction: right
-
-hub: "PostgreSQL\nOperations" {shape: hexagon}
-nightly_base_backup: "Nightly Base Backup" {shape: rectangle}
-replication_lag_monitor: "Replication Lag Monitor" {shape: rectangle}
-bloat_report: "Bloat Report" {shape: rectangle}
-longrunning_transaction_alert: "Long-Running Transaction Alert" {shape: rectangle}
-index_usage_report: "Index Usage Report" {shape: rectangle}
-connection_count_trend: "Connection Count Trend" {shape: rectangle}
-
-hub -> nightly_base_backup
-hub -> replication_lag_monitor
-hub -> bloat_report
-hub -> longrunning_transaction_alert
-hub -> index_usage_report
-hub -> connection_count_trend
-```
-
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

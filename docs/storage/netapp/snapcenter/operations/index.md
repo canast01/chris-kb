@@ -5,16 +5,11 @@ tags:
 ---
 # NetApp SnapCenter — Operations
 
-
 <div class="kb-summary">
 NetApp SnapCenter — Operations reference: Health Checks, Procedures, Common Issues, CLI Reference, and 3 more.
 
 *Applies to: SnapCenter 5.x*
 </div>
-![NetApp SnapCenter — Operations](../../../../assets/storage-netapp-snapcenter-operations-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>

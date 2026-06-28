@@ -11,25 +11,7 @@ Common questions about Venafi Trust Protection Platform operations, configuratio
 </div>
 ![Venafi Trust Protection Platform — Frequently Asked Questions](../../../assets/security-venafi-operations-faq.svg)
 
-
 ![Venafi Trust Protection Platform FAQ](../../../assets/security-venafi-operations-faq.svg)
-
-```d2
-direction: right
-
-hub: "Operations\nOperations" {shape: hexagon}
-general: "General" {shape: rectangle}
-configuration: "Configuration" {shape: rectangle}
-operations: "Operations" {shape: rectangle}
-troubleshooting: "Troubleshooting" {shape: rectangle}
-backup_and_recovery: "Backup and Recovery" {shape: rectangle}
-
-hub -> general
-hub -> configuration
-hub -> operations
-hub -> troubleshooting
-hub -> backup_and_recovery
-```
 
 ## General
 

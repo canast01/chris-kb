@@ -6,7 +6,6 @@ tags:
 # Cisco Nexus Dashboard — Security Access Control
 ![Cisco Nexus Dashboard — Security Access Control](../../../../assets/san-cisco-nexus-dashboard-security-access-control.svg)
 
-
 ```bash
 # Via REST API
 TOKEN=$(curl -sk -X POST https://nd-dc1.corp.example.com/login \
@@ -25,22 +24,6 @@ curl -sk -X POST https://nd-dc1.corp.example.com/nexus/api/v1/users \
     "email": "san-team@corp.example.com",
     "roles": [{"name": "Viewer", "sites": [{"name": "DC1-SAN"}, {"name": "DC2-SAN"}]}]
   }' | python3 -m json.tool
-```
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-perimeter_controls: "Perimeter Controls" {shape: rectangle}
-identity_access: "Identity & Access" {shape: rectangle}
-audit_logging: "Audit & Logging" {shape: rectangle}
-core: "Nexus Dashboard Core" {shape: hexagon}
-
-external -> perimeter_controls: traffic in
-perimeter_controls -> identity_access
-identity_access -> audit_logging
-audit_logging -> core: secured path
 ```
 
 ## Before you begin

@@ -4,8 +4,6 @@ tags:
   - github-actions
 ---
 # GitHub Actions — Integrations
-![GitHub Actions — Integrations](../../../../assets/automation-github-actions-architecture-integrations-index.svg)
-
 
 ```yaml
 permissions:
@@ -124,19 +122,6 @@ steps:
 ```
 
 ---
-
-```d2
-direction: right
-
-center: "GitHub Actions" {shape: hexagon}
-component_a: "Component A" {shape: rectangle}
-component_b: "Component B" {shape: rectangle}
-component_c: "Component C" {shape: rectangle}
-
-center -> component_a
-center -> component_b
-center -> component_c
-```
 
 ## See also
 

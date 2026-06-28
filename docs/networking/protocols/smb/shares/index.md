@@ -4,31 +4,9 @@ tags:
 ---
 # SMB Shares
 
-
 <div class="kb-summary">
 SMB Shares reference covering Overview, Creating Shares with PowerShell, Creating Shares with net share, DFS Namespace Configuration, Share Enumeration and Auditing and 1 more sections.
 </div>
-![SMB Shares](../../../../assets/networking-protocols-smb-shares-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "SMB" {shape: hexagon}
-creating_shares_with_powershell: "Creating Shares with PowerShell" {shape: rectangle}
-creating_shares_with_net_share: "Creating Shares with net share" {shape: rectangle}
-dfs_namespace_configuration: "DFS Namespace Configuration" {shape: rectangle}
-share_enumeration_and_auditing: "Share Enumeration and Auditing" {shape: rectangle}
-share_properties_and_limits: "Share Properties and Limits" {shape: rectangle}
-
-center -> creating_shares_with_powershell
-center -> creating_shares_with_net_share
-center -> dfs_namespace_configuration
-center -> share_enumeration_and_auditing
-center -> share_properties_and_limits
-```
 
 ## Overview
 

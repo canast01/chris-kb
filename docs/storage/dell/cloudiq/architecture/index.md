@@ -20,17 +20,6 @@ Cloud-native AIOps SaaS platform hosted by Dell. Receives telemetry from on-prem
 <a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>SCG redundancy, notification configuration, and API integration practices.</span></a>
 </div>
 
-```d2
-direction: right
-
-center: "CloudIQ" {shape: hexagon}
-supported_platforms: "Supported Platforms" {shape: rectangle}
-data_pipeline: "Data Pipeline" {shape: rectangle}
-
-center -> supported_platforms
-center -> data_pipeline
-```
-
 ## Supported Platforms
 
 | Platform | Telemetry Source |

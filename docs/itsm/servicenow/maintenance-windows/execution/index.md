@@ -4,33 +4,11 @@ tags:
 ---
 # Maintenance Window Execution
 
-
 <div class="kb-summary">
 Maintenance Window Execution reference covering Overview, Go / No-Go at Window Open, Execution Checklist, Step-by-Step Discipline, Time Management During Execution and 1 more sections.
 
 *Applies to: ServiceNow*
 </div>
-![Maintenance Window Execution](../../../../assets/itsm-servicenow-maintenance-windows-execution-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "ServiceNow" {shape: hexagon}
-go_nogo_at_window_open: "Go / No-Go at Window Open" {shape: rectangle}
-execution_checklist: "Execution Checklist" {shape: rectangle}
-stepbystep_discipline: "Step-by-Step Discipline" {shape: rectangle}
-time_management_during_execution: "Time Management During Execution" {shape: rectangle}
-handling_unexpected_issues_during_ex: "Handling Unexpected Issues During Execution" {shape: rectangle}
-
-center -> go_nogo_at_window_open
-center -> execution_checklist
-center -> stepbystep_discipline
-center -> time_management_during_execution
-center -> handling_unexpected_issues_during_ex
-```
 
 ## Overview
 

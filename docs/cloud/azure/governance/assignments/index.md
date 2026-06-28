@@ -4,35 +4,11 @@ tags:
 ---
 # Policy and Initiative Assignments
 
-
 <div class="kb-summary">
 A policy assignment connects a policy definition or initiative (policy set) to a specific scope in the Azure hierarchy. The assignment is the mechanism that makes a policy active and enforceable.
 
 *Applies to: Azure*
 </div>
-![Policy and Initiative Assignments](../../../../assets/cloud-azure-governance-assignments-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-policy_assignment_scope_hierarchy: "Policy Assignment Scope Hierarchy" {shape: rectangle}
-creating_a_policy_assignment: "Creating a Policy Assignment" {shape: rectangle}
-assignment_scope: "Assignment Scope" {shape: rectangle}
-parameters: "Parameters" {shape: rectangle}
-exemptions: "Exemptions" {shape: rectangle}
-assignment_managed_identity: "Assignment Managed Identity" {shape: rectangle}
-
-center -> policy_assignment_scope_hierarchy
-center -> creating_a_policy_assignment
-center -> assignment_scope
-center -> parameters
-center -> exemptions
-center -> assignment_managed_identity
-```
 
 ## Policy Assignment Scope Hierarchy
 

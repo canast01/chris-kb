@@ -11,10 +11,6 @@ Red Hat support escalation process: severity levels, required data for support c
 
 *Applies to: OpenShift 4.x*
 </div>
-![OpenShift — Escalation](../../../../assets/virtualization-openshift-troubleshooting-escalation-index.svg)
-
-
-
 
 ```mermaid
 graph TD

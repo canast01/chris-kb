@@ -37,17 +37,12 @@ deploy_switches -> validate
 ---
 
 # Cisco DCNM — Initial Deployment
-![Cisco DCNM — Initial Deployment](../../../../assets/san-cisco-cisco-dcnm-deploy-index.svg)
-
-
-
 
 This guide covers deploying Cisco Data Center Network Manager (DCNM) from OVA installation through adding a first fabric. DCNM (now integrated into Nexus Dashboard Fabric Controller, NDFC) is Cisco's centralized management platform for Nexus data center switching fabrics — covering both SAN (MDS) and LAN (Nexus VXLAN/Classic) fabrics.
 
 Note: Cisco renamed DCNM to NDFC starting with version 12.x on the Nexus Dashboard platform. This guide covers standalone DCNM 11.x deployment; for NDFC 12.x+ see the Nexus Dashboard deployment guide.
 
 ---
-
 
 ```mermaid
 flowchart TD

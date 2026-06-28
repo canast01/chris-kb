@@ -4,35 +4,13 @@ tags:
 ---
 # NetApp Keystone — Scripts
 
-
 <div class="kb-summary">
 NetApp Keystone automation scripts: REST API queries for subscription consumption data, capacity trend reporting, and SLA threshold alert integration.
 
 *Applies to: Keystone STaaS*
 </div>
-![NetApp Keystone — Scripts](../../../../assets/storage-netapp-keystone-scripts-index.svg)
-
-
-
 
 ---
-
-```d2
-direction: right
-
-center: "Keystone STaaS" {shape: rectangle}
-keystone_collector_health_check_bash: "Keystone Collector Health Check (Bash)" {shape: rectangle}
-keystone_usage_report_python: "Keystone Usage Report (Python)" {shape: rectangle}
-volume_service_level_audit_bash: "Volume Service Level Audit (Bash)" {shape: rectangle}
-windows_keystone_subscription_usage_: "Windows: Keystone Subscription Usage via REST API (PowerShel" {shape: rectangle}
-windows_keystone_usage_trending_powe: "Windows: Keystone Usage Trending (PowerShell)" {shape: rectangle}
-
-center -> keystone_collector_health_check_bash
-center -> keystone_usage_report_python
-center -> volume_service_level_audit_bash
-center -> windows_keystone_subscription_usage_
-center -> windows_keystone_usage_trending_powe
-```
 
 ## Keystone Collector Health Check (Bash)
 

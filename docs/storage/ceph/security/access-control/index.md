@@ -10,10 +10,6 @@ CephX user accounts, capability syntax for granular permissions, per-pool access
 
 *Applies to: Ceph Reef / Squid*
 </div>
-![Ceph — Access Control](../../../../assets/storage-ceph-security-access-control-index.svg)
-
-
-
 
 ```mermaid
 graph TD
@@ -31,32 +27,6 @@ graph TD
     G --> H{Caps allow op?}:::action
     H -- No --> I([Permission denied]):::action
     H -- Yes --> J([I/O proceeds]):::target
-```
-
-```d2
-direction: down
-
-root: "Ceph\nAccess Control" {shape: hexagon}
-cephx_user_management: "CephX User Management" {shape: rectangle}
-capability_syntax_reference: "Capability Syntax Reference" {shape: rectangle}
-service_account_patterns: "Service Account Patterns" {shape: rectangle}
-keyring_file_management: "Keyring File Management" {shape: rectangle}
-rgw_user_layers: "RGW User Layers" {shape: rectangle}
-rook_kubernetes_keyring_access: "Rook / Kubernetes Keyring Access" {shape: rectangle}
-resources: Protected Resources {shape: cylinder}
-
-root -> cephx_user_management: role
-cephx_user_management -> resources: scoped
-root -> capability_syntax_reference: role
-capability_syntax_reference -> resources: scoped
-root -> service_account_patterns: role
-service_account_patterns -> resources: scoped
-root -> keyring_file_management: role
-keyring_file_management -> resources: scoped
-root -> rgw_user_layers: role
-rgw_user_layers -> resources: scoped
-root -> rook_kubernetes_keyring_access: role
-rook_kubernetes_keyring_access -> resources: scoped
 ```
 
 ## Before you begin

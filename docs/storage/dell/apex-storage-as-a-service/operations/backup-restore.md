@@ -5,16 +5,12 @@ tags:
 ---
 # APEX Storage as a Service — Backup & Restore
 
-
 <div class="kb-summary">
 APEX STaaS backup and restore: snapshot schedule configuration via CloudIQ portal, cross-region copy policies, and restore-from-snapshot procedure.
 
 *Applies to: APEX Storage-as-a-Service*
 </div>
 ![APEX Storage as a Service — Backup & Restore](../../../../assets/storage-dell-apex-storage-as-a-service-operations-backup-res.svg)
-
-
-
 
 > Part of the [APEX Storage as a Service](../index.md) reference.
 
@@ -27,15 +23,6 @@ Key items to document and protect:
 - **APEX API credentials**: store client ID and client secret in a secrets vault; cannot be retrieved after creation
 - **Subscription records**: retain documentation of subscription ID, committed tier, burst ceiling, contract dates, and SLA tier
 - **Monthly usage exports**: export APEX Console billing data monthly and retain for billing reconciliation
-
-```d2
-direction: right
-
-hub: "APEX Storage\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
-```
 
 ## Before you begin
 

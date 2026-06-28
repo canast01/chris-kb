@@ -5,7 +5,6 @@ tags:
 ---
 # SnapCenter — Standards
 
-
 <div class="kb-summary">
 SnapCenter design standards: plugin server placement, SQL/Oracle/VMware plugin sizing, repository database requirements, and SnapCenter to ONTAP version matrix.
 
@@ -13,23 +12,7 @@ SnapCenter design standards: plugin server placement, SQL/Oracle/VMware plugin s
 </div>
 ![SnapCenter — Standards](../../../../assets/storage-netapp-snapcenter-architecture-design-standards.svg)
 
-
-
-
 ---
-
-```d2
-direction: right
-
-center: "SnapCenter" {shape: hexagon}
-naming_conventions: "Naming Conventions" {shape: rectangle}
-build_baseline: "Build Baseline" {shape: rectangle}
-configuration_checklist: "Configuration Checklist" {shape: rectangle}
-
-center -> naming_conventions
-center -> build_baseline
-center -> configuration_checklist
-```
 
 ## Naming Conventions
 

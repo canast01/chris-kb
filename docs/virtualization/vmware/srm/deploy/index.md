@@ -13,13 +13,8 @@ End-to-end deployment guide for VMware Site Recovery Manager DR orchestration. P
 
 *Applies to: SRM 8.x / 9.x*
 </div>
-![SRM — Deploy](../../../../assets/virtualization-vmware-srm-deploy-index.svg)
-
-
-
 
 ---
-
 
 ```mermaid
 flowchart TD
@@ -454,7 +449,6 @@ Confirm the following before starting the deployment:
 
 ---
 
-
 ## Deploy SRM at Protected Site
 
 **For OVA (SRM 8.x+):**
@@ -479,7 +473,6 @@ Confirm the following before starting the deployment:
 
 ---
 
-
 ## Deploy SRM at Recovery Site
 
 1. Repeat the identical deployment process at the recovery-site vCenter (OVA or Windows, matching version exactly).
@@ -489,7 +482,6 @@ Confirm the following before starting the deployment:
 Key check: both SRM instances must run the same version. Version mismatch blocks pairing.
 
 ---
-
 
 ## Pair the Sites
 
@@ -503,7 +495,6 @@ Site pairing establishes the trust relationship between the two SRM instances.
 6. Verify from the recovery site: open recovery-site vCenter → **Menu → Site Recovery → Sites** → protected site listed as the peer with status **Connected**.
 
 ---
-
 
 ## Configure Replication
 
@@ -530,7 +521,6 @@ Site pairing establishes the trust relationship between the two SRM instances.
 5. Verify SRM discovers replicated datastore pairs under **Configure → Array Pairs**.
 
 ---
-
 
 ## Configure Mappings
 
@@ -559,7 +549,6 @@ Mappings define how protected-site objects translate to recovery-site equivalent
 
 ---
 
-
 ## Create a Protection Group
 
 A protection group defines which VMs are protected together and how they replicate.
@@ -575,7 +564,6 @@ A protection group defines which VMs are protected together and how they replica
 7. Confirm protection group status shows **OK** (green) with all VMs listed as **Protected**.
 
 ---
-
 
 ## Create a Recovery Plan
 
@@ -597,7 +585,6 @@ A recovery plan defines the ordered sequence of steps to recover a set of protec
 8. Resolve all validation errors before proceeding. Warnings should be reviewed but do not block testing.
 
 ---
-
 
 ## Test the Recovery Plan
 

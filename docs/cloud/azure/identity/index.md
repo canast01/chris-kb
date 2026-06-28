@@ -9,19 +9,6 @@ Azure Identity articles, operational checks, troubleshooting notes, and referenc
 
 *Applies to: Azure*
 </div>
-![Azure Identity](../../../assets/cloud-azure-identity-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-articles: "Articles" {shape: rectangle}
-
-center -> articles
-```
 
 ## Articles
 

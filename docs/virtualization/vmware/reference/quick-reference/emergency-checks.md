@@ -4,16 +4,11 @@ tags:
 ---
 # Emergency Checks
 
-
 <div class="kb-summary">
 Emergency checks: vCenter service status, ESXi PSOD scan, vSAN health degradation, storage path loss, and cluster event log review — run first in any major incident.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Emergency Checks](../../../../assets/virtualization-vmware-reference-quick-reference-emergency-ch.svg)
-
-
-
 
 | Area | Check |
 |---|---|
@@ -25,19 +20,6 @@ Emergency checks: vCenter service status, ESXi PSOD scan, vSAN health degradatio
 | Network | Are management and VM networks reachable? |
 | Hardware | Any failed disks, NICs, PSU, memory? |
 | Backups | Are recent backups available? |
-
-```d2
-direction: right
-
-center: "Quick Reference" {shape: rectangle}
-known_issue_tracking: "Known Issue Tracking" {shape: rectangle}
-escalation_quick_reference: "Escalation Quick Reference" {shape: rectangle}
-fast_troubleshooting_map: "Fast Troubleshooting Map" {shape: rectangle}
-
-center -> known_issue_tracking
-center -> escalation_quick_reference
-center -> fast_troubleshooting_map
-```
 
 ## Known Issue Tracking
 

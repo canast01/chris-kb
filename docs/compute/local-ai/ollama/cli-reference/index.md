@@ -6,40 +6,16 @@ tags:
 ---
 # Ollama CLI Reference
 
-
 <div class="kb-summary">
 Ollama is a tool for running large language models locally. You download models to your machine and talk to them through the `ollama` command or its built-in API server — no cloud account or API key required.
 
 *Applies to: Ollama*
 </div>
-![Ollama CLI Reference](../../../../assets/compute-local-ai-ollama-cli-reference-index.svg)
-
-
-
 
  Models are stored as layers (similar to Docker images) and run on your GPU if one is available, or fall back to CPU.
 
 > Install on macOS with `brew install ollama` or download from ollama.com. On Linux, use the install script: `curl -fsSL https://ollama.com/install.sh | sh`. Start the server with `ollama serve` (runs automatically as a service on macOS after install).
 ---
-
-```d2
-direction: right
-
-center: "Ollama" {shape: rectangle}
-model_management: "Model Management" {shape: rectangle}
-running_models: "Running Models" {shape: rectangle}
-server: "Server" {shape: rectangle}
-custom_models_modelfiles: "Custom Models (Modelfiles)" {shape: rectangle}
-environment_configuration: "Environment & Configuration" {shape: rectangle}
-common_patterns: "Common Patterns" {shape: rectangle}
-
-center -> model_management
-center -> running_models
-center -> server
-center -> custom_models_modelfiles
-center -> environment_configuration
-center -> common_patterns
-```
 
 ## Model Management
 

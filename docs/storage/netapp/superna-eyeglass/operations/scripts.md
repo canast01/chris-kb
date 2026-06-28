@@ -5,25 +5,12 @@ tags:
 ---
 # Superna Eyeglass — Scripts
 
-
 <div class="kb-summary">
 Automation scripts for Superna Eyeglass — DR test operations, configuration reporting, and SyncIQ health monitoring.
 
 *Applies to: Superna Eyeglass*
 </div>
 ![Superna Eyeglass — Scripts](../../../../assets/storage-netapp-superna-eyeglass-operations-scripts.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "Superna Eyeglass\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
-```
 
 ## Before you begin
 

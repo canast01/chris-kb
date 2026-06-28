@@ -5,16 +5,12 @@ tags:
 ---
 # Dell VPLEX — Hardening
 
-
 <div class="kb-summary">
 Security baseline for VPLEX deployments. Apply all items before production go-live and validate against this checklist after any significant configuration change or GeoSynchrony upgrade.
 
 *Applies to: VPLEX*
 </div>
 ![Dell VPLEX — Hardening](../../../../assets/storage-dell-vplex-security-hardening.svg)
-
-
-
 
 ```mermaid
 flowchart TD
@@ -42,25 +38,6 @@ flowchart TD
     mgmtVlan --> fefabric --> befabric --> iclSeg
     corpCert --> certMonitor
     syslogFwd --> snmpAlerts
-```
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-hardening_checklist: "Hardening Checklist" {shape: rectangle}
-ssh_hardening_reference_configuratio: "SSH Hardening — Reference Configuration" {shape: rectangle}
-network_segmentation: "Network Segmentation" {shape: rectangle}
-compliance_alignment: "Compliance Alignment" {shape: rectangle}
-validation_checks_after_hardening: "Validation Checks After Hardening" {shape: rectangle}
-core: "VPLEX Core" {shape: hexagon}
-
-external -> hardening_checklist: traffic in
-hardening_checklist -> ssh_hardening_reference_configuratio
-ssh_hardening_reference_configuratio -> network_segmentation
-network_segmentation -> compliance_alignment
-compliance_alignment -> validation_checks_after_hardening
-validation_checks_after_hardening -> core: secured path
 ```
 
 ## Before you begin

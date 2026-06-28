@@ -5,7 +5,6 @@ tags:
 ---
 # Dell PowerStore CLI Reference
 
-
 <div class="kb-summary">
 PowerStore management uses the PowerStore Manager web UI, REST API, and the `pstcli` command-line interface. `pstcli` connects to the PowerStore management IP and supports scripting and automation for all array operations.
 
@@ -13,29 +12,7 @@ PowerStore management uses the PowerStore Manager web UI, REST API, and the `pst
 </div>
 ![Dell PowerStore CLI Reference](../../../../assets/storage-dell-powerstore-operations-cli-reference.svg)
 
-
-
-
 ---
-
-```d2
-direction: right
-
-hub: "PowerStore\nOperations" {shape: hexagon}
-connection: "Connection" {shape: rectangle}
-array_system_management: "Array & System Management" {shape: rectangle}
-volume_operations: "Volume Operations" {shape: rectangle}
-host_management: "Host Management" {shape: rectangle}
-snapshots_protection: "Snapshots & Protection" {shape: rectangle}
-capacity_performance: "Capacity & Performance" {shape: rectangle}
-
-hub -> connection
-hub -> array_system_management
-hub -> volume_operations
-hub -> host_management
-hub -> snapshots_protection
-hub -> capacity_performance
-```
 
 ## Before you begin
 

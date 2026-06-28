@@ -17,28 +17,6 @@ Firewall port reference for VMware Horizon. Covers client-to-Connection Server, 
 </div>
 ![Horizon — Ports and Network Requirements](../../../../assets/virtualization-vmware-horizon-architecture-ports.svg)
 
-
-
-
-```d2
-direction: right
-
-center: "Horizon" {shape: hexagon}
-inbound_horizon_client_to_unified_ac: "Inbound — Horizon Client to Unified Access Gateway (UAG) — E" {shape: rectangle}
-uag_to_connection_server_internal_fi: "UAG to Connection Server — Internal Firewall" {shape: rectangle}
-direct_internal_clients_no_uag: "Direct (Internal Clients — No UAG)" {shape: rectangle}
-connection_server_to_horizon_agent_d: "Connection Server to Horizon Agent (Desktop / RDSH VMs)" {shape: rectangle}
-connection_server_infrastructure: "Connection Server — Infrastructure" {shape: rectangle}
-connection_server_cluster_pod_interc: "Connection Server Cluster (Pod — Inter-CS)" {shape: rectangle}
-
-center -> inbound_horizon_client_to_unified_ac
-center -> uag_to_connection_server_internal_fi
-center -> direct_internal_clients_no_uag
-center -> connection_server_to_horizon_agent_d
-center -> connection_server_infrastructure
-center -> connection_server_cluster_pod_interc
-```
-
 ## Before you begin
 
 - In most deployments, external clients connect to the Unified Access Gateway (UAG) in the DMZ — not directly to Connection Servers

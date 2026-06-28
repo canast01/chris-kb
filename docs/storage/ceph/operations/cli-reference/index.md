@@ -10,10 +10,6 @@ Essential Ceph CLI commands: ceph status and health, OSD management, pool operat
 
 *Applies to: Ceph Reef / Squid*
 </div>
-![Ceph — CLI Reference](../../../../assets/storage-ceph-operations-cli-reference-index.svg)
-
-
-
 
 ```mermaid
 graph LR
@@ -48,25 +44,6 @@ graph LR
 
     CADM --> A1[host add / rm / drain]:::sub
     CADM --> A2[daemon add / rm / restart]:::sub
-```
-
-```d2
-direction: right
-
-center: "Ceph" {shape: rectangle}
-cluster_management: "Cluster Management" {shape: rectangle}
-osd_management: "OSD Management" {shape: rectangle}
-pool_management: "Pool Management" {shape: rectangle}
-pg_management: "PG Management" {shape: rectangle}
-rados_objectlevel: "rados (Object-Level)" {shape: rectangle}
-rbd_block_storage: "RBD (Block Storage)" {shape: rectangle}
-
-center -> cluster_management
-center -> osd_management
-center -> pool_management
-center -> pg_management
-center -> rados_objectlevel
-center -> rbd_block_storage
 ```
 
 ## Before you begin

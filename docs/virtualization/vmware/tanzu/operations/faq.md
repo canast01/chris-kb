@@ -11,25 +11,7 @@ Common questions about VMware Tanzu operations, configuration, and troubleshooti
 </div>
 ![VMware Tanzu — Frequently Asked Questions](../../../../assets/virtualization-vmware-tanzu-operations-faq.svg)
 
-
 ![VMware Tanzu FAQ](../../../../assets/virtualization-vmware-tanzu-operations-faq.svg)
-
-```d2
-direction: right
-
-hub: "Tanzu\nOperations" {shape: hexagon}
-general: "General" {shape: rectangle}
-configuration: "Configuration" {shape: rectangle}
-operations: "Operations" {shape: rectangle}
-troubleshooting: "Troubleshooting" {shape: rectangle}
-backup_and_recovery: "Backup and Recovery" {shape: rectangle}
-
-hub -> general
-hub -> configuration
-hub -> operations
-hub -> troubleshooting
-hub -> backup_and_recovery
-```
 
 ## General
 

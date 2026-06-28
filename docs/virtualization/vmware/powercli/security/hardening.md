@@ -13,30 +13,6 @@ Hardening PowerCLI deployments: enforcing certificate validation, script executi
 </div>
 ![PowerCLI — Hardening](../../../../assets/virtualization-vmware-powercli-security-hardening.svg)
 
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-powercli_configuration_hardening: "PowerCLI Configuration Hardening" {shape: rectangle}
-powershell_execution_policy: "PowerShell Execution Policy" {shape: rectangle}
-script_signing: "Script Signing" {shape: rectangle}
-session_timeout_and_disconnect: "Session Timeout and Disconnect" {shape: rectangle}
-audit_log_review_via_powercli: "Audit Log Review via PowerCLI" {shape: rectangle}
-secure_pipeline_configuration: "Secure Pipeline Configuration" {shape: rectangle}
-core: "PowerCLI Core" {shape: hexagon}
-
-external -> powercli_configuration_hardening: traffic in
-powercli_configuration_hardening -> powershell_execution_policy
-powershell_execution_policy -> script_signing
-script_signing -> session_timeout_and_disconnect
-session_timeout_and_disconnect -> audit_log_review_via_powercli
-audit_log_review_via_powercli -> secure_pipeline_configuration
-secure_pipeline_configuration -> core: secured path
-```
-
 ## Before you begin
 
 - **Access:** vCenter Administrator role

@@ -9,10 +9,6 @@ Dell EMC InsightIQ performance analytics for PowerScale clusters — architectur
 
 *Applies to: InsightIQ*
 </div>
-![InsightIQ](../../../assets/storage-netapp-insightiq-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-5">
 <a class="kb-card" href="architecture/"><strong>Architecture</strong><span>Deployment on vApp, PowerScale data collection intervals, and reporting database architecture.</span></a>

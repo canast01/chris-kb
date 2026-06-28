@@ -5,14 +5,9 @@ tags:
 ---
 # Certificates — Scripts
 
-
 <div class="kb-summary">
 Certificate automation scripts cover expiry scanning across all servers and services, TLS endpoint checking across all registered hostnames, CRL freshness monitoring, auto-renewal triggering via Venafi or ACME, and certificate chain validation.
 </div>
-![Certificates — Scripts](../../../../assets/security-certificates-operations-scripts-index.svg)
-
-
-
 
  Scripts are maintained in PowerShell for Windows environments and Python for cross-platform use.
 
@@ -39,15 +34,6 @@ def check_cert_expiry(hostname, port=443, warn_days=30):
     if days_left < warn_days:
         print(f"WARNING: {hostname} expires in {days_left} days ({expiry})")
     return days_left
-```
-
-```d2
-direction: right
-
-center: "Scripts" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> verify
 ```
 
 ## Before you begin

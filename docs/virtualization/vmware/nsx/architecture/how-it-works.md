@@ -7,37 +7,12 @@ tags:
 ---
 # NSX — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering API Surfaces, Transport Nodes, Geneve Encapsulation, Transport Zones, Gateway Architecture — T0 and T1 and 7 more sections.
 
 *Applies to: NSX-T 3.x · NSX 4.x*
 </div>
 ![NSX — How It Works](../../../../assets/virtualization-vmware-nsx-architecture-how-it-works.svg)
-
-
-
-
-
-
-```d2
-direction: right
-
-center: "NSX-T" {shape: hexagon}
-control_and_data_plane: "Control and Data Plane" {shape: rectangle}
-geneve_encapsulation: "Geneve Encapsulation" {shape: rectangle}
-transport_zones: "Transport Zones" {shape: rectangle}
-gateway_architecture_t0_and_t1: "Gateway Architecture — T0 and T1" {shape: rectangle}
-edge_cluster: "Edge Cluster" {shape: rectangle}
-distributed_firewall_dfw: "Distributed Firewall (DFW)" {shape: rectangle}
-
-center -> control_and_data_plane
-center -> geneve_encapsulation
-center -> transport_zones
-center -> gateway_architecture_t0_and_t1
-center -> edge_cluster
-center -> distributed_firewall_dfw
-```
 
 ```plantuml
 @startuml

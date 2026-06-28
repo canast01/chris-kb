@@ -6,7 +6,6 @@ tags:
 ---
 # vSphere Replication — Hardening
 
-
 <div class="kb-summary">
 Hardening reference covering Post-Deployment Checklist, Restrict SSH Access, Restrict VRA Management Access, Least-Privilege VR Service Account, Enable Encryption for WAN Replications and 3 more sections.
 
@@ -14,32 +13,9 @@ Hardening reference covering Post-Deployment Checklist, Restrict SSH Access, Res
 </div>
 ![vSphere Replication — Hardening](../../../../assets/virtualization-vmware-vsphere-replication-security-hardening.svg)
 
-
   VR Hardening Controls
 
-
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-postdeployment_checklist: "Post-Deployment Checklist" {shape: rectangle}
-restrict_ssh_access: "Restrict SSH Access" {shape: rectangle}
-restrict_vra_management_access: "Restrict VRA Management Access" {shape: rectangle}
-leastprivilege_vr_service_account: "Least-Privilege VR Service Account" {shape: rectangle}
-enable_encryption_for_wan_replicatio: "Enable Encryption for WAN Replications" {shape: rectangle}
-regular_test_recovery: "Regular Test Recovery" {shape: rectangle}
-core: "vSphere Replication Core" {shape: hexagon}
-
-external -> postdeployment_checklist: traffic in
-postdeployment_checklist -> restrict_ssh_access
-restrict_ssh_access -> restrict_vra_management_access
-restrict_vra_management_access -> leastprivilege_vr_service_account
-leastprivilege_vr_service_account -> enable_encryption_for_wan_replicatio
-enable_encryption_for_wan_replicatio -> regular_test_recovery
-regular_test_recovery -> core: secured path
-```
 
 ## Before you begin
 

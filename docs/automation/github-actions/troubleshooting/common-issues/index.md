@@ -7,14 +7,11 @@ search:
 ---
 # GitHub Actions — Common Issues
 
-
 <div class="kb-summary">
 GitHub Actions troubleshooting: failed steps, permission errors, runner connectivity issues, secret resolution failures, and cache invalidation problems.
 
 *Applies to: GitHub Actions*
 </div>
-![GitHub Actions — Common Issues](../../../../assets/automation-github-actions-troubleshooting-common-issues-inde.svg)
-
 
 ---
 
@@ -100,7 +97,6 @@ flowchart TD
     stepFail --> secretErr
     stepFail --> wdErr
 ```
-
 
 ---
 

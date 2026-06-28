@@ -5,16 +5,11 @@ tags:
 ---
 # RecoverPoint — Security
 
-
-
 <div class="kb-summary">
 RecoverPoint hardening — management access control, user roles, TLS configuration, and audit logging.
 
 *Applies to: RecoverPoint 5.x*
 </div>
-![RecoverPoint — Security](../../../../assets/storage-dell-recoverpoint-security-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

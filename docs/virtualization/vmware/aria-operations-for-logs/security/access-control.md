@@ -6,33 +6,12 @@ tags:
 ---
 # Aria Ops for Logs — Access Control
 
-
 <div class="kb-summary">
 Access Control reference covering RBAC Roles, Configuring Active Directory Integration, AD Group-Based Role Assignment, Local User Accounts, API Authentication for Automation and 1 more sections.
 
 *Applies to: Aria Logs 8.x*
 </div>
 ![Aria Ops for Logs — Access Control](../../../../assets/virtualization-vmware-aria-operations-for-logs-security-acce.svg)
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-rbac_roles: "RBAC Roles" {shape: rectangle}
-configuring_active_directory_integra: "Configuring Active Directory Integration" {shape: rectangle}
-local_user_accounts: "Local User Accounts" {shape: rectangle}
-api_authentication_for_automation: "API Authentication for Automation" {shape: rectangle}
-session_and_access_logging: "Session and Access Logging" {shape: rectangle}
-core: "Aria Operations for Logs Core" {shape: hexagon}
-
-external -> rbac_roles: traffic in
-rbac_roles -> configuring_active_directory_integra
-configuring_active_directory_integra -> local_user_accounts
-local_user_accounts -> api_authentication_for_automation
-api_authentication_for_automation -> session_and_access_logging
-session_and_access_logging -> core: secured path
-```
 
 ## Before you begin
 
@@ -56,7 +35,6 @@ Aria Operations for Logs uses a simple two-tier RBAC model: users are either adm
 ---
 
 ## Configuring Active Directory Integration
-
 
 | AD Group | Aria Ops for Logs Role |
 |---|---|

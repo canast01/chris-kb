@@ -7,16 +7,11 @@ search:
 ---
 # Veeam — Troubleshooting
 
-
-
 <div class="kb-summary">
 Diagnosing Veeam job failures, transport mode errors, repository issues, restore failures, and agent connectivity problems.
 
 *Applies to: Veeam 12.x*
 </div>
-![Veeam — Troubleshooting](../../../assets/backup-veeam-troubleshooting-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

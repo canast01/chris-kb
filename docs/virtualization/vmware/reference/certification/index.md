@@ -9,10 +9,6 @@ VMware certification study notes — exam tracking, weak areas, and review plans
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Virtualization — Certifications](../../../../assets/virtualization-vmware-reference-certification-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

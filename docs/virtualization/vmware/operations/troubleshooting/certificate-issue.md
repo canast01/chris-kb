@@ -7,16 +7,11 @@ search:
 ---
 # Certificate Issues
 
-
 <div class="kb-summary">
 Diagnosing and resolving certificate errors across the VMware platform — VCSA certificate expiry, ESXi thumbprint mismatches, NSX certificate chains, and Aria certificate rotation.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Certificate Issues](../../../../assets/virtualization-vmware-operations-troubleshooting-certificate.svg)
-
-
-
 
 ---
 

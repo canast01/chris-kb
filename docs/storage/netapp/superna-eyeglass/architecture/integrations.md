@@ -5,27 +5,12 @@ tags:
 ---
 # Superna Eyeglass — Integrations
 
-
 <div class="kb-summary">
 Integrations reference covering NetApp PowerScale (SyncIQ), Syslog / SIEM, Email Notifications.
 
 *Applies to: Superna Eyeglass*
 </div>
 ![Superna Eyeglass — Integrations](../../../../assets/storage-netapp-superna-eyeglass-architecture-integrations.svg)
-
-
-```d2
-direction: right
-
-center: "Superna Eyeglass" {shape: hexagon}
-netapp_powerscale_synciq: "NetApp PowerScale (SyncIQ)" {shape: rectangle}
-syslog_siem: "Syslog / SIEM" {shape: rectangle}
-email_notifications: "Email Notifications" {shape: rectangle}
-
-center -> netapp_powerscale_synciq
-center -> syslog_siem
-center -> email_notifications
-```
 
 ## NetApp PowerScale (SyncIQ)
 
@@ -52,7 +37,6 @@ flowchart TB
     eyeglass -->|"DNS cutover\nzone delegation"| dns
     eyeglass -->|"SNMP traps\nsyslog events"| siem
 ```
-
 
 ## Syslog / SIEM
 

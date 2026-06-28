@@ -4,16 +4,11 @@ tags:
 ---
 # Virtualization Upgrade Readiness
 
-
 <div class="kb-summary">
 Upgrade planning, pre-checks, rollback planning, and post-upgrade validation.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Virtualization Upgrade Readiness](../../../../assets/virtualization-vmware-reference-upgrade-readiness-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-5">
 

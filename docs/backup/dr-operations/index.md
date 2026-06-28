@@ -7,21 +7,6 @@ tags:
 <div class="kb-summary">
 Cross-product disaster recovery governance and operations — DR design, runbooks, recovery testing, Isolated Recovery Environment, backup validation, health checks, failure testing, reliability engineering, SLOs, and service availability. Defines backup retention schedules per RTO/RPO tier and governs daily, weekly, and monthly recovery window compliance.
 </div>
-![DR Operations](../../assets/backup-dr-operations-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "DR Operations" {shape: hexagon}
-governance_design: "Governance & Design" {shape: rectangle}
-operational: "Operational" {shape: rectangle}
-
-center -> governance_design
-center -> operational
-```
 
 ## Governance & Design
 

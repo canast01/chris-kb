@@ -10,29 +10,6 @@ VxRail Support Case Prep reference covering Overview, Where It Fits, Daily Check
 
 *Applies to: VxRail 7.x / 8.x*
 </div>
-![VxRail Support Case Prep](../../../../assets/virtualization-vmware-vxrail-operations-support-case-prep.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "VxRail\nOperations" {shape: hexagon}
-where_it_fits: "Where It Fits" {shape: rectangle}
-daily_checks: "Daily Checks" {shape: rectangle}
-health_commands: "Health Commands" {shape: rectangle}
-common_issues: "Common Issues" {shape: rectangle}
-operational_tasks: "Operational Tasks" {shape: rectangle}
-upgrade_notes: "Upgrade Notes" {shape: rectangle}
-
-hub -> where_it_fits
-hub -> daily_checks
-hub -> health_commands
-hub -> common_issues
-hub -> operational_tasks
-hub -> upgrade_notes
-```
 
 ## Before you begin
 

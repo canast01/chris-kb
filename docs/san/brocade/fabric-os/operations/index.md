@@ -5,16 +5,11 @@ tags:
 ---
 # FabricOS — Operations
 
-
 <div class="kb-summary">
 Brocade FabricOS day-to-day operations — zoning, port management, fabric health monitoring, and switch administration.
 
 *Applies to: Brocade FOS 9.x*
 </div>
-![FabricOS — Operations](../../../../assets/san-brocade-fabric-os-operations-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

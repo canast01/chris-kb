@@ -7,7 +7,6 @@ tags:
 # Aria Automation — Integrations
 ![Aria Automation — Integrations](../../../../assets/virtualization-vmware-aria-automation-architecture-integrati.svg)
 
-
 ```bash
 # Add vCenter cloud account via API
 curl -sk -X POST -H "Authorization: Bearer $TOKEN" \
@@ -97,19 +96,6 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
 ```text
 Infrastructure > Connections > Cloud Accounts  — check green status for all vCenter and NSX accounts
 Infrastructure > Connections > Integrations    — check all integration endpoints are reachable
-```
-
-```d2
-direction: right
-
-center: "Aria Automation" {shape: hexagon}
-component_a: "Component A" {shape: rectangle}
-component_b: "Component B" {shape: rectangle}
-component_c: "Component C" {shape: rectangle}
-
-center -> component_a
-center -> component_b
-center -> component_c
 ```
 
 ## See also

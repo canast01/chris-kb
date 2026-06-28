@@ -5,16 +5,12 @@ tags:
 ---
 # FOD — Authentication
 
-
 <div class="kb-summary">
 Dell FoD authentication: SCG service account management, CloudIQ SSO configuration, API token rotation, and audit trail review for capacity entitlement changes.
 
 *Applies to: Dell FOD*
 </div>
 ![FOD — Authentication](../../../../assets/storage-dell-fod-security-authentication.svg)
-
-
-
 
 > Part of the [Flex on Demand](../index.md) reference.
 
@@ -26,17 +22,6 @@ FOD metering access is managed through the underlying array management interface
 - **APEX Console**: Dell account-based authentication with optional SSO/federation via Azure AD or Okta.
 - **CloudIQ API**: OAuth2 client credentials for programmatic access to metered usage data.
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-related_reference: "Related Reference" {shape: rectangle}
-core: "Flex On Demand Core" {shape: hexagon}
-
-external -> related_reference: traffic in
-related_reference -> core: secured path
-```
 
 ## Before you begin
 

@@ -6,15 +6,10 @@ search:
   boost: 1.5
 ---
 # Pure Storage — Getting Started
-![Pure Storage — Getting Started](../../../assets/storage-pure-deploy-index.svg)
-
-
-
 
 This guide provides an orientation to deploying Pure Storage infrastructure, covering FlashArray block storage and FlashBlade NAS/object storage. Each product has its own dedicated deployment guide; this page summarizes the key first-day steps for each.
 
 ---
-
 
 ```mermaid
 flowchart TD

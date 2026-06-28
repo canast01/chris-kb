@@ -13,29 +13,7 @@ Backup and restore coverage for VxRail clusters. Covers VxRail Manager VM backup
 </div>
 ![VxRail — Backup & Restore](../../../../assets/virtualization-vmware-vxrail-operations-backup-restore.svg)
 
-
-
-
 ---
-
-```d2
-direction: right
-
-hub: "VxRail\nOperations" {shape: hexagon}
-vxrail_manager_vm_backup: "VxRail Manager VM Backup" {shape: rectangle}
-esxi_host_configuration_export: "ESXi Host Configuration Export" {shape: rectangle}
-vcenter_filebased_backup_vami: "vCenter File-Based Backup (VAMI)" {shape: rectangle}
-restore_considerations: "Restore Considerations" {shape: rectangle}
-backup_schedule_summary: "Backup Schedule Summary" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> vxrail_manager_vm_backup
-hub -> esxi_host_configuration_export
-hub -> vcenter_filebased_backup_vami
-hub -> restore_considerations
-hub -> backup_schedule_summary
-hub -> verify
-```
 
 ## Before you begin
 

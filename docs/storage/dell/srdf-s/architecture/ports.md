@@ -18,27 +18,6 @@ Firewall port reference for Dell SRDF/S (Symmetrix Remote Data Facility / Synchr
 </div>
 ![Dell SRDF/S — Ports and Network Requirements](../../../../assets/storage-dell-srdf-s-architecture-ports.svg)
 
-
-
-
-
-```d2
-direction: right
-
-center: "SRDF/S" {shape: hexagon}
-srdf_data_path_fc_no_ip_rules_needed: "SRDF Data Path — FC (No IP Rules Needed)" {shape: rectangle}
-srdf_data_path_ip_gige_links: "SRDF Data Path — IP (GigE Links)" {shape: rectangle}
-unisphere_management: "Unisphere Management" {shape: rectangle}
-firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> srdf_data_path_fc_no_ip_rules_needed
-center -> srdf_data_path_ip_gige_links
-center -> unisphere_management
-center -> firewall_zone_summary
-center -> verify
-```
-
 ## SRDF Data Path — FC (No IP Rules Needed)
 
 FC-based SRDF/S (most deployments) uses Fibre Channel ISL links — no IP firewall rules required.

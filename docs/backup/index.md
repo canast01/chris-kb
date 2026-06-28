@@ -8,17 +8,6 @@ Enterprise backup and disaster recovery — Veeam, Commvault, and NetBackup back
 
 ![Backup & DR — Diagram](../assets/backup-diagram.svg)
 
-```d2
-direction: right
-
-center: "Backup" {shape: hexagon}
-backup_products: "Backup Products" {shape: rectangle}
-disaster_recovery: "Disaster Recovery" {shape: rectangle}
-
-center -> backup_products
-center -> disaster_recovery
-```
-
 ## Backup Products
 
 <div class="kb-grid kb-grid-3">

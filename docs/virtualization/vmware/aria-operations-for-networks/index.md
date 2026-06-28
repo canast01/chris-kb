@@ -10,13 +10,6 @@ Technical and operational reference for VMware Aria Operations for Networks. Cov
 
 *Applies to: Aria Operations for Networks 6.x*
 </div>
-![Aria Operations for Networks](../../../assets/virtualization-vmware-aria-operations-for-networks-index.svg)
-
-
-
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

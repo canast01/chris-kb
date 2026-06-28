@@ -7,16 +7,11 @@ search:
 ---
 # Venafi — Common Issues
 
-
 <div class="kb-summary">
 Known issues and resolution steps for frequent Venafi problems.
 
 *Applies to: Venafi TLS Protect*
 </div>
-![Venafi — Common Issues](../../../../assets/security-venafi-troubleshooting-common-issues-index.svg)
-
-
-
 
 | Symptom | First Check |
 |---|---|

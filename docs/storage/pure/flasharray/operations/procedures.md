@@ -5,7 +5,6 @@ tags:
 ---
 # FlashArray — Procedures
 
-
 <div class="kb-summary">
 FlashArray operational procedures — host and volume provisioning, snapshot and replication management, pod and ActiveCluster operations, capacity monitoring, performance analysis, and change readiness.
 
@@ -13,25 +12,6 @@ FlashArray operational procedures — host and volume provisioning, snapshot and
 </div>
 
 ![FlashArray — Procedures — Diagram](../../../../assets/storage-pure-flasharray-operations-procedures-diagram.svg)
-
-```d2
-direction: right
-
-hub: "FlashArray\nOperations" {shape: hexagon}
-change_readiness: "Change Readiness" {shape: rectangle}
-maintenance_window: "Maintenance Window" {shape: rectangle}
-postchange_validation: "Post-Change Validation" {shape: rectangle}
-host_volume_provisioning_flow: "Host Volume Provisioning Flow" {shape: rectangle}
-host_management: "Host Management" {shape: rectangle}
-volume_management: "Volume Management" {shape: rectangle}
-
-hub -> change_readiness
-hub -> maintenance_window
-hub -> postchange_validation
-hub -> host_volume_provisioning_flow
-hub -> host_management
-hub -> volume_management
-```
 
 ## Before you begin
 
@@ -299,8 +279,6 @@ purevol recover <volume_name>
 ```
 
 ### Volume Tags
-
-![Volume Tags](../../../../assets/flasharray-proc-volume-tags.svg)
 
 ```bash
 # Set a tag on a volume

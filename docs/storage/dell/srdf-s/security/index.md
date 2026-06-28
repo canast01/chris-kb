@@ -5,16 +5,11 @@ tags:
 ---
 # SRDF/S — Security
 
-
-
 <div class="kb-summary">
 SRDF/S security controls — link encryption options, Unisphere access management, and audit logging for synchronous replication.
 
 *Applies to: SRDF/S*
 </div>
-![SRDF/S — Security](../../../../assets/storage-dell-srdf-s-security-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

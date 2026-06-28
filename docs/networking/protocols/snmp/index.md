@@ -9,10 +9,6 @@ tags:
 <div class="kb-summary">
 Simple Network Management Protocol (SNMP) polls device metrics and receives asynchronous fault notifications (traps) over UDP — port 161 for polling, 162 for traps. SNMPv1/v2c use plaintext community strings; SNMPv3 adds authentication and encryption via the User Security Model (USM). Coverage includes OID polling, trap handling, and monitoring integration.
 </div>
-![SNMP](../../../assets/networking-protocols-snmp-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-5">
 
@@ -42,19 +38,6 @@ Simple Network Management Protocol (SNMP) polls device metrics and receives asyn
 </a>
 
 </div>
-
-```d2
-direction: right
-
-center: "SNMP" {shape: hexagon}
-quick_reference: "Quick Reference" {shape: rectangle}
-common_commands_config: "Common Commands / Config" {shape: rectangle}
-troubleshooting: "Troubleshooting" {shape: rectangle}
-
-center -> quick_reference
-center -> common_commands_config
-center -> troubleshooting
-```
 
 ## Quick Reference
 

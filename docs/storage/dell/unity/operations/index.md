@@ -10,9 +10,6 @@ Unity — Operations reference: Health Checks, Procedures, CLI Reference, Instal
 
 *Applies to: Unity XT*
 </div>
-![Unity — Operations](../../../../assets/storage-dell-unity-operations-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>

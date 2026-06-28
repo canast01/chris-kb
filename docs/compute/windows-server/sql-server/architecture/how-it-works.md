@@ -12,27 +12,6 @@ SQL Server architecture — database engine, buffer pool, transaction log, WAL-b
 </div>
 ![SQL Server — How It Works](../../../../assets/compute-windows-server-sql-server-architecture-how-it-works.svg)
 
-
-
-
-
-```d2
-direction: right
-
-center: "SQL Server" {shape: hexagon}
-database_engine_components: "Database Engine Components" {shape: rectangle}
-buffer_pool: "Buffer Pool" {shape: rectangle}
-transaction_log_and_recovery: "Transaction Log and Recovery" {shape: rectangle}
-always_on_availability_groups: "Always On Availability Groups" {shape: rectangle}
-query_processing: "Query Processing" {shape: rectangle}
-
-center -> database_engine_components
-center -> buffer_pool
-center -> transaction_log_and_recovery
-center -> always_on_availability_groups
-center -> query_processing
-```
-
 ```plantuml
 @startuml
 skinparam sequenceArrowThickness 1.5

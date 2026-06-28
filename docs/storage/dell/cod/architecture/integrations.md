@@ -5,16 +5,12 @@ tags:
 ---
 # COD — Integrations
 
-
 <div class="kb-summary">
 Capacity on Demand integration with VMware, Unisphere, and storage management platforms.
 
 *Applies to: Cloud for Desktop (COD)*
 </div>
 ![COD — Integrations](../../../../assets/storage-dell-cod-architecture-integrations.svg)
-
-
-
 
 > Part of the [COD](../index.md) reference.
 
@@ -29,19 +25,6 @@ Capacity on Demand integration with VMware, Unisphere, and storage management pl
 | CMDB / change management | COD activations must be recorded as changes; CMDB updated after each activation |
 
 ---
-
-```d2
-direction: right
-
-center: "Cloud On Demand" {shape: hexagon}
-component_a: "Component A" {shape: rectangle}
-component_b: "Component B" {shape: rectangle}
-component_c: "Component C" {shape: rectangle}
-
-center -> component_a
-center -> component_b
-center -> component_c
-```
 
 ## See also
 

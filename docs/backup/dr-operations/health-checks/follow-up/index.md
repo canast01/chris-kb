@@ -4,31 +4,9 @@ tags:
 ---
 # Health Check Follow-Up and Open Item Tracking
 
-
 <div class="kb-summary">
 Health Check Follow-Up and Open Item Tracking reference covering Overview, Finding Classification, Creating Follow-Up Tickets, Owner Assignment, Tracking and Reporting and 1 more sections.
 </div>
-![Health Check Follow-Up and Open Item Tracking](../../../../assets/backup-dr-operations-health-checks-follow-up-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "DR Operations" {shape: hexagon}
-finding_classification: "Finding Classification" {shape: rectangle}
-creating_followup_tickets: "Creating Follow-Up Tickets" {shape: rectangle}
-owner_assignment: "Owner Assignment" {shape: rectangle}
-tracking_and_reporting: "Tracking and Reporting" {shape: rectangle}
-closure_criteria: "Closure Criteria" {shape: rectangle}
-
-center -> finding_classification
-center -> creating_followup_tickets
-center -> owner_assignment
-center -> tracking_and_reporting
-center -> closure_criteria
-```
 
 ## Overview
 

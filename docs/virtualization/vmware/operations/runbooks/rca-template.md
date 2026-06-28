@@ -6,15 +6,11 @@ tags:
 
 # RCA Template
 
-
 <div class="kb-summary">
 RCA Template reference covering Summary, Impact, Timeline, Root Cause, Resolution and 2 more sections.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![RCA Template](../../../../assets/virtualization-vmware-operations-runbooks-rca-template.svg)
-
-
 
 ```plantuml
 @startuml

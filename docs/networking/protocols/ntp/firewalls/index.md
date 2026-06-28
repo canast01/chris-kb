@@ -4,35 +4,11 @@ tags:
 ---
 # NTP Firewall Rules
 
-
 <div class="kb-summary">
 NTP Firewall Rules reference covering Required Firewall Rules, Linux — firewalld, Linux — iptables, Windows Firewall, Cisco ASA / Firepower and 2 more sections.
 </div>
-![NTP Firewall Rules](../../../../assets/networking-protocols-ntp-firewalls-index.svg)
-
-
-
 
 NTP uses **UDP port 123** for all client-server and peer communication. If this port is blocked between a host and its NTP server, the clock will not synchronise.
-
-```d2
-direction: right
-
-center: "NTP" {shape: hexagon}
-required_firewall_rules: "Required Firewall Rules" {shape: rectangle}
-linux_firewalld: "Linux — firewalld" {shape: rectangle}
-linux_iptables: "Linux — iptables" {shape: rectangle}
-windows_firewall: "Windows Firewall" {shape: rectangle}
-cisco_asa_firepower: "Cisco ASA / Firepower" {shape: rectangle}
-testing_connectivity: "Testing Connectivity" {shape: rectangle}
-
-center -> required_firewall_rules
-center -> linux_firewalld
-center -> linux_iptables
-center -> windows_firewall
-center -> cisco_asa_firepower
-center -> testing_connectivity
-```
 
 ## Required Firewall Rules
 

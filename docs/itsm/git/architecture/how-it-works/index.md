@@ -5,33 +5,13 @@ tags:
 ---
 # Git — How It Works
 
-
 <div class="kb-summary">
 Git is a distributed version control system where every working copy is a full repository with complete history.
 
 *Applies to: Git 2.x*
 </div>
-![Git — How It Works](../../../../assets/itsm-git-architecture-how-it-works-index.svg)
-
 
 ---
-
-```d2
-direction: right
-
-center: "How It Works" {shape: hexagon}
-distributed_model: "Distributed Model" {shape: rectangle}
-refs_and_branches: "Refs and Branches" {shape: rectangle}
-github_enterprise_gitlab_selfmanaged: "GitHub Enterprise / GitLab Self-Managed Architecture" {shape: rectangle}
-data_flow_git_push: "Data Flow — git push" {shape: rectangle}
-storage_layout: "Storage Layout" {shape: rectangle}
-
-center -> distributed_model
-center -> refs_and_branches
-center -> github_enterprise_gitlab_selfmanaged
-center -> data_flow_git_push
-center -> storage_layout
-```
 
 ## Distributed Model
 
@@ -59,7 +39,6 @@ graph TD
     LC -->|git push| FORK
     FORK -->|Pull Request / MR| REMOTE
 ```
-
 
 ---
 

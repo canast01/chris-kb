@@ -9,9 +9,6 @@ System onboarding, upgrade readiness, migration, post-upgrade validation, rollba
 
 *Applies to: ServiceNow*
 </div>
-![ServiceNow — Lifecycle Management](../../../assets/itsm-servicenow-lifecycle-index.svg)
-
-
 
 <!-- diagram:lifecycle -->
 

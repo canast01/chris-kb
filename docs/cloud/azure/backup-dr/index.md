@@ -6,15 +6,11 @@ tags:
 
 # Azure Backup and DR
 
-
 <div class="kb-summary">
 Backup and recovery notes for Azure Backup, Site Recovery, vaults, jobs, and restore validation.
 
 *Applies to: Azure*
 </div>
-![Azure Backup and DR](../../../assets/cloud-azure-backup-dr-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

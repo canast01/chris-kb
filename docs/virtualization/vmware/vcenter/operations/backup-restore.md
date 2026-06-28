@@ -7,35 +7,12 @@ tags:
 ---
 # vCenter — Backup & Restore
 
-
 <div class="kb-summary">
 Backup & Restore reference covering Alert on Backup Failure, Restore Procedure, Recovery Scenarios, Certificates to Track Before Any Restore, vCenter High Availability (vCHA) vs. Backup and 1 more sections.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
 ![vCenter — Backup & Restore](../../../../assets/virtualization-vmware-vcenter-operations-backup-restore.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "vCenter Server\nOperations" {shape: hexagon}
-restore_from_filebased_backup: "Restore from File-Based Backup" {shape: rectangle}
-recovery_scenarios: "Recovery Scenarios" {shape: rectangle}
-certificates_to_track_before_any_res: "Certificates to Track Before Any Restore" {shape: rectangle}
-vcenter_high_availability_vcha_vs_ba: "vCenter High Availability (vCHA) vs. Backup" {shape: rectangle}
-backup_audit_evidence: "Backup Audit Evidence" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> restore_from_filebased_backup
-hub -> recovery_scenarios
-hub -> certificates_to_track_before_any_res
-hub -> vcenter_high_availability_vcha_vs_ba
-hub -> backup_audit_evidence
-hub -> verify
-```
 
 ## Restore from File-Based Backup
 

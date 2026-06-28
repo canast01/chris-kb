@@ -9,19 +9,6 @@ Azure Compute articles, operational checks, troubleshooting notes, and reference
 
 *Applies to: Azure*
 </div>
-![Azure Compute](../../../assets/cloud-azure-compute-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-articles: "Articles" {shape: rectangle}
-
-center -> articles
-```
 
 ## Articles
 

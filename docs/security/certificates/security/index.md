@@ -4,14 +4,9 @@ tags:
 ---
 # Certificates — Security
 
-
 <div class="kb-summary">
 Certificate security controls — CA trust chain management, key storage, mTLS enforcement, and TLS policy hardening.
 </div>
-![Certificates — Security](../../../assets/security-certificates-security-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-4">
 

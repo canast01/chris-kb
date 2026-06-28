@@ -4,34 +4,11 @@ tags:
 ---
 # Systems Manager (SSM)
 
-
 <div class="kb-summary">
 Systems Manager (SSM) reference covering Run Command, Parameter Store, Maintenance Windows, Patch Management, Inventory and 2 more sections.
 
 *Applies to: AWS*
 </div>
-![Systems Manager (SSM)](../../../../assets/cloud-aws-cli-reference-ssm-index.svg)
-
-
-
-```d2
-direction: right
-
-center: "AWS" {shape: hexagon}
-parameter_store: "Parameter Store" {shape: rectangle}
-maintenance_windows: "Maintenance Windows" {shape: rectangle}
-patch_management: "Patch Management" {shape: rectangle}
-inventory: "Inventory" {shape: rectangle}
-opsitems: "OpsItems" {shape: rectangle}
-automation_documents: "Automation Documents" {shape: rectangle}
-
-center -> parameter_store
-center -> maintenance_windows
-center -> patch_management
-center -> inventory
-center -> opsitems
-center -> automation_documents
-```
 
 ## Parameter Store
 

@@ -6,35 +6,12 @@ tags:
 ---
 # Tanzu — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering vSphere with Tanzu Architecture, TKG Standalone — Workload Cluster Lifecycle, Networking Models, Harbor Registry Integration, TAP Supply Chain Concept and 1 more sections.
 
 *Applies to: Tanzu 2.x*
 </div>
 ![Tanzu — How It Works](../../../../assets/virtualization-vmware-tanzu-architecture-how-it-works.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Tanzu" {shape: hexagon}
-vsphere_with_tanzu_architecture: "vSphere with Tanzu Architecture" {shape: rectangle}
-tkg_standalone_workload_cluster_life: "TKG Standalone — Workload Cluster Lifecycle" {shape: rectangle}
-networking_models: "Networking Models" {shape: rectangle}
-harbor_registry_integration: "Harbor Registry Integration" {shape: rectangle}
-tap_supply_chain_concept: "TAP Supply Chain Concept" {shape: rectangle}
-component_relationship_diagram: "Component Relationship Diagram" {shape: rectangle}
-
-center -> vsphere_with_tanzu_architecture
-center -> tkg_standalone_workload_cluster_life
-center -> networking_models
-center -> harbor_registry_integration
-center -> tap_supply_chain_concept
-center -> component_relationship_diagram
-```
 
 ```plantuml
 @startuml

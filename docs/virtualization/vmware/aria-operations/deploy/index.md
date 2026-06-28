@@ -13,13 +13,8 @@ End-to-end deployment guide for VMware Aria Operations (vROps). Covers prerequis
 
 *Applies to: Aria Ops 8.x*
 </div>
-![Aria Operations — Deploy](../../../../assets/virtualization-vmware-aria-operations-deploy-index.svg)
-
-
-
 
 ---
-
 
 ```mermaid
 flowchart TD

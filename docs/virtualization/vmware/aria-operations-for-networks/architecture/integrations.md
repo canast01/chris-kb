@@ -7,7 +7,6 @@ tags:
 # vRNI Integrations
 ![vRNI Integrations](../../../../assets/virtualization-vmware-aria-operations-for-networks-architect.svg)
 
-
 ```bash
 # Verify NSX-T API connectivity from Collector VM
 curl -k -u 'svc-aon:PASSWORD' \
@@ -206,19 +205,6 @@ Facility: LOG_USER
   "headers": {"Content-Type": "application/json"},
   "body_template": "{\"text\": \"[AON] {{severity}}: {{alert_name}} — {{description}}\"}"
 }
-```
-
-```d2
-direction: right
-
-center: "Aria Operations for Networks" {shape: hexagon}
-component_a: "Component A" {shape: rectangle}
-component_b: "Component B" {shape: rectangle}
-component_c: "Component C" {shape: rectangle}
-
-center -> component_a
-center -> component_b
-center -> component_c
 ```
 
 ## See also

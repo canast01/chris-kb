@@ -6,7 +6,6 @@ tags:
 # Cisco DCNM — Integrations
 ![Cisco DCNM — Integrations](../../../../assets/san-cisco-cisco-dcnm-architecture-integrations.svg)
 
-
 ```bash
 # On DCNM appliance
 ssh root@dcnm-mgmt.corp.example.com
@@ -23,21 +22,7 @@ logger -p local0.info -t dcnm "Test message"
 # Verify arrival at SIEM
 ```
 
-
 ---
-
-```d2
-direction: right
-
-center: "Cisco DCNM" {shape: hexagon}
-component_a: "Component A" {shape: rectangle}
-component_b: "Component B" {shape: rectangle}
-component_c: "Component C" {shape: rectangle}
-
-center -> component_a
-center -> component_b
-center -> component_c
-```
 
 ## See also
 

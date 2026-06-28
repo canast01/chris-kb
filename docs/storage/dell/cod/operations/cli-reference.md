@@ -6,7 +6,6 @@ tags:
 # Dell COD CLI Reference
 ![Dell COD CLI Reference](../../../../assets/storage-dell-cod-operations-cli-reference.svg)
 
-
 ```bash
 # --- Discover all arrays reachable from this host ---
 symcfg discover
@@ -100,15 +99,6 @@ symcfg -version
 
 # Verify Solutions Enabler can communicate with the array
 symcfg list -sid <sid> -v 2>&1 | head -5
-```
-
-```d2
-direction: right
-
-hub: "Cloud On Demand\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

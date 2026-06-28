@@ -24,20 +24,36 @@ Firewall port reference for Dell PowerMax (formerly VMAX). Covers Unisphere for 
 ```d2
 direction: right
 
-center: "PowerMax" {shape: hexagon}
-inbound_management: "Inbound — Management" {shape: rectangle}
-outbound_array_to_external: "Outbound — Array to External" {shape: rectangle}
-iscsi_san: "iSCSI (SAN)" {shape: rectangle}
-srdf_replication_if_iscsibased_srdf: "SRDF Replication (if iSCSI-based SRDF)" {shape: rectangle}
-solutions_enabler_symcli_hostbased_m: "Solutions Enabler (SYMCLI) Host-Based Management" {shape: rectangle}
-firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
+clients: Clients {
+  admin: Admin Workstations {shape: rectangle}
+  symcli: SYMCLI Hosts {shape: rectangle}
+  iscsi: iSCSI Hosts {shape: rectangle}
+}
 
-center -> inbound_management
-center -> outbound_array_to_external
-center -> iscsi_san
-center -> srdf_replication_if_iscsibased_srdf
-center -> solutions_enabler_symcli_hostbased_m
-center -> firewall_zone_summary
+powermax: PowerMax {
+  uni: Unisphere\n:8443 REST / Web {shape: rectangle}
+  stored: Solutions Enabler\nstorEd :2707 {shape: rectangle}
+  iscsi_port: iSCSI Ports\n:3260 {shape: rectangle}
+  rdf: RDF Directors\nSRDF over IP :3260 {shape: rectangle}
+}
+
+external: External Services {
+  esrs: ESRS / CloudIQ\n:443 {shape: rectangle}
+  snmp: SNMP Receiver\n:162 UDP {shape: rectangle}
+  syslog: Syslog Server\n:514 UDP {shape: rectangle}
+  ntp: NTP Server\n:123 UDP {shape: rectangle}
+}
+
+remote: Remote PowerMax\n(SRDF target) {shape: rectangle}
+
+clients.admin -> powermax.uni: TCP 8443
+clients.symcli -> powermax.stored: TCP 2707
+clients.iscsi -> powermax.iscsi_port: TCP 3260
+powermax.uni -> external.esrs: TCP 443
+powermax.uni -> external.snmp: UDP 162
+powermax.uni -> external.syslog: UDP 514
+powermax.uni -> external.ntp: UDP 123
+powermax.rdf -> remote: TCP 3260\n(SRDF/A over IP)
 ```
 
 ## Inbound — Management

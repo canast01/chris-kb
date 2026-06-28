@@ -4,14 +4,11 @@ tags:
 ---
 # VM Slow Decision Tree
 
-
 <div class="kb-summary">
 VM slow decision tree: branching logic covering CPU ready, memory balloon, storage latency, and network saturation — walk through in order for systematic diagnosis.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![VM Slow Decision Tree](../../../../assets/virtualization-vmware-reference-quick-reference-decision-tre.svg)
-
 
 ```text
                          VM reported slow
@@ -38,17 +35,7 @@ VM slow decision tree: branching logic covering CPU ready, memory balloon, stora
                                          └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
-```d2
-direction: right
-
-center: "Quick Reference" {shape: rectangle}
-first_decision: "First Decision" {shape: rectangle}
-
-center -> first_decision
-```
-
 ## First Decision
-
 
 Is CPU high?
 

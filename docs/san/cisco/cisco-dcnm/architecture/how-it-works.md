@@ -5,32 +5,12 @@ tags:
 ---
 # Cisco DCNM — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Overview, Deployment Models, Management Flow, Network Requirements, VM Sizing (Standalone, 11.x) and 1 more sections.
 
 *Applies to: Cisco MDS · Nexus*
 </div>
 ![Cisco DCNM — How It Works](../../../../assets/san-cisco-cisco-dcnm-architecture-how-it-works.svg)
-
-
-
-```d2
-direction: right
-
-center: "Cisco DCNM" {shape: hexagon}
-deployment_models: "Deployment Models" {shape: rectangle}
-management_flow: "Management Flow" {shape: rectangle}
-network_requirements: "Network Requirements" {shape: rectangle}
-vm_sizing_standalone_11x: "VM Sizing (Standalone, 11.x)" {shape: rectangle}
-dcnm_11x_vs_ndfc_12x: "DCNM 11.x vs. NDFC 12.x" {shape: rectangle}
-
-center -> deployment_models
-center -> management_flow
-center -> network_requirements
-center -> vm_sizing_standalone_11x
-center -> dcnm_11x_vs_ndfc_12x
-```
 
 ```plantuml
 @startuml

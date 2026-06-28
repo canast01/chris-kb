@@ -15,27 +15,6 @@ Firewall port reference for Python automation scripts and services. Python scrip
 </div>
 ![Python — Ports and Network Requirements](../../../assets/automation-python-architecture-ports.svg)
 
-
-
-
-
-```d2
-direction: right
-
-center: "Python" {shape: hexagon}
-python_script_outbound_common_target: "Python Script Outbound — Common Target Ports" {shape: rectangle}
-python_web_services_inbound: "Python Web Services (Inbound)" {shape: rectangle}
-python_package_and_library_access: "Python Package and Library Access" {shape: rectangle}
-firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> python_script_outbound_common_target
-center -> python_web_services_inbound
-center -> python_package_and_library_access
-center -> firewall_zone_summary
-center -> verify
-```
-
 ## Python Script Outbound — Common Target Ports
 
 Python automation scripts connect to APIs and infrastructure. Open from the host running the script to each target:

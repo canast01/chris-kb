@@ -5,16 +5,12 @@ tags:
 ---
 # APEX Storage as a Service — Authentication
 
-
 <div class="kb-summary">
 APEX STaaS authentication: CloudIQ portal SSO with SAML 2.0, API OAuth2 token generation, MFA enforcement policy, and service account credential rotation.
 
 *Applies to: APEX Storage-as-a-Service*
 </div>
 ![APEX Storage as a Service — Authentication](../../../../assets/storage-dell-apex-storage-as-a-service-security-authenticati.svg)
-
-
-
 
 > Part of the [APEX Storage as a Service](../index.md) reference.
 
@@ -24,17 +20,6 @@ APEX STaaS authentication: CloudIQ portal SSO with SAML 2.0, API OAuth2 token ge
 - **APEX REST API**: OAuth2 client credentials (client ID + client secret) generated in APEX Console → Settings → API Keys; access tokens valid for 3600 seconds
 - **Underlying platforms**: PowerStore/PowerScale/PowerFlex management authentication is separate and follows each platform's local or LDAP configuration
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-related_reference: "Related Reference" {shape: rectangle}
-core: "APEX Storage Core" {shape: hexagon}
-
-external -> related_reference: traffic in
-related_reference -> core: secured path
-```
 
 ## Before you begin
 

@@ -4,8 +4,6 @@ tags:
   - windows
 ---
 # Windows Server — Hardening
-![Windows Server — Hardening](../../../../assets/compute-windows-server-security-hardening-index.svg)
-
 
 ```powershell
 # Import Microsoft Security Baseline GPO backup

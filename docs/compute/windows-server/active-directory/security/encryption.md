@@ -5,31 +5,12 @@ tags:
 ---
 # Active Directory — Encryption
 
-
 <div class="kb-summary">
 Encryption reference covering AD Protocol Encryption Overview, Enforcing LDAP Signing and Channel Binding, Kerberos Encryption Policy.
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
 ![Active Directory — Encryption](../../../../assets/compute-windows-server-active-directory-security-encryption.svg)
-
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-ad_protocol_encryption_overview: "AD Protocol Encryption Overview" {shape: rectangle}
-enforcing_ldap_signing_and_channel_b: "Enforcing LDAP Signing and Channel Binding" {shape: rectangle}
-kerberos_encryption_policy: "Kerberos Encryption Policy" {shape: rectangle}
-core: "Active Directory Core" {shape: hexagon}
-
-external -> ad_protocol_encryption_overview: traffic in
-ad_protocol_encryption_overview -> enforcing_ldap_signing_and_channel_b
-enforcing_ldap_signing_and_channel_b -> kerberos_encryption_policy
-kerberos_encryption_policy -> core: secured path
-```
 
 ## Before you begin
 

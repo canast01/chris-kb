@@ -5,35 +5,13 @@ tags:
 ---
 # Pure Storage Evergreen Security
 
-
 <div class="kb-summary">
 Pure Storage Evergreen Security reference covering Hardening Checklist, RBAC, Encryption, Audit Logging, Subscription Security.
 
 *Applies to: Evergreen*
 </div>
-![Pure Storage Evergreen Security](../../../../assets/storage-pure-evergreen-security-index.svg)
-
 
 Evergreen Security Controls
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-hardening_checklist: "Hardening Checklist" {shape: rectangle}
-rbac: "RBAC" {shape: rectangle}
-encryption: "Encryption" {shape: rectangle}
-audit_logging: "Audit Logging" {shape: rectangle}
-subscription_security: "Subscription Security" {shape: rectangle}
-core: "Evergreen Core" {shape: hexagon}
-
-external -> hardening_checklist: traffic in
-hardening_checklist -> rbac
-rbac -> encryption
-encryption -> audit_logging
-audit_logging -> subscription_security
-subscription_security -> core: secured path
-```
 
 ## Before you begin
 

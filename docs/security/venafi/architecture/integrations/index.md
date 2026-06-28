@@ -5,16 +5,11 @@ tags:
 ---
 # Venafi — Integrations
 
-
 <div class="kb-summary">
 Venafi TPP integrates with Microsoft ADCS as the primary internal CA backend, with DigiCert and Entrust for external and public certificate issuance.
 
 *Applies to: Venafi TLS Protect*
 </div>
-![Venafi — Integrations](../../../../assets/security-venafi-architecture-integrations-index.svg)
-
-
-
 
  HashiCorp Vault PKI secrets engine can be fronted by Venafi policy to enforce organisational standards on dynamically issued certificates. Kubernetes cert-manager uses the Venafi issuer plugin to request certificates from TPP or VaaS for workloads running in-cluster.
 
@@ -29,19 +24,6 @@ ServiceNow integration enables certificate request workflows via ITSM tickets, r
 | ServiceNow | REST API / workflow connector | Certificate request approval workflow |
 | SIEM | Venafi Log Server syslog forwarding | Audit event centralisation |
 | Terraform | Venafi Terraform provider | Certificate provisioning in IaC pipelines |
-
-```d2
-direction: right
-
-center: "Integrations" {shape: hexagon}
-component_a: "Component A" {shape: rectangle}
-component_b: "Component B" {shape: rectangle}
-component_c: "Component C" {shape: rectangle}
-
-center -> component_a
-center -> component_b
-center -> component_c
-```
 
 ## Before you begin
 

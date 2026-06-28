@@ -4,19 +4,6 @@ tags:
   - vxrail
 ---
 # VxRail — Cluster Software Stack and Data Plane
-![VxRail — Cluster Software Stack and Data Plane](../../../../../assets/virtualization-vmware-vxrail-architecture-how-it-works-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "VxRail" {shape: hexagon}
-hci_node_cluster: "HCI Node Cluster" {shape: rectangle}
-
-center -> hci_node_cluster
-```
 
 ## Overview
 
@@ -25,7 +12,6 @@ VxRail is a hyper-converged infrastructure (HCI) appliance built on Dell PowerEd
 VxRail is sold exclusively as a pre-configured appliance and managed as a system — firmware updates, vSphere upgrades, and vSAN configuration changes all go through the VxRail Manager lifecycle workflow, never independently.
 
 ## HCI Node Cluster
-
 
 ```mermaid
 graph TB

@@ -5,10 +5,6 @@ Azure OpenAI Service hosts GPT-4o and other models within Azure regions with pri
 
 *Applies to: Azure OpenAI*
 </div>
-![Azure OpenAI](../../../assets/cloud-ai-azure-openai-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-5">
 
@@ -38,19 +34,6 @@ Azure OpenAI Service hosts GPT-4o and other models within Azure regions with pri
 </a>
 
 </div>
-
-```d2
-direction: right
-
-center: "Azure OpenAI" {shape: hexagon}
-quick_reference: "Quick Reference" {shape: rectangle}
-common_operations: "Common Operations" {shape: rectangle}
-key_considerations: "Key Considerations" {shape: rectangle}
-
-center -> quick_reference
-center -> common_operations
-center -> key_considerations
-```
 
 ## Quick Reference
 

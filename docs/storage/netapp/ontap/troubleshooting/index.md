@@ -7,16 +7,11 @@ search:
 ---
 # ONTAP — Troubleshooting
 
-
 <div class="kb-summary">
 ONTAP — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
 
 *Applies to: ONTAP 9.x*
 </div>
-![ONTAP — Troubleshooting](../../../../assets/storage-netapp-ontap-troubleshooting-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="common-issues/"><strong>Common Issues</strong><span>Quick reference for common problems and resolutions.</span></a>

@@ -7,7 +7,6 @@ tags:
 # Aria Operations for Logs — Scripts Reference
 ![Aria Operations for Logs — Scripts Reference](../../../../assets/virtualization-vmware-aria-operations-for-logs-operations-sc.svg)
 
-
 ```bash
 #!/usr/bin/env bash
 # Usage: ./vrli-health.sh <vrli-fqdn> <username> <password>
@@ -88,15 +87,6 @@ Get-VMHost | ForEach-Object {
         Status = if ($cfg.RemoteHost -eq $vrliTarget) { "OK" } else { "MISMATCH" }
     }
 } | Format-Table -AutoSize
-```
-
-```d2
-direction: right
-
-hub: "Aria Operations for Logs\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

@@ -8,21 +8,6 @@ tags:
 <div class="kb-summary">
 Top-10 vSphere Replication commands for replication configuration, status monitoring, and recovery via PowerCLI and VRMS REST API.
 </div>
-![vSphere Replication Cheat Sheet](../../assets/reference-cheat-sheets-vsphere-replication.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Cheat Sheets" {shape: rectangle}
-powercli: "PowerCLI" {shape: rectangle}
-vrms_rest_api: "VRMS REST API" {shape: rectangle}
-
-center -> powercli
-center -> vrms_rest_api
-```
 
 ## PowerCLI
 

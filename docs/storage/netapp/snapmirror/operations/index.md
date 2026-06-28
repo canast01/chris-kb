@@ -5,16 +5,11 @@ tags:
 ---
 # NetApp SnapMirror — Operations
 
-
 <div class="kb-summary">
 NetApp SnapMirror — Operations reference: Health Checks, Procedures, Common Issues, CLI Reference, and 3 more.
 
 *Applies to: SnapMirror*
 </div>
-![NetApp SnapMirror — Operations](../../../../assets/storage-netapp-snapmirror-operations-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>

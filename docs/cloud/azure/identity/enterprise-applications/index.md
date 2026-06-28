@@ -4,35 +4,11 @@ tags:
 ---
 # Enterprise Applications
 
-
 <div class="kb-summary">
 Enterprise applications in Microsoft Entra ID represent the service principal for an application within your tenant. They are created automatically when an app registration is made or when a third-party SaaS app is added from the gallery.
 
 *Applies to: Azure*
 </div>
-![Enterprise Applications](../../../../assets/cloud-azure-identity-enterprise-applications-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-enterprise_application_sso_flow: "Enterprise Application SSO Flow" {shape: rectangle}
-viewing_and_managing_enterprise_appl: "Viewing and Managing Enterprise Applications" {shape: rectangle}
-sso_configuration: "SSO Configuration" {shape: rectangle}
-user_assignment: "User Assignment" {shape: rectangle}
-provisioning: "Provisioning" {shape: rectangle}
-app_roles: "App Roles" {shape: rectangle}
-
-center -> enterprise_application_sso_flow
-center -> viewing_and_managing_enterprise_appl
-center -> sso_configuration
-center -> user_assignment
-center -> provisioning
-center -> app_roles
-```
 
 ## Enterprise Application SSO Flow
 

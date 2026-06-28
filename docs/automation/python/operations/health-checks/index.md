@@ -5,14 +5,11 @@ tags:
 ---
 # Python Automation — Health Checks
 
-
 <div class="kb-summary">
 Health Checks reference covering Environment Health, Package Management, Scheduled Scripts.
 
 *Applies to: Python 3.x*
 </div>
-![Python Automation — Health Checks](../../../../assets/automation-python-operations-health-checks-index.svg)
-
 
 ```d2
 direction: right
@@ -65,7 +62,6 @@ python3 -m py_compile <script.py> && echo "OK"
 # 6. Cron / scheduled script health — verify expected jobs present
 crontab -l | grep python
 ```
-
 
 **Check pyenv version (if using pyenv)**
 

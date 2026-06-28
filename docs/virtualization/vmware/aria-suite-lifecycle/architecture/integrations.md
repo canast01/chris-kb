@@ -6,7 +6,6 @@ tags:
 ---
 # Aria Suite Lifecycle — Integrations
 
-
 <div class="kb-summary">
 Integrations reference covering vCenter Server, NSX-T Integration (Optional), SMTP Configuration, NFS Binary Repository, Proxy / Offline Depot and 2 more sections.
 
@@ -14,27 +13,7 @@ Integrations reference covering vCenter Server, NSX-T Integration (Optional), SM
 </div>
 ![Aria Suite Lifecycle — Integrations](../../../../assets/virtualization-vmware-aria-suite-lifecycle-architecture-inte.svg)
 
-
   LCM Integration Map
-
-```d2
-direction: right
-
-center: "Aria Suite Lifecycle" {shape: hexagon}
-nsxt_integration_optional: "NSX-T Integration (Optional)" {shape: rectangle}
-smtp_configuration: "SMTP Configuration" {shape: rectangle}
-nfs_binary_repository: "NFS Binary Repository" {shape: rectangle}
-proxy_offline_depot: "Proxy / Offline Depot" {shape: rectangle}
-active_directory_ldap: "Active Directory / LDAP" {shape: rectangle}
-aria_automation_integration: "Aria Automation Integration" {shape: rectangle}
-
-center -> nsxt_integration_optional
-center -> smtp_configuration
-center -> nfs_binary_repository
-center -> proxy_offline_depot
-center -> active_directory_ldap
-center -> aria_automation_integration
-```
 
 ## NSX-T Integration (Optional)
 

@@ -4,8 +4,6 @@ tags:
   - security
 ---
 # Jira — Authentication
-![Jira — Authentication](../../../../assets/itsm-jira-security-authentication-index.svg)
-
 
 ```xml
 <!-- atlassian-user.xml snippet for LDAP (Data Center) -->

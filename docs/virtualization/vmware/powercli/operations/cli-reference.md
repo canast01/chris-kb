@@ -13,29 +13,7 @@ Core PowerCLI cmdlets for VM management, host operations, cluster management, da
 </div>
 ![PowerCLI — CLI Reference](../../../../assets/virtualization-vmware-powercli-operations-cli-reference.svg)
 
-
-
-
 <!-- diagram:powercli-operations -->
-
-```d2
-direction: right
-
-hub: "PowerCLI\nOperations" {shape: hexagon}
-vm_management: "VM Management" {shape: rectangle}
-host_operations: "Host Operations" {shape: rectangle}
-cluster_management: "Cluster Management" {shape: rectangle}
-datastore_and_storage: "Datastore and Storage" {shape: rectangle}
-vsan_operations: "vSAN Operations" {shape: rectangle}
-snapshots: "Snapshots" {shape: rectangle}
-
-hub -> vm_management
-hub -> host_operations
-hub -> cluster_management
-hub -> datastore_and_storage
-hub -> vsan_operations
-hub -> snapshots
-```
 
 ## Before you begin
 

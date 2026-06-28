@@ -4,16 +4,11 @@ tags:
 ---
 # Incident Management
 
-
 <div class="kb-summary">
 Incident Management operational notes and deep-dive references.
 
 *Applies to: ServiceNow*
 </div>
-![Incident Management](../../../assets/itsm-servicenow-incident-management-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-5">
 

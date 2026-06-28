@@ -22,17 +22,6 @@ Pure1 is a SaaS monitoring and analytics platform. FlashArray and FlashBlade sys
 
 ---
 
-```d2
-direction: right
-
-center: "Pure1" {shape: hexagon}
-component_roles: "Component Roles" {shape: rectangle}
-architecture: "Architecture" {shape: rectangle}
-
-center -> component_roles
-center -> architecture
-```
-
 ## Component Roles
 
 | Component | Role |

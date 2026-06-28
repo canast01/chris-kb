@@ -9,9 +9,6 @@ Git knowledge base covering the distributed object model, GitHub Enterprise and 
 
 *Applies to: Git 2.x*
 </div>
-![Git](../../assets/itsm-git-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

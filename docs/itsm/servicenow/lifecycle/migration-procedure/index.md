@@ -3,8 +3,6 @@ tags:
   - servicenow
 ---
 # Migration Procedure
-![Migration Procedure](../../../../assets/itsm-servicenow-lifecycle-migration-procedure-index.svg)
-
 
 ```yaml
 Migration Plan — <HOSTNAME> / <WORKLOAD>

@@ -9,10 +9,6 @@ Node sizing guidelines, MachineSet design, storage class standards, network CIDR
 
 *Applies to: OpenShift 4.x*
 </div>
-![OpenShift — Design Standards](../../../../assets/virtualization-openshift-architecture-design-standards-index.svg)
-
-
-
 
 ```mermaid
 graph TB

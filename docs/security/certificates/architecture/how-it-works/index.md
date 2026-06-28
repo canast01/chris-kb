@@ -5,37 +5,13 @@ tags:
 ---
 # Certificates — How It Works
 
-
 <div class="kb-summary">
 Certificate infrastructure follows a three-tier PKI hierarchy: an offline, air-gapped Root CA at the trust anchor, an online Issuing CA for day-to-day issuance, and optionally a Registration Authority (RA) to separate enrolment approval from issuance.
 </div>
-![Certificates — How It Works](../../../../assets/security-certificates-architecture-how-it-works-index.svg)
-
-
-
 
  Internal PKI is implemented with Microsoft ADCS. External and public-facing services use commercial CAs (DigiCert, Entrust) or Let's Encrypt via ACME.
 
 ---
-
-```d2
-direction: right
-
-center: "How It Works" {shape: hexagon}
-pki_hierarchy: "PKI Hierarchy" {shape: rectangle}
-certificate_lifecycle_flow: "Certificate Lifecycle Flow" {shape: rectangle}
-adcs_role_components: "ADCS Role Components" {shape: rectangle}
-certificate_templates: "Certificate Templates" {shape: rectangle}
-cdp_and_aia_configuration: "CDP and AIA Configuration" {shape: rectangle}
-autoenrollment_via_group_policy: "Auto-Enrollment via Group Policy" {shape: rectangle}
-
-center -> pki_hierarchy
-center -> certificate_lifecycle_flow
-center -> adcs_role_components
-center -> certificate_templates
-center -> cdp_and_aia_configuration
-center -> autoenrollment_via_group_policy
-```
 
 ## Before you begin
 

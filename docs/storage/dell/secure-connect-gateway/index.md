@@ -9,34 +9,12 @@ Dell Secure Connect Gateway navigation for Operations, CLI Reference, Scripts.
 
 *Applies to: Secure Connect Gateway*
 </div>
-![Dell Secure Connect Gateway](../../../assets/storage-dell-secure-connect-gateway-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="operations/"><strong>Operations</strong><span>Daily checks, health monitoring, maintenance tasks, and runbooks.</span></a>
 <a class="kb-card" href="cli-reference/"><strong>CLI Reference</strong><span>Command reference by category with syntax and examples.</span></a>
 <a class="kb-card" href="scripts/"><strong>Scripts</strong><span>Automation scripts for daily checks, health, incident triage, and validation.</span></a>
 </div>
-
-```d2
-direction: right
-
-center: "Secure Connect Gateway" {shape: hexagon}
-where_it_fits: "Where It Fits" {shape: rectangle}
-daily_checks: "Daily Checks" {shape: rectangle}
-health_commands: "Health Commands" {shape: rectangle}
-common_issues: "Common Issues" {shape: rectangle}
-operational_tasks: "Operational Tasks" {shape: rectangle}
-best_practices: "Best Practices" {shape: rectangle}
-
-center -> where_it_fits
-center -> daily_checks
-center -> health_commands
-center -> common_issues
-center -> operational_tasks
-center -> best_practices
-```
 
 ## Overview
 

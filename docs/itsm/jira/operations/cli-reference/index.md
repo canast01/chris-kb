@@ -4,8 +4,6 @@ tags:
   - operations
 ---
 # Jira — CLI Reference
-![Jira — CLI Reference](../../../../assets/itsm-jira-operations-cli-reference-index.svg)
-
 
 ```bash
 export JIRA_URL="https://jira.example.com"
@@ -255,15 +253,6 @@ issuetype = Bug AND labels = regression AND fixVersion in unreleasedVersions()
 
 -- Full-text search across project
 project = PROJ AND text ~ "authentication timeout" ORDER BY updated DESC
-```
-
-```d2
-direction: right
-
-center: "Jira" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> verify
 ```
 
 ## Before you begin

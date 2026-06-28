@@ -17,28 +17,6 @@ Firewall port reference for vCenter Server Appliance (VCSA). Use this to build f
 </div>
 ![vCenter — Ports and Network Requirements](../../../../assets/virtualization-vmware-vcenter-architecture-ports.svg)
 
-
-
-
-```d2
-direction: right
-
-center: "vCenter Server" {shape: hexagon}
-inbound_client_to_vcenter: "Inbound — Client to vCenter" {shape: rectangle}
-outbound_vcenter_to_infrastructure: "Outbound — vCenter to Infrastructure" {shape: rectangle}
-vcenter_ha_3node_activepassivewitnes: "vCenter HA (3-Node Active/Passive/Witness)" {shape: rectangle}
-backup_agent_to_vcenter: "Backup Agent to vCenter" {shape: rectangle}
-monitoring_and_management_tools: "Monitoring and Management Tools" {shape: rectangle}
-firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
-
-center -> inbound_client_to_vcenter
-center -> outbound_vcenter_to_infrastructure
-center -> vcenter_ha_3node_activepassivewitnes
-center -> backup_agent_to_vcenter
-center -> monitoring_and_management_tools
-center -> firewall_zone_summary
-```
-
 ## Before you begin
 
 - Identify source IP ranges for each traffic category (admin workstations, backup proxies, monitoring)

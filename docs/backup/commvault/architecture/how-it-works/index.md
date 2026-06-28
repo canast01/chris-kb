@@ -5,29 +5,11 @@ tags:
 ---
 # Commvault — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Overview, Component Topology, MediaAgent and Deduplication, Storage Library Types, Port Requirements and 1 more sections.
 
 *Applies to: Commvault 11.x*
 </div>
-![Commvault — How It Works](../../../../assets/backup-commvault-architecture-how-it-works-index.svg)
-
-
-```d2
-direction: right
-
-center: "Commvault" {shape: hexagon}
-component_topology: "Component Topology" {shape: rectangle}
-storage_library_types: "Storage Library Types" {shape: rectangle}
-port_requirements: "Port Requirements" {shape: rectangle}
-multisite_topology: "Multi-Site Topology" {shape: rectangle}
-
-center -> component_topology
-center -> storage_library_types
-center -> port_requirements
-center -> multisite_topology
-```
 
 ## Overview
 
@@ -52,7 +34,6 @@ graph TB
   class SRC,ADMIN host
   class WEBCON mgmt
 ```
-
 
 MediaAgent best practices:
 - Deploy one MediaAgent per site for local backups

@@ -22,17 +22,6 @@ ServiceNow is a multi-instance SaaS platform with fully isolated per-customer st
 
 ---
 
-```d2
-direction: right
-
-center: "ServiceNow" {shape: hexagon}
-instance_hierarchy: "Instance Hierarchy" {shape: rectangle}
-platform_node_topology: "Platform Node Topology" {shape: rectangle}
-
-center -> instance_hierarchy
-center -> platform_node_topology
-```
-
 ## Instance Hierarchy
 
 | Instance | Purpose |

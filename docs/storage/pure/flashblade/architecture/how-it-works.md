@@ -5,35 +5,12 @@ tags:
 ---
 # FlashBlade — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Overview, Scale-Out Architecture, HA Topology, Connectivity, File Services and 3 more sections.
 
 *Applies to: FlashBlade Purity//FB 4.x*
 </div>
 ![FlashBlade — How It Works](../../../../assets/storage-pure-flashblade-architecture-how-it-works.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "FlashBlade" {shape: hexagon}
-scaleout_architecture: "Scale-Out Architecture" {shape: rectangle}
-ha_topology: "HA Topology" {shape: rectangle}
-connectivity: "Connectivity" {shape: rectangle}
-file_services: "File Services" {shape: rectangle}
-object_services_s3: "Object Services (S3)" {shape: rectangle}
-purityfb_data_services: "Purity//FB Data Services" {shape: rectangle}
-
-center -> scaleout_architecture
-center -> ha_topology
-center -> connectivity
-center -> file_services
-center -> object_services_s3
-center -> purityfb_data_services
-```
 
 ```plantuml
 @startuml

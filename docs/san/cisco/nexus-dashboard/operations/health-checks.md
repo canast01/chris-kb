@@ -4,8 +4,6 @@ tags:
   - san
 ---
 # Cisco Nexus Dashboard — Operations Health Checks
-![Cisco Nexus Dashboard — Operations Health Checks](../../../../assets/san-cisco-nexus-dashboard-operations-health-checks.svg)
-
 
 ```bash
 # SSH to any cluster node
@@ -25,18 +23,6 @@ acs apps status
 # Show any failing Kubernetes pods
 kubectl get pods --all-namespaces | grep -Ev "Running|Completed"
 # Zero output = all pods healthy; any output needs investigation
-```
-
-
-```d2
-direction: right
-
-hub: "Nexus Dashboard\nOperations" {shape: hexagon}
-run_this_routine: "Run This Routine" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> run_this_routine
-hub -> verify
 ```
 
 ## Before you begin

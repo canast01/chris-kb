@@ -6,16 +6,11 @@ tags:
 ---
 # vCenter Upgrade Readiness Checklist
 
-
 <div class="kb-summary">
 vCenter Upgrade Readiness Checklist reference covering Current State, Target Version, Pre-Upgrade Checks, Post-Upgrade Validation.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![vCenter Upgrade Readiness Checklist](../../../../assets/virtualization-vmware-reference-upgrade-readiness-vcenter-up.svg)
-
-
-
 
 ```d2
 direction: right

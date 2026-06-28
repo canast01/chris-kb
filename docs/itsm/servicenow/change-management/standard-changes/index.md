@@ -9,7 +9,4 @@ Pre-approved standard change catalogue — low-risk repeatable changes that bypa
 
 *Applies to: ServiceNow*
 </div>
-![ServiceNow — Standard Changes](../../../../assets/itsm-servicenow-change-management-standard-changes-index.svg)
-
-
 

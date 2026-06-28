@@ -5,16 +5,11 @@ tags:
 ---
 # Cisco DCNM — Operations
 
-
 <div class="kb-summary">
 Cisco DCNM day-to-day operations — fabric management, template deployment, image management, and health monitoring.
 
 *Applies to: Cisco MDS · Nexus*
 </div>
-![Cisco DCNM — Operations](../../../../assets/san-cisco-cisco-dcnm-operations-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

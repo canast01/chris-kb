@@ -4,35 +4,11 @@ tags:
 ---
 # Bedrock Security
 
-
 <div class="kb-summary">
 Security for Bedrock spans IAM access control, network isolation with VPC endpoints, encryption at rest and in transit, and content guardrails. Apply all layers for production deployments handling sensitive data.
 
 *Applies to: AWS Bedrock*
 </div>
-![Bedrock Security](../../../../assets/cloud-ai-aws-bedrock-security-index.svg)
-
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-iam_policies: "IAM Policies" {shape: rectangle}
-vpc_endpoints: "VPC Endpoints" {shape: rectangle}
-encryption: "Encryption" {shape: rectangle}
-guardrails: "Guardrails" {shape: rectangle}
-audit_and_compliance: "Audit and Compliance" {shape: rectangle}
-core: "AWS Bedrock Core" {shape: hexagon}
-
-external -> iam_policies: traffic in
-iam_policies -> vpc_endpoints
-vpc_endpoints -> encryption
-encryption -> guardrails
-guardrails -> audit_and_compliance
-audit_and_compliance -> core: secured path
-```
 
 ## Before you begin
 

@@ -13,31 +13,7 @@ RBAC and access scoping for VxRail in the VMware product context. Covers VxRail 
 </div>
 ![VxRail — Access Control](../../../../assets/virtualization-vmware-vxrail-security-access-control.svg)
 
-
-
-
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-vxrail_manager_roles: "VxRail Manager Roles" {shape: rectangle}
-vsphere_rbac_for_vxrail_operations: "vSphere RBAC for VxRail Operations" {shape: rectangle}
-lockdown_mode: "Lockdown Mode" {shape: rectangle}
-exception_user_list: "Exception User List" {shape: rectangle}
-omivv_service_account_permissions: "OMIVV Service Account Permissions" {shape: rectangle}
-network_access_control: "Network Access Control" {shape: rectangle}
-core: "VxRail Core" {shape: hexagon}
-
-external -> vxrail_manager_roles: traffic in
-vxrail_manager_roles -> vsphere_rbac_for_vxrail_operations
-vsphere_rbac_for_vxrail_operations -> lockdown_mode
-lockdown_mode -> exception_user_list
-exception_user_list -> omivv_service_account_permissions
-omivv_service_account_permissions -> network_access_control
-network_access_control -> core: secured path
-```
 
 ## Before you begin
 

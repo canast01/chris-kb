@@ -12,11 +12,6 @@ SQL Server initial deployment — installation checklist, post-install configura
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
-![SQL Server — Initial Deployment](../../../../assets/compute-windows-server-sql-server-deploy-index.svg)
-
-
-
-
 
 ```mermaid
 flowchart TD

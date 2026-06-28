@@ -4,8 +4,6 @@ tags:
   - operations
 ---
 # GitHub Actions — Install & Upgrade
-![GitHub Actions — Install & Upgrade](../../../../assets/automation-github-actions-operations-install-upgrade-index.svg)
-
 
 ```bash
 cd /opt/actions-runner   # or wherever the runner is installed
@@ -20,17 +18,6 @@ jobs:
     steps:
       - run: echo "Runner version check"
       - run: cat /opt/actions-runner/.runner
-```
-
-```d2
-direction: right
-
-plan: "Plan" {shape: oval}
-verify: "Verify" {shape: rectangle}
-validate: "Validate" {shape: oval}
-
-plan -> verify
-verify -> validate
 ```
 
 ## Before you begin

@@ -5,14 +5,11 @@ tags:
 ---
 # Linux — Standards
 
-
 <div class="kb-summary">
 Linux architecture standards: kernel version and patch cadence requirements, NTP configuration, disk layout (LVM), network bonding, and SELinux/AppArmor baseline.
 
 *Applies to: RHEL 8.x / 9.x · Ubuntu 22.04 / 24.04*
 </div>
-![Linux — Standards](../../../../assets/compute-linux-architecture-design-standards-index.svg)
-
 
 ```d2
 direction: down
@@ -32,7 +29,6 @@ os_component_stack -> software_installation_policy: hardens
 ```
 
 ## Naming Convention
-
 
 Sudo access granted via AD group membership:
 ```bash
@@ -96,7 +92,6 @@ flowchart TD
 - Package additions require a change record
 
 ---
-
 
 ## Hostname and DNS Configuration
 

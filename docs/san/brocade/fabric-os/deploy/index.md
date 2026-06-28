@@ -42,15 +42,10 @@ isl_configuration -> validate
 ---
 
 # Brocade FabricOS — Initial Deployment
-![Brocade FabricOS — Initial Deployment](../../../../assets/san-brocade-fabric-os-deploy-index.svg)
-
-
-
 
 This guide covers deploying a Brocade SAN switch (running Fabric OS) from physical installation through a validated, production-ready FC fabric. Applies to Brocade G620, G630, and X7 directors running Fabric OS 9.x.
 
 ---
-
 
 ```mermaid
 flowchart TD

@@ -12,10 +12,6 @@ Troubleshooting guide for frequent Ceph problems: OSD down/out, PG degraded and 
 
 *Applies to: Ceph Reef / Squid*
 </div>
-![Ceph — Common Issues](../../../../assets/storage-ceph-troubleshooting-common-issues-index.svg)
-
-
-
 
 ```mermaid
 graph TD

@@ -4,33 +4,11 @@ tags:
 ---
 # Azure Storage — Capacity Monitoring
 
-
 <div class="kb-summary">
 Capacity Monitoring reference covering Overview, Storage Account Metrics, Capacity Alerts, Container-Level Capacity, Forecasting and Trend Analysis and 1 more sections.
 
 *Applies to: Azure*
 </div>
-![Azure Storage — Capacity Monitoring](../../../../assets/cloud-azure-storage-capacity-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-storage_account_metrics: "Storage Account Metrics" {shape: rectangle}
-capacity_alerts: "Capacity Alerts" {shape: rectangle}
-containerlevel_capacity: "Container-Level Capacity" {shape: rectangle}
-forecasting_and_trend_analysis: "Forecasting and Trend Analysis" {shape: rectangle}
-storage_account_limits_reference: "Storage Account Limits Reference" {shape: rectangle}
-
-center -> storage_account_metrics
-center -> capacity_alerts
-center -> containerlevel_capacity
-center -> forecasting_and_trend_analysis
-center -> storage_account_limits_reference
-```
 
 ## Overview
 

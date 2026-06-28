@@ -47,17 +47,6 @@ graph TB
 
 </div>
 
-```d2
-direction: right
-
-center: "Active Directory" {shape: hexagon}
-fsmo_roles: "FSMO Roles" {shape: rectangle}
-forest_and_domain_hierarchy: "Forest and Domain Hierarchy" {shape: rectangle}
-
-center -> fsmo_roles
-center -> forest_and_domain_hierarchy
-```
-
 ## FSMO Roles
 
 | FSMO Role | Scope | Recommended DC |
@@ -69,5 +58,4 @@ center -> forest_and_domain_hierarchy
 | Infrastructure Master | Per domain | Not a GC DC (if single-domain, can be GC) |
 
 ## Forest and Domain Hierarchy
-
 

@@ -4,8 +4,6 @@ tags:
   - operations
 ---
 # Jira — Install and Upgrade
-![Jira — Install and Upgrade](../../../../assets/itsm-jira-operations-install-upgrade-index.svg)
-
 
 ```bash
 # List all installed apps and versions
@@ -188,17 +186,6 @@ systemctl start jira
 
 # 5. Validate
 curl -s https://jira.example.com/status
-```
-
-```d2
-direction: right
-
-plan: "Plan" {shape: oval}
-verify: "Verify" {shape: rectangle}
-validate: "Validate" {shape: oval}
-
-plan -> verify
-verify -> validate
 ```
 
 ## Before you begin

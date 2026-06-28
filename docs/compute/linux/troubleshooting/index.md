@@ -7,16 +7,11 @@ search:
 ---
 # Linux — Troubleshooting
 
-
-
 <div class="kb-summary">
 Linux — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>
-![Linux — Troubleshooting](../../../assets/compute-linux-troubleshooting-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="common-issues/"><strong>Common Issues</strong><span>Quick reference for common problems and resolutions.</span></a>

@@ -5,38 +5,14 @@ tags:
 ---
 # Secure Connect Gateway — Operations
 
-
 <div class="kb-summary">
 SCG operations: device registration, connectivity health checks, firmware advisory review, SupportAssist case creation, and daily telemetry verification.
 
 *Applies to: Secure Connect Gateway*
   <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
-![Secure Connect Gateway — Operations](../../../../assets/storage-dell-secure-connect-gateway-operations-index.svg)
-
-
-
 
 ---
-
-```d2
-direction: right
-
-hub: "Secure Connect Gateway\nOperations" {shape: hexagon}
-daily_checks: "Daily Checks" {shape: rectangle}
-health_check: "Health Check" {shape: rectangle}
-change_readiness: "Change Readiness" {shape: rectangle}
-incident_triage: "Incident Triage" {shape: rectangle}
-maintenance_window: "Maintenance Window" {shape: rectangle}
-postchange_validation: "Post-Change Validation" {shape: rectangle}
-
-hub -> daily_checks
-hub -> health_check
-hub -> change_readiness
-hub -> incident_triage
-hub -> maintenance_window
-hub -> postchange_validation
-```
 
 ## Before you begin
 
@@ -48,7 +24,6 @@ hub -> postchange_validation
 ---
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|

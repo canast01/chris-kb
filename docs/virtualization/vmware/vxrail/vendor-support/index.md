@@ -4,16 +4,11 @@ tags:
 ---
 # VxRail Vendor Support
 
-
 <div class="kb-summary">
 VxRail vendor support: Dell SupportAssist case creation, `mystic` diagnostic bundle collection, Secure Remote Services (SRS) connectivity, and engineering escalation path.
 
 *Applies to: VxRail 7.x · 8.x*
 </div>
-![VxRail Vendor Support](../../../../assets/virtualization-vmware-vxrail-vendor-support-index.svg)
-
-
-
 
 ---
 

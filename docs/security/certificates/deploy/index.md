@@ -10,10 +10,6 @@ search:
 <div class="kb-summary">
 Certificate infrastructure deployment — CA hierarchy build-out, ADCS configuration, and initial trust distribution.
 </div>
-![Certificates — Deploy](../../../assets/security-certificates-deploy-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-1">
 

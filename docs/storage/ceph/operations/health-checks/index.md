@@ -10,8 +10,6 @@ Ceph health check routine: cluster status, OSD up/in counts, PG state verificati
 
 *Applies to: Ceph Reef / Squid*
 </div>
-![Ceph — Health Checks](../../../../assets/storage-ceph-operations-health-checks-index.svg)
-
 
 ```mermaid
 graph TD
@@ -40,8 +38,6 @@ graph TD
     class E,E1,E2,E3,E4 err
     class A,B check
 ```
-
-
 
 ```d2
 direction: right

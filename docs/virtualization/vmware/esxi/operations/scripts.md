@@ -7,7 +7,6 @@ tags:
 ---
 # ESXi — Scripts
 
-
 <div class="kb-summary">
 ESXi Scripts reference covering Storage Path Health Check (Bash / esxcli), ESXi Syslog and Event Collector (Python), NTP Configuration Audit (Bash), Ansible ESXi Configuration Playbook, Windows: ESXi Host Health via REST API (PowerShell) and 1 more sections.
 
@@ -15,29 +14,9 @@ ESXi Scripts reference covering Storage Path Health Check (Bash / esxcli), ESXi 
 </div>
 ![ESXi — Scripts](../../../../assets/virtualization-vmware-esxi-operations-scripts.svg)
 
-
 ESXi Automation Scripts — Tool Selection
 
 ---
-
-```d2
-direction: right
-
-hub: "ESXi\nOperations" {shape: hexagon}
-storage_path_health_check_bash_esxcl: "Storage Path Health Check (Bash / esxcli)" {shape: rectangle}
-esxi_syslog_and_event_collector_pyth: "ESXi Syslog and Event Collector (Python)" {shape: rectangle}
-ntp_configuration_audit_bash: "NTP Configuration Audit (Bash)" {shape: rectangle}
-ansible_esxi_configuration_playbook: "Ansible ESXi Configuration Playbook" {shape: rectangle}
-windows_esxi_host_health_via_rest_ap: "Windows: ESXi Host Health via REST API (PowerShell)" {shape: rectangle}
-windows_esxi_esxcli_commands_via_pli: "Windows: ESXi ESXCLI Commands via Plink (CMD)" {shape: rectangle}
-
-hub -> storage_path_health_check_bash_esxcl
-hub -> esxi_syslog_and_event_collector_pyth
-hub -> ntp_configuration_audit_bash
-hub -> ansible_esxi_configuration_playbook
-hub -> windows_esxi_host_health_via_rest_ap
-hub -> windows_esxi_esxcli_commands_via_pli
-```
 
 ## Before you begin
 
@@ -157,14 +136,12 @@ WARN_TYPES = {
 
 NMP_PATTERNS = ["NMP", "Dead path", "SCSI", "storage", "LUN", "vmhba"]
 
-
 def connect_vcenter():
     context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
     context.check_hostname = False
     context.verify_mode = ssl.CERT_NONE
     si = SmartConnect(host=VCENTER_HOST, user=VC_USER, pwd=VC_PASS, sslContext=context)
     return si
-
 
 def collect_events(si):
     content = si.RetrieveContent()
@@ -174,7 +151,6 @@ def collect_events(si):
         time=vim.event.EventFilterSpec.ByTime(beginTime=start_time),
     )
     return em.QueryEvents(filter=filter_spec)
-
 
 si = connect_vcenter()
 events = collect_events(si)

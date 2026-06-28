@@ -12,10 +12,6 @@ Terraform escalation: when to open a HashiCorp support case, how to file a provi
 
 *Applies to: Terraform 1.x / Terraform Cloud / HCP Terraform*
 </div>
-![Terraform — Escalation](../../../../assets/automation-terraform-troubleshooting-escalation-index.svg)
-
-
-
 
 ```plantuml
 @startuml

@@ -4,14 +4,9 @@ tags:
 ---
 # Certificates — Encryption
 
-
 <div class="kb-summary">
 Encryption reference covering CA Key Protection Hierarchy, CA Key Protection, CRL Availability.
 </div>
-![Certificates — Encryption](../../../../assets/security-certificates-security-encryption-index.svg)
-
-
-
 
 ```d2
 direction: down

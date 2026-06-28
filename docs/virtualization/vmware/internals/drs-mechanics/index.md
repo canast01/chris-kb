@@ -10,10 +10,6 @@ DRS evaluates cluster imbalance every 5 minutes using a per-host demand score ag
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![DRS Mechanics](../../../../assets/virtualization-vmware-internals-drs-mechanics-index.svg)
-
-
-
 
 ```mermaid
 graph TD
@@ -44,25 +40,6 @@ graph TD
     H -->|No rules| E
     E -->|Fully automated| F
     E -->|Manual / partial| G
-```
-
-```d2
-direction: right
-
-center: "Drs Mechanics" {shape: hexagon}
-imbalance_score_calculation: "Imbalance Score Calculation" {shape: rectangle}
-migration_priority_bands: "Migration Priority Bands" {shape: rectangle}
-reservation_vs_entitlement: "Reservation vs Entitlement" {shape: rectangle}
-initial_placement: "Initial Placement" {shape: rectangle}
-predictive_drs: "Predictive DRS" {shape: rectangle}
-drs_behavior_by_automation_level: "DRS Behavior by Automation Level" {shape: rectangle}
-
-center -> imbalance_score_calculation
-center -> migration_priority_bands
-center -> reservation_vs_entitlement
-center -> initial_placement
-center -> predictive_drs
-center -> drs_behavior_by_automation_level
 ```
 
 ## Imbalance Score Calculation

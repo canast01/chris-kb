@@ -5,7 +5,6 @@ tags:
 ---
 # SnapMirror — Integrations
 
-
 <div class="kb-summary">
 SnapMirror integrations: SnapCenter backup chain extension, SnapVault for long-term retention, SVM-DR for disaster recovery, and S3 SnapMirror for object replication.
 
@@ -13,27 +12,7 @@ SnapMirror integrations: SnapCenter backup chain extension, SnapVault for long-t
 </div>
 ![SnapMirror — Integrations](../../../../assets/storage-netapp-snapmirror-architecture-integrations.svg)
 
-
-
-
 ---
-
-```d2
-direction: right
-
-center: "SnapMirror" {shape: hexagon}
-snapcenter_orchestration: "SnapCenter Orchestration" {shape: rectangle}
-svmdr_for_nas_failover: "SVM-DR for NAS Failover" {shape: rectangle}
-smbc_for_transparent_host_failover: "SMBC for Transparent Host Failover" {shape: rectangle}
-cloud_volumes_ontap: "Cloud Volumes ONTAP" {shape: rectangle}
-rest_api: "REST API" {shape: rectangle}
-
-center -> snapcenter_orchestration
-center -> svmdr_for_nas_failover
-center -> smbc_for_transparent_host_failover
-center -> cloud_volumes_ontap
-center -> rest_api
-```
 
 ## SnapCenter Orchestration
 

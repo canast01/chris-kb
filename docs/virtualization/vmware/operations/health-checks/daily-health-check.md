@@ -4,15 +4,11 @@ tags:
 ---
 # Daily Health Check
 
-
 <div class="kb-summary">
 Morning checks covering all components that can silently degrade overnight. Target: complete in under 15 minutes.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Daily Health Check](../../../../assets/virtualization-vmware-operations-health-checks-daily-health-.svg)
-
-
 
 ```d2
 direction: right

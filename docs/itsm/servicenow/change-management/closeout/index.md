@@ -4,33 +4,11 @@ tags:
 ---
 # Change Closeout
 
-
 <div class="kb-summary">
 Change Closeout reference covering Overview, Closeout Checklist, Change Outcome Classification, PIR (Post-Implementation Review), Lessons Learned and 1 more sections.
 
 *Applies to: ServiceNow*
 </div>
-![Change Closeout](../../../../assets/itsm-servicenow-change-management-closeout-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "ServiceNow" {shape: hexagon}
-closeout_checklist: "Closeout Checklist" {shape: rectangle}
-change_outcome_classification: "Change Outcome Classification" {shape: rectangle}
-pir_postimplementation_review: "PIR (Post-Implementation Review)" {shape: rectangle}
-lessons_learned: "Lessons Learned" {shape: rectangle}
-cmdb_update_on_closeout: "CMDB Update on Closeout" {shape: rectangle}
-
-center -> closeout_checklist
-center -> change_outcome_classification
-center -> pir_postimplementation_review
-center -> lessons_learned
-center -> cmdb_update_on_closeout
-```
 
 ## Overview
 

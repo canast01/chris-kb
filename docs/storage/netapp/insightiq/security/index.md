@@ -10,25 +10,6 @@ InsightIQ Security reference covering Authentication, OneFS Service Account Secu
 
 *Applies to: InsightIQ*
 </div>
-![InsightIQ Security](../../../../assets/storage-netapp-insightiq-security-index.svg)
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-authentication: "Authentication" {shape: rectangle}
-database_backup_encryption: "Database Backup Encryption" {shape: rectangle}
-audit_logging: "Audit Logging" {shape: rectangle}
-security_hardening_checklist: "Security Hardening Checklist" {shape: rectangle}
-core: "InsightIQ Core" {shape: hexagon}
-
-external -> authentication: traffic in
-authentication -> database_backup_encryption
-database_backup_encryption -> audit_logging
-audit_logging -> security_hardening_checklist
-security_hardening_checklist -> core: secured path
-```
 
 ## Before you begin
 
@@ -52,7 +33,6 @@ Local accounts should be limited to:
 Do not use local accounts for day-to-day operations.
 
 ### LDAP / Active Directory Integration
-
 
 Rotate the service account password on the 12-month schedule. Update the credential in InsightIQ immediately after rotation.
 

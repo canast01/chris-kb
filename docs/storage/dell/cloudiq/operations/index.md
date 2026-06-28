@@ -10,9 +10,6 @@ CloudIQ — Operations reference: CLI Reference, Health Checks, Procedures, Inst
 
 *Applies to: CloudIQ*
 </div>
-![CloudIQ — Operations](../../../../assets/storage-dell-cloudiq-operations-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="cli-reference/"><strong>CLI Reference</strong><span>Commands, syntax, and quick reference.</span></a>

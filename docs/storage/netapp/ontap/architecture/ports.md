@@ -16,28 +16,6 @@ Firewall port reference for NetApp ONTAP clusters. Covers cluster management, da
 </div>
 ![NetApp ONTAP — Ports and Network Requirements](../../../../assets/storage-netapp-ontap-architecture-ports.svg)
 
-
-
-
-```d2
-direction: right
-
-center: "NetApp ONTAP" {shape: hexagon}
-inbound_management_traffic: "Inbound — Management Traffic" {shape: rectangle}
-data_protocols_nfs: "Data Protocols — NFS" {shape: rectangle}
-data_protocols_smb_cifs: "Data Protocols — SMB (CIFS)" {shape: rectangle}
-data_protocols_iscsi_san: "Data Protocols — iSCSI (SAN)" {shape: rectangle}
-data_protocols_nvmeof_nvmetcp_ontap_: "Data Protocols — NVMe-oF / NVMe-TCP (ONTAP 9.10+)" {shape: rectangle}
-snapmirror_snapvault_replication_int: "SnapMirror / SnapVault Replication (Intercluster LIFs)" {shape: rectangle}
-
-center -> inbound_management_traffic
-center -> data_protocols_nfs
-center -> data_protocols_smb_cifs
-center -> data_protocols_iscsi_san
-center -> data_protocols_nvmeof_nvmetcp_ontap_
-center -> snapmirror_snapvault_replication_int
-```
-
 ## Before you begin
 
 - ONTAP uses Logical Interfaces (LIFs) — management, data, and intercluster LIFs have separate IPs, each on their own VLAN

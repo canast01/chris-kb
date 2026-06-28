@@ -7,15 +7,11 @@ search:
 ---
 # iSCSI Troubleshooting
 
-
 <div class="kb-summary">
 iSCSI Troubleshooting reference covering Diagnostic Flow, Quick Diagnostics, Common Issues Reference, MTU Troubleshooting, Log Locations and 1 more sections.
 </div>
-![iSCSI Troubleshooting](../../../../assets/networking-protocols-iscsi-troubleshooting-index.svg)
-
 
         TRIAGE: HOST CANNOT SEE iSCSI LUN
-
 
 ```d2
 direction: down

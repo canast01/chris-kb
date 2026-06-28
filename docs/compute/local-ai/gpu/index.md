@@ -3,10 +3,6 @@
 <div class="kb-summary">
 GPU compute for AI/ML workloads runs on the NVIDIA CUDA platform (driver, CUDA toolkit, cuDNN). Coverage includes GPU family selection for training vs inference, VRAM sizing, driver/CUDA compatibility, performance tuning, and monitoring thermal health and ECC errors.
 </div>
-![GPU Workloads](../../../assets/compute-local-ai-gpu-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-5">
 
@@ -36,19 +32,6 @@ GPU compute for AI/ML workloads runs on the NVIDIA CUDA platform (driver, CUDA t
 </a>
 
 </div>
-
-```d2
-direction: right
-
-center: "GPU Compute" {shape: hexagon}
-quick_reference: "Quick Reference" {shape: rectangle}
-common_operations: "Common Operations" {shape: rectangle}
-key_considerations: "Key Considerations" {shape: rectangle}
-
-center -> quick_reference
-center -> common_operations
-center -> key_considerations
-```
 
 ## Quick Reference
 

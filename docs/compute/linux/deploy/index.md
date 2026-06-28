@@ -12,16 +12,10 @@ Linux Server initial deployment: OS install, NTP, syslog forwarding, hardening b
 
 *Applies to: RHEL 9 / Rocky Linux 9 (Ubuntu equivalents noted)*
 </div>
-![Linux Server — Initial Deployment](../../../assets/compute-linux-deploy-index.svg)
-
-
-
-
 
 This guide covers deploying a new Linux server from OS install through hardening, NTP, syslog forwarding, and optional domain join. Steps apply to RHEL 9 / Rocky Linux 9; Ubuntu equivalents are noted where commands differ.
 
 ---
-
 
 ```mermaid
 flowchart TD

@@ -7,14 +7,11 @@ search:
 ---
 # Python Automation — Common Issues
 
-
 <div class="kb-summary">
 Common Issues reference covering Python Error Triage Flow, API and Network Timeouts, Common Errors Reference.
 
 *Applies to: Python 3.x*
 </div>
-![Python Automation — Common Issues](../../../../assets/automation-python-troubleshooting-common-issues-index.svg)
-
 
 ```d2
 direction: down
@@ -97,7 +94,6 @@ flowchart TD
     errType -->|PermissionError| checkPath["ls -la on output\ndirectory"]
     checkPath --> fixPerms["chmod / chown\noutput directory"]
 ```
-
 
 ## API and Network Timeouts
 

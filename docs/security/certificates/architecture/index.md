@@ -11,7 +11,6 @@ Three-tier PKI hierarchy with offline Root CA, ADCS-backed Issuing CA, and comme
 
 ![Certificates — Architecture — Diagram](../../../assets/security-certificates-architecture-diagram.svg)
 
-
 ![Certificates Architecture](../../../assets/certificates-architecture-overview.svg)
 
 <div class="kb-grid kb-grid-3">
@@ -32,17 +31,6 @@ Three-tier PKI hierarchy with offline Root CA, ADCS-backed Issuing CA, and comme
 </a>
 
 </div>
-
-```d2
-direction: right
-
-center: "Architecture" {shape: hexagon}
-pki_tiers: "PKI Tiers" {shape: rectangle}
-pki_hierarchy: "PKI Hierarchy" {shape: rectangle}
-
-center -> pki_tiers
-center -> pki_hierarchy
-```
 
 ## PKI Tiers
 

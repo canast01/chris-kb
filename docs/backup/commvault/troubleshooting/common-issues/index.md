@@ -7,15 +7,11 @@ search:
 ---
 # Commvault — Common Issues
 
-
 <div class="kb-summary">
 Common Commvault issues — backup job failures, media agent errors, deduplication problems, and client connectivity failures.
 
 *Applies to: Commvault 2024.x*
 </div>
-![Commvault — Common Issues](../../../../assets/backup-commvault-troubleshooting-common-issues-index.svg)
-
-
 
 CommVault job failures are classified by error code and phase. The first diagnostic step is to open the job detail in the Job Controller and expand the phase-level log — this shows the specific module and error code.
 

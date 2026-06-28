@@ -4,31 +4,13 @@ tags:
 ---
 # Maintenance Risk Validation
 
-
 <div class="kb-summary">
 Validate cluster health before any maintenance window. All checks must pass before placing a host into maintenance mode or performing upgrades. Use the tables below as a structured pre-flight checklist.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Maintenance Risk Validation](../../../../assets/virtualization-vmware-topics-maintenance-risk-validation-ind.svg)
-
-
-
 
 ---
-
-```d2
-direction: right
-
-center: "Maintenance Risk Validation" {shape: hexagon}
-premaintenance_validation: "Pre-Maintenance Validation" {shape: rectangle}
-redflag_conditions: "Red-Flag Conditions" {shape: rectangle}
-safetoproceed_validation_checklist: "Safe-to-Proceed Validation Checklist" {shape: rectangle}
-
-center -> premaintenance_validation
-center -> redflag_conditions
-center -> safetoproceed_validation_checklist
-```
 
 ```vegalite
 {

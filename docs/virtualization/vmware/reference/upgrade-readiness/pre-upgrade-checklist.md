@@ -4,16 +4,11 @@ tags:
 ---
 # Pre-Upgrade Checklist
 
-
 <div class="kb-summary">
 Complete all items before starting any vSphere upgrade (vCenter, ESXi, vSAN, NSX).
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Pre-Upgrade Checklist](../../../../assets/virtualization-vmware-reference-upgrade-readiness-pre-upgrad.svg)
-
-
-
 
 ```d2
 direction: right

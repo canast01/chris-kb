@@ -9,13 +9,6 @@ CyberArk Privileged Access Manager knowledge base covering Digital Vault archite
 
 *Applies to: CyberArk PAM*
 </div>
-![CyberArk](../../assets/security-cyberark-index.svg)
-
-
-
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

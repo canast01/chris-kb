@@ -4,15 +4,11 @@ tags:
 ---
 # Virtualization Network Validation
 
-
 <div class="kb-summary">
 Virtualization Network Validation reference covering Overview, Pre-Checks, Steps, Validation, Rollback and 1 more sections.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Virtualization Network Validation](../../../../assets/virtualization-vmware-operations-runbooks-network-validation.svg)
-
-
 
 ```plantuml
 @startuml

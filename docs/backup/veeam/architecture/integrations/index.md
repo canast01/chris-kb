@@ -5,15 +5,11 @@ tags:
 ---
 # Veeam — Integrations
 
-
 <div class="kb-summary">
 Veeam integration with VMware vSphere, Nutanix, Azure, object storage repositories, and monitoring platforms.
 
 *Applies to: Veeam Backup & Replication 12.x*
 </div>
-![Veeam — Integrations](../../../../assets/backup-veeam-architecture-integrations-index.svg)
-
-
 
 Veeam integrates with virtualisation, storage, cloud, and monitoring platforms through native plugins and APIs. VMware vSphere is the primary integration: Veeam connects to vCenter (or individual ESXi hosts for standalone), uses VADP for snapshot-based backups, and leverages Changed Block Tracking (CBT) for incremental efficiency. Storage integrations use vendor-specific plugins for hardware snapshot-based backups, reducing backup windows and eliminating I/O impact on production.
 
@@ -31,19 +27,6 @@ Veeam integrates with virtualisation, storage, cloud, and monitoring platforms t
 | ServiceNow | Custom PowerShell integration | Incident creation on job failure |
 
 ---
-
-```d2
-direction: right
-
-center: "Veeam" {shape: hexagon}
-component_a: "Component A" {shape: rectangle}
-component_b: "Component B" {shape: rectangle}
-component_c: "Component C" {shape: rectangle}
-
-center -> component_a
-center -> component_b
-center -> component_c
-```
 
 ## See also
 

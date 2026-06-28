@@ -10,10 +10,6 @@ Recommended reading order for MySQL on Linux. Follow these stages in order to bu
 
 *Applies to: MySQL 8.x · MariaDB 10.x*
 </div>
-![MySQL — Learning Path](../../../../assets/compute-linux-mysql-learning-path-index.svg)
-
-
-
 
 ```mermaid
 graph LR
@@ -30,21 +26,6 @@ graph LR
 | 5 — Troubleshooting | Slow queries, replication errors, deadlocks | as needed |
 
 ---
-
-```d2
-direction: right
-
-stage_1_architecture: "Stage 1 — Architecture" {shape: rectangle}
-stage_2_deployment: "Stage 2 — Deployment" {shape: rectangle}
-stage_3_operations: "Stage 3 — Operations" {shape: rectangle}
-stage_4_security: "Stage 4 — Security" {shape: rectangle}
-stage_5_troubleshooting: "Stage 5 — Troubleshooting" {shape: rectangle}
-
-stage_1_architecture -> stage_2_deployment: next
-stage_2_deployment -> stage_3_operations: next
-stage_3_operations -> stage_4_security: next
-stage_4_security -> stage_5_troubleshooting: next
-```
 
 ## Stage 1 — Architecture
 

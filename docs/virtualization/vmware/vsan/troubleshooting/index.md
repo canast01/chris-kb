@@ -14,10 +14,6 @@ Troubleshooting reference for VMware vSAN. Covers common failure patterns, diagn
 
 *Applies to: vSAN 7.x / 8.x*
 </div>
-![vSAN — Troubleshooting](../../../../assets/virtualization-vmware-vsan-troubleshooting-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

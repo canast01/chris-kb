@@ -5,25 +5,12 @@ tags:
 ---
 # SRDF/S — Scripts
 
-
 <div class="kb-summary">
 Scripts reference covering Available Scripts, Script Pattern — State Check.
 
 *Applies to: SRDF/S*
 </div>
 ![SRDF/S — Scripts](../../../../assets/storage-dell-srdf-s-operations-scripts.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "SRDF/S\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
-```
 
 ## Before you begin
 

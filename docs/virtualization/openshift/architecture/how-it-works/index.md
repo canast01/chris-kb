@@ -9,10 +9,6 @@ Control plane components, etcd quorum, API server request flow, scheduler decisi
 
 *Applies to: OpenShift 4.x*
 </div>
-![OpenShift — How It Works](../../../../assets/virtualization-openshift-architecture-how-it-works-index.svg)
-
-
-
 
 ```mermaid
 graph TD
@@ -35,25 +31,6 @@ graph TD
     class D,E ctrl
     class F node
     class G runtime
-```
-
-```d2
-direction: right
-
-center: "OpenShift" {shape: hexagon}
-control_plane_components: "Control Plane Components" {shape: rectangle}
-etcd_quorum_rules: "etcd Quorum Rules" {shape: rectangle}
-operator_pattern: "Operator Pattern" {shape: rectangle}
-machineconfig_and_mco: "MachineConfig and MCO" {shape: rectangle}
-networking_ovnkubernetes_internals: "Networking — OVN-Kubernetes Internals" {shape: rectangle}
-node_types: "Node Types" {shape: rectangle}
-
-center -> control_plane_components
-center -> etcd_quorum_rules
-center -> operator_pattern
-center -> machineconfig_and_mco
-center -> networking_ovnkubernetes_internals
-center -> node_types
 ```
 
 ## Control Plane Components

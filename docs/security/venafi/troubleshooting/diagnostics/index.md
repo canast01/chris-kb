@@ -12,10 +12,6 @@ Venafi TLS Protect diagnostic commands: check Windows service status, test SQL S
 
 *Applies to: Venafi TLS Protect (TPP) on Windows Server*
 </div>
-![Venafi — Diagnostics](../../../../assets/security-venafi-troubleshooting-diagnostics-index.svg)
-
-
-
 
 ```mermaid
 flowchart TD

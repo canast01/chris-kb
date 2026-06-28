@@ -4,35 +4,12 @@ tags:
   - vmware
 ---
 # vSphere Cluster Services — DRS, HA, FT, and vCLS
-![vSphere Cluster Services — DRS, HA, FT, and vCLS](../../../../assets/virtualization-vmware-internals-cluster-services-index.svg)
-
 
 vSphere cluster services are the group of features that collectively make a cluster of ESXi hosts behave as a resilient, self-managing compute platform. vSphere High Availability (HA), Distributed Resource Scheduler (DRS), Fault Tolerance (FT), and vSphere Cluster Services (vCLS) are complementary — each addresses a different failure scenario or resource management goal. Understanding how they interact is essential for both day-to-day administration and for the VCP-DCV 8 exam.
 
 ---
 
-```d2
-direction: right
-
-center: "Cluster Services" {shape: hexagon}
-overview_how_the_services_relate: "Overview — How the Services Relate" {shape: rectangle}
-vsphere_ha: "vSphere HA" {shape: rectangle}
-vsphere_drs: "vSphere DRS" {shape: rectangle}
-fault_tolerance_ft: "Fault Tolerance (FT)" {shape: rectangle}
-vsphere_cluster_services_vcls: "vSphere Cluster Services (vCLS)" {shape: rectangle}
-resource_pools_detailed_reference: "Resource Pools — Detailed Reference" {shape: rectangle}
-
-center -> overview_how_the_services_relate
-center -> vsphere_ha
-center -> vsphere_drs
-center -> fault_tolerance_ft
-center -> vsphere_cluster_services_vcls
-center -> resource_pools_detailed_reference
-```
-
 ## Overview — How the Services Relate
-
-
 
 | Feature | What it solves | Recovery time | Workload impact |
 |---|---|---|---|

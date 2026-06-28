@@ -9,10 +9,6 @@ tags:
 <div class="kb-summary">
 Design your NSX topology: overlay vs VLAN transport, T0/T1 gateway placement, Edge cluster sizing, HA model, and north-south routing type.
 </div>
-![NSX Topology Decision Tree](../../assets/reference-decision-trees-nsx-topology.svg)
-
-
-
 
 ```mermaid
 flowchart TD
@@ -44,17 +40,6 @@ flowchart TD
 
     N -->|Simpler — active/standby| O([Active/Standby T0\nOne active Edge at a time\nFast failover via BFD])
     N -->|Higher throughput| P([ECMP Active/Active\n2–8 equal-cost paths\nRequires BGP · stateless DFW])
-```
-
-```d2
-direction: right
-
-center: "Decision Trees" {shape: hexagon}
-key_design_decisions: "Key design decisions" {shape: rectangle}
-important_constraints: "Important constraints" {shape: rectangle}
-
-center -> key_design_decisions
-center -> important_constraints
 ```
 
 ## Key design decisions

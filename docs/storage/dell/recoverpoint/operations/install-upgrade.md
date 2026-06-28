@@ -5,7 +5,6 @@ tags:
 ---
 # RecoverPoint — Install & Upgrade
 
-
 <div class="kb-summary">
 RecoverPoint install and upgrade: `rcpcli` upgrade workflow, quiesce consistency groups before upgrade, cluster rolling upgrade, and post-upgrade health validation.
 
@@ -13,31 +12,11 @@ RecoverPoint install and upgrade: `rcpcli` upgrade workflow, quiesce consistency
 </div>
 ![RecoverPoint — Install & Upgrade](../../../../assets/storage-dell-recoverpoint-operations-install-upgrade.svg)
 
-
 > Part of the [RecoverPoint](../index.md) > [Operations](index.md) reference.
 
 Dell RecoverPoint (RP/CL) provides continuous data protection and replication using dedicated RecoverPoint Appliances (RPAs) at each site. This page covers physical RPA deployment, cluster configuration, all splitter types, the upgrade procedure, and post-upgrade validation.
 
 ---
-
-```d2
-direction: right
-
-hub: "RecoverPoint\nOperations" {shape: hexagon}
-version_matrix: "Version Matrix" {shape: rectangle}
-architecture_overview: "Architecture Overview" {shape: rectangle}
-splitter_types: "Splitter Types" {shape: rectangle}
-consistency_group_configuration: "Consistency Group Configuration" {shape: rectangle}
-upgrade_procedure: "Upgrade Procedure" {shape: rectangle}
-postupgrade_validation: "Post-Upgrade Validation" {shape: rectangle}
-
-hub -> version_matrix
-hub -> architecture_overview
-hub -> splitter_types
-hub -> consistency_group_configuration
-hub -> upgrade_procedure
-hub -> postupgrade_validation
-```
 
 ## Before you begin
 
@@ -100,7 +79,6 @@ flowchart TD
     class hA,hB host
     class spA,spB splitter
 ```
-
 
 ---
 

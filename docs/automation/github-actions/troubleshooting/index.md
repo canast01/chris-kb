@@ -7,16 +7,11 @@ search:
 ---
 # GitHub Actions — Troubleshooting
 
-
-
 <div class="kb-summary">
 Debugging workflow failures, runner connectivity, permission errors, caching issues, and common GitHub Actions pipeline problems.
 
 *Applies to: GitHub Actions*
 </div>
-![GitHub Actions — Troubleshooting](../../../assets/automation-github-actions-troubleshooting-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

@@ -4,8 +4,6 @@ tags:
   - python
 ---
 # Python — Install & Upgrade
-![Python — Install & Upgrade](../../../../assets/automation-python-operations-install-upgrade-index.svg)
-
 
 ```bash
 # Install pyenv (Linux/macOS)
@@ -234,17 +232,6 @@ grep -r '/.venv/bin/python' /etc/systemd/system/
 # Update to point to new .venv if path changed
 sudo systemctl daemon-reload
 sudo systemctl restart my-automation.service
-```
-
-```d2
-direction: right
-
-plan: "Plan" {shape: oval}
-verify: "Verify" {shape: rectangle}
-validate: "Validate" {shape: oval}
-
-plan -> verify
-verify -> validate
 ```
 
 ## Before you begin

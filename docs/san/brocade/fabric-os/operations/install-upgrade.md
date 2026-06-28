@@ -5,7 +5,6 @@ tags:
 ---
 # FabricOS — Install & Upgrade
 
-
 <div class="kb-summary">
 FabricOS install and upgrade: `firmwaredownload` from SCP/FTP, firmware commit procedure, HA failover test, and downgrade rollback steps.
 
@@ -13,23 +12,7 @@ FabricOS install and upgrade: `firmwaredownload` from SCP/FTP, firmware commit p
 </div>
 ![FabricOS — Install & Upgrade](../../../../assets/san-brocade-fabric-os-operations-install-upgrade.svg)
 
-
 ---
-
-```d2
-direction: right
-
-hub: "Brocade Fabric OS\nOperations" {shape: hexagon}
-firmware_upgrade_sequence_ha_directo: "Firmware Upgrade Sequence (HA Director)" {shape: rectangle}
-switch_replacement: "Switch Replacement" {shape: rectangle}
-firmware: "Firmware" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> firmware_upgrade_sequence_ha_directo
-hub -> switch_replacement
-hub -> firmware
-hub -> verify
-```
 
 ## Before you begin
 
@@ -61,7 +44,6 @@ sequenceDiagram
     Admin->>Admin: version — confirm both CPs on new FOS
     Admin->>Fabric: switchshow, fabricshow — verify fabric intact
 ```
-
 
 3. Connect ISL cables to the edge ports of the core switch.
 4. Verify the new switch joins the fabric:

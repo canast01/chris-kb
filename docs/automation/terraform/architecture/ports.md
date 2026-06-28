@@ -16,28 +16,6 @@ Firewall port reference for Terraform and Terraform Enterprise (TFE). Terraform 
 </div>
 ![Terraform — Ports and Network Requirements](../../../assets/automation-terraform-architecture-ports.svg)
 
-
-
-
-```d2
-direction: right
-
-center: "Architecture" {shape: hexagon}
-inbound_admin_to_terraform_enterpris: "Inbound — Admin to Terraform Enterprise (Self-Hosted)" {shape: rectangle}
-tfe_cluster_internal_activeactive: "TFE Cluster Internal (Active/Active)" {shape: rectangle}
-terraform_cli_or_tfe_to_provider_api: "Terraform (CLI or TFE) to Provider APIs" {shape: rectangle}
-terraform_provisioners_remoteexec_fi: "Terraform Provisioners (remote-exec, file)" {shape: rectangle}
-outbound_tfe_to_external_services: "Outbound — TFE to External Services" {shape: rectangle}
-firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
-
-center -> inbound_admin_to_terraform_enterpris
-center -> tfe_cluster_internal_activeactive
-center -> terraform_cli_or_tfe_to_provider_api
-center -> terraform_provisioners_remoteexec_fi
-center -> outbound_tfe_to_external_services
-center -> firewall_zone_summary
-```
-
 ## Before you begin
 
 - Standalone Terraform CLI has no listening ports — open only outbound rules from where `terraform apply` runs

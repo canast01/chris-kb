@@ -5,14 +5,11 @@ tags:
 ---
 # ServiceNow — Health Checks
 
-
 <div class="kb-summary">
 Routine health checks detect degradation before users are impacted. This page defines the daily, weekly, and on-demand checks for a ServiceNow production instance, covering availability, performance, background processing, and MID Server health.
 
 *Applies to: ServiceNow (Washington / Xanadu)*
 </div>
-![ServiceNow — Health Checks](../../../../assets/itsm-servicenow-operations-health-checks-index.svg)
-
 
 ---
 
@@ -77,7 +74,6 @@ flowchart TD
     REPL -- Errors found --> INV5["Purge stale ECC records\nCheck MID Server logs"]
     REPL -- Clear --> OK
 ```
-
 
 ## Run This Routine
 

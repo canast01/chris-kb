@@ -4,33 +4,9 @@ tags:
 ---
 # DHCP Reservations
 
-
 <div class="kb-summary">
 DHCP Reservations reference covering Overview, Creating a Reservation, Bulk Reservations from CSV, Reservation Conflicts, Reservation Management Reference and 2 more sections.
 </div>
-![DHCP Reservations](../../../../assets/networking-protocols-dhcp-reservations-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "DHCP" {shape: hexagon}
-creating_a_reservation: "Creating a Reservation" {shape: rectangle}
-bulk_reservations_from_csv: "Bulk Reservations from CSV" {shape: rectangle}
-reservation_conflicts: "Reservation Conflicts" {shape: rectangle}
-reservation_management_reference: "Reservation Management Reference" {shape: rectangle}
-reservation_option_overrides: "Reservation Option Overrides" {shape: rectangle}
-known_issues: "Known Issues" {shape: rectangle}
-
-center -> creating_a_reservation
-center -> bulk_reservations_from_csv
-center -> reservation_conflicts
-center -> reservation_management_reference
-center -> reservation_option_overrides
-center -> known_issues
-```
 
 ## Overview
 

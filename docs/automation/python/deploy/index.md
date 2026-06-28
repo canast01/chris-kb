@@ -6,17 +6,12 @@ search:
   boost: 1.5
 ---
 # Python Automation — Environment Setup
-![Python Automation — Environment Setup](../../../assets/automation-python-deploy-index.svg)
-
 
 This guide covers installing Python, isolating dependencies with a virtual environment,
 managing packages, loading secrets safely, integrating with VS Code, and wiring a CI
 pipeline before running your first automation scripts.
 
-
-
 ---
-
 
 ```mermaid
 flowchart TD

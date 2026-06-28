@@ -6,7 +6,6 @@ tags:
 # Brocade SANnav — Install and Upgrade
 ![Brocade SANnav — Install and Upgrade](../../../../assets/san-brocade-sannav-operations-install-upgrade.svg)
 
-
 ```bash
 # After VM powers on, access the console or SSH with default credentials
 # Default credentials: admin / passw0rd (change on first login)
@@ -28,15 +27,6 @@ passwd admin
 # On each switch (FOS CLI)
 snmpconfig --set trapdest -index <n> -trapdest 0.0.0.0   # clear trap destination
 userconfig --delete sannav_svc
-```
-
-```d2
-direction: right
-
-hub: "SANnav\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

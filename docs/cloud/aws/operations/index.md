@@ -5,16 +5,11 @@ tags:
 ---
 # AWS — Operations
 
-
 <div class="kb-summary">
 Operations reference covering Change Readiness, Incident Triage, Maintenance Window, Post-Change Validation.
 
 *Applies to: AWS*
 </div>
-![AWS — Operations](../../../assets/cloud-aws-operations-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 
@@ -50,21 +45,6 @@ Operations reference covering Change Readiness, Incident Triage, Maintenance Win
 
   <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
-
-```d2
-direction: right
-
-hub: "AWS\nOperations" {shape: hexagon}
-change_readiness: "Change Readiness" {shape: rectangle}
-incident_triage: "Incident Triage" {shape: rectangle}
-maintenance_window: "Maintenance Window" {shape: rectangle}
-postchange_validation: "Post-Change Validation" {shape: rectangle}
-
-hub -> change_readiness
-hub -> incident_triage
-hub -> maintenance_window
-hub -> postchange_validation
-```
 
 ## Change Readiness
 

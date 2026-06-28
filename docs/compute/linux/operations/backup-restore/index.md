@@ -4,8 +4,6 @@ tags:
   - operations
 ---
 # Linux — Backup & Restore
-![Linux — Backup & Restore](../../../../assets/compute-linux-operations-backup-restore-index.svg)
-
 
 ```bash
 # Add Veeam repository (RHEL/CentOS)

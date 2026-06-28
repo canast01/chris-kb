@@ -4,8 +4,6 @@ tags:
   - operations
 ---
 # GitHub Actions — CLI Reference
-![GitHub Actions — CLI Reference](../../../../assets/automation-github-actions-operations-cli-reference-index.svg)
-
 
 ```bash
 # macOS
@@ -149,15 +147,6 @@ jobs:
 
       - name: Use step output
         run: docker pull ${{ steps.build.outputs.image-tag }}
-```
-
-```d2
-direction: right
-
-center: "GitHub Actions" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> verify
 ```
 
 ## Before you begin

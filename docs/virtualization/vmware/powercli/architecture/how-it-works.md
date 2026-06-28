@@ -13,28 +13,7 @@ PowerCLI wraps the vSphere Web Services API (SOAP/REST) in PowerShell cmdlets. E
 </div>
 ![PowerCLI — How It Works](../../../../assets/virtualization-vmware-powercli-architecture-how-it-works.svg)
 
-
-
-
-
 <!-- diagram:powercli-architecture -->
-
-```d2
-direction: right
-
-center: "PowerCLI" {shape: hexagon}
-module_structure: "Module Structure" {shape: rectangle}
-connection_model: "Connection Model" {shape: rectangle}
-session_handling: "Session Handling" {shape: rectangle}
-api_binding_view_vs_vi_objects: "API Binding — View vs. VI Objects" {shape: rectangle}
-credential_handling: "Credential Handling" {shape: rectangle}
-
-center -> module_structure
-center -> connection_model
-center -> session_handling
-center -> api_binding_view_vs_vi_objects
-center -> credential_handling
-```
 
 ```plantuml
 @startuml

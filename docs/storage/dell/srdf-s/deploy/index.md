@@ -37,11 +37,6 @@ verify_synchronization -> validate
 ---
 
 # SRDF/S — Initial Deployment
-![SRDF/S — Initial Deployment](../../../../assets/storage-dell-srdf-s-deploy-index.svg)
-
-
-
-
 
 ```mermaid
 flowchart TD

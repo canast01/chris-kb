@@ -49,17 +49,6 @@ graph TB
   </a>
 </div>
 
-```d2
-direction: right
-
-center: "Unity XT" {shape: hexagon}
-hardware_models: "Hardware Models" {shape: rectangle}
-topology: "Topology" {shape: rectangle}
-
-center -> hardware_models
-center -> topology
-```
-
 ## Hardware Models
 
 | Model | Max Raw Capacity | Notes |
@@ -72,5 +61,4 @@ center -> topology
 | UnityVSA | Software-defined | ESXi-hosted; dev/test and small environments only |
 
 ## Topology
-
 

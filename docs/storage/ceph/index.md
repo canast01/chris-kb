@@ -11,8 +11,6 @@ Ceph is an open-source distributed storage system providing block (RBD), file (C
 
 *Applies to: Red Hat Ceph Storage · Upstream Ceph*
 </div>
-![Ceph Distributed Storage](../../assets/storage-ceph-index.svg)
-
 
 ![Ceph Distributed Storage — Diagram](../../assets/storage-ceph-diagram.svg)
 <div class="kb-grid">

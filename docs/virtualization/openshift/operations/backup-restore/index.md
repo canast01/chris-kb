@@ -9,10 +9,6 @@ etcd backup and restore procedure, OADP (OpenShift API for Data Protection) for 
 
 *Applies to: OpenShift 4.x*
 </div>
-![OpenShift — Backup & Restore](../../../../assets/virtualization-openshift-operations-backup-restore-index.svg)
-
-
-
 
 ```mermaid
 graph TD

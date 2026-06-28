@@ -4,14 +4,11 @@ tags:
 ---
 # Decision Tree: Host Down
 
-
 <div class="kb-summary">
 Use this when a vSphere host shows `Not Responding` or `Disconnected` in vCenter.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Decision Tree: Host Down](../../../../assets/virtualization-vmware-reference-quick-reference-decision-tre.svg)
-
 
 ```text
                     Host: Not Responding / Disconnected
@@ -37,25 +34,6 @@ Use this when a vSphere host shows `Not Responding` or `Disconnected` in vCenter
                                               │ → Cold restart     │
                                               │ → VMware SR bundle │
                                               └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-```d2
-direction: right
-
-center: "Quick Reference" {shape: rectangle}
-step_1_can_you_ping_the_host_managem: "Step 1 — Can You Ping the Host Management IP?" {shape: rectangle}
-step_2_can_you_ssh_to_the_host: "Step 2 — Can You SSH to the Host?" {shape: rectangle}
-step_3_check_management_agent_status: "Step 3 — Check Management Agent Status" {shape: rectangle}
-step_4_psod_purple_screen_of_death: "Step 4 — PSOD (Purple Screen of Death)?" {shape: rectangle}
-step_5_host_reconnects_but_vms_are_m: "Step 5 — Host Reconnects but VMs Are Missing?" {shape: rectangle}
-step_6_hardware_issues: "Step 6 — Hardware Issues?" {shape: rectangle}
-
-center -> step_1_can_you_ping_the_host_managem
-center -> step_2_can_you_ssh_to_the_host
-center -> step_3_check_management_agent_status
-center -> step_4_psod_purple_screen_of_death
-center -> step_5_host_reconnects_but_vms_are_m
-center -> step_6_hardware_issues
 ```
 
 ## Step 1 — Can You Ping the Host Management IP?

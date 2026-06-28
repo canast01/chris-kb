@@ -10,35 +10,12 @@ General-purpose PowerShell automation patterns — ITSM scripts for daily checks
 
 *Applies to: PowerShell 7.x*
 </div>
-![PowerShell — Scripts](../../../../assets/automation-powershell-operations-scripts-index.svg)
-
-
-
 
 See also:
 - [Windows Server Scripts](../../../../compute/windows-server/operations/scripts/) — remote health checks, cert expiry monitoring, service health, script runners
 - [PowerCLI Scripts](../../../../virtualization/vmware/powercli/operations/scripts/) — VMware vSphere inventory, snapshot audit, host reports
 
 ---
-
-```d2
-direction: right
-
-center: "PowerShell" {shape: rectangle}
-daily_check_script: "Daily Check Script" {shape: rectangle}
-incident_triage_script: "Incident Triage Script" {shape: rectangle}
-change_precheck_script: "Change Pre-Check Script" {shape: rectangle}
-postchange_validation_script: "Post-Change Validation Script" {shape: rectangle}
-health_check_script: "Health Check Script" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> daily_check_script
-center -> incident_triage_script
-center -> change_precheck_script
-center -> postchange_validation_script
-center -> health_check_script
-center -> verify
-```
 
 ## Before you begin
 

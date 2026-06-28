@@ -9,9 +9,6 @@ tags:
 <div class="kb-summary">
 Canonical LDAP/Active Directory integration reference for all KB-covered products. Use this page for field definitions, security standards, and connectivity testing. Product authentication pages link here for the shared baseline and document only their product-specific steps.
 </div>
-![Standard LDAP Integration](../../assets/security-ldap-integration-index.svg)
-
-
 
 <div class="kb-grid">
   <a class="kb-card" href="operations/">
@@ -22,25 +19,6 @@ Canonical LDAP/Active Directory integration reference for all KB-covered product
 </div>
 
 ---
-
-```d2
-direction: right
-
-center: "Ldap Integration" {shape: hexagon}
-standard_field_reference: "Standard Field Reference" {shape: rectangle}
-service_account_standards: "Service Account Standards" {shape: rectangle}
-connectivity_testing: "Connectivity Testing" {shape: rectangle}
-synchronisation_and_failover: "Synchronisation and Failover" {shape: rectangle}
-tls_certificate_management: "TLS Certificate Management" {shape: rectangle}
-common_issues: "Common Issues" {shape: rectangle}
-
-center -> standard_field_reference
-center -> service_account_standards
-center -> connectivity_testing
-center -> synchronisation_and_failover
-center -> tls_certificate_management
-center -> common_issues
-```
 
 ## Standard Field Reference
 

@@ -10,10 +10,6 @@ SQL Server security: Windows Authentication vs. mixed-mode policy, `sp_addlogin`
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
-![SQL Server — Security](../../../../assets/compute-windows-server-sql-server-security-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-4">
   <a class="kb-card" href="access-control/">Access Control</a>

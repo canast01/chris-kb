@@ -4,33 +4,9 @@ tags:
 ---
 # AI Platforms
 
-
 <div class="kb-summary">
 AI Platforms reference covering AWS Bedrock, Azure OpenAI Service, Google Vertex AI, Hugging Face, Platform Comparison Table and 1 more sections.
 </div>
-![AI Platforms](../../../../assets/cloud-ai-certifications-platforms-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Platforms" {shape: hexagon}
-aws_bedrock: "AWS Bedrock" {shape: rectangle}
-azure_openai_service: "Azure OpenAI Service" {shape: rectangle}
-google_vertex_ai: "Google Vertex AI" {shape: rectangle}
-hugging_face: "Hugging Face" {shape: rectangle}
-platform_comparison_table: "Platform Comparison Table" {shape: rectangle}
-study_checklist: "Study Checklist" {shape: rectangle}
-
-center -> aws_bedrock
-center -> azure_openai_service
-center -> google_vertex_ai
-center -> hugging_face
-center -> platform_comparison_table
-center -> study_checklist
-```
 
 ## AWS Bedrock
 

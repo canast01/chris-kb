@@ -13,29 +13,6 @@ and recovering SSO and certificate services after time is fixed.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![NTP Drift Causing SSO or Certificate Errors](../../../../assets/virtualization-vmware-topics-scenarios-ntp-drift-sso-certifi.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Scenarios" {shape: hexagon}
-products_involved: "Products Involved" {shape: rectangle}
-1_understand_why_ntp_matters_in_vmwa: "1. Understand Why NTP Matters in VMware" {shape: rectangle}
-2_check_time_on_vcenter_vcsa: "2. Check Time on vCenter VCSA" {shape: rectangle}
-3_check_time_on_esxi_hosts: "3. Check Time on ESXi Hosts" {shape: rectangle}
-4_check_time_on_nsx_manager: "4. Check Time on NSX Manager" {shape: rectangle}
-5_fix_ntp_on_esxi_hosts: "5. Fix NTP on ESXi Hosts" {shape: rectangle}
-
-center -> products_involved
-center -> 1_understand_why_ntp_matters_in_vmwa
-center -> 2_check_time_on_vcenter_vcsa
-center -> 3_check_time_on_esxi_hosts
-center -> 4_check_time_on_nsx_manager
-center -> 5_fix_ntp_on_esxi_hosts
-```
 
 ## Products Involved
 

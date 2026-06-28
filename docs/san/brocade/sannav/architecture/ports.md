@@ -16,28 +16,6 @@ Firewall port reference for Brocade SANnav Management Portal. SANnav is the SAN 
 </div>
 ![Brocade SANnav — Ports and Network Requirements](../../../../assets/san-brocade-sannav-architecture-ports.svg)
 
-
-
-
-```d2
-direction: right
-
-center: "SANnav" {shape: hexagon}
-inbound_admin_to_sannav: "Inbound — Admin to SANnav" {shape: rectangle}
-sannav_to_managed_switches: "SANnav to Managed Switches" {shape: rectangle}
-inbound_snmp_traps_from_switches: "Inbound — SNMP Traps from Switches" {shape: rectangle}
-sannav_to_external_services: "SANnav to External Services" {shape: rectangle}
-firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> inbound_admin_to_sannav
-center -> sannav_to_managed_switches
-center -> inbound_snmp_traps_from_switches
-center -> sannav_to_external_services
-center -> firewall_zone_summary
-center -> verify
-```
-
 ## Before you begin
 
 - SANnav runs as a virtual appliance (OVA); all admin access uses HTTPS on 443

@@ -6,8 +6,6 @@ search:
   boost: 1.5
 ---
 # Confluence — Common Issues
-![Confluence — Common Issues](../../../../assets/itsm-confluence-troubleshooting-common-issues-index.svg)
-
 
 ```bash
 # Check heap size in setenv.sh

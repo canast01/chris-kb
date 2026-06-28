@@ -4,13 +4,9 @@ tags:
 ---
 # Access Review Procedure
 
-
 <div class="kb-summary">
 Periodic access reviews ensure that users and service accounts hold only the permissions required for their current role. Reviews reduce the blast radius of credential compromise and satisfy audit requirements.
 </div>
-![Access Review Procedure](../../assets/security-access-review-index.svg)
-
-
 
 <div class="kb-grid">
   <a class="kb-card" href="operations/">
@@ -19,25 +15,6 @@ Periodic access reviews ensure that users and service accounts hold only the per
     <div class="kb-card-desc">Review workflows, AD exports, stale account cleanup, audit evidence</div>
   </a>
 </div>
-
-```d2
-direction: right
-
-center: "Access Review" {shape: hexagon}
-review_schedule: "Review Schedule" {shape: rectangle}
-active_directory_export_and_review: "Active Directory — Export and Review" {shape: rectangle}
-privileged_account_review: "Privileged Account Review" {shape: rectangle}
-service_account_review: "Service Account Review" {shape: rectangle}
-inactive_and_stale_account_cleanup: "Inactive and Stale Account Cleanup" {shape: rectangle}
-linux_posix_account_review: "Linux / POSIX Account Review" {shape: rectangle}
-
-center -> review_schedule
-center -> active_directory_export_and_review
-center -> privileged_account_review
-center -> service_account_review
-center -> inactive_and_stale_account_cleanup
-center -> linux_posix_account_review
-```
 
 ## Review Schedule
 

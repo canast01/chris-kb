@@ -9,10 +9,6 @@ Operational scripts: daily health snapshot, CSR auto-approval, node drain wrappe
 
 *Applies to: OpenShift 4.x*
 </div>
-![OpenShift — Scripts](../../../../assets/virtualization-openshift-operations-scripts-index.svg)
-
-
-
 
 ```mermaid
 graph LR
@@ -28,25 +24,6 @@ graph LR
     classDef backup fill:#7c3aed,color:#fff
     classDef node fill:#b45309,color:#fff
     classDef pod fill:#164e63,color:#fff
-```
-
-```d2
-direction: right
-
-center: "OpenShift" {shape: rectangle}
-clusterhealthchecksh: "cluster-health-check.sh" {shape: rectangle}
-autoapprovecsrssh: "auto-approve-csrs.sh" {shape: rectangle}
-etcdbackupsh: "etcd-backup.sh" {shape: rectangle}
-nodedrainsh: "node-drain.sh" {shape: rectangle}
-podrestartdetectorsh: "pod-restart-detector.sh" {shape: rectangle}
-csrapprovesh: "csr-approve.sh" {shape: rectangle}
-
-center -> clusterhealthchecksh
-center -> autoapprovecsrssh
-center -> etcdbackupsh
-center -> nodedrainsh
-center -> podrestartdetectorsh
-center -> csrapprovesh
 ```
 
 ## Before you begin

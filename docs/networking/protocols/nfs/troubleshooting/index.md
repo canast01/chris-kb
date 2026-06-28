@@ -7,14 +7,9 @@ search:
 ---
 # NFS Troubleshooting
 
-
 <div class="kb-summary">
 NFS Troubleshooting reference covering Diagnostic Flow, Quick Diagnostics, Common Issues, Performance Tuning, Export Configuration Reference and 2 more sections.
 </div>
-![NFS Troubleshooting](../../../../assets/networking-protocols-nfs-troubleshooting-index.svg)
-
-
-
 
 ```d2
 direction: down

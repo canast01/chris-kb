@@ -5,7 +5,6 @@ tags:
 ---
 # RecoverPoint CLI Reference
 
-
 <div class="kb-summary">
 RecoverPoint CLI reference: `get_all_rpas`, `get_rp_system_settings`, `fail_over_group`, `test_links`, `get_journal_full_percentage`, and `set_rp_volume` commands.
 
@@ -13,23 +12,7 @@ RecoverPoint CLI reference: `get_all_rpas`, `get_rp_system_settings`, `fail_over
 </div>
 ![RecoverPoint CLI Reference](../../../../assets/storage-dell-recoverpoint-operations-cli-reference.svg)
 
-
 ---
-
-```d2
-direction: right
-
-hub: "RecoverPoint\nOperations" {shape: hexagon}
-image_access_flow: "Image Access Flow" {shape: rectangle}
-rpapi_rest: "RPAPI REST" {shape: rectangle}
-key_operational_scenarios: "Key Operational Scenarios" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> image_access_flow
-hub -> rpapi_rest
-hub -> key_operational_scenarios
-hub -> verify
-```
 
 ## Before you begin
 
@@ -83,7 +66,6 @@ flowchart TD
     style enableAccess fill:#b45309,color:#fff
     style disableAccess fill:#b45309,color:#fff
 ```
-
 
 ### Image Access (CG Operations)
 

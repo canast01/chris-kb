@@ -6,17 +6,12 @@ search:
   boost: 1.5
 ---
 # GitHub Actions — Environment Setup
-![GitHub Actions — Environment Setup](../../../assets/automation-github-actions-deploy-index.svg)
-
 
 This guide walks through the initial setup of GitHub Actions for a repository: enabling
 the feature, creating your first workflow, managing secrets and environments, adding
 self-hosted runners, and enforcing status checks on protected branches.
 
-
-
 ---
-
 
 ```mermaid
 flowchart TD

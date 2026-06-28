@@ -5,33 +5,11 @@ tags:
 ---
 # Python Automation — Procedures
 
-
 <div class="kb-summary">
 Procedures reference covering Change Readiness, Maintenance Window, Post-Change Validation, Python Logging Pipeline, Reports.
 
 *Applies to: Python 3.x*
 </div>
-![Python Automation — Procedures](../../../../assets/automation-python-operations-procedures-index.svg)
-
-
-```d2
-direction: right
-
-hub: "Python\nOperations" {shape: hexagon}
-change_readiness: "Change Readiness" {shape: rectangle}
-maintenance_window: "Maintenance Window" {shape: rectangle}
-postchange_validation: "Post-Change Validation" {shape: rectangle}
-python_logging_pipeline: "Python Logging Pipeline" {shape: rectangle}
-reports: "Reports" {shape: rectangle}
-create_and_manage_a_virtual_environm: "Create and Manage a Virtual Environment" {shape: rectangle}
-
-hub -> change_readiness
-hub -> maintenance_window
-hub -> postchange_validation
-hub -> python_logging_pipeline
-hub -> reports
-hub -> create_and_manage_a_virtual_environm
-```
 
 ## Before you begin
 
@@ -120,7 +98,6 @@ graph TD
     logFile --> siem
     syslogHandler --> siem
 ```
-
 
 ```python
 from apscheduler.schedulers.blocking import BlockingScheduler

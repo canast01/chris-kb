@@ -5,14 +5,12 @@ tags:
 ---
 # Superna Eyeglass — CLI Reference
 
-
 <div class="kb-summary">
 Eyeglass provides the `igls` CLI accessible from the appliance shell via SSH and a REST API for automation. OneFS SyncIQ CLI commands are used alongside Eyeglass operations to verify the underlying replication state. SSH to the Eyeglass appliance as the `admin` user.
 
 *Applies to: Superna Eyeglass*
 </div>
 ![Superna Eyeglass — CLI Reference](../../../../assets/storage-netapp-superna-eyeglass-operations-cli-reference.svg)
-
 
 ```mermaid
 flowchart LR
@@ -29,23 +27,7 @@ flowchart LR
     eyeglassSvc --> psApi --> synciq
 ```
 
-
 ---
-
-```d2
-direction: right
-
-hub: "Superna Eyeglass\nOperations" {shape: hexagon}
-failback: "Failback" {shape: rectangle}
-onefs_synciq_supporting_commands: "OneFS SyncIQ (Supporting Commands)" {shape: rectangle}
-rest_api: "REST API" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> failback
-hub -> onefs_synciq_supporting_commands
-hub -> rest_api
-hub -> verify
-```
 
 ## Before you begin
 

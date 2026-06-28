@@ -4,14 +4,11 @@ tags:
 ---
 # Decision Tree: Storage Latency
 
-
 <div class="kb-summary">
 Use this when VMs are slow, I/O latency is elevated in monitoring, or vSAN latency alarms trigger.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Decision Tree: Storage Latency](../../../../assets/virtualization-vmware-reference-quick-reference-decision-tre.svg)
-
 
 ```text
                Latency alert / VM storage slow
@@ -37,25 +34,6 @@ Use this when VMs are slow, I/O latency is elevated in monitoring, or vSAN laten
         │ Snapshot chain > 3 deep?        │
         │ Backup job running against VM?  │
         └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-```d2
-direction: right
-
-center: "Quick Reference" {shape: rectangle}
-step_1_confirm_latency_baseline_brea: "Step 1 — Confirm Latency Baseline Breach" {shape: rectangle}
-step_2_is_vsan_resync_active: "Step 2 — Is vSAN Resync Active?" {shape: rectangle}
-step_3_check_storage_array_health: "Step 3 — Check Storage Array Health" {shape: rectangle}
-step_4_check_network_fabric: "Step 4 — Check Network / Fabric" {shape: rectangle}
-step_5_check_for_hotspot_vms: "Step 5 — Check for Hot-Spot VMs" {shape: rectangle}
-step_6_snapshot_chain: "Step 6 — Snapshot Chain" {shape: rectangle}
-
-center -> step_1_confirm_latency_baseline_brea
-center -> step_2_is_vsan_resync_active
-center -> step_3_check_storage_array_health
-center -> step_4_check_network_fabric
-center -> step_5_check_for_hotspot_vms
-center -> step_6_snapshot_chain
 ```
 
 ## Step 1 — Confirm Latency Baseline Breach

@@ -16,29 +16,6 @@ Firewall port reference for NetApp Keystone (Storage as a Service). Keystone dep
 </div>
 ![NetApp Keystone — Ports and Network Requirements](../../../../assets/storage-netapp-keystone-architecture-ports.svg)
 
-
-
-
-
-```d2
-direction: right
-
-center: "Keystone STaaS" {shape: hexagon}
-how_it_works: "How It Works" {shape: rectangle}
-keystone_collector_outbound_required: "Keystone Collector (Outbound — Required)" {shape: rectangle}
-admin_access_keystone_portal_saas: "Admin Access (Keystone Portal — SaaS)" {shape: rectangle}
-data_access_protocols_same_as_underl: "Data Access Protocols (Same as Underlying Storage)" {shape: rectangle}
-firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> how_it_works
-center -> keystone_collector_outbound_required
-center -> admin_access_keystone_portal_saas
-center -> data_access_protocols_same_as_underl
-center -> firewall_zone_summary
-center -> verify
-```
-
 ## How It Works
 
 Keystone is a NetApp-managed STaaS offering using the same ONTAP / StorageGRID hardware as standard NetApp deployments. On-premises components include a **Keystone Collector** VM that measures consumed capacity and uploads usage data to NetApp.

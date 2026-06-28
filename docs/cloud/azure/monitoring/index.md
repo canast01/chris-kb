@@ -9,19 +9,6 @@ Azure Monitoring articles, operational checks, troubleshooting notes, and refere
 
 *Applies to: Azure*
 </div>
-![Azure Monitoring](../../../assets/cloud-azure-monitoring-index.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "Azure\nOperations" {shape: hexagon}
-articles: "Articles" {shape: rectangle}
-
-hub -> articles
-```
 
 ## Articles
 

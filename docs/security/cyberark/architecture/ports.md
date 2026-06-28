@@ -16,28 +16,6 @@ Firewall port reference for CyberArk Privileged Access Manager (PAM). Covers the
 </div>
 ![CyberArk — Ports and Network Requirements](../../../assets/security-cyberark-architecture-ports.svg)
 
-
-
-
-```d2
-direction: right
-
-center: "Architecture" {shape: hexagon}
-inbound_users_to_pvwa: "Inbound — Users to PVWA" {shape: rectangle}
-pvwa_to_vault: "PVWA to Vault" {shape: rectangle}
-cpm_to_vault_and_targets: "CPM to Vault and Targets" {shape: rectangle}
-psm_users_to_psm_session_launch: "PSM — Users to PSM (Session Launch)" {shape: rectangle}
-psm_psm_to_target_systems_session_pr: "PSM — PSM to Target Systems (Session Proxy)" {shape: rectangle}
-psm_to_vault: "PSM to Vault" {shape: rectangle}
-
-center -> inbound_users_to_pvwa
-center -> pvwa_to_vault
-center -> cpm_to_vault_and_targets
-center -> psm_users_to_psm_session_launch
-center -> psm_psm_to_target_systems_session_pr
-center -> psm_to_vault
-```
-
 ## Before you begin
 
 - The CyberArk Vault only accepts **outbound-initiated** connections from its components — never open inbound from the Vault to external zones

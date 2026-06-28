@@ -12,16 +12,10 @@ Windows Server initial deployment: OS install, network configuration, NTP, Windo
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
-![Windows Server — Initial Deployment](../../../assets/compute-windows-server-deploy-index.svg)
-
-
-
-
 
 This guide covers deploying a new Windows Server from OS install through network configuration, NTP, Windows Update, domain join, firewall, WinRM, and security baseline application.
 
 ---
-
 
 ```mermaid
 flowchart TD

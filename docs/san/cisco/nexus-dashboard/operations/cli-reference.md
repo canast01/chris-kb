@@ -6,7 +6,6 @@ tags:
 # Cisco Nexus Dashboard — Operations CLI Reference
 ![Cisco Nexus Dashboard — Operations CLI Reference](../../../../assets/san-cisco-nexus-dashboard-operations-cli-reference.svg)
 
-
 ```bash
 # Show cluster health summary
 acs health
@@ -205,15 +204,6 @@ w = csv.DictWriter(sys.stdout, fieldnames=fields, extrasaction='ignore')
 w.writeheader()
 for s in data: w.writerow(s)
 " > ndfc-switches-$(date +%Y%m%d).csv
-```
-
-```d2
-direction: right
-
-hub: "Nexus Dashboard\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

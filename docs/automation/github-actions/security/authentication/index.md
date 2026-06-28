@@ -4,8 +4,6 @@ tags:
   - security
 ---
 # GitHub Actions — Authentication
-![GitHub Actions — Authentication](../../../../assets/automation-github-actions-security-authentication-index.svg)
-
 
 ```yaml
 # Default token usage

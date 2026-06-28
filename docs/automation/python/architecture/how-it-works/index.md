@@ -5,31 +5,13 @@ tags:
 ---
 # Python Automation — How It Works
 
-
 <div class="kb-summary">
 Python is the dominant language for infrastructure automation, data pipelines, and API integration in modern enterprise environments. This page covers architecture patterns, runtime models, and execution strategies for production Python automation.
 
 *Applies to: Python 3.x*
 </div>
-![Python Automation — How It Works](../../../../assets/automation-python-architecture-how-it-works-index.svg)
-
 
 ---
-
-```d2
-direction: right
-
-center: "Python" {shape: hexagon}
-architecture_model: "Architecture Model" {shape: rectangle}
-async_patterns: "Async Patterns" {shape: rectangle}
-containerisation_with_docker: "Containerisation with Docker" {shape: rectangle}
-project_layout: "Project Layout" {shape: rectangle}
-
-center -> architecture_model
-center -> async_patterns
-center -> containerisation_with_docker
-center -> project_layout
-```
 
 ## Architecture Model
 
@@ -49,7 +31,6 @@ flowchart TD
     style B fill:#1565c0,color:#fff
     style C fill:#2e7d32,color:#fff
 ```
-
 
 ---
 

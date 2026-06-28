@@ -4,16 +4,11 @@ tags:
 ---
 # CyberArk — Encryption
 
-
 <div class="kb-summary">
 Session recordings are encrypted at rest using AES-256. Vault audit log integrity is protected by the Vault's internal signing mechanism. PVWA enforces TLS 1.2 minimum for all connections.
 
 *Applies to: CyberArk PAM*
 </div>
-![CyberArk — Encryption](../../../../assets/security-cyberark-security-encryption-index.svg)
-
-
-
 
 ```d2
 direction: down

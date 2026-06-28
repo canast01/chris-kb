@@ -10,9 +10,6 @@ Dell ECS — Operations reference: Health Checks, Procedures, CLI Reference, Ins
 
 *Applies to: ECS 3.x*
 </div>
-![Dell ECS — Operations](../../../../assets/storage-dell-ecs-operations-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>

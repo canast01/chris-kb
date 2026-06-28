@@ -9,10 +9,6 @@ Venafi Trust Protection Platform knowledge base covering certificate lifecycle m
 
 *Applies to: Venafi TLS Protect*
 </div>
-![Venafi](../../assets/security-venafi-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

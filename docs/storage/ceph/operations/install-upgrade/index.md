@@ -10,8 +10,6 @@ Ceph cluster upgrades with cephadm: version compatibility, upgrade sequence (MON
 
 *Applies to: Ceph Reef / Squid*
 </div>
-![Ceph — Lifecycle & Upgrades](../../../../assets/storage-ceph-operations-install-upgrade-index.svg)
-
 
 ```mermaid
 graph TD
@@ -31,8 +29,6 @@ graph TD
     class D,E,F,G,H upgrade
     class I verify
 ```
-
-
 
 ```d2
 direction: right

@@ -4,16 +4,11 @@ tags:
 ---
 # VMware Backup Standards
 
-
 <div class="kb-summary">
 VMware Backup Standards reference covering Critical VM Backup Policy, Standard VM Backup Policy, vCenter Backup, Snapshot Handling, Backup Monitoring and 2 more sections.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![VMware Backup Standards](../../../../assets/virtualization-vmware-reference-standards-backup-standards.svg)
-
-
-
 
 ```d2
 direction: down

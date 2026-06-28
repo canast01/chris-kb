@@ -5,31 +5,11 @@ tags:
 ---
 # Superna Eyeglass — Health Checks
 
-
 <div class="kb-summary">
 Health Checks reference covering Overview, SyncIQ Replication Health, PowerScale Cluster Health, Weekly DR Readiness Check, Health Check Summary Table and 1 more sections.
 
 *Applies to: Superna Eyeglass*
 </div>
-
-```d2
-direction: right
-
-hub: "Superna Eyeglass\nOperations" {shape: hexagon}
-run_this_routine: "Run This Routine" {shape: rectangle}
-powerscale_cluster_health: "PowerScale Cluster Health" {shape: rectangle}
-weekly_dr_readiness_check: "Weekly DR Readiness Check" {shape: rectangle}
-health_check_summary_table: "Health Check Summary Table" {shape: rectangle}
-validation: "Validation" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> run_this_routine
-hub -> powerscale_cluster_health
-hub -> weekly_dr_readiness_check
-hub -> health_check_summary_table
-hub -> validation
-hub -> verify
-```
 
 ## Before you begin
 
@@ -77,7 +57,6 @@ flowchart TD
     result -->|Yes| ok([DR Ready - Score 100%])
     result -->|No| investigate([Investigate and remediate])
 ```
-
 
 ## Run This Routine
 

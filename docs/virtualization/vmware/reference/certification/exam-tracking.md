@@ -9,7 +9,4 @@ VMware certification exam tracking — scheduled exams, attempt history, scores,
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Virtualization — Exam Tracking](../../../../assets/virtualization-vmware-reference-certification-exam-tracking.svg)
-
-
 

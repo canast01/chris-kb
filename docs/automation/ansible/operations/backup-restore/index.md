@@ -4,8 +4,6 @@ tags:
   - operations
 ---
 # Ansible — Backup & Restore
-![Ansible — Backup & Restore](../../../../assets/automation-ansible-operations-backup-restore-index.svg)
-
 
 ```bash
 # Ensure remote is current

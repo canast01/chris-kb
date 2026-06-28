@@ -6,7 +6,6 @@ tags:
 # Dell CloudIQ CLI Reference
 ![Dell CloudIQ CLI Reference](../../../../assets/storage-dell-cloudiq-operations-cli-reference.svg)
 
-
 ```bash
 CLIENT_ID="<your_client_id>"
 CLIENT_SECRET="<your_client_secret>"
@@ -106,15 +105,6 @@ curl -s -X GET "${BASE}/systems?tag_id=${TAG_ID}" \
 # --- Delete a tag (removes it globally) ---
 curl -s -X DELETE "${BASE}/tags/${TAG_ID}" \
   -H "${AUTH}"
-```
-
-```d2
-direction: right
-
-hub: "CloudIQ\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

@@ -7,16 +7,11 @@ search:
 ---
 # FlashArray — Troubleshooting
 
-
 <div class="kb-summary">
 FlashArray — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
 
 *Applies to: FlashArray Purity 6.x*
 </div>
-![FlashArray — Troubleshooting](../../../../assets/storage-pure-flasharray-troubleshooting-index.svg)
-
-
-
 
 ![FlashArray — Troubleshooting — Diagram](../../../../assets/storage-pure-flasharray-troubleshooting-diagram.svg)
 

@@ -3,25 +3,8 @@
 <div class="kb-summary">
 Knowledge base statistics: page counts, section distribution, and content type coverage.
 </div>
-![Usage Metrics](assets/usage-metrics.svg)
-
-
-
 
 Generated: 2026-06-28
-
-```d2
-direction: right
-
-center: "System" {shape: hexagon}
-current_totals: "Current totals" {shape: rectangle}
-section_page_counts: "Section page counts" {shape: rectangle}
-health_checks: "Health checks" {shape: rectangle}
-
-center -> current_totals
-center -> section_page_counts
-center -> health_checks
-```
 
 ## Current totals
 
@@ -30,8 +13,8 @@ center -> health_checks
 | Total markdown pages | 2,846 |
 | Sections | 11 |
 | Pages with full-width ASCII diagrams | 63 |
-| Pages with SVG diagrams | 2,846 |
-| Pages with Mermaid diagrams | 744 |
+| Pages with SVG diagrams | 1,406 |
+| Pages with Mermaid diagrams | 741 |
 | Pages with kb-summary | 2,567 |
 | Pages with tags | 2,819 |
 | Audit score | 36 / 37 |

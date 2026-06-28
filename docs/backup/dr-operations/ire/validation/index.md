@@ -4,25 +4,9 @@ tags:
 ---
 # IRE — Validation
 
-
 <div class="kb-summary">
 Validation is the final gate before restored systems return to production. It covers technical verification (application health, data integrity) and business verification (data completeness, schedule compliance, and retention window confirmation — verify the restored data point is within the approved retention period and predates the compromise eventunctionality).
 </div>
-![IRE — Validation](../../../../assets/backup-dr-operations-ire-validation-index.svg)
-
-
-```d2
-direction: right
-
-center: "DR Operations" {shape: hexagon}
-validation_gates: "Validation Gates" {shape: rectangle}
-rto_rpo_measurement: "RTO / RPO Measurement" {shape: rectangle}
-common_issues: "Common Issues" {shape: rectangle}
-
-center -> validation_gates
-center -> rto_rpo_measurement
-center -> common_issues
-```
 
 ## Validation Gates
 
@@ -34,7 +18,6 @@ flowchart LR
     DRTEST --> SIGNOFF["DR Lead Sign-Off\n(written approval)"]
     SIGNOFF --> PROD["Reintroduce to Production"]
 ```
-
 
 ## RTO / RPO Measurement
 

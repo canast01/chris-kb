@@ -4,31 +4,11 @@ tags:
 ---
 # Cost Allocation Tags
 
-
 <div class="kb-summary">
 Tags are the primary mechanism for attributing Azure costs to teams, projects, environments, and cost centres.
 
 *Applies to: Azure*
 </div>
-![Cost Allocation Tags](../../../../assets/cloud-azure-cost-cost-allocation-tags-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-enforcement_with_policy: "Enforcement with Policy" {shape: rectangle}
-cost_allocation_rules: "Cost Allocation Rules" {shape: rectangle}
-tag_inheritance: "Tag Inheritance" {shape: rectangle}
-reporting_on_tag_coverage: "Reporting on Tag Coverage" {shape: rectangle}
-
-center -> enforcement_with_policy
-center -> cost_allocation_rules
-center -> tag_inheritance
-center -> reporting_on_tag_coverage
-```
 
 ## Enforcement with Policy
 

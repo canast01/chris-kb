@@ -5,7 +5,6 @@ tags:
 ---
 # SnapMirror — Access Control
 
-
 <div class="kb-summary">
 SnapMirror access control: ONTAP RBAC role with `snapmirror-*` privileges, SVM admin scoping, intercluster peer authentication, and audit trail review.
 
@@ -13,25 +12,7 @@ SnapMirror access control: ONTAP RBAC role with `snapmirror-*` privileges, SVM a
 </div>
 ![SnapMirror — Access Control](../../../../assets/storage-netapp-snapmirror-security-access-control.svg)
 
-
-
-
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-rbac: "RBAC" {shape: rectangle}
-destination_volume_protection: "Destination Volume Protection" {shape: rectangle}
-audit_logging: "Audit Logging" {shape: rectangle}
-core: "SnapMirror Core" {shape: hexagon}
-
-external -> rbac: traffic in
-rbac -> destination_volume_protection
-destination_volume_protection -> audit_logging
-audit_logging -> core: secured path
-```
 
 ## Before you begin
 

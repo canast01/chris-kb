@@ -12,33 +12,8 @@ Why vSAN resyncs happen, how CLOM decides when and where to rebuild, what drives
 
 *Applies to: vSAN 7.x · 8.x*
 </div>
-![vSAN — Resync Mechanics](../../../../assets/virtualization-vmware-vsan-architecture-resync-mechanics.svg)
-
-
-
-
-
 
 ---
-
-```d2
-direction: right
-
-center: "vSAN" {shape: hexagon}
-why_resync_happens: "Why Resync Happens" {shape: rectangle}
-how_clom_decides_where_to_rebuild: "How CLOM Decides Where to Rebuild" {shape: rectangle}
-capacity_headroom_why_30_matters: "Capacity Headroom: Why 30% Matters" {shape: rectangle}
-resync_duration_and_throughput: "Resync Duration and Throughput" {shape: rectangle}
-the_throttle_trading_speed_for_vm_st: "The Throttle: Trading Speed for VM Stability" {shape: rectangle}
-deltasync_vs_full_rebuild: "Delta-Sync vs Full Rebuild" {shape: rectangle}
-
-center -> why_resync_happens
-center -> how_clom_decides_where_to_rebuild
-center -> capacity_headroom_why_30_matters
-center -> resync_duration_and_throughput
-center -> the_throttle_trading_speed_for_vm_st
-center -> deltasync_vs_full_rebuild
-```
 
 ## Why Resync Happens
 

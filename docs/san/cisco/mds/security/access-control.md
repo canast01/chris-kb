@@ -5,7 +5,6 @@ tags:
 ---
 # MDS — Access Control
 
-
 <div class="kb-summary">
 Cisco MDS access control: RBAC role assignment with `role name`, network-admin vs. vsan-admin scoping, TACACS+ server configuration, and AAA fallback.
 
@@ -13,29 +12,7 @@ Cisco MDS access control: RBAC role assignment with `role name`, network-admin v
 </div>
 ![MDS — Access Control](../../../../assets/san-cisco-mds-security-access-control.svg)
 
-
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-access_control_architecture: "Access Control Architecture" {shape: rectangle}
-aaa_integration_tacacs_radius: "AAA Integration (TACACS+ / RADIUS)" {shape: rectangle}
-management_plane_acls: "Management Plane ACLs" {shape: rectangle}
-vsan_isolation_as_an_access_control_: "VSAN Isolation as an Access Control Boundary" {shape: rectangle}
-zoning_as_dataplane_access_control: "Zoning as Data-Plane Access Control" {shape: rectangle}
-audit_logging: "Audit Logging" {shape: rectangle}
-core: "Cisco MDS Core" {shape: hexagon}
-
-external -> access_control_architecture: traffic in
-access_control_architecture -> aaa_integration_tacacs_radius
-aaa_integration_tacacs_radius -> management_plane_acls
-management_plane_acls -> vsan_isolation_as_an_access_control_
-vsan_isolation_as_an_access_control_ -> zoning_as_dataplane_access_control
-zoning_as_dataplane_access_control -> audit_logging
-audit_logging -> core: secured path
-```
 
 ## Before you begin
 
@@ -81,7 +58,6 @@ graph TD
   class FCID allow
   class DENY block
 ```
-
 
 ### VSAN-Scoped Roles
 

@@ -12,10 +12,6 @@ Terraform diagnostic commands: enable TF_LOG trace logging, inspect plan output 
 
 *Applies to: Terraform 1.x / OpenTofu 1.x*
 </div>
-![Terraform — Diagnostics](../../../../assets/automation-terraform-troubleshooting-diagnostics-index.svg)
-
-
-
 
 ```mermaid
 graph TD

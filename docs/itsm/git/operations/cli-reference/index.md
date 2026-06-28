@@ -4,8 +4,6 @@ tags:
   - operations
 ---
 # Git — CLI Reference
-![Git — CLI Reference](../../../../assets/itsm-git-operations-cli-reference-index.svg)
-
 
 ```bash
 # Identity (required — used in every commit you make)
@@ -141,15 +139,6 @@ git config --global alias.lg "log --oneline --graph --all --decorate"
 git config --global alias.undo "reset --soft HEAD~1"
 git config --global alias.unstage "restore --staged"
 git config --global alias.aliases "config --get-regexp alias"
-```
-
-```d2
-direction: right
-
-center: "Cli Reference" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> verify
 ```
 
 ## Before you begin

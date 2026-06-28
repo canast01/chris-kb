@@ -4,8 +4,6 @@ tags:
   - operations
 ---
 # Git — Operations Scripts
-![Git — Operations Scripts](../../../../assets/itsm-git-operations-scripts-index.svg)
-
 
 ```bash
 #!/usr/bin/env bash
@@ -282,15 +280,6 @@ if [[ -f "$REPO_PATH/.gitattributes" ]]; then
 else
   echo ".gitattributes not found"
 fi
-```
-
-```d2
-direction: right
-
-center: "Scripts" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> verify
 ```
 
 ## Before you begin

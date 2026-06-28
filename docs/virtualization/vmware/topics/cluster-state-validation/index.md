@@ -4,35 +4,11 @@ tags:
 ---
 # Cluster State Validation
 
-
 <div class="kb-summary">
 Quick checks to confirm a vSphere cluster is healthy before and after changes.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Cluster State Validation](../../../../assets/virtualization-vmware-topics-cluster-state-validation-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Cluster State Validation" {shape: hexagon}
-host_connectivity: "Host Connectivity" {shape: rectangle}
-ha_and_drs_status: "HA and DRS Status" {shape: rectangle}
-active_alarms: "Active Alarms" {shape: rectangle}
-vsan_cluster_health: "vSAN Cluster Health" {shape: rectangle}
-resource_utilisation: "Resource Utilisation" {shape: rectangle}
-drs_migration_recommendations: "DRS Migration Recommendations" {shape: rectangle}
-
-center -> host_connectivity
-center -> ha_and_drs_status
-center -> active_alarms
-center -> vsan_cluster_health
-center -> resource_utilisation
-center -> drs_migration_recommendations
-```
 
 ## Host Connectivity
 

@@ -12,10 +12,6 @@ Commvault diagnostic commands: identify job failures with qlist, test component 
 
 *Applies to: Commvault 2024.x / Commvault Cloud*
 </div>
-![Commvault — Diagnostics](../../../../assets/backup-commvault-troubleshooting-diagnostics-index.svg)
-
-
-
 
 ```mermaid
 graph TD

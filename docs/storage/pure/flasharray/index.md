@@ -9,10 +9,6 @@ All-flash block storage running Purity//FA — ActiveDR, ActiveCluster, NVMe/FC,
 
 *Applies to: FlashArray Purity 6.x*
 </div>
-![Pure FlashArray](../../../assets/storage-pure-flasharray-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

@@ -7,16 +7,11 @@ search:
 ---
 # SRDF/S — Troubleshooting
 
-
-
 <div class="kb-summary">
 Diagnosing SRDF/S link failures, synchronisation errors, SUSPENDED state recovery, and RDF group health issues.
 
 *Applies to: SRDF/S*
 </div>
-![SRDF/S — Troubleshooting](../../../../assets/storage-dell-srdf-s-troubleshooting-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

@@ -5,33 +5,11 @@ tags:
 ---
 # CloudIQ — Health Checks
 
-
 <div class="kb-summary">
 Health Checks reference covering Daily Checks, Health Check Commands, Change Readiness, Incident Triage, Post-Change Validation.
 
 *Applies to: CloudIQ*
 </div>
-
-
-
-```d2
-direction: right
-
-hub: "CloudIQ\nOperations" {shape: hexagon}
-run_this_routine: "Run This Routine" {shape: rectangle}
-change_readiness: "Change Readiness" {shape: rectangle}
-incident_triage: "Incident Triage" {shape: rectangle}
-postchange_validation: "Post-Change Validation" {shape: rectangle}
-common_health_issues: "Common Health Issues" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> run_this_routine
-hub -> change_readiness
-hub -> incident_triage
-hub -> postchange_validation
-hub -> common_health_issues
-hub -> verify
-```
 
 ## Before you begin
 

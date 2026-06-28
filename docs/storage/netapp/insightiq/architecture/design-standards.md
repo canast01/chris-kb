@@ -12,25 +12,6 @@ VM sizing, data retention policy, network access requirements, naming convention
 </div>
 ![InsightIQ — Design Standards](../../../../assets/storage-netapp-insightiq-architecture-design-standards.svg)
 
-
-
-```d2
-direction: right
-
-center: "InsightIQ" {shape: hexagon}
-vm_sizing: "VM Sizing" {shape: rectangle}
-retention_policy: "Retention Policy" {shape: rectangle}
-naming_conventions: "Naming Conventions" {shape: rectangle}
-network_requirements: "Network Requirements" {shape: rectangle}
-configuration_checklist: "Configuration Checklist" {shape: rectangle}
-
-center -> vm_sizing
-center -> retention_policy
-center -> naming_conventions
-center -> network_requirements
-center -> configuration_checklist
-```
-
 ## VM Sizing
 
 | Parameter | Minimum | Recommended (production) |

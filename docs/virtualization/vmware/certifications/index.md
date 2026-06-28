@@ -5,15 +5,9 @@ tags:
 ---
 # VMware Certification
 
-
-
 <div class="kb-summary">
 VMware Certification reference covering Overview, Core Certification Paths, Daily Study Focus, Useful Commands, Renewal Notes.
 </div>
-![VMware Certification](../../../assets/virtualization-vmware-certifications-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-1">
 
@@ -41,21 +35,6 @@ VMware Certification reference covering Overview, Core Certification Paths, Dail
 <a class="kb-card" href="vcp-dcv/"><strong>VCP-DCV</strong><span>VMware Certified Professional – Data Center Virtualization study notes and exam prep.</span></a>
 
 </div>
-
-```d2
-direction: right
-
-center: "Certifications" {shape: hexagon}
-core_certification_paths: "Core Certification Paths" {shape: rectangle}
-daily_study_focus: "Daily Study Focus" {shape: rectangle}
-useful_commands: "Useful Commands" {shape: rectangle}
-renewal_notes: "Renewal Notes" {shape: rectangle}
-
-center -> core_certification_paths
-center -> daily_study_focus
-center -> useful_commands
-center -> renewal_notes
-```
 
 ## Overview
 

@@ -5,35 +5,11 @@ tags:
 ---
 # Azure — Certificates
 
-
 <div class="kb-summary">
 Azure Key Vault manages X.509 certificates, providing lifecycle management including creation, import, auto-renewal, and expiry alerting. Key Vault integrates with App Gateway, API Management, App Service, and other services for SSL/TLS offloading.
 
 *Applies to: Azure*
 </div>
-![Azure — Certificates](../../../../assets/cloud-azure-security-certificates-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-creating_a_key_vault_certificate: "Creating a Key Vault Certificate" {shape: rectangle}
-importing_certificates: "Importing Certificates" {shape: rectangle}
-certificate_versions_and_rotation: "Certificate Versions and Rotation" {shape: rectangle}
-autorotation_with_lifetime_actions: "Auto-Rotation with Lifetime Actions" {shape: rectangle}
-app_gateway_integration: "App Gateway Integration" {shape: rectangle}
-certificate_expiry_monitoring: "Certificate Expiry Monitoring" {shape: rectangle}
-
-center -> creating_a_key_vault_certificate
-center -> importing_certificates
-center -> certificate_versions_and_rotation
-center -> autorotation_with_lifetime_actions
-center -> app_gateway_integration
-center -> certificate_expiry_monitoring
-```
 
 ## Before you begin
 

@@ -5,28 +5,14 @@ tags:
 ---
 # Veeam — Scripts
 
-
 <div class="kb-summary">
 PowerShell scripts for Veeam job management, capacity reporting, SLA health checks, and backup copy automation.
 
 *Applies to: Veeam 12.x*
 </div>
-![Veeam — Scripts](../../../../assets/backup-veeam-operations-scripts-index.svg)
-
-
-
 
 - Store VBR credentials using Windows Credential Manager or retrieve from CyberArk at runtime.
 - Use `Try/Catch/Finally` blocks to ensure `Disconnect-VBRServer` is called even on error.
-
-```d2
-direction: right
-
-center: "Veeam" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> verify
-```
 
 ## Before you begin
 

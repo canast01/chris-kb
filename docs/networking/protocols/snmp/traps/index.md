@@ -4,35 +4,13 @@ tags:
 ---
 # SNMP Traps
 
-
 <div class="kb-summary">
 SNMP traps are unsolicited notifications sent from a device to a trap receiver (NMS) when an event occurs
 </div>
-![SNMP Traps](../../../../assets/networking-protocols-snmp-traps-index.svg)
-
 
         TRAP FLOW (device-initiated, async)
 
 — a link going down, a threshold being crossed, or a hardware fault. Unlike polling, traps push alerts in real time.
-
-```d2
-direction: right
-
-center: "SNMP" {shape: hexagon}
-trap_vs_inform: "Trap vs Inform" {shape: rectangle}
-configuring_trap_destinations: "Configuring Trap Destinations" {shape: rectangle}
-testing_trap_delivery: "Testing Trap Delivery" {shape: rectangle}
-common_trap_oids: "Common Trap OIDs" {shape: rectangle}
-trap_receiver_snmptrapd: "Trap Receiver — snmptrapd" {shape: rectangle}
-common_issues: "Common Issues" {shape: rectangle}
-
-center -> trap_vs_inform
-center -> configuring_trap_destinations
-center -> testing_trap_delivery
-center -> common_trap_oids
-center -> trap_receiver_snmptrapd
-center -> common_issues
-```
 
 ## Trap vs Inform
 

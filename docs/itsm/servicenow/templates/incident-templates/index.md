@@ -9,7 +9,4 @@ Incident record templates for common failure types — P1 outage, service degrad
 
 *Applies to: ServiceNow*
 </div>
-![ServiceNow — Incident Templates](../../../../assets/itsm-servicenow-templates-incident-templates-index.svg)
-
-
 

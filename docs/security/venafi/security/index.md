@@ -4,16 +4,11 @@ tags:
 ---
 # Venafi — Security
 
-
 <div class="kb-summary">
 Venafi hardening — CA connector security, policy enforcement, RBAC, and certificate authority trust chain management.
 
 *Applies to: Venafi TLS Protect*
 </div>
-![Venafi — Security](../../../assets/security-venafi-security-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-2">
 

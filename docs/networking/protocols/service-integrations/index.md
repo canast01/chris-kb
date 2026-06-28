@@ -3,8 +3,6 @@ tags:
   - networking
 ---
 # Integration — Service Integrations
-![Integration — Service Integrations](../../../assets/networking-protocols-service-integrations-index.svg)
-
 
 ```bash
 # Prometheus: check scrape targets

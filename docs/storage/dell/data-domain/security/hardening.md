@@ -5,35 +5,12 @@ tags:
 ---
 # Data Domain — Hardening
 
-
 <div class="kb-summary">
 Hardening reference covering Overview, Audit Logging and Syslog, SNMP Security, Certificate Management, Encryption Hardening and 4 more sections.
 
 *Applies to: Data Domain DD OS 7.x*
 </div>
 ![Data Domain — Hardening](../../../../assets/storage-dell-data-domain-security-hardening.svg)
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-audit_logging_and_syslog: "Audit Logging and Syslog" {shape: rectangle}
-snmp_security: "SNMP Security" {shape: rectangle}
-certificate_management: "Certificate Management" {shape: rectangle}
-encryption_hardening: "Encryption Hardening" {shape: rectangle}
-firmware_and_software_currency: "Firmware and Software Currency" {shape: rectangle}
-vulnerability_scanning_and_penetrati: "Vulnerability Scanning and Penetration Testing" {shape: rectangle}
-core: "Data Domain Core" {shape: hexagon}
-
-external -> audit_logging_and_syslog: traffic in
-audit_logging_and_syslog -> snmp_security
-snmp_security -> certificate_management
-certificate_management -> encryption_hardening
-encryption_hardening -> firmware_and_software_currency
-firmware_and_software_currency -> vulnerability_scanning_and_penetrati
-vulnerability_scanning_and_penetrati -> core: secured path
-```
 
 ## Before you begin
 
@@ -71,7 +48,6 @@ graph TD
     dd --> proto
     dd --> enc
 ```
-
 
 ### Login Banner
 

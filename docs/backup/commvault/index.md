@@ -9,13 +9,6 @@ Commvault enterprise backup and recovery — CommServe command and control, Medi
 
 *Applies to: Commvault 11.x*
 </div>
-![Commvault](../../assets/backup-commvault-index.svg)
-
-
-
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

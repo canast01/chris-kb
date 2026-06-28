@@ -7,16 +7,11 @@ search:
 ---
 # Azure — Troubleshooting
 
-
 <div class="kb-summary">
 Troubleshooting reference covering NSG Troubleshooting, Azure AD Authentication Errors, Azure Storage Access Denied, AKS Pod Not Starting, App Service 502/503.
 
 *Applies to: Azure*
 </div>
-![Azure — Troubleshooting](../../../assets/cloud-azure-troubleshooting-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

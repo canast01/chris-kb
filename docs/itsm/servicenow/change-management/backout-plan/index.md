@@ -4,33 +4,11 @@ tags:
 ---
 # Backout Plan
 
-
 <div class="kb-summary">
 Backout Plan reference covering Overview, Backout Criteria, Backout Steps Template, Backout Checklist, Validation After Backout and 1 more sections.
 
 *Applies to: ServiceNow*
 </div>
-![Backout Plan](../../../../assets/itsm-servicenow-change-management-backout-plan-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "ServiceNow" {shape: hexagon}
-backout_criteria: "Backout Criteria" {shape: rectangle}
-backout_steps_template: "Backout Steps Template" {shape: rectangle}
-backout_checklist: "Backout Checklist" {shape: rectangle}
-validation_after_backout: "Validation After Backout" {shape: rectangle}
-postbackout_communication: "Post-Backout Communication" {shape: rectangle}
-
-center -> backout_criteria
-center -> backout_steps_template
-center -> backout_checklist
-center -> validation_after_backout
-center -> postbackout_communication
-```
 
 ## Overview
 

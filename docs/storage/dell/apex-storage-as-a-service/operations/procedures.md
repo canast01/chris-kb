@@ -5,39 +5,15 @@ tags:
 ---
 # APEX Storage as a Service — Procedures
 
-
 <div class="kb-summary">
 Procedures reference covering Incident Triage, Maintenance Window, Operational Tasks.
 
 *Applies to: APEX Storage-as-a-Service*
 </div>
-![APEX Storage as a Service — Procedures](../../../../assets/storage-dell-apex-storage-as-a-service-operations-procedures.svg)
-
-
-
 
 > Part of the [APEX Storage as a Service](../index.md) reference.
 
 ---
-
-```d2
-direction: right
-
-hub: "APEX Storage\nOperations" {shape: hexagon}
-incident_triage: "Incident Triage" {shape: rectangle}
-maintenance_window: "Maintenance Window" {shape: rectangle}
-operational_tasks: "Operational Tasks" {shape: rectangle}
-request_capacity_expansion: "Request Capacity Expansion" {shape: rectangle}
-open_a_support_case_from_apex_consol: "Open a Support Case from APEX Console" {shape: rectangle}
-configure_data_protection_policy: "Configure Data Protection Policy" {shape: rectangle}
-
-hub -> incident_triage
-hub -> maintenance_window
-hub -> operational_tasks
-hub -> request_capacity_expansion
-hub -> open_a_support_case_from_apex_consol
-hub -> configure_data_protection_policy
-```
 
 ## Before you begin
 

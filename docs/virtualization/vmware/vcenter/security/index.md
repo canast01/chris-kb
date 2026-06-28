@@ -12,10 +12,6 @@ Security reference for VMware vCenter Server. Covers SSO authentication, identit
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![vCenter — Security](../../../../assets/virtualization-vmware-vcenter-security-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

@@ -4,33 +4,11 @@ tags:
 ---
 # Recovery Testing
 
-
 <div class="kb-summary">
 Recovery testing validates that systems, data, and services can be restored to a defined state within acceptable timeframes. Testing is the only mechanism that converts documented procedures into verified capability. Untested recovery plans are risk documents, not recovery plans.
 </div>
-![Recovery Testing](../../../assets/backup-dr-operations-recovery-testing-index.svg)
-
 
 ---
-
-```d2
-direction: right
-
-center: "DR Operations" {shape: hexagon}
-testing_types: "Testing Types" {shape: rectangle}
-annual_testing_calendar: "Annual Testing Calendar" {shape: rectangle}
-test_scenario_library: "Test Scenario Library" {shape: rectangle}
-test_execution_procedure: "Test Execution Procedure" {shape: rectangle}
-commvault_intellisnap_applicationcon: "Commvault IntelliSnap — Application-Consistent Recovery Test" {shape: rectangle}
-regulatory_requirements_for_dr_testi: "Regulatory Requirements for DR Testing" {shape: rectangle}
-
-center -> testing_types
-center -> annual_testing_calendar
-center -> test_scenario_library
-center -> test_execution_procedure
-center -> commvault_intellisnap_applicationcon
-center -> regulatory_requirements_for_dr_testi
-```
 
 ## Testing Types
 
@@ -125,7 +103,6 @@ flowchart TD
     P --> Q[Runbook Updated if Required]
     Q --> R[Report Signed Off\nFiled in GRC System]
 ```
-
 
 DataLabs is ideal for:
 - Testing patches before production deployment against a live copy of the environment

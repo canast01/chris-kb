@@ -5,27 +5,11 @@ tags:
 ---
 # Nexus Dashboard: Endpoint Tracking, Flow Visibility, and Topology View
 
-
 <div class="kb-summary">
 Nexus Dashboard: Endpoint Tracking, Flow Visibility, and Topology View reference covering Flow Visibility, Topology View, Path Trace for Troubleshooting, Common Visibility Issues.
 
 *Applies to: Cisco MDS · Nexus*
 </div>
-![Nexus Dashboard: Endpoint Tracking, Flow Visibility, and Topology View](../../../../assets/san-cisco-nexus-dashboard-operations-visibility.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "Nexus Dashboard\nOperations" {shape: hexagon}
-common_visibility_issues: "Common Visibility Issues" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> common_visibility_issues
-hub -> verify
-```
 
 ## Before you begin
 

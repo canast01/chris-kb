@@ -7,16 +7,11 @@ search:
 ---
 # Terraform — Troubleshooting
 
-
-
 <div class="kb-summary">
 Diagnosing state drift, provider errors, plan failures, lock conflicts, and common Terraform workflow issues.
 
 *Applies to: Terraform 1.x*
 </div>
-![Terraform — Troubleshooting](../../../assets/automation-terraform-troubleshooting-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

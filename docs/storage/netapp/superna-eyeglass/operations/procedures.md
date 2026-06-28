@@ -5,31 +5,11 @@ tags:
 ---
 # Superna Eyeglass — Procedures
 
-
 <div class="kb-summary">
 Procedures reference covering Failover, Failback, Day-to-Day Operations.
 
 *Applies to: Superna Eyeglass*
 </div>
-
-```d2
-direction: right
-
-hub: "Superna Eyeglass\nOperations" {shape: hexagon}
-failover: "Failover" {shape: rectangle}
-failback: "Failback" {shape: rectangle}
-configure_replication_job_schedule: "Configure Replication Job Schedule" {shape: rectangle}
-run_a_dr_test_nondisruptive: "Run a DR Test (Non-Disruptive)" {shape: rectangle}
-perform_dr_failover_planned: "Perform DR Failover (Planned)" {shape: rectangle}
-perform_dr_failover_emergency: "Perform DR Failover (Emergency)" {shape: rectangle}
-
-hub -> failover
-hub -> failback
-hub -> configure_replication_job_schedule
-hub -> run_a_dr_test_nondisruptive
-hub -> perform_dr_failover_planned
-hub -> perform_dr_failover_emergency
-```
 
 ## Before you begin
 
@@ -64,7 +44,6 @@ flowchart TD
     ready -->|Yes| triggerFO
     triggerFO --> breakSync --> activateZones --> dnsSwitch --> notify --> validate --> done
 ```
-
 
 ### DNS Cutover
 

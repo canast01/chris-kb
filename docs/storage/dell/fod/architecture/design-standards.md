@@ -5,7 +5,6 @@ tags:
 ---
 # FOD — Standards
 
-
 <div class="kb-summary">
 Standards reference covering Upgrade Notes, Design Standards.
 
@@ -13,23 +12,9 @@ Standards reference covering Upgrade Notes, Design Standards.
 </div>
 ![FOD — Standards](../../../../assets/storage-dell-fod-architecture-design-standards.svg)
 
-
-
-
 > Part of the [Flex on Demand](../index.md) reference.
 
 ---
-
-```d2
-direction: right
-
-center: "Flex On Demand" {shape: hexagon}
-upgrade_notes: "Upgrade Notes" {shape: rectangle}
-design_standards: "Design Standards" {shape: rectangle}
-
-center -> upgrade_notes
-center -> design_standards
-```
 
 ## Upgrade Notes
 

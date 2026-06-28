@@ -9,8 +9,6 @@ Dell AIOps Lifecycle reference covering Platform Update Model, Customer Lifecycl
 
 *Applies to: Dell AIOps*
 </div>
-![Dell AIOps Lifecycle](../../../../assets/storage-dell-dell-aiops-lifecycle-index.svg)
-
 
 ```d2
 direction: right
@@ -58,7 +56,6 @@ Dell AIOps is a SaaS platform — feature updates, AI model improvements, and bu
 The SCG is the only customer-managed component in the Dell AIOps stack. Keeping SCG current ensures access to new platform support and AIOps features.
 
 ### Check Current SCG Version
-
 
 ## API Lifecycle
 

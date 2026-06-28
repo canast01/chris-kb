@@ -12,9 +12,6 @@ EVS cluster sizing, AZ placement, CIDR planning, Direct Connect bandwidth requir
 </div>
 ![Amazon EVS — Design Standards](../../../../assets/cloud-aws-evs-architecture-design-standards.svg)
 
-
-
-
 ```mermaid
 graph TB
     classDef dev fill:#b45309,color:#fff
@@ -29,25 +26,6 @@ graph TB
 
     DEV --> MIN --> PROD
     PROD --> STR
-```
-
-```d2
-direction: right
-
-center: "AWS EVS" {shape: hexagon}
-host_type_selection: "Host Type Selection" {shape: rectangle}
-cluster_sizing: "Cluster Sizing" {shape: rectangle}
-vsan_policy_selection: "vSAN Policy Selection" {shape: rectangle}
-stretched_cluster_design: "Stretched Cluster Design" {shape: rectangle}
-vpc_and_cidr_design: "VPC and CIDR Design" {shape: rectangle}
-high_availability_design: "High Availability Design" {shape: rectangle}
-
-center -> host_type_selection
-center -> cluster_sizing
-center -> vsan_policy_selection
-center -> stretched_cluster_design
-center -> vpc_and_cidr_design
-center -> high_availability_design
 ```
 
 ## Host Type Selection

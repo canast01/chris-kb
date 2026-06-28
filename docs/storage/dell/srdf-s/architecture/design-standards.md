@@ -5,7 +5,6 @@ tags:
 ---
 # SRDF/S — Standards
 
-
 <div class="kb-summary">
 SRDF/S design standards: maximum distance and latency requirements for synchronous SRDF, RDF group sizing, and SRDF/S coexistence with Concurrent SRDF/A.
 
@@ -13,23 +12,7 @@ SRDF/S design standards: maximum distance and latency requirements for synchrono
 </div>
 ![SRDF/S — Standards](../../../../assets/storage-dell-srdf-s-architecture-design-standards.svg)
 
-
 ---
-
-```d2
-direction: right
-
-center: "SRDF/S" {shape: hexagon}
-rtt_and_latency_budget: "RTT and Latency Budget" {shape: rectangle}
-target_volume_standards: "Target Volume Standards" {shape: rectangle}
-test_frequency: "Test Frequency" {shape: rectangle}
-recovery_time_standards: "Recovery Time Standards" {shape: rectangle}
-
-center -> rtt_and_latency_budget
-center -> target_volume_standards
-center -> test_frequency
-center -> recovery_time_standards
-```
 
 ## RTT and Latency Budget
 
@@ -64,7 +47,6 @@ graph LR
     linkLabel -->|"ack to R1"| r1
     linkLabel --> r2
 ```
-
 
 Where 1.25 = 25% headroom for burst absorption.
 

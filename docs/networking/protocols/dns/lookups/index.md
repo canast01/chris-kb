@@ -4,32 +4,11 @@ tags:
 ---
 # DNS Lookups
 
-
 <div class="kb-summary">
 DNS Lookups reference covering Overview, nslookup, dig, Resolve-DnsName (PowerShell), TTL Debugging and 1 more sections.
 </div>
-![DNS Lookups](../../../../assets/networking-protocols-dns-lookups-index.svg)
-
 
         FORWARD vs REVERSE LOOKUPS
-
-
-```d2
-direction: right
-
-center: "DNS" {shape: hexagon}
-nslookup: "nslookup" {shape: rectangle}
-dig: "dig" {shape: rectangle}
-resolvednsname_powershell: "Resolve-DnsName (PowerShell)" {shape: rectangle}
-ttl_debugging: "TTL Debugging" {shape: rectangle}
-known_issues: "Known Issues" {shape: rectangle}
-
-center -> nslookup
-center -> dig
-center -> resolvednsname_powershell
-center -> ttl_debugging
-center -> known_issues
-```
 
 ## Overview
 

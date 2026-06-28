@@ -4,8 +4,6 @@ tags:
   - san
 ---
 # Cisco MDS 9000 — Health Checks
-![Cisco MDS 9000 — Health Checks](../../../../assets/san-cisco-mds-operations-health-checks.svg)
-
 
 ```bash
 # Full daily health sweep — run on each MDS switch
@@ -16,18 +14,6 @@ show zoneset active vsan all
 show logging last 50
 show environment
 show version
-```
-
-
-```d2
-direction: right
-
-hub: "Cisco MDS\nOperations" {shape: hexagon}
-run_this_routine: "Run This Routine" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> run_this_routine
-hub -> verify
 ```
 
 ## Before you begin

@@ -4,31 +4,9 @@ tags:
 ---
 # DNS Records
 
-
 <div class="kb-summary">
 DNS Records reference covering Overview, Common Record Types, Managing Records with PowerShell, Scavenging and Aging, Dynamic DNS and 1 more sections.
 </div>
-![DNS Records](../../../../assets/networking-protocols-dns-records-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "DNS" {shape: hexagon}
-common_record_types: "Common Record Types" {shape: rectangle}
-managing_records_with_powershell: "Managing Records with PowerShell" {shape: rectangle}
-scavenging_and_aging: "Scavenging and Aging" {shape: rectangle}
-dynamic_dns: "Dynamic DNS" {shape: rectangle}
-known_issues: "Known Issues" {shape: rectangle}
-
-center -> common_record_types
-center -> managing_records_with_powershell
-center -> scavenging_and_aging
-center -> dynamic_dns
-center -> known_issues
-```
 
 ## Overview
 

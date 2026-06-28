@@ -5,14 +5,11 @@ tags:
 ---
 # Confluence — Backup & Restore
 
-
 <div class="kb-summary">
 This page covers all backup and restore methods for Confluence Data Center: built-in XML export, database-level backups, and filesystem snapshots. Use a layered backup strategy — database + shared home filesystem — rather than relying on XML export alone for production recovery.
 
 *Applies to: Confluence Cloud / Data Center*
 </div>
-![Confluence — Backup & Restore](../../../../assets/itsm-confluence-operations-backup-restore-index.svg)
-
 
 ---
 
@@ -80,7 +77,6 @@ flowchart TD
     D --> D2[Index]
     D --> D3[Plugins / Avatars]
 ```
-
 
 Naming convention: `backup-<YYYY-MM-DD-HH-MM-SS>.zip`
 

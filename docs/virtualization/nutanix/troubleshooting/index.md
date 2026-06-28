@@ -5,10 +5,6 @@ Nutanix troubleshooting guide — common operational problems, diagnostic tools 
 
 *Applies to: AOS 6.x · AHV*
 </div>
-![Nutanix — Troubleshooting](../../../assets/virtualization-nutanix-troubleshooting-index.svg)
-
-
-
 
 <div class="kb-grid">
   <a class="kb-card" href="common-issues/">

@@ -10,29 +10,6 @@ Alerts reference covering ONTAP EMS Alerts, AutoSupport Notifications, SNMP Aler
 
 *Applies to: ONTAP 9.x*
 </div>
-![NetApp Operations — Alerts](../../../../assets/storage-netapp-operations-alerts-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Alerts" {shape: hexagon}
-ontap_ems_alerts: "ONTAP EMS Alerts" {shape: rectangle}
-autosupport_notifications: "AutoSupport Notifications" {shape: rectangle}
-snmp_alerting: "SNMP Alerting" {shape: rectangle}
-bluexp_alerts_keystone_cloud_manager: "BlueXP Alerts (Keystone / Cloud Manager)" {shape: rectangle}
-alert_triage_priority: "Alert Triage Priority" {shape: rectangle}
-resolving_health_alerts: "Resolving Health Alerts" {shape: rectangle}
-
-center -> ontap_ems_alerts
-center -> autosupport_notifications
-center -> snmp_alerting
-center -> bluexp_alerts_keystone_cloud_manager
-center -> alert_triage_priority
-center -> resolving_health_alerts
-```
 
 ## Before you begin
 

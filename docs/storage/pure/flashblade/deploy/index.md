@@ -37,15 +37,12 @@ configure_replication -> validate
 ---
 
 # FlashBlade — Initial Deployment
-![FlashBlade — Initial Deployment](../../../../assets/storage-pure-flashblade-deploy-index.svg)
-
 
 ![FlashBlade — Initial Deployment — Diagram](../../../../assets/storage-pure-flashblade-deploy-diagram.svg)
 
 This guide covers deploying a Pure Storage FlashBlade (//S or //E series) from physical installation through validated NFS or S3 access. All steps apply to Purity//FB 4.x and later.
 
 ---
-
 
 ```mermaid
 flowchart TD

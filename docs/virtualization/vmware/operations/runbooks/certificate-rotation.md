@@ -16,10 +16,6 @@ tags:
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![vCenter Certificate Rotation Runbook](../../../../assets/virtualization-vmware-operations-runbooks-certificate-rotati.svg)
-
-
-
 
 ```plantuml
 @startuml

@@ -12,10 +12,6 @@ AWS diagnostic commands: confirm account and role identity with aws sts, query C
 
 *Applies to: AWS CLI v2 · all regions*
 </div>
-![AWS — Diagnostics](../../../../assets/cloud-aws-troubleshooting-diagnostics-index.svg)
-
-
-
 
 ```mermaid
 graph TD

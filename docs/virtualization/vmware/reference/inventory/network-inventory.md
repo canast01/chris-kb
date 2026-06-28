@@ -4,36 +4,15 @@ tags:
 ---
 # Network Inventory
 
-
 <div class="kb-summary">
 Network Inventory reference covering Overview, Distributed Switches, Port Groups, VMkernel Adapters, Fields Reference and 1 more sections.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Network Inventory](../../../../assets/virtualization-vmware-reference-inventory-network-inventory.svg)
-
-
 
 > Part of the [Inventory](index.md) reference.
 
 ---
-
-```d2
-direction: right
-
-center: "Inventory" {shape: rectangle}
-distributed_switches: "Distributed Switches" {shape: rectangle}
-port_groups: "Port Groups" {shape: rectangle}
-vmkernel_adapters: "VMkernel Adapters" {shape: rectangle}
-fields_reference: "Fields Reference" {shape: rectangle}
-network_change_checklist: "Network Change Checklist" {shape: rectangle}
-
-center -> distributed_switches
-center -> port_groups
-center -> vmkernel_adapters
-center -> fields_reference
-center -> network_change_checklist
-```
 
 ## Overview
 

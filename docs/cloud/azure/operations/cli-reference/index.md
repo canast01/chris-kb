@@ -5,37 +5,13 @@ tags:
 ---
 # Azure Operations CLI Reference
 
-
 <div class="kb-summary">
 A practical reference for day-to-day Azure CLI usage: authentication, subscription management, resource group operations, output formatting, and productivity tools.
 
 *Applies to: Azure*
 </div>
-![Azure Operations CLI Reference](../../../../assets/cloud-azure-operations-cli-reference-index.svg)
-
-
-
 
 ---
-
-```d2
-direction: right
-
-center: "Azure" {shape: rectangle}
-authentication_and_login: "Authentication and Login" {shape: rectangle}
-account_and_subscription_management: "Account and Subscription Management" {shape: rectangle}
-resource_group_operations: "Resource Group Operations" {shape: rectangle}
-output_formats: "Output Formats" {shape: rectangle}
-useful_queries_with_query: "Useful Queries with --query" {shape: rectangle}
-az_find_command_discovery: "az find — Command Discovery" {shape: rectangle}
-
-center -> authentication_and_login
-center -> account_and_subscription_management
-center -> resource_group_operations
-center -> output_formats
-center -> useful_queries_with_query
-center -> az_find_command_discovery
-```
 
 ## Before you begin
 

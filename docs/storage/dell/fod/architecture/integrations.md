@@ -5,16 +5,12 @@ tags:
 ---
 # FOD — Integrations
 
-
 <div class="kb-summary">
 Features on Demand integration with PowerMax/Unity management platforms and storage orchestration tools.
 
 *Applies to: Dell FOD*
 </div>
 ![FOD — Integrations](../../../../assets/storage-dell-fod-architecture-integrations.svg)
-
-
-
 
 > Part of the [Flex on Demand](../index.md) reference.
 
@@ -30,19 +26,6 @@ Features on Demand integration with PowerMax/Unity management platforms and stor
 | Finance / chargeback tools | Automated monthly usage export via CloudIQ API for internal reporting |
 
 ---
-
-```d2
-direction: right
-
-center: "Flex On Demand" {shape: hexagon}
-component_a: "Component A" {shape: rectangle}
-component_b: "Component B" {shape: rectangle}
-component_c: "Component C" {shape: rectangle}
-
-center -> component_a
-center -> component_b
-center -> component_c
-```
 
 ## See also
 

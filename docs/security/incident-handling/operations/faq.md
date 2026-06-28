@@ -11,25 +11,7 @@ Common questions about Incident Handling operations, configuration, and troubles
 </div>
 ![Incident Handling — Frequently Asked Questions](../../../assets/security-incident-handling-operations-faq.svg)
 
-
 ![Incident Handling FAQ](../../../assets/security-incident-handling-operations-faq.svg)
-
-```d2
-direction: right
-
-hub: "Operations\nOperations" {shape: hexagon}
-general: "General" {shape: rectangle}
-configuration: "Configuration" {shape: rectangle}
-operations: "Operations" {shape: rectangle}
-troubleshooting: "Troubleshooting" {shape: rectangle}
-backup_and_recovery: "Backup and Recovery" {shape: rectangle}
-
-hub -> general
-hub -> configuration
-hub -> operations
-hub -> troubleshooting
-hub -> backup_and_recovery
-```
 
 ## General
 

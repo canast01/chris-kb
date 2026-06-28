@@ -5,33 +5,12 @@ tags:
 ---
 # PowerPath — Integrations
 
-
 <div class="kb-summary">
 Integrations reference covering Windows HBA Integration, Linux DM-Multipath Comparison, VMware VAAI Integration (PowerPath/VE), AIX MPIO Coexistence, Monitoring Integration.
 
 *Applies to: PowerPath*
 </div>
 ![PowerPath — Integrations](../../../../assets/storage-dell-powerpath-architecture-integrations.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "PowerPath" {shape: hexagon}
-windows_hba_integration: "Windows HBA Integration" {shape: rectangle}
-linux_dmmultipath_comparison: "Linux DM-Multipath Comparison" {shape: rectangle}
-vmware_vaai_integration_powerpathve: "VMware VAAI Integration (PowerPath/VE)" {shape: rectangle}
-aix_mpio_coexistence: "AIX MPIO Coexistence" {shape: rectangle}
-monitoring_integration: "Monitoring Integration" {shape: rectangle}
-
-center -> windows_hba_integration
-center -> linux_dmmultipath_comparison
-center -> vmware_vaai_integration_powerpathve
-center -> aix_mpio_coexistence
-center -> monitoring_integration
-```
 
 ## Windows HBA Integration
 

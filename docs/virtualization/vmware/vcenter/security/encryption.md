@@ -7,34 +7,12 @@ tags:
 ---
 # vCenter Security — Encryption
 
-
 <div class="kb-summary">
 Encryption reference covering vSAN Encryption, Certificate Encryption, VM Encryption Key Flow, vSphere Trust Authority (vTA), Certificate Management and 3 more sections.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
 ![vCenter Security — Encryption](../../../../assets/virtualization-vmware-vcenter-security-encryption.svg)
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-vsphere_trust_authority_vta: "vSphere Trust Authority (vTA)" {shape: rectangle}
-certificate_management: "Certificate Management" {shape: rectangle}
-certificate_replacement_procedures: "Certificate Replacement Procedures" {shape: rectangle}
-nkp_backup_and_recovery: "NKP Backup and Recovery" {shape: rectangle}
-vm_encryption_storage_policy: "VM Encryption Storage Policy" {shape: rectangle}
-core: "vCenter Server Core" {shape: hexagon}
-
-external -> vsphere_trust_authority_vta: traffic in
-vsphere_trust_authority_vta -> certificate_management
-certificate_management -> certificate_replacement_procedures
-certificate_replacement_procedures -> nkp_backup_and_recovery
-nkp_backup_and_recovery -> vm_encryption_storage_policy
-vm_encryption_storage_policy -> core: secured path
-```
 
 ## Before you begin
 

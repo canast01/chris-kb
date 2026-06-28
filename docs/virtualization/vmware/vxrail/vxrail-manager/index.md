@@ -4,15 +4,11 @@ tags:
 ---
 # VxRail Manager
 
-
 <div class="kb-summary">
 VxRail Manager notes for service health, lifecycle jobs, support bundles, connectivity, certificates, and logs.
 
 *Applies to: VxRail 7.x · 8.x*
 </div>
-![VxRail Manager](../../../../assets/virtualization-vmware-vxrail-vxrail-manager-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

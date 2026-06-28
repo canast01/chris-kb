@@ -10,13 +10,6 @@ Technical and operational reference for VMware Aria Operations. Covers performan
 
 *Applies to: Aria Operations 8.x*
 </div>
-![Aria Operations](../../../assets/virtualization-vmware-aria-operations-index.svg)
-
-
-
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

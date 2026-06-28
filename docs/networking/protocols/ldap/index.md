@@ -6,15 +6,9 @@ tags:
 
 # LDAP
 
-
 <div class="kb-summary">
 Lightweight Directory Access Protocol — directory service query and authentication for infrastructure and applications.
 </div>
-![LDAP](../../../assets/networking-protocols-ldap-index.svg)
-
-
-
-
 
 <div class="kb-grid kb-grid-1">
 
@@ -37,23 +31,6 @@ Lightweight Directory Access Protocol — directory service query and authentica
 <a class="kb-card" href="queries/"><strong>Queries</strong><span>LDAP search filters, attribute queries, and ldapsearch examples.</span></a>
 
 </div>
-
-```d2
-direction: right
-
-center: "LDAP" {shape: hexagon}
-key_concepts: "Key Concepts" {shape: rectangle}
-common_ldapsearch_queries: "Common ldapsearch Queries" {shape: rectangle}
-ldaps_verification: "LDAPS Verification" {shape: rectangle}
-application_ldap_integration_linux_p: "Application LDAP Integration (Linux PAM/SSSD)" {shape: rectangle}
-troubleshooting: "Troubleshooting" {shape: rectangle}
-
-center -> key_concepts
-center -> common_ldapsearch_queries
-center -> ldaps_verification
-center -> application_ldap_integration_linux_p
-center -> troubleshooting
-```
 
 ## Key Concepts
 

@@ -5,7 +5,6 @@ tags:
 ---
 # FlashArray — Design Standards
 
-
 <div class="kb-summary">
 FlashArray design standards — host group naming conventions, volume layout, protection group design, and replication architecture.
 
@@ -13,25 +12,11 @@ FlashArray design standards — host group naming conventions, volume layout, pr
 </div>
 ![FlashArray — Design Standards](../../../../assets/storage-pure-flasharray-architecture-design-standards.svg)
 
-
 FlashArray Design Checklist — Key Areas
 
 For Linux DM-Multipath, use the Pure Storage recommended `multipath.conf` settings (available from Pure Support): `path_grouping_policy multibus`, `path_checker tur`, `failback immediate`, `no_path_retry 18`.
 
 ---
-
-```d2
-direction: right
-
-center: "FlashArray" {shape: hexagon}
-component_a: "Component A" {shape: rectangle}
-component_b: "Component B" {shape: rectangle}
-component_c: "Component C" {shape: rectangle}
-
-center -> component_a
-center -> component_b
-center -> component_c
-```
 
 ## See also
 

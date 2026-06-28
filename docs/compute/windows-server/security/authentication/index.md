@@ -4,8 +4,6 @@ tags:
   - windows
 ---
 # Windows Server — Authentication
-![Windows Server — Authentication](../../../../assets/compute-windows-server-security-authentication-index.svg)
-
 
 ```mermaid
 sequenceDiagram

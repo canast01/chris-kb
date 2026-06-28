@@ -6,35 +6,11 @@ tags:
 ---
 # OpenAI Security Review
 
-
 <div class="kb-summary">
 Security considerations when integrating the OpenAI API into production systems: data retention policies, prompt injection, PII handling, compliance frameworks, and hardening API usage.
 
 *Applies to: OpenAI API*
 </div>
-![OpenAI Security Review](../../../../assets/cloud-ai-openai-security-review-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "OpenAI API" {shape: hexagon}
-data_retention_policies: "Data Retention Policies" {shape: rectangle}
-prompt_injection_risks: "Prompt Injection Risks" {shape: rectangle}
-pii_handling: "PII Handling" {shape: rectangle}
-compliance_frameworks: "Compliance Frameworks" {shape: rectangle}
-api_key_security: "API Key Security" {shape: rectangle}
-output_validation: "Output Validation" {shape: rectangle}
-
-center -> data_retention_policies
-center -> prompt_injection_risks
-center -> pii_handling
-center -> compliance_frameworks
-center -> api_key_security
-center -> output_validation
-```
 
 ## Data Retention Policies
 

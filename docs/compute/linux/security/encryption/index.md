@@ -4,8 +4,6 @@ tags:
   - security
 ---
 # Linux — Encryption
-![Linux — Encryption](../../../../assets/compute-linux-security-encryption-index.svg)
-
 
 ```bash
 # Install cryptsetup

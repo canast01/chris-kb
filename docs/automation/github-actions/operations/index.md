@@ -5,16 +5,11 @@ tags:
 ---
 # GitHub Actions — Operations
 
-
-
 <div class="kb-summary">
 GitHub Actions — Operations reference: CLI Reference, Health Checks, Procedures, Install & Upgrade, and 2 more.
 
 *Applies to: GitHub Actions*
 </div>
-![GitHub Actions — Operations](../../../assets/automation-github-actions-operations-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="cli-reference/"><strong>CLI Reference</strong><span>Commands, syntax, and quick reference.</span></a>

@@ -4,8 +4,6 @@ tags:
   - security
 ---
 # Git — Authentication
-![Git — Authentication](../../../../assets/itsm-git-security-authentication-index.svg)
-
 
 ```bash
 # Generate Ed25519 key (preferred)

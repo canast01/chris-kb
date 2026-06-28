@@ -12,10 +12,6 @@ Ceph support escalation: Red Hat Ceph Storage support case process, community re
 
 *Applies to: Ceph Reef / Squid*
 </div>
-![Ceph — Escalation](../../../../assets/storage-ceph-troubleshooting-escalation-index.svg)
-
-
-
 
 ```mermaid
 graph TD

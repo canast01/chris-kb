@@ -6,33 +6,12 @@ tags:
 ---
 # Aria Automation — Authentication
 
-
 <div class="kb-summary">
 Authentication reference covering Authentication Architecture, Active Directory Integration via VIDM, API Authentication, API Service Account, Session and Token Policies and 2 more sections.
 
 *Applies to: Aria Automation 8.x*
 </div>
 ![Aria Automation — Authentication](../../../../assets/virtualization-vmware-aria-automation-security-authenticatio.svg)
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-authentication_architecture: "Authentication Architecture" {shape: rectangle}
-api_service_account: "API Service Account" {shape: rectangle}
-session_and_token_policies: "Session and Token Policies" {shape: rectangle}
-certificate_trust_for_api_clients: "Certificate Trust for API Clients" {shape: rectangle}
-related_reference: "Related Reference" {shape: rectangle}
-core: "Aria Automation Core" {shape: hexagon}
-
-external -> authentication_architecture: traffic in
-authentication_architecture -> api_service_account
-api_service_account -> session_and_token_policies
-session_and_token_policies -> certificate_trust_for_api_clients
-certificate_trust_for_api_clients -> related_reference
-related_reference -> core: secured path
-```
 
 ## Before you begin
 
@@ -46,7 +25,6 @@ related_reference -> core: secured path
 ## Authentication Architecture
 
 Aria Automation delegates all authentication to **Workspace ONE Access (VIDM)**. There is no standalone AD/LDAP connector in Aria Automation itself — VIDM acts as the identity broker between Aria Automation and Active Directory.
-
 
 **Acquire a token (AD user):**
 

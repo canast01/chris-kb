@@ -12,9 +12,6 @@ APEX Storage as a Service — Troubleshooting navigation for Common Issues, Diag
 
 *Applies to: APEX Storage-as-a-Service*
 </div>
-![APEX Storage as a Service — Troubleshooting](../../../../assets/storage-dell-apex-storage-as-a-service-troubleshooting-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="common-issues/"><strong>Common Issues</strong><span>Quick reference for common problems and resolutions.</span></a>

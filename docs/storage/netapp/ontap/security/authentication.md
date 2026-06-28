@@ -5,37 +5,12 @@ tags:
 ---
 # ONTAP — Authentication
 
-
 <div class="kb-summary">
 Authentication in ONTAP controls how administrators and service accounts gain access to cluster and SVM management interfaces. ONTAP supports local accounts, Active Directory (LDAP/Kerberos), SSH public keys, and SAML-based SSO for System Manager.
 
 *Applies to: ONTAP 9.x*
 </div>
 ![ONTAP — Authentication](../../../../assets/storage-netapp-ontap-security-authentication.svg)
-
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-authentication_flow: "Authentication Flow" {shape: rectangle}
-authentication_methods_summary: "Authentication Methods Summary" {shape: rectangle}
-local_accounts: "Local Accounts" {shape: rectangle}
-ssh_public_key_authentication: "SSH Public Key Authentication" {shape: rectangle}
-active_directory_cifs_authentication: "Active Directory / CIFS Authentication" {shape: rectangle}
-ldap_integration: "LDAP Integration" {shape: rectangle}
-core: "NetApp ONTAP Core" {shape: hexagon}
-
-external -> authentication_flow: traffic in
-authentication_flow -> authentication_methods_summary
-authentication_methods_summary -> local_accounts
-local_accounts -> ssh_public_key_authentication
-ssh_public_key_authentication -> active_directory_cifs_authentication
-active_directory_cifs_authentication -> ldap_integration
-ldap_integration -> core: secured path
-```
 
 ## Before you begin
 

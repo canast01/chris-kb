@@ -12,11 +12,6 @@ MySQL initial deployment — installation on RHEL/Ubuntu, post-install hardening
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>
-![MySQL / MariaDB — Initial Deployment](../../../../assets/compute-linux-mysql-deploy-index.svg)
-
-
-
-
 
 ```mermaid
 flowchart TD

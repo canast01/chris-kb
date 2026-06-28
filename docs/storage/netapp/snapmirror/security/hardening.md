@@ -5,7 +5,6 @@ tags:
 ---
 # SnapMirror — Hardening
 
-
 <div class="kb-summary">
 SnapMirror hardening: restricting intercluster LIF firewall policy to replication only, peer passphrase rotation cadence, and audit log for relationship changes.
 
@@ -13,29 +12,7 @@ SnapMirror hardening: restricting intercluster LIF firewall policy to replicatio
 </div>
 ![SnapMirror — Hardening](../../../../assets/storage-netapp-snapmirror-security-hardening.svg)
 
-
-
-
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-hardening_checklist: "Hardening Checklist" {shape: rectangle}
-intercluster_lif_hardening: "Intercluster LIF Hardening" {shape: rectangle}
-rbac_restricting_break_and_resync_op: "RBAC: Restricting Break and Resync Operations" {shape: rectangle}
-ems_alerting_for_replication_events: "EMS Alerting for Replication Events" {shape: rectangle}
-annual_review_tasks: "Annual Review Tasks" {shape: rectangle}
-core: "SnapMirror Core" {shape: hexagon}
-
-external -> hardening_checklist: traffic in
-hardening_checklist -> intercluster_lif_hardening
-intercluster_lif_hardening -> rbac_restricting_break_and_resync_op
-rbac_restricting_break_and_resync_op -> ems_alerting_for_replication_events
-ems_alerting_for_replication_events -> annual_review_tasks
-annual_review_tasks -> core: secured path
-```
 
 ## Before you begin
 

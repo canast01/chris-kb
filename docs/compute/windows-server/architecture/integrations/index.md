@@ -5,33 +5,11 @@ tags:
 ---
 # Windows Server — Integrations
 
-
 <div class="kb-summary">
 Windows Server integration: Active Directory domain join, SCOM agent, SCCM/ConfigMgr management, NFS client configuration, and SNMP/WMI monitoring hooks.
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
-![Windows Server — Integrations](../../../../assets/compute-windows-server-architecture-integrations-index.svg)
-
-
-```d2
-direction: right
-
-center: "Windows Server" {shape: hexagon}
-ad_dns_dependency_diagram: "AD / DNS Dependency Diagram" {shape: rectangle}
-monitoring_agent_deployment: "Monitoring Agent Deployment" {shape: rectangle}
-backup_agent_deployment: "Backup Agent Deployment" {shape: rectangle}
-rdp_winrm_session_flow: "RDP / WinRM Session Flow" {shape: rectangle}
-iscsi_mpio_configuration: "iSCSI / MPIO Configuration" {shape: rectangle}
-dns_registration: "DNS Registration" {shape: rectangle}
-
-center -> ad_dns_dependency_diagram
-center -> monitoring_agent_deployment
-center -> backup_agent_deployment
-center -> rdp_winrm_session_flow
-center -> iscsi_mpio_configuration
-center -> dns_registration
-```
 
 ## AD / DNS Dependency Diagram
 
@@ -52,7 +30,6 @@ flowchart TD
     dc --- sysvol
     client -->|"GPO download"| sysvol
 ```
-
 
 Maintenance windows control reboot scheduling:
 - Development: patching on Tuesdays, auto-reboot allowed

@@ -7,14 +7,11 @@ search:
 ---
 # PowerShell — Common Issues
 
-
 <div class="kb-summary">
 PowerShell troubleshooting: execution policy blocks, module import failures, remoting authentication errors, pipeline object type mismatches, and cmdlet version conflicts.
 
 *Applies to: PowerShell 7.x*
 </div>
-![PowerShell — Common Issues](../../../../assets/automation-powershell-troubleshooting-common-issues-index.svg)
-
 
 ---
 
@@ -99,7 +96,6 @@ flowchart TD
     errType -->|Script logic\nundefined var| strictMode["Set-StrictMode -Version Latest\nadd breakpoint()"]
     strictMode --> stepDebug["Set-PSBreakpoint\nstep through execution"]
 ```
-
 
 ## Debugging Scripts
 

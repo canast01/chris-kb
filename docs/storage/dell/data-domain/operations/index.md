@@ -10,9 +10,6 @@ Data Domain — Operations reference: Health Checks, Procedures, CLI Reference, 
 
 *Applies to: Data Domain DD OS 7.x*
 </div>
-![Data Domain — Operations](../../../../assets/storage-dell-data-domain-operations-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>

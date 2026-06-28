@@ -5,35 +5,11 @@ tags:
 ---
 # VxRail LCM Failure Triage
 
-
 <div class="kb-summary">
 VxRail LCM Failure Triage reference covering Symptoms, Likely Causes, Commands, Troubleshooting Workflow, Resolution and 1 more sections.
 
 *Applies to: VxRail 7.x / 8.x*
 </div>
-![VxRail LCM Failure Triage](../../../../assets/virtualization-vmware-vxrail-operations-lcm-failure-triage.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "VxRail\nOperations" {shape: hexagon}
-symptoms: "Symptoms" {shape: rectangle}
-likely_causes: "Likely Causes" {shape: rectangle}
-commands: "Commands" {shape: rectangle}
-troubleshooting_workflow: "Troubleshooting Workflow" {shape: rectangle}
-resolution: "Resolution" {shape: rectangle}
-prevention: "Prevention" {shape: rectangle}
-
-hub -> symptoms
-hub -> likely_causes
-hub -> commands
-hub -> troubleshooting_workflow
-hub -> resolution
-hub -> prevention
-```
 
 ## Before you begin
 

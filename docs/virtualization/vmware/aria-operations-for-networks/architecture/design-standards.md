@@ -6,34 +6,12 @@ tags:
 ---
 # Aria Operations for Networks — Design Standards
 
-
 <div class="kb-summary">
 Design Standards reference covering Sizing, Collector Placement Guidelines, Network Requirements, High Availability, Certificate Requirements and 3 more sections.
 
 *Applies to: Aria Operations for Networks 6.x*
 </div>
 ![Aria Operations for Networks — Design Standards](../../../../assets/virtualization-vmware-aria-operations-for-networks-architect.svg)
-
-
-
-```d2
-direction: right
-
-center: "Aria Operations for Networks" {shape: hexagon}
-sizing: "Sizing" {shape: rectangle}
-collector_placement_guidelines: "Collector Placement Guidelines" {shape: rectangle}
-network_requirements: "Network Requirements" {shape: rectangle}
-high_availability: "High Availability" {shape: rectangle}
-certificate_requirements: "Certificate Requirements" {shape: rectangle}
-ldap_ad_integration_for_rbac: "LDAP / AD Integration for RBAC" {shape: rectangle}
-
-center -> sizing
-center -> collector_placement_guidelines
-center -> network_requirements
-center -> high_availability
-center -> certificate_requirements
-center -> ldap_ad_integration_for_rbac
-```
 
 ## Sizing
 

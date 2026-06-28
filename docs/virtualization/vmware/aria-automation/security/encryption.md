@@ -6,31 +6,12 @@ tags:
 ---
 # Aria Automation — Encryption
 
-
 <div class="kb-summary">
 Encryption reference covering Secrets and Encrypted Properties, TLS Certificate Management, Data at Rest Encryption, Kubernetes Secret Management.
 
 *Applies to: Aria Automation 8.x*
 </div>
 ![Aria Automation — Encryption](../../../../assets/virtualization-vmware-aria-automation-security-encryption.svg)
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-secrets_and_encrypted_properties: "Secrets and Encrypted Properties" {shape: rectangle}
-tls_certificate_management: "TLS Certificate Management" {shape: rectangle}
-data_at_rest_encryption: "Data at Rest Encryption" {shape: rectangle}
-kubernetes_secret_management: "Kubernetes Secret Management" {shape: rectangle}
-core: "Aria Automation Core" {shape: hexagon}
-
-external -> secrets_and_encrypted_properties: traffic in
-secrets_and_encrypted_properties -> tls_certificate_management
-tls_certificate_management -> data_at_rest_encryption
-data_at_rest_encryption -> kubernetes_secret_management
-kubernetes_secret_management -> core: secured path
-```
 
 ## Before you begin
 
@@ -48,7 +29,6 @@ Sensitive values (passwords, API tokens, SSH keys) must not be stored as plainte
 ### Encrypted Property Groups
 
 Encrypted Property Groups store sensitive key-value pairs at the Aria Automation level. Values are encrypted at rest and never appear in deployment event logs or API responses.
-
 
 Provide:
 - Vault URL: `https://vault.example.local:8200`

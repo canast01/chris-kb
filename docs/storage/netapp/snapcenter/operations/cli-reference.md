@@ -5,7 +5,6 @@ tags:
 ---
 # SnapCenter — CLI Reference
 
-
 <div class="kb-summary">
 SnapCenter CLI reference: `Open-SmConnection`, `Add-SmResources`, `New-SmBackup`, `Get-SmBackupReport`, `Restore-SmBackup`, and `Get-SmJob` cmdlets.
 
@@ -13,23 +12,7 @@ SnapCenter CLI reference: `Open-SmConnection`, `Add-SmResources`, `New-SmBackup`
 </div>
 ![SnapCenter — CLI Reference](../../../../assets/storage-netapp-snapcenter-operations-cli-reference.svg)
 
-
-
-
 ---
-
-```d2
-direction: right
-
-hub: "SnapCenter\nOperations" {shape: hexagon}
-powershell_module: "PowerShell Module" {shape: rectangle}
-rest_api_curl: "REST API (curl)" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> powershell_module
-hub -> rest_api_curl
-hub -> verify
-```
 
 ## Before you begin
 

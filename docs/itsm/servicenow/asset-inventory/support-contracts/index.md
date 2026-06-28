@@ -3,8 +3,6 @@ tags:
   - servicenow
 ---
 # Inventory — Support Contracts
-![Inventory — Support Contracts](../../../../assets/itsm-servicenow-asset-inventory-support-contracts-index.svg)
-
 
 ```bash
 # Query contract CSV for near-expiry items

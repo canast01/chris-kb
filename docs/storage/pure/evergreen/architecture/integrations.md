@@ -5,7 +5,6 @@ tags:
 ---
 # Evergreen — Integrations
 
-
 <div class="kb-summary">
 Integrations reference covering Pure1 Integration, True Forward Capacity Upgrades, VMware Integration, Backup Integration, REST API.
 
@@ -13,31 +12,11 @@ Integrations reference covering Pure1 Integration, True Forward Capacity Upgrade
 </div>
 ![Evergreen — Integrations](../../../../assets/storage-pure-evergreen-architecture-integrations.svg)
 
-
-
-
 ![Evergreen — Integrations — Diagram](../../../../assets/storage-pure-evergreen-architecture-integrations-diagram.svg)
 
 > Part of the [Evergreen Architecture](index.md) reference.
 
 ---
-
-```d2
-direction: right
-
-center: "Evergreen" {shape: hexagon}
-pure1_integration: "Pure1 Integration" {shape: rectangle}
-true_forward_capacity_upgrades: "True Forward Capacity Upgrades" {shape: rectangle}
-vmware_integration: "VMware Integration" {shape: rectangle}
-backup_integration: "Backup Integration" {shape: rectangle}
-rest_api: "REST API" {shape: rectangle}
-
-center -> pure1_integration
-center -> true_forward_capacity_upgrades
-center -> vmware_integration
-center -> backup_integration
-center -> rest_api
-```
 
 ## Pure1 Integration
 

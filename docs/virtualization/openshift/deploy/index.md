@@ -11,8 +11,6 @@ IPI vs UPI vs agent-based installation methods, install-config.yaml structure fo
 
 *Applies to: OpenShift 4.x*
 </div>
-![OpenShift — Deploy](../../../assets/virtualization-openshift-deploy-index.svg)
-
 
 ![OpenShift — Deploy — Diagram](../../../assets/virtualization-openshift-deploy-diagram.svg)
 

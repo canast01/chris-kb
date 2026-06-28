@@ -6,35 +6,12 @@ tags:
 ---
 # Aria Automation — Hardening
 
-
 <div class="kb-summary">
 Hardening reference covering Default Account Hardening, Certificate Replacement, Service Account Principle of Least Privilege, SSH and Console Access, Kubernetes Security and 3 more sections.
 
 *Applies to: Aria Automation 8.x*
 </div>
 ![Aria Automation — Hardening](../../../../assets/virtualization-vmware-aria-automation-security-hardening.svg)
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-default_account_hardening: "Default Account Hardening" {shape: rectangle}
-service_account_principle_of_least_p: "Service Account Principle of Least Privilege" {shape: rectangle}
-ssh_and_console_access: "SSH and Console Access" {shape: rectangle}
-kubernetes_security: "Kubernetes Security" {shape: rectangle}
-network_firewall_rules: "Network Firewall Rules" {shape: rectangle}
-audit_and_compliance: "Audit and Compliance" {shape: rectangle}
-core: "Aria Automation Core" {shape: hexagon}
-
-external -> default_account_hardening: traffic in
-default_account_hardening -> service_account_principle_of_least_p
-service_account_principle_of_least_p -> ssh_and_console_access
-ssh_and_console_access -> kubernetes_security
-kubernetes_security -> network_firewall_rules
-network_firewall_rules -> audit_and_compliance
-audit_and_compliance -> core: secured path
-```
 
 ## Before you begin
 
@@ -48,7 +25,6 @@ audit_and_compliance -> core: secured path
 ## Default Account Hardening
 
 The `admin` account is a local system account in the VIDM System Domain. Change its password immediately after deployment:
-
 
 **Via vracli (standalone deployments):**
 

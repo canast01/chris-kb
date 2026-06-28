@@ -5,35 +5,11 @@ tags:
 
 # Host Isolation Response
 
-
 <div class="kb-summary">
 vSphere HA host isolation response determines what happens to VMs on a host that loses all management network connectivity but may still be running.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Host Isolation Response](../../../../assets/virtualization-vmware-topics-host-isolation-response-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Host Isolation Response" {shape: hexagon}
-isolation_response_options: "Isolation Response Options" {shape: rectangle}
-recommended_configuration: "Recommended Configuration" {shape: rectangle}
-datastore_heartbeating: "Datastore Heartbeating" {shape: rectangle}
-splitbrain_risk: "Split-Brain Risk" {shape: rectangle}
-pervm_override: "Per-VM Override" {shape: rectangle}
-troubleshooting_isolation_events: "Troubleshooting Isolation Events" {shape: rectangle}
-
-center -> isolation_response_options
-center -> recommended_configuration
-center -> datastore_heartbeating
-center -> splitbrain_risk
-center -> pervm_override
-center -> troubleshooting_isolation_events
-```
 
 ## Isolation Response Options
 

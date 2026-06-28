@@ -7,12 +7,8 @@ tags:
 <div class="kb-summary">
 Fibre Channel reference — WWPN/WWNN addressing, zoning, fabric login (FLOGI), multipathing, and SAN fabric health.
 </div>
-![Fibre Channel](../../../assets/networking-protocols-fibre-channel-index.svg)
-
-
 
 ```xml
-
 
 <div class="kb-grid kb-grid-1">
 
@@ -35,25 +31,6 @@ Fibre Channel reference — WWPN/WWNN addressing, zoning, fabric login (FLOGI), 
 <a class="kb-card" href="zoning/"><strong>Zoning</strong><span>FC fabric zoning — hard/soft zoning, zone sets, and best practices.</span></a>
 
 </div>
-
-```d2
-direction: right
-
-center: "Fibre Channel" {shape: hexagon}
-key_concepts: "Key Concepts" {shape: rectangle}
-fc_port_speeds: "FC Port Speeds" {shape: rectangle}
-health_checks_cisco_mds: "Health Checks — Cisco MDS" {shape: rectangle}
-port_status: "Port status" {shape: rectangle}
-flogi_database_confirmed_loggedin_de: "FLOGI database — confirmed logged-in devices" {shape: rectangle}
-fc_name_server_hosttostorage_mapping: "FC Name Server — host-to-storage mapping" {shape: rectangle}
-
-center -> key_concepts
-center -> fc_port_speeds
-center -> health_checks_cisco_mds
-center -> port_status
-center -> flogi_database_confirmed_loggedin_de
-center -> fc_name_server_hosttostorage_mapping
-```
 
 ## Key Concepts
 

@@ -5,35 +5,12 @@ tags:
 ---
 # PowerStore — Backup & Restore
 
-
 <div class="kb-summary">
 Backup & Restore reference covering Protection Architecture Overview, Native Snapshots, Backup Integration, Backup Restore Procedures, Recovery Objectives.
 
 *Applies to: PowerStore 3.x*
 </div>
 ![PowerStore — Backup & Restore](../../../../assets/storage-dell-powerstore-operations-backup-restore.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "PowerStore\nOperations" {shape: hexagon}
-protection_architecture_overview: "Protection Architecture Overview" {shape: rectangle}
-native_snapshots: "Native Snapshots" {shape: rectangle}
-backup_integration: "Backup Integration" {shape: rectangle}
-backup_restore_procedures: "Backup Restore Procedures" {shape: rectangle}
-recovery_objectives: "Recovery Objectives" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> protection_architecture_overview
-hub -> native_snapshots
-hub -> backup_integration
-hub -> backup_restore_procedures
-hub -> recovery_objectives
-hub -> verify
-```
 
 ## Before you begin
 

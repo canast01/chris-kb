@@ -4,35 +4,11 @@ tags:
 ---
 # AWS AWS Organizations
 
-
 <div class="kb-summary">
 AWS AWS Organizations reference covering Overview, Where It Fits, Daily Checks, Health Commands, Common Issues and 3 more sections.
 
 *Applies to: AWS*
 </div>
-![AWS AWS Organizations](../../../../assets/cloud-aws-governance-aws-organizations-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "AWS" {shape: hexagon}
-where_it_fits: "Where It Fits" {shape: rectangle}
-daily_checks: "Daily Checks" {shape: rectangle}
-health_commands: "Health Commands" {shape: rectangle}
-common_issues: "Common Issues" {shape: rectangle}
-operational_tasks: "Operational Tasks" {shape: rectangle}
-upgrade_notes: "Upgrade Notes" {shape: rectangle}
-
-center -> where_it_fits
-center -> daily_checks
-center -> health_commands
-center -> common_issues
-center -> operational_tasks
-center -> upgrade_notes
-```
 
 ## Overview
 
@@ -43,7 +19,6 @@ AWS AWS Organizations notes for day-to-day infrastructure operations.
 Use this page for build work, support checks, troubleshooting, standards, and operational review.
 
 ## Daily Checks
-
 
 | Check | Command | Notes |
 |---|---|---|
@@ -67,7 +42,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Operational Tasks
 
-
 | Task | Command |
 |---|---|
 | Review current configuration. |  |
@@ -84,7 +58,6 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 
 ## Best Practices
 
-
 | Recommendation | Detail |
 |---|---|
 | Keep naming consistent. | Keep naming consistent. |
@@ -95,6 +68,4 @@ Use this page for build work, support checks, troubleshooting, standards, and op
 ---
 
 ## AWS Organizations Multi-Account Hierarchy
-
-
 

@@ -4,8 +4,6 @@ tags:
   - security
 ---
 # Jira — Encryption
-![Jira — Encryption](../../../../assets/itsm-jira-security-encryption-index.svg)
-
 
 ```nginx
 # /etc/nginx/sites-available/jira

@@ -6,7 +6,6 @@ tags:
 # Cisco Nexus Dashboard — Operations Scripts
 ![Cisco Nexus Dashboard — Operations Scripts](../../../../assets/san-cisco-nexus-dashboard-operations-scripts.svg)
 
-
 ```bash
 #!/usr/bin/env bash
 # nd-auth.sh — obtain a Nexus Dashboard API token
@@ -202,15 +201,6 @@ urllib.request.urlopen(
     urllib.request.Request(ND_HOST + "/logout", method="POST",
     headers={"Authorization": f"Bearer {TOKEN}"}), context=ctx
 ).close()
-```
-
-```d2
-direction: right
-
-hub: "Nexus Dashboard\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

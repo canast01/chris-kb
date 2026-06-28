@@ -6,7 +6,6 @@ tags:
 ---
 # Horizon — CLI Reference
 
-
 <div class="kb-summary">
 CLI Reference reference covering Session Management, vdmexport / vdmimport, UAG CLI (hzedge), PowerShell — VMware.Hv.Helper, Horizon REST API.
 
@@ -14,28 +13,7 @@ CLI Reference reference covering Session Management, vdmexport / vdmimport, UAG 
 </div>
 ![Horizon — CLI Reference](../../../../assets/virtualization-vmware-horizon-operations-cli-reference.svg)
 
-
   Horizon CLI Tools
-
-
-```d2
-direction: right
-
-hub: "Horizon\nOperations" {shape: hexagon}
-hvconfig_cli: "hvconfig CLI" {shape: rectangle}
-vdmexport_vdmimport: "vdmexport / vdmimport" {shape: rectangle}
-uag_cli_hzedge: "UAG CLI (hzedge)" {shape: rectangle}
-powershell_vmwarehvhelper: "PowerShell — VMware.Hv.Helper" {shape: rectangle}
-horizon_rest_api: "Horizon REST API" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> hvconfig_cli
-hub -> vdmexport_vdmimport
-hub -> uag_cli_hzedge
-hub -> powershell_vmwarehvhelper
-hub -> horizon_rest_api
-hub -> verify
-```
 
 ## hvconfig CLI
 

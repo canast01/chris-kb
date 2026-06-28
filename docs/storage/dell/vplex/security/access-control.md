@@ -5,16 +5,12 @@ tags:
 ---
 # Dell VPLEX — Access Control
 
-
 <div class="kb-summary">
 VPLEX access control operates at two layers: management plane access (who can change configuration) and data plane access (which hosts can access which volumes).
 
 *Applies to: VPLEX*
 </div>
 ![Dell VPLEX — Access Control](../../../../assets/storage-dell-vplex-security-access-control.svg)
-
-
-
 
 ```mermaid
 flowchart LR
@@ -34,23 +30,6 @@ flowchart LR
     svcRole -->|"SSH vplexcli"| storView
     sanZone -->|"enforcement at\nSAN switch"| storView
     storView --> virtVol
-```
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-management_plane_roles: "Management Plane Roles" {shape: rectangle}
-data_plane_access_control_storage_vi: "Data Plane Access Control — Storage Views" {shape: rectangle}
-san_fabric_zoning: "SAN Fabric Zoning" {shape: rectangle}
-privileged_access_management: "Privileged Access Management" {shape: rectangle}
-core: "VPLEX Core" {shape: hexagon}
-
-external -> management_plane_roles: traffic in
-management_plane_roles -> data_plane_access_control_storage_vi
-data_plane_access_control_storage_vi -> san_fabric_zoning
-san_fabric_zoning -> privileged_access_management
-privileged_access_management -> core: secured path
 ```
 
 ## Before you begin

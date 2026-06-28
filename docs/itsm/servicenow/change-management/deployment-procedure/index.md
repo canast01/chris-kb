@@ -3,8 +3,6 @@ tags:
   - servicenow
 ---
 # Deployment Procedure
-![Deployment Procedure](../../../../assets/itsm-servicenow-change-management-deployment-procedure-index.svg)
-
 
 ```bash
 # Snapshot / backup before change (example: VM snapshot)

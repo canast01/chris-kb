@@ -4,33 +4,11 @@ tags:
 ---
 # Asset Audit Process
 
-
 <div class="kb-summary">
 Asset Audit Process reference covering Overview, Audit Scope and Frequency, Discovery Tools, CMDB Reconciliation Steps, Discrepancy Tracking and 1 more sections.
 
 *Applies to: ServiceNow*
 </div>
-![Asset Audit Process](../../../../assets/itsm-servicenow-asset-inventory-audit-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "ServiceNow" {shape: hexagon}
-audit_scope_and_frequency: "Audit Scope and Frequency" {shape: rectangle}
-discovery_tools: "Discovery Tools" {shape: rectangle}
-cmdb_reconciliation_steps: "CMDB Reconciliation Steps" {shape: rectangle}
-discrepancy_tracking: "Discrepancy Tracking" {shape: rectangle}
-audit_signoff_and_reporting: "Audit Sign-Off and Reporting" {shape: rectangle}
-
-center -> audit_scope_and_frequency
-center -> discovery_tools
-center -> cmdb_reconciliation_steps
-center -> discrepancy_tracking
-center -> audit_signoff_and_reporting
-```
 
 ## Overview
 

@@ -6,33 +6,11 @@ tags:
 ---
 # Capacity Forecasting
 
-
 <div class="kb-summary">
 Capacity forecasting predicts when a resource will be exhausted based on historical trend data, enabling proactive expansion before impact occurs.
 
 *Applies to: Aria Ops 8.x*
 </div>
-![Capacity Forecasting](../../../../assets/virtualization-vmware-aria-operations-operations-capacity-fo.svg)
-
-
-```d2
-direction: right
-
-hub: "Aria Operations\nOperations" {shape: hexagon}
-forecasting_model: "Forecasting Model" {shape: rectangle}
-forecasting_by_resource_type: "Forecasting by Resource Type" {shape: rectangle}
-forecasting_thresholds: "Forecasting Thresholds" {shape: rectangle}
-capacity_report_template: "Capacity Report Template" {shape: rectangle}
-automation_monthly_report_script: "Automation — Monthly Report Script" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> forecasting_model
-hub -> forecasting_by_resource_type
-hub -> forecasting_thresholds
-hub -> capacity_report_template
-hub -> automation_monthly_report_script
-hub -> verify
-```
 
 ## Before you begin
 
@@ -44,7 +22,6 @@ hub -> verify
 ---
 
 ## Forecasting Model
-
 
 **Pure FlashArray:**
 ```bash

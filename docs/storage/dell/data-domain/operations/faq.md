@@ -11,25 +11,7 @@ Common questions about Dell Data Domain operations, configuration, and troublesh
 </div>
 ![Dell Data Domain — Frequently Asked Questions](../../../../assets/storage-dell-data-domain-operations-faq.svg)
 
-
 ![Dell Data Domain FAQ](../../../../assets/storage-dell-data-domain-operations-faq.svg)
-
-```d2
-direction: right
-
-hub: "Data Domain\nOperations" {shape: hexagon}
-general: "General" {shape: rectangle}
-configuration: "Configuration" {shape: rectangle}
-operations: "Operations" {shape: rectangle}
-troubleshooting: "Troubleshooting" {shape: rectangle}
-backup_and_recovery: "Backup and Recovery" {shape: rectangle}
-
-hub -> general
-hub -> configuration
-hub -> operations
-hub -> troubleshooting
-hub -> backup_and_recovery
-```
 
 ## General
 

@@ -8,7 +8,6 @@ tags:
 # NSX — Install and Upgrade
 ![NSX — Install and Upgrade](../../../../assets/virtualization-vmware-nsx-operations-install-upgrade.svg)
 
-
 ```bash
 # SSH to node 2
 nsxcli
@@ -83,15 +82,6 @@ curl -sk -u 'admin:password' \
 
 # DFW rule push
 # Verify a test VM can still communicate as expected after upgrade
-```
-
-```d2
-direction: right
-
-hub: "NSX-T\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

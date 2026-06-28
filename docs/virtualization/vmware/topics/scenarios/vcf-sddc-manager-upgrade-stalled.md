@@ -14,33 +14,9 @@ recover the workflow.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![VCF SDDC Manager Upgrade Stalled](../../../../assets/virtualization-vmware-topics-scenarios-vcf-sddc-manager-upgr.svg)
-
-
-
-
 
 !!! warning "Full SDDC management plane downtime"
     SDDC Manager upgrade pauses all lifecycle management operations for the duration. No new workloads, patches, or expansions can be applied until the upgrade completes.
-
-```d2
-direction: right
-
-center: "Scenarios" {shape: hexagon}
-products_involved: "Products Involved" {shape: rectangle}
-1_identify_the_failed_task: "1. Identify the Failed Task" {shape: rectangle}
-2_check_sddc_manager_logs: "2. Check SDDC Manager Logs" {shape: rectangle}
-3_fix_the_underlying_issue: "3. Fix the Underlying Issue" {shape: rectangle}
-4_retry_or_resume_the_workflow: "4. Retry or Resume the Workflow" {shape: rectangle}
-5_validate_upgrade_completion: "5. Validate Upgrade Completion" {shape: rectangle}
-
-center -> products_involved
-center -> 1_identify_the_failed_task
-center -> 2_check_sddc_manager_logs
-center -> 3_fix_the_underlying_issue
-center -> 4_retry_or_resume_the_workflow
-center -> 5_validate_upgrade_completion
-```
 
 ## Products Involved
 

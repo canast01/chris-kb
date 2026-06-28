@@ -5,15 +5,11 @@ tags:
 ---
 # Commvault — Hardening
 
-
 <div class="kb-summary">
 Hardening reference covering Network Security, Security Hardening Checklist.
 
 *Applies to: Commvault 2024.x*
 </div>
-![Commvault — Hardening](../../../../assets/backup-commvault-security-hardening-index.svg)
-
-
 
 ```d2
 direction: down

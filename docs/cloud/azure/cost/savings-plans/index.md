@@ -4,35 +4,11 @@ tags:
 ---
 # Savings Plans
 
-
 <div class="kb-summary">
 Azure Compute Savings Plans provide discounts (up to 65%) in exchange for a consistent hourly compute spend commitment over 1 or 3 years. Unlike Reserved Instances, savings plans apply automatically across VM families, regions, and compute services, giving more flexibility.
 
 *Applies to: Azure*
 </div>
-![Savings Plans](../../../../assets/cloud-azure-cost-savings-plans-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-cost_commitment_options: "Cost Commitment Options" {shape: rectangle}
-savings_plan_vs_reserved_instances: "Savings Plan vs Reserved Instances" {shape: rectangle}
-hourly_commitment: "Hourly Commitment" {shape: rectangle}
-flexibility_scope: "Flexibility Scope" {shape: rectangle}
-utilisation_monitoring: "Utilisation Monitoring" {shape: rectangle}
-combining_savings_plans_and_reserved: "Combining Savings Plans and Reserved Instances" {shape: rectangle}
-
-center -> cost_commitment_options
-center -> savings_plan_vs_reserved_instances
-center -> hourly_commitment
-center -> flexibility_scope
-center -> utilisation_monitoring
-center -> combining_savings_plans_and_reserved
-```
 
 ## Cost Commitment Options
 

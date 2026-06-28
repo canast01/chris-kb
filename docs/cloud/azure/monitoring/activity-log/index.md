@@ -4,35 +4,11 @@ tags:
 ---
 # Activity Log
 
-
 <div class="kb-summary">
 The Azure Activity Log is a platform log that records subscription-level events — resource creation, modification, deletion, and administrative operations. It is retained for 90 days natively and can be exported for longer-term storage or querying.
 
 *Applies to: Azure*
 </div>
-![Activity Log](../../../../assets/cloud-azure-monitoring-activity-log-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-activity_log_data_flow: "Activity Log Data Flow" {shape: rectangle}
-querying_the_activity_log: "Querying the Activity Log" {shape: rectangle}
-exporting_to_a_log_analytics_workspa: "Exporting to a Log Analytics Workspace" {shape: rectangle}
-retention_and_archival_destinations: "Retention and Archival Destinations" {shape: rectangle}
-alerts_on_activity_log_events: "Alerts on Activity Log Events" {shape: rectangle}
-activity_log_categories: "Activity Log Categories" {shape: rectangle}
-
-center -> activity_log_data_flow
-center -> querying_the_activity_log
-center -> exporting_to_a_log_analytics_workspa
-center -> retention_and_archival_destinations
-center -> alerts_on_activity_log_events
-center -> activity_log_categories
-```
 
 ## Activity Log Data Flow
 

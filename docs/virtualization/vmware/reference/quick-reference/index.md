@@ -4,16 +4,11 @@ tags:
 ---
 # Virtualization Quick Reference
 
-
 <div class="kb-summary">
 Virtualization quick-reference hub: emergency checks, vCenter commands, VM performance checks, and a slow-VM decision tree — one-stop for rapid incident response.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Virtualization Quick Reference](../../../../assets/virtualization-vmware-reference-quick-reference-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-5">
 

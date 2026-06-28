@@ -5,7 +5,6 @@ tags:
 ---
 # SRDF/A — Integrations
 
-
 <div class="kb-summary">
 SRDF/A integrations: coexistence with TimeFinder snapshots, RecoverPoint on VMAX, EMC SRDF/EDP (extended distance), and Symmetrix DMX compatibility.
 
@@ -13,17 +12,7 @@ SRDF/A integrations: coexistence with TimeFinder snapshots, RecoverPoint on VMAX
 </div>
 ![SRDF/A — Integrations](../../../../assets/storage-dell-srdf-a-architecture-integrations.svg)
 
-
 ---
-
-```d2
-direction: right
-
-center: "SRDF/A" {shape: hexagon}
-srm_integration_topology: "SRM Integration Topology" {shape: rectangle}
-
-center -> srm_integration_topology
-```
 
 ## SRM Integration Topology
 
@@ -52,7 +41,6 @@ graph TD
     r1array -->|"SRDF/A async replication"| r2array
     srmProd <-->|"SRM pairing channel"| srmDr
 ```
-
 
 ---
 

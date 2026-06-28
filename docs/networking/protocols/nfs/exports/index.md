@@ -4,31 +4,9 @@ tags:
 ---
 # NFS Exports
 
-
 <div class="kb-summary">
 NFS Exports reference covering Overview, /etc/exports Syntax, Key Export Options, Applying Export Changes, Verifying Exports from Client Side and 1 more sections.
 </div>
-![NFS Exports](../../../../assets/networking-protocols-nfs-exports-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "NFS" {shape: hexagon}
-etcexports_syntax: "/etc/exports Syntax" {shape: rectangle}
-key_export_options: "Key Export Options" {shape: rectangle}
-applying_export_changes: "Applying Export Changes" {shape: rectangle}
-verifying_exports_from_client_side: "Verifying Exports from Client Side" {shape: rectangle}
-known_issues: "Known Issues" {shape: rectangle}
-
-center -> etcexports_syntax
-center -> key_export_options
-center -> applying_export_changes
-center -> verifying_exports_from_client_side
-center -> known_issues
-```
 
 ## Overview
 

@@ -12,9 +12,6 @@ Amazon EVS runs VMware Cloud Foundation on dedicated bare-metal EC2 instances in
 </div>
 ![Amazon EVS — How It Works](../../../../assets/cloud-aws-evs-architecture-how-it-works.svg)
 
-
-
-
 ```mermaid
 graph LR
     classDef prem fill:#1e3a5f,color:#fff
@@ -37,25 +34,6 @@ graph LR
     VPC --> T0
     T0 --> T1
     T1 --> WL
-```
-
-```d2
-direction: right
-
-center: "AWS EVS" {shape: hexagon}
-baremetal_host_model: "Bare-Metal Host Model" {shape: rectangle}
-vpc_integration: "VPC Integration" {shape: rectangle}
-vsan_architecture: "vSAN Architecture" {shape: rectangle}
-nsxt_overlay_network: "NSX-T Overlay Network" {shape: rectangle}
-vcf_management_stack: "VCF Management Stack" {shape: rectangle}
-vcf_component_versions: "VCF Component Versions" {shape: rectangle}
-
-center -> baremetal_host_model
-center -> vpc_integration
-center -> vsan_architecture
-center -> nsxt_overlay_network
-center -> vcf_management_stack
-center -> vcf_component_versions
 ```
 
 ```plantuml

@@ -5,29 +5,11 @@ tags:
 ---
 # Linux — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Overview, Kernel Subsystem Architecture, LVM Stack, Storage Stack, Network Stack and 1 more sections.
 
 *Applies to: RHEL 8.x / 9.x · Ubuntu 22.04 / 24.04*
 </div>
-![Linux — How It Works](../../../../assets/compute-linux-architecture-how-it-works-index.svg)
-
-
-```d2
-direction: right
-
-center: "Linux" {shape: hexagon}
-kernel_subsystem_architecture: "Kernel Subsystem Architecture" {shape: rectangle}
-storage_stack: "Storage Stack" {shape: rectangle}
-network_stack: "Network Stack" {shape: rectangle}
-key_cli_commands: "Key CLI Commands" {shape: rectangle}
-
-center -> kernel_subsystem_architecture
-center -> storage_stack
-center -> network_stack
-center -> key_cli_commands
-```
 
 ## Overview
 
@@ -55,7 +37,6 @@ graph TB
   class NIC,NET net
   class ADMIN host
 ```
-
 
 ## Storage Stack
 

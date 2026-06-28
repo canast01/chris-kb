@@ -37,15 +37,10 @@ configure_nfs_and_smb -> validate
 ---
 
 # Dell PowerScale — Initial Deployment
-![Dell PowerScale — Initial Deployment](../../../../assets/storage-dell-powerscale-deploy-index.svg)
-
-
-
 
 This guide covers deploying a Dell PowerScale (formerly Isilon) cluster from physical node installation through validated NFS and SMB access. Applies to PowerScale F600, H700, and H7000 nodes running OneFS 9.x.
 
 ---
-
 
 ```mermaid
 flowchart TD

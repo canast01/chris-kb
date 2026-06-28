@@ -5,7 +5,6 @@ tags:
 ---
 # MDS — Standards
 
-
 <div class="kb-summary">
 Cisco MDS design standards: VSANs for fabric segmentation, port-channel ISL configuration, N-port virtualisation (NPV) mode, and buffer credit sizing.
 
@@ -13,30 +12,9 @@ Cisco MDS design standards: VSANs for fabric segmentation, port-channel ISL conf
 </div>
 ![MDS — Standards](../../../../assets/san-cisco-mds-architecture-design-standards.svg)
 
-
 ---
 
-```d2
-direction: right
-
-center: "Cisco MDS" {shape: hexagon}
-switch_naming: "Switch Naming" {shape: rectangle}
-isl_standards: "ISL Standards" {shape: rectangle}
-aaa_authentication_standards: "AAA / Authentication Standards" {shape: rectangle}
-nxos_version_standards: "NX-OS Version Standards" {shape: rectangle}
-snmp_standards: "SNMP Standards" {shape: rectangle}
-cisco_ndfc_integration: "Cisco NDFC Integration" {shape: rectangle}
-
-center -> switch_naming
-center -> isl_standards
-center -> aaa_authentication_standards
-center -> nxos_version_standards
-center -> snmp_standards
-center -> cisco_ndfc_integration
-```
-
 ## Switch Naming
-
 
 ## ISL Standards
 

@@ -9,10 +9,6 @@ Daily cluster health routine: cluster operators, node status, etcd health, monit
 
 *Applies to: OpenShift 4.x*
 </div>
-![OpenShift — Health Checks](../../../../assets/virtualization-openshift-operations-health-checks-index.svg)
-
-
-
 
 ```d2
 direction: right

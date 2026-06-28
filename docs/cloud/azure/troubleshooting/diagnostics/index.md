@@ -12,10 +12,6 @@ Azure diagnostic commands: check account and subscription context with az cli, d
 
 *Applies to: Microsoft Azure — all core IaaS services*
 </div>
-![Azure — Diagnostics](../../../../assets/cloud-azure-troubleshooting-diagnostics-index.svg)
-
-
-
 
 ```mermaid
 graph TD

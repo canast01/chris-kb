@@ -5,7 +5,6 @@ tags:
 ---
 # Evergreen//One — Integrations
 
-
 <div class="kb-summary">
 Integrations reference covering Pure1 Management Plane, vSphere / ESXi Host Connectivity, VMware VASA Provider (vVols), Veeam Backup & Replication, ActiveCluster (Synchronous Replication) and 1 more sections.
 
@@ -13,31 +12,11 @@ Integrations reference covering Pure1 Management Plane, vSphere / ESXi Host Conn
 </div>
 ![Evergreen//One — Integrations](../../../../assets/storage-pure-evergreen-one-architecture-integrations.svg)
 
-
 ![Evergreen//One — Integrations — Diagram](../../../../assets/storage-pure-evergreen-one-architecture-integrations-diagram.svg)
 
 Evergreen//One uses the same FlashArray and FlashBlade hardware as standard Evergreen, so all host-side and management integrations are identical. The key difference is that Pure manages the hardware lifecycle — the management plane integration with Pure1 is mandatory and always active.
 
 ---
-
-```d2
-direction: right
-
-center: "Evergreen//One" {shape: hexagon}
-pure1_management_plane: "Pure1 Management Plane" {shape: rectangle}
-vsphere_esxi_host_connectivity: "vSphere / ESXi Host Connectivity" {shape: rectangle}
-vmware_vasa_provider_vvols: "VMware VASA Provider (vVols)" {shape: rectangle}
-veeam_backup_replication: "Veeam Backup & Replication" {shape: rectangle}
-activecluster_synchronous_replicatio: "ActiveCluster (Synchronous Replication)" {shape: rectangle}
-siem_syslog_integration: "SIEM / Syslog Integration" {shape: rectangle}
-
-center -> pure1_management_plane
-center -> vsphere_esxi_host_connectivity
-center -> vmware_vasa_provider_vvols
-center -> veeam_backup_replication
-center -> activecluster_synchronous_replicatio
-center -> siem_syslog_integration
-```
 
 ## Pure1 Management Plane
 

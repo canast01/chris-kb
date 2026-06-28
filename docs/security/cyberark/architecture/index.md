@@ -13,7 +13,6 @@ PAM platform with Digital Vault as the encrypted credential store, CPM for autom
 
 ![CyberArk — Architecture — Diagram](../../../assets/security-cyberark-architecture-diagram.svg)
 
-
 ![CyberArk Architecture](../../../assets/cyberark-architecture-overview.svg)
 
 <div class="kb-grid kb-grid-3">
@@ -34,17 +33,6 @@ PAM platform with Digital Vault as the encrypted credential store, CPM for autom
 </a>
 
 </div>
-
-```d2
-direction: right
-
-center: "Architecture" {shape: hexagon}
-component_overview: "Component Overview" {shape: rectangle}
-pam_component_topology: "PAM Component Topology" {shape: rectangle}
-
-center -> component_overview
-center -> pam_component_topology
-```
 
 ## Component Overview
 

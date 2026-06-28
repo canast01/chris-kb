@@ -5,16 +5,11 @@ tags:
 ---
 # Commvault — Operations
 
-
-
 <div class="kb-summary">
 Commvault day-to-day operations — job management, subclient configuration, data aging policies, SLA monitoring, and library health.
 
 *Applies to: Commvault 2024.x*
 </div>
-![Commvault — Operations](../../../assets/backup-commvault-operations-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

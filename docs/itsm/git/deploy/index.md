@@ -12,12 +12,6 @@ Step-by-step guide to installing Git, configuring global settings, setting up SS
 
 *Applies to: Git 2.x*
 </div>
-![Git — Environment Setup](../../../assets/itsm-git-deploy-index.svg)
-
-
-
-
-
 
 ```mermaid
 flowchart TD

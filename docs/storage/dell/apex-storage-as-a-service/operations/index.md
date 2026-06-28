@@ -10,9 +10,6 @@ APEX Storage as a Service — Operations reference: CLI Reference, Health Checks
 
 *Applies to: APEX Storage-as-a-Service*
 </div>
-![APEX Storage as a Service — Operations](../../../../assets/storage-dell-apex-storage-as-a-service-operations-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="cli-reference/"><strong>CLI Reference</strong><span>Commands, syntax, and quick reference.</span></a>

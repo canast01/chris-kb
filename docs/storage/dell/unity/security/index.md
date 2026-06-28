@@ -10,9 +10,6 @@ Unity hardening — management access control, audit logging, replication channe
 
 *Applies to: Unity XT*
 </div>
-![Unity — Security](../../../../assets/storage-dell-unity-security-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

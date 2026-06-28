@@ -9,13 +9,6 @@ Dell PowerMax SRDF/S synchronous replication — every host write committed to b
 
 *Applies to: SRDF/S*
 </div>
-![SRDF/S](../../../assets/storage-dell-srdf-s-index.svg)
-
-
-
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

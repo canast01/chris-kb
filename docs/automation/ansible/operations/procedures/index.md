@@ -5,35 +5,13 @@ tags:
 ---
 # Ansible — Procedures
 
-
 <div class="kb-summary">
 Ansible operational procedures: deploying playbooks, managing inventory sources, rotating vault passwords, and promoting changes from dev to production environments.
 
 *Applies to: Ansible 2.14+*
 </div>
-![Ansible — Procedures](../../../../assets/automation-ansible-operations-procedures-index.svg)
-
 
 ---
-
-```d2
-direction: right
-
-hub: "Ansible\nOperations" {shape: hexagon}
-change_readiness: "Change Readiness" {shape: rectangle}
-incident_triage: "Incident Triage" {shape: rectangle}
-maintenance_window: "Maintenance Window" {shape: rectangle}
-postchange_validation: "Post-Change Validation" {shape: rectangle}
-ansible_tower_awx_job_launch_sequenc: "Ansible Tower / AWX Job Launch Sequence" {shape: rectangle}
-roles: "Roles" {shape: rectangle}
-
-hub -> change_readiness
-hub -> incident_triage
-hub -> maintenance_window
-hub -> postchange_validation
-hub -> ansible_tower_awx_job_launch_sequenc
-hub -> roles
-```
 
 ## Before you begin
 
@@ -123,7 +101,6 @@ graph LR
     awxExecutor -->|ansible-playbook| managed
     awxExecutor --> jobHistory
 ```
-
 
 ### Tags
 

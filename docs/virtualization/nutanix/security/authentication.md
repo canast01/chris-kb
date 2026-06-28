@@ -15,32 +15,7 @@ Active Directory and LDAP integration for Prism Element and Prism Central, local
 </div>
 ![Nutanix — Authentication](../../../assets/virtualization-nutanix-security-authentication.svg)
 
-
-
-
-
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-local_accounts: "Local Accounts" {shape: rectangle}
-active_directory_ldap_integration: "Active Directory / LDAP Integration" {shape: rectangle}
-role_mapping_ad_groups_prism_roles: "Role Mapping (AD Groups → Prism Roles)" {shape: rectangle}
-openldap_integration: "OpenLDAP Integration" {shape: rectangle}
-saml_sso_prism_central: "SAML / SSO (Prism Central)" {shape: rectangle}
-session_and_timeout_settings: "Session and Timeout Settings" {shape: rectangle}
-core: "Nutanix AHV Core" {shape: hexagon}
-
-external -> local_accounts: traffic in
-local_accounts -> active_directory_ldap_integration
-active_directory_ldap_integration -> role_mapping_ad_groups_prism_roles
-role_mapping_ad_groups_prism_roles -> openldap_integration
-openldap_integration -> saml_sso_prism_central
-saml_sso_prism_central -> session_and_timeout_settings
-session_and_timeout_settings -> core: secured path
-```
 
 ## Before you begin
 

@@ -4,16 +4,11 @@ tags:
 ---
 # Identity & RBAC
 
-
 <div class="kb-summary">
 Azure identity CLI: `az ad user/group/sp`, `az role assignment create`, `az policy definition create`, `az keyvault set-policy`, and managed identity assignment.
 
 *Applies to: Azure*
 </div>
-![Identity & RBAC](../../../../assets/cloud-azure-cli-reference-identity-index.svg)
-
-
-
 
 > Part of the Azure CLI Reference.
 
@@ -50,19 +45,6 @@ az role assignment delete --assignee <user_or_sp> --role "Contributor" --scope <
 # Role definitions
 az role definition list --output table
 az role definition show --name "Contributor"
-```
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-component_a: "Component A" {shape: rectangle}
-component_b: "Component B" {shape: rectangle}
-component_c: "Component C" {shape: rectangle}
-
-center -> component_a
-center -> component_b
-center -> component_c
 ```
 
 ## See also

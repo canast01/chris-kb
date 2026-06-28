@@ -5,14 +5,11 @@ tags:
 ---
 # Windows Server — Standards
 
-
 <div class="kb-summary">
 Windows Server design standards: domain join requirements, WSUS patch cadence, storage layout (C:/D: split), NTP chain config, and Group Policy baseline.
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
-![Windows Server — Standards](../../../../assets/compute-windows-server-architecture-design-standards-index.svg)
-
 
 ```d2
 direction: down
@@ -44,7 +41,6 @@ flowchart LR
 
     localGPO --> siteGPO --> domainGPO --> ouParentGPO --> ouChildGPO --> applied
 ```
-
 
 WinRM listener configuration:
 
@@ -115,7 +111,6 @@ All servers must receive the following GPO categories at minimum:
 | Role-specific settings | Applied at role-level OUs |
 
 ---
-
 
 ## Hostname Convention and Domain Join
 

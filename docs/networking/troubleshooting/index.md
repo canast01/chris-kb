@@ -10,8 +10,6 @@ search:
 <div class="kb-summary">
 Networking troubleshooting — Layer 1-3 diagnostics, DNS/DHCP failures, routing issues, VLAN misconfigurations, and connectivity tools.
 </div>
-![Networking — Troubleshooting](../../assets/networking-troubleshooting-index.svg)
-
 
 ```bash
 nslookup <hostname>

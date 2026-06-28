@@ -5,14 +5,11 @@ tags:
 ---
 # ServiceNow — ITSM Standards
 
-
 <div class="kb-summary">
 This page documents operational standards enforced within the ServiceNow platform, including incident priority, change risk scoring, CMDB naming conventions, SLA targets, and change governance procedures.
 
 *Applies to: ServiceNow*
 </div>
-![ServiceNow — ITSM Standards](../../../../assets/itsm-servicenow-architecture-design-standards-index.svg)
-
 
 ---
 
@@ -144,7 +141,6 @@ flowchart TD
     G -- Rejected --> I
     H --> K --> L
 ```
-
 
 | Token | Values | Example |
 |---|---|---|

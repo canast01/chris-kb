@@ -9,10 +9,6 @@ NetApp SnapMirror knowledge base — replication architecture, operations, secur
 
 *Applies to: SnapMirror*
 </div>
-![NetApp SnapMirror](../../../assets/storage-netapp-snapmirror-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="architecture/"><strong>Architecture</strong><span>Replication types, components, connectivity, DR failover sequence, and SVM-level replication.</span></a>

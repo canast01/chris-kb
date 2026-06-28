@@ -10,10 +10,6 @@ Ceph's RADOS layer stores all data as objects. Clients calculate data placement 
 
 *Applies to: Red Hat Ceph Storage · Upstream Ceph*
 </div>
-![Ceph — How It Works](../../../../assets/storage-ceph-architecture-how-it-works-index.svg)
-
-
-
 
 ```mermaid
 graph TD
@@ -37,25 +33,6 @@ graph TD
     PRI --> SEC2
     SEC1 --> ACK
     SEC2 --> ACK
-```
-
-```d2
-direction: right
-
-center: "Ceph" {shape: hexagon}
-daemon_roles: "Daemon Roles" {shape: rectangle}
-bluestore_internals: "BlueStore Internals" {shape: rectangle}
-pg_lifecycle: "PG Lifecycle" {shape: rectangle}
-crush_deep_dive: "CRUSH Deep Dive" {shape: rectangle}
-mon_quorum: "MON Quorum" {shape: rectangle}
-osd_heartbeat_and_failure_detection: "OSD Heartbeat and Failure Detection" {shape: rectangle}
-
-center -> daemon_roles
-center -> bluestore_internals
-center -> pg_lifecycle
-center -> crush_deep_dive
-center -> mon_quorum
-center -> osd_heartbeat_and_failure_detection
 ```
 
 ## Daemon Roles

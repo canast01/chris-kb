@@ -4,34 +4,15 @@ tags:
 ---
 # Datastore Inventory
 
-
 <div class="kb-summary">
 Datastore Inventory reference covering Overview, Datastore Inventory Table, Fields Reference, Capacity Thresholds, Datastore Checklist.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Datastore Inventory](../../../../assets/virtualization-vmware-reference-inventory-datastore-inventor.svg)
-
-
 
 > Part of the [Inventory](index.md) reference.
 
 ---
-
-```d2
-direction: right
-
-center: "Inventory" {shape: rectangle}
-datastore_inventory_table: "Datastore Inventory Table" {shape: rectangle}
-fields_reference: "Fields Reference" {shape: rectangle}
-capacity_thresholds: "Capacity Thresholds" {shape: rectangle}
-datastore_checklist: "Datastore Checklist" {shape: rectangle}
-
-center -> datastore_inventory_table
-center -> fields_reference
-center -> capacity_thresholds
-center -> datastore_checklist
-```
 
 ```vegalite
 {

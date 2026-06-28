@@ -5,7 +5,6 @@ tags:
 ---
 # Evergreen — Install & Upgrade
 
-
 <div class="kb-summary">
 Install & Upgrade reference covering Evergreen Program Tiers, Software Upgrade (Purity), Drive Replacement, Controller Refresh (Evergreen//Forever), Lifecycle Timeline and 1 more sections.
 
@@ -13,31 +12,11 @@ Install & Upgrade reference covering Evergreen Program Tiers, Software Upgrade (
 </div>
 ![Evergreen — Install & Upgrade](../../../../assets/storage-pure-evergreen-operations-install-upgrade.svg)
 
-
 ![Evergreen — Install & Upgrade — Diagram](../../../../assets/storage-pure-evergreen-operations-install-upgrade-diagram.svg)
 
 > Part of the [Evergreen Operations](index.md) reference.
 
 ---
-
-```d2
-direction: right
-
-hub: "Evergreen\nOperations" {shape: hexagon}
-evergreen_program_tiers: "Evergreen Program Tiers" {shape: rectangle}
-software_upgrade_purity: "Software Upgrade (Purity)" {shape: rectangle}
-drive_replacement: "Drive Replacement" {shape: rectangle}
-controller_refresh_evergreenforever: "Controller Refresh (Evergreen//Forever)" {shape: rectangle}
-lifecycle_timeline: "Lifecycle Timeline" {shape: rectangle}
-endoflife_considerations: "End-of-Life Considerations" {shape: rectangle}
-
-hub -> evergreen_program_tiers
-hub -> software_upgrade_purity
-hub -> drive_replacement
-hub -> controller_refresh_evergreenforever
-hub -> lifecycle_timeline
-hub -> endoflife_considerations
-```
 
 ## Before you begin
 

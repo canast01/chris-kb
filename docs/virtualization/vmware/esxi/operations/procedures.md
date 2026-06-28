@@ -7,33 +7,11 @@ tags:
 ---
 # ESXi — Procedures
 
-
 <div class="kb-summary">
 Procedures reference covering Change Readiness, Maintenance Window, Post-Change Validation, Incident Triage, Networking, Storage, Security and Hardening, and Lifecycle and Patching.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-
-
-
-```d2
-direction: right
-
-hub: "ESXi\nOperations" {shape: hexagon}
-change_readiness: "Change Readiness" {shape: rectangle}
-maintenance_window: "Maintenance Window" {shape: rectangle}
-postchange_validation: "Post-Change Validation" {shape: rectangle}
-incident_triage: "Incident Triage" {shape: rectangle}
-add_a_vmkernel_adapter_vmk: "Add a VMkernel Adapter (vmk)" {shape: rectangle}
-configure_a_vss_port_group: "Configure a vSS Port Group" {shape: rectangle}
-
-hub -> change_readiness
-hub -> maintenance_window
-hub -> postchange_validation
-hub -> incident_triage
-hub -> add_a_vmkernel_adapter_vmk
-hub -> configure_a_vss_port_group
-```
 
 ## Before you begin
 

@@ -10,10 +10,6 @@ tags:
 <div class="kb-summary">
 Choose the right DR tool for your environment: SRM, vSphere Replication, or backup-based DR — based on RPO, RTO, application requirements, and licensing.
 </div>
-![DR Tool Selection Decision Tree](../../assets/reference-decision-trees-dr-tool.svg)
-
-
-
 
 ```mermaid
 flowchart TD
@@ -42,17 +38,6 @@ flowchart TD
     J --> N
     L --> N
     M --> N
-```
-
-```d2
-direction: right
-
-center: "Decision Trees" {shape: hexagon}
-tool_comparison: "Tool comparison" {shape: rectangle}
-key_constraints: "Key constraints" {shape: rectangle}
-
-center -> tool_comparison
-center -> key_constraints
 ```
 
 ## Tool comparison

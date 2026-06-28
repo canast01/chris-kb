@@ -9,13 +9,6 @@ Windows Server Active Directory knowledge base covering forest and domain archit
 
 *Applies to: Active Directory (Windows Server 2019 / 2022)*
 </div>
-![Active Directory](../../../assets/compute-windows-server-active-directory-index.svg)
-
-
-
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

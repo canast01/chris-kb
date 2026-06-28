@@ -5,35 +5,12 @@ tags:
 ---
 # ONTAP — Backup & Restore
 
-
 <div class="kb-summary">
 Backup and restore in ONTAP is built around native snapshot technology. Snapshots are the on-array recovery primitive; SnapMirror and SnapVault extend recovery to remote systems and long-term retention; application-aware tools (SnapCenter, Veeam) add consistency coordination.
 
 *Applies to: ONTAP 9.x*
 </div>
 ![ONTAP — Backup & Restore](../../../../assets/storage-netapp-ontap-operations-backup-restore.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "NetApp ONTAP\nOperations" {shape: hexagon}
-snapshotbased_restore: "Snapshot-Based Restore" {shape: rectangle}
-snapmirror_relationship_types: "SnapMirror Relationship Types" {shape: rectangle}
-snapmirror_failover_dr_restore: "SnapMirror Failover (DR Restore)" {shape: rectangle}
-snapvault_longterm_retention: "SnapVault (Long-Term Retention)" {shape: rectangle}
-snapcenter_integration: "SnapCenter Integration" {shape: rectangle}
-veeam_integration: "Veeam Integration" {shape: rectangle}
-
-hub -> snapshotbased_restore
-hub -> snapmirror_relationship_types
-hub -> snapmirror_failover_dr_restore
-hub -> snapvault_longterm_retention
-hub -> snapcenter_integration
-hub -> veeam_integration
-```
 
 ## Before you begin
 

@@ -5,33 +5,12 @@ tags:
 ---
 # Active Directory — Hardening
 
-
 <div class="kb-summary">
 Hardening reference covering AD Hardening Controls Flow, DCSync Attack Detection, Defender for Identity Deployment, Hardening Checklist.
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
 ![Active Directory — Hardening](../../../../assets/compute-windows-server-active-directory-security-hardening.svg)
-
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-ad_hardening_controls_flow: "AD Hardening Controls Flow" {shape: rectangle}
-dcsync_attack_detection: "DCSync Attack Detection" {shape: rectangle}
-defender_for_identity_deployment: "Defender for Identity Deployment" {shape: rectangle}
-hardening_checklist: "Hardening Checklist" {shape: rectangle}
-core: "Active Directory Core" {shape: hexagon}
-
-external -> ad_hardening_controls_flow: traffic in
-ad_hardening_controls_flow -> dcsync_attack_detection
-dcsync_attack_detection -> defender_for_identity_deployment
-defender_for_identity_deployment -> hardening_checklist
-hardening_checklist -> core: secured path
-```
 
 ## Before you begin
 

@@ -9,10 +9,6 @@ Brocade SANnav management platform knowledge base covering fabric discovery, mon
 
 *Applies to: Brocade FOS 9.x*
 </div>
-![SANnav](../../../assets/san-brocade-sannav-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

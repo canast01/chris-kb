@@ -4,15 +4,11 @@ tags:
 ---
 # Virtualization Evidence Collection
 
-
 <div class="kb-summary">
 Virtualization Evidence Collection reference covering Overview, Pre-Checks, Steps, Validation, Rollback and 1 more sections.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Virtualization Evidence Collection](../../../../assets/virtualization-vmware-operations-runbooks-evidence-collectio.svg)
-
-
 
 ```plantuml
 @startuml

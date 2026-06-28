@@ -11,9 +11,6 @@ SRM hardening — RBAC configuration, certificate management, vSphere Replicatio
 
 *Applies to: SRM 8.x / 9.x*
 </div>
-![Site Recovery Manager — Security](../../../../assets/virtualization-vmware-srm-security-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

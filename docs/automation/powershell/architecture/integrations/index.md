@@ -5,25 +5,11 @@ tags:
 ---
 # PowerShell — Integrations
 
-
 <div class="kb-summary">
 Integrations reference covering PowerCLI VM Management Flow, Windows.
 
 *Applies to: PowerShell 7.x*
 </div>
-![PowerShell — Integrations](../../../../assets/automation-powershell-architecture-integrations-index.svg)
-
-
-```d2
-direction: right
-
-center: "PowerShell" {shape: hexagon}
-powercli_vm_management_flow: "PowerCLI VM Management Flow" {shape: rectangle}
-windows: "Windows" {shape: rectangle}
-
-center -> powercli_vm_management_flow
-center -> windows
-```
 
 ## PowerCLI VM Management Flow
 
@@ -55,7 +41,6 @@ graph LR
     configure --> disconnect
     migrateDS --> disconnect
 ```
-
 
 ### Snapshots
 

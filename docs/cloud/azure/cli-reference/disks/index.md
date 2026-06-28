@@ -4,16 +4,11 @@ tags:
 ---
 # Disks & Snapshots
 
-
 <div class="kb-summary">
 Azure disks CLI: `az disk create/resize`, `az snapshot create`, `az disk grant-access`, `az disk revoke-access`, and managed disk SKU conversion commands.
 
 *Applies to: Azure*
 </div>
-![Disks & Snapshots](../../../../assets/cloud-azure-cli-reference-disks-index.svg)
-
-
-
 
 > Part of the Azure CLI Reference.
 
@@ -34,19 +29,6 @@ az vm disk detach --resource-group <rg> --vm-name <vm> --name <disk>
 az snapshot list --resource-group <rg> --output table
 az snapshot create --resource-group <rg> --name <snap> --source <disk_id>
 az snapshot delete --resource-group <rg> --name <snap>
-```
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-component_a: "Component A" {shape: rectangle}
-component_b: "Component B" {shape: rectangle}
-component_c: "Component C" {shape: rectangle}
-
-center -> component_a
-center -> component_b
-center -> component_c
 ```
 
 ## See also

@@ -16,29 +16,6 @@ Firewall port reference for Dell ECS (Elastic Cloud Storage). Covers S3-compatib
 </div>
 ![Dell ECS — Ports and Network Requirements](../../../../assets/storage-dell-ecs-architecture-ports.svg)
 
-
-
-
-
-```d2
-direction: right
-
-center: "ECS" {shape: hexagon}
-inbound_management: "Inbound — Management" {shape: rectangle}
-object_access_s3_api: "Object Access (S3 API)" {shape: rectangle}
-internode_cluster_communication: "Inter-Node Cluster Communication" {shape: rectangle}
-outbound: "Outbound" {shape: rectangle}
-georeplication_multisite: "Geo-Replication (Multi-Site)" {shape: rectangle}
-firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
-
-center -> inbound_management
-center -> object_access_s3_api
-center -> internode_cluster_communication
-center -> outbound
-center -> georeplication_multisite
-center -> firewall_zone_summary
-```
-
 ## Inbound — Management
 
 | Port | Protocol | Source | Purpose |

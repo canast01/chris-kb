@@ -5,16 +5,12 @@ tags:
 ---
 # FlashBlade — Authentication
 
-
 <div class="kb-summary">
 Authentication reference covering Authentication Mechanisms Summary, Local Account Management, Active Directory Integration, LDAP Integration (Non-AD), SAML SSO Configuration and 3 more sections.
 
 *Applies to: FlashBlade Purity//FB 4.x*
 </div>
 ![FlashBlade — Authentication](../../../../assets/storage-pure-flashblade-security-authentication.svg)
-
-
-
 
 ![FlashBlade — Authentication — Diagram](../../../../assets/storage-pure-flashblade-security-authentication-diagram.svg)
 
@@ -25,27 +21,6 @@ Authentication reference covering Authentication Mechanisms Summary, Local Accou
 This page covers all authentication mechanisms available in Purity//FB: local accounts, Active Directory integration for SMB and admin access, LDAP for NFS UID/GID mapping, SAML SSO for the management GUI, and API token management for automation.
 
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-authentication_mechanisms_summary: "Authentication Mechanisms Summary" {shape: rectangle}
-local_account_management: "Local Account Management" {shape: rectangle}
-active_directory_integration: "Active Directory Integration" {shape: rectangle}
-ldap_integration_nonad: "LDAP Integration (Non-AD)" {shape: rectangle}
-saml_sso_configuration: "SAML SSO Configuration" {shape: rectangle}
-api_token_management: "API Token Management" {shape: rectangle}
-core: "FlashBlade Core" {shape: hexagon}
-
-external -> authentication_mechanisms_summary: traffic in
-authentication_mechanisms_summary -> local_account_management
-local_account_management -> active_directory_integration
-active_directory_integration -> ldap_integration_nonad
-ldap_integration_nonad -> saml_sso_configuration
-saml_sso_configuration -> api_token_management
-api_token_management -> core: secured path
-```
 
 ## Before you begin
 

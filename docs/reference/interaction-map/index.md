@@ -17,21 +17,6 @@ How VMware's 15 core products connect — compute, storage, network, management,
 
 The five domains stack vertically: **Management** (VCF, Aria Suite Lifecycle) orchestrates everything below it. **Compute** (ESXi, vCenter, PowerCLI) is the execution layer. **Storage** (vSAN, vSphere Replication, VxRail) runs inside ESXi or as managed HCI. **Network** (NSX, vDS) runs as ESXi kernel modules and edge VMs. **Automation** (Aria Suite, Tanzu, Horizon) consumes all layers through APIs.
 
-```d2
-direction: right
-
-center: "Interaction Map" {shape: hexagon}
-domain_interaction_maps: "Domain interaction maps" {shape: rectangle}
-key_principles: "Key principles" {shape: rectangle}
-full_stack_interaction_map: "Full Stack Interaction Map" {shape: rectangle}
-integration_points_by_layer: "Integration Points by Layer" {shape: rectangle}
-
-center -> domain_interaction_maps
-center -> key_principles
-center -> full_stack_interaction_map
-center -> integration_points_by_layer
-```
-
 ## Domain interaction maps
 
 <div class="kb-grid">

@@ -9,9 +9,6 @@ Python infrastructure automation knowledge base covering virtual environment man
 
 *Applies to: Python 3.x*
 </div>
-![Python Automation](../../assets/automation-python-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

@@ -13,9 +13,6 @@ Diagnosing Tanzu cluster failures, pod scheduling issues, ingress errors, and co
 
 *Applies to: Tanzu 3.x*
 </div>
-![Tanzu — Troubleshooting](../../../../assets/virtualization-vmware-tanzu-troubleshooting-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

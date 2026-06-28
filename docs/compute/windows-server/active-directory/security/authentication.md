@@ -5,35 +5,12 @@ tags:
 ---
 # Active Directory — Authentication
 
-
 <div class="kb-summary">
 Authentication reference covering Privileged Access and Kerberos Security Flow, Privileged Access Workstations (PAWs), Protected Users Group, Kerberos Encryption Policy, Related Reference.
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
 ![Active Directory — Authentication](../../../../assets/compute-windows-server-active-directory-security-authenticat.svg)
-
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-privileged_access_and_kerberos_secur: "Privileged Access and Kerberos Security Flow" {shape: rectangle}
-privileged_access_workstations_paws: "Privileged Access Workstations (PAWs)" {shape: rectangle}
-protected_users_group: "Protected Users Group" {shape: rectangle}
-kerberos_encryption_policy: "Kerberos Encryption Policy" {shape: rectangle}
-related_reference: "Related Reference" {shape: rectangle}
-core: "Active Directory Core" {shape: hexagon}
-
-external -> privileged_access_and_kerberos_secur: traffic in
-privileged_access_and_kerberos_secur -> privileged_access_workstations_paws
-privileged_access_workstations_paws -> protected_users_group
-protected_users_group -> kerberos_encryption_policy
-kerberos_encryption_policy -> related_reference
-related_reference -> core: secured path
-```
 
 ## Before you begin
 

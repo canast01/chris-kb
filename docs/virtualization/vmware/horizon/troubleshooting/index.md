@@ -13,9 +13,6 @@ Horizon troubleshooting — Connection Server failures, desktop provisioning err
 
 *Applies to: Horizon 8.x*
 </div>
-![Horizon (VDI) — Troubleshooting](../../../../assets/virtualization-vmware-horizon-troubleshooting-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

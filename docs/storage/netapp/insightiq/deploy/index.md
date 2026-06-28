@@ -7,17 +7,11 @@ search:
 ---
 # InsightIQ — Initial Deployment
 
-
-
 <div class="kb-summary">
 Step-by-step guide to deploying Dell EMC InsightIQ, connecting PowerScale clusters, configuring data collection schedules, and validating reporting.
 
 *Applies to: InsightIQ*
 </div>
-![InsightIQ — Initial Deployment](../../../../assets/storage-netapp-insightiq-deploy-index.svg)
-
-
-
 
 ```mermaid
 flowchart TD

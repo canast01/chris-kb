@@ -4,31 +4,11 @@ tags:
 ---
 # Pure1 — Alerts
 
-
 <div class="kb-summary">
 Alerts reference covering Viewing Alerts in Pure1, Alerts via CLI, Alerts via Pure1 API, Alert Severity Definitions, Common Alert Types and 2 more sections.
 
 *Applies to: Pure1*
 </div>
-![Pure1 — Alerts](../../../../assets/storage-pure-pure1-alerts-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Pure1" {shape: hexagon}
-alert_severity_definitions: "Alert Severity Definitions" {shape: rectangle}
-common_alert_types: "Common Alert Types" {shape: rectangle}
-alert_notification_configuration: "Alert Notification Configuration" {shape: rectangle}
-alert_integration_with_prometheus: "Alert Integration with Prometheus" {shape: rectangle}
-
-center -> alert_severity_definitions
-center -> common_alert_types
-center -> alert_notification_configuration
-center -> alert_integration_with_prometheus
-```
 
 ## Alert Severity Definitions
 

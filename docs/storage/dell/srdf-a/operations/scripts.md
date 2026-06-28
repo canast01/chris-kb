@@ -6,7 +6,6 @@ tags:
 # SRDF/A — Scripts
 ![SRDF/A — Scripts](../../../../assets/storage-dell-srdf-a-operations-scripts.svg)
 
-
 ```bash
 #!/usr/bin/env bash
 # srdf-cycle-time-monitor.sh
@@ -557,15 +556,6 @@ elif [ "${DEGRADED:-0}" -gt 0 ]; then
   exit 1
 fi
 exit 0
-```
-
-```d2
-direction: right
-
-hub: "SRDF/A\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

@@ -5,7 +5,6 @@ tags:
 ---
 # Superna Eyeglass — Hardening
 
-
 <div class="kb-summary">
 Hardening reference covering Audit Log Forwarding, Appliance Patching.
 
@@ -13,26 +12,11 @@ Hardening reference covering Audit Log Forwarding, Appliance Patching.
 </div>
 ![Superna Eyeglass — Hardening](../../../../assets/storage-netapp-superna-eyeglass-security-hardening.svg)
 
-
-
 | Control | Detail |
 |---|---|
 | Audit log | All failover and configuration events logged; forward to SIEM |
 | Appliance hardening | Disable unused services; keep appliance patched to current release |
 | Service account rotation | Eyeglass service account credentials rotated every 90 days (coordinate with CyberArk policy) |
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-audit_log_forwarding: "Audit Log Forwarding" {shape: rectangle}
-appliance_patching: "Appliance Patching" {shape: rectangle}
-core: "Superna Eyeglass Core" {shape: hexagon}
-
-external -> audit_log_forwarding: traffic in
-audit_log_forwarding -> appliance_patching
-appliance_patching -> core: secured path
-```
 
 ## Before you begin
 

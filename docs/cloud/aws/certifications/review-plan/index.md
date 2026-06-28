@@ -5,14 +5,9 @@ tags:
 ---
 # AWS Certification Review Plan
 
-
 <div class="kb-summary">
 AWS Certification Review Plan reference covering Target Exam and Study Timeline, AWS Skill Builder, Key Whitepapers, Practice Exam Resources, AWS Labs and 1 more sections.
 </div>
-![AWS Certification Review Plan](../../../../assets/cloud-aws-certifications-review-plan-index.svg)
-
-
-
 
 ```d2
 direction: right

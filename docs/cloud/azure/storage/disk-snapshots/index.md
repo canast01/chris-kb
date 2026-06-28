@@ -4,35 +4,11 @@ tags:
 ---
 # Azure Disk Snapshots
 
-
 <div class="kb-summary">
 Azure Disk Snapshots reference covering Overview, Snapshot Lifecycle, Creating Snapshots, Snapshot vs Full Backup Comparison, Restoring from Snapshot and 3 more sections.
 
 *Applies to: Azure*
 </div>
-![Azure Disk Snapshots](../../../../assets/cloud-azure-storage-disk-snapshots-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-snapshot_lifecycle: "Snapshot Lifecycle" {shape: rectangle}
-creating_snapshots: "Creating Snapshots" {shape: rectangle}
-snapshot_vs_full_backup_comparison: "Snapshot vs Full Backup Comparison" {shape: rectangle}
-restoring_from_snapshot: "Restoring from Snapshot" {shape: rectangle}
-crossregion_snapshot_copy: "Cross-Region Snapshot Copy" {shape: rectangle}
-snapshot_retention_and_cleanup: "Snapshot Retention and Cleanup" {shape: rectangle}
-
-center -> snapshot_lifecycle
-center -> creating_snapshots
-center -> snapshot_vs_full_backup_comparison
-center -> restoring_from_snapshot
-center -> crossregion_snapshot_copy
-center -> snapshot_retention_and_cleanup
-```
 
 ## Overview
 

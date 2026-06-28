@@ -4,8 +4,6 @@ tags:
   - operations
 ---
 # Jira — Operations Scripts
-![Jira — Operations Scripts](../../../../assets/itsm-jira-operations-scripts-index.svg)
-
 
 ```bash
 export JIRA_URL="https://jira.example.com"
@@ -314,15 +312,6 @@ jcmd "${JIRA_PID}" GC.heap_info
 
 # JVM system properties
 jcmd "${JIRA_PID}" VM.system_properties | grep -E "jira|atlassian|java.heap|Xmx"
-```
-
-```d2
-direction: right
-
-center: "Jira" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> verify
 ```
 
 ## Before you begin

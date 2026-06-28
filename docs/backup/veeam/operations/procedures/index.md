@@ -5,33 +5,11 @@ tags:
 ---
 # Veeam — Procedures
 
-
 <div class="kb-summary">
 Operational procedures covering backup job creation, copy job setup, SOBR management, and restore testing.
 
 *Applies to: Veeam 12.x*
 </div>
-![Veeam — Procedures](../../../../assets/backup-veeam-operations-procedures-index.svg)
-
-
-```d2
-direction: right
-
-hub: "Veeam\nOperations" {shape: hexagon}
-instant_vm_recovery_flow: "Instant VM Recovery Flow" {shape: rectangle}
-configure_veeam_backup_job_granular_: "Configure Veeam Backup Job (Granular Options)" {shape: rectangle}
-run_instant_vm_recovery: "Run Instant VM Recovery" {shape: rectangle}
-restore_individual_files_guest_file_: "Restore Individual Files (Guest File Restore)" {shape: rectangle}
-restore_application_items_sql_exchan: "Restore Application Items (SQL / Exchange)" {shape: rectangle}
-run_surebackup_verification_job: "Run SureBackup Verification Job" {shape: rectangle}
-
-hub -> instant_vm_recovery_flow
-hub -> configure_veeam_backup_job_granular_
-hub -> run_instant_vm_recovery
-hub -> restore_individual_files_guest_file_
-hub -> restore_application_items_sql_exchan
-hub -> run_surebackup_verification_job
-```
 
 ## Before you begin
 
@@ -70,7 +48,6 @@ sequenceDiagram
     VBR->>vCenter: Unregister IVR VM
     VBR->>Proxy: Unmount vPower NFS datastore
 ```
-
 
 ---
 

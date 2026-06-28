@@ -5,35 +5,11 @@ tags:
 ---
 # Venafi — Procedures
 
-
 <div class="kb-summary">
 Operational procedures for certificate renewal, automation, and reporting.
 
 *Applies to: Venafi TLS Protect*
 </div>
-![Venafi — Procedures](../../../../assets/security-venafi-operations-procedures-index.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "Procedures\nOperations" {shape: hexagon}
-renewal_and_reporting_workflow: "Renewal and Reporting Workflow" {shape: rectangle}
-renewal: "Renewal" {shape: rectangle}
-automation: "Automation" {shape: rectangle}
-reporting: "Reporting" {shape: rectangle}
-request_a_certificate_via_venafi: "Request a Certificate via Venafi" {shape: rectangle}
-renew_an_expiring_certificate: "Renew an Expiring Certificate" {shape: rectangle}
-
-hub -> renewal_and_reporting_workflow
-hub -> renewal
-hub -> automation
-hub -> reporting
-hub -> request_a_certificate_via_venafi
-hub -> renew_an_expiring_certificate
-```
 
 ## Before you begin
 

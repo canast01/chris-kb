@@ -6,7 +6,6 @@ tags:
 ---
 # Aria Suite Lifecycle — Encryption
 
-
 <div class="kb-summary">
 Encryption reference covering Importing a Signed Certificate into Locker, Verifying a Certificate Before Import, Applying a Certificate to a Product, Password Encryption in Locker, TLS Standards and 1 more sections.
 
@@ -14,33 +13,11 @@ Encryption reference covering Importing a Signed Certificate into Locker, Verify
 </div>
 ![Aria Suite Lifecycle — Encryption](../../../../assets/virtualization-vmware-aria-suite-lifecycle-security-encrypti.svg)
 
-
   LCM Encryption Coverage
 
 Submit the generated CSR to the CA. Retrieve the signed certificate chain (leaf + intermediates + root) in PEM format.
 
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-importing_a_signed_certificate_into_: "Importing a Signed Certificate into Locker" {shape: rectangle}
-verifying_a_certificate_before_impor: "Verifying a Certificate Before Import" {shape: rectangle}
-applying_a_certificate_to_a_product: "Applying a Certificate to a Product" {shape: rectangle}
-password_encryption_in_locker: "Password Encryption in Locker" {shape: rectangle}
-tls_standards: "TLS Standards" {shape: rectangle}
-prechange_certificate_validation_che: "Pre-Change Certificate Validation Checklist" {shape: rectangle}
-core: "Aria Suite Lifecycle Core" {shape: hexagon}
-
-external -> importing_a_signed_certificate_into_: traffic in
-importing_a_signed_certificate_into_ -> verifying_a_certificate_before_impor
-verifying_a_certificate_before_impor -> applying_a_certificate_to_a_product
-applying_a_certificate_to_a_product -> password_encryption_in_locker
-password_encryption_in_locker -> tls_standards
-tls_standards -> prechange_certificate_validation_che
-prechange_certificate_validation_che -> core: secured path
-```
 
 ## Before you begin
 

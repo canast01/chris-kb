@@ -4,8 +4,6 @@ tags:
   - powershell
 ---
 # PowerShell — Backup & Restore
-![PowerShell — Backup & Restore](../../../../assets/automation-powershell-operations-backup-restore-index.svg)
-
 
 ```powershell
 # Locate and back up PowerShell profiles
@@ -24,7 +22,6 @@ foreach ($p in $ProfilePaths) {
     }
 }
 ```
-
 
 ```plantuml
 @startuml

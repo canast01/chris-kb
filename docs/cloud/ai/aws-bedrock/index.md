@@ -5,10 +5,6 @@ AWS Bedrock is a fully managed serverless service for invoking foundation models
 
 *Applies to: AWS Bedrock*
 </div>
-![AWS Bedrock](../../../assets/cloud-ai-aws-bedrock-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-5">
 
@@ -38,19 +34,6 @@ AWS Bedrock is a fully managed serverless service for invoking foundation models
 </a>
 
 </div>
-
-```d2
-direction: right
-
-center: "AWS Bedrock" {shape: hexagon}
-quick_reference: "Quick Reference" {shape: rectangle}
-common_operations: "Common Operations" {shape: rectangle}
-key_considerations: "Key Considerations" {shape: rectangle}
-
-center -> quick_reference
-center -> common_operations
-center -> key_considerations
-```
 
 ## Quick Reference
 

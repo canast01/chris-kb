@@ -5,14 +5,11 @@ tags:
 ---
 # ServiceNow — Install & Upgrade
 
-
 <div class="kb-summary">
 ServiceNow upgrade management: upgrade scheduling via Now Support, pre-upgrade instance clone and testing, plugin compatibility checks, and post-upgrade validation.
 
 *Applies to: ServiceNow (Washington / Xanadu)*
 </div>
-![ServiceNow — Install & Upgrade](../../../../assets/itsm-servicenow-operations-install-upgrade-index.svg)
-
 
 ---
 
@@ -85,7 +82,6 @@ flowchart TD
     K -- Fail --> L --> J
     K -- Pass --> M --> N --> O --> P
 ```
-
 
 ### Upgrading Plugins
 

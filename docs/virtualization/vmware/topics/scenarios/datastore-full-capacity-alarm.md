@@ -14,29 +14,6 @@ to prevent recurrence.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Datastore Full / Capacity Alarm](../../../../assets/virtualization-vmware-topics-scenarios-datastore-full-capaci.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Scenarios" {shape: hexagon}
-products_involved: "Products Involved" {shape: rectangle}
-1_identify_the_alarm_and_affected_da: "1. Identify the Alarm and Affected Datastore" {shape: rectangle}
-2_check_what_is_consuming_space: "2. Check What Is Consuming Space" {shape: rectangle}
-3_find_large_snapshots_powercli: "3. Find Large Snapshots — PowerCLI" {shape: rectangle}
-4_find_orphaned_vmdks_on_the_datasto: "4. Find Orphaned VMDKs on the Datastore" {shape: rectangle}
-5_expand_capacity_or_storage_vmotion: "5. Expand Capacity or Storage vMotion VMs" {shape: rectangle}
-
-center -> products_involved
-center -> 1_identify_the_alarm_and_affected_da
-center -> 2_check_what_is_consuming_space
-center -> 3_find_large_snapshots_powercli
-center -> 4_find_orphaned_vmdks_on_the_datasto
-center -> 5_expand_capacity_or_storage_vmotion
-```
 
 ## Products Involved
 

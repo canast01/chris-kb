@@ -10,9 +10,6 @@ Dell VPLEX — Security reference: Authentication, Access Control, Encryption, H
 
 *Applies to: VPLEX*
 </div>
-![Dell VPLEX — Security](../../../../assets/storage-dell-vplex-security-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="authentication/"><strong>Authentication</strong><span>SSO, LDAP, local accounts, and identity sources.</span></a>

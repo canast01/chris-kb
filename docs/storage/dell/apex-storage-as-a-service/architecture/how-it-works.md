@@ -5,31 +5,12 @@ tags:
 ---
 # APEX Storage as a Service — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Overview, Use Cases, How It Works, Underlying Platforms, Best Practices.
 
 *Applies to: APEX Storage-as-a-Service*
 </div>
 ![APEX Storage as a Service — How It Works](../../../../assets/storage-dell-apex-storage-as-a-service-architecture-how-it-w.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "APEX Storage" {shape: hexagon}
-use_cases: "Use Cases" {shape: rectangle}
-how_it_works: "How It Works" {shape: rectangle}
-underlying_platforms: "Underlying Platforms" {shape: rectangle}
-best_practices: "Best Practices" {shape: rectangle}
-
-center -> use_cases
-center -> how_it_works
-center -> underlying_platforms
-center -> best_practices
-```
 
 ```plantuml
 @startuml

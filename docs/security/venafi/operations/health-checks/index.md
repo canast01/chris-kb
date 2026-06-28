@@ -5,15 +5,11 @@ tags:
 ---
 # Venafi — Health Checks
 
-
 <div class="kb-summary">
 Daily operations centre on the Venafi Policy Server dashboard: review certificates expiring within 30, 60, and 90-day buckets, check for failed renewal jobs, review discovery scan results for newly found unmanaged certificates, confirm no policy violations exist, and verify CA co
 
 *Applies to: Venafi TLS Protect*
 </div>
-![Venafi — Health Checks](../../../../assets/security-venafi-operations-health-checks-index.svg)
-
-
 
 ```d2
 direction: right
@@ -73,7 +69,6 @@ flowchart TD
     resolveViolation --> caHealth
     caHealth --> done["Health check complete\nLog to ops log"]
 ```
-
 
 Weekly tasks include reviewing orphaned or unmanaged certificates surfaced by Edge Proxy discovery scans and assigning them to appropriate policy folders or scheduling revocation.
 

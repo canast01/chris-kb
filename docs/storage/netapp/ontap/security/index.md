@@ -5,16 +5,11 @@ tags:
 ---
 # ONTAP — Security
 
-
 <div class="kb-summary">
 ONTAP — Security reference: Access Control, Encryption, Authentication, Hardening.
 
 *Applies to: ONTAP 9.x*
 </div>
-![ONTAP — Security](../../../../assets/storage-netapp-ontap-security-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="access-control/"><strong>Access Control</strong><span>Roles, permissions, and least privilege access.</span></a>

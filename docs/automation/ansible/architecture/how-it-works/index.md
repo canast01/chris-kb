@@ -5,37 +5,15 @@ tags:
 ---
 # Ansible — How It Works
 
-
 <div class="kb-summary">
 Ansible is an agentless IT automation engine that automates provisioning, configuration management, application deployment, orchestration, and many other IT processes.
 
 *Applies to: Ansible 2.x*
 </div>
-![Ansible — How It Works](../../../../assets/automation-ansible-architecture-how-it-works-index.svg)
-
 
  It uses SSH (or WinRM for Windows) to communicate with managed nodes, pushing small programs called modules to execute tasks, then removing them when complete. No agent daemon is required on any managed node.
 
 ---
-
-```d2
-direction: right
-
-center: "Ansible" {shape: hexagon}
-the_agentless_model: "The Agentless Model" {shape: rectangle}
-module_execution: "Module Execution" {shape: rectangle}
-roles: "Roles" {shape: rectangle}
-collections: "Collections" {shape: rectangle}
-execution_flow: "Execution Flow" {shape: rectangle}
-ansible_cli_vs_awx_vs_aap: "Ansible CLI vs AWX vs AAP" {shape: rectangle}
-
-center -> the_agentless_model
-center -> module_execution
-center -> roles
-center -> collections
-center -> execution_flow
-center -> ansible_cli_vs_awx_vs_aap
-```
 
 ## The Agentless Model
 
@@ -56,7 +34,6 @@ flowchart LR
     CN -->|HTTPS API| MN4[Cloud API\nAWS / Azure / vSphere]
     CN -->|SSH| MN5[Linux Host]
 ```
-
 
 ---
 

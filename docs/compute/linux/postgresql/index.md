@@ -9,10 +9,6 @@ PostgreSQL open-source object-relational database — MVCC, streaming replicatio
 
 *Applies to: PostgreSQL 15.x / 16.x*
 </div>
-![PostgreSQL](../../../assets/compute-linux-postgresql-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-5">
   <a class="kb-card" href="architecture/">Architecture</a>

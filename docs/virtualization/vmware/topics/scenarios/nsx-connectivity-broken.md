@@ -15,29 +15,6 @@ exact commands and UI paths to isolate and resolve each layer.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![NSX Connectivity Broken](../../../../assets/virtualization-vmware-topics-scenarios-nsx-connectivity-brok.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Scenarios" {shape: hexagon}
-products_involved: "Products Involved" {shape: rectangle}
-1_scope_the_problem_before_touching_: "1. Scope the Problem Before Touching Anything" {shape: rectangle}
-2_aria_networks_path_trace_first_too: "2. Aria Networks Path Trace — First Tool to Use" {shape: rectangle}
-3_dfw_rule_investigation: "3. DFW Rule Investigation" {shape: rectangle}
-4_segment_and_transport_node_check: "4. Segment and Transport Node Check" {shape: rectangle}
-5_t1t0_routing_check: "5. T1/T0 Routing Check" {shape: rectangle}
-
-center -> products_involved
-center -> 1_scope_the_problem_before_touching_
-center -> 2_aria_networks_path_trace_first_too
-center -> 3_dfw_rule_investigation
-center -> 4_segment_and_transport_node_check
-center -> 5_t1t0_routing_check
-```
 
 ## Products Involved
 

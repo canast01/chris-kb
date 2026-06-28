@@ -4,35 +4,11 @@ tags:
 ---
 # Conditional Access
 
-
 <div class="kb-summary">
 Conditional Access (CA) policies are the enforcement engine of Zero Trust in Microsoft Entra ID. They evaluate signals (user, location, device, app, risk) and grant, block, or require additional controls (MFA, compliant device) before granting access.
 
 *Applies to: Azure*
 </div>
-![Conditional Access](../../../../assets/cloud-azure-identity-conditional-access-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-conditional_access_evaluation_flow: "Conditional Access Evaluation Flow" {shape: rectangle}
-ca_policy_creation: "CA Policy Creation" {shape: rectangle}
-conditions: "Conditions" {shape: rectangle}
-grant_controls: "Grant Controls" {shape: rectangle}
-named_locations: "Named Locations" {shape: rectangle}
-reportonly_mode: "Report-Only Mode" {shape: rectangle}
-
-center -> conditional_access_evaluation_flow
-center -> ca_policy_creation
-center -> conditions
-center -> grant_controls
-center -> named_locations
-center -> reportonly_mode
-```
 
 ## Conditional Access Evaluation Flow
 

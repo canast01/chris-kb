@@ -4,8 +4,6 @@ tags:
   - san
 ---
 # Cisco DCNM — Health Checks
-![Cisco DCNM — Health Checks](../../../../assets/san-cisco-cisco-dcnm-operations-health-checks.svg)
-
 
 ```bash
 ssh root@dcnm-dc1.corp.example.com
@@ -27,18 +25,6 @@ grep -i "ERROR\|SEVERE\|Exception" /var/log/dcnm/server.log | tail -50
 # NTP status
 timedatectl status
 # Expected: synchronized: yes
-```
-
-
-```d2
-direction: right
-
-hub: "Cisco DCNM\nOperations" {shape: hexagon}
-run_this_routine: "Run This Routine" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> run_this_routine
-hub -> verify
 ```
 
 ## Before you begin

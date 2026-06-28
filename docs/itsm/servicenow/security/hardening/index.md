@@ -4,8 +4,6 @@ tags:
   - servicenow
 ---
 # ServiceNow Hardening
-![ServiceNow Hardening](../../../../assets/itsm-servicenow-security-hardening-index.svg)
-
 
 ```javascript
 // Bulk verify critical properties via Script Editor

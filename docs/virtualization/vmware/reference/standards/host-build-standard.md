@@ -4,18 +4,13 @@ tags:
 ---
 # Host Build Standard
 
-
 <div class="kb-summary">
 ESXi host build standard: NTP server list, syslog destination, vSwitch MTU, BIOS power profile, scratch datastore, and lockdown mode requirements.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Host Build Standard](../../../../assets/virtualization-vmware-reference-standards-host-build-standar.svg)
-
-
 
 ---
-
 
 ```d2
 direction: down

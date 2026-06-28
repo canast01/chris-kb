@@ -4,8 +4,6 @@ tags:
   - security
 ---
 # AWS Security Hardening — CIS Baseline
-![AWS Security Hardening — CIS Baseline](../../../../assets/cloud-aws-security-hardening-index.svg)
-
 
 ```bash
 # Check root account has no access keys

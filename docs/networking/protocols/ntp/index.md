@@ -9,10 +9,6 @@ tags:
 <div class="kb-summary">
 Network Time Protocol (NTP) synchronises system clocks over UDP port 123 using a hierarchical stratum model. Clock skew breaks Kerberos auth, TLS validity, and log correlation. Coverage includes chrony/ntpd/w32tm configuration, stratum selection, sync health metrics, and VMware time sync rules.
 </div>
-![NTP](../../../assets/networking-protocols-ntp-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-5">
 
@@ -42,19 +38,6 @@ Network Time Protocol (NTP) synchronises system clocks over UDP port 123 using a
 </a>
 
 </div>
-
-```d2
-direction: right
-
-center: "NTP" {shape: hexagon}
-quick_reference: "Quick Reference" {shape: rectangle}
-common_commands_config: "Common Commands / Config" {shape: rectangle}
-troubleshooting: "Troubleshooting" {shape: rectangle}
-
-center -> quick_reference
-center -> common_commands_config
-center -> troubleshooting
-```
 
 ## Quick Reference
 

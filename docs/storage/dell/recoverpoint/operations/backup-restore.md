@@ -6,7 +6,6 @@ tags:
 # RecoverPoint — Backup & Restore
 ![RecoverPoint — Backup & Restore](../../../../assets/storage-dell-recoverpoint-operations-backup-restore.svg)
 
-
 ```bash
 # Connect to RecoverPoint appliance
 ssh admin@rpa01.example.com
@@ -38,15 +37,6 @@ sequenceDiagram
     RP->>AccessHost: Remove volume
     RP->>Journal: Resume normal journal write processing
     Note over RP: Replication was not interrupted
-```
-
-```d2
-direction: right
-
-hub: "RecoverPoint\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

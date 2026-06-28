@@ -4,25 +4,9 @@ tags:
 ---
 # Reliability Engineering
 
-
 <div class="kb-summary">
 Reliability Engineering reference covering Core Principles, Redundancy Patterns, Reliability Metrics, Incident Review (Postmortem) Process, Toil Reduction and 1 more sections.
 </div>
-![Reliability Engineering](../../../assets/backup-dr-operations-reliability-engineering-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "DR Operations" {shape: hexagon}
-toil_reduction: "Toil Reduction" {shape: rectangle}
-reliability_improvement_checklist: "Reliability Improvement Checklist" {shape: rectangle}
-
-center -> toil_reduction
-center -> reliability_improvement_checklist
-```
 
 ## Toil Reduction
 

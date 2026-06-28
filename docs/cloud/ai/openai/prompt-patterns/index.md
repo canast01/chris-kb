@@ -5,35 +5,11 @@ tags:
 ---
 # OpenAI Prompt Patterns
 
-
 <div class="kb-summary">
 Effective prompting is the difference between reliable production outputs and inconsistent results. This page covers system prompts, few-shot examples, chain-of-thought, structured output, and other patterns with working code.
 
 *Applies to: OpenAI API*
 </div>
-![OpenAI Prompt Patterns](../../../../assets/cloud-ai-openai-prompt-patterns-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "OpenAI API" {shape: hexagon}
-system_prompts: "System Prompts" {shape: rectangle}
-fewshot_examples: "Few-Shot Examples" {shape: rectangle}
-chainofthought: "Chain-of-Thought" {shape: rectangle}
-structured_output: "Structured Output" {shape: rectangle}
-controlling_output_format: "Controlling Output Format" {shape: rectangle}
-prompt_injection_defence: "Prompt Injection Defence" {shape: rectangle}
-
-center -> system_prompts
-center -> fewshot_examples
-center -> chainofthought
-center -> structured_output
-center -> controlling_output_format
-center -> prompt_injection_defence
-```
 
 ## System Prompts
 

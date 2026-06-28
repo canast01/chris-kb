@@ -4,16 +4,11 @@ tags:
 ---
 # VMware Snapshot Standards
 
-
 <div class="kb-summary">
 VMware Snapshot Standards reference covering Snapshots Are Temporary, Approved Use Cases, Maximum Snapshot Age, Snapshot Size Monitoring, Cleanup Responsibility and 3 more sections.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![VMware Snapshot Standards](../../../../assets/virtualization-vmware-reference-standards-snapshot-standards.svg)
-
-
-
 
 ```d2
 direction: down

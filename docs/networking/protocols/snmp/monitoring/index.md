@@ -4,33 +4,9 @@ tags:
 ---
 # SNMP in Monitoring
 
-
 <div class="kb-summary">
 SNMP is the primary protocol for collecting metrics from network devices, storage arrays, and infrastructure components that do not expose native Prometheus endpoints. This page covers integrating SNMP with the main monitoring platforms.
 </div>
-![SNMP in Monitoring](../../../../assets/networking-protocols-snmp-monitoring-index.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "SNMP\nOperations" {shape: hexagon}
-architecture: "Architecture" {shape: rectangle}
-prometheus_snmp_exporter: "Prometheus + SNMP Exporter" {shape: rectangle}
-zabbix_snmp_configuration: "Zabbix SNMP Configuration" {shape: rectangle}
-librenms_snmp_setup: "LibreNMS SNMP Setup" {shape: rectangle}
-trap_integration: "Trap Integration" {shape: rectangle}
-key_metrics_to_poll_per_device_type: "Key Metrics to Poll per Device Type" {shape: rectangle}
-
-hub -> architecture
-hub -> prometheus_snmp_exporter
-hub -> zabbix_snmp_configuration
-hub -> librenms_snmp_setup
-hub -> trap_integration
-hub -> key_metrics_to_poll_per_device_type
-```
 
 ## Architecture
 

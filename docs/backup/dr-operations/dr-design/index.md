@@ -4,29 +4,9 @@ tags:
 ---
 # Disaster Recovery Design
 
-
 <div class="kb-summary">
 ![Disaster Recovery Design Overview](../../../assets/disaster-recovery-design-overview.svg)
 </div>
-
-```d2
-direction: right
-
-center: "DR Operations" {shape: hexagon}
-rto_rpo_matrix_by_service_tier: "RTO / RPO Matrix by Service Tier" {shape: rectangle}
-dr_strategy_selection: "DR Strategy Selection" {shape: rectangle}
-network_considerations_for_dr: "Network Considerations for DR" {shape: rectangle}
-dr_runbook_structure: "DR Runbook Structure" {shape: rectangle}
-dr_testing_schedule: "DR Testing Schedule" {shape: rectangle}
-common_dr_design_pitfalls: "Common DR Design Pitfalls" {shape: rectangle}
-
-center -> rto_rpo_matrix_by_service_tier
-center -> dr_strategy_selection
-center -> network_considerations_for_dr
-center -> dr_runbook_structure
-center -> dr_testing_schedule
-center -> common_dr_design_pitfalls
-```
 
 ## Overview
 

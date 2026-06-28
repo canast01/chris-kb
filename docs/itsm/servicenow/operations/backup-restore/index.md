@@ -5,14 +5,11 @@ tags:
 ---
 # ServiceNow — Backup & Restore
 
-
 <div class="kb-summary">
 ServiceNow cloud instances do not expose direct database backup access. The primary mechanisms for instance protection and data recovery are **Instance Cloning** (for sub-production refresh and disaster recovery testing) and **Export Sets** (for selective data export).
 
 *Applies to: ServiceNow (Washington / Xanadu)*
 </div>
-![ServiceNow — Backup & Restore](../../../../assets/itsm-servicenow-operations-backup-restore-index.svg)
-
 
  This page covers both in detail.
 
@@ -73,7 +70,6 @@ flowchart LR
     PROD -- "Scheduled Clone\n(weekly)" --> UAT
     PROD -- "On-demand Clone\n(before major release)" --> DEV
 ```
-
 
 Typical schedule options: daily, weekly, bi-weekly, monthly.
 

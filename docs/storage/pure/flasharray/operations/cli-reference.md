@@ -5,7 +5,6 @@ tags:
 ---
 # FlashArray — CLI Reference
 
-
 <div class="kb-summary">
 CLI Reference reference covering Admin Accounts, Alerts & Audit, Array & System Management, Configuration & Directory Services, CSV Exports and 5 more sections.
 
@@ -13,33 +12,11 @@ CLI Reference reference covering Admin Accounts, Alerts & Audit, Array & System 
 </div>
 ![FlashArray — CLI Reference](../../../../assets/storage-pure-flasharray-operations-cli-reference.svg)
 
-
-
-
 ![FlashArray — CLI Reference — Diagram](../../../../assets/storage-pure-flasharray-operations-cli-reference-diagram.svg)
 
 Commonly used Purity CLI commands for managing Pure FlashArray all-flash storage systems. Connect via SSH to the array's management IP and log in as `pureuser` or another admin account.
 
 ---
-
-```d2
-direction: right
-
-hub: "FlashArray\nOperations" {shape: hexagon}
-admin_accounts: "Admin Accounts" {shape: rectangle}
-alerts_audit: "Alerts & Audit" {shape: rectangle}
-array_system_management: "Array & System Management" {shape: rectangle}
-configuration_directory_services: "Configuration & Directory Services" {shape: rectangle}
-csv_exports: "CSV Exports" {shape: rectangle}
-drives_hardware: "Drives & Hardware" {shape: rectangle}
-
-hub -> admin_accounts
-hub -> alerts_audit
-hub -> array_system_management
-hub -> configuration_directory_services
-hub -> csv_exports
-hub -> drives_hardware
-```
 
 ## Before you begin
 

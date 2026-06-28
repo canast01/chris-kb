@@ -13,28 +13,6 @@ Node count requirements, cluster naming, vSAN policy standards, network design r
 </div>
 ![VxRail — Design Standards](../../../../assets/virtualization-vmware-vxrail-architecture-design-standards.svg)
 
-
-
-
-```d2
-direction: right
-
-center: "VxRail" {shape: hexagon}
-cluster_sizing_standards: "Cluster Sizing Standards" {shape: rectangle}
-node_families: "Node Families" {shape: rectangle}
-naming_conventions: "Naming Conventions" {shape: rectangle}
-vsan_storage_policy_standards: "vSAN Storage Policy Standards" {shape: rectangle}
-network_design: "Network Design" {shape: rectangle}
-configuration_checklist: "Configuration Checklist" {shape: rectangle}
-
-center -> cluster_sizing_standards
-center -> node_families
-center -> naming_conventions
-center -> vsan_storage_policy_standards
-center -> network_design
-center -> configuration_checklist
-```
-
 ## Cluster Sizing Standards
 
 | Parameter | Minimum | Recommended | Maximum |

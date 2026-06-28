@@ -4,15 +4,11 @@ tags:
 ---
 # Naming Standard
 
-
 <div class="kb-summary">
 Naming Standard reference covering Overview, Virtual Machines, Clusters, ESXi Hosts, Datastores and 7 more sections.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Naming Standard](../../../../assets/virtualization-vmware-reference-standards-naming-standard.svg)
-
-
 
 > Part of the [Standards](index.md) reference.
 

@@ -3,8 +3,6 @@ tags:
   - servicenow
 ---
 # Inventory — Hardware Lifecycle
-![Inventory — Hardware Lifecycle](../../../../assets/itsm-servicenow-asset-inventory-hardware-lifecycle-index.svg)
-
 
 ```bash
 # Dell — check and update firmware via iDRAC

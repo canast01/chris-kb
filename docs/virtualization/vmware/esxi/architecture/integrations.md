@@ -7,15 +7,12 @@ tags:
 ---
 # ESXi — Integrations
 
-
 <div class="kb-summary">
 Integrations reference covering Network Integration, Backup Integration, Monitoring Integration.
 
 *Applies to: vSphere 7.x · 8.x*
 </div>
 ![ESXi — Integrations](../../../../assets/virtualization-vmware-esxi-architecture-integrations.svg)
-
-
 
 Ensure the NFS vmkernel adapter is on the correct VLAN and the NFS server export allows the ESXi management/NFS IP.
 
@@ -29,19 +26,6 @@ vmkfstools -P /vmfs/volumes/<datastore>
 ```
 
 VAAI primitives (XCOPY, WRITE_SAME, ATS) significantly reduce ESXi CPU overhead during cloning and provisioning.
-
-```d2
-direction: right
-
-center: "ESXi" {shape: hexagon}
-network_integration: "Network Integration" {shape: rectangle}
-backup_integration: "Backup Integration" {shape: rectangle}
-monitoring_integration: "Monitoring Integration" {shape: rectangle}
-
-center -> network_integration
-center -> backup_integration
-center -> monitoring_integration
-```
 
 ## Network Integration
 

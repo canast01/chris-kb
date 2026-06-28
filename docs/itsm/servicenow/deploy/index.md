@@ -12,11 +12,6 @@ Step-by-step guide to requesting a ServiceNow developer instance, configuring ad
 
 *Applies to: ServiceNow (Washington / Xanadu)*
 </div>
-![ServiceNow — Initial Instance Setup](../../../assets/itsm-servicenow-deploy-index.svg)
-
-
-
-
 
 ```mermaid
 flowchart TD

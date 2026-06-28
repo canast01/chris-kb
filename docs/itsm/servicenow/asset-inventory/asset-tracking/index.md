@@ -3,8 +3,6 @@ tags:
   - servicenow
 ---
 # Inventory — Asset Tracking
-![Inventory — Asset Tracking](../../../../assets/itsm-servicenow-asset-inventory-asset-tracking-index.svg)
-
 
 ```bash
 # Linux — server hardware info

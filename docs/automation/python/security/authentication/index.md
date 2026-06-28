@@ -5,14 +5,11 @@ tags:
 ---
 # Python Automation — Authentication
 
-
 <div class="kb-summary">
 Authentication reference covering Credential Flow — API Authentication, .env Files with python-dotenv, OAuth 2.0 (Client Credentials), Credential Management Reference.
 
 *Applies to: Python 3.x*
 </div>
-![Python Automation — Authentication](../../../../assets/automation-python-security-authentication-index.svg)
-
 
 ```plantuml
 @startuml
@@ -70,7 +67,6 @@ graph TD
     apiKey --> bearerHeader
     bearerHeader --> apiEndpoint
 ```
-
 
 ```python
 from dotenv import load_dotenv

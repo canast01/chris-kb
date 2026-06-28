@@ -6,7 +6,6 @@ tags:
 # Dell Data Domain Scripts
 ![Dell Data Domain Scripts](../../../../assets/storage-dell-data-domain-operations-scripts.svg)
 
-
 ```bash
 #!/bin/bash
 # dd_health_check.sh — Daily health check for a Dell Data Domain appliance
@@ -595,15 +594,6 @@ echo "$REPL" | grep -qi "error\|disabled\|idle-error\|in-error" \
 LABELS=( OK WARN CRIT )
 echo "OVERALL: ${LABELS[$STATE]}"
 exit "$STATE"
-```
-
-```d2
-direction: right
-
-hub: "Data Domain\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

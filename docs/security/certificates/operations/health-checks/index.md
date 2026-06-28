@@ -5,13 +5,9 @@ tags:
 ---
 # Certificates — Health Checks
 
-
 <div class="kb-summary">
 Weekly operations include reviewing the certificate expiry dashboard for certificates expiring within 30, 60, and 90 days, checking CRL and OCSP responder availability for all CAs, verifying CA service health (for ADCS: check Certificate Services in Server Manager and confirm the
 </div>
-![Certificates — Health Checks](../../../../assets/security-certificates-operations-health-checks-index.svg)
-
-
 
 ```d2
 direction: right
@@ -69,7 +65,6 @@ flowchart TD
     renewAction --> newCert["New certificate installed\nand validated"]
     newCert --> monitor
 ```
-
 
 OCSP and CRL freshness must be checked proactively — a stale CRL can cause widespread certificate validation failures across services that depend on it.
 

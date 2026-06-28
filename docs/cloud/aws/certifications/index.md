@@ -7,15 +7,9 @@ tags:
 
 # AWS — Certifications
 
-
-
 <div class="kb-summary">
 Certifications reference covering Overview, Core Certification Paths, Daily Study Focus, Useful Commands, Renewal Notes.
 </div>
-![AWS — Certifications](../../../assets/cloud-aws-certifications-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-1">
 
@@ -23,7 +17,6 @@ Certifications reference covering Overview, Core Certification Paths, Daily Stud
   <strong>Cloud Practitioner CLF-C02</strong>
   <span>14-day study plan — 3 hrs/day, 50 Q&A per day. Covers all 4 domains.</span>
 </a>
-
 
 <a class="kb-card" href="exam-tracking/">
   <strong>Exam Tracking</strong>
@@ -44,21 +37,6 @@ Certifications reference covering Overview, Core Certification Paths, Daily Stud
 <a class="kb-card" href="services/"><strong>Services</strong><span>Per-service study notes — IAM, EC2, VPC, S3, RDS, Lambda, and more.</span></a>
 
 </div>
-
-```d2
-direction: right
-
-center: "AWS" {shape: hexagon}
-core_certification_paths: "Core Certification Paths" {shape: rectangle}
-daily_study_focus: "Daily Study Focus" {shape: rectangle}
-useful_commands: "Useful Commands" {shape: rectangle}
-renewal_notes: "Renewal Notes" {shape: rectangle}
-
-center -> core_certification_paths
-center -> daily_study_focus
-center -> useful_commands
-center -> renewal_notes
-```
 
 ## Overview
 

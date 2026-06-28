@@ -5,14 +5,11 @@ tags:
 ---
 # Ansible — Encryption
 
-
 <div class="kb-summary">
 Ansible encryption: `ansible-vault encrypt`, `encrypt_string`, vault ID configuration, KMS-backed vault password files, and in-transit SSH encryption settings.
 
 *Applies to: Ansible 2.14+*
 </div>
-![Ansible — Encryption](../../../../assets/automation-ansible-security-encryption-index.svg)
-
 
 ```d2
 direction: down
@@ -58,7 +55,6 @@ graph LR
     vcKeyFile -->|decrypt at runtime| playbook
     playbook -->|over SSH| managedHost["Managed Host"]
 ```
-
 
 ### Recommended Layout
 

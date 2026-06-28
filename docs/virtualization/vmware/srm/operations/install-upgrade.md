@@ -6,14 +6,12 @@ tags:
 ---
 # SRM — Install and Upgrade
 
-
 <div class="kb-summary">
 Install and Upgrade reference covering vSphere Replication Appliance Deployment, SRA Installation, Site Pairing, Upgrade Order, Post-Install Verification.
 
 *Applies to: SRM 8.x / 9.x*
 </div>
 ![SRM — Install and Upgrade](../../../../assets/virtualization-vmware-srm-operations-install-upgrade.svg)
-
 
   SRM Upgrade Sequence (strictly ordered)
 
@@ -26,25 +24,6 @@ vCenter (Protected) → Site Recovery → New Site Pair
 ```
 
 ---
-
-```d2
-direction: right
-
-hub: "Site Recovery Manager\nOperations" {shape: hexagon}
-sra_installation: "SRA Installation" {shape: rectangle}
-site_pairing: "Site Pairing" {shape: rectangle}
-upgrade_order: "Upgrade Order" {shape: rectangle}
-postinstall_verification: "Post-Install Verification" {shape: rectangle}
-version_compatibility: "Version Compatibility" {shape: rectangle}
-upgrade_sequence: "Upgrade Sequence" {shape: rectangle}
-
-hub -> sra_installation
-hub -> site_pairing
-hub -> upgrade_order
-hub -> postinstall_verification
-hub -> version_compatibility
-hub -> upgrade_sequence
-```
 
 ## Before you begin
 
@@ -152,7 +131,6 @@ SRM version must match vCenter version. Always check the Broadcom Product Intero
 | SRM 8.6 | vCenter 8.0 U1 | VR 8.6 | Check EOS |
 | SRM 8.4 | vCenter 7.0 U3 | VR 8.4 | vSphere 7 era |
 
-
 ## Upgrade Sequence
 
 ### Upgrade Order Dependency Chain
@@ -177,7 +155,6 @@ flowchart TD
     class srmCheck check
     class start,done terminal
 ```
-
 
 ---
 

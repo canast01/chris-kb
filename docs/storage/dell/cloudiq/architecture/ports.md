@@ -16,27 +16,6 @@ Firewall port reference for Dell CloudIQ. CloudIQ is Dell's SaaS analytics and h
 </div>
 ![Dell CloudIQ — Ports and Network Requirements](../../../../assets/storage-dell-cloudiq-architecture-ports.svg)
 
-
-
-
-
-```d2
-direction: right
-
-center: "CloudIQ" {shape: hexagon}
-how_it_works: "How It Works" {shape: rectangle}
-outbound_array_to_cloudiq_required_f: "Outbound — Array to CloudIQ (Required for Participation)" {shape: rectangle}
-admin_access_saas_no_onprem_rules_ne: "Admin Access (SaaS — No On-Prem Rules Needed)" {shape: rectangle}
-firewall_summary: "Firewall Summary" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> how_it_works
-center -> outbound_array_to_cloudiq_required_f
-center -> admin_access_saas_no_onprem_rules_ne
-center -> firewall_summary
-center -> verify
-```
-
 ## How It Works
 
 CloudIQ is a SaaS service — no on-premise CloudIQ server exists. Storage arrays send telemetry outbound to `cloudiq.dell.com`. Admin access is via browser to `cloudiq.dell.com` directly.

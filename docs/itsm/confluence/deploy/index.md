@@ -12,10 +12,6 @@ Step-by-step guide to installing Confluence Data Center, configuring the databas
 
 *Applies to: Confluence Cloud / Data Center*
 </div>
-![Confluence — Initial Deployment](../../../assets/itsm-confluence-deploy-index.svg)
-
-
-
 
 ```mermaid
 flowchart TD
@@ -63,8 +59,6 @@ install_recommended_addons -> validate
 - **Logging:** record every IP address, hostname, and credential set assigned during this deployment
 
 ---
-
-
 
 ## Prerequisites
 

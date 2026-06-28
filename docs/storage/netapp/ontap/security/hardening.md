@@ -5,37 +5,12 @@ tags:
 ---
 # ONTAP — Hardening
 
-
 <div class="kb-summary">
 Security hardening for ONTAP focuses on reducing attack surface, enforcing strong authentication, encrypting management and data traffic, and enabling comprehensive audit logging. Apply this baseline to all production clusters at build and validate quarterly.
 
 *Applies to: ONTAP 9.x*
 </div>
 ![ONTAP — Hardening](../../../../assets/storage-netapp-ontap-security-hardening.svg)
-
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-hardening_control_layers: "Hardening Control Layers" {shape: rectangle}
-hardening_checklist: "Hardening Checklist" {shape: rectangle}
-authentication_hardening: "Authentication Hardening" {shape: rectangle}
-protocol_hardening: "Protocol Hardening" {shape: rectangle}
-snmp_hardening: "SNMP Hardening" {shape: rectangle}
-autosupport_security: "AutoSupport Security" {shape: rectangle}
-core: "NetApp ONTAP Core" {shape: hexagon}
-
-external -> hardening_control_layers: traffic in
-hardening_control_layers -> hardening_checklist
-hardening_checklist -> authentication_hardening
-authentication_hardening -> protocol_hardening
-protocol_hardening -> snmp_hardening
-snmp_hardening -> autosupport_security
-autosupport_security -> core: secured path
-```
 
 ## Before you begin
 

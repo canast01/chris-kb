@@ -4,35 +4,11 @@ tags:
 ---
 # Storage Latency Troubleshooting (VMware)
 
-
 <div class="kb-summary">
 Storage Latency Troubleshooting (VMware) reference covering Latency Thresholds, Step 1: Identify Affected VMs and Datastores, Step 2: Check Storage Paths, Step 3: Check for vSAN Resync or Rebuild, Step 4: Queue Depth and Congestion and 3 more sections.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Storage Latency Troubleshooting (VMware)](../../../../assets/virtualization-vmware-topics-storage-latency-troubleshooting.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Storage Latency Troubleshooting" {shape: hexagon}
-latency_thresholds: "Latency Thresholds" {shape: rectangle}
-step_1_identify_affected_vms_and_dat: "Step 1: Identify Affected VMs and Datastores" {shape: rectangle}
-step_2_check_storage_paths: "Step 2: Check Storage Paths" {shape: rectangle}
-step_3_check_for_vsan_resync_or_rebu: "Step 3: Check for vSAN Resync or Rebuild" {shape: rectangle}
-step_4_queue_depth_and_congestion: "Step 4: Queue Depth and Congestion" {shape: rectangle}
-step_5_datastores_on_the_same_lunvol: "Step 5: Datastores on the Same LUN/Volume" {shape: rectangle}
-
-center -> latency_thresholds
-center -> step_1_identify_affected_vms_and_dat
-center -> step_2_check_storage_paths
-center -> step_3_check_for_vsan_resync_or_rebu
-center -> step_4_queue_depth_and_congestion
-center -> step_5_datastores_on_the_same_lunvol
-```
 
 ## Latency Thresholds
 

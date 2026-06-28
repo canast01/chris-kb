@@ -11,25 +11,7 @@ Common questions about VMware vCenter operations, configuration, and troubleshoo
 </div>
 ![VMware vCenter — Frequently Asked Questions](../../../../assets/virtualization-vmware-vcenter-operations-faq.svg)
 
-
 ![VMware vCenter FAQ](../../../../assets/virtualization-vmware-vcenter-operations-faq.svg)
-
-```d2
-direction: right
-
-hub: "vCenter Server\nOperations" {shape: hexagon}
-general: "General" {shape: rectangle}
-configuration: "Configuration" {shape: rectangle}
-operations: "Operations" {shape: rectangle}
-troubleshooting: "Troubleshooting" {shape: rectangle}
-backup_and_recovery: "Backup and Recovery" {shape: rectangle}
-
-hub -> general
-hub -> configuration
-hub -> operations
-hub -> troubleshooting
-hub -> backup_and_recovery
-```
 
 ## General
 

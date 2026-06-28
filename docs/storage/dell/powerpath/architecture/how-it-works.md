@@ -5,35 +5,12 @@ tags:
 ---
 # PowerPath — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Overview, Host-Side MPIO Stack, Path States, Load-Balancing Policies, Failover and Recovery and 2 more sections.
 
 *Applies to: PowerPath*
 </div>
 ![PowerPath — How It Works](../../../../assets/storage-dell-powerpath-architecture-how-it-works.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "PowerPath" {shape: hexagon}
-hostside_mpio_stack: "Host-Side MPIO Stack" {shape: rectangle}
-path_states: "Path States" {shape: rectangle}
-loadbalancing_policies: "Load-Balancing Policies" {shape: rectangle}
-failover_and_recovery: "Failover and Recovery" {shape: rectangle}
-supported_platforms: "Supported Platforms" {shape: rectangle}
-key_commands: "Key Commands" {shape: rectangle}
-
-center -> hostside_mpio_stack
-center -> path_states
-center -> loadbalancing_policies
-center -> failover_and_recovery
-center -> supported_platforms
-center -> key_commands
-```
 
 ```plantuml
 @startuml

@@ -4,16 +4,11 @@ tags:
 ---
 # Dell AIOps: Workload Insights, Performance Predictions, and Bottleneck Detection
 
-
 <div class="kb-summary">
 Dell AIOps: Workload Insights, Performance Predictions, and Bottleneck Detection reference covering Performance Predictions, Bottleneck Detection, Noisy Neighbour Detection, Common Insight Issues.
 
 *Applies to: Dell AIOps*
 </div>
-![Dell AIOps: Workload Insights, Performance Predictions, and Bottleneck Detection](../../../../assets/storage-dell-dell-aiops-insights-index.svg)
-
-
-
 
 Common bottleneck types and remediation:
 
@@ -23,17 +18,6 @@ Common bottleneck types and remediation:
 | Cache write-pending high | Backend write throughput insufficient | Check backend drives health, RAID rebuild? |
 | Controller CPU bound | Too many volumes or complex RAID | Rebalance volumes; consider tiering |
 | Back-end bandwidth saturated | Drive enclosure bandwidth limit | Spread volumes across enclosures |
-
-```d2
-direction: right
-
-center: "Dell AIOps" {shape: hexagon}
-noisy_neighbour_detection: "Noisy Neighbour Detection" {shape: rectangle}
-common_insight_issues: "Common Insight Issues" {shape: rectangle}
-
-center -> noisy_neighbour_detection
-center -> common_insight_issues
-```
 
 ## Noisy Neighbour Detection
 

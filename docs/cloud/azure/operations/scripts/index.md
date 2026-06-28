@@ -5,37 +5,13 @@ tags:
 ---
 # Azure — Scripts
 
-
 <div class="kb-summary">
 Azure operational scripts: PowerShell and `az cli` automation for resource provisioning, VM scale operations, Key Vault secret rotation, and policy compliance reporting.
 
 *Applies to: Azure*
 </div>
-![Azure — Scripts](../../../../assets/cloud-azure-operations-scripts-index.svg)
-
-
-
 
 ---
-
-```d2
-direction: right
-
-center: "Azure" {shape: rectangle}
-script_categories: "Script Categories" {shape: rectangle}
-azure_subscription_health_check: "Azure Subscription Health Check" {shape: rectangle}
-vm_health_and_compliance_report: "VM Health and Compliance Report" {shape: rectangle}
-azure_cost_spike_alert: "Azure Cost Spike Alert" {shape: rectangle}
-network_security_group_audit: "Network Security Group Audit" {shape: rectangle}
-vm_dr_failover_with_azure_site_recov: "VM DR Failover with Azure Site Recovery (Ansible)" {shape: rectangle}
-
-center -> script_categories
-center -> azure_subscription_health_check
-center -> vm_health_and_compliance_report
-center -> azure_cost_spike_alert
-center -> network_security_group_audit
-center -> vm_dr_failover_with_azure_site_recov
-```
 
 ## Before you begin
 
@@ -221,7 +197,6 @@ FIELDS = [
     "MonitoringAgent", "Flags",
 ]
 
-
 def get_power_state(instance_view) -> str:
     if instance_view and instance_view.statuses:
         for s in instance_view.statuses:
@@ -229,14 +204,12 @@ def get_power_state(instance_view) -> str:
                 return s.code.split("/")[1]
     return "unknown"
 
-
 def get_extensions(vm_name: str, rg: str, compute_client: ComputeManagementClient) -> list[str]:
     try:
         exts = list(compute_client.virtual_machine_extensions.list(rg, vm_name))
         return [e.virtual_machine_extension_type for e in exts if e.virtual_machine_extension_type]
     except Exception:
         return []
-
 
 def main() -> None:
     cred           = DefaultAzureCredential()
@@ -297,7 +270,6 @@ def main() -> None:
 
     if flagged:
         raise SystemExit(1)
-
 
 if __name__ == "__main__":
     main()
@@ -383,7 +355,6 @@ CURR_START = TODAY - datetime.timedelta(days=7)
 PREV_END   = CURR_START
 PREV_START = PREV_END - datetime.timedelta(days=7)
 
-
 def fetch_cost(client: CostManagementClient, start: datetime.date, end: datetime.date) -> dict[str, float]:
     scope = f"/subscriptions/{SUBSCRIPTION_ID}"
     query = QueryDefinition(
@@ -407,7 +378,6 @@ def fetch_cost(client: CostManagementClient, start: datetime.date, end: datetime
         service_cost[service] += cost
     return dict(service_cost)
 
-
 def send_alert(subject: str, body: str) -> None:
     msg = MIMEText(body)
     msg["Subject"] = subject
@@ -418,7 +388,6 @@ def send_alert(subject: str, body: str) -> None:
         if SMTP_USER:
             server.login(SMTP_USER, SMTP_PASS)
         server.sendmail(FROM_EMAIL, ALERT_EMAIL, msg.as_string())
-
 
 def main() -> None:
     cred   = DefaultAzureCredential()
@@ -465,7 +434,6 @@ def main() -> None:
             print(f"Alert email sent to {ALERT_EMAIL}")
         except Exception as exc:
             print(f"Warning: could not send alert email: {exc}")
-
 
 if __name__ == "__main__":
     main()
@@ -546,7 +514,6 @@ SEP = "-" * len(HEADER)
 
 findings: list[dict] = []
 
-
 def port_matches_dangerous(port_range: str) -> bool:
     if port_range in ("*", "Any"):
         return True
@@ -562,10 +529,8 @@ def port_matches_dangerous(port_range: str) -> bool:
     except ValueError:
         return False
 
-
 def is_internet_source(prefix: str) -> bool:
     return prefix in INTERNET_SOURCES
-
 
 def main() -> None:
     cred   = DefaultAzureCredential()
@@ -641,7 +606,6 @@ def main() -> None:
 
     if total_issues > 0:
         raise SystemExit(1)
-
 
 if __name__ == "__main__":
     main()
@@ -1017,7 +981,6 @@ NOW = datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc)
 HEADER = f"{'Vault':<30} {'Certificate':<40} {'Expiry':<22} {'DaysLeft':>9} {'Status'}"
 SEP    = "-" * len(HEADER)
 
-
 def check_vault(vault_name: str, vault_url: str, cred) -> list[dict]:
     client = CertificateClient(vault_url=vault_url, credential=cred)
     results = []
@@ -1055,7 +1018,6 @@ def check_vault(vault_name: str, vault_url: str, cred) -> list[dict]:
     except Exception as exc:
         print(f"  Warning: could not access vault {vault_name}: {exc}")
     return results
-
 
 def main() -> None:
     cred   = DefaultAzureCredential()
@@ -1098,7 +1060,6 @@ def main() -> None:
         raise SystemExit(1)
 
     print("\nAll certificates OK.")
-
 
 if __name__ == "__main__":
     main()

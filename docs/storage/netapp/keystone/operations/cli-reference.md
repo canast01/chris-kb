@@ -6,7 +6,6 @@ tags:
 # NetApp Keystone — Operations: CLI Reference
 ![NetApp Keystone — Operations: CLI Reference](../../../../assets/storage-netapp-keystone-operations-cli-reference.svg)
 
-
 ```bash
 # Show Collector status and version
 keystone-collector status
@@ -40,15 +39,6 @@ HDR    = {"Authorization": f"Bearer {TOKEN}", "Content-Type": "application/json"
 resp = requests.get(f"{PORTAL}/subscriptions", headers=HDR)
 for sub in resp.json().get("subscriptions", []):
     print(f"{sub['subscriptionNumber']}  committed={sub['committedCapacity']} consumed={sub['consumedCapacity']}")
-```
-
-```d2
-direction: right
-
-hub: "Keystone STaaS\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

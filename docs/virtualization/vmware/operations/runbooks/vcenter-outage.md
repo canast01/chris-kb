@@ -5,14 +5,11 @@ tags:
   - vsphere-8
 ---
 # vCenter Outage Runbook
-![vCenter Outage Runbook](../../../../assets/virtualization-vmware-operations-runbooks-vcenter-outage.svg)
-
 
 ```bash
 ping <vcenter-ip>
 nslookup <vcenter-fqdn>
 ```
-
 
 ```plantuml
 @startuml

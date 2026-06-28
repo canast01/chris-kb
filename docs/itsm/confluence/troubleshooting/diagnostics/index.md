@@ -12,10 +12,6 @@ Confluence diagnostic commands: check instance health via the /status endpoint, 
 
 *Applies to: Confluence Data Center / Cloud*
 </div>
-![Confluence — Diagnostics](../../../../assets/itsm-confluence-troubleshooting-diagnostics-index.svg)
-
-
-
 
 ```mermaid
 graph TD

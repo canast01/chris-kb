@@ -6,8 +6,6 @@ search:
   boost: 1.5
 ---
 # Dell AIOps — Troubleshooting
-![Dell AIOps — Troubleshooting](../../../../assets/storage-dell-dell-aiops-troubleshooting-index.svg)
-
 
 ```bash
 # List recent AI alerts with confidence scores
@@ -23,7 +21,6 @@ curl -sk -X POST \
   -H "Content-Type: application/json" \
   -d '{"reason": "FALSE_POSITIVE", "comment": "Weekly backup job 22:00–02:00, expected anomaly"}'
 ```
-
 
 ```d2
 direction: down

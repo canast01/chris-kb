@@ -9,10 +9,6 @@ Host-based multipath I/O software — automatic path failover, dynamic load bala
 
 *Applies to: PowerPath*
 </div>
-![Dell PowerPath](../../../assets/storage-dell-powerpath-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 
@@ -37,25 +33,6 @@ Host-based multipath I/O software — automatic path failover, dynamic load bala
 </a>
 
 </div>
-
-```d2
-direction: right
-
-center: "PowerPath" {shape: hexagon}
-where_it_fits: "Where It Fits" {shape: rectangle}
-daily_checks: "Daily Checks" {shape: rectangle}
-health_commands: "Health Commands" {shape: rectangle}
-common_issues: "Common Issues" {shape: rectangle}
-operational_tasks: "Operational Tasks" {shape: rectangle}
-upgrade_notes: "Upgrade Notes" {shape: rectangle}
-
-center -> where_it_fits
-center -> daily_checks
-center -> health_commands
-center -> common_issues
-center -> operational_tasks
-center -> upgrade_notes
-```
 
 ## Overview
 

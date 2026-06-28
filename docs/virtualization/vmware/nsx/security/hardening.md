@@ -8,7 +8,6 @@ tags:
 # NSX — Hardening
 ![NSX — Hardening](../../../../assets/virtualization-vmware-nsx-security-hardening.svg)
 
-
 ```bash
 curl -sk -u 'admin:password' \
   "https://<nsx-manager>/policy/api/v1/infra/domains/default/security-policies/default-layer3-section/rules" | \
@@ -69,21 +68,6 @@ esxcli software vib list | grep -i nsx | awk '{print $1, $4}'
 summarize-dvfilter | grep -c "vmware-sfw"
 # Count should equal the number of powered-on VM vNICs on this host
 # A count of 0 means DFW is not applying to VMs — escalate immediately
-```
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-perimeter_controls: "Perimeter Controls" {shape: rectangle}
-identity_access: "Identity & Access" {shape: rectangle}
-audit_logging: "Audit & Logging" {shape: rectangle}
-core: "NSX-T Core" {shape: hexagon}
-
-external -> perimeter_controls: traffic in
-perimeter_controls -> identity_access
-identity_access -> audit_logging
-audit_logging -> core: secured path
 ```
 
 ## Before you begin

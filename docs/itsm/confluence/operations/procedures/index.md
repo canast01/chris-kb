@@ -4,8 +4,6 @@ tags:
   - operations
 ---
 # Confluence — Operations Procedures
-![Confluence — Operations Procedures](../../../../assets/itsm-confluence-operations-procedures-index.svg)
-
 
 ```bash
 # Create a page via REST API
@@ -197,25 +195,6 @@ curl -s -u user:token -G \
 ```
 
 ---
-
-```d2
-direction: right
-
-hub: "Procedures\nOperations" {shape: hexagon}
-create_a_space: "Create a Space" {shape: rectangle}
-manage_space_permissions: "Manage Space Permissions" {shape: rectangle}
-create_and_publish_a_page: "Create and Publish a Page" {shape: rectangle}
-restrict_page_access: "Restrict Page Access" {shape: rectangle}
-manage_user_accounts_admin: "Manage User Accounts (Admin)" {shape: rectangle}
-run_a_space_backup: "Run a Space Backup" {shape: rectangle}
-
-hub -> create_a_space
-hub -> manage_space_permissions
-hub -> create_and_publish_a_page
-hub -> restrict_page_access
-hub -> manage_user_accounts_admin
-hub -> run_a_space_backup
-```
 
 ## Before you begin
 

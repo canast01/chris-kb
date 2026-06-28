@@ -9,8 +9,6 @@ InsightIQ Lifecycle reference covering Compatibility Validation, Pre-Upgrade Che
 
 *Applies to: InsightIQ*
 </div>
-![InsightIQ Lifecycle](../../../../assets/storage-netapp-insightiq-lifecycle-index.svg)
-
 
 ```d2
 direction: right
@@ -43,7 +41,6 @@ Key compatibility rules:
 - Always check IMT before a cluster OS upgrade — a OneFS upgrade may require an InsightIQ upgrade first
 
 ## Pre-Upgrade Checklist
-
 
 Backup files should be replicated to an external backup target (NAS, S3-compatible, or enterprise backup solution).
 

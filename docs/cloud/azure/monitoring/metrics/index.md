@@ -4,35 +4,11 @@ tags:
 ---
 # Metrics
 
-
 <div class="kb-summary">
 Azure Monitor Metrics is a time-series database that stores numeric data from Azure resources at near-real-time frequency. Platform metrics are collected automatically at no cost; custom metrics can be emitted from application code or agents.
 
 *Applies to: Azure*
 </div>
-![Metrics](../../../../assets/cloud-azure-monitoring-metrics-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-metrics_collection_and_consumption: "Metrics Collection and Consumption" {shape: rectangle}
-platform_metrics_vs_custom_metrics: "Platform Metrics vs Custom Metrics" {shape: rectangle}
-querying_metrics: "Querying Metrics" {shape: rectangle}
-aggregation_types: "Aggregation Types" {shape: rectangle}
-metric_alerts: "Metric Alerts" {shape: rectangle}
-dimension_filtering: "Dimension Filtering" {shape: rectangle}
-
-center -> metrics_collection_and_consumption
-center -> platform_metrics_vs_custom_metrics
-center -> querying_metrics
-center -> aggregation_types
-center -> metric_alerts
-center -> dimension_filtering
-```
 
 ## Metrics Collection and Consumption
 

@@ -16,26 +16,6 @@ Firewall port reference for NetApp InsightIQ. InsightIQ is a performance analyti
 </div>
 ![NetApp InsightIQ — Ports and Network Requirements](../../../../assets/storage-netapp-insightiq-architecture-ports.svg)
 
-
-```d2
-direction: right
-
-center: "InsightIQ" {shape: hexagon}
-network_zones: "Network Zones" {shape: rectangle}
-inbound_admin_to_insightiq: "Inbound — Admin to InsightIQ" {shape: rectangle}
-insightiq_to_powerscale_outbound: "InsightIQ to PowerScale (Outbound)" {shape: rectangle}
-insightiq_to_support_updates_outboun: "InsightIQ to Support / Updates (Outbound)" {shape: rectangle}
-firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> network_zones
-center -> inbound_admin_to_insightiq
-center -> insightiq_to_powerscale_outbound
-center -> insightiq_to_support_updates_outboun
-center -> firewall_zone_summary
-center -> verify
-```
-
 ## Network Zones
 
 ```

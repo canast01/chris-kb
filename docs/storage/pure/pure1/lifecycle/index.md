@@ -3,8 +3,6 @@ tags:
   - pure
 ---
 # Pure1 — Lifecycle Management
-![Pure1 — Lifecycle Management](../../../../assets/storage-pure-pure1-lifecycle-index.svg)
-
 
 ```bash
 # From Purity CLI — verify Pure1 connectivity

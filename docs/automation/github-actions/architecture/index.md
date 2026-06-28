@@ -33,17 +33,6 @@ Event-driven CI/CD platform embedded in GitHub repositories; workflows defined i
 
 </div>
 
-```d2
-direction: right
-
-center: "GitHub Actions" {shape: hexagon}
-githubhosted_runner_specs: "GitHub-Hosted Runner Specs" {shape: rectangle}
-core_execution_model: "Core Execution Model" {shape: rectangle}
-
-center -> githubhosted_runner_specs
-center -> core_execution_model
-```
-
 ## GitHub-Hosted Runner Specs
 
 | Label | OS | vCPU | RAM |

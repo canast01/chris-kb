@@ -5,37 +5,15 @@ tags:
 ---
 # Confluence — How It Works
 
-
 <div class="kb-summary">
 Confluence is Atlassian's enterprise wiki and collaboration platform, available in three deployment models: **Server** (EOL), **Data Center** (self-managed, HA-capable), and **Cloud** (SaaS).
 
 *Applies to: Confluence Cloud / Data Center*
 </div>
-![Confluence — How It Works](../../../../assets/itsm-confluence-architecture-how-it-works-index.svg)
-
 
  This page covers the internal component architecture and deployment topology for on-premises Data Center deployments.
 
 ---
-
-```d2
-direction: right
-
-center: "How It Works" {shape: hexagon}
-deployment_models: "Deployment Models" {shape: rectangle}
-core_components: "Core Components" {shape: rectangle}
-deployment_topology: "Deployment Topology" {shape: rectangle}
-network_port_reference: "Network Port Reference" {shape: rectangle}
-plugin_architecture: "Plugin Architecture" {shape: rectangle}
-key_admin_urls: "Key Admin URLs" {shape: rectangle}
-
-center -> deployment_models
-center -> core_components
-center -> deployment_topology
-center -> network_port_reference
-center -> plugin_architecture
-center -> key_admin_urls
-```
 
 ## Deployment Models
 
@@ -132,7 +110,6 @@ flowchart TD
     N2 --> DB
     N3 --> DB
 ```
-
 
 ---
 

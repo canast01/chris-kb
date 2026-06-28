@@ -4,29 +4,11 @@ tags:
 ---
 # Pure1 — Performance
 
-
 <div class="kb-summary">
 Performance reference covering Performance via Pure1 API, Latency Investigation, Performance Benchmarking (fio), Common Performance Issues.
 
 *Applies to: Pure1*
 </div>
-![Pure1 — Performance](../../../../assets/storage-pure-pure1-performance-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Pure1" {shape: hexagon}
-latency_investigation: "Latency Investigation" {shape: rectangle}
-performance_benchmarking_fio: "Performance Benchmarking (fio)" {shape: rectangle}
-common_performance_issues: "Common Performance Issues" {shape: rectangle}
-
-center -> latency_investigation
-center -> performance_benchmarking_fio
-center -> common_performance_issues
-```
 
 ## Latency Investigation
 

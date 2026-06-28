@@ -4,31 +4,9 @@ tags:
 ---
 # Daily Infrastructure Health Checks
 
-
 <div class="kb-summary">
 Daily Infrastructure Health Checks reference covering Overview, Morning Check Routine, What to Look For, Escalation Decision Tree, Documentation and Handover and 1 more sections.
 </div>
-![Daily Infrastructure Health Checks](../../../../assets/backup-dr-operations-health-checks-daily-checks-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "DR Operations" {shape: hexagon}
-morning_check_routine: "Morning Check Routine" {shape: rectangle}
-what_to_look_for: "What to Look For" {shape: rectangle}
-escalation_decision_tree: "Escalation Decision Tree" {shape: rectangle}
-documentation_and_handover: "Documentation and Handover" {shape: rectangle}
-common_daily_check_commands: "Common Daily Check Commands" {shape: rectangle}
-
-center -> morning_check_routine
-center -> what_to_look_for
-center -> escalation_decision_tree
-center -> documentation_and_handover
-center -> common_daily_check_commands
-```
 
 ## Overview
 

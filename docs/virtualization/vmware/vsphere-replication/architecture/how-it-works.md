@@ -6,35 +6,12 @@ tags:
 ---
 # vSphere Replication — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Replication Engine — ESXi Kernel Module, Data Flow, RPO Mechanics, VRA Role — vSphere Replication Appliance, VRS — vSphere Replication Server (Scale-Out) and 2 more sections.
 
 *Applies to: vSphere Replication 8.x*
 </div>
 ![vSphere Replication — How It Works](../../../../assets/virtualization-vmware-vsphere-replication-architecture-how-i.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "vSphere Replication" {shape: hexagon}
-replication_engine_esxi_kernel_modul: "Replication Engine — ESXi Kernel Module" {shape: rectangle}
-data_flow: "Data Flow" {shape: rectangle}
-rpo_mechanics: "RPO Mechanics" {shape: rectangle}
-vra_role_vsphere_replication_applian: "VRA Role — vSphere Replication Appliance" {shape: rectangle}
-vrs_vsphere_replication_server_scale: "VRS — vSphere Replication Server (Scale-Out)" {shape: rectangle}
-consistency_groups: "Consistency Groups" {shape: rectangle}
-
-center -> replication_engine_esxi_kernel_modul
-center -> data_flow
-center -> rpo_mechanics
-center -> vra_role_vsphere_replication_applian
-center -> vrs_vsphere_replication_server_scale
-center -> consistency_groups
-```
 
 ```plantuml
 @startuml

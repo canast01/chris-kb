@@ -6,31 +6,9 @@ search:
 ---
 # Replication Failures Troubleshooting
 
-
 <div class="kb-summary">
 Replication Failures Troubleshooting reference covering Overview, Replication Technology Classification, Diagnostic Flowchart, ONTAP SnapMirror Troubleshooting, RecoverPoint Troubleshooting and 5 more sections.
 </div>
-![Replication Failures Troubleshooting](../../../assets/storage-troubleshooting-replication-failures-index.svg)
-
-
-```d2
-direction: right
-
-center: "Replication Failures" {shape: hexagon}
-replication_technology_classificatio: "Replication Technology Classification" {shape: rectangle}
-diagnostic_flowchart: "Diagnostic Flowchart" {shape: rectangle}
-ontap_snapmirror_troubleshooting: "ONTAP SnapMirror Troubleshooting" {shape: rectangle}
-recoverpoint_troubleshooting: "RecoverPoint Troubleshooting" {shape: rectangle}
-replication_lag_threshold_and_rpo_br: "Replication Lag Threshold and RPO Breach Criteria" {shape: rectangle}
-network_bandwidth_and_latency_impact: "Network Bandwidth and Latency Impact" {shape: rectangle}
-
-center -> replication_technology_classificatio
-center -> diagnostic_flowchart
-center -> ontap_snapmirror_troubleshooting
-center -> recoverpoint_troubleshooting
-center -> replication_lag_threshold_and_rpo_br
-center -> network_bandwidth_and_latency_impact
-```
 
 ## Before you begin
 
@@ -92,7 +70,6 @@ flowchart TD
     B -- Veeam Rep --> Z[Get-VBRJob type Replica\nCheck last session result]
     Z --> AA[Review session log\nCheck network path to replica host]
 ```
-
 
 ### SRDF Error Codes
 

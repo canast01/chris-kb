@@ -5,35 +5,12 @@ tags:
 ---
 # Unity — Integrations
 
-
 <div class="kb-summary">
 Integrations reference covering Integration Map, VMware Integration, Backup Integration, CloudIQ Monitoring, Active Directory and 1 more sections.
 
 *Applies to: Unity XT*
 </div>
 ![Unity — Integrations](../../../../assets/storage-dell-unity-architecture-integrations.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Unity XT" {shape: hexagon}
-integration_map: "Integration Map" {shape: rectangle}
-vmware_integration: "VMware Integration" {shape: rectangle}
-backup_integration: "Backup Integration" {shape: rectangle}
-cloudiq_monitoring: "CloudIQ Monitoring" {shape: rectangle}
-active_directory: "Active Directory" {shape: rectangle}
-rest_api: "REST API" {shape: rectangle}
-
-center -> integration_map
-center -> vmware_integration
-center -> backup_integration
-center -> cloudiq_monitoring
-center -> active_directory
-center -> rest_api
-```
 
 ## Integration Map
 

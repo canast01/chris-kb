@@ -10,19 +10,6 @@ Azure Networking articles, operational checks, troubleshooting notes, and refere
 
 *Applies to: Azure*
 </div>
-![Azure Networking](../../../assets/cloud-azure-networking-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-articles: "Articles" {shape: rectangle}
-
-center -> articles
-```
 
 ## Articles
 

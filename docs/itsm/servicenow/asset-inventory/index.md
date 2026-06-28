@@ -9,9 +9,6 @@ Asset tracking, CMDB, environment mapping, lifecycle, and license management pro
 
 *Applies to: ServiceNow*
 </div>
-![ServiceNow — Asset Inventory](../../../assets/itsm-servicenow-asset-inventory-index.svg)
-
-
 
 <!-- diagram:inventory -->
 

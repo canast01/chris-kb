@@ -5,14 +5,9 @@ tags:
 ---
 # Review Plan
 
-
 <div class="kb-summary">
 Review Plan reference covering Purpose, Common checks, Incident notes, Change notes, Useful commands or references and 1 more sections.
 </div>
-![Review Plan](../../../../assets/virtualization-vmware-certifications-review-plan-index.svg)
-
-
-
 
 ```d2
 direction: right

@@ -11,10 +11,6 @@ Troubleshooting guide for frequent OpenShift failures: CrashLoopBackOff, ImagePu
 
 *Applies to: OpenShift 4.x*
 </div>
-![OpenShift — Common Issues](../../../../assets/virtualization-openshift-troubleshooting-common-issues-index.svg)
-
-
-
 
 ```mermaid
 graph TD

@@ -6,16 +6,11 @@ tags:
 ---
 # Aria Operations: Dashboards — Creating, Editing, and Sharing
 
-
 <div class="kb-summary">
 Creating, Editing, and Sharing reference covering Dashboard Interactions, Sharing and Cloning Dashboards, Importing Community Dashboards, Common Dashboard Issues.
 
 *Applies to: Aria Ops 8.x*
 </div>
-![Aria Operations: Dashboards — Creating, Editing, and Sharing](../../../../assets/virtualization-vmware-aria-operations-operations-dashboards.svg)
-
-
-
 
 Popular community packs:
 
@@ -25,17 +20,6 @@ Popular community packs:
 | NSX-T Operations | Logical network health and flow telemetry |
 | vSAN Operations | Disk group health, capacity, performance |
 | Kubernetes | Container resource usage via Telegraf |
-
-```d2
-direction: right
-
-hub: "Aria Operations\nOperations" {shape: hexagon}
-common_dashboard_issues: "Common Dashboard Issues" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> common_dashboard_issues
-hub -> verify
-```
 
 ## Before you begin
 

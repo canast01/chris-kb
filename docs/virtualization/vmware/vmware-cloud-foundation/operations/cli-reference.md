@@ -6,7 +6,6 @@ tags:
 ---
 # VCF Operations — CLI Reference
 
-
 <div class="kb-summary">
 CLI Reference reference covering Support Bundles, SDDC Manager REST API, Password Management, Service Status & Logs.
 
@@ -14,25 +13,9 @@ CLI Reference reference covering Support Bundles, SDDC Manager REST API, Passwor
 </div>
 ![VCF Operations — CLI Reference](../../../../assets/virtualization-vmware-vmware-cloud-foundation-operations-cli.svg)
 
-
 VCF CLI Tool Map — Where to Run What
 
 ---
-
-```d2
-direction: right
-
-hub: "VMware Cloud Foundation\nOperations" {shape: hexagon}
-sddc_manager_rest_api: "SDDC Manager REST API" {shape: rectangle}
-password_management: "Password Management" {shape: rectangle}
-service_status_logs: "Service Status & Logs" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> sddc_manager_rest_api
-hub -> password_management
-hub -> service_status_logs
-hub -> verify
-```
 
 ## Before you begin
 

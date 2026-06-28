@@ -4,8 +4,6 @@ tags:
   - operations
 ---
 # Git — Health Checks
-![Git — Health Checks](../../../../assets/itsm-git-operations-health-checks-index.svg)
-
 
 ```bash
 # Basic integrity check
@@ -23,7 +21,6 @@ git -C /backup/repo.git fsck --full
 # "missing blob <sha>"       — CORRUPTION — object referenced but missing from disk
 # "broken link from tree"    — CORRUPTION — tree references a missing object
 ```
-
 
 ```d2
 direction: right

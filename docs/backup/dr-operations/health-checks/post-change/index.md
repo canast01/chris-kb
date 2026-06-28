@@ -4,31 +4,9 @@ tags:
 ---
 # Post-Change Health Check
 
-
 <div class="kb-summary">
 Post-Change Health Check reference covering Overview, Timing, Post-Change Check Sequence, Comparison Against Pre-Change Baseline, Escalation During Post-Check and 1 more sections.
 </div>
-![Post-Change Health Check](../../../../assets/backup-dr-operations-health-checks-post-change-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "DR Operations" {shape: hexagon}
-timing: "Timing" {shape: rectangle}
-postchange_check_sequence: "Post-Change Check Sequence" {shape: rectangle}
-comparison_against_prechange_baselin: "Comparison Against Pre-Change Baseline" {shape: rectangle}
-escalation_during_postcheck: "Escalation During Post-Check" {shape: rectangle}
-postcheck_signoff: "Post-Check Sign-Off" {shape: rectangle}
-
-center -> timing
-center -> postchange_check_sequence
-center -> comparison_against_prechange_baselin
-center -> escalation_during_postcheck
-center -> postcheck_signoff
-```
 
 ## Overview
 

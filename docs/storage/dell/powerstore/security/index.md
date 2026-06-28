@@ -10,9 +10,6 @@ PowerStore hardening — RBAC, local user management, encryption key management,
 
 *Applies to: PowerStore 3.x*
 </div>
-![PowerStore — Security](../../../../assets/storage-dell-powerstore-security-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

@@ -5,35 +5,12 @@ tags:
 ---
 # Unity — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Overview, Architecture, HA and Write Cache Mirroring, Hardware Models, Storage Pool Architecture and 3 more sections.
 
 *Applies to: Unity XT*
 </div>
 ![Unity — How It Works](../../../../assets/storage-dell-unity-architecture-how-it-works.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Unity XT" {shape: hexagon}
-architecture: "Architecture" {shape: rectangle}
-ha_and_write_cache_mirroring: "HA and Write Cache Mirroring" {shape: rectangle}
-hardware_models: "Hardware Models" {shape: rectangle}
-storage_pool_architecture: "Storage Pool Architecture" {shape: rectangle}
-data_services: "Data Services" {shape: rectangle}
-networking: "Networking" {shape: rectangle}
-
-center -> architecture
-center -> ha_and_write_cache_mirroring
-center -> hardware_models
-center -> storage_pool_architecture
-center -> data_services
-center -> networking
-```
 
 ```plantuml
 @startuml

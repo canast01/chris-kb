@@ -27,18 +27,26 @@ hosts: Hosts {
 
 pm1: PowerMax (Site A) {
   fe_a: Front-End Directors\n(FC / iSCSI / NVMe) {shape: rectangle}
-  be_a: Back-End Directors\n(NVMe-oF to flash) {shape: rectangle}
+  gc_a: Global Cache\n(DRAM · RAID-1 mirrored) {shape: rectangle}
+  be_a: Back-End Directors {shape: rectangle}
   rdf_a: RDF Directors {shape: rectangle}
   flash_a: NVMe Flash Bays {shape: cylinder}
-  fe_a -> be_a: internal fabric
+  fe_a -> gc_a: write to cache
+  gc_a -> be_a: async destage
+  gc_a -> rdf_a: SRDF path
   be_a -> flash_a
 }
 
 pm2: PowerMax (Site B) {
   fe_b: Front-End Directors {shape: rectangle}
+  gc_b: Global Cache\n(DRAM · RAID-1 mirrored) {shape: rectangle}
+  be_b: Back-End Directors {shape: rectangle}
   rdf_b: RDF Directors {shape: rectangle}
   flash_b: NVMe Flash Bays {shape: cylinder}
-  fe_b -> flash_b
+  fe_b -> gc_b: write to cache
+  gc_b -> be_b: async destage
+  gc_b -> rdf_b: SRDF path
+  be_b -> flash_b
 }
 
 unisphere: Unisphere\n(management) {shape: rectangle}
@@ -48,8 +56,8 @@ hosts.h2 -> pm2.fe_b: FC / NVMe-oF
 
 pm1.rdf_a -> pm2.rdf_b: SRDF replication\n(sync / async / STAR)
 
-unisphere -> pm1.fe_a: manage
-unisphere -> pm2.fe_b: manage
+unisphere -> pm1: manage
+unisphere -> pm2: manage
 ```
 
 ## Architecture Overview
@@ -109,63 +117,52 @@ Key properties:
 
 **Vault protection:** In the event of a power failure, PowerMax uses battery-backed NVRAM to safely flush the contents of global cache to a dedicated vault area on the NVMe drives. On power restoration, the array replays the vault log and restores the cache to its pre-failure state before accepting new host I/O.
 
-## Mermaid Diagram: I/O Architecture
+## I/O Architecture
 
-```mermaid
-flowchart LR
-    subgraph HOSTS["Host Layer"]
-        H1["Production Hosts\nOracle / SQL / SAP\nFC / iSCSI / FICON"]
-    end
+```d2
+direction: right
 
-    subgraph FEDIR["Front-End Directors"]
-        FA1["FA Director A\nFC / iSCSI ports\nMasking Views"]
-        FA2["FA Director B\nFC / iSCSI ports\nMasking Views"]
-    end
+hosts: Host Layer {
+  h1: Production Hosts\nOracle · SQL · SAP\nFC / iSCSI / FICON {shape: rectangle}
+}
 
-    subgraph CACHE["Global Cache"]
-        GC["DRAM Cache\nTens–hundreds of GB\nRAID-1 across directors\nVault on power loss"]
-    end
+fe: Front-End Directors {
+  fa1: FA Director A\nFC / iSCSI ports\nMasking Views {shape: rectangle}
+  fa2: FA Director B\nFC / iSCSI ports\nMasking Views {shape: rectangle}
+}
 
-    subgraph BEDIR["Back-End Directors"]
-        DA1["DA Director A\nNVMe drive control\nRAID-5/6 protection"]
-        DA2["DA Director B\nNVMe drive control\nRAID-5/6 protection"]
-    end
+cache: Global Cache {
+  gc: DRAM Cache\nHundreds of GB\nRAID-1 · Vault-safe {shape: rectangle}
+}
 
-    subgraph NVME["NVMe Flash"]
-        DRV["NVMe Drive Bays\neTLC / SCM\nRAID protected"]
-    end
+be: Back-End Directors {
+  da1: DA Director A\nNVMe drive control\nRAID-5/6 protection {shape: rectangle}
+  da2: DA Director B\nNVMe drive control\nRAID-5/6 protection {shape: rectangle}
+}
 
-    subgraph SRDF["SRDF Replication"]
-        RA1["RA Director A\nRDF Group links"]
-        RA2["RA Director B\nRDF Group links"]
-    end
+nvme: NVMe Flash {
+  drv: NVMe Drive Bays\neTLC / SCM\nRAID protected {shape: cylinder}
+}
 
-    REMOTE["Remote PowerMax\nSRDF/S or SRDF/A target"]
+srdf: SRDF Replication {
+  ra1: RA Director A\nRDF Group links {shape: rectangle}
+  ra2: RA Director B\nRDF Group links {shape: rectangle}
+}
 
-    H1 -->|"FC / iSCSI host I/O"| FA1
-    H1 -->|"FC / iSCSI host I/O"| FA2
-    FA1 --> GC
-    FA2 --> GC
-    GC --> DA1
-    GC --> DA2
-    DA1 --> DRV
-    DA2 --> DRV
-    GC --> RA1
-    GC --> RA2
-    RA1 -->|"SRDF/S or SRDF/A\nRDF protocol over FC or IP"| REMOTE
-    RA2 -->|"SRDF/S or SRDF/A"| REMOTE
+remote: Remote PowerMax\nSRDF/S or SRDF/A target {shape: rectangle}
 
-    classDef host fill:#1d4ed8,stroke:#1e3a8a,color:#fff
-    classDef dir fill:#15803d,stroke:#14532d,color:#fff
-    classDef cache fill:#15803d,stroke:#14532d,color:#fff
-    classDef nvme fill:#b45309,stroke:#92400e,color:#fff
-    classDef srdf fill:#7c3aed,stroke:#5b21b6,color:#fff
-
-    class H1 host
-    class FA1,FA2,DA1,DA2 dir
-    class GC cache
-    class DRV nvme
-    class RA1,RA2,REMOTE srdf
+hosts.h1 -> fe.fa1: FC / iSCSI host I/O
+hosts.h1 -> fe.fa2: FC / iSCSI host I/O
+fe.fa1 -> cache.gc
+fe.fa2 -> cache.gc
+cache.gc -> be.da1
+cache.gc -> be.da2
+be.da1 -> nvme.drv
+be.da2 -> nvme.drv
+cache.gc -> srdf.ra1
+cache.gc -> srdf.ra2
+srdf.ra1 -> remote: SRDF/S or SRDF/A\nRDF protocol over FC or IP
+srdf.ra2 -> remote: SRDF/S or SRDF/A
 ```
 
 ## SRDF Replication
@@ -261,22 +258,25 @@ hosts: Production Hosts {
   h: Oracle RAC · SAP HANA\nFC 32 Gb/s dual-fabric {shape: rectangle}
 }
 
-fa: FA Directors A/B\nHost FC · iSCSI · NVMe/FC\nMasking Views enforced here {shape: rectangle}
+fa: FA Directors A/B\nFC · iSCSI · NVMe/FC\nMasking Views {shape: rectangle}
 
-gc: Global Cache — Site A\nDRAM 2 TB+ · RAID-1 mirrored\nAll host writes stage here first {shape: rectangle}
+gc: Global Cache — Site A\nDRAM · RAID-1 mirrored\nAll writes land here first {shape: rectangle}
 
 ra: RDF Directors — Site A {
-  ra_s: RA Director S — RDF Group 1\nSRDF/S Synchronous\nHolds host write until R2 ACKs {shape: rectangle}
-  ra_a: RA Director A — RDF Group 2\nSRDF/A Asynchronous\nACKs host now — buffers delta set {shape: rectangle}
+  ra_s: RA Director S — RDFg1\nSRDF/S Synchronous\nHolds write until R2 ACKs {shape: rectangle}
+  ra_a: RA Director A — RDFg2\nSRDF/A Asynchronous\nACKs host · buffers deltas {shape: rectangle}
 }
 
-da: DA Directors A/B\nNVMe Flash Bays\nRAID-5/6 protection {shape: cylinder}
+da: DA Directors A/B\nNVMe-oF · RAID-5/6 {shape: rectangle}
+
+flash: NVMe Flash Bays\neTLC / SCM media {shape: cylinder}
 
 hosts.h -> fa: FC host write
 fa -> gc: write to cache
 gc -> da: async destage
 gc -> ra.ra_s: SRDF/S path
 gc -> ra.ra_a: SRDF/A path
+da -> flash
 ```
 
 **Part 2 — Inter-site SRDF topology:** the two RA director pairs connect over dedicated links; SRDF/S holds the host ACK until Site B confirms, SRDF/A releases the host immediately and transmits delta sets periodically.
@@ -285,34 +285,37 @@ gc -> ra.ra_a: SRDF/A path
 direction: right
 
 ra1: Site A — RDF Directors {
-  s1: RA Director S\nRDF Group 1\nSRDF/S — Synchronous\nRPO = 0 {shape: rectangle}
-  a1: RA Director A\nRDF Group 2\nSRDF/A — Asynchronous\nRPO ~30 seconds {shape: rectangle}
+  s1: RA-S · RDFg1\nSRDF/S Synchronous\nRPO = 0 {shape: rectangle}
+  a1: RA-A · RDFg2\nSRDF/A Asynchronous\nRPO ~30 s {shape: rectangle}
 }
 
 links: Inter-Site Links {
-  ls: Sync Link\nFC / DWDM dedicated\nMax 10 ms RTT {shape: diamond}
-  la: Async Link\nFC or IP (1 GbE / 10 GbE)\nAny distance tolerated {shape: diamond}
+  ls: Sync Link\nFC / DWDM · Max 10 ms RTT {shape: rectangle}
+  la: Async Link\nFC or IP · Any distance {shape: rectangle}
 }
 
 ra2: Site B — RDF Directors {
-  s2: RA Director S\nRDF Group 1\nReceives SRDF/S write\nACKs back to Site A RA {shape: rectangle}
-  a2: RA Director A\nRDF Group 2\nReceives SRDF/A delta sets\nApplies writes in order {shape: rectangle}
+  s2: RA-S · RDFg1\nReceives SRDF/S write\nACKs back to R1 {shape: rectangle}
+  a2: RA-A · RDFg2\nReceives SRDF/A deltas\nApplies in order {shape: rectangle}
 }
 
-gc2: Global Cache — Site B\nDRAM · RAID-1 mirrored\nR2 write staging area {shape: rectangle}
+gc2: Global Cache — Site B\nDRAM · RAID-1 mirrored\nR2 staging area {shape: rectangle}
 
-da2: DA Directors A/B\nNVMe Flash Bays\nRAID-5/6 protection {shape: cylinder}
+da2: DA Directors A/B\nNVMe-oF · RAID-5/6 {shape: rectangle}
 
-dev: R2 Devices (TDEVs)\nRead-only during normal ops\nPromoted read-write on failover {shape: rectangle}
+flash2: NVMe Flash Bays — Site B\neTLC / SCM media {shape: cylinder}
+
+dev: R2 Devices (TDEVs)\nRead-only normally\nRead-write on failover {shape: rectangle}
 
 ra1.s1 -> links.ls: SRDF/S frames
 ra1.a1 -> links.la: delta sets every 15–30 s
 links.ls -> ra2.s2
 links.la -> ra2.a2
-ra2.s2 -> gc2: confirm to R1 RA\nbefore host ACK issued
-ra2.a2 -> gc2: apply delta set in order
+ra2.s2 -> gc2: confirm to R1 first
+ra2.a2 -> gc2: apply delta in order
 gc2 -> da2: destage
-da2 -> dev
+da2 -> flash2
+flash2 -> dev
 ```
 
 Key points illustrated:

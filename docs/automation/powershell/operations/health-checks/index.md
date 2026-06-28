@@ -5,14 +5,11 @@ tags:
 ---
 # PowerShell — Health Checks
 
-
 <div class="kb-summary">
 Health Checks reference covering Module Health, Scheduled Tasks, Remoting Connectivity.
 
 *Applies to: PowerShell 7.x*
 </div>
-![PowerShell — Health Checks](../../../../assets/automation-powershell-operations-health-checks-index.svg)
-
 
 ```d2
 direction: right
@@ -63,7 +60,6 @@ Test-WSMan -ComputerName <target>
 # 6. PowerShell Core availability — verify if cross-platform scripts require PS Core
 pwsh -Version
 ```
-
 
 **List only installed PSGallery modules**
 

@@ -7,36 +7,12 @@ tags:
 ---
 # vSAN — Access Control
 
-
 <div class="kb-summary">
 vSAN access control is implemented through vCenter's Role-Based Access Control (RBAC) system. There is no separate vSAN permission model — all vSAN management actions require vCenter permissions on the cluster or datacenter objects.
 
 *Applies to: vSAN 7.x / 8.x*
 </div>
 ![vSAN — Access Control](../../../../assets/virtualization-vmware-vsan-security-access-control.svg)
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-custom_roles: "Custom Roles" {shape: rectangle}
-assigning_permissions: "Assigning Permissions" {shape: rectangle}
-storage_policy_access_control: "Storage Policy Access Control" {shape: rectangle}
-vsan_datastore_access: "vSAN Datastore Access" {shape: rectangle}
-privileged_access_governance: "Privileged Access Governance" {shape: rectangle}
-access_control_for_stretched_cluster: "Access Control for Stretched Clusters" {shape: rectangle}
-core: "vSAN Core" {shape: hexagon}
-
-external -> custom_roles: traffic in
-custom_roles -> assigning_permissions
-assigning_permissions -> storage_policy_access_control
-storage_policy_access_control -> vsan_datastore_access
-vsan_datastore_access -> privileged_access_governance
-privileged_access_governance -> access_control_for_stretched_cluster
-access_control_for_stretched_cluster -> core: secured path
-```
 
 ## Before you begin
 

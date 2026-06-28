@@ -10,10 +10,6 @@ vSphere Distributed Switch separates control plane (vCenter) from data plane (ES
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![vSphere Networking Internals](../../../../assets/virtualization-vmware-internals-vsphere-networking-internals.svg)
-
-
-
 
 ```mermaid
 graph LR
@@ -38,25 +34,6 @@ graph LR
     PG2 --> VMNIC2
     VMNIC1 --> PHSW
     VMNIC2 --> PHSW
-```
-
-```d2
-direction: right
-
-center: "Vsphere Networking Internals" {shape: hexagon}
-dvs_architecture: "DVS Architecture" {shape: rectangle}
-port_group_types: "Port Group Types" {shape: rectangle}
-nioc_network_io_control: "NIOC — Network I/O Control" {shape: rectangle}
-teaming_policies: "Teaming Policies" {shape: rectangle}
-lacp_configuration: "LACP Configuration" {shape: rectangle}
-vmkernel_adapters: "VMkernel Adapters" {shape: rectangle}
-
-center -> dvs_architecture
-center -> port_group_types
-center -> nioc_network_io_control
-center -> teaming_policies
-center -> lacp_configuration
-center -> vmkernel_adapters
 ```
 
 ## DVS Architecture

@@ -6,7 +6,6 @@ tags:
 ---
 # vSphere Replication — Scripts
 
-
 <div class="kb-summary">
 Scripts reference covering Get All Replicated VMs and RPO Compliance, Export Replication Status Report, Identify VMs Without Replication, Check VRA Disk Usage via REST API, Alert on VMs with Replication Lag Exceeding Threshold.
 
@@ -14,30 +13,9 @@ Scripts reference covering Get All Replicated VMs and RPO Compliance, Export Rep
 </div>
 ![vSphere Replication — Scripts](../../../../assets/virtualization-vmware-vsphere-replication-operations-scripts.svg)
 
-
   VR Automation via PowerCLI + REST API + Python
 
-
 ---
-
-```d2
-direction: right
-
-hub: "vSphere Replication\nOperations" {shape: hexagon}
-get_all_replicated_vms_and_rpo_compl: "Get All Replicated VMs and RPO Compliance" {shape: rectangle}
-export_replication_status_report: "Export Replication Status Report" {shape: rectangle}
-identify_vms_without_replication: "Identify VMs Without Replication" {shape: rectangle}
-check_vra_disk_usage_via_rest_api: "Check VRA Disk Usage via REST API" {shape: rectangle}
-alert_on_vms_with_replication_lag_ex: "Alert on VMs with Replication Lag Exceeding Threshold" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> get_all_replicated_vms_and_rpo_compl
-hub -> export_replication_status_report
-hub -> identify_vms_without_replication
-hub -> check_vra_disk_usage_via_rest_api
-hub -> alert_on_vms_with_replication_lag_ex
-hub -> verify
-```
 
 ## Before you begin
 

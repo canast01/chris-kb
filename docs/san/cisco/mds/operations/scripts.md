@@ -6,7 +6,6 @@ tags:
 # Cisco MDS 9000 — Operations Scripts
 ![Cisco MDS 9000 — Operations Scripts](../../../../assets/san-cisco-mds-operations-scripts.svg)
 
-
 ```bash
 #!/bin/bash
 # mds_fabric_health.sh
@@ -646,15 +645,6 @@ elif [ "${DOWN:-0}" -gt 0 ]; then
   exit 1
 fi
 exit 0
-```
-
-```d2
-direction: right
-
-hub: "Cisco MDS\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

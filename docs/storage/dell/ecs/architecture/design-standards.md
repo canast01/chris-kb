@@ -5,35 +5,12 @@ tags:
 ---
 # Dell ECS — Standards
 
-
 <div class="kb-summary">
 Standards reference covering Sizing and Capacity Model, Sizing by Workload, Network Sizing, Naming Conventions, Build and Deployment Baseline and 4 more sections.
 
 *Applies to: ECS 3.x*
 </div>
 ![Dell ECS — Standards](../../../../assets/storage-dell-ecs-architecture-design-standards.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "ECS" {shape: hexagon}
-sizing_and_capacity_model: "Sizing and Capacity Model" {shape: rectangle}
-sizing_by_workload: "Sizing by Workload" {shape: rectangle}
-network_sizing: "Network Sizing" {shape: rectangle}
-naming_conventions: "Naming Conventions" {shape: rectangle}
-build_and_deployment_baseline: "Build and Deployment Baseline" {shape: rectangle}
-replication_group_design: "Replication Group Design" {shape: rectangle}
-
-center -> sizing_and_capacity_model
-center -> sizing_by_workload
-center -> network_sizing
-center -> naming_conventions
-center -> build_and_deployment_baseline
-center -> replication_group_design
-```
 
 ## Sizing and Capacity Model
 

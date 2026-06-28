@@ -9,29 +9,6 @@ tags:
 Step-by-step procedures for conducting infrastructure security audits, reviewing firewall rules, auditing privileged accounts, checking certificates, and tracking findings to closure.
   <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
-![Security Audit — Procedures](../../../assets/security-security-audit-operations-index.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "Operations\nOperations" {shape: hexagon}
-conduct_infrastructure_security_audi: "Conduct Infrastructure Security Audit" {shape: rectangle}
-review_firewall_rule_effectiveness: "Review Firewall Rule Effectiveness" {shape: rectangle}
-audit_privileged_access_accounts: "Audit Privileged Access Accounts" {shape: rectangle}
-review_certificate_expiry: "Review Certificate Expiry" {shape: rectangle}
-check_for_unauthorised_changes_fim: "Check for Unauthorised Changes (FIM)" {shape: rectangle}
-generate_audit_report: "Generate Audit Report" {shape: rectangle}
-
-hub -> conduct_infrastructure_security_audi
-hub -> review_firewall_rule_effectiveness
-hub -> audit_privileged_access_accounts
-hub -> review_certificate_expiry
-hub -> check_for_unauthorised_changes_fim
-hub -> generate_audit_report
-```
 
 ## Before you begin
 

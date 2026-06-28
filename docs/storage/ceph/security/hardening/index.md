@@ -10,10 +10,6 @@ Ceph security hardening: network isolation, msgr2 encryption, cephx least-privil
 
 *Applies to: Ceph Reef / Squid*
 </div>
-![Ceph — Hardening](../../../../assets/storage-ceph-security-hardening-index.svg)
-
-
-
 
 ```mermaid
 graph TD

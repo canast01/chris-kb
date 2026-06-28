@@ -9,29 +9,6 @@ tags:
 Step-by-step procedures for enrolling users in MFA, resetting credentials, configuring MFA across vCenter and Azure AD, and reviewing MFA adoption.
   <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
-![Multi-Factor Authentication — Procedures](../../../assets/security-mfa-operations-index.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "Operations\nOperations" {shape: hexagon}
-enrol_a_user_in_mfa: "Enrol a User in MFA" {shape: rectangle}
-reset_mfa_for_a_user_helpdesk: "Reset MFA for a User (Helpdesk)" {shape: rectangle}
-configure_mfa_for_vcenter_sso_radius: "Configure MFA for vCenter SSO (RADIUS)" {shape: rectangle}
-configure_conditional_access_mfa_azu: "Configure Conditional Access MFA (Azure AD)" {shape: rectangle}
-exclude_a_service_account_from_mfa: "Exclude a Service Account from MFA" {shape: rectangle}
-test_mfa_authentication_flow: "Test MFA Authentication Flow" {shape: rectangle}
-
-hub -> enrol_a_user_in_mfa
-hub -> reset_mfa_for_a_user_helpdesk
-hub -> configure_mfa_for_vcenter_sso_radius
-hub -> configure_conditional_access_mfa_azu
-hub -> exclude_a_service_account_from_mfa
-hub -> test_mfa_authentication_flow
-```
 
 ## Before you begin
 

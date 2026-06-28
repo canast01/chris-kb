@@ -3,8 +3,6 @@ tags:
   - pure
 ---
 # Pure1 — Integration Guide
-![Pure1 — Integration Guide](../../../../assets/storage-pure-pure1-integration-index.svg)
-
 
 ```bash
 # Verify array connectivity from Purity CLI

@@ -9,10 +9,6 @@ Scale-out NAS platform running OneFS — multi-protocol access (NFS, SMB, S3, HD
 
 *Applies to: PowerScale (Isilon) 9.x*
 </div>
-![Dell PowerScale](../../../assets/storage-dell-powerscale-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

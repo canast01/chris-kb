@@ -5,33 +5,9 @@ tags:
 ---
 # Exam Tracking
 
-
 <div class="kb-summary">
 Exam Tracking reference covering Purpose, Common checks, Incident notes, Change notes, Useful commands or references and 1 more sections.
 </div>
-![Exam Tracking](../../../../assets/virtualization-vmware-certifications-exam-tracking-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Exam Tracking" {shape: hexagon}
-purpose: "Purpose" {shape: rectangle}
-common_checks: "Common checks" {shape: rectangle}
-incident_notes: "Incident notes" {shape: rectangle}
-change_notes: "Change notes" {shape: rectangle}
-useful_commands_or_references: "Useful commands or references" {shape: rectangle}
-known_issues: "Known issues" {shape: rectangle}
-
-center -> purpose
-center -> common_checks
-center -> incident_notes
-center -> change_notes
-center -> useful_commands_or_references
-center -> known_issues
-```
 
 ## Purpose
 

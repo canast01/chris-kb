@@ -4,8 +4,6 @@ tags:
   - python
 ---
 # Python — Design Standards
-![Python — Design Standards](../../../../assets/automation-python-architecture-design-standards-index.svg)
-
 
 ```python
 from __future__ import annotations  # enables forward references in Python 3.9

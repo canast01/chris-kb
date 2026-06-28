@@ -10,10 +10,6 @@ Recommended reading order for SQL Server on Windows. Follow these stages in orde
 
 *Applies to: SQL Server 2019 / 2022*
 </div>
-![SQL Server — Learning Path](../../../../assets/compute-windows-server-sql-server-learning-path-index.svg)
-
-
-
 
 ```mermaid
 graph LR
@@ -30,21 +26,6 @@ graph LR
 | 5 — Troubleshooting | Query Store, Extended Events, deadlocks, CHECKDB | as needed |
 
 ---
-
-```d2
-direction: right
-
-stage_1_architecture: "Stage 1 — Architecture" {shape: rectangle}
-stage_2_deployment: "Stage 2 — Deployment" {shape: rectangle}
-stage_3_operations: "Stage 3 — Operations" {shape: rectangle}
-stage_4_security: "Stage 4 — Security" {shape: rectangle}
-stage_5_troubleshooting: "Stage 5 — Troubleshooting" {shape: rectangle}
-
-stage_1_architecture -> stage_2_deployment: next
-stage_2_deployment -> stage_3_operations: next
-stage_3_operations -> stage_4_security: next
-stage_4_security -> stage_5_troubleshooting: next
-```
 
 ## Stage 1 — Architecture
 

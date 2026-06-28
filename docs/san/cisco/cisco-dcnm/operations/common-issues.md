@@ -5,33 +5,12 @@ tags:
 ---
 # Cisco DCNM — Known Issues
 
-
 <div class="kb-summary">
 Cisco DCNM known issues: inventory sync failures, zone push errors, fabric discovery timeouts, database corruption recovery, and version upgrade caveats.
 
 *Applies to: Cisco MDS · Nexus*
 </div>
 ![Cisco DCNM — Known Issues](../../../../assets/san-cisco-cisco-dcnm-operations-common-issues.svg)
-
-
-```d2
-direction: right
-
-hub: "Cisco DCNM\nOperations" {shape: hexagon}
-fabric_discovery_failures: "Fabric Discovery Failures" {shape: rectangle}
-deployment_failures: "Deployment Failures" {shape: rectangle}
-performance_ui_issues: "Performance / UI Issues" {shape: rectangle}
-vxlan_vpc_issues: "VXLAN / VPC Issues" {shape: rectangle}
-license_issues: "License Issues" {shape: rectangle}
-log_collection_for_tac: "Log Collection for TAC" {shape: rectangle}
-
-hub -> fabric_discovery_failures
-hub -> deployment_failures
-hub -> performance_ui_issues
-hub -> vxlan_vpc_issues
-hub -> license_issues
-hub -> log_collection_for_tac
-```
 
 ## Before you begin
 
@@ -45,7 +24,6 @@ hub -> log_collection_for_tac
 ## Fabric Discovery Failures
 
 ### Switches Not Discovered / Stuck in "Unreachable"
-
 
 ## Deployment Failures
 

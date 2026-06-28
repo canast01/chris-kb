@@ -9,10 +9,6 @@ Unified fast file and object storage running Purity//FB — NFS, SMB, S3, and HD
 
 *Applies to: FlashBlade Purity//FB 4.x*
 </div>
-![Pure FlashBlade](../../../assets/storage-pure-flashblade-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

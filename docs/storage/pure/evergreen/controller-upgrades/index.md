@@ -4,37 +4,15 @@ tags:
 ---
 # Pure Storage Controller Upgrades
 
-
 <div class="kb-summary">
 Pure Storage Controller Upgrades reference covering How Controller Upgrades Work, Customer Pre-Upgrade Responsibilities, During the Upgrade, Verifying Paths During/After Upgrade, Post-Upgrade Verification and 1 more sections.
 
 *Applies to: Evergreen*
 </div>
-![Pure Storage Controller Upgrades](../../../../assets/storage-pure-evergreen-controller-upgrades-index.svg)
-
 
 ![Pure Storage Controller Upgrades — Diagram](../../../../assets/storage-pure-evergreen-controller-upgrades-diagram.svg)
 
 Under the Evergreen program, Pure Storage performs non-disruptive controller upgrades as part of the subscription — there is no hardware refresh cycle or capital expenditure.
-
-```d2
-direction: right
-
-center: "Evergreen" {shape: hexagon}
-how_controller_upgrades_work: "How Controller Upgrades Work" {shape: rectangle}
-customer_preupgrade_responsibilities: "Customer Pre-Upgrade Responsibilities" {shape: rectangle}
-during_the_upgrade: "During the Upgrade" {shape: rectangle}
-verifying_paths_duringafter_upgrade: "Verifying Paths During/After Upgrade" {shape: rectangle}
-postupgrade_verification: "Post-Upgrade Verification" {shape: rectangle}
-common_considerations: "Common Considerations" {shape: rectangle}
-
-center -> how_controller_upgrades_work
-center -> customer_preupgrade_responsibilities
-center -> during_the_upgrade
-center -> verifying_paths_duringafter_upgrade
-center -> postupgrade_verification
-center -> common_considerations
-```
 
 ## How Controller Upgrades Work
 

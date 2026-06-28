@@ -13,25 +13,6 @@ Essential ONTAP CLI commands for cluster, SVM, volume, aggregate, network, SnapM
 
 ![ONTAP CLI Cheat Sheet](../../assets/reference-cheat-sheets-ontap-cli.svg)
 
-```d2
-direction: right
-
-center: "Cheat Sheets" {shape: rectangle}
-cluster_node: "Cluster & Node" {shape: rectangle}
-svm_management: "SVM Management" {shape: rectangle}
-volume_operations: "Volume Operations" {shape: rectangle}
-aggregate_raid: "Aggregate & RAID" {shape: rectangle}
-network: "Network" {shape: rectangle}
-snapmirror: "SnapMirror" {shape: rectangle}
-
-center -> cluster_node
-center -> svm_management
-center -> volume_operations
-center -> aggregate_raid
-center -> network
-center -> snapmirror
-```
-
 ## Cluster & Node
 
 | Command | Description | Example |

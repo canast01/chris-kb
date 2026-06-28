@@ -12,31 +12,8 @@ Comprehensive reference for vSphere networking. Covers the architecture differen
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![vSphere Networking — VSS, VDS, VMkernel, and NIOC](../../../../assets/virtualization-vmware-internals-vsphere-networking-index.svg)
-
-
-
 
 ---
-
-```d2
-direction: right
-
-center: "Vsphere Networking" {shape: hexagon}
-standard_switch_vss_vs_distributed_s: "Standard Switch (VSS) vs Distributed Switch (VDS)" {shape: rectangle}
-vmkernel_adapters: "VMkernel Adapters" {shape: rectangle}
-networking_policies: "Networking Policies" {shape: rectangle}
-network_io_control_nioc: "Network I/O Control (NIOC)" {shape: rectangle}
-port_groups_and_vlans: "Port Groups and VLANs" {shape: rectangle}
-multiple_tcpip_stacks: "Multiple TCP/IP Stacks" {shape: rectangle}
-
-center -> standard_switch_vss_vs_distributed_s
-center -> vmkernel_adapters
-center -> networking_policies
-center -> network_io_control_nioc
-center -> port_groups_and_vlans
-center -> multiple_tcpip_stacks
-```
 
 ## Standard Switch (VSS) vs Distributed Switch (VDS)
 

@@ -5,35 +5,12 @@ tags:
 ---
 # PowerStore — Standards
 
-
 <div class="kb-summary">
 Standards reference covering Naming Conventions, Capacity Sizing Guidelines, Protection Policy Standards, Host Configuration Standards, Software Version Matrix and 2 more sections.
 
 *Applies to: PowerStore 3.x*
 </div>
 ![PowerStore — Standards](../../../../assets/storage-dell-powerstore-architecture-design-standards.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "PowerStore" {shape: hexagon}
-naming_conventions: "Naming Conventions" {shape: rectangle}
-capacity_sizing_guidelines: "Capacity Sizing Guidelines" {shape: rectangle}
-protection_policy_standards: "Protection Policy Standards" {shape: rectangle}
-host_configuration_standards: "Host Configuration Standards" {shape: rectangle}
-software_version_matrix: "Software Version Matrix" {shape: rectangle}
-import_standards_from_legacy_arrays: "Import Standards (from Legacy Arrays)" {shape: rectangle}
-
-center -> naming_conventions
-center -> capacity_sizing_guidelines
-center -> protection_policy_standards
-center -> host_configuration_standards
-center -> software_version_matrix
-center -> import_standards_from_legacy_arrays
-```
 
 ## Naming Conventions
 

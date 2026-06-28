@@ -4,8 +4,6 @@ tags:
   - operations
 ---
 # SRDF/S — Procedures
-![SRDF/S — Procedures](../../../../assets/storage-dell-srdf-s-operations-procedures.svg)
-
 
 ```bash
 # Capture baseline state before the window
@@ -276,25 +274,6 @@ ping -c 10 <dr_site_ip>
 
 # Capture post-change state for the change ticket
 symrdf query -g <dgname> > /tmp/srdf_s_postchange_$(date +%Y%m%d_%H%M).txt
-```
-
-```d2
-direction: right
-
-hub: "SRDF/S\nOperations" {shape: hexagon}
-query_srdfs_group_status: "Query SRDF/S Group Status" {shape: rectangle}
-verify_wan_latency_acceptability: "Verify WAN Latency Acceptability" {shape: rectangle}
-perform_a_planned_failover_failover: "Perform a Planned Failover (Failover)" {shape: rectangle}
-perform_a_disaster_recovery_failover: "Perform a Disaster Recovery Failover (Failover Force)" {shape: rectangle}
-fail_back_after_recovery: "Fail Back After Recovery" {shape: rectangle}
-suspend_replication_planned_maintena: "Suspend Replication (Planned Maintenance)" {shape: rectangle}
-
-hub -> query_srdfs_group_status
-hub -> verify_wan_latency_acceptability
-hub -> perform_a_planned_failover_failover
-hub -> perform_a_disaster_recovery_failover
-hub -> fail_back_after_recovery
-hub -> suspend_replication_planned_maintena
 ```
 
 ## Before you begin

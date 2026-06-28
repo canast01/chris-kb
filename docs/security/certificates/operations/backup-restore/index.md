@@ -5,14 +5,9 @@ tags:
 ---
 # Certificates — Backup & Restore
 
-
 <div class="kb-summary">
 Losing a Certificate Authority's private key is an unrecoverable event — every certificate it issued becomes untrusted.
 </div>
-![Certificates — Backup & Restore](../../../../assets/security-certificates-operations-backup-restore-index.svg)
-
-
-
 
  This page covers the full backup and restore lifecycle for both Windows Active Directory Certificate Services (ADCS) and OpenSSL-based private CAs, including key ceremony documentation, PKCS#12 export, and validated restore procedures.
 

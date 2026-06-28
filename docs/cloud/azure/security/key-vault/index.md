@@ -5,35 +5,11 @@ tags:
 ---
 # Azure — Key Vault
 
-
 <div class="kb-summary">
 Azure Key Vault is a managed service for storing and controlling access to secrets, encryption keys, and certificates. It provides hardware security module (HSM) backing, RBAC-based access control, soft-delete protection, and audit logging.
 
 *Applies to: Azure*
 </div>
-![Azure — Key Vault](../../../../assets/cloud-azure-security-key-vault-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-vault_vs_managed_hsm: "Vault vs Managed HSM" {shape: rectangle}
-access_model: "Access Model" {shape: rectangle}
-creating_a_key_vault: "Creating a Key Vault" {shape: rectangle}
-managing_secrets: "Managing Secrets" {shape: rectangle}
-soft_delete_and_purge_protection: "Soft Delete and Purge Protection" {shape: rectangle}
-networking_private_endpoint: "Networking — Private Endpoint" {shape: rectangle}
-
-center -> vault_vs_managed_hsm
-center -> access_model
-center -> creating_a_key_vault
-center -> managing_secrets
-center -> soft_delete_and_purge_protection
-center -> networking_private_endpoint
-```
 
 ## Before you begin
 

@@ -5,16 +5,11 @@ tags:
 ---
 # Linux — Operations
 
-
-
 <div class="kb-summary">
 Linux — Operations reference: Health Checks, Procedures, Common Issues, CLI Reference, and 3 more.
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>
-![Linux — Operations](../../../assets/compute-linux-operations-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>

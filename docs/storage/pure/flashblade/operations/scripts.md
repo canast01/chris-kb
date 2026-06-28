@@ -5,7 +5,6 @@ tags:
 ---
 # FlashBlade — Scripts
 
-
 <div class="kb-summary">
 Scripts reference covering Array Health Check (Python), Filesystem Capacity Report (Bash), ActiveDR Replication Monitor (Python), Daily Check Script (Bash via SSH), S3 Bucket Audit (Python) and 1 more sections.
 
@@ -13,33 +12,11 @@ Scripts reference covering Array Health Check (Python), Filesystem Capacity Repo
 </div>
 ![FlashBlade — Scripts](../../../../assets/storage-pure-flashblade-operations-scripts.svg)
 
-
-
-
 ![FlashBlade — Scripts — Diagram](../../../../assets/storage-pure-flashblade-operations-scripts-diagram.svg)
 
 > Part of the [FlashBlade Operations](index.md) reference.
 
 ---
-
-```d2
-direction: right
-
-hub: "FlashBlade\nOperations" {shape: hexagon}
-array_health_check_python: "Array Health Check (Python)" {shape: rectangle}
-filesystem_capacity_report_bash: "Filesystem Capacity Report (Bash)" {shape: rectangle}
-activedr_replication_monitor_python: "ActiveDR Replication Monitor (Python)" {shape: rectangle}
-daily_check_script_bash_via_ssh: "Daily Check Script (Bash via SSH)" {shape: rectangle}
-s3_bucket_audit_python: "S3 Bucket Audit (Python)" {shape: rectangle}
-windows_flashblade_health_check_via_: "Windows: FlashBlade Health Check via REST API (PowerShell)" {shape: rectangle}
-
-hub -> array_health_check_python
-hub -> filesystem_capacity_report_bash
-hub -> activedr_replication_monitor_python
-hub -> daily_check_script_bash_via_ssh
-hub -> s3_bucket_audit_python
-hub -> windows_flashblade_health_check_via_
-```
 
 ## Before you begin
 

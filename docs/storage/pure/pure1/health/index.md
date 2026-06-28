@@ -4,29 +4,11 @@ tags:
 ---
 # Pure1 — Array Health
 
-
 <div class="kb-summary">
 Array Health reference covering FlashBlade Health, Health via Pure1 REST API, Connectivity Health — Phone Home, Health Monitoring Integration, Common Health Issues.
 
 *Applies to: Pure1*
 </div>
-![Pure1 — Array Health](../../../../assets/storage-pure-pure1-health-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Pure1" {shape: hexagon}
-connectivity_health_phone_home: "Connectivity Health — Phone Home" {shape: rectangle}
-health_monitoring_integration: "Health Monitoring Integration" {shape: rectangle}
-common_health_issues: "Common Health Issues" {shape: rectangle}
-
-center -> connectivity_health_phone_home
-center -> health_monitoring_integration
-center -> common_health_issues
-```
 
 ## Connectivity Health — Phone Home
 

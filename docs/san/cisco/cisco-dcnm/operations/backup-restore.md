@@ -6,7 +6,6 @@ tags:
 # Cisco DCNM — Backup and Restore
 ![Cisco DCNM — Backup and Restore](../../../../assets/san-cisco-cisco-dcnm-operations-backup-restore.svg)
 
-
 ```bash
 ssh root@dcnm-dc1.corp.example.com
 
@@ -70,15 +69,6 @@ gunzip -c /var/backup/dcnm/dcnm-db-20260506-0200.sql.gz | psql -U postgres
 
 # Monitor startup
 tail -f /var/log/dcnm/server.log
-```
-
-```d2
-direction: right
-
-hub: "Cisco DCNM\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

@@ -5,7 +5,6 @@ tags:
 ---
 # SANnav — Operations Common Issues
 
-
 <div class="kb-summary">
 Operations Common Issues reference covering Overview, Switch Not Appearing After Discovery, Zone Change Does Not Take Effect, Firmware Upgrade Reported as Complete but Switch Still on Old Version, Alert Emails Not Being Received and 3 more sections.
 
@@ -13,31 +12,9 @@ Operations Common Issues reference covering Overview, Switch Not Appearing After
 </div>
 ![SANnav — Operations Common Issues](../../../../assets/san-brocade-sannav-operations-common-issues.svg)
 
-
-
-
 > Part of the [SANnav](../index.md) reference. For deeper diagnosis, see [Troubleshooting > Common Issues](../troubleshooting/common-issues/index.md).
 
 ---
-
-```d2
-direction: right
-
-hub: "SANnav\nOperations" {shape: hexagon}
-switch_not_appearing_after_discovery: "Switch Not Appearing After Discovery" {shape: rectangle}
-zone_change_does_not_take_effect: "Zone Change Does Not Take Effect" {shape: rectangle}
-firmware_upgrade_reported_as_complet: "Firmware Upgrade Reported as Complete but Switch Still on Ol" {shape: rectangle}
-alert_emails_not_being_received: "Alert Emails Not Being Received" {shape: rectangle}
-scheduled_backup_not_running: "Scheduled Backup Not Running" {shape: rectangle}
-san_analytics_data_missing_or_stale: "SAN Analytics Data Missing or Stale" {shape: rectangle}
-
-hub -> switch_not_appearing_after_discovery
-hub -> zone_change_does_not_take_effect
-hub -> firmware_upgrade_reported_as_complet
-hub -> alert_emails_not_being_received
-hub -> scheduled_backup_not_running
-hub -> san_analytics_data_missing_or_stale
-```
 
 ## Before you begin
 

@@ -6,7 +6,6 @@ tags:
 # Brocade SANnav — CLI Reference
 ![Brocade SANnav — CLI Reference](../../../../assets/san-brocade-sannav-operations-cli-reference.svg)
 
-
 ```bash
 # Show status of all SANnav services
 sannav status
@@ -175,15 +174,6 @@ for p in data.get('ports', []):
     if p.get('portType') == 'F_PORT' and p.get('portState') != 'ONLINE':
         print(p.get('switchName'), p.get('portIndex'), p.get('portState'))
 "
-```
-
-```d2
-direction: right
-
-hub: "SANnav\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

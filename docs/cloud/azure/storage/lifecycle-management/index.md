@@ -4,35 +4,11 @@ tags:
 ---
 # Azure Storage Lifecycle Management
 
-
 <div class="kb-summary">
 Azure Storage Lifecycle Management reference covering Overview, Lifecycle Policy Evaluation, Policy Structure, Tier Transitions, Filter Sets and 3 more sections.
 
 *Applies to: Azure*
 </div>
-![Azure Storage Lifecycle Management](../../../../assets/cloud-azure-storage-lifecycle-management-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-lifecycle_policy_evaluation: "Lifecycle Policy Evaluation" {shape: rectangle}
-policy_structure: "Policy Structure" {shape: rectangle}
-tier_transitions: "Tier Transitions" {shape: rectangle}
-filter_sets: "Filter Sets" {shape: rectangle}
-deletion_rules: "Deletion Rules" {shape: rectangle}
-lifecycle_policy_limitations: "Lifecycle Policy Limitations" {shape: rectangle}
-
-center -> lifecycle_policy_evaluation
-center -> policy_structure
-center -> tier_transitions
-center -> filter_sets
-center -> deletion_rules
-center -> lifecycle_policy_limitations
-```
 
 ## Overview
 

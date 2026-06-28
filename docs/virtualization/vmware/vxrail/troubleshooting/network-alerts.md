@@ -12,10 +12,6 @@ VxRail Network Alerts reference covering Overview, Where It Fits, Daily Checks, 
 
 *Applies to: VxRail 7.x / 8.x*
 </div>
-![VxRail Network Alerts](../../../../assets/virtualization-vmware-vxrail-troubleshooting-network-alerts.svg)
-
-
-
 
 ```d2
 direction: down

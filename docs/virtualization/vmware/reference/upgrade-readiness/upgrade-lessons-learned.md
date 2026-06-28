@@ -4,16 +4,11 @@ tags:
 ---
 # Upgrade Lessons Learned
 
-
 <div class="kb-summary">
 Document post-upgrade findings to improve future upgrade runbooks. Complete this within 48 hours of change record closure while details are fresh.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Upgrade Lessons Learned](../../../../assets/virtualization-vmware-reference-upgrade-readiness-upgrade-le.svg)
-
-
-
 
 ```d2
 direction: right

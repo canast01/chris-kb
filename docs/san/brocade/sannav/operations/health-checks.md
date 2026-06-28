@@ -4,8 +4,6 @@ tags:
   - san
 ---
 # Brocade SANnav — Health Checks
-![Brocade SANnav — Health Checks](../../../../assets/san-brocade-sannav-operations-health-checks.svg)
-
 
 ```bash
 # SSH to appliance
@@ -31,18 +29,6 @@ grep -i "ERROR" /opt/sannav/logs/event-engine.log | tail -20
 # Check NTP sync
 timedatectl status
 # Expected: "synchronized: yes"
-```
-
-
-```d2
-direction: right
-
-hub: "SANnav\nOperations" {shape: hexagon}
-run_this_routine: "Run This Routine" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> run_this_routine
-hub -> verify
 ```
 
 ## Before you begin

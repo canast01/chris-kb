@@ -7,14 +7,11 @@ search:
 ---
 # Windows Server — Common Issues
 
-
 <div class="kb-summary">
 Quick reference for common problems and resolutions. Structured approach to diagnosing common Windows Server issues.
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
-![Windows Server — Common Issues](../../../../assets/compute-windows-server-troubleshooting-common-issues-index.svg)
-
 
 Quick reference for common problems and resolutions.
 
@@ -104,7 +101,6 @@ flowchart TD
     authOk -- Yes --> sessionLimit
     sessionLimit --> resolved
 ```
-
 
 ## High Memory
 

@@ -6,7 +6,6 @@ tags:
 # CloudIQ — Reporting
 ![CloudIQ — Reporting](../../../../assets/storage-dell-cloudiq-operations-reports.svg)
 
-
 ```bash
 # Trigger an on-demand health report via CloudIQ API
 curl -sk -X POST \
@@ -34,16 +33,6 @@ curl -sk -X GET \
   "https://cloudiq.apis.dell.com/cloudiq/rest/v1/reports/<reportId>/download" \
   -H "Authorization: Bearer <access_token>" \
   -o cloudiq-health-report.pdf
-```
-
-
-```d2
-direction: right
-
-hub: "CloudIQ\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

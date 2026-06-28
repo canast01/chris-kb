@@ -6,14 +6,12 @@ tags:
 ---
 # SRM — Design Standards
 
-
 <div class="kb-summary">
 Design Standards reference covering Test Network Design, IP Customization Strategy, Recovery Plan Structure Best Practices, RPO Targets and SRA Capability, Test Frequency Recommendations and 1 more sections.
 
 *Applies to: SRM 8.x*
 </div>
 ![SRM — Design Standards](../../../../assets/virtualization-vmware-srm-architecture-design-standards.svg)
-
 
   Replication Topology + Recovery Plan Structure
 
@@ -26,25 +24,6 @@ With compression: (50 × 8192) / (86400 × 0.7) = 6.8 Mbps
 ```
 
 ---
-
-```d2
-direction: right
-
-center: "Site Recovery Manager" {shape: hexagon}
-test_frequency_recommendations: "Test Frequency Recommendations" {shape: rectangle}
-srm_design_checklist: "SRM Design Checklist" {shape: rectangle}
-naming_conventions: "Naming Conventions" {shape: rectangle}
-priority_tiers: "Priority Tiers" {shape: rectangle}
-recovery_plan_design: "Recovery Plan Design" {shape: rectangle}
-test_frequency_and_documentation: "Test Frequency and Documentation" {shape: rectangle}
-
-center -> test_frequency_recommendations
-center -> srm_design_checklist
-center -> naming_conventions
-center -> priority_tiers
-center -> recovery_plan_design
-center -> test_frequency_and_documentation
-```
 
 ## Test Frequency Recommendations
 
@@ -97,7 +76,6 @@ Regular testing is the only way to confirm recovery plans actually work. Documen
 | vSphere Replication group | `VR-<app>-<env>` | `VR-ERP-PROD` |
 | Test network (bubble) | `vPG-SRM-Test-Bubble` | — |
 
-
 ## Priority Tiers
 
 | Priority | Application Class | RPO | RTO |
@@ -108,16 +86,12 @@ Regular testing is the only way to confirm recovery plans actually work. Documen
 
 ### Protection Group to Recovery Plan Mapping
 
-
-
-
 ## Recovery Plan Design
 
 - Power-on sequence is mandatory: infrastructure VMs (DC, DNS) → DB tier → APP tier → WEB tier
 - Each step must include a health check (custom script or vSphere Replication quiescing check)
 - IP customisation rules must be configured for every VM in a non-same-subnet recovery design
 - Boot dependencies: set appropriate per-step delays (e.g., wait 120 seconds after DB server boot before starting APP servers)
-
 
 ## Test Frequency and Documentation
 
@@ -133,7 +107,6 @@ Test reports must include:
 3. Any failed steps and root cause
 4. Outstanding action items with owners and due dates
 
-
 ## SRA Standards
 
 | Storage Platform | SRA | Minimum Version |
@@ -144,7 +117,6 @@ Test reports must include:
 | VMware vSphere Replication | Built-in (no SRA needed) | VR 8.x |
 
 Install SRA on both SRM servers (protected and recovery site). Re-scan array managers after SRA update.
-
 
 ## Datastore Mapping Standards
 

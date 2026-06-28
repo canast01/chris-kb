@@ -7,16 +7,11 @@ search:
 ---
 # FlashBlade — Troubleshooting
 
-
 <div class="kb-summary">
 FlashBlade — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
 
 *Applies to: FlashBlade Purity//FB 4.x*
 </div>
-![FlashBlade — Troubleshooting](../../../../assets/storage-pure-flashblade-troubleshooting-index.svg)
-
-
-
 
 ![FlashBlade — Troubleshooting — Diagram](../../../../assets/storage-pure-flashblade-troubleshooting-diagram.svg)
 

@@ -5,17 +5,13 @@ tags:
 ---
 # FlashArray — Security
 
-
 <div class="kb-summary">
 FlashArray — Security reference: Authentication, Access Control, Encryption, Hardening.
 
 *Applies to: FlashArray Purity 6.x*
 </div>
-![FlashArray — Security](../../../../assets/storage-pure-flasharray-security-index.svg)
-
 
 FlashArray Security Layers
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="authentication/"><strong>Authentication</strong><span>SSO, LDAP, local accounts, and identity sources.</span></a>

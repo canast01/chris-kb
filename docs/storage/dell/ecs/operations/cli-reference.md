@@ -5,16 +5,12 @@ tags:
 ---
 # Dell ECS — CLI Reference
 
-
 <div class="kb-summary">
 ECS administration is split across three interfaces: the **ECS Management Shell** (`ecscli`), the **ECS Management REST API** (port 4443), and the **S3-compatible object API** (port 9020 HTTP / 9021 HTTPS).
 
 *Applies to: ECS 3.x*
 </div>
 ![Dell ECS — CLI Reference](../../../../assets/storage-dell-ecs-operations-cli-reference.svg)
-
-
-
 
  For system-level diagnostics, SSH access to individual nodes is also available.
 
@@ -23,25 +19,6 @@ ECS administration is split across three interfaces: the **ECS Management Shell*
 > **SSH node access**: `ssh admin@<ecs-node>` (use `viprexec` for cluster-wide commands)
 
 ---
-
-```d2
-direction: right
-
-hub: "ECS\nOperations" {shape: hexagon}
-quickreference_command_table: "Quick-Reference Command Table" {shape: rectangle}
-ecs_management_shell_ecscli: "ECS Management Shell (ecscli)" {shape: rectangle}
-s3_api_aws_cli_s3cmd: "S3 API (aws cli / s3cmd)" {shape: rectangle}
-object_store_admin_api_curl: "Object Store Admin API (curl)" {shape: rectangle}
-system_cli_ssh_nodelevel_access: "System CLI (SSH — Node-Level Access)" {shape: rectangle}
-common_troubleshooting_commands: "Common Troubleshooting Commands" {shape: rectangle}
-
-hub -> quickreference_command_table
-hub -> ecs_management_shell_ecscli
-hub -> s3_api_aws_cli_s3cmd
-hub -> object_store_admin_api_curl
-hub -> system_cli_ssh_nodelevel_access
-hub -> common_troubleshooting_commands
-```
 
 ## Before you begin
 

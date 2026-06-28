@@ -5,16 +5,11 @@ tags:
 ---
 # Commvault — Encryption
 
-
 <div class="kb-summary">
 Encryption reference covering Backup Encryption, Linux Hardened Repository (Immutable Backups).
 
 *Applies to: Commvault 2024.x*
 </div>
-![Commvault — Encryption](../../../../assets/backup-commvault-security-encryption-index.svg)
-
-
-
 
 Configure via VBR Repository settings: enable "Immutable" with retention period matching recovery requirements.
 

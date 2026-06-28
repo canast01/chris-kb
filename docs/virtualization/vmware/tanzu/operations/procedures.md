@@ -6,35 +6,13 @@ tags:
 ---
 # Tanzu — Procedures
 
-
 <div class="kb-summary">
 TKG and Tanzu operations — namespace and workload cluster lifecycle, RBAC, Harbor project configuration, Helm deployments, Ingress setup, node scaling, cluster upgrade, Velero backup/restore, and persistent storage via vSAN CNS.
 
 *Applies to: Tanzu 3.x*
 </div>
 
-
-
 ---
-
-```d2
-direction: right
-
-hub: "Tanzu\nOperations" {shape: hexagon}
-create_a_vsphere_namespace: "Create a vSphere Namespace" {shape: rectangle}
-deploy_a_tkg_workload_cluster_in_a_n: "Deploy a TKG Workload Cluster in a Namespace" {shape: rectangle}
-grant_namespace_access_to_a_team: "Grant Namespace Access to a Team" {shape: rectangle}
-configure_harbor_project_with_vulner: "Configure Harbor Project with Vulnerability Scanning" {shape: rectangle}
-configure_pullthrough_cache_in_harbo: "Configure Pull-Through Cache in Harbor" {shape: rectangle}
-deploy_application_via_helm: "Deploy Application via Helm" {shape: rectangle}
-
-hub -> create_a_vsphere_namespace
-hub -> deploy_a_tkg_workload_cluster_in_a_n
-hub -> grant_namespace_access_to_a_team
-hub -> configure_harbor_project_with_vulner
-hub -> configure_pullthrough_cache_in_harbo
-hub -> deploy_application_via_helm
-```
 
 ## Before you begin
 

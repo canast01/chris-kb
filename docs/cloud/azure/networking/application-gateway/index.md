@@ -5,35 +5,11 @@ tags:
 ---
 # Application Gateway
 
-
 <div class="kb-summary">
 Azure Application Gateway is a Layer 7 load balancer that provides SSL termination, URL-based routing, Web Application Firewall (WAF), and autoscaling. It operates at the application layer and is the preferred entry point for HTTP/HTTPS workloads.
 
 *Applies to: Azure*
 </div>
-![Application Gateway](../../../../assets/cloud-azure-networking-application-gateway-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-application_gateway_traffic_flow: "Application Gateway Traffic Flow" {shape: rectangle}
-creating_an_application_gateway: "Creating an Application Gateway" {shape: rectangle}
-waf_mode_configuration: "WAF Mode Configuration" {shape: rectangle}
-listener_configuration: "Listener Configuration" {shape: rectangle}
-backend_pools_and_health_probes: "Backend Pools and Health Probes" {shape: rectangle}
-ssl_termination_and_tls_policy: "SSL Termination and TLS Policy" {shape: rectangle}
-
-center -> application_gateway_traffic_flow
-center -> creating_an_application_gateway
-center -> waf_mode_configuration
-center -> listener_configuration
-center -> backend_pools_and_health_probes
-center -> ssl_termination_and_tls_policy
-```
 
 ## Application Gateway Traffic Flow
 

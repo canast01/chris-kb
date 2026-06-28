@@ -6,35 +6,12 @@ tags:
 ---
 # SRM — Integrations
 
-
 <div class="kb-summary">
 Integrations reference covering Storage Replication Adapter (SRA) Integration, vSphere Replication Integration, NSX-T Integration for Network Mapping, Active Directory / Identity Integration, Identity Federation with vIDM / Workspace ONE Access and 1 more sections.
 
 *Applies to: SRM 8.x*
 </div>
 ![SRM — Integrations](../../../../assets/virtualization-vmware-srm-architecture-integrations.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Site Recovery Manager" {shape: hexagon}
-storage_replication_adapters: "Storage Replication Adapters" {shape: rectangle}
-vsphere_replication_integration: "vSphere Replication Integration" {shape: rectangle}
-nsxt_integration_for_network_mapping: "NSX-T Integration for Network Mapping" {shape: rectangle}
-active_directory_identity_integratio: "Active Directory / Identity Integration" {shape: rectangle}
-identity_federation_with_vidm_worksp: "Identity Federation with vIDM / Workspace ONE Access" {shape: rectangle}
-srm_and_vsan_integration: "SRM and vSAN Integration" {shape: rectangle}
-
-center -> storage_replication_adapters
-center -> vsphere_replication_integration
-center -> nsxt_integration_for_network_mapping
-center -> active_directory_identity_integratio
-center -> identity_federation_with_vidm_worksp
-center -> srm_and_vsan_integration
-```
 
 ## Storage Replication Adapters
 
@@ -254,8 +231,6 @@ When datastores are vSAN:
 
 SRM sits at the centre of multiple integration layers — storage, networking, monitoring, and orchestration all connect through a defined interface.
 
-
-
 ---
 
 ## Dell EMC SRA for PowerMax
@@ -278,7 +253,6 @@ The Dell EMC SRA translates SRM storage operations into SYMCLI/Unisphere REST AP
 
 ---
 
-
 ## Pure Storage SRA
 
 The Pure Storage SRA supports both **ActiveCluster** (synchronous, stretch cluster) and **async pod replication**.
@@ -288,7 +262,6 @@ The Pure Storage SRA supports both **ActiveCluster** (synchronous, stretch clust
 - Install Pure1 SRA on both SRM servers; configure with FlashArray management VIP and API token credentials.
 
 ---
-
 
 ## NetApp SnapMirror SRA
 
@@ -301,7 +274,6 @@ The NetApp SRA for ONTAP supports SnapMirror Asynchronous and SnapMirror Synchro
 Configure with ONTAP management LIF credentials. Both source and destination SVM must be accessible from the SRM server at the corresponding site.
 
 ---
-
 
 ## vSphere Replication Configuration
 
@@ -318,7 +290,6 @@ vSphere Replication is built into vSphere and requires no SRA.
 
 ---
 
-
 ## NSX Network Mapping
 
 When VMs are protected by SRM across NSX-T environments, network mappings ensure VMs connect to the correct segments at the recovery site.
@@ -333,7 +304,6 @@ NSX Distributed Firewall (DFW) policy follows the VM via Security Group tags —
 
 ---
 
-
 ## Aria Operations Integration
 
 The SRM monitoring pack for Aria Operations provides:
@@ -346,7 +316,6 @@ The SRM monitoring pack for Aria Operations provides:
 Configure the SRM management pack in Aria Operations under Administration → Solutions → Cloud Accounts: add the SRM endpoint with vCenter credentials.
 
 ---
-
 
 ## Runbook Integration
 

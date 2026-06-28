@@ -5,33 +5,11 @@ tags:
 ---
 # Commvault — CLI Reference
 
-
 <div class="kb-summary">
 CLI Reference reference covering Backup Job Lifecycle, Backup Operations, Restore Operations, Clients & Policies, CommServe Maintenance and 1 more sections.
 
 *Applies to: Commvault 2024.x*
 </div>
-![Commvault — CLI Reference](../../../../assets/backup-commvault-operations-cli-reference-index.svg)
-
-
-```d2
-direction: right
-
-center: "Commvault" {shape: rectangle}
-backup_job_lifecycle: "Backup Job Lifecycle" {shape: rectangle}
-restore_operations: "Restore Operations" {shape: rectangle}
-clients_policies: "Clients & Policies" {shape: rectangle}
-commserve_maintenance: "CommServe Maintenance" {shape: rectangle}
-rest_api: "REST API" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> backup_job_lifecycle
-center -> restore_operations
-center -> clients_policies
-center -> commserve_maintenance
-center -> rest_api
-center -> verify
-```
 
 ## Before you begin
 
@@ -67,7 +45,6 @@ sequenceDiagram
     JM-->>Sched: Job status: Completed
     note over MA,Storage: Auxiliary copy job (separate schedule)\ncopies from primary to secondary (offsite/tape/cloud)
 ```
-
 
 ---
 

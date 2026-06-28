@@ -5,31 +5,11 @@ tags:
 ---
 # Data Domain — Health Checks
 
-
 <div class="kb-summary">
 Health Checks reference covering Daily Checks, Weekly Health Check, Health Check — Pre-Change, Capacity Monitoring, Replication Health and 3 more sections.
 
 *Applies to: Data Domain DD OS 7.x*
 </div>
-
-```d2
-direction: right
-
-hub: "Data Domain\nOperations" {shape: hexagon}
-daily_checks: "Daily Checks" {shape: rectangle}
-run_this_routine: "Run This Routine" {shape: rectangle}
-health_check_prechange: "Health Check — Pre-Change" {shape: rectangle}
-capacity_monitoring: "Capacity Monitoring" {shape: rectangle}
-replication_health: "Replication Health" {shape: rectangle}
-hardware_health: "Hardware Health" {shape: rectangle}
-
-hub -> daily_checks
-hub -> run_this_routine
-hub -> health_check_prechange
-hub -> capacity_monitoring
-hub -> replication_health
-hub -> hardware_health
-```
 
 ```vegalite
 {
@@ -166,7 +146,6 @@ flowchart TD
     L -->|No| N([All checks passed])
     D & G & J & M --> N
 ```
-
 
 ## Run This Routine
 

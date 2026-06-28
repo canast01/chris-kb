@@ -5,12 +5,9 @@ tags:
 ---
 # Account Unlock Runbook
 
-
 <div class="kb-summary">
 | Field | Value | |---|---| | Risk | Low | | Approval | Verify requester identity — no change ticket required for standard user accounts | | Estimated time | 5–15 minutes | | Impact | User regains access; no service disruption |
 </div>
-![Account Unlock Runbook](../../../../assets/security-operations-runbooks-account-unlock-index.svg)
-
 
 | Field | Value |
 |---|---|
@@ -18,25 +15,6 @@ tags:
 | Approval | Verify requester identity — no change ticket required for standard user accounts |
 | Estimated time | 5–15 minutes |
 | Impact | User regains access; no service disruption |
-
-```d2
-direction: right
-
-center: "Account Unlock" {shape: hexagon}
-process_flow: "Process Flow" {shape: rectangle}
-step_3_fix_root_cause: "Step 3 — Fix Root Cause" {shape: rectangle}
-step_4_unlock_the_account: "Step 4 — Unlock the Account" {shape: rectangle}
-step_5_validate_authentication: "Step 5 — Validate Authentication" {shape: rectangle}
-linux_sssd_if_applicable: "Linux / SSSD (if applicable)" {shape: rectangle}
-checklist: "Checklist" {shape: rectangle}
-
-center -> process_flow
-center -> step_3_fix_root_cause
-center -> step_4_unlock_the_account
-center -> step_5_validate_authentication
-center -> linux_sssd_if_applicable
-center -> checklist
-```
 
 ## Before you begin
 
@@ -48,7 +26,6 @@ center -> checklist
 ---
 
 ## Process Flow
-
 
 Key fields in Event ID 4740:
 

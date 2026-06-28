@@ -6,7 +6,6 @@ tags:
 ---
 # VCF — Procedures
 
-
 <div class="kb-summary">
 Procedures reference covering SDDC Manager Backup, Password Management, Useful Log Locations.
 
@@ -17,25 +16,6 @@ VCF Operational Procedures — Decision Map
 
 - Schedule: daily; retain at least 7 restore points
 - On-demand: `SDDC Manager → Administration → Backup → Backup Now`
-
-```d2
-direction: right
-
-hub: "VMware Cloud Foundation\nOperations" {shape: hexagon}
-password_management: "Password Management" {shape: rectangle}
-useful_log_locations: "Useful Log Locations" {shape: rectangle}
-commission_a_host_into_the_free_pool: "Commission a Host into the Free Pool" {shape: rectangle}
-create_a_workload_domain: "Create a Workload Domain" {shape: rectangle}
-expand_a_workload_domain_add_hosts: "Expand a Workload Domain (Add Hosts)" {shape: rectangle}
-delete_a_workload_domain: "Delete a Workload Domain" {shape: rectangle}
-
-hub -> password_management
-hub -> useful_log_locations
-hub -> commission_a_host_into_the_free_pool
-hub -> create_a_workload_domain
-hub -> expand_a_workload_domain_add_hosts
-hub -> delete_a_workload_domain
-```
 
 ## Before you begin
 

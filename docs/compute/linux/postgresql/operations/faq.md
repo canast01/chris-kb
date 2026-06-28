@@ -11,25 +11,7 @@ Common questions about PostgreSQL operations, configuration, and troubleshooting
 </div>
 ![PostgreSQL — Frequently Asked Questions](../../../../assets/compute-linux-postgresql-operations-faq.svg)
 
-
 ![PostgreSQL FAQ](../../../../assets/compute-linux-postgresql-operations-faq.svg)
-
-```d2
-direction: right
-
-hub: "PostgreSQL\nOperations" {shape: hexagon}
-general: "General" {shape: rectangle}
-configuration: "Configuration" {shape: rectangle}
-operations: "Operations" {shape: rectangle}
-troubleshooting: "Troubleshooting" {shape: rectangle}
-backup_and_recovery: "Backup and Recovery" {shape: rectangle}
-
-hub -> general
-hub -> configuration
-hub -> operations
-hub -> troubleshooting
-hub -> backup_and_recovery
-```
 
 ## General
 

@@ -13,30 +13,7 @@ Prism Central multi-cluster registration, Active Directory/LDAP integration, bac
 </div>
 ![Nutanix — Integrations](../../../assets/virtualization-nutanix-architecture-integrations.svg)
 
-
-
-
-
 ---
-
-```d2
-direction: right
-
-center: "Nutanix AHV" {shape: hexagon}
-prism_central_registration: "Prism Central Registration" {shape: rectangle}
-active_directory_ldap_integration: "Active Directory / LDAP Integration" {shape: rectangle}
-backup_integrations: "Backup Integrations" {shape: rectangle}
-monitoring: "Monitoring" {shape: rectangle}
-nutanix_files_scaleout_nfssmb: "Nutanix Files (Scale-Out NFS/SMB)" {shape: rectangle}
-nutanix_objects_s3compatible: "Nutanix Objects (S3-Compatible)" {shape: rectangle}
-
-center -> prism_central_registration
-center -> active_directory_ldap_integration
-center -> backup_integrations
-center -> monitoring
-center -> nutanix_files_scaleout_nfssmb
-center -> nutanix_objects_s3compatible
-```
 
 ## Prism Central Registration
 

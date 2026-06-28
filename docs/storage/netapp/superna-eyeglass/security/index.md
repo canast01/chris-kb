@@ -5,16 +5,11 @@ tags:
 ---
 # Superna Eyeglass — Security
 
-
-
 <div class="kb-summary">
 Superna Eyeglass hardening — RBAC, TLS enforcement, audit logging, and management interface access controls.
 
 *Applies to: Superna Eyeglass*
 </div>
-![Superna Eyeglass — Security](../../../../assets/storage-netapp-superna-eyeglass-security-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

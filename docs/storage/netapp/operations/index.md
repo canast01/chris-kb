@@ -5,16 +5,11 @@ tags:
 ---
 # NetApp Operations
 
-
 <div class="kb-summary">
 Use this section for practical notes, checks, commands, troubleshooting, design references, and change validation.
 
 *Applies to: ONTAP 9.x*
 </div>
-![NetApp Operations](../../../assets/storage-netapp-operations-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

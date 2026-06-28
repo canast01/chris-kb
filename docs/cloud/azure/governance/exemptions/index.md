@@ -4,35 +4,11 @@ tags:
 ---
 # Policy Exemptions
 
-
 <div class="kb-summary">
 Policy exemptions allow specific resources, resource groups, or subscriptions to be excluded from policy evaluation. Exemptions are preferred over assignment exclusions because they are auditable, time-bound, and can be reviewed independently.
 
 *Applies to: Azure*
 </div>
-![Policy Exemptions](../../../../assets/cloud-azure-governance-exemptions-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-exemption_decision_flow: "Exemption Decision Flow" {shape: rectangle}
-creating_exemptions: "Creating Exemptions" {shape: rectangle}
-waiver_vs_mitigated: "Waiver vs Mitigated" {shape: rectangle}
-expiry: "Expiry" {shape: rectangle}
-audit_trail: "Audit Trail" {shape: rectangle}
-exemption_best_practices: "Exemption Best Practices" {shape: rectangle}
-
-center -> exemption_decision_flow
-center -> creating_exemptions
-center -> waiver_vs_mitigated
-center -> expiry
-center -> audit_trail
-center -> exemption_best_practices
-```
 
 ## Exemption Decision Flow
 

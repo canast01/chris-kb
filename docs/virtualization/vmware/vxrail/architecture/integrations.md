@@ -13,28 +13,6 @@ VxRail integrates natively with vCenter, NSX-T, Aria Operations, and Dell Suppor
 </div>
 ![VxRail — Integrations](../../../../assets/virtualization-vmware-vxrail-architecture-integrations.svg)
 
-
-
-
-```d2
-direction: right
-
-center: "VxRail" {shape: hexagon}
-vcenter_integration: "vCenter Integration" {shape: rectangle}
-nsxt_integration: "NSX-T Integration" {shape: rectangle}
-aria_operations_integration: "Aria Operations Integration" {shape: rectangle}
-dell_supportassist_integration: "Dell SupportAssist Integration" {shape: rectangle}
-vxrail_manager_rest_api: "VxRail Manager REST API" {shape: rectangle}
-cmdb_integration: "CMDB Integration" {shape: rectangle}
-
-center -> vcenter_integration
-center -> nsxt_integration
-center -> aria_operations_integration
-center -> dell_supportassist_integration
-center -> vxrail_manager_rest_api
-center -> cmdb_integration
-```
-
 ## vCenter Integration
 
 VxRail Manager embeds a vCenter Server plugin that adds HCI-specific capabilities:

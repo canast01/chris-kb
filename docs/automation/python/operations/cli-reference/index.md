@@ -5,33 +5,11 @@ tags:
 ---
 # Python Automation — CLI Reference
 
-
 <div class="kb-summary">
 CLI Reference reference covering Python Script Execution Pipeline, Package Management (pip), Common Infrastructure Packages, Environment Variables, Running Scripts and 3 more sections.
 
 *Applies to: Python 3.x*
 </div>
-![Python Automation — CLI Reference](../../../../assets/automation-python-operations-cli-reference-index.svg)
-
-
-```d2
-direction: right
-
-center: "Python" {shape: rectangle}
-python_script_execution_pipeline: "Python Script Execution Pipeline" {shape: rectangle}
-common_infrastructure_packages: "Common Infrastructure Packages" {shape: rectangle}
-environment_variables: "Environment Variables" {shape: rectangle}
-running_scripts: "Running Scripts" {shape: rectangle}
-debugging: "Debugging" {shape: rectangle}
-windowsspecific: "Windows-Specific" {shape: rectangle}
-
-center -> python_script_execution_pipeline
-center -> common_infrastructure_packages
-center -> environment_variables
-center -> running_scripts
-center -> debugging
-center -> windowsspecific
-```
 
 ## Before you begin
 
@@ -60,7 +38,6 @@ graph LR
     exportOutput --> sendReport
     runScript --> logResult
 ```
-
 
 ---
 

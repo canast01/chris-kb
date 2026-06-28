@@ -4,8 +4,6 @@ tags:
   - servicenow
 ---
 # ServiceNow Authentication
-![ServiceNow Authentication](../../../../assets/itsm-servicenow-security-authentication-index.svg)
-
 
 ```javascript
 // Test LDAP configuration from ServiceNow Script Editor

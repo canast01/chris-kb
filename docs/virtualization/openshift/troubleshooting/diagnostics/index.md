@@ -11,10 +11,6 @@ Diagnostic tools and techniques: must-gather collection, oc adm inspect, Prometh
 
 *Applies to: OpenShift 4.x*
 </div>
-![OpenShift — Diagnostics](../../../../assets/virtualization-openshift-troubleshooting-diagnostics-index.svg)
-
-
-
 
 ```mermaid
 graph TD

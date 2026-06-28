@@ -5,16 +5,11 @@ tags:
 ---
 # Venafi — Standards
 
-
 <div class="kb-summary">
 Certificate policy standards enforced through the Venafi policy tree. All certificates issued through Venafi must comply with these standards. Non-compliant requests are rejected at the policy folder level.
 
 *Applies to: Venafi TLS Protect*
 </div>
-![Venafi — Standards](../../../../assets/security-venafi-architecture-design-standards-index.svg)
-
-
-
 
 ---
 

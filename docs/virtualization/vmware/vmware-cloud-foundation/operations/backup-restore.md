@@ -6,7 +6,6 @@ tags:
 ---
 # VCF Operations — Backup & Restore
 
-
 <div class="kb-summary">
 VMware Cloud Foundation backup protects the management plane components: SDDC Manager, NSX Manager, and vCenter Server. Each component has its own backup mechanism and must be restored in the correct sequence.
 
@@ -14,29 +13,9 @@ VMware Cloud Foundation backup protects the management plane components: SDDC Ma
 </div>
 ![VCF Operations — Backup & Restore](../../../../assets/virtualization-vmware-vmware-cloud-foundation-operations-bac.svg)
 
-
  This page covers configuration, scheduling, restore procedures, and validation.
 
 ---
-
-```d2
-direction: right
-
-hub: "VMware Cloud Foundation\nOperations" {shape: hexagon}
-management_plane_backup_overview: "Management Plane Backup Overview" {shape: rectangle}
-backup_architecture: "Backup Architecture" {shape: rectangle}
-nsx_manager_backup: "NSX Manager Backup" {shape: rectangle}
-vcenter_server_filebased_backup_fbb: "vCenter Server File-Based Backup (FBB)" {shape: rectangle}
-vsan_configuration_backup: "vSAN Configuration Backup" {shape: rectangle}
-restore_procedure: "Restore Procedure" {shape: rectangle}
-
-hub -> management_plane_backup_overview
-hub -> backup_architecture
-hub -> nsx_manager_backup
-hub -> vcenter_server_filebased_backup_fbb
-hub -> vsan_configuration_backup
-hub -> restore_procedure
-```
 
 ## Before you begin
 
@@ -79,7 +58,6 @@ flowchart TD
         R2 --> R3[Restore vCenter]
     end
 ```
-
 
 ---
 
@@ -361,8 +339,6 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
 
 > **Test restores:** Run a full restore simulation quarterly in an isolated environment. An untested backup is not a backup.
 
-
-
 ---
 
 ## Verify
@@ -371,7 +347,6 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
 - SDDC Manager backup bundle is stored at the configured external location and is retrievable
 - After a restore test: SDDC Manager UI is accessible and inventory reflects the expected state
 - NSX and vCenter configurations match the backup point-in-time snapshot
-
 
 ---
 

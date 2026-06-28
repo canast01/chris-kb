@@ -5,16 +5,12 @@ tags:
 ---
 # Dell VPLEX — Scripts
 
-
 <div class="kb-summary">
 Dell VPLEX automation scripts: `vplexcli` and Python REST API examples for distributed device status, cluster health polling, and migration task management.
 
 *Applies to: VPLEX*
 </div>
 ![Dell VPLEX — Scripts](../../../../assets/storage-dell-vplex-operations-scripts.svg)
-
-
-
 
 ```mermaid
 flowchart LR
@@ -34,23 +30,6 @@ flowchart LR
 ```
 
 ---
-
-```d2
-direction: right
-
-hub: "VPLEX\nOperations" {shape: hexagon}
-distributed_device_health_check: "Distributed Device Health Check" {shape: rectangle}
-metro_consistency_group_monitor: "Metro Consistency Group Monitor" {shape: rectangle}
-daily_check_script: "Daily Check Script" {shape: rectangle}
-prechange_validation_script: "Pre-Change Validation Script" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> distributed_device_health_check
-hub -> metro_consistency_group_monitor
-hub -> daily_check_script
-hub -> prechange_validation_script
-hub -> verify
-```
 
 ## Before you begin
 

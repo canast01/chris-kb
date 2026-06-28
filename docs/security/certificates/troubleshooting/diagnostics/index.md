@@ -12,10 +12,6 @@ Certificate diagnostic commands: check expiry and SANs with openssl s_client, ve
 
 *Applies to: Linux (RHEL/Ubuntu) · Windows Server · OpenSSL 3.x · ADCS*
 </div>
-![Certificates — Diagnostics](../../../../assets/security-certificates-troubleshooting-diagnostics-index.svg)
-
-
-
 
 ```mermaid
 graph TD

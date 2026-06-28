@@ -10,10 +10,6 @@ vCenter High Availability (VCHA) deploys three vCenter instances — active, pas
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![vCenter HA Internals](../../../../assets/virtualization-vmware-internals-vcha-internals-index.svg)
-
-
-
 
 ```mermaid
 graph LR
@@ -32,25 +28,6 @@ graph LR
     A -->|heartbeat| HN
     HN -->|heartbeat| W
     P -->|quorum check| W
-```
-
-```d2
-direction: right
-
-center: "Vcha Internals" {shape: hexagon}
-3node_topology: "3-Node Topology" {shape: rectangle}
-state_synchronisation: "State Synchronisation" {shape: rectangle}
-failover_trigger_and_sequence: "Failover Trigger and Sequence" {shape: rectangle}
-splitbrain_prevention: "Split-Brain Prevention" {shape: rectangle}
-vcenter_ha_vs_recovery_options: "vCenter HA vs Recovery Options" {shape: rectangle}
-vcha_requirements: "VCHA Requirements" {shape: rectangle}
-
-center -> 3node_topology
-center -> state_synchronisation
-center -> failover_trigger_and_sequence
-center -> splitbrain_prevention
-center -> vcenter_ha_vs_recovery_options
-center -> vcha_requirements
 ```
 
 ## 3-Node Topology

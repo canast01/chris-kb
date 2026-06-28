@@ -5,14 +5,11 @@ tags:
 ---
 # Veeam — Backup & Restore
 
-
 <div class="kb-summary">
 Veeam Backup & Replication provides comprehensive recovery options ranging from full VM restore to granular application-item recovery. Choosing the right restore type minimises RTO and avoids unnecessary data movement.
 
 *Applies to: Veeam 12.x*
 </div>
-![Veeam — Backup & Restore](../../../../assets/backup-veeam-operations-backup-restore-index.svg)
-
 
 ---
 
@@ -82,7 +79,6 @@ flowchart TD
     H --> J
     I --> J
 ```
-
 
 This performs a Storage vMotion in the background. The VM remains live throughout.
 

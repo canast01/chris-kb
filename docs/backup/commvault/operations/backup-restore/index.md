@@ -4,8 +4,6 @@ tags:
   - operations
 ---
 # Commvault Backup and Restore — Procedures
-![Commvault Backup and Restore — Procedures](../../../../assets/backup-commvault-operations-backup-restore-index.svg)
-
 
 ```bash
 curl -s -X POST "https://commserve.example.com/webconsole/api/Login" \

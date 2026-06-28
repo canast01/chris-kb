@@ -13,13 +13,8 @@ End-to-end deployment guide for VMware Horizon VDI and published applications. P
 
 *Applies to: Horizon 8.x*
 </div>
-![Horizon — Deploy](../../../../assets/virtualization-vmware-horizon-deploy-index.svg)
-
-
-
 
 ---
-
 
 ```mermaid
 flowchart TD

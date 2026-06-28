@@ -6,7 +6,6 @@ tags:
 ---
 # Aria Operations for Networks — Encryption
 
-
 <div class="kb-summary">
 Encryption reference covering Data at Rest, Data in Transit, Certificate Management, TLS Cipher Hardening, Credential Storage.
 
@@ -14,27 +13,7 @@ Encryption reference covering Data at Rest, Data in Transit, Certificate Managem
 </div>
 ![Aria Operations for Networks — Encryption](../../../../assets/virtualization-vmware-aria-operations-for-networks-security-.svg)
 
-
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-data_at_rest: "Data at Rest" {shape: rectangle}
-data_in_transit: "Data in Transit" {shape: rectangle}
-certificate_management: "Certificate Management" {shape: rectangle}
-tls_cipher_hardening: "TLS Cipher Hardening" {shape: rectangle}
-credential_storage: "Credential Storage" {shape: rectangle}
-core: "Aria Operations for Networks Core" {shape: hexagon}
-
-external -> data_at_rest: traffic in
-data_at_rest -> data_in_transit
-data_in_transit -> certificate_management
-certificate_management -> tls_cipher_hardening
-tls_cipher_hardening -> credential_storage
-credential_storage -> core: secured path
-```
 
 ## Before you begin
 
@@ -78,7 +57,6 @@ NetFlow/IPFIX is inherently unencrypted. Mitigate by placing Collector VMs on a 
 vRNI ships with a self-signed certificate. Replace with a CA-signed certificate for production.
 
 ### Replace via UI
-
 
 ---
 

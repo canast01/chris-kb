@@ -4,16 +4,11 @@ tags:
 ---
 # Virtualization Standards
 
-
 <div class="kb-summary">
 VMware standards hub: host build standard, VM naming conventions, network port-group naming, cluster design rules, and change control requirements.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Virtualization Standards](../../../../assets/virtualization-vmware-reference-standards-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-5">
 

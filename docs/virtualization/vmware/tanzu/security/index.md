@@ -11,9 +11,6 @@ Tanzu hardening — RBAC, network policies, pod security admission, OPA Gatekeep
 
 *Applies to: Tanzu 3.x*
 </div>
-![Tanzu — Security](../../../../assets/virtualization-vmware-tanzu-security-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

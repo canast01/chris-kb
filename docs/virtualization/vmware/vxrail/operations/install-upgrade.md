@@ -13,29 +13,7 @@ VxRail LCM upgrade workflow from bundle download through post-upgrade validation
 </div>
 ![VxRail — Install & Upgrade](../../../../assets/virtualization-vmware-vxrail-operations-install-upgrade.svg)
 
-
-
-
 ---
-
-```d2
-direction: right
-
-hub: "VxRail\nOperations" {shape: hexagon}
-lcm_preupgrade_checklist: "LCM Pre-Upgrade Checklist" {shape: rectangle}
-step_1_obtain_the_upgrade_bundle: "Step 1 — Obtain the Upgrade Bundle" {shape: rectangle}
-step_2_upload_the_bundle: "Step 2 — Upload the Bundle" {shape: rectangle}
-step_3_run_preupgrade_checks: "Step 3 — Run Pre-Upgrade Checks" {shape: rectangle}
-step_4_run_the_upgrade: "Step 4 — Run the Upgrade" {shape: rectangle}
-step_5_monitor_progress: "Step 5 — Monitor Progress" {shape: rectangle}
-
-hub -> lcm_preupgrade_checklist
-hub -> step_1_obtain_the_upgrade_bundle
-hub -> step_2_upload_the_bundle
-hub -> step_3_run_preupgrade_checks
-hub -> step_4_run_the_upgrade
-hub -> step_5_monitor_progress
-```
 
 ## Before you begin
 

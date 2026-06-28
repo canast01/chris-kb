@@ -12,10 +12,6 @@ Security reference for VMware ESXi. Covers vCenter SSO authentication, lockdown 
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![ESXi — Security](../../../../assets/virtualization-vmware-esxi-security-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

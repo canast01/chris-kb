@@ -5,7 +5,6 @@ tags:
 ---
 # Unity — CLI Reference
 
-
 <div class="kb-summary">
 Commonly used `uemcli` commands for managing Dell Unity storage systems. Unity is a dual-controller mid-range array supporting both block (SAN) and file (NAS) workloads.
 
@@ -13,31 +12,9 @@ Commonly used `uemcli` commands for managing Dell Unity storage systems. Unity i
 </div>
 ![Unity — CLI Reference](../../../../assets/storage-dell-unity-operations-cli-reference.svg)
 
-
-
-
 > Connect with: `uemcli -d <array_ip> -u <user> -p <password>` — or set a connection profile to avoid retyping credentials.
 
 ---
-
-```d2
-direction: right
-
-hub: "Unity XT\nOperations" {shape: hexagon}
-system_status: "System & Status" {shape: rectangle}
-storage_pools: "Storage Pools" {shape: rectangle}
-luns: "LUNs" {shape: rectangle}
-file_systems_nas: "File Systems (NAS)" {shape: rectangle}
-hosts_access: "Hosts & Access" {shape: rectangle}
-network_interfaces: "Network Interfaces" {shape: rectangle}
-
-hub -> system_status
-hub -> storage_pools
-hub -> luns
-hub -> file_systems_nas
-hub -> hosts_access
-hub -> network_interfaces
-```
 
 ## Before you begin
 

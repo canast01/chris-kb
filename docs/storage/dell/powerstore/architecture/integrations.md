@@ -5,35 +5,12 @@ tags:
 ---
 # PowerStore — Integrations
 
-
 <div class="kb-summary">
 Integrations reference covering VMware vSphere, Dell Backup and Recovery (Data Domain / PowerProtect), CloudIQ, SupportAssist (ESRS), SNMP Monitoring and 4 more sections.
 
 *Applies to: PowerStore 3.x*
 </div>
 ![PowerStore — Integrations](../../../../assets/storage-dell-powerstore-architecture-integrations.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "PowerStore" {shape: hexagon}
-vmware_vsphere: "VMware vSphere" {shape: rectangle}
-dell_backup_and_recovery_data_domain: "Dell Backup and Recovery (Data Domain / PowerProtect)" {shape: rectangle}
-cloudiq: "CloudIQ" {shape: rectangle}
-supportassist_esrs: "SupportAssist (ESRS)" {shape: rectangle}
-snmp_monitoring: "SNMP Monitoring" {shape: rectangle}
-syslog_siem_integration: "Syslog / SIEM Integration" {shape: rectangle}
-
-center -> vmware_vsphere
-center -> dell_backup_and_recovery_data_domain
-center -> cloudiq
-center -> supportassist_esrs
-center -> snmp_monitoring
-center -> syslog_siem_integration
-```
 
 ## VMware vSphere
 

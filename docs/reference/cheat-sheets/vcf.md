@@ -10,20 +10,6 @@ Top-10 VCF commands for SDDC Manager operations, workload domains, LCM upgrades,
 </div>
 ![VCF Cheat Sheet](../../assets/reference-cheat-sheets-vcf.svg)
 
-
-
-
-```d2
-direction: right
-
-center: "Cheat Sheets" {shape: rectangle}
-sddc_manager_rest_api: "SDDC Manager REST API" {shape: rectangle}
-password_management_sddc_manager_app: "Password management (SDDC Manager appliance SSH)" {shape: rectangle}
-
-center -> sddc_manager_rest_api
-center -> password_management_sddc_manager_app
-```
-
 ## SDDC Manager REST API
 
 ```bash

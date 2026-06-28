@@ -10,10 +10,6 @@ search:
 <div class="kb-summary">
 Troubleshooting guides for DR failures — backup job errors, replication lag, failover issues, IRE connectivity problems, and backup validation failures.
 </div>
-![DR Troubleshooting](../../../assets/backup-dr-operations-troubleshooting-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-1">
 

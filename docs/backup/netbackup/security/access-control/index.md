@@ -5,36 +5,11 @@ tags:
 ---
 # NetBackup — Access Control
 
-
 <div class="kb-summary">
 Access Control reference covering NetBackup Access Control (NBAC).
 
 *Applies to: NetBackup 10.x*
 </div>
-![NetBackup — Access Control](../../../../assets/backup-netbackup-security-access-control-index.svg)
-
-
-
-
-```d2
-direction: down
-
-root: "NetBackup\nAccess Control" {shape: hexagon}
-administrator: "Administrator" {shape: rectangle}
-operator: "Operator" {shape: rectangle}
-auditor: "Auditor" {shape: rectangle}
-readonly: "Read-Only" {shape: rectangle}
-resources: Protected Resources {shape: cylinder}
-
-root -> administrator: role
-administrator -> resources: scoped
-root -> operator: role
-operator -> resources: scoped
-root -> auditor: role
-auditor -> resources: scoped
-root -> readonly: role
-readonly -> resources: scoped
-```
 
 ## Before you begin
 

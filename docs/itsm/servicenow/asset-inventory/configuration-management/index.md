@@ -3,8 +3,6 @@ tags:
   - servicenow
 ---
 # Inventory — Configuration Management (CMDB)
-![Inventory — Configuration Management (CMDB)](../../../../assets/itsm-servicenow-asset-inventory-configuration-management-ind.svg)
-
 
 ```bash
 # Run playbook against all servers to enforce baseline

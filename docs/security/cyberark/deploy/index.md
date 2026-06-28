@@ -12,10 +12,6 @@ CyberArk PAM initial deployment: Digital Vault, CPM, PVWA, PSM, initial account 
 
 *Applies to: CyberArk PAM 12.x / 13.x*
 </div>
-![CyberArk PAM — Initial Deployment](../../../assets/security-cyberark-deploy-index.svg)
-
-
-
 
 ```mermaid
 flowchart TD
@@ -63,9 +59,6 @@ onboard_the_first_accounts -> validate
 - **Logging:** record every IP address, hostname, and credential set assigned during this deployment
 
 ---
-
-
-
 
 This guide covers deploying a CyberArk Privileged Access Management environment from scratch, including the Digital Vault, CPM, PVWA, PSM, initial account onboarding, LDAP integration, and deployment validation.
 

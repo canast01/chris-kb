@@ -12,9 +12,6 @@ Data Domain — Troubleshooting navigation for Common Issues, Diagnostics, Escal
 
 *Applies to: Data Domain DD OS 7.x*
 </div>
-![Data Domain — Troubleshooting](../../../../assets/storage-dell-data-domain-troubleshooting-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="common-issues/"><strong>Common Issues</strong><span>Quick reference for common problems and resolutions.</span></a>

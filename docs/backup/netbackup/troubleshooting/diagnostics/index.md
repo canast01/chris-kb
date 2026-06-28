@@ -12,10 +12,6 @@ NetBackup diagnostic commands: query failed jobs with bpdbjobs, check storage un
 
 *Applies to: NetBackup 10.x on Linux master/media servers*
 </div>
-![NetBackup — Diagnostics](../../../../assets/backup-netbackup-troubleshooting-diagnostics-index.svg)
-
-
-
 
 ```mermaid
 graph TD

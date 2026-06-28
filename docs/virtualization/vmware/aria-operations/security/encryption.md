@@ -6,33 +6,12 @@ tags:
 ---
 # Aria Operations — Encryption
 
-
 <div class="kb-summary">
 Encryption reference covering TLS Certificate Replacement, Cluster-Internal TLS, Data at Rest Encryption, Credential Encryption in Adapters, Certificate Expiry Monitoring and 1 more sections.
 
 *Applies to: Aria Ops 8.x*
 </div>
 ![Aria Operations — Encryption](../../../../assets/virtualization-vmware-aria-operations-security-encryption.svg)
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-tls_certificate_replacement: "TLS Certificate Replacement" {shape: rectangle}
-data_at_rest_encryption: "Data at Rest Encryption" {shape: rectangle}
-credential_encryption_in_adapters: "Credential Encryption in Adapters" {shape: rectangle}
-certificate_expiry_monitoring: "Certificate Expiry Monitoring" {shape: rectangle}
-fips_mode: "FIPS Mode" {shape: rectangle}
-core: "Aria Operations Core" {shape: hexagon}
-
-external -> tls_certificate_replacement: traffic in
-tls_certificate_replacement -> data_at_rest_encryption
-data_at_rest_encryption -> credential_encryption_in_adapters
-credential_encryption_in_adapters -> certificate_expiry_monitoring
-certificate_expiry_monitoring -> fips_mode
-fips_mode -> core: secured path
-```
 
 ## Before you begin
 
@@ -48,7 +27,6 @@ fips_mode -> core: secured path
 Aria Operations ships with a self-signed certificate. Replace with a CA-signed certificate for production to avoid browser warnings, API trust failures, and integration issues with other Aria products.
 
 **Via UI:**
-
 
 ---
 

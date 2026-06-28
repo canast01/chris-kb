@@ -5,14 +5,11 @@ tags:
 ---
 # PowerShell — Encryption
 
-
 <div class="kb-summary">
 PowerShell encryption: `ConvertTo-SecureString`, `New-SelfSignedCertificate`, encrypting credential exports, and SecretManagement module for vault integration.
 
 *Applies to: PowerShell 7.x*
 </div>
-![PowerShell — Encryption](../../../../assets/automation-powershell-security-encryption-index.svg)
-
 
 ---
 
@@ -55,7 +52,6 @@ graph TD
     secureString -->|New-PSSession -UseSSL| winrmHTTPS
     winrmHTTPS --> remoteSession
 ```
-
 
 ## Encryption Reference
 

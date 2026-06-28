@@ -9,10 +9,6 @@ etcd encryption at rest, Kubernetes secret encryption, TLS configuration, certif
 
 *Applies to: OpenShift 4.x*
 </div>
-![OpenShift — Encryption](../../../../assets/virtualization-openshift-security-encryption-index.svg)
-
-
-
 
 ```mermaid
 graph TD

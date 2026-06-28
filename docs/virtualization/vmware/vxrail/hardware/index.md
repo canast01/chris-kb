@@ -4,15 +4,11 @@ tags:
 ---
 # VxRail Hardware
 
-
 <div class="kb-summary">
 VxRail hardware notes for nodes, disks, NICs, power, cooling, iDRAC, and firmware inventory.
 
 *Applies to: VxRail 7.x · 8.x*
 </div>
-![VxRail Hardware](../../../../assets/virtualization-vmware-vxrail-hardware-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

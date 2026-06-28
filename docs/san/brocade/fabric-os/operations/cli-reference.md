@@ -6,7 +6,6 @@ tags:
 # Brocade Fabric OS — CLI Reference
 ![Brocade Fabric OS — CLI Reference](../../../../assets/san-brocade-fabric-os-operations-cli-reference.svg)
 
-
 ```bash
 switchshow         # ports, state, speed, and connected WWNs — most useful daily command
 switchstatusshow   # overall switch health status (expected: HEALTHY)
@@ -273,15 +272,6 @@ setContext 128         # 128 = default/base fabric
 ```
 ```bash
 lscfg --port <slot/port> -lport <fid>    # assign port as XISL
-```
-
-```d2
-direction: right
-
-hub: "Brocade Fabric OS\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

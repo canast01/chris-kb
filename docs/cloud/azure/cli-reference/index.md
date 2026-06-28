@@ -4,14 +4,11 @@ tags:
 ---
 # Azure CLI Reference
 
-
 <div class="kb-summary">
 Commonly used Azure CLI (`az`) commands for managing compute, storage, networking, identity, and monitoring. The Azure CLI is a cross-platform tool that talks directly to Azure APIs — everything you can do in the portal, you can automate with `az`.
 
 *Applies to: Azure*
 </div>
-![Azure CLI Reference](../../../assets/cloud-azure-cli-reference-index.svg)
-
 
 > Requires `az login` or service principal credentials. Use `az account set --subscription <id>` to target a specific subscription.
 
@@ -72,25 +69,6 @@ Commonly used Azure CLI (`az`) commands for managing compute, storage, networkin
 </div>
 
 ---
-
-```d2
-direction: right
-
-center: "Azure" {shape: rectangle}
-storage_accounts_blobs: "Storage Accounts & Blobs" {shape: rectangle}
-networking: "Networking" {shape: rectangle}
-identity_rbac: "Identity & RBAC" {shape: rectangle}
-monitor_alerts: "Monitor & Alerts" {shape: rectangle}
-key_vault: "Key Vault" {shape: rectangle}
-aks: "AKS" {shape: rectangle}
-
-center -> storage_accounts_blobs
-center -> networking
-center -> identity_rbac
-center -> monitor_alerts
-center -> key_vault
-center -> aks
-```
 
 ## Storage Accounts & Blobs
 

@@ -10,9 +10,6 @@ Dell VPLEX — Operations reference: Health Checks, Procedures, CLI Reference, I
 
 *Applies to: VPLEX*
 </div>
-![Dell VPLEX — Operations](../../../../assets/storage-dell-vplex-operations-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>

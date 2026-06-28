@@ -5,7 +5,6 @@ tags:
 ---
 # SnapCenter — Access Control
 
-
 <div class="kb-summary">
 SnapCenter access control: RBAC role assignment for App Backup Admin and Backup Viewer, `Get-SmRole`, resource group ownership scoping, and audit trail review.
 
@@ -13,25 +12,7 @@ SnapCenter access control: RBAC role assignment for App Backup Admin and Backup 
 </div>
 ![SnapCenter — Access Control](../../../../assets/storage-netapp-snapcenter-security-access-control.svg)
 
-
-
-
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-rbac: "RBAC" {shape: rectangle}
-ontap_service_account_security: "ONTAP Service Account Security" {shape: rectangle}
-audit_logging: "Audit Logging" {shape: rectangle}
-core: "SnapCenter Core" {shape: hexagon}
-
-external -> rbac: traffic in
-rbac -> ontap_service_account_security
-ontap_service_account_security -> audit_logging
-audit_logging -> core: secured path
-```
 
 ## Before you begin
 

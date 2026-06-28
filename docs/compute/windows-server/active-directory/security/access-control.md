@@ -5,31 +5,12 @@ tags:
 ---
 # Active Directory — Access Control
 
-
 <div class="kb-summary">
 Access Control reference covering Tiered Administration Model, Core Security Controls, AdminSDHolder Monitoring.
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
 ![Active Directory — Access Control](../../../../assets/compute-windows-server-active-directory-security-access-cont.svg)
-
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-tiered_administration_model: "Tiered Administration Model" {shape: rectangle}
-core_security_controls: "Core Security Controls" {shape: rectangle}
-adminsdholder_monitoring: "AdminSDHolder Monitoring" {shape: rectangle}
-core: "Active Directory Core" {shape: hexagon}
-
-external -> tiered_administration_model: traffic in
-tiered_administration_model -> core_security_controls
-core_security_controls -> adminsdholder_monitoring
-adminsdholder_monitoring -> core: secured path
-```
 
 ## Before you begin
 
@@ -64,7 +45,6 @@ graph TD
     tier0 -. "GPO: Deny log on locally to Tier 1/2" .-> tier1
     tier1 -. "GPO: Deny log on locally to Tier 2" .-> tier2
 ```
-
 
 | Tier | Scope | Examples | Access Restriction |
 |---|---|---|---|

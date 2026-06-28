@@ -5,14 +5,9 @@ tags:
 ---
 # Certificates — Operations
 
-
 <div class="kb-summary">
 Certificate lifecycle operations — renewal, re-issuance, CSR generation, chain validation, and certificate rotation procedures.
 </div>
-![Certificates — Operations](../../../assets/security-certificates-operations-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

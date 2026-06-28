@@ -5,16 +5,12 @@ tags:
 ---
 # FOD — Install & Upgrade
 
-
 <div class="kb-summary">
 Dell FoD install and upgrade: SCG registration for automatic telemetry, FoD licence activation procedure, and upgrade path for capacity tier changes.
 
 *Applies to: Dell FOD*
 </div>
 ![FOD — Install & Upgrade](../../../../assets/storage-dell-fod-operations-install-upgrade.svg)
-
-
-
 
 ---
 
@@ -25,17 +21,6 @@ FOD billing is managed by Dell — there is no on-premises software upgrade for 
 | 1 | FOD billing is unaffected by firmware upgrades, but confirm CloudIQ telemetry resumes promptly after any maintenance that takes the array offline |
 | 2 | After adding physical burst capacity under a FOD agreement, confirm CloudIQ reflects the new total installed capacity |
 | 3 | If the array is migrated or replaced, work with Dell to transfer the FOD contract to the new system SID |
-
-```d2
-direction: right
-
-hub: "Flex On Demand\nOperations" {shape: hexagon}
-license_key_management: "License Key Management" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> license_key_management
-hub -> verify
-```
 
 ## Before you begin
 

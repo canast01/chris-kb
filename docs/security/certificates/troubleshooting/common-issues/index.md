@@ -7,14 +7,9 @@ search:
 ---
 # Certificates — Common Issues
 
-
 <div class="kb-summary">
 Common Issues reference covering Certificate Issue Triage Flow, Common checks, Incident notes, Change notes, Known issues and 2 more sections.
 </div>
-![Certificates — Common Issues](../../../../assets/security-certificates-troubleshooting-common-issues-index.svg)
-
-
-
 
 ```d2
 direction: down

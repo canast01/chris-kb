@@ -12,12 +12,6 @@ PostgreSQL initial deployment — installation on RHEL/Ubuntu, postgresql.conf b
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>
-![PostgreSQL — Initial Deployment](../../../../assets/compute-linux-postgresql-deploy-index.svg)
-
-
-
-
-
 
 ```mermaid
 flowchart TD

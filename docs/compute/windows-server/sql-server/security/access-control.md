@@ -12,28 +12,6 @@ SQL Server access control — logins vs users, server/database roles, GRANT/DENY
 </div>
 ![SQL Server — Access Control](../../../../assets/compute-windows-server-sql-server-security-access-control.svg)
 
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-login_vs_user: "Login vs User" {shape: rectangle}
-serverlevel_roles: "Server-Level Roles" {shape: rectangle}
-databaselevel_roles: "Database-Level Roles" {shape: rectangle}
-finegrained_grant_deny: "Fine-Grained GRANT / DENY" {shape: rectangle}
-auditing_permissions: "Auditing Permissions" {shape: rectangle}
-core: "SQL Server Core" {shape: hexagon}
-
-external -> login_vs_user: traffic in
-login_vs_user -> serverlevel_roles
-serverlevel_roles -> databaselevel_roles
-databaselevel_roles -> finegrained_grant_deny
-finegrained_grant_deny -> auditing_permissions
-auditing_permissions -> core: secured path
-```
-
 ## Before you begin
 
 - **Access:** Local Administrator or Domain Admin on target hosts

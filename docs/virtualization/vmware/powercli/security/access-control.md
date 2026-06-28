@@ -13,30 +13,6 @@ Managing vSphere RBAC via PowerCLI: auditing existing permissions, creating auto
 </div>
 ![PowerCLI — Access Control](../../../../assets/virtualization-vmware-powercli-security-access-control.svg)
 
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-audit_existing_permissions: "Audit Existing Permissions" {shape: rectangle}
-create_a_leastprivilege_automation_r: "Create a Least-Privilege Automation Role" {shape: rectangle}
-assign_role_to_service_account: "Assign Role to Service Account" {shape: rectangle}
-modify_and_remove_permissions: "Modify and Remove Permissions" {shape: rectangle}
-detect_permission_sprawl: "Detect Permission Sprawl" {shape: rectangle}
-permission_inheritance_check: "Permission Inheritance Check" {shape: rectangle}
-core: "PowerCLI Core" {shape: hexagon}
-
-external -> audit_existing_permissions: traffic in
-audit_existing_permissions -> create_a_leastprivilege_automation_r
-create_a_leastprivilege_automation_r -> assign_role_to_service_account
-assign_role_to_service_account -> modify_and_remove_permissions
-modify_and_remove_permissions -> detect_permission_sprawl
-detect_permission_sprawl -> permission_inheritance_check
-permission_inheritance_check -> core: secured path
-```
-
 ## Before you begin
 
 - **Access:** vCenter Administrator role

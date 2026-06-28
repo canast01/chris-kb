@@ -5,14 +5,11 @@ tags:
 ---
 # GitHub Actions — Health Checks
 
-
 <div class="kb-summary">
 Health Checks reference covering Runner Health, Workflow Failures, Secrets and Credentials, Runner Resources.
 
 *Applies to: GitHub Actions*
 </div>
-![GitHub Actions — Health Checks](../../../../assets/automation-github-actions-operations-health-checks-index.svg)
-
 
 ```d2
 direction: right
@@ -65,7 +62,6 @@ df -h /
 # 6. Workflow run minutes (billed plan)
 gh api /repos/<owner>/<repo>/actions/billing/minutes
 ```
-
 
 **List runners at the organisation level**
 

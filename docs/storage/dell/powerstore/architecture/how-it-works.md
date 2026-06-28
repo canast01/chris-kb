@@ -5,35 +5,12 @@ tags:
 ---
 # PowerStore — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Overview, Architecture, Appliance Architecture, Hardware Models, Components and 4 more sections.
 
 *Applies to: PowerStore 3.x*
 </div>
 ![PowerStore — How It Works](../../../../assets/storage-dell-powerstore-architecture-how-it-works.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "PowerStore" {shape: hexagon}
-architecture: "Architecture" {shape: rectangle}
-appliance_architecture: "Appliance Architecture" {shape: rectangle}
-hardware_models: "Hardware Models" {shape: rectangle}
-components: "Components" {shape: rectangle}
-data_services: "Data Services" {shape: rectangle}
-metro_volume: "Metro Volume" {shape: rectangle}
-
-center -> architecture
-center -> appliance_architecture
-center -> hardware_models
-center -> components
-center -> data_services
-center -> metro_volume
-```
 
 ```plantuml
 @startuml

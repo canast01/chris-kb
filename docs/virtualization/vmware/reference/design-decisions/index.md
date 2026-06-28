@@ -3,33 +3,10 @@ tags:
   - reference
 ---
 # VMware Platform Design Decisions
-![VMware Platform Design Decisions](../../../../assets/virtualization-vmware-reference-design-decisions-index.svg)
-
 
 This page documents key architectural design decisions made for the VMware platform environment. Each entry captures what was chosen, why it was chosen over the alternatives, and what trade-offs were accepted. This serves as institutional memory — a record of intent that should inform future changes and prevent decisions from being revisited without cause.
 
-
-
 ---
-
-```d2
-direction: right
-
-center: "Design Decisions" {shape: hexagon}
-storage_decisions: "Storage Decisions" {shape: rectangle}
-decision_vsan_as_primary_vm_storage: "Decision: vSAN as Primary VM Storage" {shape: rectangle}
-decision_powermax_pure_storage_for_m: "Decision: PowerMax / Pure Storage for Mission-Critical Workl" {shape: rectangle}
-networking_decisions: "Networking Decisions" {shape: rectangle}
-decision_nsxt_as_the_overlay_network: "Decision: NSX-T as the Overlay Network" {shape: rectangle}
-decision_vsphere_distributed_switch_: "Decision: vSphere Distributed Switch (VDS) over Standard Swi" {shape: rectangle}
-
-center -> storage_decisions
-center -> decision_vsan_as_primary_vm_storage
-center -> decision_powermax_pure_storage_for_m
-center -> networking_decisions
-center -> decision_nsxt_as_the_overlay_network
-center -> decision_vsphere_distributed_switch_
-```
 
 ## Storage Decisions
 

@@ -5,14 +5,11 @@ tags:
 ---
 # VM Snapshot Runbook
 
-
 <div class="kb-summary">
 | Field | Value | |---|---| | Risk | Low (taking) / Medium (removing) | | Approval | No formal change required to take; revert requires change ticket | | Estimated time | 2–5 minutes to create; 10–30 minutes to remove (consolidation) | | Impact | None during creation (brief I/O s
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![VM Snapshot Runbook](../../../../assets/virtualization-vmware-operations-runbooks-vm-snapshot.svg)
-
 
 | Field | Value |
 |---|---|
@@ -59,7 +56,6 @@ B --> A: OK
 ---
 
 ## Process Flow
-
 
 ## Step 2 — Create Snapshot
 

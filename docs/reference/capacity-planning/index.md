@@ -11,8 +11,6 @@ tags:
 !!! summary "kb-summary"
     Sizing formulas, rules of thumb, and worksheets for compute, storage, and network capacity planning.
 
-![Capacity Planning](../../assets/reference-capacity-planning-index.svg)
-
 <div class="kb-grid" markdown>
 <div class="kb-card" markdown>
 
@@ -37,23 +35,6 @@ tags:
 </div>
 
 ---
-
-```d2
-direction: right
-
-center: "Capacity Planning" {shape: hexagon}
-compute_capacity_vmware_vsphere: "Compute Capacity (VMware vSphere)" {shape: rectangle}
-storage_capacity_general: "Storage Capacity (General)" {shape: rectangle}
-network_capacity: "Network Capacity" {shape: rectangle}
-capacity_planning_worksheet: "Capacity Planning Worksheet" {shape: rectangle}
-headroom_rules: "Headroom Rules" {shape: rectangle}
-
-center -> compute_capacity_vmware_vsphere
-center -> storage_capacity_general
-center -> network_capacity
-center -> capacity_planning_worksheet
-center -> headroom_rules
-```
 
 ## Compute Capacity (VMware vSphere)
 

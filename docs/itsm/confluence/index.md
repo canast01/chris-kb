@@ -9,9 +9,6 @@ Confluence knowledge base covering Data Center cluster architecture, space and p
 
 *Applies to: Confluence Cloud / Data Center*
 </div>
-![Confluence](../../assets/itsm-confluence-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

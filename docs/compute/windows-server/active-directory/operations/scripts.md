@@ -5,35 +5,12 @@ tags:
 ---
 # Active Directory — Scripts
 
-
 <div class="kb-summary">
 PowerShell automation tools for routine Active Directory health checks, auditing, and reporting. Run from a host with the `ActiveDirectory` PowerShell module installed.
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
 ![Active Directory — Scripts](../../../../assets/compute-windows-server-active-directory-operations-scripts.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "Active Directory\nOperations" {shape: hexagon}
-audit_script_workflow: "Audit Script Workflow" {shape: rectangle}
-prerequisites: "Prerequisites" {shape: rectangle}
-user_account_queries: "User Account Queries" {shape: rectangle}
-group_membership_audits: "Group Membership Audits" {shape: rectangle}
-stale_and_locked_accounts: "Stale and Locked Accounts" {shape: rectangle}
-expiring_passwords: "Expiring Passwords" {shape: rectangle}
-
-hub -> audit_script_workflow
-hub -> prerequisites
-hub -> user_account_queries
-hub -> group_membership_audits
-hub -> stale_and_locked_accounts
-hub -> expiring_passwords
-```
 
 ## Before you begin
 

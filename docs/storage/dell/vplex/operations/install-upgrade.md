@@ -5,33 +5,12 @@ tags:
 ---
 # Dell VPLEX — Install & Upgrade
 
-
 <div class="kb-summary">
 Install & Upgrade reference covering GeoSynchrony Version Matrix, Upgrade Paths, Hardware Lifecycle, EOL Tracking.
 
 *Applies to: VPLEX*
 </div>
 ![Dell VPLEX — Install & Upgrade](../../../../assets/storage-dell-vplex-operations-install-upgrade.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "VPLEX\nOperations" {shape: hexagon}
-geosynchrony_version_matrix: "GeoSynchrony Version Matrix" {shape: rectangle}
-upgrade_paths: "Upgrade Paths" {shape: rectangle}
-hardware_lifecycle: "Hardware Lifecycle" {shape: rectangle}
-eol_tracking: "EOL Tracking" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> geosynchrony_version_matrix
-hub -> upgrade_paths
-hub -> hardware_lifecycle
-hub -> eol_tracking
-hub -> verify
-```
 
 ## Before you begin
 

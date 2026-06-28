@@ -12,29 +12,8 @@ How vSAN classifies each object component's health — from the initial ABSENT s
 
 *Applies to: vSAN 7.x · 8.x*
 </div>
-![vSAN — Component States](../../../../assets/virtualization-vmware-vsan-architecture-component-states.svg)
-
-
-
-
-
 
 ---
-
-```d2
-direction: right
-
-center: "vSAN" {shape: hexagon}
-the_four_operational_states: "The Four Operational States" {shape: rectangle}
-state_transition_diagram: "State Transition Diagram" {shape: rectangle}
-the_clomrepairdelay_timer: "The clomRepairDelay Timer" {shape: rectangle}
-when_objects_become_inaccessible: "When Objects Become INACCESSIBLE" {shape: rectangle}
-
-center -> the_four_operational_states
-center -> state_transition_diagram
-center -> the_clomrepairdelay_timer
-center -> when_objects_become_inaccessible
-```
 
 ## The Four Operational States
 

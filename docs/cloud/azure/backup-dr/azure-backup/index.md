@@ -4,37 +4,13 @@ tags:
 ---
 # Azure Backup
 
-
 <div class="kb-summary">
 Azure Backup is a cloud-native backup service that provides simple, secure, and cost-effective solutions for protecting VMs, SQL databases, file shares, and on-premises workloads.
 
 *Applies to: Azure*
 </div>
-![Azure Backup](../../../../assets/cloud-azure-backup-dr-azure-backup-index.svg)
-
-
-
 
 ---
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-azure_backup_architecture: "Azure Backup Architecture" {shape: rectangle}
-recovery_services_vault_setup: "Recovery Services Vault Setup" {shape: rectangle}
-backup_policies: "Backup Policies" {shape: rectangle}
-enabling_protection_on_vms: "Enabling Protection on VMs" {shape: rectangle}
-ondemand_backup: "On-Demand Backup" {shape: rectangle}
-recovery_points: "Recovery Points" {shape: rectangle}
-
-center -> azure_backup_architecture
-center -> recovery_services_vault_setup
-center -> backup_policies
-center -> enabling_protection_on_vms
-center -> ondemand_backup
-center -> recovery_points
-```
 
 ## Azure Backup Architecture
 

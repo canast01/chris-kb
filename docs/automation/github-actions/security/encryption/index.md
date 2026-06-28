@@ -5,14 +5,11 @@ tags:
 ---
 # GitHub Actions — Encryption
 
-
 <div class="kb-summary">
 GitHub Actions encryption: encrypted secrets storage, environment-level secret scoping, OIDC token federation for AWS and Azure, and artifact encryption policies.
 
 *Applies to: GitHub Actions*
 </div>
-![GitHub Actions — Encryption](../../../../assets/automation-github-actions-security-encryption-index.svg)
-
 
 ---
 
@@ -49,7 +46,6 @@ flowchart LR
     ghEncrypted -->|"injected at runtime\nnot stored on disk"| wfRun
     wfRun --> step --> logs
 ```
-
 
 ## Masking Dynamic Values
 

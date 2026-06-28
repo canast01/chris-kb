@@ -5,7 +5,6 @@ tags:
 ---
 # APEX Storage as a Service — Standards
 
-
 <div class="kb-summary">
 Standards reference covering Upgrade Notes, Design Standards.
 
@@ -13,23 +12,9 @@ Standards reference covering Upgrade Notes, Design Standards.
 </div>
 ![APEX Storage as a Service — Standards](../../../../assets/storage-dell-apex-storage-as-a-service-architecture-design-s.svg)
 
-
-
-
 > Part of the [APEX Storage as a Service](../index.md) reference.
 
 ---
-
-```d2
-direction: right
-
-center: "APEX Storage" {shape: hexagon}
-upgrade_notes: "Upgrade Notes" {shape: rectangle}
-design_standards: "Design Standards" {shape: rectangle}
-
-center -> upgrade_notes
-center -> design_standards
-```
 
 ## Upgrade Notes
 

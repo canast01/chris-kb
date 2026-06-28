@@ -5,16 +5,12 @@ tags:
 ---
 # CloudIQ — Authentication
 
-
 <div class="kb-summary">
 Authentication reference covering API Authentication, Related Reference.
 
 *Applies to: CloudIQ*
 </div>
 ![CloudIQ — Authentication](../../../../assets/storage-dell-cloudiq-security-authentication.svg)
-
-
-
 
 > Part of the [CloudIQ](../index.md) reference.
 
@@ -25,19 +21,6 @@ CloudIQ uses Dell account-based authentication for portal access. Accounts are m
 - **SSO/Federation**: CloudIQ supports identity federation via Azure AD and Okta. Configure federation under **Settings > Identity Provider** in the CloudIQ admin console. With federation enabled, users authenticate via your corporate IdP and CloudIQ accepts the SAML assertion.
 - **MFA**: Enforce multi-factor authentication on all Dell accounts that have access to CloudIQ. For federated accounts, MFA enforcement is managed by your IdP. For non-federated Dell accounts, enable MFA in **My Dell Account** settings.
 - **Session management**: CloudIQ sessions have a fixed idle timeout; users are required to re-authenticate after inactivity.
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-api_authentication: "API Authentication" {shape: rectangle}
-related_reference: "Related Reference" {shape: rectangle}
-core: "CloudIQ Core" {shape: hexagon}
-
-external -> api_authentication: traffic in
-api_authentication -> related_reference
-related_reference -> core: secured path
-```
 
 ## Before you begin
 

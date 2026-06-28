@@ -5,37 +5,12 @@ tags:
 ---
 # PowerStore — Hardening
 
-
 <div class="kb-summary">
 Hardening reference covering Overview, Management Plane Hardening, Host Connectivity Hardening, SupportAssist Hardening, Audit Logging and 2 more sections.
 
 *Applies to: PowerStore 3.x*
 </div>
 ![PowerStore — Hardening](../../../../assets/storage-dell-powerstore-security-hardening.svg)
-
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-management_plane_hardening: "Management Plane Hardening" {shape: rectangle}
-host_connectivity_hardening: "Host Connectivity Hardening" {shape: rectangle}
-supportassist_hardening: "SupportAssist Hardening" {shape: rectangle}
-audit_logging: "Audit Logging" {shape: rectangle}
-hardening_checklist: "Hardening Checklist" {shape: rectangle}
-compliance_mapping: "Compliance Mapping" {shape: rectangle}
-core: "PowerStore Core" {shape: hexagon}
-
-external -> management_plane_hardening: traffic in
-management_plane_hardening -> host_connectivity_hardening
-host_connectivity_hardening -> supportassist_hardening
-supportassist_hardening -> audit_logging
-audit_logging -> hardening_checklist
-hardening_checklist -> compliance_mapping
-compliance_mapping -> core: secured path
-```
 
 ## Before you begin
 

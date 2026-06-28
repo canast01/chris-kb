@@ -5,16 +5,11 @@ tags:
 ---
 # NetApp SnapCenter — Security
 
-
 <div class="kb-summary">
 NetApp SnapCenter — Security reference: Authentication, Access Control, Encryption, Hardening.
 
 *Applies to: SnapCenter 5.x*
 </div>
-![NetApp SnapCenter — Security](../../../../assets/storage-netapp-snapcenter-security-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="authentication/"><strong>Authentication</strong><span>SSO, LDAP, local accounts, and identity sources.</span></a>

@@ -9,10 +9,6 @@ Microsoft Azure knowledge base covering compute, storage, networking, identity, 
 
 *Applies to: Azure*
 </div>
-![Azure](../../assets/cloud-azure-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

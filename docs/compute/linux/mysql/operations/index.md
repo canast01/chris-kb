@@ -10,10 +10,6 @@ Health checks, procedures, CLI, backup/restore, upgrades, and scripts.
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>
-![MySQL / MariaDB — Operations](../../../../assets/compute-linux-mysql-operations-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
   <a class="kb-card" href="health-checks/">Health Checks</a>

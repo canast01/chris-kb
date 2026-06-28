@@ -5,7 +5,6 @@ tags:
 ---
 # FlashArray — Authentication
 
-
 <div class="kb-summary">
 Authentication reference covering Authentication Architecture, Local Accounts, Active Directory (AD), LDAP (Non-AD), SAML SSO and 4 more sections.
 
@@ -13,35 +12,11 @@ Authentication reference covering Authentication Architecture, Local Accounts, A
 </div>
 ![FlashArray — Authentication](../../../../assets/storage-pure-flasharray-security-authentication.svg)
 
-
-
-
 ![FlashArray — Authentication — Diagram](../../../../assets/storage-pure-flasharray-security-authentication-diagram.svg)
 
 FlashArray supports multiple identity sources for admin authentication: local accounts, Active Directory (AD), LDAP, and SAML SSO. All authentication is role-based — every admin account is bound to one of the four built-in Purity roles. API tokens are the recommended credential type for automation and monitoring integrations.
 
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-authentication_architecture: "Authentication Architecture" {shape: rectangle}
-local_accounts: "Local Accounts" {shape: rectangle}
-active_directory_ad: "Active Directory (AD)" {shape: rectangle}
-ldap_nonad: "LDAP (Non-AD)" {shape: rectangle}
-saml_sso: "SAML SSO" {shape: rectangle}
-api_token_authentication: "API Token Authentication" {shape: rectangle}
-core: "FlashArray Core" {shape: hexagon}
-
-external -> authentication_architecture: traffic in
-authentication_architecture -> local_accounts
-local_accounts -> active_directory_ad
-active_directory_ad -> ldap_nonad
-ldap_nonad -> saml_sso
-saml_sso -> api_token_authentication
-api_token_authentication -> core: secured path
-```
 
 ## Before you begin
 

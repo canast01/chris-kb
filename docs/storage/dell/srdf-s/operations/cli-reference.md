@@ -5,7 +5,6 @@ tags:
 ---
 # SRDF/S — CLI Reference
 
-
 <div class="kb-summary">
 SRDF/S CLI reference: `symrdf establish`, `symrdf query -synchronous`, `symrdf suspend`, `symrdf resume`, `symrdf failover -establish`, and link status commands.
 
@@ -13,27 +12,9 @@ SRDF/S CLI reference: `symrdf establish`, `symrdf query -synchronous`, `symrdf s
 </div>
 ![SRDF/S — CLI Reference](../../../../assets/storage-dell-srdf-s-operations-cli-reference.svg)
 
-
 > Part of the [SRDF/S Operations](index.md) reference.
 
 All SRDF/S management is performed via SYMCLI (Solutions Enabler). Commands require appropriate RBAC permissions and must be run from a Solutions Enabler host with connectivity to the array. Always specify `-g <group>` to scope operations to the correct SRDF group and `-sid <sid>` to target the correct array.
-
-```d2
-direction: right
-
-hub: "SRDF/S\nOperations" {shape: hexagon}
-srdfs_operation_decision_map: "SRDF/S Operation Decision Map" {shape: rectangle}
-failover_failback: "Failover & Failback" {shape: rectangle}
-swap_metro_operations: "Swap & Metro Operations" {shape: rectangle}
-common_health_check_sequence: "Common Health Check Sequence" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> srdfs_operation_decision_map
-hub -> failover_failback
-hub -> swap_metro_operations
-hub -> common_health_check_sequence
-hub -> verify
-```
 
 ## Before you begin
 
@@ -77,7 +58,6 @@ flowchart TD
     style cmdFailover fill:#be123c,color:#fff
     style cmdFailback fill:#7c3aed,color:#fff
 ```
-
 
 ---
 

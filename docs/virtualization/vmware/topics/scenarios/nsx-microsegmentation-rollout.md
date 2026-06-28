@@ -17,29 +17,6 @@ projects.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![NSX Microsegmentation Rollout](../../../../assets/virtualization-vmware-topics-scenarios-nsx-microsegmentation.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Scenarios" {shape: hexagon}
-products_involved: "Products Involved" {shape: rectangle}
-1_enable_ipfix_flow_collection: "1. Enable IPFIX Flow Collection" {shape: rectangle}
-2_observe_traffic_flows_phase_1_24_w: "2. Observe Traffic Flows (Phase 1: 2-4 Weeks)" {shape: rectangle}
-3_create_nsx_security_groups: "3. Create NSX Security Groups" {shape: rectangle}
-4_tag_vms_in_vcenter: "4. Tag VMs in vCenter" {shape: rectangle}
-5_define_dfw_policy_in_monitor_mode: "5. Define DFW Policy in Monitor Mode" {shape: rectangle}
-
-center -> products_involved
-center -> 1_enable_ipfix_flow_collection
-center -> 2_observe_traffic_flows_phase_1_24_w
-center -> 3_create_nsx_security_groups
-center -> 4_tag_vms_in_vcenter
-center -> 5_define_dfw_policy_in_monitor_mode
-```
 
 ## Products Involved
 

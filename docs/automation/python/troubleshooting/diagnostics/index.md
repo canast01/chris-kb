@@ -12,10 +12,6 @@ Python diagnostic commands: read the full traceback, trace imports with python3 
 
 *Applies to: Python 3.x*
 </div>
-![Python Automation — Diagnostics](../../../../assets/automation-python-troubleshooting-diagnostics-index.svg)
-
-
-
 
 ```mermaid
 graph TD

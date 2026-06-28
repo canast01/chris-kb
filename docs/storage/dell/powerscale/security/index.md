@@ -10,9 +10,6 @@ PowerScale hardening — SmartLock compliance mode, NFS export access control, S
 
 *Applies to: PowerScale (Isilon) 9.x*
 </div>
-![PowerScale — Security](../../../../assets/storage-dell-powerscale-security-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

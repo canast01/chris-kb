@@ -33,17 +33,6 @@ Cross-platform automation language with virtual environment isolation, poetry/ve
 
 </div>
 
-```d2
-direction: right
-
-center: "Python" {shape: hexagon}
-virtual_environment_tools: "Virtual Environment Tools" {shape: rectangle}
-architecture_model: "Architecture Model" {shape: rectangle}
-
-center -> virtual_environment_tools
-center -> architecture_model
-```
-
 ## Virtual Environment Tools
 
 | Tool | Lock file | Dependency groups | Build/publish | Best for |

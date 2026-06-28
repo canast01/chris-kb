@@ -4,15 +4,11 @@ tags:
 ---
 # Dell AIOps Vendor Support
 
-
 <div class="kb-summary">
 Dell AIOps vendor support: support case opening via SupportAssist, log bundle collection, escalation to Dell Engineering, and firmware advisory tracking.
 
 *Applies to: Dell AIOps*
 </div>
-![Dell AIOps Vendor Support](../../../../assets/storage-dell-dell-aiops-vendor-support-index.svg)
-
-
 
 Dell AIOps and CloudIQ support is provided by Dell Technologies via the Dell Support Portal (dell.com/support). When raising an SR for telemetry or collection issues, collect a diagnostic bundle from the Secure Connect Gateway. For AIOps recommendation or anomaly questions, include the recommendation ID, system serial number, and CloudIQ client ID in the SR. Dell ProSupport is required for operational AIOps questions and SLA-backed response times.
 

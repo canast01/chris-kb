@@ -10,13 +10,6 @@ Technical and operational reference for VMware Aria Automation. Covers infrastru
 
 *Applies to: Aria Automation 8.x*
 </div>
-![Aria Automation](../../../assets/virtualization-vmware-aria-automation-index.svg)
-
-
-
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

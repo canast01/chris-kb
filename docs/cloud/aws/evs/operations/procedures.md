@@ -10,29 +10,6 @@ EVS operational procedures: adding and removing hosts, host replacement, vSAN re
 
 *Applies to: Amazon EVS*
 </div>
-![Amazon EVS — Procedures](../../../../assets/cloud-aws-evs-operations-procedures.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "AWS EVS\nOperations" {shape: hexagon}
-remove_a_host: "Remove a Host" {shape: rectangle}
-add_a_host: "Add a Host" {shape: rectangle}
-host_replacement_awsinitiated: "Host Replacement (AWS-Initiated)" {shape: rectangle}
-vcf_password_rotation: "VCF Password Rotation" {shape: rectangle}
-nsxt_edge_cluster_scaleout: "NSX-T Edge Cluster Scale-Out" {shape: rectangle}
-vsan_storage_policy_update: "vSAN Storage Policy Update" {shape: rectangle}
-
-hub -> remove_a_host
-hub -> add_a_host
-hub -> host_replacement_awsinitiated
-hub -> vcf_password_rotation
-hub -> nsxt_edge_cluster_scaleout
-hub -> vsan_storage_policy_update
-```
 
 ## Before you begin
 

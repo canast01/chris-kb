@@ -16,26 +16,6 @@ Firewall port reference for Superna Eyeglass (PowerScale / Isilon DR orchestrati
 </div>
 ![Superna Eyeglass — Ports and Network Requirements](../../../../assets/storage-netapp-superna-eyeglass-architecture-ports.svg)
 
-
-```d2
-direction: right
-
-center: "Superna Eyeglass" {shape: hexagon}
-network_zones: "Network Zones" {shape: rectangle}
-inbound_admin_to_eyeglass: "Inbound — Admin to Eyeglass" {shape: rectangle}
-eyeglass_to_powerscale_outbound: "Eyeglass to PowerScale (Outbound)" {shape: rectangle}
-eyeglass_to_active_directory_outboun: "Eyeglass to Active Directory (Outbound)" {shape: rectangle}
-eyeglass_to_nfs_file_auditing_option: "Eyeglass to NFS (File Auditing — Optional)" {shape: rectangle}
-firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
-
-center -> network_zones
-center -> inbound_admin_to_eyeglass
-center -> eyeglass_to_powerscale_outbound
-center -> eyeglass_to_active_directory_outboun
-center -> eyeglass_to_nfs_file_auditing_option
-center -> firewall_zone_summary
-```
-
 ## Network Zones
 
 ```

@@ -5,15 +5,11 @@ tags:
 ---
 # Commvault — Install & Upgrade
 
-
 <div class="kb-summary">
 Install & Upgrade reference covering Release Cadence, Upgrade Order, CommVault to Metallic SaaS Migration, EOL Tracking.
 
 *Applies to: Commvault 2024.x*
 </div>
-![Commvault — Install & Upgrade](../../../../assets/backup-commvault-operations-install-upgrade-index.svg)
-
-
 
 ```d2
 direction: right
@@ -58,8 +54,6 @@ Check current version EOL: [documentation.commvault.com](https://documentation.c
 ## Upgrade Order
 
 ### CommVault Upgrade Dependency Chain
-
-
 
 Verify in Command Center: Jobs → Active Jobs — confirm no jobs stuck in queued state.
 

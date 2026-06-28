@@ -5,35 +5,12 @@ tags:
 ---
 # PowerScale — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Overview, Architecture, OneFS Distributed File System, HA and Protection Levels, Node Pool and Tier Architecture and 4 more sections.
 
 *Applies to: PowerScale (Isilon) 9.x*
 </div>
 ![PowerScale — How It Works](../../../../assets/storage-dell-powerscale-architecture-how-it-works.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "PowerScale (Isilon)" {shape: hexagon}
-architecture: "Architecture" {shape: rectangle}
-onefs_distributed_file_system: "OneFS Distributed File System" {shape: rectangle}
-ha_and_protection_levels: "HA and Protection Levels" {shape: rectangle}
-node_pool_and_tier_architecture: "Node Pool and Tier Architecture" {shape: rectangle}
-components: "Components" {shape: rectangle}
-connectivity: "Connectivity" {shape: rectangle}
-
-center -> architecture
-center -> onefs_distributed_file_system
-center -> ha_and_protection_levels
-center -> node_pool_and_tier_architecture
-center -> components
-center -> connectivity
-```
 
 ```plantuml
 @startuml

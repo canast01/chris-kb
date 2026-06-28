@@ -5,16 +5,11 @@ tags:
 ---
 # Active Directory — Operations
 
-
 <div class="kb-summary">
 Active Directory day-to-day operations — user and group management, GPO administration, replication health, and OU structure.
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
-![Active Directory — Operations](../../../../assets/compute-windows-server-active-directory-operations-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

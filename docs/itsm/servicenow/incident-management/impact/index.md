@@ -4,33 +4,11 @@ tags:
 ---
 # Business Impact Assessment
 
-
 <div class="kb-summary">
 Business Impact Assessment reference covering Overview, Impact Dimensions, User Impact Categories, SLA Breach Assessment, Affected Services Inventory and 1 more sections.
 
 *Applies to: ServiceNow*
 </div>
-![Business Impact Assessment](../../../../assets/itsm-servicenow-incident-management-impact-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "ServiceNow" {shape: hexagon}
-impact_dimensions: "Impact Dimensions" {shape: rectangle}
-user_impact_categories: "User Impact Categories" {shape: rectangle}
-sla_breach_assessment: "SLA Breach Assessment" {shape: rectangle}
-affected_services_inventory: "Affected Services Inventory" {shape: rectangle}
-financial_and_reputational_exposure: "Financial and Reputational Exposure" {shape: rectangle}
-
-center -> impact_dimensions
-center -> user_impact_categories
-center -> sla_breach_assessment
-center -> affected_services_inventory
-center -> financial_and_reputational_exposure
-```
 
 ## Overview
 

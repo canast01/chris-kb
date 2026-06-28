@@ -5,27 +5,12 @@ tags:
 ---
 # PowerPath — Encryption
 
-
 <div class="kb-summary">
 Encryption reference covering Overview, Encryption Responsibility Matrix.
 
 *Applies to: PowerPath*
 </div>
 ![PowerPath — Encryption](../../../../assets/storage-dell-powerpath-security-encryption.svg)
-
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-encryption_responsibility_matrix: "Encryption Responsibility Matrix" {shape: rectangle}
-core: "PowerPath Core" {shape: hexagon}
-
-external -> encryption_responsibility_matrix: traffic in
-encryption_responsibility_matrix -> core: secured path
-```
 
 ## Before you begin
 

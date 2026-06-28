@@ -5,27 +5,9 @@ tags:
 ---
 # Event Correlation
 
-
 <div class="kb-summary">
 Event Correlation reference covering Correlation Workflow, Building a Correlation Timeline, Common Correlation Patterns, SIEM Correlation Rules (Examples), Dependency Map (template) and 1 more sections.
 </div>
-![Event Correlation](../../../assets/security-operations-event-correlation-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Event Correlation" {shape: hexagon}
-dependency_map_template: "Dependency Map (template)" {shape: rectangle}
-crossplatform_log_locations: "Cross-Platform Log Locations" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> dependency_map_template
-center -> crossplatform_log_locations
-center -> verify
-```
 
 ## Before you begin
 

@@ -4,31 +4,10 @@ tags:
   - vmware
 ---
 # vSphere Storage Architecture — Datastores, Policies, and Advanced Features
-![vSphere Storage Architecture — Datastores, Policies, and Advanced Features](../../../../assets/virtualization-vmware-internals-vsphere-storage-index.svg)
-
 
 vSphere supports a broad set of storage protocols and datastore types. Choosing the right combination depends on performance requirements, existing hardware, budget, and operational complexity. This page covers the full vSphere storage stack from protocols through SPBM policies, multipathing, and advanced features such as NVMe-oF and PMem — all areas covered on the VCP-DCV 8 exam.
 
 ---
-
-```d2
-direction: right
-
-center: "Vsphere Storage" {shape: hexagon}
-storage_protocol_overview: "Storage Protocol Overview" {shape: rectangle}
-datastore_types: "Datastore Types" {shape: rectangle}
-storage_policies_spbm: "Storage Policies — SPBM" {shape: rectangle}
-vaai_and_vasa: "VAAI and VASA" {shape: rectangle}
-multipathing: "Multipathing" {shape: rectangle}
-sioc_storage_io_control: "SIOC — Storage I/O Control" {shape: rectangle}
-
-center -> storage_protocol_overview
-center -> datastore_types
-center -> storage_policies_spbm
-center -> vaai_and_vasa
-center -> multipathing
-center -> sioc_storage_io_control
-```
 
 ## Storage Protocol Overview
 
@@ -134,8 +113,6 @@ SDRS generates migration recommendations or acts automatically (similar to compu
 Storage Policy-Based Management (SPBM) is a framework that decouples storage capability requirements from specific arrays or datastores. You define a policy describing what you need; vCenter finds compliant storage and enforces the policy at provisioning time.
 
 ### How SPBM Works
-
-
 
 ### Policy Components
 
@@ -375,8 +352,6 @@ ESXi 7.0+ supports NVMe/FC and NVMe/TCP. NVMe/TCP requires no special hardware b
 ---
 
 ## Storage Architecture Decision Reference
-
-
 
 ---
 

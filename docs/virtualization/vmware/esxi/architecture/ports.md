@@ -17,28 +17,6 @@ Firewall port reference for VMware ESXi hosts. Covers management, VM console, vM
 </div>
 ![ESXi — Ports and Network Requirements](../../../../assets/virtualization-vmware-esxi-architecture-ports.svg)
 
-
-
-
-```d2
-direction: right
-
-center: "ESXi" {shape: hexagon}
-inbound_management_traffic_to_esxi: "Inbound — Management Traffic to ESXi" {shape: rectangle}
-outbound_esxi_to_infrastructure: "Outbound — ESXi to Infrastructure" {shape: rectangle}
-vmotion_esxi_to_esxi: "vMotion (ESXi to ESXi)" {shape: rectangle}
-fault_tolerance_esxi_to_esxi: "Fault Tolerance (ESXi to ESXi)" {shape: rectangle}
-vsan_traffic_esxi_to_esxi: "vSAN Traffic (ESXi to ESXi)" {shape: rectangle}
-nsx_overlay_esxi_as_transport_node: "NSX Overlay (ESXi as Transport Node)" {shape: rectangle}
-
-center -> inbound_management_traffic_to_esxi
-center -> outbound_esxi_to_infrastructure
-center -> vmotion_esxi_to_esxi
-center -> fault_tolerance_esxi_to_esxi
-center -> vsan_traffic_esxi_to_esxi
-center -> nsx_overlay_esxi_as_transport_node
-```
-
 ## Before you begin
 
 - ESXi has a built-in stateful firewall managed by `esxcli network firewall`; port table below reflects permitted directions from ESXi's perspective

@@ -5,26 +5,11 @@ tags:
 ---
 # Active Directory — Health Checks
 
-
 <div class="kb-summary">
 Daily operations centre on replication health and authentication event monitoring across all Domain Controllers.
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
-![Active Directory — Health Checks](../../../../assets/compute-windows-server-active-directory-operations-health-ch.svg)
-
-
-
-```d2
-direction: right
-
-hub: "Active Directory\nOperations" {shape: hexagon}
-run_this_routine: "Run This Routine" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> run_this_routine
-hub -> verify
-```
 
 ## Before you begin
 

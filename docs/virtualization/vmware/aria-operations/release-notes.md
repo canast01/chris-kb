@@ -11,19 +11,6 @@ Version history and release notes for VMware Aria Operations.
 
 ![Release Notes](../../../assets/aria-operations-release-notes.svg)
 
-```d2
-direction: right
-
-center: "Aria Operations" {shape: hexagon}
-version_history: "Version History" {shape: rectangle}
-key_terminology: "Key Terminology" {shape: rectangle}
-upgrade_path: "Upgrade Path" {shape: rectangle}
-
-center -> version_history
-center -> key_terminology
-center -> upgrade_path
-```
-
 ## Version History
 
 | Version | Released | Summary | Notes |

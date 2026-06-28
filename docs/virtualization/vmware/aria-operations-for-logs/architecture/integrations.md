@@ -6,33 +6,12 @@ tags:
 ---
 # Aria Ops for Logs — Integrations
 
-
 <div class="kb-summary">
 Integrations reference covering Integration with Aria Operations (vROps), NSX-T Syslog Integration, Linux Log Forwarding Agent, Windows Log Forwarding Agent, SNMP Trap Receiver and 2 more sections.
 
 *Applies to: Aria Operations for Logs 8.x*
 </div>
 ![Aria Ops for Logs — Integrations](../../../../assets/virtualization-vmware-aria-operations-for-logs-architecture-.svg)
-
-
-```d2
-direction: right
-
-center: "Aria Operations for Logs" {shape: hexagon}
-integration_with_aria_operations_vro: "Integration with Aria Operations (vROps)" {shape: rectangle}
-nsxt_syslog_integration: "NSX-T Syslog Integration" {shape: rectangle}
-linux_log_forwarding_agent: "Linux Log Forwarding Agent" {shape: rectangle}
-windows_log_forwarding_agent: "Windows Log Forwarding Agent" {shape: rectangle}
-snmp_trap_receiver: "SNMP Trap Receiver" {shape: rectangle}
-generic_syslog_tcpudp: "Generic Syslog (TCP/UDP)" {shape: rectangle}
-
-center -> integration_with_aria_operations_vro
-center -> nsxt_syslog_integration
-center -> linux_log_forwarding_agent
-center -> windows_log_forwarding_agent
-center -> snmp_trap_receiver
-center -> generic_syslog_tcpudp
-```
 
 ## Integration with Aria Operations (vROps)
 

@@ -12,10 +12,6 @@ Python automation escalation: when to file a CPython bug, how to report a librar
 
 *Applies to: Python 3.x*
 </div>
-![Python Automation — Escalation](../../../../assets/automation-python-troubleshooting-escalation-index.svg)
-
-
-
 
 ```plantuml
 @startuml

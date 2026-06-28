@@ -10,10 +10,6 @@ Linux operational runbooks — routine maintenance, service recovery, backup val
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>
-![Linux — Operational Runbooks](../../../../assets/compute-linux-operations-runbooks-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="service-restart/"><strong>Service Restart</strong><span>Safe service restart runbook — pre-checks, restart sequence, and post-restart validation.</span></a>

@@ -5,33 +5,11 @@ tags:
 ---
 # VPN Gateway
 
-
 <div class="kb-summary">
 Azure VPN Gateway provides encrypted connectivity between Azure VNets and on-premises networks over IPsec/IKE tunnels.
 
 *Applies to: Azure*
 </div>
-![VPN Gateway](../../../../assets/cloud-azure-networking-vpn-gateway-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-sitetosite_connection: "Site-to-Site Connection" {shape: rectangle}
-pointtosite_configuration: "Point-to-Site Configuration" {shape: rectangle}
-bgp_configuration: "BGP Configuration" {shape: rectangle}
-activeactive_configuration: "Active-Active Configuration" {shape: rectangle}
-monitoring: "Monitoring" {shape: rectangle}
-
-center -> sitetosite_connection
-center -> pointtosite_configuration
-center -> bgp_configuration
-center -> activeactive_configuration
-center -> monitoring
-```
 
 ## Site-to-Site Connection
 

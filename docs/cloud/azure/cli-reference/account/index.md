@@ -4,16 +4,11 @@ tags:
 ---
 # Account, Subscriptions & Resource Groups
 
-
 <div class="kb-summary">
 Azure account CLI: `az account set`, `az group create/list/delete`, `az subscription list`, `az policy assignment create`, and resource lock management.
 
 *Applies to: Azure*
 </div>
-![Account, Subscriptions & Resource Groups](../../../../assets/cloud-azure-cli-reference-account-index.svg)
-
-
-
 
 > Part of the Azure CLI Reference.
 
@@ -41,19 +36,6 @@ az group show --name <rg>
 az group create --name <rg> --location eastus
 az group delete --name <rg> --yes
 az group list --query "[].{Name:name,Location:location,State:properties.provisioningState}" --output table
-```
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-component_a: "Component A" {shape: rectangle}
-component_b: "Component B" {shape: rectangle}
-component_c: "Component C" {shape: rectangle}
-
-center -> component_a
-center -> component_b
-center -> component_c
 ```
 
 ## See also

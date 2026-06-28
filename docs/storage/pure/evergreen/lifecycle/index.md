@@ -4,16 +4,11 @@ tags:
 ---
 # Pure Storage Evergreen Lifecycle
 
-
 <div class="kb-summary">
 Pure Storage Evergreen Lifecycle reference covering Evergreen Program Tiers, Software Upgrade (Purity), Drive Replacement, Controller Refresh (Evergreen//Forever), End-of-Life Considerations and 1 more sections.
 
 *Applies to: Evergreen*
 </div>
-![Pure Storage Evergreen Lifecycle](../../../../assets/storage-pure-evergreen-lifecycle-index.svg)
-
-
-
 
 ![Pure Storage Evergreen Lifecycle — Diagram](../../../../assets/storage-pure-evergreen-lifecycle-diagram.svg)
 

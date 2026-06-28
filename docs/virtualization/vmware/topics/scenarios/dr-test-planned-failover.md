@@ -15,31 +15,9 @@ them to fail.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![DR Test and Planned Failover](../../../../assets/virtualization-vmware-topics-scenarios-dr-test-planned-failo.svg)
-
-
-
-
 
 !!! warning "Production traffic cutover"
     Executing a planned failover transfers production traffic to the recovery site. Confirm all replication groups are synchronised (RPO = 0) and stakeholders are notified before starting.
-
-```d2
-direction: right
-
-center: "Scenarios" {shape: hexagon}
-products_involved: "Products Involved" {shape: rectangle}
-dr_test_nondisruptive_recovery_valid: "DR Test — Non-Disruptive Recovery Validation" {shape: rectangle}
-planned_failover_graceful_production: "Planned Failover — Graceful Production Migration to DR Site" {shape: rectangle}
-posttask_validation: "Post-Task Validation" {shape: rectangle}
-key_terms: "Key Terms" {shape: rectangle}
-
-center -> products_involved
-center -> dr_test_nondisruptive_recovery_valid
-center -> planned_failover_graceful_production
-center -> posttask_validation
-center -> key_terms
-```
 
 ## Products Involved
 

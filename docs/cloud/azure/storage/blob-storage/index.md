@@ -4,35 +4,11 @@ tags:
 ---
 # Azure Blob Storage
 
-
 <div class="kb-summary">
 Azure Blob Storage reference covering Overview, Blob Lifecycle Management Flow, Access Tiers, Lifecycle Rules, SAS Tokens and 2 more sections.
 
 *Applies to: Azure*
 </div>
-![Azure Blob Storage](../../../../assets/cloud-azure-storage-blob-storage-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-blob_lifecycle_management_flow: "Blob Lifecycle Management Flow" {shape: rectangle}
-access_tiers: "Access Tiers" {shape: rectangle}
-lifecycle_rules: "Lifecycle Rules" {shape: rectangle}
-sas_tokens: "SAS Tokens" {shape: rectangle}
-blob_versioning: "Blob Versioning" {shape: rectangle}
-soft_delete_and_recovery: "Soft Delete and Recovery" {shape: rectangle}
-
-center -> blob_lifecycle_management_flow
-center -> access_tiers
-center -> lifecycle_rules
-center -> sas_tokens
-center -> blob_versioning
-center -> soft_delete_and_recovery
-```
 
 ## Overview
 

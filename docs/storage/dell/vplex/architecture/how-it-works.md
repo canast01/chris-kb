@@ -5,35 +5,12 @@ tags:
 ---
 # VPLEX — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Overview, Deployment Models, Storage Object Hierarchy, VPLEX Metro Topology, Director Architecture and 5 more sections.
 
 *Applies to: VPLEX*
 </div>
 ![VPLEX — How It Works](../../../../assets/storage-dell-vplex-architecture-how-it-works.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "VPLEX" {shape: hexagon}
-deployment_models: "Deployment Models" {shape: rectangle}
-storage_object_hierarchy: "Storage Object Hierarchy" {shape: rectangle}
-vplex_metro_topology: "VPLEX Metro Topology" {shape: rectangle}
-director_architecture: "Director Architecture" {shape: rectangle}
-metro_write_path: "Metro Write Path" {shape: rectangle}
-witness_quorum_arbitrator: "Witness (Quorum Arbitrator)" {shape: rectangle}
-
-center -> deployment_models
-center -> storage_object_hierarchy
-center -> vplex_metro_topology
-center -> director_architecture
-center -> metro_write_path
-center -> witness_quorum_arbitrator
-```
 
 ```plantuml
 @startuml

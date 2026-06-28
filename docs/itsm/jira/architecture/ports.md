@@ -16,29 +16,6 @@ Firewall port reference for Jira (Data Center, self-hosted). Covers web UI, clus
 </div>
 ![Jira — Ports and Network Requirements](../../../assets/itsm-jira-architecture-ports.svg)
 
-
-
-
-
-```d2
-direction: right
-
-center: "Jira" {shape: hexagon}
-inbound_client_access: "Inbound — Client Access" {shape: rectangle}
-jira_data_center_cluster_nodetonode: "Jira Data Center Cluster (Node-to-Node)" {shape: rectangle}
-jira_to_database: "Jira to Database" {shape: rectangle}
-jira_outbound_services: "Jira Outbound Services" {shape: rectangle}
-firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> inbound_client_access
-center -> jira_data_center_cluster_nodetonode
-center -> jira_to_database
-center -> jira_outbound_services
-center -> firewall_zone_summary
-center -> verify
-```
-
 ## Inbound — Client Access
 
 | Port | Protocol | Source | Purpose |

@@ -5,14 +5,11 @@ tags:
 ---
 # Linux — Known Issues
 
-
 <div class="kb-summary">
 Quick reference for common problems and resolutions. Structured approach to diagnosing common Linux server issues.
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>
-![Linux — Known Issues](../../../../assets/compute-linux-operations-common-issues-index.svg)
-
 
 Quick reference for common problems and resolutions.
 
@@ -79,7 +76,6 @@ flowchart TD
     hardware -- No --> changed
     changed --> resources --> services --> resolve
 ```
-
 
 ## High Disk I/O or Latency
 

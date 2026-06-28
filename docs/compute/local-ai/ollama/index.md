@@ -5,10 +5,6 @@ Ollama runs open-weight LLMs locally, exposing an OpenAI-compatible REST API wit
 
 *Applies to: Ollama*
 </div>
-![Local AI — Ollama](../../../assets/compute-local-ai-ollama-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-6">
 
@@ -43,19 +39,6 @@ Ollama runs open-weight LLMs locally, exposing an OpenAI-compatible REST API wit
 </a>
 
 </div>
-
-```d2
-direction: right
-
-center: "Ollama" {shape: hexagon}
-quick_reference: "Quick Reference" {shape: rectangle}
-common_operations: "Common Operations" {shape: rectangle}
-key_considerations: "Key Considerations" {shape: rectangle}
-
-center -> quick_reference
-center -> common_operations
-center -> key_considerations
-```
 
 ## Quick Reference
 

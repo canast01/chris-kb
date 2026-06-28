@@ -5,16 +5,11 @@ tags:
 ---
 # Confluence — Security
 
-
-
 <div class="kb-summary">
 Confluence hardening — access control, SSL termination, application links security, and user session management.
 
 *Applies to: Confluence Cloud / Data Center*
 </div>
-![Confluence — Security](../../../assets/itsm-confluence-security-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

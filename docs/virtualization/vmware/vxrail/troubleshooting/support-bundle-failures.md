@@ -12,10 +12,6 @@ VxRail Support Bundle Failures reference covering Overview, Where It Fits, Daily
 
 *Applies to: VxRail 7.x / 8.x*
 </div>
-![VxRail Support Bundle Failures](../../../../assets/virtualization-vmware-vxrail-troubleshooting-support-bundle-.svg)
-
-
-
 
 ```d2
 direction: down

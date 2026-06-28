@@ -37,11 +37,6 @@ configure_user_and_group_sync -> validate
 ---
 
 # Superna Eyeglass — Initial Deployment
-![Superna Eyeglass — Initial Deployment](../../../../assets/storage-netapp-superna-eyeglass-deploy-index.svg)
-
-
-
-
 
 ```mermaid
 flowchart TD

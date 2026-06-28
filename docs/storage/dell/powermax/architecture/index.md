@@ -13,25 +13,28 @@ Dell PowerMax is an enterprise all-flash NVMe-oF array with an active-active dir
 
 ![PowerMax — Architecture — Diagram](../../../../assets/storage-dell-powermax-architecture-diagram.svg)
 
-```mermaid
-graph TB
-  SAN(["FC / NVMe-oF Hosts"])
-  subgraph "PowerMax Engine"
-    DA["Director A\n(FE + BE + RDF)"] <-->|"Global Memory\n(mirrored)"| DB["Director B\n(FE + BE + RDF)"]
-  end
-  NVMe[("NVMe SSDs\nRAID-5 / RAID-6")]
-  SRDF["Remote PowerMax\n(SRDF partner)"]
-  SAN --> DA & DB
-  DA & DB --> NVMe
-  DA & DB -->|"SRDF/S or SRDF/A\nFC / GigE"| SRDF
-  classDef ctrl fill:#2563eb,stroke:#1d4ed8,color:#fff
-  classDef store fill:#7c3aed,stroke:#6d28d9,color:#fff
-  classDef host fill:#15803d,stroke:#166534,color:#fff
-  classDef dr fill:#be123c,stroke:#9f1239,color:#fff
-  class DA,DB ctrl
-  class NVMe store
-  class SAN host
-  class SRDF dr
+```d2
+direction: right
+
+san: FC / NVMe-oF Hosts {shape: rectangle}
+
+engine: PowerMax Engine {
+  da: Director A\n(FE + BE + RDF) {shape: rectangle}
+  db: Director B\n(FE + BE + RDF) {shape: rectangle}
+  gc: Global Memory\n(DRAM · RAID-1 mirrored) {shape: rectangle}
+  da -> gc: shared cache
+  db -> gc: shared cache
+}
+
+nvme: NVMe SSDs\nRAID-5 / RAID-6 {shape: cylinder}
+srdf: Remote PowerMax\n(SRDF partner) {shape: rectangle}
+
+san -> engine.da: FC / NVMe-oF
+san -> engine.db: FC / NVMe-oF
+engine.da -> nvme
+engine.db -> nvme
+engine.da -> srdf: SRDF/S or SRDF/A\nFC / GigE
+engine.db -> srdf: SRDF/S or SRDF/A
 ```
 ![PowerMax Architecture](../../../../assets/powermax-architecture-overview.svg)
 
@@ -53,26 +56,39 @@ graph TB
   </a>
 </div>
 
-```d2
-direction: right
-
-center: "PowerMax" {shape: hexagon}
-models: "Models" {shape: rectangle}
-topology: "Topology" {shape: rectangle}
-
-center -> models
-center -> topology
-```
-
 ## Models
 
 | Model | Engines | Max Raw Capacity | Primary Use Case |
 |---|---|---|---|
-| PowerMax 2000 | 1–4 | ~4.5 PB | Mid-enterprise; tier-1 databases |
-| PowerMax 8000 | 1–8 | ~9 PB | Large enterprise; SRDF/S metro clusters |
+| PowerMax 2500 | 1–2 | ~4 PB | Mid-enterprise; tier-1 databases |
+| PowerMax 8500 | 1–8 | ~9 PB | Large enterprise; SRDF/S metro clusters |
 
-Both models share the same PowerMaxOS, SRDF feature set, and NVMe-oF architecture. The 8000 supports more engines and higher drive counts.
+Both models share the same Hypermax OS, SRDF feature set, and NVMe-oF architecture. The 8500 supports more engines and higher drive counts.
 
 ## Topology
 
+PowerMax uses a director-pair architecture where every engine contains at least two director boards (Director A and Director B). Both directors share a crossbar interconnect to the same Global Cache DRAM pool — this is the key to its active-active HA model. A director failure does not take the array offline because the surviving director retains full access to the shared cache and drives.
 
+```d2
+direction: right
+
+h: Hosts {shape: rectangle}
+
+engine: Engine (active-active pair) {
+  da: Director A\nFE · BE · RDF roles {shape: rectangle}
+  db: Director B\nFE · BE · RDF roles {shape: rectangle}
+  xbar: Crossbar Interconnect {shape: rectangle}
+  gc: Global Cache (DRAM)\nRAID-1 across DA–DB pair {shape: rectangle}
+  da -> xbar
+  db -> xbar
+  xbar -> gc
+}
+
+flash: NVMe Flash Bays\n(RAID-5 / RAID-6) {shape: cylinder}
+remote: Remote PowerMax\n(SRDF partner) {shape: rectangle}
+
+h -> engine.da: host I/O
+h -> engine.db: host I/O (multipath)
+engine.gc -> flash: destage
+engine.da -> remote: SRDF replication
+```

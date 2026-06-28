@@ -5,14 +5,11 @@ tags:
 ---
 # Terraform — Authentication
 
-
 <div class="kb-summary">
 Authentication reference covering Provider Credential Flow — CI/CD, CI/CD Credential Injection, Credential Management Reference.
 
 *Applies to: Terraform 1.x*
 </div>
-![Terraform — Authentication](../../../../assets/automation-terraform-security-authentication-index.svg)
-
 
 ```plantuml
 @startuml
@@ -69,7 +66,6 @@ graph LR
     envVars --> tfProvider
     tfProvider --> cloudAPI
 ```
-
 
 ### Google Cloud
 

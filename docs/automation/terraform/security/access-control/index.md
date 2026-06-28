@@ -5,31 +5,11 @@ tags:
 ---
 # Terraform — Access Control
 
-
 <div class="kb-summary">
 Access Control reference covering Terraform RBAC and Backend Access Model, Least Privilege IAM for Terraform, Workspace and Environment Separation, Access Control Reference.
 
 *Applies to: Terraform 1.x*
 </div>
-![Terraform — Access Control](../../../../assets/automation-terraform-security-access-control-index.svg)
-
-
-```d2
-direction: down
-
-root: "Access Control\nAccess Control" {shape: hexagon}
-terraform_rbac_and_backend_access_mo: "Terraform RBAC and Backend Access Model" {shape: rectangle}
-workspace_and_environment_separation: "Workspace and Environment Separation" {shape: rectangle}
-access_control_reference: "Access Control Reference" {shape: rectangle}
-resources: Protected Resources {shape: cylinder}
-
-root -> terraform_rbac_and_backend_access_mo: role
-terraform_rbac_and_backend_access_mo -> resources: scoped
-root -> workspace_and_environment_separation: role
-workspace_and_environment_separation -> resources: scoped
-root -> access_control_reference: role
-access_control_reference -> resources: scoped
-```
 
 ## Before you begin
 
@@ -60,7 +40,6 @@ graph TD
     tfRole --> auditLog
     humanReview --> auditLog
 ```
-
 
 ## Workspace and Environment Separation
 

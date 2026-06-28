@@ -47,17 +47,6 @@ graph TB
   </a>
 </div>
 
-```d2
-direction: right
-
-center: "PowerScale (Isilon)" {shape: hexagon}
-node_families: "Node Families" {shape: rectangle}
-topology: "Topology" {shape: rectangle}
-
-center -> node_families
-center -> topology
-```
-
 ## Node Families
 
 | Family | Models | Storage Type | Primary Use Case |
@@ -67,5 +56,4 @@ center -> topology
 | A-series | A300, A3000 | NL-SAS high-density | Archive and cold data retention |
 
 ## Topology
-
 

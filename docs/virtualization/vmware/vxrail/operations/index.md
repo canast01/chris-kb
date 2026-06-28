@@ -5,15 +5,11 @@ tags:
 ---
 # VxRail Operations
 
-
 <div class="kb-summary">
 VxRail operations notes for daily checks, maintenance windows, node work, expansion, support cases, and post-change validation.
 
 *Applies to: VxRail 7.x / 8.x*
 </div>
-![VxRail Operations](../../../../assets/virtualization-vmware-vxrail-operations-index.svg)
-
-
 
 <div class="kb-grid kb-grid-5">
 

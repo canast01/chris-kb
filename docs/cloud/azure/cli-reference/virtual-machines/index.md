@@ -4,16 +4,11 @@ tags:
 ---
 # Azure CLI — Virtual Machines
 
-
 <div class="kb-summary">
 Azure CLI commands for VM management — create, resize, deallocate, managed disks, extensions, and snapshot operations.
 
 *Applies to: Azure*
 </div>
-![Azure CLI — Virtual Machines](../../../../assets/cloud-azure-cli-reference-virtual-machines-index.svg)
-
-
-
 
 > Part of the Azure CLI Reference.
 
@@ -48,19 +43,6 @@ az vm run-command invoke --resource-group <rg> --name <vm> --command-id RunShell
 
 # Open port
 az vm open-port --resource-group <rg> --name <vm> --port 22
-```
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-component_a: "Component A" {shape: rectangle}
-component_b: "Component B" {shape: rectangle}
-component_c: "Component C" {shape: rectangle}
-
-center -> component_a
-center -> component_b
-center -> component_c
 ```
 
 ## See also

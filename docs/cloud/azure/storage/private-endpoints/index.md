@@ -4,33 +4,11 @@ tags:
 ---
 # Azure Storage Private Endpoints
 
-
 <div class="kb-summary">
 Azure Storage Private Endpoints reference covering Overview, Creating a Private Endpoint for Storage, DNS Configuration, Verifying Connectivity, Network Isolation Configuration and 1 more sections.
 
 *Applies to: Azure*
 </div>
-![Azure Storage Private Endpoints](../../../../assets/cloud-azure-storage-private-endpoints-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-creating_a_private_endpoint_for_stor: "Creating a Private Endpoint for Storage" {shape: rectangle}
-dns_configuration: "DNS Configuration" {shape: rectangle}
-verifying_connectivity: "Verifying Connectivity" {shape: rectangle}
-network_isolation_configuration: "Network Isolation Configuration" {shape: rectangle}
-troubleshooting: "Troubleshooting" {shape: rectangle}
-
-center -> creating_a_private_endpoint_for_stor
-center -> dns_configuration
-center -> verifying_connectivity
-center -> network_isolation_configuration
-center -> troubleshooting
-```
 
 ## Overview
 

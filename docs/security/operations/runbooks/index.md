@@ -8,10 +8,6 @@ tags:
 <div class="kb-summary">
 Security operational runbooks — certificate renewal, PAM credential rotation, firewall rule review, access recertification, and hardening check schedule.
 </div>
-![Security — Operational Runbooks](../../../assets/security-operations-runbooks-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-2">
 <a class="kb-card" href="account-unlock/"><strong>Account Unlock</strong><span>Account unlock runbook for AD and CyberArk PAM accounts — verification, unlock steps, and audit trail.</span></a>

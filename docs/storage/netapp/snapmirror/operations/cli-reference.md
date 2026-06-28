@@ -5,7 +5,6 @@ tags:
 ---
 # SnapMirror — CLI Reference
 
-
 <div class="kb-summary">
 SnapMirror CLI reference: `snapmirror show`, `snapmirror create`, `snapmirror modify`, `snapmirror quiesce`, `snapmirror break`, `snapmirror resync`, and `snapmirror delete`.
 
@@ -13,25 +12,7 @@ SnapMirror CLI reference: `snapmirror show`, `snapmirror create`, `snapmirror mo
 </div>
 ![SnapMirror — CLI Reference](../../../../assets/storage-netapp-snapmirror-operations-cli-reference.svg)
 
-
-
-
 ---
-
-```d2
-direction: right
-
-hub: "SnapMirror\nOperations" {shape: hexagon}
-ontap_cli: "ONTAP CLI" {shape: rectangle}
-lag_monitoring_and_alerts: "Lag Monitoring and Alerts" {shape: rectangle}
-rest_api: "REST API" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> ontap_cli
-hub -> lag_monitoring_and_alerts
-hub -> rest_api
-hub -> verify
-```
 
 ## Before you begin
 

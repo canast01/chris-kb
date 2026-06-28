@@ -5,33 +5,11 @@ tags:
 ---
 # PowerShell — Procedures
 
-
 <div class="kb-summary">
 Procedures reference covering Change Readiness, Incident Triage, Maintenance Window, Post-Change Validation, PowerShell Error Handling Flow.
 
 *Applies to: PowerShell 7.x*
 </div>
-![PowerShell — Procedures](../../../../assets/automation-powershell-operations-procedures-index.svg)
-
-
-```d2
-direction: right
-
-hub: "PowerShell\nOperations" {shape: hexagon}
-change_readiness: "Change Readiness" {shape: rectangle}
-incident_triage: "Incident Triage" {shape: rectangle}
-maintenance_window: "Maintenance Window" {shape: rectangle}
-postchange_validation: "Post-Change Validation" {shape: rectangle}
-powershell_error_handling_flow: "PowerShell Error Handling Flow" {shape: rectangle}
-create_and_use_a_powershell_module: "Create and Use a PowerShell Module" {shape: rectangle}
-
-hub -> change_readiness
-hub -> incident_triage
-hub -> maintenance_window
-hub -> postchange_validation
-hub -> powershell_error_handling_flow
-hub -> create_and_use_a_powershell_module
-```
 
 ## Before you begin
 
@@ -127,7 +105,6 @@ flowchart TD
     success --> finallyBlock
     finallyBlock --> exitCode
 ```
-
 
 ### Scheduled Tasks for Automated Reports
 

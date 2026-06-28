@@ -7,14 +7,9 @@ search:
 ---
 # LDAP Troubleshooting
 
-
 <div class="kb-summary">
 LDAP Troubleshooting reference covering Overview, Bind Failure Diagnostics, Certificate Errors, Using ldp.exe (Windows GUI Tool), LDAP Referrals and 1 more sections.
 </div>
-![LDAP Troubleshooting](../../../../assets/networking-protocols-ldap-troubleshooting-index.svg)
-
-
-
 
 ```d2
 direction: down

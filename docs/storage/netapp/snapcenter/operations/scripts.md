@@ -5,7 +5,6 @@ tags:
 ---
 # SnapCenter — Scripts
 
-
 <div class="kb-summary">
 SnapCenter automation scripts: PowerShell `Open-SmConnection` wrappers, pre-/post-backup hook scripts, and REST API integration for job status reporting.
 
@@ -13,29 +12,7 @@ SnapCenter automation scripts: PowerShell `Open-SmConnection` wrappers, pre-/pos
 </div>
 ![SnapCenter — Scripts](../../../../assets/storage-netapp-snapcenter-operations-scripts.svg)
 
-
-
-
 ---
-
-```d2
-direction: right
-
-hub: "SnapCenter\nOperations" {shape: hexagon}
-backup_job_status_monitor_powershell: "Backup Job Status Monitor (PowerShell)" {shape: rectangle}
-resource_health_check_powershell: "Resource Health Check (PowerShell)" {shape: rectangle}
-secondary_backup_validation_powershe: "Secondary Backup Validation (PowerShell)" {shape: rectangle}
-ansible_snapcenter_monitoring_playbo: "Ansible SnapCenter Monitoring Playbook" {shape: rectangle}
-daily_check_script: "Daily Check Script" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> backup_job_status_monitor_powershell
-hub -> resource_health_check_powershell
-hub -> secondary_backup_validation_powershe
-hub -> ansible_snapcenter_monitoring_playbo
-hub -> daily_check_script
-hub -> verify
-```
 
 ## Before you begin
 

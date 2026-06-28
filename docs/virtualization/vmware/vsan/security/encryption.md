@@ -7,7 +7,6 @@ tags:
 ---
 # vSAN — Encryption
 
-
 <div class="kb-summary">
 vSAN supports two complementary encryption modes: data-at-rest encryption (D@RE) and data-in-transit encryption. Both are optional and independently configurable. This page covers architecture, KMS integration, enabling procedures, and operational considerations.
 
@@ -15,29 +14,7 @@ vSAN supports two complementary encryption modes: data-at-rest encryption (D@RE)
 </div>
 ![vSAN — Encryption](../../../../assets/virtualization-vmware-vsan-security-encryption.svg)
 
-
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-encryption_architecture: "Encryption Architecture" {shape: rectangle}
-enabling_dataatrest_encryption: "Enabling Data-at-Rest Encryption" {shape: rectangle}
-enabling_dataintransit_encryption: "Enabling Data-in-Transit Encryption" {shape: rectangle}
-key_rotation: "Key Rotation" {shape: rectangle}
-encryption_and_deduplication_compres: "Encryption and Deduplication / Compression" {shape: rectangle}
-operational_considerations: "Operational Considerations" {shape: rectangle}
-core: "vSAN Core" {shape: hexagon}
-
-external -> encryption_architecture: traffic in
-encryption_architecture -> enabling_dataatrest_encryption
-enabling_dataatrest_encryption -> enabling_dataintransit_encryption
-enabling_dataintransit_encryption -> key_rotation
-key_rotation -> encryption_and_deduplication_compres
-encryption_and_deduplication_compres -> operational_considerations
-operational_considerations -> core: secured path
-```
 
 ## Before you begin
 
@@ -55,7 +32,6 @@ operational_considerations -> core: secured path
 vSAN D@RE encrypts all data written to disk at the disk group level, below the storage policy layer. Encryption is transparent to VMs and storage policies — no changes to guest OS or VMDK files are required.
 
 **Key hierarchy:**
-
 
 ### KMS Setup
 

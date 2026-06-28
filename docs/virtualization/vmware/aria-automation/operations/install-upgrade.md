@@ -6,33 +6,12 @@ tags:
 ---
 # Aria Automation — Install & Upgrade
 
-
 <div class="kb-summary">
 Install & Upgrade reference covering Version Matrix, Initial Deployment (New Environment), Pre-Upgrade Checklist, Post-Upgrade Validation, EOL Tracking and 2 more sections.
 
 *Applies to: Aria Automation 8.x*
 </div>
 ![Aria Automation — Install & Upgrade](../../../../assets/virtualization-vmware-aria-automation-operations-install-upg.svg)
-
-
-```d2
-direction: right
-
-hub: "Aria Automation\nOperations" {shape: hexagon}
-version_matrix: "Version Matrix" {shape: rectangle}
-initial_deployment_new_environment: "Initial Deployment (New Environment)" {shape: rectangle}
-preupgrade_checklist: "Pre-Upgrade Checklist" {shape: rectangle}
-postupgrade_validation: "Post-Upgrade Validation" {shape: rectangle}
-eol_tracking: "EOL Tracking" {shape: rectangle}
-patch_cadence: "Patch Cadence" {shape: rectangle}
-
-hub -> version_matrix
-hub -> initial_deployment_new_environment
-hub -> preupgrade_checklist
-hub -> postupgrade_validation
-hub -> eol_tracking
-hub -> patch_cadence
-```
 
 ## Before you begin
 
@@ -77,7 +56,6 @@ The Easy Installer ISO automates the end-to-end deployment of LCM + VIDM + Aria 
 ### Via LCM (Adding Aria Automation to Existing LCM Environment)
 
 If LCM is already deployed and Aria Automation needs to be added:
-
 
 ---
 

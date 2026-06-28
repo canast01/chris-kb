@@ -5,35 +5,13 @@ tags:
 ---
 # GitHub Actions — Procedures
 
-
 <div class="kb-summary">
 GitHub Actions procedures: creating workflows, configuring environments, managing self-hosted runners, rotating secrets, and monitoring job execution in the Actions console.
 
 *Applies to: GitHub Actions*
 </div>
-![GitHub Actions — Procedures](../../../../assets/automation-github-actions-operations-procedures-index.svg)
-
 
 ---
-
-```d2
-direction: right
-
-hub: "GitHub Actions\nOperations" {shape: hexagon}
-workflows: "Workflows" {shape: rectangle}
-builds: "Builds" {shape: rectangle}
-publishing: "Publishing" {shape: rectangle}
-validation: "Validation" {shape: rectangle}
-configure_a_selfhosted_runner: "Configure a Self-Hosted Runner" {shape: rectangle}
-set_up_environment_protection_rules: "Set Up Environment Protection Rules" {shape: rectangle}
-
-hub -> workflows
-hub -> builds
-hub -> publishing
-hub -> validation
-hub -> configure_a_selfhosted_runner
-hub -> set_up_environment_protection_rules
-```
 
 ## Before you begin
 
@@ -64,7 +42,6 @@ flowchart TD
     jobB -->|"all matrix legs pass"| jobC
     jobC --> deploy
 ```
-
 
 ```bash
 # .github/workflows/main.yml (calling workflow)

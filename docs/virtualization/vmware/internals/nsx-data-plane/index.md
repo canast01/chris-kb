@@ -12,10 +12,6 @@ NSX-T data plane consists of per-host kernel modules — N-VDS, Distributed Rout
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![NSX Data Plane](../../../../assets/virtualization-vmware-internals-nsx-data-plane-index.svg)
-
-
-
 
 ```mermaid
 graph LR
@@ -42,25 +38,6 @@ graph LR
     TEP2 --> NVDS2
     NVDS2 --> VMB
     PHSW -.->|underlay| PHYS
-```
-
-```d2
-direction: right
-
-center: "Nsx Data Plane" {shape: hexagon}
-nvds_nsx_virtual_distributed_switch: "N-VDS: NSX Virtual Distributed Switch" {shape: rectangle}
-tep_tunnel_endpoint: "TEP: Tunnel Endpoint" {shape: rectangle}
-geneve_encapsulation: "Geneve Encapsulation" {shape: rectangle}
-bfd_bidirectional_forwarding_detecti: "BFD: Bidirectional Forwarding Detection" {shape: rectangle}
-distributed_router_dr: "Distributed Router (DR)" {shape: rectangle}
-edge_nodes_ns_traffic: "Edge Nodes: N-S Traffic" {shape: rectangle}
-
-center -> nvds_nsx_virtual_distributed_switch
-center -> tep_tunnel_endpoint
-center -> geneve_encapsulation
-center -> bfd_bidirectional_forwarding_detecti
-center -> distributed_router_dr
-center -> edge_nodes_ns_traffic
 ```
 
 ## N-VDS: NSX Virtual Distributed Switch

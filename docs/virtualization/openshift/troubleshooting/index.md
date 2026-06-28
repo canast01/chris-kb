@@ -11,8 +11,6 @@ OpenShift troubleshooting: pod failures, node issues, cluster operator problems,
 
 *Applies to: OpenShift 4.x*
 </div>
-![OpenShift — Troubleshooting](../../../assets/virtualization-openshift-troubleshooting-index.svg)
-
 
 ![OpenShift — Troubleshooting — Diagram](../../../assets/virtualization-openshift-troubleshooting-diagram.svg)
 

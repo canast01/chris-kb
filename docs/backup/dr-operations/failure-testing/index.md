@@ -3,8 +3,6 @@ tags:
   - dr
 ---
 # Performance — Failure Testing
-![Performance — Failure Testing](../../../assets/backup-dr-operations-failure-testing-index.svg)
-
 
 ```bash
 # Kill a process (simulate crash)

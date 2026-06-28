@@ -15,25 +15,7 @@ Daily and weekly Nutanix cluster health check routine — NCC automated tests, c
 *Applies to: AOS 6.x · AHV*
 </div>
 
-
-
-
 ---
-
-```d2
-direction: right
-
-hub: "Nutanix AHV\nOperations" {shape: hexagon}
-run_this_routine: "Run This Routine" {shape: rectangle}
-key_checks_what_to_look_for: "Key Checks — What to Look For" {shape: rectangle}
-weekly_extended_checks: "Weekly Extended Checks" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> run_this_routine
-hub -> key_checks_what_to_look_for
-hub -> weekly_extended_checks
-hub -> verify
-```
 
 ## Before you begin
 
@@ -225,8 +207,6 @@ ncli disk list | grep -v NORMAL
 
 ---
 
-
-
 ---
 
 ## Verify
@@ -235,7 +215,6 @@ ncli disk list | grep -v NORMAL
 - Prism cluster health shows all components green (no CRITICAL or WARNING badges)
 - `ncli cluster get` shows `Cluster Status: STARTED` and all nodes as `UP`
 - Alert feed in Prism shows no unacknowledged critical alerts
-
 
 ---
 

@@ -4,32 +4,16 @@ tags:
 ---
 # Pure Evergreen CLI Reference
 
-
 <div class="kb-summary">
 Pure Evergreen CLI Reference reference covering Overview, Pure1 REST API, FlashArray CLI (per-array), Alerts.
 
 *Applies to: Evergreen*
 </div>
-![Pure Evergreen CLI Reference](../../../../assets/storage-pure-evergreen-cli-reference-index.svg)
-
 
 ![Pure Evergreen CLI Reference — Diagram](../../../../assets/storage-pure-evergreen-cli-reference-diagram.svg)
 
 > Part of the [Evergreen](../index.md) reference.
 ---
-
-```d2
-direction: right
-
-center: "Evergreen" {shape: rectangle}
-pure1_rest_api: "Pure1 REST API" {shape: rectangle}
-flasharray_cli_perarray: "FlashArray CLI (per-array)" {shape: rectangle}
-alerts: "Alerts" {shape: rectangle}
-
-center -> pure1_rest_api
-center -> flasharray_cli_perarray
-center -> alerts
-```
 
 ## Overview
 

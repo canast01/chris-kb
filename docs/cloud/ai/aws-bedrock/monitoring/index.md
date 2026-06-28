@@ -5,35 +5,11 @@ tags:
 ---
 # Bedrock Monitoring
 
-
 <div class="kb-summary">
 AWS Bedrock emits CloudWatch metrics and optional invocation logs that cover latency, token usage, error rates, and throttling. Setting up monitoring early prevents blind spots in production.
 
 *Applies to: AWS Bedrock*
 </div>
-![Bedrock Monitoring](../../../../assets/cloud-ai-aws-bedrock-monitoring-index.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "AWS Bedrock\nOperations" {shape: hexagon}
-cloudwatch_metrics: "CloudWatch Metrics" {shape: rectangle}
-key_metrics_reference: "Key Metrics Reference" {shape: rectangle}
-invocation_logging: "Invocation Logging" {shape: rectangle}
-cloudwatch_alarms: "CloudWatch Alarms" {shape: rectangle}
-querying_logs_with_cloudwatch_insigh: "Querying Logs with CloudWatch Insights" {shape: rectangle}
-latency_tracking_with_dashboards: "Latency Tracking with Dashboards" {shape: rectangle}
-
-hub -> cloudwatch_metrics
-hub -> key_metrics_reference
-hub -> invocation_logging
-hub -> cloudwatch_alarms
-hub -> querying_logs_with_cloudwatch_insigh
-hub -> latency_tracking_with_dashboards
-```
 
 ## CloudWatch Metrics
 

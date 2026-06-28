@@ -4,8 +4,6 @@ tags:
   - python
 ---
 # Python — Backup & Restore
-![Python — Backup & Restore](../../../../assets/automation-python-operations-backup-restore-index.svg)
-
 
 ```bash
 # Verify all scripts are tracked

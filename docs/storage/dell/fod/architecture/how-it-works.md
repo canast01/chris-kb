@@ -5,33 +5,12 @@ tags:
 ---
 # Flex on Demand — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Overview, Metering Model, Supported Platforms, Use Cases, Best Practices.
 
 *Applies to: Dell FOD*
 </div>
 ![Flex on Demand — How It Works](../../../../assets/storage-dell-fod-architecture-how-it-works.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Flex On Demand" {shape: hexagon}
-fod_licence_lifecycle: "FOD Licence Lifecycle" {shape: rectangle}
-metering_model: "Metering Model" {shape: rectangle}
-supported_platforms: "Supported Platforms" {shape: rectangle}
-use_cases: "Use Cases" {shape: rectangle}
-best_practices: "Best Practices" {shape: rectangle}
-
-center -> fod_licence_lifecycle
-center -> metering_model
-center -> supported_platforms
-center -> use_cases
-center -> best_practices
-```
 
 ## Overview
 

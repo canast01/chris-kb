@@ -4,31 +4,9 @@ tags:
 ---
 # Evidence Capture and Audit Trail
 
-
 <div class="kb-summary">
 Evidence Capture and Audit Trail reference covering Overview, What Counts as Evidence, Naming Convention, Evidence Storage, Evidence Capture Checklist and 1 more sections.
 </div>
-![Evidence Capture and Audit Trail](../../../../assets/backup-dr-operations-health-checks-evidence-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "DR Operations" {shape: hexagon}
-what_counts_as_evidence: "What Counts as Evidence" {shape: rectangle}
-naming_convention: "Naming Convention" {shape: rectangle}
-evidence_storage: "Evidence Storage" {shape: rectangle}
-evidence_capture_checklist: "Evidence Capture Checklist" {shape: rectangle}
-audit_trail_requirements: "Audit Trail Requirements" {shape: rectangle}
-
-center -> what_counts_as_evidence
-center -> naming_convention
-center -> evidence_storage
-center -> evidence_capture_checklist
-center -> audit_trail_requirements
-```
 
 ## Overview
 

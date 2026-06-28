@@ -11,29 +11,7 @@ Deploy NSX Manager, register vCenter as a compute manager, prepare ESXi transpor
 </div>
 ![Lab 3 Guide — NSX-T in Nested ESXi Step-by-Step](../../assets/labs-nsx-nested-guide.svg)
 
-
-
-
 ---
-
-```d2
-direction: right
-
-center: "Nsx Nested" {shape: hexagon}
-phase_1_deploy_nsx_manager: "Phase 1 — Deploy NSX Manager" {shape: rectangle}
-phase_2_add_vcenter_as_compute_manag: "Phase 2 — Add vCenter as Compute Manager" {shape: rectangle}
-phase_3_prepare_transport_nodes: "Phase 3 — Prepare Transport Nodes" {shape: rectangle}
-phase_4_create_an_overlay_segment: "Phase 4 — Create an Overlay Segment" {shape: rectangle}
-phase_5_write_a_basic_dfw_rule: "Phase 5 — Write a Basic DFW Rule" {shape: rectangle}
-optional_deploy_edge_vm_and_t0_gatew: "Optional: Deploy Edge VM and T0 Gateway" {shape: rectangle}
-
-center -> phase_1_deploy_nsx_manager
-center -> phase_2_add_vcenter_as_compute_manag
-center -> phase_3_prepare_transport_nodes
-center -> phase_4_create_an_overlay_segment
-center -> phase_5_write_a_basic_dfw_rule
-center -> optional_deploy_edge_vm_and_t0_gatew
-```
 
 ## Phase 1 — Deploy NSX Manager
 

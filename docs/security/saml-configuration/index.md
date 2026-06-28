@@ -9,9 +9,6 @@ tags:
 <div class="kb-summary">
 Canonical SAML 2.0 SSO reference for all KB-covered products. Covers SP/IdP concepts, attribute mapping, Azure AD (Entra ID) and Okta setup, security requirements, and troubleshooting. Product authentication pages link here for the shared baseline and document only their product-specific ACS URLs and entity IDs.
 </div>
-![Standard SAML Configuration](../../assets/security-saml-configuration-index.svg)
-
-
 
 <div class="kb-grid">
   <a class="kb-card" href="operations/">
@@ -22,25 +19,6 @@ Canonical SAML 2.0 SSO reference for all KB-covered products. Covers SP/IdP conc
 </div>
 
 ---
-
-```d2
-direction: right
-
-center: "Saml Configuration" {shape: hexagon}
-standard_field_reference: "Standard Field Reference" {shape: rectangle}
-azure_ad_entra_id_setup: "Azure AD (Entra ID) Setup" {shape: rectangle}
-okta_setup: "Okta Setup" {shape: rectangle}
-security_requirements: "Security Requirements" {shape: rectangle}
-certificate_lifecycle: "Certificate Lifecycle" {shape: rectangle}
-common_issues: "Common Issues" {shape: rectangle}
-
-center -> standard_field_reference
-center -> azure_ad_entra_id_setup
-center -> okta_setup
-center -> security_requirements
-center -> certificate_lifecycle
-center -> common_issues
-```
 
 ## Standard Field Reference
 

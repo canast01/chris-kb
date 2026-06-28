@@ -5,35 +5,12 @@ tags:
 ---
 # Active Directory CLI Reference
 
-
 <div class="kb-summary">
 Active Directory management uses native tools (`repadmin`, `dcdiag`, `nltest`, `netdom`, `dsquery`) and the ActiveDirectory PowerShell module. All commands assume RSAT-AD-PowerShell is installed or the command is run on a Domain Controller.
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
 ![Active Directory CLI Reference](../../../../assets/compute-windows-server-active-directory-operations-cli-refer.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "Active Directory\nOperations" {shape: hexagon}
-replication_health_triage_flow: "Replication Health Triage Flow" {shape: rectangle}
-replication_health: "Replication Health" {shape: rectangle}
-dc_diagnostics: "DC Diagnostics" {shape: rectangle}
-fsmo_roles: "FSMO Roles" {shape: rectangle}
-users_groups: "Users & Groups" {shape: rectangle}
-computers: "Computers" {shape: rectangle}
-
-hub -> replication_health_triage_flow
-hub -> replication_health
-hub -> dc_diagnostics
-hub -> fsmo_roles
-hub -> users_groups
-hub -> computers
-```
 
 ## Before you begin
 

@@ -3,8 +3,6 @@ tags:
   - servicenow
 ---
 # Change Request (RFC)
-![Change Request (RFC)](../../../../assets/itsm-servicenow-change-management-change-request-index.svg)
-
 
 ```markdown
 Title:          [INFRA] Upgrade PostgreSQL 14 → 15 on db-prod-01

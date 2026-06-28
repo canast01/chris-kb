@@ -4,34 +4,11 @@ tags:
 ---
 # NFS Versions
 
-
 <div class="kb-summary">
 NFS Versions reference covering Version Comparison, Recommended Version, Checking NFS Version in Use, Configuring NFS Version, NFSv4 ID Mapping and 1 more sections.
 </div>
-![NFS Versions](../../../../assets/networking-protocols-nfs-versions-index.svg)
-
 
         NFSv3 vs NFSv4 vs NFSv4.1 COMPARISON
-
-
-```d2
-direction: right
-
-center: "NFS" {shape: hexagon}
-nfsv41_session_model_and_pnfs_data_p: "NFSv4.1 Session Model and pNFS Data Path" {shape: rectangle}
-version_comparison: "Version Comparison" {shape: rectangle}
-recommended_version: "Recommended Version" {shape: rectangle}
-checking_nfs_version_in_use: "Checking NFS Version in Use" {shape: rectangle}
-configuring_nfs_version: "Configuring NFS Version" {shape: rectangle}
-nfsv4_id_mapping: "NFSv4 ID Mapping" {shape: rectangle}
-
-center -> nfsv41_session_model_and_pnfs_data_p
-center -> version_comparison
-center -> recommended_version
-center -> checking_nfs_version_in_use
-center -> configuring_nfs_version
-center -> nfsv4_id_mapping
-```
 
 ## NFSv4.1 Session Model and pNFS Data Path
 

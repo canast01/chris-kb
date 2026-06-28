@@ -10,10 +10,6 @@ search:
 <div class="kb-summary">
 TLS troubleshooting — certificate chain validation failures, handshake timeouts, cipher negotiation errors, SNI mismatches, and expired certificate diagnosis.
 </div>
-![TLS — Troubleshooting](../../../../assets/networking-protocols-tls-troubleshooting-index.svg)
-
-
-
 
 ```d2
 direction: down

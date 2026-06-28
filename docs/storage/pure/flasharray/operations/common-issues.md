@@ -5,7 +5,6 @@ tags:
 ---
 # FlashArray — Known Issues
 
-
 <div class="kb-summary">
 Known Issues reference covering Quick Reference, Incident Triage, Performance Issues, Latency Targets.
 
@@ -13,25 +12,7 @@ Known Issues reference covering Quick Reference, Incident Triage, Performance Is
 </div>
 ![FlashArray — Known Issues](../../../../assets/storage-pure-flasharray-operations-common-issues.svg)
 
-
 ![FlashArray — Known Issues — Diagram](../../../../assets/storage-pure-flasharray-operations-common-issues-diagram.svg)
-
-```d2
-direction: right
-
-hub: "FlashArray\nOperations" {shape: hexagon}
-quick_reference: "Quick Reference" {shape: rectangle}
-incident_triage: "Incident Triage" {shape: rectangle}
-performance_issues: "Performance Issues" {shape: rectangle}
-latency_targets: "Latency Targets" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> quick_reference
-hub -> incident_triage
-hub -> performance_issues
-hub -> latency_targets
-hub -> verify
-```
 
 ## Before you begin
 

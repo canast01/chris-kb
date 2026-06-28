@@ -4,14 +4,9 @@ tags:
 ---
 # AI Certification Review Plan
 
-
 <div class="kb-summary">
 AI Certification Review Plan reference covering Target Exams and Timeline, 6-Week Study Schedule Template, Key Study Resources, Practice Exam Links, Weak Area Focus and 1 more sections.
 </div>
-![AI Certification Review Plan](../../../../assets/cloud-ai-certifications-review-plan-index.svg)
-
-
-
 
 ```d2
 direction: right

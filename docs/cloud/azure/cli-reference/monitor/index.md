@@ -4,16 +4,11 @@ tags:
 ---
 # Monitor & Alerts
 
-
 <div class="kb-summary">
 Azure Monitor CLI: `az monitor metrics list`, `az monitor alert create`, `az monitor log-analytics query`, `az monitor diagnostic-settings create`, and workspace management.
 
 *Applies to: Azure*
 </div>
-![Monitor & Alerts](../../../../assets/cloud-azure-cli-reference-monitor-index.svg)
-
-
-
 
 > Part of the Azure CLI Reference.
 
@@ -36,19 +31,6 @@ az monitor action-group list
 az monitor diagnostic-settings list --resource <resource_id>
 az monitor diagnostic-settings create --name <name> --resource <resource_id> \
   --workspace <workspace_id> --metrics '[{"category":"AllMetrics","enabled":true}]'
-```
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-component_a: "Component A" {shape: rectangle}
-component_b: "Component B" {shape: rectangle}
-component_c: "Component C" {shape: rectangle}
-
-center -> component_a
-center -> component_b
-center -> component_c
 ```
 
 ## See also

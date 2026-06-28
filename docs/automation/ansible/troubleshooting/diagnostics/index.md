@@ -12,10 +12,6 @@ Ansible diagnostic commands: progressively increase verbosity with -v to -vvvv, 
 
 *Applies to: Ansible 2.14+; AWX / Ansible Automation Platform 2.x*
 </div>
-![Ansible — Diagnostics](../../../../assets/automation-ansible-troubleshooting-diagnostics-index.svg)
-
-
-
 
 ```mermaid
 graph TD

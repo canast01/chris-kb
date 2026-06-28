@@ -3,8 +3,6 @@ tags:
   - azure
 ---
 # Azure — Backup Jobs
-![Azure — Backup Jobs](../../../../assets/cloud-azure-backup-dr-backup-jobs-index.svg)
-
 
 ```text
   Trigger
@@ -12,32 +10,12 @@ tags:
      ▼
 ```
 
-
 ```text
      │
      ▼
   az backup job list --status Failed
 ```
 ```bash
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-list_all_backup_jobs_in_a_vault: "List all backup jobs in a vault" {shape: rectangle}
-filter_jobs_by_status_completed_fail: "Filter jobs by status (Completed, Failed, InProgress, Cancel" {shape: rectangle}
-filter_jobs_by_operation_type: "Filter jobs by operation type" {shape: rectangle}
-filter_jobs_within_a_specific_time_r: "Filter jobs within a specific time range" {shape: rectangle}
-show_full_details_for_a_job_job_id_f: "Show full details for a job (job ID from list output)" {shape: rectangle}
-get_just_the_status_and_error_detail: "Get just the status and error details" {shape: rectangle}
-
-center -> list_all_backup_jobs_in_a_vault
-center -> filter_jobs_by_status_completed_fail
-center -> filter_jobs_by_operation_type
-center -> filter_jobs_within_a_specific_time_r
-center -> show_full_details_for_a_job_job_id_f
-center -> get_just_the_status_and_error_detail
-```
 
 ## List all backup jobs in a vault
 az backup job list \

@@ -5,35 +5,12 @@ tags:
 ---
 # PowerScale — Scripts
 
-
 <div class="kb-summary">
 Automation scripts and reusable code for Dell PowerScale operations.
 
 *Applies to: PowerScale (Isilon) 9.x*
 </div>
 ![PowerScale — Scripts](../../../../assets/storage-dell-powerscale-operations-scripts.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "PowerScale (Isilon)\nOperations" {shape: hexagon}
-cluster_health_check: "Cluster Health Check" {shape: rectangle}
-synciq_policy_monitor: "SyncIQ Policy Monitor" {shape: rectangle}
-quota_report: "Quota Report" {shape: rectangle}
-ansible_synciq_health_playbook: "Ansible SyncIQ Health Playbook" {shape: rectangle}
-performance_baseline_check: "Performance Baseline Check" {shape: rectangle}
-daily_check_script: "Daily Check Script" {shape: rectangle}
-
-hub -> cluster_health_check
-hub -> synciq_policy_monitor
-hub -> quota_report
-hub -> ansible_synciq_health_playbook
-hub -> performance_baseline_check
-hub -> daily_check_script
-```
 
 ## Before you begin
 
@@ -464,7 +441,6 @@ if not PS_HOST:
     print("ERROR: PS_HOST must be set.", file=sys.stderr)
     sys.exit(1)
 
-
 def ssh_run(command):
     client = paramiko.SSHClient()
     client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
@@ -481,7 +457,6 @@ def ssh_run(command):
     client.close()
     return out, err
 
-
 def parse_stats(output):
     stats = {}
     for line in output.splitlines():
@@ -493,7 +468,6 @@ def parse_stats(output):
             key, node, value = parts[0], parts[1], parts[2]
             stats.setdefault(key, []).append(float(value) if re.match(r'^[\d.]+$', value) else 0.0)
     return stats
-
 
 def main():
     keys = ",".join(THRESHOLDS.keys())
@@ -547,7 +521,6 @@ def main():
     print(f"  OVERALL: {labels.get(exit_code, 'UNKNOWN')}")
     print("=" * 55)
     sys.exit(exit_code)
-
 
 if __name__ == "__main__":
     main()

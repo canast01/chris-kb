@@ -4,14 +4,11 @@ tags:
 ---
 # Upgrade Readiness Checklist
 
-
 <div class="kb-summary">
 Validates that infrastructure is in a safe state before any upgrade or patching activity begins. Complete all checks and obtain explicit go/no-go sign-off before proceeding.
 
 *Applies to: ServiceNow*
 </div>
-![Upgrade Readiness Checklist](../../../../assets/itsm-servicenow-lifecycle-upgrade-readiness-index.svg)
-
 
 ```d2
 direction: right
@@ -46,7 +43,6 @@ flowchart LR
     F -->|Go| G[Proceed with Upgrade]
     F -->|No-Go| H[Defer — remediate\nblocker first]
 ```
-
 
 | Health Check | Pass Criteria |
 |---|---|

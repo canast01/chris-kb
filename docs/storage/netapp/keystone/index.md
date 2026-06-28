@@ -9,9 +9,6 @@ NetApp Keystone STaaS knowledge base — architecture, operations, security, and
 
 *Applies to: Keystone STaaS*
 </div>
-![NetApp Keystone](../../../assets/storage-netapp-keystone-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="architecture/"><strong>Architecture</strong><span>How it works, integrations, and design standards.</span></a>

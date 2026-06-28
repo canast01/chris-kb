@@ -4,35 +4,11 @@ tags:
 ---
 # Subscriptions
 
-
 <div class="kb-summary">
 An Azure subscription is a logical unit of Azure services that links to an Azure account. Subscriptions are the primary billing and access control boundary. Understanding subscription types, limits, and management operations is essential for scalable Azure governance.
 
 *Applies to: Azure*
 </div>
-![Subscriptions](../../../../assets/cloud-azure-governance-subscriptions-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-azure_subscription_governance_model: "Azure Subscription Governance Model" {shape: rectangle}
-subscription_types: "Subscription Types" {shape: rectangle}
-managing_subscriptions: "Managing Subscriptions" {shape: rectangle}
-moving_resources_between_subscriptio: "Moving Resources Between Subscriptions" {shape: rectangle}
-subscription_policies: "Subscription Policies" {shape: rectangle}
-subscription_limits: "Subscription Limits" {shape: rectangle}
-
-center -> azure_subscription_governance_model
-center -> subscription_types
-center -> managing_subscriptions
-center -> moving_resources_between_subscriptio
-center -> subscription_policies
-center -> subscription_limits
-```
 
 ## Azure Subscription Governance Model
 

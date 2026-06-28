@@ -12,10 +12,6 @@ ServiceNow diagnostic tools: check instance health and thread state via stats.do
 
 *Applies to: ServiceNow Washington / Xanadu*
 </div>
-![ServiceNow — Diagnostics](../../../../assets/itsm-servicenow-troubleshooting-diagnostics-index.svg)
-
-
-
 
 ```mermaid
 graph TD

@@ -5,16 +5,11 @@ tags:
 ---
 # PowerShell — Operations
 
-
-
 <div class="kb-summary">
 Day-to-day PowerShell administration — script execution, module management, remoting, scheduled jobs, and runbook maintenance.
 
 *Applies to: PowerShell 7.x*
 </div>
-![PowerShell — Operations](../../../assets/automation-powershell-operations-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

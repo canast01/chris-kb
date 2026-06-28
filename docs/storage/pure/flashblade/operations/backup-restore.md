@@ -5,14 +5,12 @@ tags:
 ---
 # FlashBlade — Backup & Restore
 
-
 <div class="kb-summary">
 Backup & Restore reference covering Snapshot-Based Backup Overview, Snapshot Management, File Restore Procedures, Object Store Restore Procedures, Veeam Backup & Replication Integration and 4 more sections.
 
 *Applies to: FlashBlade Purity//FB 4.x*
 </div>
 ![FlashBlade — Backup & Restore](../../../../assets/storage-pure-flashblade-operations-backup-restore.svg)
-
 
 ![FlashBlade — Backup & Restore — Diagram](../../../../assets/storage-pure-flashblade-operations-backup-restore-diagram.svg)
 
@@ -23,25 +21,6 @@ Backup & Restore reference covering Snapshot-Based Backup Overview, Snapshot Man
 This page covers FlashBlade snapshot-based data protection, integration with enterprise backup tools, and restore procedures for filesystems and object store buckets.
 
 ---
-
-```d2
-direction: right
-
-hub: "FlashBlade\nOperations" {shape: hexagon}
-snapshotbased_backup_overview: "Snapshot-Based Backup Overview" {shape: rectangle}
-snapshot_management: "Snapshot Management" {shape: rectangle}
-file_restore_procedures: "File Restore Procedures" {shape: rectangle}
-object_store_restore_procedures: "Object Store Restore Procedures" {shape: rectangle}
-veeam_backup_replication_integration: "Veeam Backup & Replication Integration" {shape: rectangle}
-commvault_integration: "Commvault Integration" {shape: rectangle}
-
-hub -> snapshotbased_backup_overview
-hub -> snapshot_management
-hub -> file_restore_procedures
-hub -> object_store_restore_procedures
-hub -> veeam_backup_replication_integration
-hub -> commvault_integration
-```
 
 ## Before you begin
 

@@ -4,31 +4,9 @@ tags:
 ---
 # SMB Share Permissions
 
-
 <div class="kb-summary">
 SMB Share Permissions reference covering Overview, Viewing and Setting Share Permissions, Creating Shares with net share, Combining NTFS and Share Permissions, PowerShell Share Creation and 1 more sections.
 </div>
-![SMB Share Permissions](../../../../assets/networking-protocols-smb-permissions-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "SMB" {shape: hexagon}
-viewing_and_setting_share_permission: "Viewing and Setting Share Permissions" {shape: rectangle}
-creating_shares_with_net_share: "Creating Shares with net share" {shape: rectangle}
-combining_ntfs_and_share_permissions: "Combining NTFS and Share Permissions" {shape: rectangle}
-powershell_share_creation: "PowerShell Share Creation" {shape: rectangle}
-auditing_share_permission_changes: "Auditing Share Permission Changes" {shape: rectangle}
-
-center -> viewing_and_setting_share_permission
-center -> creating_shares_with_net_share
-center -> combining_ntfs_and_share_permissions
-center -> powershell_share_creation
-center -> auditing_share_permission_changes
-```
 
 ## Overview
 

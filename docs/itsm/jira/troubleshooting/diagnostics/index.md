@@ -12,10 +12,6 @@ Jira diagnostic commands: check instance health via the /status endpoint and RES
 
 *Applies to: Jira 9.x / Data Center*
 </div>
-![Jira — Diagnostics](../../../../assets/itsm-jira-troubleshooting-diagnostics-index.svg)
-
-
-
 
 ```mermaid
 graph TD

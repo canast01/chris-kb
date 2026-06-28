@@ -7,16 +7,11 @@ search:
 ---
 # NetApp SnapMirror — Troubleshooting
 
-
 <div class="kb-summary">
 NetApp SnapMirror — Troubleshooting navigation for Common Issues, Diagnostics, Escalation.
 
 *Applies to: SnapMirror*
 </div>
-![NetApp SnapMirror — Troubleshooting](../../../../assets/storage-netapp-snapmirror-troubleshooting-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="common-issues/"><strong>Common Issues</strong><span>Quick reference for common problems and resolutions.</span></a>

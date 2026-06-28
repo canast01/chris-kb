@@ -6,7 +6,6 @@ tags:
 # Dell CloudIQ Scripts
 ![Dell CloudIQ Scripts](../../../../assets/storage-dell-cloudiq-operations-scripts.svg)
 
-
 ```python
 #!/usr/bin/env python3
 # cloudiq_alert_poller.py — Poll CloudIQ for active alerts across all systems
@@ -34,7 +33,6 @@ if not CLIENT_ID or not CLIENT_SECRET:
 
 session = requests.Session()
 
-
 def get_token():
     resp = session.post(
         AUTH_URL,
@@ -48,7 +46,6 @@ def get_token():
     resp.raise_for_status()
     return resp.json()["access_token"]
 
-
 def api_get(token, path, params=None):
     resp = session.get(
         f"{API_BASE}{path}",
@@ -57,7 +54,6 @@ def api_get(token, path, params=None):
     )
     resp.raise_for_status()
     return resp.json()
-
 
 def main():
     exit_code = 0
@@ -104,7 +100,6 @@ def main():
     labels = {0: "OK", 1: "WARNING", 2: "CRITICAL"}
     print(f"  Overall: {labels.get(exit_code, 'UNKNOWN')}")
     sys.exit(exit_code)
-
 
 if __name__ == "__main__":
     main()
@@ -671,15 +666,6 @@ echo "  [INFO] systems with health_score < 80: $LOW"
 LABELS=( OK WARN CRIT )
 echo "OVERALL: ${LABELS[$STATE]}"
 exit "$STATE"
-```
-
-```d2
-direction: right
-
-hub: "CloudIQ\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

@@ -4,8 +4,6 @@ tags:
   - confluence
 ---
 # Confluence — Design Standards
-![Confluence — Design Standards](../../../../assets/itsm-confluence-architecture-design-standards-index.svg)
-
 
 ```bash
 # List global templates

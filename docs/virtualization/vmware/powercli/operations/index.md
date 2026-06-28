@@ -11,10 +11,6 @@ PowerCLI operational reference: cmdlet library, automation scripts, health check
 
 *Applies to: PowerCLI 13.x*
 </div>
-![PowerCLI — Operations](../../../../assets/virtualization-vmware-powercli-operations-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

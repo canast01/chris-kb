@@ -4,33 +4,13 @@ tags:
 ---
 # Pure Storage Evergreen//One Integration
 
-
 <div class="kb-summary">
 Pure Storage Evergreen//One Integration reference covering Pure1 Integration, Capacity True-Up Integration with Finance, VMware Integration, Backup Integration, REST API.
 
 *Applies to: Evergreen//One*
 </div>
-![Pure Storage Evergreen//One Integration](../../../../assets/storage-pure-evergreen-one-integration-index.svg)
-
 
 ![Pure Storage Evergreen//One Integration — Diagram](../../../../assets/storage-pure-evergreen-one-integration-diagram.svg)
-
-```d2
-direction: right
-
-center: "Evergreen//One" {shape: hexagon}
-pure1_integration: "Pure1 Integration" {shape: rectangle}
-capacity_trueup_integration_with_fin: "Capacity True-Up Integration with Finance" {shape: rectangle}
-vmware_integration: "VMware Integration" {shape: rectangle}
-backup_integration: "Backup Integration" {shape: rectangle}
-rest_api: "REST API" {shape: rectangle}
-
-center -> pure1_integration
-center -> capacity_trueup_integration_with_fin
-center -> vmware_integration
-center -> backup_integration
-center -> rest_api
-```
 
 ## Pure1 Integration
 

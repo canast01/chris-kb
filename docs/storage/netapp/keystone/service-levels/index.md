@@ -4,35 +4,11 @@ tags:
 ---
 # Keystone Service Levels
 
-
 <div class="kb-summary">
 NetApp Keystone offers tiered service levels based on performance characteristics. Each service level is defined by IOPS and latency targets per TB.
 
 *Applies to: Keystone STaaS*
 </div>
-![Keystone Service Levels](../../../../assets/storage-netapp-keystone-service-levels-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Keystone STaaS" {shape: hexagon}
-standard_service_levels: "Standard Service Levels" {shape: rectangle}
-viewing_assigned_service_levels: "Viewing Assigned Service Levels" {shape: rectangle}
-burst_capacity: "Burst Capacity" {shape: rectangle}
-changing_service_levels: "Changing Service Levels" {shape: rectangle}
-qos_policy_mapping_ontap_cli: "QoS Policy Mapping (ONTAP CLI)" {shape: rectangle}
-common_issues: "Common Issues" {shape: rectangle}
-
-center -> standard_service_levels
-center -> viewing_assigned_service_levels
-center -> burst_capacity
-center -> changing_service_levels
-center -> qos_policy_mapping_ontap_cli
-center -> common_issues
-```
 
 ## Standard Service Levels
 

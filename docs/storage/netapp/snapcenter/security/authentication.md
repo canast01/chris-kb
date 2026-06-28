@@ -5,7 +5,6 @@ tags:
 ---
 # SnapCenter — Authentication
 
-
 <div class="kb-summary">
 SnapCenter authentication: AD/LDAP integration via Windows Authentication, service account configuration, MFA enforcement, and API token management.
 
@@ -13,31 +12,7 @@ SnapCenter authentication: AD/LDAP integration via Windows Authentication, servi
 </div>
 ![SnapCenter — Authentication](../../../../assets/storage-netapp-snapcenter-security-authentication.svg)
 
-
-
-
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-authentication_methods: "Authentication Methods" {shape: rectangle}
-active_directory_integration: "Active Directory Integration" {shape: rectangle}
-saml_20_mfa_integration_snapcenter_6: "SAML 2.0 / MFA Integration (SnapCenter 6.0+)" {shape: rectangle}
-service_account_authentication_ontap: "Service Account Authentication — ONTAP" {shape: rectangle}
-plugin_host_authentication: "Plugin Host Authentication" {shape: rectangle}
-session_and_token_management: "Session and Token Management" {shape: rectangle}
-core: "SnapCenter Core" {shape: hexagon}
-
-external -> authentication_methods: traffic in
-authentication_methods -> active_directory_integration
-active_directory_integration -> saml_20_mfa_integration_snapcenter_6
-saml_20_mfa_integration_snapcenter_6 -> service_account_authentication_ontap
-service_account_authentication_ontap -> plugin_host_authentication
-plugin_host_authentication -> session_and_token_management
-session_and_token_management -> core: secured path
-```
 
 ## Before you begin
 

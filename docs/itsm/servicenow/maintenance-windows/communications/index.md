@@ -4,33 +4,11 @@ tags:
 ---
 # Maintenance Window Communications
 
-
 <div class="kb-summary">
 Maintenance Window Communications reference covering Overview, Communication Timeline, Stakeholder List, Notification Templates, Bridge and War Room Details and 1 more sections.
 
 *Applies to: ServiceNow*
 </div>
-![Maintenance Window Communications](../../../../assets/itsm-servicenow-maintenance-windows-communications-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "ServiceNow" {shape: hexagon}
-communication_timeline: "Communication Timeline" {shape: rectangle}
-stakeholder_list: "Stakeholder List" {shape: rectangle}
-notification_templates: "Notification Templates" {shape: rectangle}
-bridge_and_war_room_details: "Bridge and War Room Details" {shape: rectangle}
-status_page_updates: "Status Page Updates" {shape: rectangle}
-
-center -> communication_timeline
-center -> stakeholder_list
-center -> notification_templates
-center -> bridge_and_war_room_details
-center -> status_page_updates
-```
 
 ## Overview
 

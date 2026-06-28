@@ -10,10 +10,6 @@ Ceph encryption: OSD-level dmcrypt for data at rest, RBD image encryption per-im
 
 *Applies to: Ceph Reef / Squid*
 </div>
-![Ceph — Encryption](../../../../assets/storage-ceph-security-encryption-index.svg)
-
-
-
 
 ```mermaid
 graph TD

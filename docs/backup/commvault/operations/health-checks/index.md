@@ -5,16 +5,11 @@ tags:
 ---
 # Commvault — Health Checks
 
-
 <div class="kb-summary">
 Health Checks reference covering Daily Checklist, Weekly Checks.
 
 *Applies to: Commvault 2024.x*
 </div>
-![Commvault — Health Checks](../../../../assets/backup-commvault-operations-health-checks-index.svg)
-
-
-
 
 ```d2
 direction: right

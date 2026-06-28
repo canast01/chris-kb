@@ -4,8 +4,6 @@ tags:
   - security
 ---
 # Confluence — Authentication
-![Confluence — Authentication](../../../../assets/itsm-confluence-security-authentication-index.svg)
-
 
 ```yaml
 Recommended SAML configuration:

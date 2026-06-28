@@ -4,16 +4,11 @@ tags:
 ---
 # VMware Certificate Inventory
 
-
 <div class="kb-summary">
 | Product | FQDN | Certificate Type | Issuer | Expiration | Owner | Last Renewed | Next Review | |---|---|---|---|---|---|---|---| | vCenter | vcenter.domain.local | Machine SSL | VMCA | YYYY-MM-DD | infra-team | YYYY-MM-DD | YYYY-MM-DD | | vCenter | vcenter.domain.local | STS |
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![VMware Certificate Inventory](../../../../assets/virtualization-vmware-reference-inventory-certificate-invent.svg)
-
-
-
 
 | Product | FQDN | Certificate Type | Issuer | Expiration | Owner | Last Renewed | Next Review |
 |---|---|---|---|---|---|---|---|
@@ -23,17 +18,6 @@ tags:
 | Aria Operations | aria-ops.domain.local | Endpoint | Custom CA | YYYY-MM-DD | infra-team | YYYY-MM-DD | YYYY-MM-DD |
 | Aria Logs | aria-logs.domain.local | Endpoint | Custom CA | YYYY-MM-DD | infra-team | YYYY-MM-DD | YYYY-MM-DD |
 | VxRail Manager | vxrail.domain.local | UI/API | Self-signed | YYYY-MM-DD | infra-team | YYYY-MM-DD | YYYY-MM-DD |
-
-```d2
-direction: right
-
-center: "Inventory" {shape: rectangle}
-replacement_method_notes: "Replacement Method Notes" {shape: rectangle}
-tracking_notes: "Tracking Notes" {shape: rectangle}
-
-center -> replacement_method_notes
-center -> tracking_notes
-```
 
 ## Replacement Method Notes
 

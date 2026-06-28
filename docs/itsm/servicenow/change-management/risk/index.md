@@ -4,33 +4,11 @@ tags:
 ---
 # Change Risk Assessment
 
-
 <div class="kb-summary">
 Change Risk Assessment reference covering Overview, Risk Assessment Matrix, Risk Identification Checklist, Risk Mitigation Examples, Residual Risk and Acceptance and 1 more sections.
 
 *Applies to: ServiceNow*
 </div>
-![Change Risk Assessment](../../../../assets/itsm-servicenow-change-management-risk-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "ServiceNow" {shape: hexagon}
-risk_assessment_matrix: "Risk Assessment Matrix" {shape: rectangle}
-risk_identification_checklist: "Risk Identification Checklist" {shape: rectangle}
-risk_mitigation_examples: "Risk Mitigation Examples" {shape: rectangle}
-residual_risk_and_acceptance: "Residual Risk and Acceptance" {shape: rectangle}
-risk_review_during_implementation: "Risk Review During Implementation" {shape: rectangle}
-
-center -> risk_assessment_matrix
-center -> risk_identification_checklist
-center -> risk_mitigation_examples
-center -> residual_risk_and_acceptance
-center -> risk_review_during_implementation
-```
 
 ## Overview
 

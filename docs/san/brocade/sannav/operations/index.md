@@ -5,16 +5,11 @@ tags:
 ---
 # SANnav — Operations
 
-
 <div class="kb-summary">
 SANnav day-to-day operations — dashboard monitoring, fabric discovery, alert management, firmware upgrades, and reporting.
 
 *Applies to: Brocade FOS 9.x*
 </div>
-![SANnav — Operations](../../../../assets/san-brocade-sannav-operations-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

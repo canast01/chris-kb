@@ -5,16 +5,11 @@ tags:
 ---
 # CyberArk Standards
 
-
 <div class="kb-summary">
 Safe names follow the pattern `ENV-TEAM-PURPOSE` (e.g., `PROD-INFRA-SERVERS`, `DEV-APP-SQLSVC`) to make ownership and scope immediately clear in PVWA.
 
 *Applies to: CyberArk PAM*
 </div>
-![CyberArk Standards](../../../../assets/security-cyberark-architecture-design-standards-index.svg)
-
-
-
 
  Account names use either `accountname@domain` for domain accounts or `local-admin@hostname` for local administrator accounts, ensuring uniqueness within each safe. Dual-control access policy is mandatory for all production safes, requiring a second approver before a password can be retrieved, and rotation frequencies are tiered by account sensitivity.
 

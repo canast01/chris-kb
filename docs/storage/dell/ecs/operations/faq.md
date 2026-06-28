@@ -11,25 +11,7 @@ Common questions about Dell ECS (Elastic Cloud Storage) operations, configuratio
 </div>
 ![Dell ECS (Elastic Cloud Storage) — Frequently Asked Questions](../../../../assets/storage-dell-ecs-operations-faq.svg)
 
-
 ![Dell ECS (Elastic Cloud Storage) FAQ](../../../../assets/storage-dell-ecs-operations-faq.svg)
-
-```d2
-direction: right
-
-hub: "ECS\nOperations" {shape: hexagon}
-general: "General" {shape: rectangle}
-configuration: "Configuration" {shape: rectangle}
-operations: "Operations" {shape: rectangle}
-troubleshooting: "Troubleshooting" {shape: rectangle}
-backup_and_recovery: "Backup and Recovery" {shape: rectangle}
-
-hub -> general
-hub -> configuration
-hub -> operations
-hub -> troubleshooting
-hub -> backup_and_recovery
-```
 
 ## General
 

@@ -4,31 +4,9 @@ tags:
 ---
 # LDAP Binds
 
-
 <div class="kb-summary">
 LDAP Binds reference covering Overview, Simple Bind, SASL / Kerberos Bind, Service Account Bind Configuration, Anonymous Bind Risks and 1 more sections.
 </div>
-![LDAP Binds](../../../../assets/networking-protocols-ldap-binds-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "LDAP" {shape: hexagon}
-simple_bind: "Simple Bind" {shape: rectangle}
-sasl_kerberos_bind: "SASL / Kerberos Bind" {shape: rectangle}
-service_account_bind_configuration: "Service Account Bind Configuration" {shape: rectangle}
-anonymous_bind_risks: "Anonymous Bind Risks" {shape: rectangle}
-bind_test_checklist: "Bind Test Checklist" {shape: rectangle}
-
-center -> simple_bind
-center -> sasl_kerberos_bind
-center -> service_account_bind_configuration
-center -> anonymous_bind_risks
-center -> bind_test_checklist
-```
 
 ## Overview
 

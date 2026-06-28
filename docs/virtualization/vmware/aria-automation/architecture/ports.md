@@ -16,28 +16,6 @@ Firewall port reference for VMware Aria Automation (formerly vRealize Automation
 </div>
 ![Aria Automation — Ports and Network Requirements](../../../../assets/virtualization-vmware-aria-automation-architecture-ports.svg)
 
-
-
-
-```d2
-direction: right
-
-center: "Aria Automation" {shape: hexagon}
-inbound_client_to_aria_automation: "Inbound — Client to Aria Automation" {shape: rectangle}
-inbound_aria_automation_cluster_node: "Inbound — Aria Automation Cluster (Node-to-Node)" {shape: rectangle}
-outbound_aria_automation_to_infrastr: "Outbound — Aria Automation to Infrastructure" {shape: rectangle}
-outbound_cloud_provider_endpoints: "Outbound — Cloud Provider Endpoints" {shape: rectangle}
-outbound_source_control_and_gitops: "Outbound — Source Control and GitOps" {shape: rectangle}
-outbound_external_services: "Outbound — External Services" {shape: rectangle}
-
-center -> inbound_client_to_aria_automation
-center -> inbound_aria_automation_cluster_node
-center -> outbound_aria_automation_to_infrastr
-center -> outbound_cloud_provider_endpoints
-center -> outbound_source_control_and_gitops
-center -> outbound_external_services
-```
-
 ## Before you begin
 
 - Aria Automation deploys as a single appliance or 3-node HA cluster; all nodes share the same VIP — open ports to the VIP and all node IPs

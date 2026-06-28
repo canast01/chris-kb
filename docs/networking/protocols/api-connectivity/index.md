@@ -3,8 +3,6 @@ tags:
   - networking
 ---
 # Integration — API Connectivity
-![Integration — API Connectivity](../../../assets/networking-protocols-api-connectivity-index.svg)
-
 
 ```bash
 # HTTP status check

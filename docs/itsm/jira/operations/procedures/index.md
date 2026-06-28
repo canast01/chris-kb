@@ -5,33 +5,11 @@ tags:
 ---
 # Jira — Procedures
 
-
 <div class="kb-summary">
 Jira operational procedures — story and epic creation, sprint management, backlog grooming, workflow configuration, user and permission management, board setup, and reporting.
 
 *Applies to: Jira 9.x / Cloud*
 </div>
-![Jira — Procedures](../../../../assets/itsm-jira-operations-procedures-index.svg)
-
-
-```d2
-direction: right
-
-hub: "Jira\nOperations" {shape: hexagon}
-stories: "Stories" {shape: rectangle}
-story_structure: "Story Structure" {shape: rectangle}
-epics: "Epics" {shape: rectangle}
-story_splitting: "Story Splitting" {shape: rectangle}
-tasks: "Tasks" {shape: rectangle}
-creating_tasks: "Creating Tasks" {shape: rectangle}
-
-hub -> stories
-hub -> story_structure
-hub -> epics
-hub -> story_splitting
-hub -> tasks
-hub -> creating_tasks
-```
 
 ## Before you begin
 
@@ -49,7 +27,6 @@ Story structure, acceptance criteria, story points, epics, and estimation.
 ## Story Structure
 
 A well-formed user story answers: who needs this, what they need, and why.
-
 
 Estimation tips:
 - Use planning poker for team alignment

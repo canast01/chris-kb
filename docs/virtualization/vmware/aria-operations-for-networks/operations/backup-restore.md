@@ -7,7 +7,6 @@ tags:
 # vRNI Backup & Restore
 ![vRNI Backup & Restore](../../../../assets/virtualization-vmware-aria-operations-for-networks-operation.svg)
 
-
 ```bash
 PLATFORM="https://aon.example.local"
 TOKEN=$(curl -sk -X POST "${PLATFORM}/api/ni/auth/token" \
@@ -57,15 +56,6 @@ sudo systemctl status cassandra
 
 # Check all platform services
 sudo systemctl status vrni-platform nginx kafka elasticsearch postgres
-```
-
-```d2
-direction: right
-
-hub: "Aria Operations for Networks\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

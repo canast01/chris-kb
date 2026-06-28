@@ -7,16 +7,11 @@ search:
 ---
 # Azure — Common Issues
 
-
 <div class="kb-summary">
 Azure common issues — VM connectivity failures, NSG rule analysis, effective route troubleshooting, Azure Firewall and NVA blocks, DNS resolution errors, and VM provisioning failures. Includes connectivity triage flowchart and CLI diagnostic commands.
 
 *Applies to: Azure*
 </div>
-![Azure — Common Issues](../../../../assets/cloud-azure-troubleshooting-common-issues-index.svg)
-
-
-
 
 > Known failure modes, symptoms, causes, and fixes.
 

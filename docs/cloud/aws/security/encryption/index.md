@@ -4,8 +4,6 @@ tags:
   - security
 ---
 # AWS Encryption — At Rest & In Transit
-![AWS Encryption — At Rest & In Transit](../../../../assets/cloud-aws-security-encryption-index.svg)
-
 
 ```bash
 # Create a CMK with key rotation enabled

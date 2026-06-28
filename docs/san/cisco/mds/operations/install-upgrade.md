@@ -6,7 +6,6 @@ tags:
 # Cisco MDS 9000 — Install and Upgrade
 ![Cisco MDS 9000 — Install and Upgrade](../../../../assets/san-cisco-mds-operations-install-upgrade.svg)
 
-
 ```bash
 # Step 1 — Copy the target NX-OS image to the switch bootflash
 copy scp://<server>/<path>/nxos.bin bootflash:
@@ -40,15 +39,6 @@ show flogi database
 
 # Step 4 — Physically remove the switch
 # Step 5 — Update CMDB and domain ID register
-```
-
-```d2
-direction: right
-
-hub: "Cisco MDS\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

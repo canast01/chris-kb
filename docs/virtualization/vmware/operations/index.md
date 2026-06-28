@@ -9,10 +9,6 @@ Operational procedures, health checks, troubleshooting guides, and runbooks for 
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Operations](../../../assets/virtualization-vmware-operations-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-5">
 

@@ -4,8 +4,6 @@ tags:
   - git
 ---
 # Git — Integrations
-![Git — Integrations](../../../../assets/itsm-git-architecture-integrations-index.svg)
-
 
 ```yaml
 # .github/workflows/ci.yml
@@ -241,19 +239,6 @@ graph LR
 ```
 
 ---
-
-```d2
-direction: right
-
-center: "Integrations" {shape: hexagon}
-component_a: "Component A" {shape: rectangle}
-component_b: "Component B" {shape: rectangle}
-component_c: "Component C" {shape: rectangle}
-
-center -> component_a
-center -> component_b
-center -> component_c
-```
 
 ## See also
 

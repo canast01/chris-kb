@@ -4,31 +4,9 @@ tags:
   - windows
 ---
 # Windows Server — Scripts
-![Windows Server — Scripts](../../../../assets/compute-windows-server-operations-scripts-index.svg)
-
-
 
 <div class="kb-summary">
 Windows Server PowerShell scripts — remote health checks across multiple servers, certificate expiry monitoring, service health monitoring, script runner with logging, and module management.
-
-```d2
-direction: right
-
-center: "Windows Server" {shape: rectangle}
-script_deployment_and_scheduling: "Script Deployment and Scheduling" {shape: rectangle}
-service_monitor: "Service Monitor" {shape: rectangle}
-event_log_query: "Event Log Query" {shape: rectangle}
-patch_status_report: "Patch Status Report" {shape: rectangle}
-remote_health_check_topology: "Remote Health Check Topology" {shape: rectangle}
-certificate_expiry_monitor_powershel: "Certificate Expiry Monitor (PowerShell)" {shape: rectangle}
-
-center -> script_deployment_and_scheduling
-center -> service_monitor
-center -> event_log_query
-center -> patch_status_report
-center -> remote_health_check_topology
-center -> certificate_expiry_monitor_powershel
-```
 
 ## Before you begin
 
@@ -52,7 +30,6 @@ flowchart LR
 
     gitRepo --> sccm --> servers --> schedTask --> output --> monitoring
 ```
-
 
 ## Service Monitor
 
@@ -195,7 +172,6 @@ graph TD
     collectResults --> exportCsv
     collectResults --> flagIssues
 ```
-
 
 **Step 5 — Run it**
 

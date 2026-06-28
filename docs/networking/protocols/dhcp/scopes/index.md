@@ -4,33 +4,9 @@ tags:
 ---
 # DHCP Scopes
 
-
 <div class="kb-summary">
 DHCP Scopes reference covering Overview, Creating a Scope, Exclusions, Scope Planning Reference, Superscopes and 2 more sections.
 </div>
-![DHCP Scopes](../../../../assets/networking-protocols-dhcp-scopes-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "DHCP" {shape: hexagon}
-creating_a_scope: "Creating a Scope" {shape: rectangle}
-exclusions: "Exclusions" {shape: rectangle}
-scope_planning_reference: "Scope Planning Reference" {shape: rectangle}
-superscopes: "Superscopes" {shape: rectangle}
-dhcp_relay_ip_helper: "DHCP Relay (IP Helper)" {shape: rectangle}
-known_issues: "Known Issues" {shape: rectangle}
-
-center -> creating_a_scope
-center -> exclusions
-center -> scope_planning_reference
-center -> superscopes
-center -> dhcp_relay_ip_helper
-center -> known_issues
-```
 
 ## Overview
 

@@ -6,17 +6,12 @@ search:
   boost: 1.5
 ---
 # PowerShell — Environment Setup
-![PowerShell — Environment Setup](../../../assets/automation-powershell-deploy-index.svg)
-
 
 This guide covers the initial setup of a PowerShell automation environment: installing
 PowerShell Core, loading required modules, configuring a profile and execution policy,
 enabling remote management, and turning on logging.
 
-
-
 ---
-
 
 ```mermaid
 flowchart TD

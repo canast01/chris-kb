@@ -12,10 +12,6 @@ How to escalate Windows Server issues to Microsoft support: what data to collect
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
-![Windows Server — Escalation](../../../../assets/compute-windows-server-troubleshooting-escalation-index.svg)
-
-
-
 
 ---
 

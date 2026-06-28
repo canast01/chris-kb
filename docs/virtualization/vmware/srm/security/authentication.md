@@ -6,7 +6,6 @@ tags:
 ---
 # SRM — Authentication
 
-
 <div class="kb-summary">
 Authentication reference covering Site Pairing Authentication (Certificate-Based), SRA Authentication to Storage Array, REST API Authentication, vSphere Replication Authentication, Break-Glass Access to SRM and 1 more sections.
 
@@ -14,24 +13,7 @@ Authentication reference covering Site Pairing Authentication (Certificate-Based
 </div>
 ![SRM — Authentication](../../../../assets/virtualization-vmware-srm-security-authentication.svg)
 
-
   SRM Authentication Chain
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-perimeter_controls: "Perimeter Controls" {shape: rectangle}
-identity_access: "Identity & Access" {shape: rectangle}
-audit_logging: "Audit & Logging" {shape: rectangle}
-core: "Site Recovery Manager Core" {shape: hexagon}
-
-external -> perimeter_controls: traffic in
-perimeter_controls -> identity_access
-identity_access -> audit_logging
-audit_logging -> core: secured path
-```
 
 ## Before you begin
 

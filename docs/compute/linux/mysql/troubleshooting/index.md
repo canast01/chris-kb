@@ -12,10 +12,6 @@ MySQL/MariaDB troubleshooting hub: replication failures, performance degradation
 
 *Applies to: RHEL / Ubuntu LTS*
 </div>
-![MySQL / MariaDB — Troubleshooting](../../../../assets/compute-linux-mysql-troubleshooting-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
   <a class="kb-card" href="common-issues/">Common Issues</a>

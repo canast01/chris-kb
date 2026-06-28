@@ -4,33 +4,9 @@ tags:
 ---
 # DNS Forwarders
 
-
 <div class="kb-summary">
 DNS Forwarders reference covering Overview, Configuring Global Forwarders, Conditional Forwarders, Root Hints vs Forwarders, Split-Brain DNS and 2 more sections.
 </div>
-![DNS Forwarders](../../../../assets/networking-protocols-dns-forwarders-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "DNS" {shape: hexagon}
-configuring_global_forwarders: "Configuring Global Forwarders" {shape: rectangle}
-conditional_forwarders: "Conditional Forwarders" {shape: rectangle}
-root_hints_vs_forwarders: "Root Hints vs Forwarders" {shape: rectangle}
-splitbrain_dns: "Split-Brain DNS" {shape: rectangle}
-loop_prevention: "Loop Prevention" {shape: rectangle}
-known_issues: "Known Issues" {shape: rectangle}
-
-center -> configuring_global_forwarders
-center -> conditional_forwarders
-center -> root_hints_vs_forwarders
-center -> splitbrain_dns
-center -> loop_prevention
-center -> known_issues
-```
 
 ## Overview
 

@@ -5,17 +5,13 @@ tags:
 ---
 # FlashBlade — Security
 
-
 <div class="kb-summary">
 FlashBlade — Security reference: Authentication, Access Control, Encryption, Hardening.
 
 *Applies to: FlashBlade Purity//FB 4.x*
 </div>
-![FlashBlade — Security](../../../../assets/storage-pure-flashblade-security-index.svg)
-
 
 FlashBlade Security Layers
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="authentication/"><strong>Authentication</strong><span>SSO, LDAP, local accounts, and identity sources.</span></a>

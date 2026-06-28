@@ -3,8 +3,6 @@ tags:
   - dell
 ---
 # Dell AIOps — Reporting
-![Dell AIOps — Reporting](../../../../assets/storage-dell-dell-aiops-reporting-index.svg)
-
 
 ```bash
 # Generate an executive health summary report

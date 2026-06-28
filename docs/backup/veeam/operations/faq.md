@@ -11,25 +11,7 @@ Common questions about Veeam Backup & Replication operations, configuration, and
 </div>
 ![Veeam Backup & Replication — Frequently Asked Questions](../../../assets/backup-veeam-operations-faq.svg)
 
-
 ![Veeam Backup & Replication FAQ](../../../assets/backup-veeam-operations-faq.svg)
-
-```d2
-direction: right
-
-hub: "Veeam\nOperations" {shape: hexagon}
-general: "General" {shape: rectangle}
-configuration: "Configuration" {shape: rectangle}
-operations: "Operations" {shape: rectangle}
-troubleshooting: "Troubleshooting" {shape: rectangle}
-backup_and_recovery: "Backup and Recovery" {shape: rectangle}
-
-hub -> general
-hub -> configuration
-hub -> operations
-hub -> troubleshooting
-hub -> backup_and_recovery
-```
 
 ## General
 

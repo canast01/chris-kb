@@ -4,31 +4,9 @@ tags:
 ---
 # LDAP Ports
 
-
 <div class="kb-summary">
 LDAP Ports reference covering Overview, Port 389 and 636, Global Catalog Ports (3268 and 3269), Firewall Rules, StartTLS vs LDAPS and 1 more sections.
 </div>
-![LDAP Ports](../../../../assets/networking-protocols-ldap-ports-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "LDAP" {shape: hexagon}
-port_389_and_636: "Port 389 and 636" {shape: rectangle}
-global_catalog_ports_3268_and_3269: "Global Catalog Ports (3268 and 3269)" {shape: rectangle}
-firewall_rules: "Firewall Rules" {shape: rectangle}
-starttls_vs_ldaps: "StartTLS vs LDAPS" {shape: rectangle}
-port_troubleshooting: "Port Troubleshooting" {shape: rectangle}
-
-center -> port_389_and_636
-center -> global_catalog_ports_3268_and_3269
-center -> firewall_rules
-center -> starttls_vs_ldaps
-center -> port_troubleshooting
-```
 
 ## Overview
 

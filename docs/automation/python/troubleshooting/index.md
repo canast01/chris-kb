@@ -7,16 +7,11 @@ search:
 ---
 # Python Automation — Troubleshooting
 
-
-
 <div class="kb-summary">
 Diagnosing import errors, dependency conflicts, version incompatibilities, and Python automation script failures.
 
 *Applies to: Python 3.x*
 </div>
-![Python Automation — Troubleshooting](../../../assets/automation-python-troubleshooting-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

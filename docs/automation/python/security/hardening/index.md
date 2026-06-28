@@ -5,14 +5,11 @@ tags:
 ---
 # Python Automation — Hardening
 
-
 <div class="kb-summary">
 Hardening reference covering Secure Script Development Checklist Flow, Dependency Management, File and Permission Security, Hardening Checklist.
 
 *Applies to: Python 3.x*
 </div>
-![Python Automation — Hardening](../../../../assets/automation-python-security-hardening-index.svg)
-
 
 ```d2
 direction: down
@@ -59,7 +56,6 @@ flowchart TD
     filePerms --> noLogs
     noLogs --> ready
 ```
-
 
 ## File and Permission Security
 

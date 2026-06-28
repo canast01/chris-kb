@@ -10,9 +10,6 @@ Dell ECS — Security reference: Authentication, Access Control, Encryption, Har
 
 *Applies to: ECS 3.x*
 </div>
-![Dell ECS — Security](../../../../assets/storage-dell-ecs-security-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="authentication/"><strong>Authentication</strong><span>SSO, LDAP, local accounts, and identity sources.</span></a>

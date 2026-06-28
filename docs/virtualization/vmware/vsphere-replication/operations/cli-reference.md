@@ -6,7 +6,6 @@ tags:
 ---
 # vSphere Replication — CLI Reference
 
-
 <div class="kb-summary">
 CLI Reference reference covering VRA Appliance SSH Access, VRA REST API Authentication, Get Replication Status via REST API, PowerCLI — Replication Status, VRA Health API and 2 more sections.
 
@@ -14,30 +13,9 @@ CLI Reference reference covering VRA Appliance SSH Access, VRA REST API Authenti
 </div>
 ![vSphere Replication — CLI Reference](../../../../assets/virtualization-vmware-vsphere-replication-operations-cli-ref.svg)
 
-
   VR CLI and API Access
 
-
 ---
-
-```d2
-direction: right
-
-hub: "vSphere Replication\nOperations" {shape: hexagon}
-vra_appliance_ssh_access: "VRA Appliance SSH Access" {shape: rectangle}
-vra_rest_api_authentication: "VRA REST API Authentication" {shape: rectangle}
-get_replication_status_via_rest_api: "Get Replication Status via REST API" {shape: rectangle}
-powercli_replication_status: "PowerCLI — Replication Status" {shape: rectangle}
-vra_health_api: "VRA Health API" {shape: rectangle}
-test_connectivity_from_source_esxi_t: "Test Connectivity from Source ESXi to Target VRA" {shape: rectangle}
-
-hub -> vra_appliance_ssh_access
-hub -> vra_rest_api_authentication
-hub -> get_replication_status_via_rest_api
-hub -> powercli_replication_status
-hub -> vra_health_api
-hub -> test_connectivity_from_source_esxi_t
-```
 
 ## Before you begin
 

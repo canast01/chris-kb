@@ -17,28 +17,6 @@ Firewall port reference for VMware Tanzu (vSphere with Tanzu / TKG). Covers the 
 </div>
 ![Tanzu — Ports and Network Requirements](../../../../assets/virtualization-vmware-tanzu-architecture-ports.svg)
 
-
-
-
-```d2
-direction: right
-
-center: "Tanzu" {shape: hexagon}
-inbound_admin_to_supervisor_control_: "Inbound — Admin to Supervisor Control Plane" {shape: rectangle}
-inbound_access_to_tkg_workload_clust: "Inbound — Access to TKG Workload Clusters" {shape: rectangle}
-supervisor_to_vsphere_infrastructure: "Supervisor to vSphere Infrastructure" {shape: rectangle}
-supervisor_tkg_to_container_registri: "Supervisor / TKG to Container Registries" {shape: rectangle}
-tanzu_mission_control_tmc_saas: "Tanzu Mission Control (TMC — SaaS)" {shape: rectangle}
-tkg_cluster_internal: "TKG Cluster Internal" {shape: rectangle}
-
-center -> inbound_admin_to_supervisor_control_
-center -> inbound_access_to_tkg_workload_clust
-center -> supervisor_to_vsphere_infrastructure
-center -> supervisor_tkg_to_container_registri
-center -> tanzu_mission_control_tmc_saas
-center -> tkg_cluster_internal
-```
-
 ## Before you begin
 
 - vSphere with Tanzu uses the Supervisor Cluster as the management plane — it runs on ESXi hosts managed by vCenter

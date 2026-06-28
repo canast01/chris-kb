@@ -6,7 +6,6 @@ tags:
 # Cisco MDS — Security Hardening
 ![Cisco MDS — Security Hardening](../../../../assets/san-cisco-mds-security-hardening.svg)
 
-
 ```bash
 # Disable Telnet — transmits credentials in cleartext
 no feature telnet
@@ -148,21 +147,6 @@ cfs eth distribute   # or cfs ipv4 distribute — depending on transport
 # Verify CFS status
 show cfs status
 show cfs peers
-```
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-perimeter_controls: "Perimeter Controls" {shape: rectangle}
-identity_access: "Identity & Access" {shape: rectangle}
-audit_logging: "Audit & Logging" {shape: rectangle}
-core: "Cisco MDS Core" {shape: hexagon}
-
-external -> perimeter_controls: traffic in
-perimeter_controls -> identity_access
-identity_access -> audit_logging
-audit_logging -> core: secured path
 ```
 
 ## Before you begin

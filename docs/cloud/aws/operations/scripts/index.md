@@ -4,8 +4,6 @@ tags:
   - operations
 ---
 # AWS Operations — Scripts & Automation
-![AWS Operations — Scripts & Automation](../../../../assets/cloud-aws-operations-scripts-index.svg)
-
 
 ```bash
 #!/bin/bash
@@ -653,15 +651,6 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 ```bash
 cd C:\Users\YourName\Desktop
 .\aws-s3-inventory.ps1
-```
-
-```d2
-direction: right
-
-center: "AWS" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> verify
 ```
 
 ## Before you begin

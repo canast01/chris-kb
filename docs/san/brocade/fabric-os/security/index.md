@@ -5,16 +5,11 @@ tags:
 ---
 # FabricOS — Security
 
-
 <div class="kb-summary">
 FabricOS hardening — RBAC, RADIUS/TACACS+, SSH configuration, SCC/DCC policies, and secure fabric practices.
 
 *Applies to: Brocade FOS 9.x*
 </div>
-![FabricOS — Security](../../../../assets/san-brocade-fabric-os-security-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

@@ -16,29 +16,6 @@ Firewall port reference for AWS Elastic VMware Service (EVS). EVS runs VMware vS
 </div>
 ![AWS Elastic VMware Service (EVS) — Ports and Network Requirements](../../../../assets/cloud-aws-evs-architecture-ports.svg)
 
-
-
-
-
-```d2
-direction: right
-
-center: "AWS EVS" {shape: hexagon}
-management_access_vpndirect_connect_: "Management Access (VPN/Direct Connect → EVS VPC)" {shape: rectangle}
-esxi_host_ports_vpcinternal: "ESXi Host Ports (VPC-Internal)" {shape: rectangle}
-nsxt_vpcinternal: "NSX-T (VPC-Internal)" {shape: rectangle}
-aws_evs_api_outbound_control_plane: "AWS EVS API (Outbound — Control Plane)" {shape: rectangle}
-firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> management_access_vpndirect_connect_
-center -> esxi_host_ports_vpcinternal
-center -> nsxt_vpcinternal
-center -> aws_evs_api_outbound_control_plane
-center -> firewall_zone_summary
-center -> verify
-```
-
 ## Before you begin
 
 - EVS hosts run inside the customer's **VPC** — all inter-host traffic (vSAN, vMotion, NSX Geneve) is VPC-internal and not subject to AWS internet firewalls.

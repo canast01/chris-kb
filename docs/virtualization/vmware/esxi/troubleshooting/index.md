@@ -14,10 +14,6 @@ Troubleshooting reference for VMware ESXi. Covers common host failure patterns, 
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![ESXi — Troubleshooting](../../../../assets/virtualization-vmware-esxi-troubleshooting-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

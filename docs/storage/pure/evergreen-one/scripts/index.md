@@ -4,37 +4,15 @@ tags:
 ---
 # Evergreen//One — Scripts
 
-
 <div class="kb-summary">
 Evergreen//One automation scripts: Python examples for subscription consumption reporting, Pure REST API capacity queries, and auto-alert for tier threshold breach.
 
 *Applies to: Evergreen//One*
 </div>
-![Evergreen//One — Scripts](../../../../assets/storage-pure-evergreen-one-scripts-index.svg)
-
 
 ---
 
 ![Evergreen//One — Scripts — Diagram](../../../../assets/storage-pure-evergreen-one-scripts-diagram.svg)
-
-```d2
-direction: right
-
-center: "Evergreen//One" {shape: rectangle}
-consumption_usage_report_python: "Consumption Usage Report (Python)" {shape: rectangle}
-sla_compliance_check_python: "SLA Compliance Check (Python)" {shape: rectangle}
-burst_alert_script_bash: "Burst Alert Script (Bash)" {shape: rectangle}
-windows_evergreenone_subscription_ch: "Windows: Evergreen//One Subscription Check via Pure1 API (Po" {shape: rectangle}
-daily_check_script_python: "Daily Check Script (Python)" {shape: rectangle}
-incident_triage_script_python: "Incident Triage Script (Python)" {shape: rectangle}
-
-center -> consumption_usage_report_python
-center -> sla_compliance_check_python
-center -> burst_alert_script_bash
-center -> windows_evergreenone_subscription_ch
-center -> daily_check_script_python
-center -> incident_triage_script_python
-```
 
 ## Consumption Usage Report (Python)
 
@@ -889,14 +867,12 @@ if not PURE1_APP_ID or not PURE1_PRIVATE_KEY_FILE:
 RED = "\033[0;31m"; GRN = "\033[0;32m"; YEL = "\033[0;33m"; NC = "\033[0m"
 overall = 0
 
-
 def get_pure1_token():
     with open(PURE1_PRIVATE_KEY_FILE) as f:
         key = f.read()
     payload = {"iss": PURE1_APP_ID, "iat": int(time.time()), "exp": int(time.time()) + 3600}
     tok = jwt.encode(payload, key, algorithm="RS256")
     return tok if isinstance(tok, str) else tok.decode()
-
 
 def get_access_token(jwt_tok):
     resp = requests.post(
@@ -908,7 +884,6 @@ def get_access_token(jwt_tok):
     )
     resp.raise_for_status()
     return resp.json()["access_token"]
-
 
 print(f"\n=== Evergreen//One Daily Check ===")
 print(f"Generated: {datetime.datetime.now():%Y-%m-%d %H:%M}\n")
@@ -995,14 +970,12 @@ if not PURE1_APP_ID or not PURE1_PRIVATE_KEY_FILE:
 TS  = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
 OUT = f"eo1_triage_{TS}.json"
 
-
 def get_pure1_token():
     with open(PURE1_PRIVATE_KEY_FILE) as f:
         key = f.read()
     payload = {"iss": PURE1_APP_ID, "iat": int(time.time()), "exp": int(time.time()) + 3600}
     tok = jwt.encode(payload, key, algorithm="RS256")
     return tok if isinstance(tok, str) else tok.decode()
-
 
 def get_access_token(jwt_tok):
     resp = requests.post(
@@ -1014,7 +987,6 @@ def get_access_token(jwt_tok):
     )
     resp.raise_for_status()
     return resp.json()["access_token"]
-
 
 token   = get_access_token(get_pure1_token())
 headers = {"Authorization": f"Bearer {token}"}
@@ -1083,16 +1055,13 @@ if not PURE1_APP_ID or not PURE1_PRIVATE_KEY_FILE:
 RED = "\033[0;31m"; GRN = "\033[0;32m"; NC = "\033[0m"
 exit_code = 0
 
-
 def nogo(msg):
     global exit_code
     print(f"  {RED}[NO-GO]{NC} {msg}")
     exit_code = 2
 
-
 def go(msg):
     print(f"  {GRN}[GO]{NC}    {msg}")
-
 
 def get_pure1_token():
     with open(PURE1_PRIVATE_KEY_FILE) as f:
@@ -1100,7 +1069,6 @@ def get_pure1_token():
     payload = {"iss": PURE1_APP_ID, "iat": int(time.time()), "exp": int(time.time()) + 3600}
     tok = jwt.encode(payload, key, algorithm="RS256")
     return tok if isinstance(tok, str) else tok.decode()
-
 
 def get_access_token(jwt_tok):
     resp = requests.post(
@@ -1112,7 +1080,6 @@ def get_access_token(jwt_tok):
     )
     resp.raise_for_status()
     return resp.json()["access_token"]
-
 
 print(f"\n=== Evergreen//One Change Pre-Check ===")
 print(f"Generated: {datetime.datetime.now():%Y-%m-%d %H:%M}\n")
@@ -1202,7 +1169,6 @@ if not PURE1_APP_ID or not PURE1_PRIVATE_KEY_FILE:
 RED = "\033[0;31m"; GRN = "\033[0;32m"; YEL = "\033[0;33m"; NC = "\033[0m"
 exit_code = 0
 
-
 def ok(msg):   print(f"  {GRN}[OK]{NC}   {msg}")
 def fail(msg):
     global exit_code
@@ -1210,14 +1176,12 @@ def fail(msg):
     exit_code = 1
 def warn(msg): print(f"  {YEL}[WARN]{NC} {msg}")
 
-
 def get_pure1_token():
     with open(PURE1_PRIVATE_KEY_FILE) as f:
         key = f.read()
     payload = {"iss": PURE1_APP_ID, "iat": int(time.time()), "exp": int(time.time()) + 3600}
     tok = jwt.encode(payload, key, algorithm="RS256")
     return tok if isinstance(tok, str) else tok.decode()
-
 
 def get_access_token(jwt_tok):
     resp = requests.post(
@@ -1229,7 +1193,6 @@ def get_access_token(jwt_tok):
     )
     resp.raise_for_status()
     return resp.json()["access_token"]
-
 
 print(f"\n=== Evergreen//One Post-Change Validation ===")
 print(f"Generated: {datetime.datetime.now():%Y-%m-%d %H:%M}\n")
@@ -1305,14 +1268,12 @@ PURE1_API_BASE         = "https://api.pure1.purestorage.com/api/1.0"
 if not PURE1_APP_ID or not PURE1_PRIVATE_KEY_FILE:
     sys.exit("Set PURE1_APP_ID and PURE1_PRIVATE_KEY_FILE")
 
-
 def get_pure1_token():
     with open(PURE1_PRIVATE_KEY_FILE) as f:
         key = f.read()
     payload = {"iss": PURE1_APP_ID, "iat": int(time.time()), "exp": int(time.time()) + 3600}
     tok = jwt.encode(payload, key, algorithm="RS256")
     return tok if isinstance(tok, str) else tok.decode()
-
 
 def get_access_token(jwt_tok):
     resp = requests.post(
@@ -1324,7 +1285,6 @@ def get_access_token(jwt_tok):
     )
     resp.raise_for_status()
     return resp.json()["access_token"]
-
 
 try:
     token   = get_access_token(get_pure1_token())

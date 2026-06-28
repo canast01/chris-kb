@@ -7,14 +7,11 @@ search:
 ---
 # Git — Escalation
 
-
 <div class="kb-summary">
 Escalation paths for Git platform incidents, support ticket procedures, data collection requirements, emergency repository recovery, and SLA commitments.
 
 *Applies to: Git 2.x*
 </div>
-![Git — Escalation](../../../../assets/itsm-git-troubleshooting-escalation-index.svg)
-
 
 ---
 
@@ -65,7 +62,6 @@ flowchart TD
     L2 -->|Corruption / data loss confirmed| EMERG
     L3 -->|Vendor escalation| EMERG
 ```
-
 
 ---
 

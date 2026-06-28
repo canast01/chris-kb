@@ -12,13 +12,8 @@ This guide covers the end-to-end deployment of a NetApp ONTAP cluster — from p
 
 *Applies to: ONTAP 9.12+*
 </div>
-![ONTAP — Deploy](../../../../assets/storage-netapp-ontap-deploy-index.svg)
-
-
-
 
 ---
-
 
 ```mermaid
 flowchart TD

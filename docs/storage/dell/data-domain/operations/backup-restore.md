@@ -5,33 +5,12 @@ tags:
 ---
 # Data Domain — Backup & Restore
 
-
 <div class="kb-summary">
 Backup & Restore reference covering Overview, DDBoost Restore (Backup Application), NFS Direct Restore, CIFS/SMB Direct Restore, VTL Restore and 5 more sections.
 
 *Applies to: Data Domain DD OS 7.x*
 </div>
 ![Data Domain — Backup & Restore](../../../../assets/storage-dell-data-domain-operations-backup-restore.svg)
-
-
-```d2
-direction: right
-
-hub: "Data Domain\nOperations" {shape: hexagon}
-ddboost_restore_backup_application: "DDBoost Restore (Backup Application)" {shape: rectangle}
-nfs_direct_restore: "NFS Direct Restore" {shape: rectangle}
-cifssmb_direct_restore: "CIFS/SMB Direct Restore" {shape: rectangle}
-vtl_restore: "VTL Restore" {shape: rectangle}
-data_domain_configuration_backup_and: "Data Domain Configuration Backup and Recovery" {shape: rectangle}
-mtree_replication_as_a_restore_sourc: "MTree Replication as a Restore Source (DR Scenario)" {shape: rectangle}
-
-hub -> ddboost_restore_backup_application
-hub -> nfs_direct_restore
-hub -> cifssmb_direct_restore
-hub -> vtl_restore
-hub -> data_domain_configuration_backup_and
-hub -> mtree_replication_as_a_restore_sourc
-```
 
 ## Before you begin
 
@@ -67,7 +46,6 @@ graph TD
     ddboostRestore & nfsRestore & cifsRestore & vtlRestore --> ddfs
     ddfs -->|"rehydrate on the fly"| restoreTarget(["Restore Target\nVM / file / database"])
 ```
-
 
 Resume after the restore completes:
 

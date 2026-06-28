@@ -12,10 +12,6 @@ How to escalate Veeam backup issues to Veeam support: what data to collect, how 
 
 *Applies to: Veeam 12.x*
 </div>
-![Veeam — Escalation](../../../../assets/backup-veeam-troubleshooting-escalation-index.svg)
-
-
-
 
 ---
 

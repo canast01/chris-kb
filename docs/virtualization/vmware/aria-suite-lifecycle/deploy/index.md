@@ -13,13 +13,8 @@ End-to-end deployment guide for Aria Suite Lifecycle Manager (LCM). Covers OVA d
 
 *Applies to: Aria LCM 8.x*
 </div>
-![Aria Suite Lifecycle — Deploy](../../../../assets/virtualization-vmware-aria-suite-lifecycle-deploy-index.svg)
-
-
-
 
 ---
-
 
 ```mermaid
 flowchart TD

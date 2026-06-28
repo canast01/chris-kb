@@ -9,27 +9,6 @@ VxRail Field Reference reference covering Overview, Daily Checks, Dependencies, 
 
 *Applies to: VxRail 7.x · 8.x*
 </div>
-![VxRail Field Reference](../../../../assets/virtualization-vmware-vxrail-field-reference-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "VxRail" {shape: hexagon}
-daily_checks: "Daily Checks" {shape: rectangle}
-dependencies: "Dependencies" {shape: rectangle}
-common_issues: "Common Issues" {shape: rectangle}
-troubleshooting_workflow: "Troubleshooting Workflow" {shape: rectangle}
-best_practices: "Best Practices" {shape: rectangle}
-
-center -> daily_checks
-center -> dependencies
-center -> common_issues
-center -> troubleshooting_workflow
-center -> best_practices
-```
 
 ## Overview
 

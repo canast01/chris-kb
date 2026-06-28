@@ -5,14 +5,11 @@ tags:
 ---
 # Terraform — Standards
 
-
 <div class="kb-summary">
 Consistent Terraform standards prevent state corruption, make code reviewable, and enable teams to manage infrastructure at scale without heroics.
 
 *Applies to: Terraform 1.x*
 </div>
-![Terraform — Standards](../../../../assets/automation-terraform-architecture-design-standards-index.svg)
-
 
 ---
 
@@ -36,7 +33,6 @@ state_file_locking -> code_review_checklist: hardens
 ## Directory Structure
 
 ### Root module (single environment)
-
 
 ### Module versioning policy
 

@@ -6,7 +6,6 @@ tags:
 # Dell Data Domain CLI Reference
 ![Dell Data Domain CLI Reference](../../../../assets/storage-dell-data-domain-operations-cli-reference.svg)
 
-
 ```bash
 # Create a config backup
 config backup create
@@ -681,15 +680,6 @@ log view | grep -i "login\|auth\|failed"
 
 # Export audit events
 log dump system | grep -i auth
-```
-
-```d2
-direction: right
-
-hub: "Data Domain\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

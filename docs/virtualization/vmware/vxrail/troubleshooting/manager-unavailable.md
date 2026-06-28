@@ -12,10 +12,6 @@ VxRail Manager Unavailable reference covering Overview, Where It Fits, Daily Che
 
 *Applies to: VxRail 7.x / 8.x*
 </div>
-![VxRail Manager Unavailable](../../../../assets/virtualization-vmware-vxrail-troubleshooting-manager-unavail.svg)
-
-
-
 
 ```d2
 direction: down

@@ -5,15 +5,11 @@ tags:
 ---
 # Commvault — Standards
 
-
 <div class="kb-summary">
 Standards reference covering Naming Conventions, Retention Schedule, VMware vSphere Standards, Encryption Standard.
 
 *Applies to: Commvault 11.x*
 </div>
-![Commvault — Standards](../../../../assets/backup-commvault-architecture-design-standards-index.svg)
-
-
 
 ```d2
 direction: down
@@ -50,8 +46,6 @@ vmware_vsphere_standards -> encryption_standard: hardens
 Configure via SLA Plans in Command Center (preferred for FR32+) or directly in Storage Policy (legacy).
 
 ### Capacity Planning Flow
-
-
 
 ## VMware vSphere Standards
 

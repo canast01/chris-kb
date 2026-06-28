@@ -11,10 +11,6 @@ Security reference for VMware Cloud Foundation. Covers SDDC Manager authenticati
 
 *Applies to: VCF 4.x / 5.x*
 </div>
-![VCF — Security](../../../../assets/virtualization-vmware-vmware-cloud-foundation-security-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

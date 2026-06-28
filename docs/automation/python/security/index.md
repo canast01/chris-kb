@@ -5,16 +5,11 @@ tags:
 ---
 # Python Automation — Security
 
-
-
 <div class="kb-summary">
 Secure Python scripting — credential handling, dependency scanning, virtual environment isolation, and secrets management.
 
 *Applies to: Python 3.x*
 </div>
-![Python Automation — Security](../../../assets/automation-python-security-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

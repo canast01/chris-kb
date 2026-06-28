@@ -5,33 +5,11 @@ tags:
 ---
 # Active Directory — Procedures
 
-
 <div class="kb-summary">
 Procedures reference covering AGDLP Group Design Flow, Groups, GPOs, Domain Controllers.
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
-
-
-
-```d2
-direction: right
-
-hub: "Active Directory\nOperations" {shape: hexagon}
-agdlp_group_design_flow: "AGDLP Group Design Flow" {shape: rectangle}
-groups: "Groups" {shape: rectangle}
-gpos: "GPOs" {shape: rectangle}
-domain_controllers: "Domain Controllers" {shape: rectangle}
-transfer_fsmo_roles: "Transfer FSMO Roles" {shape: rectangle}
-create_a_group_policy_object: "Create a Group Policy Object" {shape: rectangle}
-
-hub -> agdlp_group_design_flow
-hub -> groups
-hub -> gpos
-hub -> domain_controllers
-hub -> transfer_fsmo_roles
-hub -> create_a_group_policy_object
-```
 
 ## Before you begin
 

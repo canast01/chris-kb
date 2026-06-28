@@ -7,7 +7,6 @@ tags:
 ---
 # vCenter Security — Hardening
 
-
 <div class="kb-summary">
 Hardening reference covering TLS Configuration, SSO Password and Lockout Policy, ESXi Host Lockdown Mode, Firewall Hardening, Audit Logging Configuration and 3 more sections.
 
@@ -15,30 +14,7 @@ Hardening reference covering TLS Configuration, SSO Password and Lockout Policy,
 </div>
 ![vCenter Security — Hardening](../../../../assets/virtualization-vmware-vcenter-security-hardening.svg)
 
-
-
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-tls_configuration: "TLS Configuration" {shape: rectangle}
-sso_password_and_lockout_policy: "SSO Password and Lockout Policy" {shape: rectangle}
-esxi_host_lockdown_mode: "ESXi Host Lockdown Mode" {shape: rectangle}
-firewall_hardening: "Firewall Hardening" {shape: rectangle}
-audit_logging_configuration: "Audit Logging Configuration" {shape: rectangle}
-vcenter_configuration_hardening_chec: "vCenter Configuration Hardening Checklist" {shape: rectangle}
-core: "vCenter Server Core" {shape: hexagon}
-
-external -> tls_configuration: traffic in
-tls_configuration -> sso_password_and_lockout_policy
-sso_password_and_lockout_policy -> esxi_host_lockdown_mode
-esxi_host_lockdown_mode -> firewall_hardening
-firewall_hardening -> audit_logging_configuration
-audit_logging_configuration -> vcenter_configuration_hardening_chec
-vcenter_configuration_hardening_chec -> core: secured path
-```
 
 ## Before you begin
 

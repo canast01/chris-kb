@@ -7,7 +7,6 @@ tags:
 # VMware Horizon — Integrations
 ![VMware Horizon — Integrations](../../../../assets/virtualization-vmware-horizon-architecture-integrations.svg)
 
-
 ```powershell
 # Verify domain join before CS install
 [System.DirectoryServices.ActiveDirectory.Domain]::GetCurrentDomain()
@@ -118,19 +117,6 @@ C:\Windows\Temp\vmware-viewcomposer-ga-new-*
 ```
 ```text
 \\?\Volume{*}\   (all volumes — or specifically App Volumes mount GUIDs)
-```
-
-```d2
-direction: right
-
-center: "Horizon" {shape: hexagon}
-component_a: "Component A" {shape: rectangle}
-component_b: "Component B" {shape: rectangle}
-component_c: "Component C" {shape: rectangle}
-
-center -> component_a
-center -> component_b
-center -> component_c
 ```
 
 ## See also

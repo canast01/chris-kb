@@ -11,25 +11,7 @@ Common questions about VMware Cloud Foundation operations, configuration, and tr
 </div>
 ![VMware Cloud Foundation — Frequently Asked Questions](../../../../assets/virtualization-vmware-vmware-cloud-foundation-operations-faq.svg)
 
-
 ![VMware Cloud Foundation FAQ](../../../../assets/virtualization-vmware-vmware-cloud-foundation-operations-faq.svg)
-
-```d2
-direction: right
-
-hub: "VMware Cloud Foundation\nOperations" {shape: hexagon}
-general: "General" {shape: rectangle}
-configuration: "Configuration" {shape: rectangle}
-operations: "Operations" {shape: rectangle}
-troubleshooting: "Troubleshooting" {shape: rectangle}
-backup_and_recovery: "Backup and Recovery" {shape: rectangle}
-
-hub -> general
-hub -> configuration
-hub -> operations
-hub -> troubleshooting
-hub -> backup_and_recovery
-```
 
 ## General
 

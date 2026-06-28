@@ -6,13 +6,11 @@ tags:
 ---
 # SRM — Procedures
 
-
 <div class="kb-summary">
 Site Recovery Manager procedures — planned migration, emergency failover, reprotect, failback, quarterly DR drills, protection groups, recovery plans, network/resource mapping updates, SRM upgrade, and VM lifecycle management.
 
 *Applies to: SRM 8.x / 9.x*
 </div>
-
 
 ```text
 Procedures ───────────────────────────────────────────┐
@@ -54,25 +52,6 @@ Procedures ───────────────────────
 │  Site Pair     = trust relationship between protected and recovery SRM servers                        │
 │                                                                                                       │
 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-```d2
-direction: right
-
-hub: "Site Recovery Manager\nOperations" {shape: hexagon}
-planned_migration: "Planned Migration" {shape: rectangle}
-emergency_failover_disaster_recovery: "Emergency Failover (Disaster Recovery)" {shape: rectangle}
-reprotect: "Reprotect" {shape: rectangle}
-failback: "Failback" {shape: rectangle}
-srm_alarms_and_monitoring: "SRM Alarms and Monitoring" {shape: rectangle}
-quarterly_dr_drill_process: "Quarterly DR Drill Process" {shape: rectangle}
-
-hub -> planned_migration
-hub -> emergency_failover_disaster_recovery
-hub -> reprotect
-hub -> failback
-hub -> srm_alarms_and_monitoring
-hub -> quarterly_dr_drill_process
 ```
 
 ## Before you begin
@@ -118,7 +97,6 @@ A planned migration gracefully shuts down VMs at the protected site, performs a 
 
 ---
 
-
 ```text
 ## Emergency Failover (Disaster Recovery)
 
@@ -150,7 +128,6 @@ boxmgmt cg check_all
 
 ---
 
-
 ## Reprotect
 
 After any failover (planned or emergency), the recovered VMs are now running at the recovery site without replication. Reprotect reverses the replication direction so the recovery site becomes the new protected site.
@@ -173,7 +150,6 @@ After any failover (planned or emergency), the recovered VMs are now running at 
     Reprotect only reverses replication — VMs continue running at the recovery site. The original site datastores now receive replicated writes from the recovery site.
 
 ---
-
 
 ## Failback
 
@@ -204,7 +180,6 @@ Failback returns VMs to the original protected site. Mechanically, it is a plann
 
 ---
 
-
 ## SRM Alarms and Monitoring
 
 SRM generates vCenter alarms for key events. Monitor these in the vCenter Alarms view or your external monitoring system.
@@ -231,7 +206,6 @@ Get-Content "C:\ProgramData\VMware\VMware vCenter Site Recovery Manager\Logs\vmw
 
 ---
 
-
 ## Quarterly DR Drill Process
 
 | Step | Owner | Timing |
@@ -248,7 +222,6 @@ Get-Content "C:\ProgramData\VMware\VMware vCenter Site Recovery Manager\Logs\vmw
 
 ---
 
-
 ## Update Network and Resource Mappings
 
 Network and resource mappings must be kept current when protected-site or recovery-site infrastructure changes.
@@ -261,7 +234,6 @@ Network and resource mappings must be kept current when protected-site or recove
 6. Resolve any validation warnings before the next scheduled DR test or production use
 
 ---
-
 
 ## Upgrade SRM Appliance (8.x+)
 
@@ -277,7 +249,6 @@ SRM 8.x ships as an appliance (OVA/VAMI managed). Follow this procedure for patc
 8. Run a recovery plan validation to confirm all protection groups and recovery plans are intact post-upgrade
 
 ---
-
 
 ## Create a Protection Group
 
@@ -303,7 +274,6 @@ foreach ($pg in $pgs) {
 ```
 
 ---
-
 
 ## Create a Recovery Plan
 
@@ -333,7 +303,6 @@ foreach ($plan in $plans) {
 
 ---
 
-
 ## Run a Test Failover (Non-Disruptive)
 
 A test failover validates a recovery plan using isolated bubble networks. Production VMs at the protected site remain fully operational throughout the test.
@@ -354,7 +323,6 @@ A test failover validates a recovery plan using isolated bubble networks. Produc
     Never leave a test failover running longer than necessary. Stale test snapshots consume replication journal space and can cause RPO violations on production replication sessions.
 
 ---
-
 
 ## Run a Disaster Recovery (Protected Site Down)
 
@@ -382,7 +350,6 @@ symrdf -sid <SYMID> -rdfg <RDFG> query
 ```
 
 ---
-
 
 ## Add a VM to an Existing Protection Group
 
@@ -413,7 +380,6 @@ $hbr | Select-Object Name, State, Rpo, LatestRpo
 
 ---
 
-
 ## Change RPO on a vSphere Replication VM
 
 Adjust the recovery point objective for a VM already enrolled in vSphere Replication. The change is made at the vSphere Replication layer; SRM reflects the updated value automatically.
@@ -439,7 +405,6 @@ foreach ($vm in $vms) {
 ```
 
 ---
-
 
 ## Remove VM from Protection (Decommission)
 

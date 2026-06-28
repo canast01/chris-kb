@@ -14,29 +14,6 @@ diagnosing NTP and DNS as silent causes, and identifying the impact on NSX trans
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![ESXi Host Disconnected from vCenter](../../../../assets/virtualization-vmware-topics-scenarios-esxi-host-disconnecte.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Scenarios" {shape: hexagon}
-products_involved: "Products Involved" {shape: rectangle}
-1_confirm_vm_status_before_doing_any: "1. Confirm VM Status Before Doing Anything Else" {shape: rectangle}
-2_attempt_reconnect_from_vcenter: "2. Attempt Reconnect from vCenter" {shape: rectangle}
-3_test_management_network_reachabili: "3. Test Management Network Reachability" {shape: rectangle}
-4_check_and_restart_vpxa_and_hostd_a: "4. Check and Restart vpxa and hostd Agents" {shape: rectangle}
-5_verify_management_network_configur: "5. Verify Management Network Configuration" {shape: rectangle}
-
-center -> products_involved
-center -> 1_confirm_vm_status_before_doing_any
-center -> 2_attempt_reconnect_from_vcenter
-center -> 3_test_management_network_reachabili
-center -> 4_check_and_restart_vpxa_and_hostd_a
-center -> 5_verify_management_network_configur
-```
 
 ## Products Involved
 

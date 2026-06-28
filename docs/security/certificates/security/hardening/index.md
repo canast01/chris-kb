@@ -4,14 +4,9 @@ tags:
 ---
 # Certificates — Hardening
 
-
 <div class="kb-summary">
 Hardening reference covering OCSP Stapling Flow, OCSP Stapling, Security Checklist.
 </div>
-![Certificates — Hardening](../../../../assets/security-certificates-security-hardening-index.svg)
-
-
-
 
 ```d2
 direction: down

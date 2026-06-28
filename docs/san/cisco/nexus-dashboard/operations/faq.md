@@ -11,25 +11,7 @@ Common questions about Cisco Nexus Dashboard operations, configuration, and trou
 </div>
 ![Cisco Nexus Dashboard — Frequently Asked Questions](../../../../assets/san-cisco-nexus-dashboard-operations-faq.svg)
 
-
 ![Cisco Nexus Dashboard FAQ](../../../../assets/san-cisco-nexus-dashboard-operations-faq.svg)
-
-```d2
-direction: right
-
-hub: "Nexus Dashboard\nOperations" {shape: hexagon}
-general: "General" {shape: rectangle}
-configuration: "Configuration" {shape: rectangle}
-operations: "Operations" {shape: rectangle}
-troubleshooting: "Troubleshooting" {shape: rectangle}
-backup_and_recovery: "Backup and Recovery" {shape: rectangle}
-
-hub -> general
-hub -> configuration
-hub -> operations
-hub -> troubleshooting
-hub -> backup_and_recovery
-```
 
 ## General
 

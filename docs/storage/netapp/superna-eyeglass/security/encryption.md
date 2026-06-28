@@ -5,15 +5,12 @@ tags:
 ---
 # Superna Eyeglass — Encryption
 
-
 <div class="kb-summary">
 Superna Eyeglass encryption — TLS configuration and data-in-transit security for Eyeglass management communications.
 
 *Applies to: Superna Eyeglass*
 </div>
 ![Superna Eyeglass — Encryption](../../../../assets/storage-netapp-superna-eyeglass-security-encryption.svg)
-
-
 
 The Eyeglass management console must be accessible only via HTTPS — HTTP access should be disabled or redirected. All communication between Eyeglass and the PowerScale OneFS API uses HTTPS (ports 8080/443).
 
@@ -23,21 +20,6 @@ The Eyeglass management console must be accessible only via HTTPS — HTTP acces
 | API token management | Store in secrets manager; rotate on schedule and on personnel change |
 
 API tokens used by automation scripts must be stored in a secrets manager (e.g. CyberArk, HashiCorp Vault) and rotated on a defined schedule. Tokens should not be stored in plaintext in scripts or version control.
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-perimeter_controls: "Perimeter Controls" {shape: rectangle}
-identity_access: "Identity & Access" {shape: rectangle}
-audit_logging: "Audit & Logging" {shape: rectangle}
-core: "Superna Eyeglass Core" {shape: hexagon}
-
-external -> perimeter_controls: traffic in
-perimeter_controls -> identity_access
-identity_access -> audit_logging
-audit_logging -> core: secured path
-```
 
 ## Before you begin
 

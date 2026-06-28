@@ -16,11 +16,6 @@ host cluster.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![NSX Transport Node Preparation Failed](../../../../assets/virtualization-vmware-topics-scenarios-nsx-transport-node-pr.svg)
-
-
-
-
 
 ```mermaid
 graph TD
@@ -46,25 +41,6 @@ graph TD
     CLEANUP --> RETRY[Force Sync in NSX Manager]:::action
     FIREWALL --> RETRY
     RETRY --> SUCCESS
-```
-
-```d2
-direction: right
-
-center: "Scenarios" {shape: hexagon}
-symptoms: "Symptoms" {shape: rectangle}
-1_read_the_exact_error_from_nsx_mana: "1. Read the Exact Error from NSX Manager" {shape: rectangle}
-2_check_for_conflicting_vibs: "2. Check for Conflicting VIBs" {shape: rectangle}
-3_verify_host_acceptance_level: "3. Verify Host Acceptance Level" {shape: rectangle}
-4_verify_port_reachability: "4. Verify Port Reachability" {shape: rectangle}
-5_check_esxupdatelog_for_vib_install: "5. Check esxupdate.log for VIB Install Errors" {shape: rectangle}
-
-center -> symptoms
-center -> 1_read_the_exact_error_from_nsx_mana
-center -> 2_check_for_conflicting_vibs
-center -> 3_verify_host_acceptance_level
-center -> 4_verify_port_reachability
-center -> 5_check_esxupdatelog_for_vib_install
 ```
 
 ## Symptoms

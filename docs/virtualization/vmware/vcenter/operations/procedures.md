@@ -7,13 +7,11 @@ tags:
 ---
 # vCenter — Procedures
 
-
 <div class="kb-summary">
 Common vCenter procedures — adding and reconnecting ESXi hosts, vMotion and storage migrations, snapshot management, tag management, HA reconfiguration, content library, certificate replacement, file-based backup, roles/permissions, SSO identity sources, alarms, cluster config, and VCSA upgrade.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-
 
 Service restart order for manual recovery:
 1. `vmware-vpostgres` — database must be running before vpxd
@@ -22,25 +20,6 @@ Service restart order for manual recovery:
 4. `vsphere-ui` — vSphere Client (if needed)
 
 ---
-
-```d2
-direction: right
-
-hub: "vCenter Server\nOperations" {shape: hexagon}
-adding_an_esxi_host_to_vcenter: "Adding an ESXi Host to vCenter" {shape: rectangle}
-placing_a_host_in_maintenance_mode: "Placing a Host in Maintenance Mode" {shape: rectangle}
-vmotion_migrating_a_vm: "vMotion — Migrating a VM" {shape: rectangle}
-snapshot_management: "Snapshot Management" {shape: rectangle}
-inventory_hygiene_tasks: "Inventory Hygiene Tasks" {shape: rectangle}
-resync_disconnected_host: "Resync Disconnected Host" {shape: rectangle}
-
-hub -> adding_an_esxi_host_to_vcenter
-hub -> placing_a_host_in_maintenance_mode
-hub -> vmotion_migrating_a_vm
-hub -> snapshot_management
-hub -> inventory_hygiene_tasks
-hub -> resync_disconnected_host
-```
 
 ## Before you begin
 

@@ -4,8 +4,6 @@ tags:
   - operations
 ---
 # Confluence — CLI Reference
-![Confluence — CLI Reference](../../../../assets/itsm-confluence-operations-cli-reference-index.svg)
-
 
 ```bash
 # Set common variables to avoid repetition
@@ -236,15 +234,6 @@ spaceManager.getAllSpaces().each { space ->
         }
     }
 }
-```
-
-```d2
-direction: right
-
-center: "Cli Reference" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> verify
 ```
 
 ## Before you begin

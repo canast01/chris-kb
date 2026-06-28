@@ -5,35 +5,11 @@ tags:
 ---
 # OpenAI Automation Use Cases
 
-
 <div class="kb-summary">
 Practical patterns for using the OpenAI API in automation pipelines: summarisation, classification, code generation, and embeddings-based search.
 
 *Applies to: OpenAI API*
 </div>
-![OpenAI Automation Use Cases](../../../../assets/cloud-ai-openai-automation-use-cases-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "OpenAI API" {shape: hexagon}
-summarisation: "Summarisation" {shape: rectangle}
-classification: "Classification" {shape: rectangle}
-code_generation: "Code Generation" {shape: rectangle}
-embeddings_for_semantic_search: "Embeddings for Semantic Search" {shape: rectangle}
-batch_processing: "Batch Processing" {shape: rectangle}
-common_automation_patterns: "Common Automation Patterns" {shape: rectangle}
-
-center -> summarisation
-center -> classification
-center -> code_generation
-center -> embeddings_for_semantic_search
-center -> batch_processing
-center -> common_automation_patterns
-```
 
 ## Summarisation
 

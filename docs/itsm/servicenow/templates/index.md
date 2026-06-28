@@ -9,10 +9,6 @@ ServiceNow templates — change request, incident, and CMDB entry templates for 
 
 *Applies to: ServiceNow*
 </div>
-![ServiceNow — Templates](../../../assets/itsm-servicenow-templates-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-4">
 

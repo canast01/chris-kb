@@ -12,10 +12,6 @@ CyberArk PAM diagnostic commands: check Vault, PVWA, CPM, and PSM Windows servic
 
 *Applies to: CyberArk PAM (Privilege Access Manager) — Vault, PVWA, CPM, PSM*
 </div>
-![CyberArk — Diagnostics](../../../../assets/security-cyberark-troubleshooting-diagnostics-index.svg)
-
-
-
 
 ```mermaid
 flowchart TD

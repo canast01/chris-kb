@@ -37,17 +37,12 @@ add_clients -> validate
 ---
 
 # NetBackup — Initial Deployment
-![NetBackup — Initial Deployment](../../../assets/backup-netbackup-deploy-index.svg)
-
 
 This guide covers deploying Veritas NetBackup from bare metal through a fully
 operational backup environment — Primary Server, Media Servers, storage units,
 deduplication pool, client onboarding, and policy creation.
 
-
-
 ---
-
 
 ```mermaid
 flowchart TD

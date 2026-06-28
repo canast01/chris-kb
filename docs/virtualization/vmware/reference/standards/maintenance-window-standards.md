@@ -4,16 +4,11 @@ tags:
 ---
 # VMware Maintenance Window Standards
 
-
 <div class="kb-summary">
 VMware Maintenance Window Standards reference covering Change Ticket Requirement, Stakeholder Notification, Window Definition, Pre-Change Evidence, Rollback Plan and 4 more sections.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![VMware Maintenance Window Standards](../../../../assets/virtualization-vmware-reference-standards-maintenance-window.svg)
-
-
-
 
 ```d2
 direction: down

@@ -9,10 +9,6 @@ Dell APEX Storage as a Service — consumption-based on-premises storage managed
 
 *Applies to: APEX Storage-as-a-Service*
 </div>
-![APEX Storage as a Service](../../../assets/storage-dell-apex-storage-as-a-service-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="architecture/"><strong>Architecture</strong><span>How it works, integrations, and design standards.</span></a>

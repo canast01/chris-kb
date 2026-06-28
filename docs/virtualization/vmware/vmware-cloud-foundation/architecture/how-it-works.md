@@ -7,30 +7,11 @@ tags:
 # VMware Cloud Foundation — How It Works
 ![VMware Cloud Foundation — How It Works](../../../../assets/virtualization-vmware-vmware-cloud-foundation-architecture-h.svg)
 
-
-
-
-
 ```text
 SDDC Manager → Security → Password Management
 → Select component → Rotate Password
 ```
 ```bash
-
-```d2
-direction: right
-
-center: "VMware Cloud Foundation" {shape: hexagon}
-api_rotate_a_single_credential: "API — rotate a single credential" {shape: rectangle}
-check_credential_rotation_status: "Check credential rotation status" {shape: rectangle}
-check_certificate_expiry_across_all_: "Check certificate expiry across all components (API)" {shape: rectangle}
-ssh_to_sddc_manager_appliance_vcf_us: "SSH to SDDC Manager appliance (vcf user → sudo)" {shape: rectangle}
-
-center -> api_rotate_a_single_credential
-center -> check_credential_rotation_status
-center -> check_certificate_expiry_across_all_
-center -> ssh_to_sddc_manager_appliance_vcf_us
-```
 
 ```plantuml
 @startuml
@@ -146,8 +127,6 @@ graph TB
     class VCB,NSXS,VSANB,VCC,VSANC amber
     class UH1,UH2 purple
 ```
-
-
 
 ## See also
 

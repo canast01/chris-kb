@@ -6,7 +6,6 @@ tags:
 ---
 # SRM — Hardening
 
-
 <div class="kb-summary">
 Hardening reference covering Least-Privilege SRA Service Accounts, Rotate SRA Credentials, Test Recovery Plans Regularly, Restrict Who Can Execute Recovery, Secure Recovery Site Network Design and 3 more sections.
 
@@ -14,24 +13,7 @@ Hardening reference covering Least-Privilege SRA Service Accounts, Rotate SRA Cr
 </div>
 ![SRM — Hardening](../../../../assets/virtualization-vmware-srm-security-hardening.svg)
 
-
   SRM Hardening Controls
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-perimeter_controls: "Perimeter Controls" {shape: rectangle}
-identity_access: "Identity & Access" {shape: rectangle}
-audit_logging: "Audit & Logging" {shape: rectangle}
-core: "Site Recovery Manager Core" {shape: hexagon}
-
-external -> perimeter_controls: traffic in
-perimeter_controls -> identity_access
-identity_access -> audit_logging
-audit_logging -> core: secured path
-```
 
 ## Before you begin
 

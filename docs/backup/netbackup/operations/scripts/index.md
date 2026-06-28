@@ -5,15 +5,11 @@ tags:
 ---
 # NetBackup — Scripts
 
-
 <div class="kb-summary">
 NetBackup automation scripts — job summary reporting, failed job alerts, STU capacity monitoring, and catalog validation.
 
 *Applies to: NetBackup 10.x*
 </div>
-![NetBackup — Scripts](../../../../assets/backup-netbackup-operations-scripts-index.svg)
-
-
 
 Automation scripts for NetBackup use the `admincmd` CLI tools and are typically scheduled via cron on the Master Server. All scripts should write output to a dated log under `/opt/netbackup/scripts/logs/` and send alerts via email or a syslog forwarder when thresholds are breached. Scripts should be owned by `root` and executable only by the backup service account.
 
@@ -30,15 +26,6 @@ Automation scripts for NetBackup use the `admincmd` CLI tools and are typically 
 - Use `set -euo pipefail` at the top of every script.
 - Log rotation: keep 30 days of logs; use `logrotate` or a cron-based cleanup.
 - Credentials: service account API keys or passwords must be stored in the vault (CyberArk) and retrieved at runtime — never hard-coded.
-
-```d2
-direction: right
-
-center: "NetBackup" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> verify
-```
 
 ## Before you begin
 

@@ -11,9 +11,6 @@ Horizon day-2 operations — Connection Server health monitoring, active session
 
 *Applies to: Horizon 8.x*
 </div>
-![Horizon (VDI) — Operations](../../../../assets/virtualization-vmware-horizon-operations-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

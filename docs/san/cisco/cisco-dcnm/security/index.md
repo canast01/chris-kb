@@ -5,16 +5,11 @@ tags:
 ---
 # Cisco DCNM — Security
 
-
 <div class="kb-summary">
 DCNM hardening — AAA configuration, RBAC, TLS enforcement, and management interface access controls.
 
 *Applies to: Cisco MDS · Nexus*
 </div>
-![Cisco DCNM — Security](../../../../assets/san-cisco-cisco-dcnm-security-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

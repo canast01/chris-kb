@@ -5,33 +5,12 @@ tags:
 ---
 # Dell VPLEX — Backup & Restore
 
-
 <div class="kb-summary">
 Backup configuration, restore procedures, and validation for Dell VPLEX.
 
 *Applies to: VPLEX*
 </div>
 ![Dell VPLEX — Backup & Restore](../../../../assets/storage-dell-vplex-operations-backup-restore.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "VPLEX\nOperations" {shape: hexagon}
-configuration_backup: "Configuration Backup" {shape: rectangle}
-collecting_a_support_bundle: "Collecting a Support Bundle" {shape: rectangle}
-recovery_scenarios: "Recovery Scenarios" {shape: rectangle}
-validation: "Validation" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> configuration_backup
-hub -> collecting_a_support_bundle
-hub -> recovery_scenarios
-hub -> validation
-hub -> verify
-```
 
 ## Before you begin
 

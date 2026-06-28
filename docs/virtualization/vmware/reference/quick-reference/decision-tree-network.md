@@ -4,14 +4,11 @@ tags:
 ---
 # Decision Tree: VM Network Issue
 
-
 <div class="kb-summary">
 Use this when a VM cannot communicate on the network — applies to both NSX-T overlay and standard vSphere networking.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Decision Tree: VM Network Issue](../../../../assets/virtualization-vmware-reference-quick-reference-decision-tre.svg)
-
 
 ```text
                      VM: Cannot communicate
@@ -36,25 +33,6 @@ Use this when a VM cannot communicate on the network — applies to both NSX-T o
                                 │ pktcap-uw capture on   │
                                 │ vNIC → analyse in Wireshark │
                                 └───────────────────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
-```d2
-direction: right
-
-center: "Quick Reference" {shape: rectangle}
-step_1_basic_connectivity_test: "Step 1 — Basic Connectivity Test" {shape: rectangle}
-step_2_vlan_segment_issue: "Step 2 — VLAN / Segment Issue" {shape: rectangle}
-step_3_mtu_check: "Step 3 — MTU Check" {shape: rectangle}
-step_4_routing_issue: "Step 4 — Routing Issue" {shape: rectangle}
-step_5_nsx_distributed_firewall_dfw: "Step 5 — NSX Distributed Firewall (DFW)" {shape: rectangle}
-step_6_packet_capture: "Step 6 — Packet Capture" {shape: rectangle}
-
-center -> step_1_basic_connectivity_test
-center -> step_2_vlan_segment_issue
-center -> step_3_mtu_check
-center -> step_4_routing_issue
-center -> step_5_nsx_distributed_firewall_dfw
-center -> step_6_packet_capture
 ```
 
 ## Step 1 — Basic Connectivity Test

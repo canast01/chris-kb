@@ -5,35 +5,12 @@ tags:
 ---
 # NetApp Keystone — Common Issues
 
-
 <div class="kb-summary">
 Common Issues reference covering Keystone Collector Not Reporting, Subscription Consumption Shows Unexpected Spike, SnapMirror Lag Alert, Collector VM Cannot Reach ONTAP Array, Keystone Portal Shows Wrong Committed Capacity and 1 more sections.
 
 *Applies to: Keystone STaaS*
 </div>
 ![NetApp Keystone — Common Issues](../../../../assets/storage-netapp-keystone-operations-common-issues.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "Keystone STaaS\nOperations" {shape: hexagon}
-keystone_collector_not_reporting: "Keystone Collector Not Reporting" {shape: rectangle}
-subscription_consumption_shows_unexp: "Subscription Consumption Shows Unexpected Spike" {shape: rectangle}
-snapmirror_lag_alert: "SnapMirror Lag Alert" {shape: rectangle}
-collector_vm_cannot_reach_ontap_arra: "Collector VM Cannot Reach ONTAP Array" {shape: rectangle}
-keystone_portal_shows_wrong_committe: "Keystone Portal Shows Wrong Committed Capacity" {shape: rectangle}
-quick_reference_error_patterns: "Quick Reference — Error Patterns" {shape: rectangle}
-
-hub -> keystone_collector_not_reporting
-hub -> subscription_consumption_shows_unexp
-hub -> snapmirror_lag_alert
-hub -> collector_vm_cannot_reach_ontap_arra
-hub -> keystone_portal_shows_wrong_committe
-hub -> quick_reference_error_patterns
-```
 
 ## Before you begin
 

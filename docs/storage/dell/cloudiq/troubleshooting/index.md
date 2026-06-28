@@ -12,9 +12,6 @@ CloudIQ — Troubleshooting navigation for Common Issues, Diagnostics, Escalatio
 
 *Applies to: CloudIQ*
 </div>
-![CloudIQ — Troubleshooting](../../../../assets/storage-dell-cloudiq-troubleshooting-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="common-issues/"><strong>Common Issues</strong><span>Quick reference for common problems and resolutions.</span></a>

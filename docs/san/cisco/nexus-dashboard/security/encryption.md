@@ -6,7 +6,6 @@ tags:
 # Cisco Nexus Dashboard — Security Encryption
 ![Cisco Nexus Dashboard — Security Encryption](../../../../assets/san-cisco-nexus-dashboard-security-encryption.svg)
 
-
 ```bash
 # Check TLS version accepted
 openssl s_client -tls1 -connect nd-dc1.corp.example.com:443 </dev/null 2>&1 | grep "alert\|Cipher"
@@ -43,21 +42,6 @@ exp = datetime.strptime(d, '%b %d %H:%M:%S %Y %Z')
 print(f'Certificate expires in {(exp - datetime.utcnow()).days} days ({exp.date()})')
 "
 # Alert when < 60 days remaining; renew by < 30 days
-```
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-perimeter_controls: "Perimeter Controls" {shape: rectangle}
-identity_access: "Identity & Access" {shape: rectangle}
-audit_logging: "Audit & Logging" {shape: rectangle}
-core: "Nexus Dashboard Core" {shape: hexagon}
-
-external -> perimeter_controls: traffic in
-perimeter_controls -> identity_access
-identity_access -> audit_logging
-audit_logging -> core: secured path
 ```
 
 ## Before you begin

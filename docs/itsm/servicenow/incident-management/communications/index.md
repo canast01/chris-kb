@@ -4,33 +4,11 @@ tags:
 ---
 # Incident Communications
 
-
 <div class="kb-summary">
 Incident Communications reference covering Overview, Communication Principles, Update Cadence, Communication Templates, Stakeholder Distribution and 1 more sections.
 
 *Applies to: ServiceNow*
 </div>
-![Incident Communications](../../../../assets/itsm-servicenow-incident-management-communications-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "ServiceNow" {shape: hexagon}
-communication_principles: "Communication Principles" {shape: rectangle}
-update_cadence: "Update Cadence" {shape: rectangle}
-communication_templates: "Communication Templates" {shape: rectangle}
-stakeholder_distribution: "Stakeholder Distribution" {shape: rectangle}
-major_incident_bridge: "Major Incident Bridge" {shape: rectangle}
-
-center -> communication_principles
-center -> update_cadence
-center -> communication_templates
-center -> stakeholder_distribution
-center -> major_incident_bridge
-```
 
 ## Overview
 

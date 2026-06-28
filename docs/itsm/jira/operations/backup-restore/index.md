@@ -4,8 +4,6 @@ tags:
   - operations
 ---
 # Jira — Backup and Restore
-![Jira — Backup and Restore](../../../../assets/itsm-jira-operations-backup-restore-index.svg)
-
 
 ```bash
 #!/bin/bash

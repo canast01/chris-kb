@@ -5,10 +5,6 @@ On-premises AI/ML compute — GPU hardware management, driver configuration, and
 
 *Applies to: Local AI*
 </div>
-![Local AI & GPU Workloads](../../assets/compute-local-ai-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-2">
 

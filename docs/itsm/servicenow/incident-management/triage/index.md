@@ -4,33 +4,11 @@ tags:
 ---
 # Incident Triage
 
-
 <div class="kb-summary">
 Incident Triage reference covering Overview, Triage Process Flow, Initial Diagnosis Checklist, Priority Assignment Guide, Ticket Creation at Triage and 1 more sections.
 
 *Applies to: ServiceNow*
 </div>
-![Incident Triage](../../../../assets/itsm-servicenow-incident-management-triage-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "ServiceNow" {shape: hexagon}
-triage_process_flow: "Triage Process Flow" {shape: rectangle}
-initial_diagnosis_checklist: "Initial Diagnosis Checklist" {shape: rectangle}
-priority_assignment_guide: "Priority Assignment Guide" {shape: rectangle}
-ticket_creation_at_triage: "Ticket Creation at Triage" {shape: rectangle}
-escalate_or_investigate_solo: "Escalate or Investigate Solo?" {shape: rectangle}
-
-center -> triage_process_flow
-center -> initial_diagnosis_checklist
-center -> priority_assignment_guide
-center -> ticket_creation_at_triage
-center -> escalate_or_investigate_solo
-```
 
 ## Overview
 

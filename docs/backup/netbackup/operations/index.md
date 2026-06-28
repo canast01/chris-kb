@@ -5,16 +5,11 @@ tags:
 ---
 # NetBackup — Operations
 
-
-
 <div class="kb-summary">
 NetBackup day-to-day operations — policy management, job monitoring, tape/disk pool administration, and catalog maintenance.
 
 *Applies to: NetBackup 10.x*
 </div>
-![NetBackup — Operations](../../../assets/backup-netbackup-operations-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

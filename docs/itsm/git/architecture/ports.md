@@ -16,29 +16,6 @@ Firewall port reference for self-hosted Git platforms (GitLab, Bitbucket Data Ce
 </div>
 ![Git (Self-Hosted) — Ports and Network Requirements](../../../assets/itsm-git-architecture-ports.svg)
 
-
-
-
-
-```d2
-direction: right
-
-center: "Architecture" {shape: hexagon}
-inbound_client_access: "Inbound — Client Access" {shape: rectangle}
-cicd_runner_to_gitlabbitbucket: "CI/CD Runner to GitLab/Bitbucket" {shape: rectangle}
-database: "Database" {shape: rectangle}
-gitlab_cluster_gitaly_praefect: "GitLab Cluster (Gitaly, Praefect)" {shape: rectangle}
-outbound_server_to_external: "Outbound — Server to External" {shape: rectangle}
-firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
-
-center -> inbound_client_access
-center -> cicd_runner_to_gitlabbitbucket
-center -> database
-center -> gitlab_cluster_gitaly_praefect
-center -> outbound_server_to_external
-center -> firewall_zone_summary
-```
-
 ## Inbound — Client Access
 
 | Port | Protocol | Source | Purpose |

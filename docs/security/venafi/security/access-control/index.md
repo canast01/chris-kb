@@ -4,45 +4,17 @@ tags:
 ---
 # Venafi — Access Control
 
-
 <div class="kb-summary">
 Venafi access control: least-privilege role assignment in Trust Protection Platform, API token scoping, certificate team RBAC configuration, and audit log review.
 
 *Applies to: Venafi TLS Protect*
 </div>
-![Venafi — Access Control](../../../../assets/security-venafi-security-access-control-index.svg)
-
-
-
 
 > Part of the [Venafi](../../index.md) reference.
 
 Least-privilege role assignment must be enforced, with service account permissions scoped to specific policy folders only. Separation of duties separates CA trust anchor management from day-to-day certificate operations.
 
 ---
-
-```d2
-direction: down
-
-root: "Access Control\nAccess Control" {shape: hexagon}
-rbac_roles: "RBAC Roles" {shape: rectangle}
-policy_folder_permission_model: "Policy Folder Permission Model" {shape: rectangle}
-service_account_configuration: "Service Account Configuration" {shape: rectangle}
-api_key_permission_scopes: "API Key Permission Scopes" {shape: rectangle}
-quarterly_access_review_procedure: "Quarterly Access Review Procedure" {shape: rectangle}
-resources: Protected Resources {shape: cylinder}
-
-root -> rbac_roles: role
-rbac_roles -> resources: scoped
-root -> policy_folder_permission_model: role
-policy_folder_permission_model -> resources: scoped
-root -> service_account_configuration: role
-service_account_configuration -> resources: scoped
-root -> api_key_permission_scopes: role
-api_key_permission_scopes -> resources: scoped
-root -> quarterly_access_review_procedure: role
-quarterly_access_review_procedure -> resources: scoped
-```
 
 ## Before you begin
 

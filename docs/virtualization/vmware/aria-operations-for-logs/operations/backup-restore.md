@@ -7,7 +7,6 @@ tags:
 # Aria Operations for Logs — Backup and Restore
 ![Aria Operations for Logs — Backup and Restore](../../../../assets/virtualization-vmware-aria-operations-for-logs-operations-ba.svg)
 
-
 ```bash
 ssh admin@vrli-prod-01.example.local
 
@@ -59,15 +58,6 @@ Administration → Cluster → each node should show state Active and ingestion 
 ```bash
 curl -sk -u 'admin:<password>' \
   "https://vrli-prod-01.example.local/api/v2/alerts" | jq '. | length'
-```
-
-```d2
-direction: right
-
-hub: "Aria Operations for Logs\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

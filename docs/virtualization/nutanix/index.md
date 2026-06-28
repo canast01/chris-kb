@@ -9,11 +9,6 @@ Nutanix HCI platform — AOS, AHV, Prism Central, Files, Objects, Flow, and Calm
 
 *Applies to: AOS 6.x · AHV*
 </div>
-![Nutanix](../../assets/virtualization-nutanix-index.svg)
-
-
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="architecture/"><strong>Architecture</strong><span>AOS distributed storage, AHV hypervisor, Prism cluster design, and CVM internals.</span></a>

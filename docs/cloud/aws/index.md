@@ -11,10 +11,6 @@ Amazon Web Services knowledge base covering compute, storage, networking, identi
 
 *Applies to: AWS*
 </div>
-![AWS](../../assets/cloud-aws-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

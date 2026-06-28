@@ -12,24 +12,6 @@ SQL Server integration points — application drivers (JDBC, ODBC, ADO.NET, pyod
 </div>
 ![SQL Server — Integrations](../../../../assets/compute-windows-server-sql-server-architecture-integrations.svg)
 
-
-
-
-```d2
-direction: right
-
-center: "SQL Server" {shape: hexagon}
-application_drivers: "Application Drivers" {shape: rectangle}
-linked_servers: "Linked Servers" {shape: rectangle}
-ssis_ssrs_ssas: "SSIS / SSRS / SSAS" {shape: rectangle}
-monitoring_integration: "Monitoring Integration" {shape: rectangle}
-
-center -> application_drivers
-center -> linked_servers
-center -> ssis_ssrs_ssas
-center -> monitoring_integration
-```
-
 ## Application Drivers
 
 | Language | Driver | Connection string |

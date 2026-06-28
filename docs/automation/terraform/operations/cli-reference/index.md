@@ -5,37 +5,15 @@ tags:
 ---
 # Terraform CLI Reference
 
-
 <div class="kb-summary">
 Terraform is HashiCorp's infrastructure-as-code tool. You describe your desired infrastructure in `.tf` files, and Terraform figures out what to create, change, or delete to reach that state.
 
 *Applies to: Terraform 1.x*
 </div>
-![Terraform CLI Reference](../../../../assets/automation-terraform-operations-cli-reference-index.svg)
-
 
  State is stored in a `.tfstate` file — it's Terraform's record of what it has actually deployed.
 
 > Install with `brew install terraform` (macOS), `apt install terraform` (Debian), or download from terraform.io. Run `terraform init` in any new working directory before other commands.
-
-```d2
-direction: right
-
-center: "Cli Reference" {shape: rectangle}
-state_backend_topology: "State Backend Topology" {shape: rectangle}
-validate_format_providers: "Validate, Format & Providers" {shape: rectangle}
-state_output: "State & Output" {shape: rectangle}
-workspaces: "Workspaces" {shape: rectangle}
-console_debug_patterns: "Console, Debug & Patterns" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> state_backend_topology
-center -> validate_format_providers
-center -> state_output
-center -> workspaces
-center -> console_debug_patterns
-center -> verify
-```
 
 ## Before you begin
 
@@ -79,7 +57,6 @@ graph TD
     tfClient -->|backend remote| tfcState
     tfcState --> tfcRuns
 ```
-
 
 ---
 

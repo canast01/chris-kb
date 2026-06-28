@@ -5,25 +5,11 @@ tags:
 ---
 # Commvault — Scripts
 
-
 <div class="kb-summary">
 PowerShell and qscript automation for Commvault job management, SLA reporting, client health checks, and storage utilisation.
 
 *Applies to: Commvault 2024.x*
 </div>
-![Commvault — Scripts](../../../../assets/backup-commvault-operations-scripts-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Commvault" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> verify
-```
 
 ## Before you begin
 

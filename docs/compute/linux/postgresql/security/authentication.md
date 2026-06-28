@@ -12,29 +12,6 @@ PostgreSQL authentication — pg_hba.conf methods (scram-sha-256, md5, peer, lda
 </div>
 ![PostgreSQL — Authentication](../../../../assets/compute-linux-postgresql-security-authentication.svg)
 
-
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-authentication_methods: "Authentication Methods" {shape: rectangle}
-pghbaconf_configuration: "pg_hba.conf Configuration" {shape: rectangle}
-password_management: "Password Management" {shape: rectangle}
-ssl_client_certificate_auth: "SSL Client Certificate Auth" {shape: rectangle}
-ldap_authentication: "LDAP Authentication" {shape: rectangle}
-core: "PostgreSQL Core" {shape: hexagon}
-
-external -> authentication_methods: traffic in
-authentication_methods -> pghbaconf_configuration
-pghbaconf_configuration -> password_management
-password_management -> ssl_client_certificate_auth
-ssl_client_certificate_auth -> ldap_authentication
-ldap_authentication -> core: secured path
-```
-
 ## Before you begin
 
 - **Access:** root or sudo-capable account on target hosts

@@ -6,7 +6,6 @@ tags:
 # Cisco DCNM — Authentication
 ![Cisco DCNM — Authentication](../../../../assets/san-cisco-cisco-dcnm-security-authentication.svg)
 
-
 ```bash
 ssh root@dcnm-dc1.corp.example.com
 
@@ -21,22 +20,6 @@ keytool -import -trustcacerts -alias corp-ldap-ca \
 
 # Restart DCNM to apply
 /usr/local/cisco/dcm/dcnm/sbin/dcnm-server restart
-```
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-perimeter_controls: "Perimeter Controls" {shape: rectangle}
-identity_access: "Identity & Access" {shape: rectangle}
-audit_logging: "Audit & Logging" {shape: rectangle}
-core: "Cisco DCNM Core" {shape: hexagon}
-
-external -> perimeter_controls: traffic in
-perimeter_controls -> identity_access
-identity_access -> audit_logging
-audit_logging -> core: secured path
 ```
 
 ## Before you begin

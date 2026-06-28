@@ -1,5 +1,3 @@
-
-![Docs](assets/index.svg)
 <div class="hero">
   <div class="hero-body">
     <p class="section-kicker">Infrastructure Engineering · Technical Reference</p>
@@ -15,15 +13,6 @@
 </div>
 
 <img src="assets/kb-landing-overview.svg" alt="Knowledge Base — Platform Overview" style="width:100%;max-width:820px;display:block;margin:1.5rem auto;">
-
-```d2
-direction: right
-
-center: "System" {shape: hexagon}
-platforms: "Platforms" {shape: rectangle}
-
-center -> platforms
-```
 
 ## Platforms
 

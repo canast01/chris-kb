@@ -6,17 +6,12 @@ tags:
 ---
 # Horizon — Authentication
 
-
 <div class="kb-summary">
 Authentication reference covering Two-Factor Authentication (RADIUS / RSA SecurID), SAML Authentication (Workspace ONE / vIDM), Smart Card / Certificate Authentication, True SSO, Unauthenticated Access (Kiosk Mode) and 3 more sections.
 
 *Applies to: Horizon 8.x*
 </div>
 ![Horizon — Authentication](../../../../assets/virtualization-vmware-horizon-security-authentication.svg)
-
-
-
-
 
 For RSA SecurID (hardware token):
 ```text
@@ -25,27 +20,6 @@ For RSA SecurID (hardware token):
 ```
 
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-saml_authentication_workspace_one_vi: "SAML Authentication (Workspace ONE / vIDM)" {shape: rectangle}
-smart_card_certificate_authenticatio: "Smart Card / Certificate Authentication" {shape: rectangle}
-true_sso: "True SSO" {shape: rectangle}
-unauthenticated_access_kiosk_mode: "Unauthenticated Access (Kiosk Mode)" {shape: rectangle}
-session_timeout_and_reauthentication: "Session Timeout and Reauthentication" {shape: rectangle}
-uag_identity_bridging: "UAG Identity Bridging" {shape: rectangle}
-core: "Horizon Core" {shape: hexagon}
-
-external -> saml_authentication_workspace_one_vi: traffic in
-saml_authentication_workspace_one_vi -> smart_card_certificate_authenticatio
-smart_card_certificate_authenticatio -> true_sso
-true_sso -> unauthenticated_access_kiosk_mode
-unauthenticated_access_kiosk_mode -> session_timeout_and_reauthentication
-session_timeout_and_reauthentication -> uag_identity_bridging
-uag_identity_bridging -> core: secured path
-```
 
 ## Before you begin
 

@@ -5,7 +5,6 @@ tags:
 ---
 # FOD — Encryption
 
-
 <div class="kb-summary">
 Encryption reference covering Encryption Controls, Key Points.
 
@@ -13,25 +12,9 @@ Encryption reference covering Encryption Controls, Key Points.
 </div>
 ![FOD — Encryption](../../../../assets/storage-dell-fod-security-encryption.svg)
 
-
-
-
 > Part of the [Flex on Demand](../index.md) reference.
 
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-encryption_controls: "Encryption Controls" {shape: rectangle}
-key_points: "Key Points" {shape: rectangle}
-core: "Flex On Demand Core" {shape: hexagon}
-
-external -> encryption_controls: traffic in
-encryption_controls -> key_points
-key_points -> core: secured path
-```
 
 ## Before you begin
 

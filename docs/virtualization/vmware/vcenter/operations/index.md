@@ -14,10 +14,6 @@ Day-to-day operational reference for VMware vCenter Server. Covers CLI commands,
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![vCenter — Operations](../../../../assets/virtualization-vmware-vcenter-operations-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

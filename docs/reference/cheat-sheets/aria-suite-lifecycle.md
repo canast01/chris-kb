@@ -10,18 +10,6 @@ Top-10 Aria Suite Lifecycle (LCM) REST API calls for product installation, upgra
 </div>
 ![Aria Suite Lifecycle Cheat Sheet](../../assets/reference-cheat-sheets-aria-suite-lifecycle.svg)
 
-
-
-
-```d2
-direction: right
-
-center: "Cheat Sheets" {shape: rectangle}
-rest_api: "REST API" {shape: rectangle}
-
-center -> rest_api
-```
-
 ## REST API
 
 ```bash

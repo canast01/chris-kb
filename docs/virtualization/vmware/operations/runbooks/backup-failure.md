@@ -4,15 +4,11 @@ tags:
 ---
 # VMware Backup Failure Runbook
 
-
 <div class="kb-summary">
 VMware Backup Failure Runbook reference covering Identify Failed VMs, Review the Error Message, Check VM Snapshot State, Check Datastore Free Space, Check Backup Proxy Health and 5 more sections.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![VMware Backup Failure Runbook](../../../../assets/virtualization-vmware-operations-runbooks-backup-failure.svg)
-
-
 
 ```plantuml
 @startuml

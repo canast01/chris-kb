@@ -12,28 +12,7 @@ Step-by-step procedures for Aria Operations for Logs — adding log sources, ins
 *Applies to: Aria Logs 8.x*
 </div>
 
-
-
 ---
-
-```d2
-direction: right
-
-hub: "Aria Operations for Logs\nOperations" {shape: hexagon}
-add_a_syslog_log_source: "Add a Syslog Log Source" {shape: rectangle}
-install_a_content_pack: "Install a Content Pack" {shape: rectangle}
-add_a_vspherevcenter_log_source_via_: "Add a vSphere/vCenter Log Source (via Integration)" {shape: rectangle}
-configure_disk_retention: "Configure Disk Retention" {shape: rectangle}
-archive_log_data_to_nfs: "Archive Log Data to NFS" {shape: rectangle}
-add_a_worker_node_scaleout: "Add a Worker Node (Scale-Out)" {shape: rectangle}
-
-hub -> add_a_syslog_log_source
-hub -> install_a_content_pack
-hub -> add_a_vspherevcenter_log_source_via_
-hub -> configure_disk_retention
-hub -> archive_log_data_to_nfs
-hub -> add_a_worker_node_scaleout
-```
 
 ## Before you begin
 

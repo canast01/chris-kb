@@ -10,10 +10,6 @@ PowerCLI is VMware's official PowerShell module suite for automating and managin
 
 *Applies to: PowerCLI 13.x*
 </div>
-![VMware PowerCLI](../../../assets/virtualization-vmware-powercli-index.svg)
-
-
-
 
 <!-- diagram:powercli -->
 

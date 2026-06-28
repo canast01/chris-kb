@@ -6,26 +6,11 @@ tags:
 # FlashArray — Encryption
 ![FlashArray — Encryption](../../../../assets/storage-pure-flasharray-security-encryption.svg)
 
-
-
-
-
 ```text
 
 FlashArray provides encryption at rest (hardware-based, always-on) and encryption in transit (TLS for all management and replication traffic). Both are enabled by default and require no configuration to activate — the operational task is to manage certificates, verify status, and integrate with external key managers when required.
 
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-encryption_at_rest: "Encryption at Rest" {shape: rectangle}
-core: "FlashArray Core" {shape: hexagon}
-
-external -> encryption_at_rest: traffic in
-encryption_at_rest -> core: secured path
-```
 
 ## Before you begin
 

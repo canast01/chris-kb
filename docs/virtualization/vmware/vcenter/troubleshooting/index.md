@@ -14,10 +14,6 @@ Troubleshooting reference for VMware vCenter Server. Covers common VCSA failure 
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![vCenter — Troubleshooting](../../../../assets/virtualization-vmware-vcenter-troubleshooting-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

@@ -7,16 +7,11 @@ search:
 ---
 # Windows Server — Troubleshooting
 
-
-
 <div class="kb-summary">
 Diagnosing Windows Server failures — services, event logs, WMI errors, performance degradation, and common boot issues.
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
-![Windows Server — Troubleshooting](../../../assets/compute-windows-server-troubleshooting-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

@@ -9,13 +9,6 @@ Dell PowerMax SRDF/A asynchronous replication — delta set cycle model buffers 
 
 *Applies to: SRDF/A*
 </div>
-![SRDF/A](../../../assets/storage-dell-srdf-a-index.svg)
-
-
-
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

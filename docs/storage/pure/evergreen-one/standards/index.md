@@ -4,14 +4,11 @@ tags:
 ---
 # Pure Storage Evergreen//One Standards
 
-
 <div class="kb-summary">
 Pure Storage Evergreen//One Standards reference covering Naming Conventions, Build Baseline, Service Agreement Checklist.
 
 *Applies to: Evergreen//One*
 </div>
-![Pure Storage Evergreen//One Standards](../../../../assets/storage-pure-evergreen-one-standards-index.svg)
-
 
 ![Pure Storage Evergreen//One Standards — Diagram](../../../../assets/storage-pure-evergreen-one-standards-diagram.svg)
 

@@ -5,7 +5,6 @@ tags:
 ---
 # Dell ECS — Scripts
 
-
 <div class="kb-summary">
 Dell ECS automation scripts: `curl` REST API examples for bucket management, namespace health polling, replication status checks, and alert-to-ticket scripts.
 
@@ -13,29 +12,7 @@ Dell ECS automation scripts: `curl` REST API examples for bucket management, nam
 </div>
 ![Dell ECS — Scripts](../../../../assets/storage-dell-ecs-operations-scripts.svg)
 
-
-
-
 ---
-
-```d2
-direction: right
-
-hub: "ECS\nOperations" {shape: hexagon}
-node_capacity_health_check: "Node & Capacity Health Check" {shape: rectangle}
-bucket_audit: "Bucket Audit" {shape: rectangle}
-s3_connectivity_check: "S3 Connectivity Check" {shape: rectangle}
-daily_check_script: "Daily Check Script" {shape: rectangle}
-prechange_validation_script: "Pre-Change Validation Script" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> node_capacity_health_check
-hub -> bucket_audit
-hub -> s3_connectivity_check
-hub -> daily_check_script
-hub -> prechange_validation_script
-hub -> verify
-```
 
 ## Before you begin
 
@@ -76,7 +53,6 @@ if not ECS_HOST or not ECS_PASS:
     print("ERROR: ECS_HOST and ECS_PASS must be set.", file=sys.stderr)
     sys.exit(1)
 
-
 def authenticate(session):
     """Authenticate and return the auth token."""
     resp = session.get(f"{BASE_URL}/login", auth=(ECS_USER, ECS_PASS), verify=False)
@@ -85,7 +61,6 @@ def authenticate(session):
     if not token:
         raise RuntimeError("Authentication failed: no token in response headers.")
     return token
-
 
 def api_get(session, token, path):
     """GET a JSON endpoint from the ECS Management API."""
@@ -96,7 +71,6 @@ def api_get(session, token, path):
     )
     resp.raise_for_status()
     return resp.json()
-
 
 def main():
     exit_code = 0
@@ -187,7 +161,6 @@ def main():
     print("=" * 50)
     sys.exit(exit_code)
 
-
 if __name__ == "__main__":
     main()
 ```
@@ -229,7 +202,6 @@ if not ECS_HOST or not ECS_PASS:
     print("ERROR: ECS_HOST and ECS_PASS must be set.", file=sys.stderr)
     sys.exit(1)
 
-
 def authenticate(session):
     resp = session.get(f"{BASE_URL}/login", auth=(ECS_USER, ECS_PASS), verify=False)
     resp.raise_for_status()
@@ -237,7 +209,6 @@ def authenticate(session):
     if not token:
         raise RuntimeError("No auth token received.")
     return token
-
 
 def api_get(session, token, path):
     resp = session.get(
@@ -248,13 +219,11 @@ def api_get(session, token, path):
     resp.raise_for_status()
     return resp.json()
 
-
 def bytes_to_gb(b):
     try:
         return float(b) / (1024 ** 3)
     except (TypeError, ValueError):
         return 0.0
-
 
 def main():
     session = requests.Session()
@@ -299,7 +268,6 @@ def main():
     print("-" * 110)
     print(f"\nTotal buckets flagged over {WARN_SIZE_GB} GB threshold: {flagged}")
     sys.exit(0 if flagged == 0 else 1)
-
 
 if __name__ == "__main__":
     main()

@@ -6,14 +6,9 @@ tags:
 
 # AI — Certifications
 
-
 <div class="kb-summary">
 Cloud AI certifications tracker: AWS ML Specialty, Azure AI Engineer, and OpenAI certifications with exam objectives, study resources, and progress notes.
 </div>
-![AI — Certifications](../../../assets/cloud-ai-certifications-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-5">
 

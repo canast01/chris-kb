@@ -10,9 +10,6 @@ PowerMax hardening — user access control, audit logging, encryption at rest, a
 
 *Applies to: PowerMax 2500 / 8500*
 </div>
-![PowerMax — Security](../../../../assets/storage-dell-powermax-security-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

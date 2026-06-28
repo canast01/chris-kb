@@ -9,29 +9,6 @@ tags:
 Step-by-step procedures for generating patch compliance reports, deploying patches, handling exceptions, and responding to zero-day vulnerabilities.
   <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
-![Patch Compliance — Procedures](../../../assets/security-patch-compliance-operations-index.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "Operations\nOperations" {shape: hexagon}
-run_monthly_patch_compliance_report: "Run Monthly Patch Compliance Report" {shape: rectangle}
-identify_unpatched_systems: "Identify Unpatched Systems" {shape: rectangle}
-approve_patches_in_wsussccm: "Approve Patches in WSUS/SCCM" {shape: rectangle}
-deploy_patch_to_production_group: "Deploy Patch to Production Group" {shape: rectangle}
-handle_a_patch_exception: "Handle a Patch Exception" {shape: rectangle}
-track_patch_sla_compliance: "Track Patch SLA Compliance" {shape: rectangle}
-
-hub -> run_monthly_patch_compliance_report
-hub -> identify_unpatched_systems
-hub -> approve_patches_in_wsussccm
-hub -> deploy_patch_to_production_group
-hub -> handle_a_patch_exception
-hub -> track_patch_sla_compliance
-```
 
 ## Before you begin
 

@@ -12,28 +12,6 @@ SQL Server automation scripts — PowerShell backup rotation, index maintenance,
 </div>
 ![SQL Server — Scripts](../../../../assets/compute-windows-server-sql-server-operations-scripts.svg)
 
-
-
-
-```d2
-direction: right
-
-hub: "SQL Server\nOperations" {shape: hexagon}
-nightly_backup_script_powershell: "Nightly Backup Script (PowerShell)" {shape: rectangle}
-index_maintenance_ola_hallengren: "Index Maintenance (Ola Hallengren)" {shape: rectangle}
-blocking_chain_alert: "Blocking Chain Alert" {shape: rectangle}
-ag_health_check: "AG Health Check" {shape: rectangle}
-database_size_report: "Database Size Report" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> nightly_backup_script_powershell
-hub -> index_maintenance_ola_hallengren
-hub -> blocking_chain_alert
-hub -> ag_health_check
-hub -> database_size_report
-hub -> verify
-```
-
 ## Before you begin
 
 - **Access:** Local Administrator or Domain Admin on target hosts

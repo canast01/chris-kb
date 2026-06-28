@@ -5,7 +5,6 @@ tags:
 ---
 # Superna Eyeglass — Backup & Restore
 
-
 <div class="kb-summary">
 Eyeglass configuration backup preserves replication policies, SyncIQ jobs, share/export configurations, access zone mappings, and SmartConnect zone settings. Without a current backup, DR failover configuration must be manually re-created.
 
@@ -13,27 +12,7 @@ Eyeglass configuration backup preserves replication policies, SyncIQ jobs, share
 </div>
 ![Superna Eyeglass — Backup & Restore](../../../../assets/storage-netapp-superna-eyeglass-operations-backup-restore.svg)
 
-
 ---
-
-```d2
-direction: right
-
-hub: "Superna Eyeglass\nOperations" {shape: hexagon}
-what_eyeglass_backs_up: "What Eyeglass Backs Up" {shape: rectangle}
-backup_architecture: "Backup Architecture" {shape: rectangle}
-postrestore_validation: "Post-Restore Validation" {shape: rectangle}
-policy_backup_export_manual: "Policy Backup Export (Manual)" {shape: rectangle}
-backup_verification_testing: "Backup Verification Testing" {shape: rectangle}
-related_pages: "Related Pages" {shape: rectangle}
-
-hub -> what_eyeglass_backs_up
-hub -> backup_architecture
-hub -> postrestore_validation
-hub -> policy_backup_export_manual
-hub -> backup_verification_testing
-hub -> related_pages
-```
 
 ## Before you begin
 
@@ -79,7 +58,6 @@ flowchart LR
     EG --> NFS
     EG --> SFTP
 ```
-
 
 ### Restore to New/Replacement Appliance
 

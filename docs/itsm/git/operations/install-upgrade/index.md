@@ -4,8 +4,6 @@ tags:
   - operations
 ---
 # Git — Install and Upgrade
-![Git — Install and Upgrade](../../../../assets/itsm-git-operations-install-upgrade-index.svg)
-
 
 ```bash
 # Install from distro repo
@@ -219,17 +217,6 @@ flowchart TD
     RESTORE --> VERIFY
     VERIFY -->|Pass| DONE([Service Restored])
     VERIFY -->|Fail| ESCALATE([Escalate to Vendor Support])
-```
-
-```d2
-direction: right
-
-plan: "Plan" {shape: oval}
-verify: "Verify" {shape: rectangle}
-validate: "Validate" {shape: oval}
-
-plan -> verify
-verify -> validate
 ```
 
 ## Before you begin

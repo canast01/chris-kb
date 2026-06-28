@@ -21,19 +21,6 @@ Analytics cluster for vSphere performance, capacity, and compliance monitoring. 
 <a class="kb-card" href="design-standards/"><strong>Design Standards</strong><span>Sizing guidelines, adapter configuration, and cluster design best practices.</span></a>
 </div>
 
-```d2
-direction: right
-
-center: "Aria Operations" {shape: hexagon}
-node_roles: "Node Roles" {shape: rectangle}
-deployment_sizing: "Deployment Sizing" {shape: rectangle}
-analytics_cluster_topology: "Analytics Cluster Topology" {shape: rectangle}
-
-center -> node_roles
-center -> deployment_sizing
-center -> analytics_cluster_topology
-```
-
 ## Node Roles
 
 | Node Role | Description |

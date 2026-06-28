@@ -9,23 +9,6 @@ Dell AIOps Integration reference covering Overview, CloudIQ / SCG (Inbound Telem
 
 *Applies to: Dell AIOps*
 </div>
-![Dell AIOps Integration](../../../../assets/storage-dell-dell-aiops-integration-index.svg)
-
-
-```d2
-direction: right
-
-center: "Dell AIOps" {shape: hexagon}
-cloudiq_scg_inbound_telemetry: "CloudIQ / SCG (Inbound Telemetry)" {shape: rectangle}
-siem_integration: "SIEM Integration" {shape: rectangle}
-integration_summary: "Integration Summary" {shape: rectangle}
-integration_health_checks: "Integration Health Checks" {shape: rectangle}
-
-center -> cloudiq_scg_inbound_telemetry
-center -> siem_integration
-center -> integration_summary
-center -> integration_health_checks
-```
 
 ## Overview
 
@@ -34,7 +17,6 @@ Dell AIOps is integrated into the broader operational toolchain via CloudIQ's no
 ## CloudIQ / SCG (Inbound Telemetry)
 
 All Dell storage systems must be registered in CloudIQ via the SCG. This is the prerequisite for all AIOps capabilities — without SCG-connected telemetry, AIOps has no data source.
-
 
 ## SIEM Integration
 

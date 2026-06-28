@@ -5,15 +5,11 @@ tags:
 ---
 # Ceph — Scripts
 
-
-
 <div class="kb-summary">
 Operational scripts for Ceph: daily health check, OSD replacement workflow, capacity report, cluster health snapshot, OSD utilization report, and RBD snapshot rotation.
 
 *Applies to: Ceph Reef / Squid*
 </div>
-![Ceph — Scripts](../../../../assets/storage-ceph-operations-scripts-index.svg)
-
 
 ```mermaid
 graph LR
@@ -34,25 +30,6 @@ graph LR
     UR --> O2[exit 0 = all within bounds<br/>exit 1 = OSD over threshold]:::out
     RS --> O3[creates daily snap<br/>removes snaps older than 7 days]:::out
     SS --> O4[/tmp/ceph-snapshot-DATE.txt<br/>full cluster state dump]:::out
-```
-
-```d2
-direction: right
-
-center: "Ceph" {shape: rectangle}
-cephhealthchecksh: "ceph-health-check.sh" {shape: rectangle}
-osdreplacesh: "osd-replace.sh" {shape: rectangle}
-capacityreportsh: "capacity-report.sh" {shape: rectangle}
-cephhealthsnapshotsh: "ceph-health-snapshot.sh" {shape: rectangle}
-osdutilizationreportsh: "osd-utilization-report.sh" {shape: rectangle}
-rbdsnapshotrotatesh: "rbd-snapshot-rotate.sh" {shape: rectangle}
-
-center -> cephhealthchecksh
-center -> osdreplacesh
-center -> capacityreportsh
-center -> cephhealthsnapshotsh
-center -> osdutilizationreportsh
-center -> rbdsnapshotrotatesh
 ```
 
 ## Before you begin

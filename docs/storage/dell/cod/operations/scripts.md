@@ -6,7 +6,6 @@ tags:
 # Dell COD Scripts
 ![Dell COD Scripts](../../../../assets/storage-dell-cod-operations-scripts.svg)
 
-
 ```bash
 #!/bin/bash
 # cod_capacity_report.sh — Report COD activated vs. reserve capacity on a PowerMax array
@@ -439,15 +438,6 @@ fi
 
 echo "COD_HEALTH SID=${SID} total_tb=${TOTAL} used_tb=${USED} avail_tb=${AVAIL} pct_used=${PCT}% status=${STATUS}"
 exit $EXIT
-```
-
-```d2
-direction: right
-
-hub: "Cloud On Demand\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

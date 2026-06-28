@@ -4,16 +4,11 @@ tags:
 ---
 # Virtualization Inventory
 
-
 <div class="kb-summary">
 Inventory references for clusters, hosts, datastores, networks, management tools, and versions.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Virtualization Inventory](../../../../assets/virtualization-vmware-reference-inventory-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-5">
 

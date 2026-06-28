@@ -4,33 +4,11 @@ tags:
 ---
 # Maintenance Window Closeout
 
-
 <div class="kb-summary">
 Maintenance Window Closeout reference covering Overview, Closeout Sequence, Closeout Checklist, Deferred Task Handling, Debrief and Lessons Learned and 1 more sections.
 
 *Applies to: ServiceNow*
 </div>
-![Maintenance Window Closeout](../../../../assets/itsm-servicenow-maintenance-windows-closeout-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "ServiceNow" {shape: hexagon}
-closeout_sequence: "Closeout Sequence" {shape: rectangle}
-closeout_checklist: "Closeout Checklist" {shape: rectangle}
-deferred_task_handling: "Deferred Task Handling" {shape: rectangle}
-debrief_and_lessons_learned: "Debrief and Lessons Learned" {shape: rectangle}
-monitoring_reinstatement: "Monitoring Reinstatement" {shape: rectangle}
-
-center -> closeout_sequence
-center -> closeout_checklist
-center -> deferred_task_handling
-center -> debrief_and_lessons_learned
-center -> monitoring_reinstatement
-```
 
 ## Overview
 

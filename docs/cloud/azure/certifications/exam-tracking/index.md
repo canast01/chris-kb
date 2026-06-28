@@ -5,33 +5,9 @@ tags:
 ---
 # Azure Exam Tracking
 
-
 <div class="kb-summary">
 Azure Exam Tracking reference covering Certification Path Overview, Exam Structure — AZ-900 (Fundamentals), Exam Structure — AZ-104 (Administrator), Exam Structure — AZ-305 (Architect), Scheduling and Retake Policy and 2 more sections.
 </div>
-![Azure Exam Tracking](../../../../assets/cloud-azure-certifications-exam-tracking-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-certification_path_overview: "Certification Path Overview" {shape: rectangle}
-exam_structure_az900_fundamentals: "Exam Structure — AZ-900 (Fundamentals)" {shape: rectangle}
-exam_structure_az104_administrator: "Exam Structure — AZ-104 (Administrator)" {shape: rectangle}
-exam_structure_az305_architect: "Exam Structure — AZ-305 (Architect)" {shape: rectangle}
-scheduling_and_retake_policy: "Scheduling and Retake Policy" {shape: rectangle}
-attempt_log: "Attempt Log" {shape: rectangle}
-
-center -> certification_path_overview
-center -> exam_structure_az900_fundamentals
-center -> exam_structure_az104_administrator
-center -> exam_structure_az305_architect
-center -> scheduling_and_retake_policy
-center -> attempt_log
-```
 
 ## Certification Path Overview
 

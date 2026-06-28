@@ -12,10 +12,6 @@ Veeam diagnostic commands: check job status and session history with PowerShell,
 
 *Applies to: Veeam Backup & Replication 12.x*
 </div>
-![Veeam — Diagnostics](../../../../assets/backup-veeam-troubleshooting-diagnostics-index.svg)
-
-
-
 
 ```mermaid
 graph TD

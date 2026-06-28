@@ -4,14 +4,11 @@ tags:
 ---
 # NetApp Keystone Lifecycle
 
-
 <div class="kb-summary">
 NetApp Keystone Lifecycle reference covering Subscription Terms and Renewal, True-Up Process, Hardware Refresh, Collector Lifecycle, Subscription Exit and Migration.
 
 *Applies to: Keystone STaaS*
 </div>
-![NetApp Keystone Lifecycle](../../../../assets/storage-netapp-keystone-lifecycle-index.svg)
-
 
 ```d2
 direction: right
@@ -49,7 +46,6 @@ The Keystone Collector reports consumption telemetry continuously. NetApp aggreg
 
 - **Committed capacity charge**: flat monthly rate for the contracted committed capacity per tier
 - **Burst charge**: per-TB rate (higher than committed rate) applied to any usage above committed capacity during the billing period
-
 
 ### Collector VM OS Maintenance
 

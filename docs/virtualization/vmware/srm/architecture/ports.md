@@ -16,28 +16,6 @@ Firewall port reference for VMware Site Recovery Manager (SRM) and vSphere Repli
 </div>
 ![SRM — Ports and Network Requirements](../../../../assets/virtualization-vmware-srm-architecture-ports.svg)
 
-
-
-
-```d2
-direction: right
-
-center: "Site Recovery Manager" {shape: hexagon}
-inbound_client_to_srm_server_both_si: "Inbound — Client to SRM Server (Both Sites)" {shape: rectangle}
-srm_server_within_site: "SRM Server Within Site" {shape: rectangle}
-srm_server_intersite_cross_the_wan_f: "SRM Server — Inter-Site (Cross the WAN Firewall)" {shape: rectangle}
-vsphere_replication_appliance_vr_wit: "vSphere Replication Appliance (VR) — Within Site" {shape: rectangle}
-vsphere_replication_appliance_vr_int: "vSphere Replication Appliance (VR) — Inter-Site (Cross the W" {shape: rectangle}
-vsphere_replication_data_traffic_esx: "vSphere Replication Data Traffic (ESXi to ESXi — Cross the W" {shape: rectangle}
-
-center -> inbound_client_to_srm_server_both_si
-center -> srm_server_within_site
-center -> srm_server_intersite_cross_the_wan_f
-center -> vsphere_replication_appliance_vr_wit
-center -> vsphere_replication_appliance_vr_int
-center -> vsphere_replication_data_traffic_esx
-```
-
 ## Before you begin
 
 - SRM requires firewall rules at two layers: within each site (SRM to vCenter) and across the inter-site link

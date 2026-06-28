@@ -4,8 +4,6 @@ tags:
   - operations
 ---
 # SRDF/A — Health Checks
-![SRDF/A — Health Checks](../../../../assets/storage-dell-srdf-a-operations-health-checks.svg)
-
 
 ```bash
 # Show cycle state and lag for all devices in group 20
@@ -20,18 +18,6 @@ symrdf -g 20 -type A query -detail | grep -E "Lag|Cycle Age"
 # Compare lag against SLA threshold (example: alert if > 60 seconds)
 LAG=$(symrdf -g 20 -type A query -detail | grep "Lag" | awk '{print $NF}')
 echo "Current lag: ${LAG} seconds"
-```
-
-
-```d2
-direction: right
-
-hub: "SRDF/A\nOperations" {shape: hexagon}
-run_this_routine: "Run This Routine" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> run_this_routine
-hub -> verify
 ```
 
 ## Before you begin

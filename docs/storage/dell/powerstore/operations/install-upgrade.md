@@ -5,31 +5,12 @@ tags:
 ---
 # PowerStore — Install & Upgrade
 
-
 <div class="kb-summary">
 Install & Upgrade reference covering Initial Setup, Software Upgrade, Appliance Lifecycle.
 
 *Applies to: PowerStore 3.x*
 </div>
 ![PowerStore — Install & Upgrade](../../../../assets/storage-dell-powerstore-operations-install-upgrade.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "PowerStore\nOperations" {shape: hexagon}
-initial_setup: "Initial Setup" {shape: rectangle}
-software_upgrade: "Software Upgrade" {shape: rectangle}
-appliance_lifecycle: "Appliance Lifecycle" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> initial_setup
-hub -> software_upgrade
-hub -> appliance_lifecycle
-hub -> verify
-```
 
 ## Before you begin
 

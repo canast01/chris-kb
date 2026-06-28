@@ -5,16 +5,11 @@ tags:
 ---
 # Terraform — Operations
 
-
-
 <div class="kb-summary">
 Terraform day-to-day operations — plan/apply workflows, state management, workspace operations, and provider configuration.
 
 *Applies to: Terraform 1.x*
 </div>
-![Terraform — Operations](../../../assets/automation-terraform-operations-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

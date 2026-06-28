@@ -5,7 +5,6 @@ tags:
 ---
 # FlashArray — Install & Upgrade
 
-
 <div class="kb-summary">
 Install & Upgrade reference covering Purity Version Matrix, Upgrade Paths, Refresh Planning, EOL Tracking.
 
@@ -13,25 +12,7 @@ Install & Upgrade reference covering Purity Version Matrix, Upgrade Paths, Refre
 </div>
 ![FlashArray — Install & Upgrade](../../../../assets/storage-pure-flasharray-operations-install-upgrade.svg)
 
-
 ![FlashArray — Install & Upgrade — Diagram](../../../../assets/storage-pure-flasharray-operations-install-upgrade-diagram.svg)
-
-```d2
-direction: right
-
-hub: "FlashArray\nOperations" {shape: hexagon}
-purity_version_matrix: "Purity Version Matrix" {shape: rectangle}
-upgrade_paths: "Upgrade Paths" {shape: rectangle}
-refresh_planning: "Refresh Planning" {shape: rectangle}
-eol_tracking: "EOL Tracking" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> purity_version_matrix
-hub -> upgrade_paths
-hub -> refresh_planning
-hub -> eol_tracking
-hub -> verify
-```
 
 ## Before you begin
 

@@ -5,16 +5,11 @@ tags:
 ---
 # GitHub Actions — Security
 
-
-
 <div class="kb-summary">
 Workflow secrets management, OIDC token auth, permission scoping, branch protection, and GitHub Actions runner hardening.
 
 *Applies to: GitHub Actions*
 </div>
-![GitHub Actions — Security](../../../assets/automation-github-actions-security-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

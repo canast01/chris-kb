@@ -12,10 +12,6 @@ Step-by-step guide to installing Jira Data Center, configuring the database conn
 
 *Applies to: Jira 9.x / Cloud*
 </div>
-![Jira — Initial Deployment](../../../assets/itsm-jira-deploy-index.svg)
-
-
-
 
 ```mermaid
 flowchart TD
@@ -63,8 +59,6 @@ configure_user_authentication_ldapss -> validate
 - **Logging:** record every IP address, hostname, and credential set assigned during this deployment
 
 ---
-
-
 
 ## Prerequisites
 

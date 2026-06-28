@@ -4,33 +4,11 @@ tags:
 ---
 # Asset Cleanup and Decommission
 
-
 <div class="kb-summary">
 Asset Cleanup and Decommission reference covering Overview, Decommission Workflow, Data Wiping Standards, Dependency Verification Checklist, Physical Asset Disposal and 1 more sections.
 
 *Applies to: ServiceNow*
 </div>
-![Asset Cleanup and Decommission](../../../../assets/itsm-servicenow-asset-inventory-cleanup-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "ServiceNow" {shape: hexagon}
-decommission_workflow: "Decommission Workflow" {shape: rectangle}
-data_wiping_standards: "Data Wiping Standards" {shape: rectangle}
-dependency_verification_checklist: "Dependency Verification Checklist" {shape: rectangle}
-physical_asset_disposal: "Physical Asset Disposal" {shape: rectangle}
-cmdb_record_updates: "CMDB Record Updates" {shape: rectangle}
-
-center -> decommission_workflow
-center -> data_wiping_standards
-center -> dependency_verification_checklist
-center -> physical_asset_disposal
-center -> cmdb_record_updates
-```
 
 ## Overview
 

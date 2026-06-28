@@ -5,35 +5,12 @@ tags:
 ---
 # Dell ECS — Integrations
 
-
 <div class="kb-summary">
 Integrations reference covering S3 Client Integration, Veeam Object Repository, Commvault Integration, NetBackup Integration, HDFS Integration and 4 more sections.
 
 *Applies to: ECS 3.x*
 </div>
 ![Dell ECS — Integrations](../../../../assets/storage-dell-ecs-architecture-integrations.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "ECS" {shape: hexagon}
-s3_client_integration: "S3 Client Integration" {shape: rectangle}
-veeam_object_repository: "Veeam Object Repository" {shape: rectangle}
-commvault_integration: "Commvault Integration" {shape: rectangle}
-netbackup_integration: "NetBackup Integration" {shape: rectangle}
-hdfs_integration: "HDFS Integration" {shape: rectangle}
-metadata_search_integration: "Metadata Search Integration" {shape: rectangle}
-
-center -> s3_client_integration
-center -> veeam_object_repository
-center -> commvault_integration
-center -> netbackup_integration
-center -> hdfs_integration
-center -> metadata_search_integration
-```
 
 ## S3 Client Integration
 

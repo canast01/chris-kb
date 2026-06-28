@@ -9,10 +9,6 @@ OCP upgrade channels, EUS (Extended Update Support) path, version lifecycle, upg
 
 *Applies to: OpenShift 4.x*
 </div>
-![OpenShift — Install & Upgrade](../../../../assets/virtualization-openshift-operations-install-upgrade-index.svg)
-
-
-
 
 ```d2
 direction: right

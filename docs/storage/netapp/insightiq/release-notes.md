@@ -10,19 +10,6 @@ Version history and release notes for NetApp InsightIQ.
 
 ![Release Notes](../../../assets/insightiq-release-notes.svg)
 
-```d2
-direction: right
-
-center: "InsightIQ" {shape: hexagon}
-version_history: "Version History" {shape: rectangle}
-key_terminology: "Key Terminology" {shape: rectangle}
-upgrade_path: "Upgrade Path" {shape: rectangle}
-
-center -> version_history
-center -> key_terminology
-center -> upgrade_path
-```
-
 ## Version History
 
 | Version | Released | Summary | Notes |

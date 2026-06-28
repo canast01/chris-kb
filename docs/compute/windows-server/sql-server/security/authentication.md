@@ -12,30 +12,6 @@ SQL Server authentication — Windows vs Mixed Mode, service account configurati
 </div>
 ![SQL Server — Authentication](../../../../assets/compute-windows-server-sql-server-security-authentication.svg)
 
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-authentication_modes: "Authentication Modes" {shape: rectangle}
-windows_authentication_logins: "Windows Authentication Logins" {shape: rectangle}
-sql_authentication: "SQL Authentication" {shape: rectangle}
-service_account_configuration: "Service Account Configuration" {shape: rectangle}
-password_policy: "Password Policy" {shape: rectangle}
-auditing_authentication_events: "Auditing Authentication Events" {shape: rectangle}
-core: "SQL Server Core" {shape: hexagon}
-
-external -> authentication_modes: traffic in
-authentication_modes -> windows_authentication_logins
-windows_authentication_logins -> sql_authentication
-sql_authentication -> service_account_configuration
-service_account_configuration -> password_policy
-password_policy -> auditing_authentication_events
-auditing_authentication_events -> core: secured path
-```
-
 ## Before you begin
 
 - **Access:** Local Administrator or Domain Admin on target hosts

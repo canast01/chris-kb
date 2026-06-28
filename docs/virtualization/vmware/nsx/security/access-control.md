@@ -8,7 +8,6 @@ tags:
 # NSX — Access Control
 ![NSX — Access Control](../../../../assets/virtualization-vmware-nsx-security-access-control.svg)
 
-
 ```bash
 # List all role bindings (users and groups with assigned roles)
 curl -sk -u 'admin:password' \
@@ -86,21 +85,6 @@ foreach ($g in $groups) {
     Write-Host "=== $g ==="
     $members | ForEach-Object { Write-Host "  $($_.SamAccountName)" }
 }
-```
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-perimeter_controls: "Perimeter Controls" {shape: rectangle}
-identity_access: "Identity & Access" {shape: rectangle}
-audit_logging: "Audit & Logging" {shape: rectangle}
-core: "NSX-T Core" {shape: hexagon}
-
-external -> perimeter_controls: traffic in
-perimeter_controls -> identity_access
-identity_access -> audit_logging
-audit_logging -> core: secured path
 ```
 
 ## Before you begin

@@ -7,10 +7,6 @@ tags:
 <div class="kb-summary">
 Step-by-step DR runbooks for failover, failback, and full DR activation. Each runbook includes activation criteria, backup schedule verification, pre-checks, phased procedures, communication trees, and validation checklists. Verify that retention-compliant backups exist before committing to failover or failback.
 </div>
-![DR Runbooks](../../../assets/backup-dr-operations-runbooks-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

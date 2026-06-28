@@ -5,34 +5,11 @@ tags:
 ---
 # Ansible — Access Control
 
-
 <div class="kb-summary">
 Ansible access control: SSH key management, service account scoping, sudo privilege restriction, and RBAC controls for AWX/Automation Controller job templates.
 
 *Applies to: Ansible 2.14+*
 </div>
-![Ansible — Access Control](../../../../assets/automation-ansible-security-access-control-index.svg)
-
-
-```d2
-direction: down
-
-root: "Ansible\nAccess Control" {shape: hexagon}
-awx_aap_rbac_model: "AWX / AAP RBAC Model" {shape: rectangle}
-inventory_access_controls: "Inventory Access Controls" {shape: rectangle}
-credential_isolation: "Credential Isolation" {shape: rectangle}
-audit_and_compliance: "Audit and Compliance" {shape: rectangle}
-resources: Protected Resources {shape: cylinder}
-
-root -> awx_aap_rbac_model: role
-awx_aap_rbac_model -> resources: scoped
-root -> inventory_access_controls: role
-inventory_access_controls -> resources: scoped
-root -> credential_isolation: role
-credential_isolation -> resources: scoped
-root -> audit_and_compliance: role
-audit_and_compliance -> resources: scoped
-```
 
 ## Before you begin
 
@@ -57,7 +34,6 @@ graph TD
     ORG --> JT[Job Templates]
     USER --> ROLE[Role Assignment\nAdmin / Execute / Use / Read]
 ```
-
 
 ### Sudoers — Scope Privilege Escalation
 

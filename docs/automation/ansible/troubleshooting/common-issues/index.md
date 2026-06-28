@@ -7,14 +7,11 @@ search:
 ---
 # Ansible — Common Issues
 
-
 <div class="kb-summary">
 Ansible troubleshooting: unreachable hosts, privilege escalation failures, variable precedence conflicts, vault decryption errors, and module compatibility issues.
 
 *Applies to: Ansible 2.14+*
 </div>
-![Ansible — Common Issues](../../../../assets/automation-ansible-troubleshooting-common-issues-index.svg)
-
 
 ---
 
@@ -99,7 +96,6 @@ flowchart TD
     checkModule -->|No| installCol["ansible-galaxy collection install\n<namespace.collection>"]
     checkModule -->|Yes| resolved["Examine task output\n& register debug"]
 ```
-
 
 ## Common Module Errors
 

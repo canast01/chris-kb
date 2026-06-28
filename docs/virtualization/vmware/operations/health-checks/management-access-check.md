@@ -4,15 +4,11 @@ tags:
 ---
 # Management Access Check
 
-
 <div class="kb-summary">
 Run this check weekly to confirm all management endpoints are reachable and access controls are healthy.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Management Access Check](../../../../assets/virtualization-vmware-operations-health-checks-management-ac.svg)
-
-
 
 Checks to perform in vCenter UI:
 - [ ] vCenter SSO Health: Administration → Single Sign On → Diagnostics → Diagnostic Site Connectivity

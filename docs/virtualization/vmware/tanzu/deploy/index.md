@@ -13,13 +13,8 @@ End-to-end deployment guide for VMware Tanzu Kubernetes Grid on vSphere. Covers 
 
 *Applies to: Tanzu 3.x*
 </div>
-![Tanzu — Deploy](../../../../assets/virtualization-vmware-tanzu-deploy-index.svg)
-
-
-
 
 ---
-
 
 ```mermaid
 flowchart TD

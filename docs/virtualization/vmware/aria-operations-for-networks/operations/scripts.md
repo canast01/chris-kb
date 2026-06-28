@@ -7,7 +7,6 @@ tags:
 # vRNI Scripts
 ![vRNI Scripts](../../../../assets/virtualization-vmware-aria-operations-for-networks-operation.svg)
 
-
 ```python
 #!/usr/bin/env python3
 import requests, json, csv
@@ -154,15 +153,6 @@ def main():
         sys.exit(1)
 
 main()
-```
-
-```d2
-direction: right
-
-hub: "Aria Operations for Networks\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

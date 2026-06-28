@@ -7,16 +7,11 @@ search:
 ---
 # Host Disconnected / Not Responding
 
-
 <div class="kb-summary">
 Diagnosing ESXi hosts showing disconnected or not responding in vCenter — management network failures, HA isolation, hostd/vpxa agent issues, and reconnect procedures.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Host Disconnected / Not Responding](../../../../assets/virtualization-vmware-operations-troubleshooting-host-discon.svg)
-
-
-
 
 ---
 

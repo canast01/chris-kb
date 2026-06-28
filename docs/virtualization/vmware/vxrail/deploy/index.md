@@ -13,13 +13,8 @@ End-to-end deployment guide for a new VxRail cluster. Covers pre-deployment read
 
 *Applies to: VxRail 7.x / 8.x*
 </div>
-![VxRail — Deploy](../../../../assets/virtualization-vmware-vxrail-deploy-index.svg)
-
-
-
 
 ---
-
 
 ```mermaid
 flowchart TD

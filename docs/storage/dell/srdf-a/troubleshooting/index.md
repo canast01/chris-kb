@@ -7,16 +7,11 @@ search:
 ---
 # SRDF/A — Troubleshooting
 
-
-
 <div class="kb-summary">
 Diagnosing SRDF/A cycle failures, delta set overflow, link errors, and async RPO violations.
 
 *Applies to: SRDF/A*
 </div>
-![SRDF/A — Troubleshooting](../../../../assets/storage-dell-srdf-a-troubleshooting-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

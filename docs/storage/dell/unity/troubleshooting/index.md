@@ -12,9 +12,6 @@ Diagnosing Unity replication failures, host connectivity issues, LUN/share provi
 
 *Applies to: Unity XT*
 </div>
-![Unity — Troubleshooting](../../../../assets/storage-dell-unity-troubleshooting-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

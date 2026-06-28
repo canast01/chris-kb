@@ -6,31 +6,12 @@ tags:
 ---
 # Aria Ops for Logs — Encryption
 
-
 <div class="kb-summary">
 Encryption reference covering TLS Certificate Replacement, Verifying Certificate Validity, Log Ingestion Transport Encryption, Data at Rest Encryption, TLS Configuration Hardening.
 
 *Applies to: Aria Logs 8.x*
 </div>
 ![Aria Ops for Logs — Encryption](../../../../assets/virtualization-vmware-aria-operations-for-logs-security-encr.svg)
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-tls_certificate_replacement: "TLS Certificate Replacement" {shape: rectangle}
-log_ingestion_transport_encryption: "Log Ingestion Transport Encryption" {shape: rectangle}
-data_at_rest_encryption: "Data at Rest Encryption" {shape: rectangle}
-tls_configuration_hardening: "TLS Configuration Hardening" {shape: rectangle}
-core: "Aria Operations for Logs Core" {shape: hexagon}
-
-external -> tls_certificate_replacement: traffic in
-tls_certificate_replacement -> log_ingestion_transport_encryption
-log_ingestion_transport_encryption -> data_at_rest_encryption
-data_at_rest_encryption -> tls_configuration_hardening
-tls_configuration_hardening -> core: secured path
-```
 
 ## Before you begin
 
@@ -46,7 +27,6 @@ tls_configuration_hardening -> core: secured path
 Aria Operations for Logs ships with a self-signed certificate. Replace it with a CA-signed certificate for production before connecting any syslog sources or users.
 
 **Via UI:**
-
 
 ---
 

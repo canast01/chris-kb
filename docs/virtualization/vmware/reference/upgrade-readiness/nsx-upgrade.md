@@ -6,16 +6,11 @@ tags:
 ---
 # NSX Upgrade Readiness Checklist
 
-
 <div class="kb-summary">
 NSX Upgrade Readiness Checklist reference covering Current State, Target Version, Pre-Upgrade Checks, Upgrade Process Overview, Post-Upgrade Validation.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![NSX Upgrade Readiness Checklist](../../../../assets/virtualization-vmware-reference-upgrade-readiness-nsx-upgrad.svg)
-
-
-
 
 ```d2
 direction: right

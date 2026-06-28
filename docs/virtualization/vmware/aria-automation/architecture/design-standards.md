@@ -6,34 +6,12 @@ tags:
 ---
 # Aria Automation — Standards
 
-
 <div class="kb-summary">
 Standards reference covering Naming Conventions, Build Baseline, Configuration Checklist, Blueprint / Template Standards, Project Standards and 1 more sections.
 
 *Applies to: Aria Automation 8.x*
 </div>
 ![Aria Automation — Standards](../../../../assets/virtualization-vmware-aria-automation-architecture-design-st.svg)
-
-
-
-```d2
-direction: right
-
-center: "Aria Automation" {shape: hexagon}
-naming_conventions: "Naming Conventions" {shape: rectangle}
-build_baseline: "Build Baseline" {shape: rectangle}
-configuration_checklist: "Configuration Checklist" {shape: rectangle}
-blueprint_template_standards: "Blueprint / Template Standards" {shape: rectangle}
-project_standards: "Project Standards" {shape: rectangle}
-related_sections: "Related Sections" {shape: rectangle}
-
-center -> naming_conventions
-center -> build_baseline
-center -> configuration_checklist
-center -> blueprint_template_standards
-center -> project_standards
-center -> related_sections
-```
 
 ## Naming Conventions
 

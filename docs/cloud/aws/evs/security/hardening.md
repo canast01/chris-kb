@@ -12,30 +12,6 @@ EVS hardening: NSX-T micro-segmentation default deny, VPC security groups, AWS V
 </div>
 ![Amazon EVS — Hardening](../../../../assets/cloud-aws-evs-security-hardening.svg)
 
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-nsxt_microsegmentation: "NSX-T Micro-segmentation" {shape: rectangle}
-vpc_security_group_hardening: "VPC Security Group Hardening" {shape: rectangle}
-esxi_hardening: "ESXi Hardening" {shape: rectangle}
-sddc_manager_and_vcenter_hardening: "SDDC Manager and vCenter Hardening" {shape: rectangle}
-compliance_and_audit: "Compliance and Audit" {shape: rectangle}
-cis_vcf_hardening_checklist: "CIS VCF Hardening Checklist" {shape: rectangle}
-core: "AWS EVS Core" {shape: hexagon}
-
-external -> nsxt_microsegmentation: traffic in
-nsxt_microsegmentation -> vpc_security_group_hardening
-vpc_security_group_hardening -> esxi_hardening
-esxi_hardening -> sddc_manager_and_vcenter_hardening
-sddc_manager_and_vcenter_hardening -> compliance_and_audit
-compliance_and_audit -> cis_vcf_hardening_checklist
-cis_vcf_hardening_checklist -> core: secured path
-```
-
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

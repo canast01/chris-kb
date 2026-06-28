@@ -9,10 +9,6 @@ Brocade Fabric OS knowledge base covering switch architecture, zoning, ISLs, por
 
 *Applies to: Brocade FOS 9.x*
 </div>
-![Brocade Fabric OS](../../../assets/san-brocade-fabric-os-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-2">
 
@@ -44,15 +40,6 @@ Brocade Fabric OS knowledge base covering switch architecture, zoning, ISLs, por
 </div>
 
 ---
-
-```d2
-direction: right
-
-center: "Brocade Fabric OS" {shape: hexagon}
-platform_summary: "Platform Summary" {shape: rectangle}
-
-center -> platform_summary
-```
 
 ## Platform Summary
 

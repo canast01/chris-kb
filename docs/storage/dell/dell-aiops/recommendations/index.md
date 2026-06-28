@@ -4,25 +4,11 @@ tags:
 ---
 # Dell AIOps: Actionable Recommendations and Implementation Tracking
 
-
 <div class="kb-summary">
 Dell AIOps: Actionable Recommendations and Implementation Tracking reference covering Implementing Recommendations, Implementation Tracking Dashboard, Firmware Recommendation Workflow, Common Recommendation Issues.
 
 *Applies to: Dell AIOps*
 </div>
-![Dell AIOps: Actionable Recommendations and Implementation Tracking](../../../../assets/storage-dell-dell-aiops-recommendations-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Dell AIOps" {shape: hexagon}
-common_recommendation_issues: "Common Recommendation Issues" {shape: rectangle}
-
-center -> common_recommendation_issues
-```
 
 ## Common Recommendation Issues
 

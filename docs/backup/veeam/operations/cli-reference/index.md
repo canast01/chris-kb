@@ -5,33 +5,11 @@ tags:
 ---
 # Veeam — CLI Reference
 
-
 <div class="kb-summary">
 CLI Reference reference covering Backup Infrastructure Topology, Sessions & History, Restore Points, VM Restore, Infrastructure and 1 more sections.
 
 *Applies to: Veeam 12.x*
 </div>
-![Veeam — CLI Reference](../../../../assets/backup-veeam-operations-cli-reference-index.svg)
-
-
-```d2
-direction: right
-
-center: "Veeam" {shape: rectangle}
-backup_infrastructure_topology: "Backup Infrastructure Topology" {shape: rectangle}
-restore_points: "Restore Points" {shape: rectangle}
-vm_restore: "VM Restore" {shape: rectangle}
-infrastructure: "Infrastructure" {shape: rectangle}
-configuration_backup: "Configuration Backup" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> backup_infrastructure_topology
-center -> restore_points
-center -> vm_restore
-center -> infrastructure
-center -> configuration_backup
-center -> verify
-```
 
 ## Before you begin
 
@@ -84,7 +62,6 @@ flowchart TD
     class vcenter host
     class obj cloud
 ```
-
 
 ---
 

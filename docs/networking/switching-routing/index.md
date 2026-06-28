@@ -3,8 +3,6 @@ tags:
   - networking
 ---
 # Networking — Switching & Routing
-![Networking — Switching & Routing](../../assets/networking-switching-routing-index.svg)
-
 
 ```bash
 show vlan brief

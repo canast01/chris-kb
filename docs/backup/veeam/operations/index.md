@@ -5,16 +5,11 @@ tags:
 ---
 # Veeam — Operations
 
-
-
 <div class="kb-summary">
 Veeam day-to-day operations — backup job management, restore procedures, scale-out repository, and immutability settings.
 
 *Applies to: Veeam 12.x*
 </div>
-![Veeam — Operations](../../../assets/backup-veeam-operations-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 
@@ -57,21 +52,6 @@ Veeam day-to-day operations — backup job management, restore procedures, scale
 </div>
 
 ---
-
-```d2
-direction: right
-
-hub: "Veeam\nOperations" {shape: hexagon}
-routine_checks: "Routine Checks" {shape: rectangle}
-configuration: "Configuration" {shape: rectangle}
-monitoring: "Monitoring" {shape: rectangle}
-maintenance: "Maintenance" {shape: rectangle}
-
-hub -> routine_checks
-hub -> configuration
-hub -> monitoring
-hub -> maintenance
-```
 
 ## See also
 

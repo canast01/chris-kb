@@ -12,10 +12,6 @@ CyberArk PAM support escalation: how to run the DiagnosticTool, collect componen
 
 *Applies to: CyberArk PAM (Self-Hosted) 12.x / 13.x*
 </div>
-![CyberArk — Escalation](../../../../assets/security-cyberark-troubleshooting-escalation-index.svg)
-
-
-
 
 ```plantuml
 @startuml

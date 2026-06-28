@@ -7,16 +7,11 @@ search:
 ---
 # Jira — Troubleshooting
 
-
-
 <div class="kb-summary">
 Diagnosing Jira performance issues, workflow errors, index corruption, mail handler failures, and integration problems.
 
 *Applies to: Jira 9.x / Cloud*
 </div>
-![Jira — Troubleshooting](../../../assets/itsm-jira-troubleshooting-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

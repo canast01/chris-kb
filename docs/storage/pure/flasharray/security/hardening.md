@@ -5,7 +5,6 @@ tags:
 ---
 # FlashArray — Hardening
 
-
 <div class="kb-summary">
 Hardening reference covering Hardening Checklist, Step-by-Step Controls, Post-Hardening Verification.
 
@@ -13,29 +12,11 @@ Hardening reference covering Hardening Checklist, Step-by-Step Controls, Post-Ha
 </div>
 ![FlashArray — Hardening](../../../../assets/storage-pure-flasharray-security-hardening.svg)
 
-
-
-
 ![FlashArray — Hardening — Diagram](../../../../assets/storage-pure-flasharray-security-hardening-diagram.svg)
 
 This page covers the ordered hardening steps to apply on every new FlashArray before it enters production, along with the rationale and CLI commands for each control. Apply these steps after initial network and identity configuration and before connecting any production hosts.
 
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-hardening_checklist: "Hardening Checklist" {shape: rectangle}
-stepbystep_controls: "Step-by-Step Controls" {shape: rectangle}
-posthardening_verification: "Post-Hardening Verification" {shape: rectangle}
-core: "FlashArray Core" {shape: hexagon}
-
-external -> hardening_checklist: traffic in
-hardening_checklist -> stepbystep_controls
-stepbystep_controls -> posthardening_verification
-posthardening_verification -> core: secured path
-```
 
 ## Before you begin
 

@@ -14,33 +14,9 @@ to capture the intended new state.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Host Profile Compliance Drift](../../../../assets/virtualization-vmware-topics-scenarios-host-profile-complian.svg)
-
-
-
-
 
 !!! warning "Hosts reboot during remediation"
     Applying a host profile that changes kernel parameters or drivers requires a host reboot. Ensure DRS can evacuate each host before remediation begins.
-
-```d2
-direction: right
-
-center: "Scenarios" {shape: hexagon}
-products_involved: "Products Involved" {shape: rectangle}
-1_run_the_compliance_report: "1. Run the Compliance Report" {shape: rectangle}
-2_identify_common_drift_categories: "2. Identify Common Drift Categories" {shape: rectangle}
-3a_accidental_drift_apply_the_host_p: "3a. Accidental Drift — Apply the Host Profile" {shape: rectangle}
-3b_intentional_drift_update_the_host: "3b. Intentional Drift — Update the Host Profile" {shape: rectangle}
-4_recheck_and_validate: "4. Re-Check and Validate" {shape: rectangle}
-
-center -> products_involved
-center -> 1_run_the_compliance_report
-center -> 2_identify_common_drift_categories
-center -> 3a_accidental_drift_apply_the_host_p
-center -> 3b_intentional_drift_update_the_host
-center -> 4_recheck_and_validate
-```
 
 ## Products Involved
 

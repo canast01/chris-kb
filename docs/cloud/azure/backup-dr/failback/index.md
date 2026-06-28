@@ -4,39 +4,15 @@ tags:
 ---
 # Failback
 
-
 <div class="kb-summary">
 Failback is the process of returning protected workloads from the DR (recovery) region back to the primary region after a failover event.
 
 *Applies to: Azure*
 </div>
-![Failback](../../../../assets/cloud-azure-backup-dr-failback-index.svg)
-
-
-
 
  In Azure Site Recovery, failback consists of re-protecting the DR VM, running a planned failover toward the primary, then committing and re-enabling replication.
 
 ---
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-asr_failover_and_failback_flow: "ASR Failover and Failback Flow" {shape: rectangle}
-failback_prerequisites: "Failback Prerequisites" {shape: rectangle}
-phase_1_reprotect_reverse_replicatio: "Phase 1 — Re-Protect (Reverse Replication)" {shape: rectangle}
-phase_2_validate_replication_health_: "Phase 2 — Validate Replication Health Before Failback" {shape: rectangle}
-phase_3_planned_failover_back_to_pri: "Phase 3 — Planned Failover (Back to Primary)" {shape: rectangle}
-phase_4_commit_failback: "Phase 4 — Commit Failback" {shape: rectangle}
-
-center -> asr_failover_and_failback_flow
-center -> failback_prerequisites
-center -> phase_1_reprotect_reverse_replicatio
-center -> phase_2_validate_replication_health_
-center -> phase_3_planned_failover_back_to_pri
-center -> phase_4_commit_failback
-```
 
 ## ASR Failover and Failback Flow
 

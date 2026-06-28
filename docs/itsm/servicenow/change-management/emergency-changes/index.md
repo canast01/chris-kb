@@ -9,7 +9,4 @@ Emergency change process — expedited approval path for urgent production fixes
 
 *Applies to: ServiceNow*
 </div>
-![ServiceNow — Emergency Changes](../../../../assets/itsm-servicenow-change-management-emergency-changes-index.svg)
-
-
 

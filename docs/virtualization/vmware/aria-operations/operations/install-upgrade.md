@@ -7,23 +7,6 @@ tags:
 # Aria Operations Install & Upgrade
 ![Aria Operations Install & Upgrade](../../../../assets/virtualization-vmware-aria-operations-operations-install-upg.svg)
 
-
-
-
-
-```d2
-direction: right
-
-hub: "Aria Operations\nOperations" {shape: hexagon}
-backup: "Backup" {shape: rectangle}
-eol_tracking: "EOL Tracking" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> backup
-hub -> eol_tracking
-hub -> verify
-```
-
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps

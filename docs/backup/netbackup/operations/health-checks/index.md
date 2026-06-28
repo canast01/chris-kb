@@ -5,16 +5,11 @@ tags:
 ---
 # NetBackup — Health Checks
 
-
 <div class="kb-summary">
 Health Checks reference covering Daily Check Flow, Daily Checklist, Job Monitoring, Validation.
 
 *Applies to: NetBackup 10.x*
 </div>
-![NetBackup — Health Checks](../../../../assets/backup-netbackup-operations-health-checks-index.svg)
-
-
-
 
 ```d2
 direction: right
@@ -93,8 +88,6 @@ Run these commands on the NetBackup Primary Server each morning for a complete h
     Or check Admin Console → Host Properties → License Keys.
 
 ## Daily Check Flow
-
-
 
 ## Daily Checklist
 

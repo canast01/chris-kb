@@ -4,34 +4,11 @@ tags:
 ---
 # TLS Certificates
 
-
 <div class="kb-summary">
 A TLS certificate is a signed X.509 document that binds a public key to an identity (hostname, IP, or service).
 </div>
-![TLS Certificates](../../../../assets/networking-protocols-tls-certificates-index.svg)
-
-
 
 The certificate allows clients to verify they are talking to the correct server and to establish encrypted sessions.
-
-```d2
-direction: right
-
-center: "TLS" {shape: hexagon}
-certificate_components: "Certificate Components" {shape: rectangle}
-certificate_types: "Certificate Types" {shape: rectangle}
-reading_a_certificate: "Reading a Certificate" {shape: rectangle}
-generating_a_csr: "Generating a CSR" {shape: rectangle}
-certificate_formats: "Certificate Formats" {shape: rectangle}
-key_sizes_and_algorithms: "Key Sizes and Algorithms" {shape: rectangle}
-
-center -> certificate_components
-center -> certificate_types
-center -> reading_a_certificate
-center -> generating_a_csr
-center -> certificate_formats
-center -> key_sizes_and_algorithms
-```
 
 ## Certificate Components
 

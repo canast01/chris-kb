@@ -5,16 +5,11 @@ tags:
 ---
 # NetApp SnapMirror — Security
 
-
 <div class="kb-summary">
 NetApp SnapMirror — Security reference: Authentication, Access Control, Encryption, Hardening.
 
 *Applies to: SnapMirror*
 </div>
-![NetApp SnapMirror — Security](../../../../assets/storage-netapp-snapmirror-security-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="authentication/"><strong>Authentication</strong><span>SSO, LDAP, local accounts, and identity sources.</span></a>

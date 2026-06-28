@@ -4,16 +4,11 @@ tags:
 ---
 # VMware Certificate Renewal Runbook
 
-
 <div class="kb-summary">
 VMware Certificate Renewal Runbook reference covering Identify the Expiring Certificate, Confirm Affected Products, Capture Current Certificate Details, Confirm Backup Exists, Schedule Maintenance Window and 4 more sections.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![VMware Certificate Renewal Runbook](../../../../assets/virtualization-vmware-operations-runbooks-certificate-renewa.svg)
-
-
-
 
 Only restart services after confirming the new certificate is applied.
 

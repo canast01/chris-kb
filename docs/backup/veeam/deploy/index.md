@@ -37,17 +37,12 @@ create_first_backup_job -> validate
 ---
 
 # Veeam — Initial Deployment
-![Veeam — Initial Deployment](../../../assets/backup-veeam-deploy-index.svg)
-
 
 This guide walks through deploying Veeam Backup & Replication from bare metal to a
 fully operational backup environment. Steps cover server installation, infrastructure
 onboarding, proxy and repository configuration, and first-job validation.
 
-
-
 ---
-
 
 ```mermaid
 flowchart TD

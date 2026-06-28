@@ -4,35 +4,11 @@ tags:
 ---
 # Snapshot Performance Impact
 
-
 <div class="kb-summary">
 Snapshots are a write-redirect mechanism — they do not freeze data, they redirect writes to a delta disk. This has measurable performance and operational consequences.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Snapshot Performance Impact](../../../../assets/virtualization-vmware-topics-snapshot-impact-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Snapshot Impact" {shape: hexagon}
-how_snapshots_work: "How Snapshots Work" {shape: rectangle}
-performance_impact_by_chain_depth: "Performance Impact by Chain Depth" {shape: rectangle}
-detecting_snapshot_issues: "Detecting Snapshot Issues" {shape: rectangle}
-consolidation_warnings: "Consolidation Warnings" {shape: rectangle}
-esxtop_identifying_snapshot_latency: "esxtop — Identifying Snapshot Latency" {shape: rectangle}
-backupinduced_snapshots: "Backup-Induced Snapshots" {shape: rectangle}
-
-center -> how_snapshots_work
-center -> performance_impact_by_chain_depth
-center -> detecting_snapshot_issues
-center -> consolidation_warnings
-center -> esxtop_identifying_snapshot_latency
-center -> backupinduced_snapshots
-```
 
 ```vegalite
 {

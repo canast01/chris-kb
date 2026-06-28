@@ -6,29 +6,11 @@ tags:
 ---
 # Monitoring Dashboard Standards
 
-
 <div class="kb-summary">
 Monitoring Dashboard Standards reference covering Grafana — Dashboard as Code, Validation Checklist, Dashboard Review Cadence.
 
 *Applies to: Aria Ops 8.x*
 </div>
-![Monitoring Dashboard Standards](../../../../assets/virtualization-vmware-aria-operations-operations-dashboard-s.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "Aria Operations\nOperations" {shape: hexagon}
-validation_checklist: "Validation Checklist" {shape: rectangle}
-dashboard_review_cadence: "Dashboard Review Cadence" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> validation_checklist
-hub -> dashboard_review_cadence
-hub -> verify
-```
 
 ## Before you begin
 

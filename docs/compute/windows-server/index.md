@@ -9,13 +9,6 @@ Windows Server 2019/2022/2025 infrastructure — Active Directory DS, DNS, SMB f
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
-![Windows Server](../../assets/compute-windows-server-index.svg)
-
-
-
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

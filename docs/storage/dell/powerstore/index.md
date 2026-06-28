@@ -9,10 +9,6 @@ Mid-range all-flash platform with active-active dual-node appliance architecture
 
 *Applies to: PowerStore 3.x*
 </div>
-![PowerStore](../../../assets/storage-dell-powerstore-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

@@ -5,7 +5,6 @@ tags:
 ---
 # FabricOS — Procedures
 
-
 <div class="kb-summary">
 FabricOS procedures: `switchshow`, `fabricshow`, zone configuration with `cfgadd`/`cfgsave`/`cfgenable`, ISL management, and port enable/disable.
 
@@ -13,25 +12,6 @@ FabricOS procedures: `switchshow`, `fabricshow`, zone configuration with `cfgadd
 </div>
 
 ---
-
-```d2
-direction: right
-
-hub: "Brocade Fabric OS\nOperations" {shape: hexagon}
-zoning_workflow: "Zoning Workflow" {shape: rectangle}
-add_a_new_switch_to_an_existing_fabr: "Add a New Switch to an Existing Fabric" {shape: rectangle}
-create_a_zone_and_zone_configuration: "Create a Zone and Zone Configuration" {shape: rectangle}
-add_a_member_to_an_existing_zone: "Add a Member to an Existing Zone" {shape: rectangle}
-remove_a_zone_member: "Remove a Zone Member" {shape: rectangle}
-replace_a_failed_sfp: "Replace a Failed SFP" {shape: rectangle}
-
-hub -> zoning_workflow
-hub -> add_a_new_switch_to_an_existing_fabr
-hub -> create_a_zone_and_zone_configuration
-hub -> add_a_member_to_an_existing_zone
-hub -> remove_a_zone_member
-hub -> replace_a_failed_sfp
-```
 
 ## Before you begin
 
@@ -59,7 +39,6 @@ flowchart TD
     style done fill:#15803d,color:#fff
     style start fill:#2563eb,color:#fff
 ```
-
 
 ### Create Aliases
 

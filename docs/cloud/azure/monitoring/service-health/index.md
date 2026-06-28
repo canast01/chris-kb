@@ -4,35 +4,11 @@ tags:
 ---
 # Service Health
 
-
 <div class="kb-summary">
 Azure Service Health provides personalised alerts and guidance for Azure service issues, planned maintenance, and health advisories that affect the services and regions you use. It combines three views: Service Issues, Planned Maintenance, and Health Advisories.
 
 *Applies to: Azure*
 </div>
-![Service Health](../../../../assets/cloud-azure-monitoring-service-health-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-service_health_alert_flow: "Service Health Alert Flow" {shape: rectangle}
-service_health_components: "Service Health Components" {shape: rectangle}
-querying_service_health_events: "Querying Service Health Events" {shape: rectangle}
-creating_service_health_alerts: "Creating Service Health Alerts" {shape: rectangle}
-resource_health_states: "Resource Health States" {shape: rectangle}
-planned_maintenance_queries: "Planned Maintenance Queries" {shape: rectangle}
-
-center -> service_health_alert_flow
-center -> service_health_components
-center -> querying_service_health_events
-center -> creating_service_health_alerts
-center -> resource_health_states
-center -> planned_maintenance_queries
-```
 
 ## Service Health Alert Flow
 

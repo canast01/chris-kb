@@ -5,16 +5,11 @@ tags:
 ---
 # Ansible — Operations
 
-
-
 <div class="kb-summary">
 Ansible — Operations reference: Health Checks, Procedures, CLI Reference, Install & Upgrade, and 2 more.
 
 *Applies to: Ansible 2.14+*
 </div>
-![Ansible — Operations](../../../assets/automation-ansible-operations-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="health-checks/"><strong>Health Checks</strong><span>Routine checks, service validation, and status verification.</span></a>

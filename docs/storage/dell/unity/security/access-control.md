@@ -5,37 +5,12 @@ tags:
 ---
 # Unity — Access Control
 
-
 <div class="kb-summary">
 Access Control reference covering Role-Based Access Control (RBAC), Local User Management, LDAP and Active Directory Group Mapping, iSCSI CHAP Authentication, NFS Export Access Control and 4 more sections.
 
 *Applies to: Unity XT*
 </div>
 ![Unity — Access Control](../../../../assets/storage-dell-unity-security-access-control.svg)
-
-
-
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-rolebased_access_control_rbac: "Role-Based Access Control (RBAC)" {shape: rectangle}
-local_user_management: "Local User Management" {shape: rectangle}
-ldap_and_active_directory_group_mapp: "LDAP and Active Directory Group Mapping" {shape: rectangle}
-iscsi_chap_authentication: "iSCSI CHAP Authentication" {shape: rectangle}
-nfs_export_access_control: "NFS Export Access Control" {shape: rectangle}
-smb_share_permissions: "SMB Share Permissions" {shape: rectangle}
-core: "Unity XT Core" {shape: hexagon}
-
-external -> rolebased_access_control_rbac: traffic in
-rolebased_access_control_rbac -> local_user_management
-local_user_management -> ldap_and_active_directory_group_mapp
-ldap_and_active_directory_group_mapp -> iscsi_chap_authentication
-iscsi_chap_authentication -> nfs_export_access_control
-nfs_export_access_control -> smb_share_permissions
-smb_share_permissions -> core: secured path
-```
 
 ## Before you begin
 

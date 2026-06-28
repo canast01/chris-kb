@@ -11,25 +11,7 @@ Common questions about VMware Horizon operations, configuration, and troubleshoo
 </div>
 ![VMware Horizon — Frequently Asked Questions](../../../../assets/virtualization-vmware-horizon-operations-faq.svg)
 
-
 ![VMware Horizon FAQ](../../../../assets/virtualization-vmware-horizon-operations-faq.svg)
-
-```d2
-direction: right
-
-hub: "Horizon\nOperations" {shape: hexagon}
-general: "General" {shape: rectangle}
-configuration: "Configuration" {shape: rectangle}
-operations: "Operations" {shape: rectangle}
-troubleshooting: "Troubleshooting" {shape: rectangle}
-backup_and_recovery: "Backup and Recovery" {shape: rectangle}
-
-hub -> general
-hub -> configuration
-hub -> operations
-hub -> troubleshooting
-hub -> backup_and_recovery
-```
 
 ## General
 

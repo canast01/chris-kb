@@ -9,10 +9,6 @@ Dell Flex on Demand — consumption-based capacity metering on PowerMax, PowerSt
 
 *Applies to: Dell FOD*
 </div>
-![Dell Flex on Demand](../../../assets/storage-dell-fod-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="architecture/"><strong>Architecture</strong><span>How it works, integrations, and design standards.</span></a>

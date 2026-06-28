@@ -3,19 +3,8 @@ tags:
   - servicenow
 ---
 # Inventory — Environment Mapping
-![Inventory — Environment Mapping](../../../../assets/itsm-servicenow-asset-inventory-environment-mapping-index.svg)
-
 
 ```markdown
-
-```d2
-direction: right
-
-center: "ServiceNow" {shape: hexagon}
-application_payments_api: "Application: Payments API" {shape: rectangle}
-
-center -> application_payments_api
-```
 
 ## Application: Payments API
 

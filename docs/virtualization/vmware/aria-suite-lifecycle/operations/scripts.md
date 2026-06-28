@@ -6,7 +6,6 @@ tags:
 ---
 # Aria Suite Lifecycle — Scripts
 
-
 <div class="kb-summary">
 Scripts reference covering Pre-Upgrade Disk Check, Environment Health Summary, Bulk Locker Password Export (Alias List), NTP Validation Across All Product Nodes, Trigger Upgrade via API (Non-Interactive).
 
@@ -14,27 +13,9 @@ Scripts reference covering Pre-Upgrade Disk Check, Environment Health Summary, B
 </div>
 ![Aria Suite Lifecycle — Scripts](../../../../assets/virtualization-vmware-aria-suite-lifecycle-operations-script.svg)
 
-
   LCM Automation Scripts
 
 ---
-
-```d2
-direction: right
-
-hub: "Aria Suite Lifecycle\nOperations" {shape: hexagon}
-environment_health_summary: "Environment Health Summary" {shape: rectangle}
-bulk_locker_password_export_alias_li: "Bulk Locker Password Export (Alias List)" {shape: rectangle}
-ntp_validation_across_all_product_no: "NTP Validation Across All Product Nodes" {shape: rectangle}
-trigger_upgrade_via_api_noninteracti: "Trigger Upgrade via API (Non-Interactive)" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> environment_health_summary
-hub -> bulk_locker_password_export_alias_li
-hub -> ntp_validation_across_all_product_no
-hub -> trigger_upgrade_via_api_noninteracti
-hub -> verify
-```
 
 ## Before you begin
 

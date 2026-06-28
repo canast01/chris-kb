@@ -11,11 +11,6 @@ Aria Operations daily operations — policy management, alert tuning, dashboard 
 
 *Applies to: Aria Ops 8.x*
 </div>
-![Aria Operations — Operations](../../../../assets/virtualization-vmware-aria-operations-operations-index.svg)
-
-
-
-
 
 <div class="kb-grid kb-grid-3">
 
@@ -87,19 +82,6 @@ Aria Operations daily operations — policy management, alert tuning, dashboard 
 
   <a class="kb-card" href="faq/"><strong>FAQ</strong><span>Frequently asked questions, common issues, and quick answers for day-to-day operations.</span></a>
 </div>
-
-```d2
-direction: right
-
-hub: "Aria Operations\nOperations" {shape: hexagon}
-daily_checklist: "Daily Checklist" {shape: rectangle}
-alert_triage_workflow: "Alert Triage Workflow" {shape: rectangle}
-monthly_tasks: "Monthly Tasks" {shape: rectangle}
-
-hub -> daily_checklist
-hub -> alert_triage_workflow
-hub -> monthly_tasks
-```
 
 ## Daily Checklist
 

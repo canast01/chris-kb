@@ -5,14 +5,11 @@ tags:
 ---
 # Windows Server — Encryption
 
-
 <div class="kb-summary">
 BitLocker with AD key escrow, Network Unlock, TLS hardening, EFS, and SMB signing.
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
-![Windows Server — Encryption](../../../../assets/compute-windows-server-security-encryption-index.svg)
-
 
 ```d2
 direction: down
@@ -74,7 +71,6 @@ flowchart TD
     vmkRelease --> fvekDecrypt --> driveUnlocked
     recoveryPrompt --> adEscrow --> driveUnlocked
 ```
-
 
 ### Enable BitLocker on Data Drives
 

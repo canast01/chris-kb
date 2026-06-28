@@ -5,16 +5,11 @@ tags:
 ---
 # Azure — Authentication
 
-
 <div class="kb-summary">
 Azure authentication is managed through Microsoft Entra ID (formerly Azure Active Directory). All Azure resource access, API calls, and administrative actions authenticate through Entra ID.
 
 *Applies to: Azure*
 </div>
-![Azure — Authentication](../../../../assets/cloud-azure-security-authentication-index.svg)
-
-
-
 
 ---
 

@@ -5,25 +5,11 @@ tags:
 ---
 # Windows Server — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Overview, Editions and Installation Types, Role Topology.
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
-![Windows Server — How It Works](../../../../assets/compute-windows-server-architecture-how-it-works-index.svg)
-
-
-```d2
-direction: right
-
-center: "Windows Server" {shape: hexagon}
-editions_and_installation_types: "Editions and Installation Types" {shape: rectangle}
-role_topology: "Role Topology" {shape: rectangle}
-
-center -> editions_and_installation_types
-center -> role_topology
-```
 
 ## Overview
 
@@ -57,7 +43,6 @@ graph TB
   class AD,DNS_R,FS,IIS,WSUS,SEC mgmt
   class ADMIN host
 ```
-
 
 ---
 

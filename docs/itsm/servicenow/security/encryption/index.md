@@ -4,8 +4,6 @@ tags:
   - servicenow
 ---
 # ServiceNow Encryption
-![ServiceNow Encryption](../../../../assets/itsm-servicenow-security-encryption-index.svg)
-
 
 ```javascript
 // Verify TLS certificate validation is enforced for outbound calls

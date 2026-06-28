@@ -4,31 +4,9 @@ tags:
 ---
 # NFS Mounts
 
-
 <div class="kb-summary">
 NFS Mounts reference covering Overview, Manual Mounts, /etc/fstab Options, Mount Option Reference, Automount with autofs and 1 more sections.
 </div>
-![NFS Mounts](../../../../assets/networking-protocols-nfs-mounts-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "NFS" {shape: hexagon}
-manual_mounts: "Manual Mounts" {shape: rectangle}
-etcfstab_options: "/etc/fstab Options" {shape: rectangle}
-mount_option_reference: "Mount Option Reference" {shape: rectangle}
-automount_with_autofs: "Automount with autofs" {shape: rectangle}
-known_issues: "Known Issues" {shape: rectangle}
-
-center -> manual_mounts
-center -> etcfstab_options
-center -> mount_option_reference
-center -> automount_with_autofs
-center -> known_issues
-```
 
 ## Overview
 

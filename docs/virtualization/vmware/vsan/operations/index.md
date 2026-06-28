@@ -14,10 +14,6 @@ Day-to-day operational reference for VMware vSAN. Covers CLI commands, health ch
 
 *Applies to: vSAN 7.x / 8.x*
 </div>
-![vSAN — Operations](../../../../assets/virtualization-vmware-vsan-operations-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

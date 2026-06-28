@@ -9,10 +9,6 @@ Purpose-built backup appliance — inline global deduplication, DDBoost, MTree r
 
 *Applies to: Data Domain DD OS 7.x*
 </div>
-![Dell Data Domain](../../../assets/storage-dell-data-domain-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

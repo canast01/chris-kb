@@ -7,7 +7,6 @@ tags:
 # vRNI Install & Upgrade
 ![vRNI Install & Upgrade](../../../../assets/virtualization-vmware-aria-operations-for-networks-operation.svg)
 
-
 ```bash
 # Check HTTPS is reachable
 curl -sk https://aon-platform.example.local -o /dev/null -w "HTTP %{http_code}\n"
@@ -75,15 +74,6 @@ Get-VM "aon-platform-01" | Get-Snapshot -Name "Pre-Upgrade-6.14.0" | Set-VM -Sna
 # If not, re-pair manually:
 ssh ubuntu@aon-collector-dc1.example.local
 sudo /home/ubuntu/support/pairing.sh
-```
-
-```d2
-direction: right
-
-hub: "Aria Operations for Networks\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

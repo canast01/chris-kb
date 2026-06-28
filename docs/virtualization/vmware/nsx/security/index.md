@@ -12,10 +12,6 @@ Security reference for VMware NSX. Covers NSX Manager authentication, role-based
 
 *Applies to: NSX-T 3.x / NSX 4.x*
 </div>
-![NSX — Security](../../../../assets/virtualization-vmware-nsx-security-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-3">
 

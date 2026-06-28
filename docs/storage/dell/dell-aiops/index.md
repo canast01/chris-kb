@@ -9,10 +9,6 @@ Dell AIOps monitoring platform — architecture, anomaly detection, recommendati
 
 *Applies to: Dell AIOps*
 </div>
-![Dell AIOps](../../../assets/storage-dell-dell-aiops-index.svg)
-
-
-
 
 <div class="kb-grid kb-grid-5">
 <a class="kb-card" href="architecture/"><strong>Architecture</strong><span>Deployment topology, SCG integration, and data ingestion pipeline from Dell arrays.</span></a>

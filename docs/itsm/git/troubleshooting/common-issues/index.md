@@ -6,8 +6,6 @@ search:
   boost: 1.5
 ---
 # Git — Common Issues
-![Git — Common Issues](../../../../assets/itsm-git-troubleshooting-common-issues-index.svg)
-
 
 ```bash
 # See which files are conflicted

@@ -4,31 +4,10 @@ tags:
   - vmware
 ---
 # vSphere Security — Encryption, Identity, and VM Hardening
-![vSphere Security — Encryption, Identity, and VM Hardening](../../../../assets/virtualization-vmware-internals-vsphere-security-index.svg)
-
 
 vSphere security covers a wide range of features from encrypting VM data at rest and in flight, to attestation of ESXi host integrity, to locking down administrative access. This page covers the security features tested on the VCP-DCV 8 exam — including VM Encryption, vSphere Trust Authority, vTPM, VBS, identity federation, lockdown mode, and Secure Boot.
 
 ---
-
-```d2
-direction: right
-
-center: "Vsphere Security" {shape: hexagon}
-vm_encryption: "VM Encryption" {shape: rectangle}
-vsphere_trust_authority_vta: "vSphere Trust Authority (vTA)" {shape: rectangle}
-key_management_key_rotation_and_life: "Key Management — Key Rotation and Lifecycle" {shape: rectangle}
-virtual_trusted_platform_module_vtpm: "Virtual Trusted Platform Module (vTPM)" {shape: rectangle}
-bios_vs_uefi_firmware: "BIOS vs UEFI Firmware" {shape: rectangle}
-virtualizationbased_security_vbs: "Virtualization-Based Security (VBS)" {shape: rectangle}
-
-center -> vm_encryption
-center -> vsphere_trust_authority_vta
-center -> key_management_key_rotation_and_life
-center -> virtual_trusted_platform_module_vtpm
-center -> bios_vs_uefi_firmware
-center -> virtualizationbased_security_vbs
-```
 
 ## VM Encryption
 
@@ -106,8 +85,6 @@ vSphere Trust Authority (introduced in vSphere 7.0) provides a way to attest the
 ### Architecture
 
 vTA uses two separate clusters:
-
-
 
 ### When to Use vTA
 
@@ -414,8 +391,6 @@ esxcli software vib list --rebooting-image | awk '{print $1, $5}'
 ---
 
 ## Security Architecture Summary
-
-
 
 ---
 

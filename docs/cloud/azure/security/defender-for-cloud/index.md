@@ -5,37 +5,13 @@ tags:
 ---
 # Defender for Cloud
 
-
 <div class="kb-summary">
 Microsoft Defender for Cloud (formerly Security Center / Azure Defender) is a cloud security posture management (CSPM) and cloud workload protection platform (CWPP).
 
 *Applies to: Azure*
 </div>
-![Defender for Cloud](../../../../assets/cloud-azure-security-defender-for-cloud-index.svg)
-
-
-
 
  It provides security recommendations, threat protection, regulatory compliance assessment, and attack path analysis.
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-defender_for_cloud_coverage: "Defender for Cloud Coverage" {shape: rectangle}
-security_posture_overview: "Security Posture Overview" {shape: rectangle}
-defender_plans: "Defender Plans" {shape: rectangle}
-defender_plans_by_resource_type: "Defender Plans by Resource Type" {shape: rectangle}
-recommendations_and_remediation: "Recommendations and Remediation" {shape: rectangle}
-regulatory_compliance: "Regulatory Compliance" {shape: rectangle}
-
-center -> defender_for_cloud_coverage
-center -> security_posture_overview
-center -> defender_plans
-center -> defender_plans_by_resource_type
-center -> recommendations_and_remediation
-center -> regulatory_compliance
-```
 
 ## Before you begin
 

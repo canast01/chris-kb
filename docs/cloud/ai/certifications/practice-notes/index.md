@@ -4,33 +4,9 @@ tags:
 ---
 # AI Practice Notes
 
-
 <div class="kb-summary">
 AI Practice Notes reference covering Question Pattern Recognition, Common Wrong Answers to Avoid, Exam Domain Breakdown — AWS Certified AI Practitioner (AIF-C01), Key Terminology Distinctions, Scoring and Exam Strategy and 2 more sections.
 </div>
-![AI Practice Notes](../../../../assets/cloud-ai-certifications-practice-notes-index.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Practice Notes" {shape: hexagon}
-question_pattern_recognition: "Question Pattern Recognition" {shape: rectangle}
-common_wrong_answers_to_avoid: "Common Wrong Answers to Avoid" {shape: rectangle}
-exam_domain_breakdown_aws_certified_: "Exam Domain Breakdown — AWS Certified AI Practitioner (AIF-C" {shape: rectangle}
-key_terminology_distinctions: "Key Terminology Distinctions" {shape: rectangle}
-scoring_and_exam_strategy: "Scoring and Exam Strategy" {shape: rectangle}
-service_boundary_quick_reference: "Service Boundary Quick Reference" {shape: rectangle}
-
-center -> question_pattern_recognition
-center -> common_wrong_answers_to_avoid
-center -> exam_domain_breakdown_aws_certified_
-center -> key_terminology_distinctions
-center -> scoring_and_exam_strategy
-center -> service_boundary_quick_reference
-```
 
 ## Question Pattern Recognition
 

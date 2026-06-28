@@ -5,15 +5,11 @@ tags:
 ---
 # Commvault — Authentication
 
-
 <div class="kb-summary">
 Authentication reference covering Two-Factor Authentication, CyberArk Integration, Related Reference.
 
 *Applies to: Commvault 2024.x*
 </div>
-![Commvault — Authentication](../../../../assets/backup-commvault-security-authentication-index.svg)
-
-
 
 ```plantuml
 @startuml

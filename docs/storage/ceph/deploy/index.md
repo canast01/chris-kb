@@ -14,9 +14,6 @@ Ceph deployment with cephadm: bootstrap on first node, add MONs and OSDs, create
 
 *Applies to: Ceph Reef / Squid*
 </div>
-![Ceph — Deploy](../../../assets/storage-ceph-deploy-index.svg)
-
-
 
 ```d2
 direction: right

@@ -6,7 +6,6 @@ tags:
 ---
 # Tanzu — Encryption
 
-
 <div class="kb-summary">
 Encryption reference covering Kubernetes Secrets Encryption at Rest, TLS for All Kubernetes API Communication, vSAN Encryption for Persistent Volumes, Image Content Trust (Cosign), External Secrets (Vault Integration) and 1 more sections.
 
@@ -14,31 +13,7 @@ Encryption reference covering Kubernetes Secrets Encryption at Rest, TLS for All
 </div>
 ![Tanzu — Encryption](../../../../assets/virtualization-vmware-tanzu-security-encryption.svg)
 
-
-
-
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-kubernetes_secrets_encryption_at_res: "Kubernetes Secrets Encryption at Rest" {shape: rectangle}
-tls_for_all_kubernetes_api_communica: "TLS for All Kubernetes API Communication" {shape: rectangle}
-vsan_encryption_for_persistent_volum: "vSAN Encryption for Persistent Volumes" {shape: rectangle}
-image_content_trust_cosign: "Image Content Trust (Cosign)" {shape: rectangle}
-external_secrets_vault_integration: "External Secrets (Vault Integration)" {shape: rectangle}
-rbac_to_restrict_secret_access: "RBAC to Restrict Secret Access" {shape: rectangle}
-core: "Tanzu Core" {shape: hexagon}
-
-external -> kubernetes_secrets_encryption_at_res: traffic in
-kubernetes_secrets_encryption_at_res -> tls_for_all_kubernetes_api_communica
-tls_for_all_kubernetes_api_communica -> vsan_encryption_for_persistent_volum
-vsan_encryption_for_persistent_volum -> image_content_trust_cosign
-image_content_trust_cosign -> external_secrets_vault_integration
-external_secrets_vault_integration -> rbac_to_restrict_secret_access
-rbac_to_restrict_secret_access -> core: secured path
-```
 
 ## Before you begin
 

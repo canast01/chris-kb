@@ -5,35 +5,12 @@ tags:
 ---
 # PowerPath — Scripts
 
-
 <div class="kb-summary">
 Scripts reference covering Path Health Check, Path Count Validator, Policy Audit, Windows: PowerPath Device Status via Plink (CMD), Windows: PowerPath Check on Local Windows Host (CMD) and 5 more sections.
 
 *Applies to: PowerPath*
 </div>
 ![PowerPath — Scripts](../../../../assets/storage-dell-powerpath-operations-scripts.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "PowerPath\nOperations" {shape: hexagon}
-path_health_check: "Path Health Check" {shape: rectangle}
-path_count_validator: "Path Count Validator" {shape: rectangle}
-policy_audit: "Policy Audit" {shape: rectangle}
-windows_powerpath_device_status_via_: "Windows: PowerPath Device Status via Plink (CMD)" {shape: rectangle}
-windows_powerpath_check_on_local_win: "Windows: PowerPath Check on Local Windows Host (CMD)" {shape: rectangle}
-daily_check_script: "Daily Check Script" {shape: rectangle}
-
-hub -> path_health_check
-hub -> path_count_validator
-hub -> policy_audit
-hub -> windows_powerpath_device_status_via_
-hub -> windows_powerpath_check_on_local_win
-hub -> daily_check_script
-```
 
 ## Before you begin
 

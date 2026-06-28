@@ -5,35 +5,13 @@ tags:
 ---
 # Pure Storage Evergreen//One Security
 
-
 <div class="kb-summary">
 Pure Storage Evergreen//One Security reference covering Hardening Checklist, RBAC, Encryption, Audit Logging, Subscription Security — Pure-Managed Responsibilities.
 
 *Applies to: Evergreen//One*
 </div>
-![Pure Storage Evergreen//One Security](../../../../assets/storage-pure-evergreen-one-security-index.svg)
-
 
 ![Pure Storage Evergreen//One Security — Diagram](../../../../assets/storage-pure-evergreen-one-security-diagram.svg)
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-hardening_checklist: "Hardening Checklist" {shape: rectangle}
-rbac: "RBAC" {shape: rectangle}
-encryption: "Encryption" {shape: rectangle}
-audit_logging: "Audit Logging" {shape: rectangle}
-subscription_security_puremanaged_re: "Subscription Security — Pure-Managed Responsibilities" {shape: rectangle}
-core: "Evergreen//One Core" {shape: hexagon}
-
-external -> hardening_checklist: traffic in
-hardening_checklist -> rbac
-rbac -> encryption
-encryption -> audit_logging
-audit_logging -> subscription_security_puremanaged_re
-subscription_security_puremanaged_re -> core: secured path
-```
 
 ## Before you begin
 

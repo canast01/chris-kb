@@ -10,27 +10,6 @@ Recommended reading order for VMware. Start here to build a complete mental mode
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![VMware Learning Path](../../../../assets/virtualization-vmware-topics-learning-path-index.svg)
-
-
-
-
-```d2
-direction: right
-
-stage_1_vcenter_server: "Stage 1: vCenter Server" {shape: rectangle}
-stage_2_esxi: "Stage 2: ESXi" {shape: rectangle}
-stage_3_vsan: "Stage 3: vSAN" {shape: rectangle}
-stage_4_nsx: "Stage 4: NSX" {shape: rectangle}
-stage_5_aria_suite: "Stage 5: Aria Suite" {shape: rectangle}
-stage_6_vxrail: "Stage 6: VxRail" {shape: rectangle}
-
-stage_1_vcenter_server -> stage_2_esxi: next
-stage_2_esxi -> stage_3_vsan: next
-stage_3_vsan -> stage_4_nsx: next
-stage_4_nsx -> stage_5_aria_suite: next
-stage_5_aria_suite -> stage_6_vxrail: next
-```
 
 ## Stage 1: vCenter Server
 

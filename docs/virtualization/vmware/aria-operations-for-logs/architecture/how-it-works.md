@@ -6,23 +6,12 @@ tags:
 ---
 # Aria Operations for Logs — How It Works
 
-
 <div class="kb-summary">
 How It Works reference covering Overview, Log Pipeline Architecture, ESXi Syslog Configuration.
 
 *Applies to: Aria Operations for Logs 8.x*
 </div>
 ![Aria Operations for Logs — How It Works](../../../../assets/virtualization-vmware-aria-operations-for-logs-architecture-.svg)
-
-
-```d2
-direction: right
-
-center: "Aria Operations for Logs" {shape: hexagon}
-log_pipeline_architecture: "Log Pipeline Architecture" {shape: rectangle}
-
-center -> log_pipeline_architecture
-```
 
 ```plantuml
 @startuml
@@ -67,9 +56,6 @@ graph TB
   class IDX store
   class SRC1,SRC2,SRC3,ADMIN host
 ```
-
-
-
 
 ## See also
 

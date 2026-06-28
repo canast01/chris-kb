@@ -5,7 +5,6 @@ tags:
 ---
 # APEX Storage as a Service — Access Control
 
-
 <div class="kb-summary">
 Access Control reference covering APEX Console RBAC Roles, API Token Management, SSO and SAML Integration, SCG Access Controls, General Controls.
 
@@ -13,31 +12,9 @@ Access Control reference covering APEX Console RBAC Roles, API Token Management,
 </div>
 ![APEX Storage as a Service — Access Control](../../../../assets/storage-dell-apex-storage-as-a-service-security-access-contr.svg)
 
-
-
-
 > Part of the [APEX Storage as a Service](../index.md) reference.
 
 ---
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-apex_console_rbac_roles: "APEX Console RBAC Roles" {shape: rectangle}
-api_token_management: "API Token Management" {shape: rectangle}
-sso_and_saml_integration: "SSO and SAML Integration" {shape: rectangle}
-scg_access_controls: "SCG Access Controls" {shape: rectangle}
-general_controls: "General Controls" {shape: rectangle}
-core: "APEX Storage Core" {shape: hexagon}
-
-external -> apex_console_rbac_roles: traffic in
-apex_console_rbac_roles -> api_token_management
-api_token_management -> sso_and_saml_integration
-sso_and_saml_integration -> scg_access_controls
-scg_access_controls -> general_controls
-general_controls -> core: secured path
-```
 
 ## Before you begin
 

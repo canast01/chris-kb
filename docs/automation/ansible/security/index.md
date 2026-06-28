@@ -5,16 +5,11 @@ tags:
 ---
 # Ansible — Security
 
-
-
 <div class="kb-summary">
 Ansible — Security reference: Authentication, Access Control, Encryption, Hardening.
 
 *Applies to: Ansible 2.14+*
 </div>
-![Ansible — Security](../../../assets/automation-ansible-security-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="authentication/"><strong>Authentication</strong><span>SSO, LDAP, local accounts, and identity sources.</span></a>

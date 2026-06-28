@@ -12,9 +12,6 @@ Diagnosing PowerStore replication failures, host connectivity issues, provisioni
 
 *Applies to: PowerStore 3.x*
 </div>
-![PowerStore — Troubleshooting](../../../../assets/storage-dell-powerstore-troubleshooting-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 

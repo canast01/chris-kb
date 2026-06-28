@@ -5,7 +5,6 @@ tags:
 ---
 # Dell FoD — Scripts
 
-
 <div class="kb-summary">
 Dell FoD automation scripts: PowerShell and Python examples for capacity consumption reporting, entitlement threshold alerting, and SCG health polling.
 
@@ -13,29 +12,7 @@ Dell FoD automation scripts: PowerShell and Python examples for capacity consump
 </div>
 ![Dell FoD — Scripts](../../../../assets/storage-dell-fod-operations-scripts.svg)
 
-
-
-
 ---
-
-```d2
-direction: right
-
-hub: "Flex On Demand\nOperations" {shape: hexagon}
-metered_usage_reporter: "Metered Usage Reporter" {shape: rectangle}
-burst_detection_script: "Burst Detection Script" {shape: rectangle}
-ansible_fod_audit_playbook: "Ansible FOD Audit Playbook" {shape: rectangle}
-windows_fod_license_status_via_unisp: "Windows: FOD License Status via Unisphere REST API (PowerShe" {shape: rectangle}
-daily_check_script: "Daily Check Script" {shape: rectangle}
-incident_triage_script: "Incident Triage Script" {shape: rectangle}
-
-hub -> metered_usage_reporter
-hub -> burst_detection_script
-hub -> ansible_fod_audit_playbook
-hub -> windows_fod_license_status_via_unisp
-hub -> daily_check_script
-hub -> incident_triage_script
-```
 
 ## Before you begin
 
@@ -77,13 +54,11 @@ HEADERS = {
     "Accept": "application/json",
 }
 
-
 def api_get(path, params=None):
     resp = session.get(f"{CLOUDIQ_BASE}{path}", headers=HEADERS,
                        params=params, verify=False)
     resp.raise_for_status()
     return resp.json()
-
 
 def main():
     print("=" * 70)
@@ -137,7 +112,6 @@ def main():
     print("-" * 95)
     print(f"\nSystems currently in burst: {burst_systems}")
     sys.exit(1 if burst_systems > 0 else 0)
-
 
 if __name__ == "__main__":
     main()

@@ -14,29 +14,6 @@ segment assignment, tagging, and post-provision compliance verification.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Provision a New Workload](../../../../assets/virtualization-vmware-topics-scenarios-provision-new-workloa.svg)
-
-
-
-
-```d2
-direction: right
-
-center: "Scenarios" {shape: hexagon}
-products_involved: "Products Involved" {shape: rectangle}
-1_rightsize_the_vm: "1. Right-Size the VM" {shape: rectangle}
-2_choose_the_vsan_storage_policy: "2. Choose the vSAN Storage Policy" {shape: rectangle}
-3_assign_the_nsx_network_segment: "3. Assign the NSX Network Segment" {shape: rectangle}
-4_create_the_vm: "4. Create the VM" {shape: rectangle}
-5_apply_spbm_storage_policy_to_all_d: "5. Apply SPBM Storage Policy to All Disks" {shape: rectangle}
-
-center -> products_involved
-center -> 1_rightsize_the_vm
-center -> 2_choose_the_vsan_storage_policy
-center -> 3_assign_the_nsx_network_segment
-center -> 4_create_the_vm
-center -> 5_apply_spbm_storage_policy_to_all_d
-```
 
 ## Products Involved
 

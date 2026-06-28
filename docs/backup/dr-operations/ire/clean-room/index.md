@@ -4,25 +4,9 @@ tags:
 ---
 # IRE — Clean Room
 
-
 <div class="kb-summary">
 The clean room is a verified, malware-free subset of the IRE used to analyse and validate recovered data before reintroducing it to production. Verify that backups fall within the defined retention window (30–90 days) before restoration. Nothing leaves the clean room until it has been scanned and validated.
 </div>
-![IRE — Clean Room](../../../../assets/backup-dr-operations-ire-clean-room-index.svg)
-
-
-```d2
-direction: right
-
-center: "DR Operations" {shape: hexagon}
-purpose: "Purpose" {shape: rectangle}
-clean_room_architecture: "Clean Room Architecture" {shape: rectangle}
-common_issues: "Common Issues" {shape: rectangle}
-
-center -> purpose
-center -> clean_room_architecture
-center -> common_issues
-```
 
 ## Purpose
 
@@ -45,7 +29,6 @@ graph LR
     VALIDATE -->|"Approved"| REINTRODUCE["Reintroduce to Production"]
     VALIDATE -->|"Issues found"| RESTORE
 ```
-
 
 ## Common Issues
 

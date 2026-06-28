@@ -16,29 +16,6 @@ Firewall port reference for Cisco DCNM (Data Center Network Manager). DCNM manag
 </div>
 ![Cisco DCNM — Ports and Network Requirements](../../../../assets/san-cisco-cisco-dcnm-architecture-ports.svg)
 
-
-
-
-
-```d2
-direction: right
-
-center: "Cisco DCNM" {shape: hexagon}
-inbound_admin_to_dcnm_server: "Inbound — Admin to DCNM Server" {shape: rectangle}
-dcnm_to_managed_devices: "DCNM to Managed Devices" {shape: rectangle}
-inbound_snmp_traps_from_devices: "Inbound — SNMP Traps from Devices" {shape: rectangle}
-dcnm_database: "DCNM Database" {shape: rectangle}
-firewall_zone_summary: "Firewall Zone Summary" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-center -> inbound_admin_to_dcnm_server
-center -> dcnm_to_managed_devices
-center -> inbound_snmp_traps_from_devices
-center -> dcnm_database
-center -> firewall_zone_summary
-center -> verify
-```
-
 ## Inbound — Admin to DCNM Server
 
 | Port | Protocol | Source | Purpose |

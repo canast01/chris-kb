@@ -5,14 +5,9 @@ tags:
 ---
 # Certificates — Install & Upgrade
 
-
 <div class="kb-summary">
 The certificate lifecycle spans six stages: enrolment, issuance, installation, monitoring, renewal, and revocation. Auto-renewal must be configured wherever possible (Venafi, ACME, cert-manager). Manual processes are a fallback only.
 </div>
-![Certificates — Install & Upgrade](../../../../assets/security-certificates-operations-install-upgrade-index.svg)
-
-
-
 
 ```d2
 direction: right
@@ -64,7 +59,6 @@ flowchart TD
     monitor -->|"compromise / decommission"| revoke["Revocation\n(ADCS / CA portal — immediate for key compromise)"]
     revoke --> newCert["Issue replacement certificate\non clean host with new key"]
 ```
-
 
 ---
 ## Lifecycle Overview

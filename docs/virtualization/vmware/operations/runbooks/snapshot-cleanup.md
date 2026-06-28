@@ -4,16 +4,11 @@ tags:
 ---
 # vSAN Degraded Object Runbook
 
-
 <div class="kb-summary">
 vSAN Degraded Object Runbook reference covering Confirm vSAN Health State, Identify Affected Objects, Check Failed Disks, Check Host Availability, Check Resync Status and 5 more sections.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![vSAN Degraded Object Runbook](../../../../assets/virtualization-vmware-operations-runbooks-snapshot-cleanup.svg)
-
-
-
 
 Active resync is expected after a host returns from maintenance — wait for it to complete before taking further action.
 

@@ -4,37 +4,13 @@ tags:
 ---
 # VM Scale Sets
 
-
 <div class="kb-summary">
 Azure Virtual Machine Scale Sets (VMSS) allow you to deploy and manage a group of identical, load-balanced VMs that can automatically scale in or out based on demand or a defined schedule.
 
 *Applies to: Azure*
 </div>
-![VM Scale Sets](../../../../assets/cloud-azure-compute-vm-scale-sets-index.svg)
-
-
-
 
 ---
-
-```d2
-direction: right
-
-center: "Azure" {shape: hexagon}
-vmss_autoscale_flow: "VMSS Autoscale Flow" {shape: rectangle}
-core_concepts: "Core Concepts" {shape: rectangle}
-creating_a_scale_set: "Creating a Scale Set" {shape: rectangle}
-scaling_operations: "Scaling Operations" {shape: rectangle}
-autoscale_rules: "Autoscale Rules" {shape: rectangle}
-upgrade_policies: "Upgrade Policies" {shape: rectangle}
-
-center -> vmss_autoscale_flow
-center -> core_concepts
-center -> creating_a_scale_set
-center -> scaling_operations
-center -> autoscale_rules
-center -> upgrade_policies
-```
 
 ## VMSS Autoscale Flow
 

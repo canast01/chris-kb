@@ -7,7 +7,6 @@ tags:
 # Aria Automation — Scripts Reference
 ![Aria Automation — Scripts Reference](../../../../assets/virtualization-vmware-aria-automation-operations-scripts.svg)
 
-
 ```powershell
 # Get-FailedDeployments.ps1
 # Returns all deployments that failed in the last 24 hours.
@@ -47,16 +46,6 @@ if ($Results) {
 } else {
     Write-Host "No failed deployments in the last 24 hours."
 }
-```
-
-
-```d2
-direction: right
-
-hub: "Aria Automation\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

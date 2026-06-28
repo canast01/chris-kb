@@ -7,7 +7,6 @@ tags:
 # Aria Operations for Logs — Install and Upgrade
 ![Aria Operations for Logs — Install and Upgrade](../../../../assets/virtualization-vmware-aria-operations-for-logs-operations-in.svg)
 
-
 ```bash
 # From master node — confirm all cluster members
 curl -sk -u 'admin:<password>' \
@@ -29,15 +28,6 @@ curl -sk -u 'admin:<password>' \
 curl -sk -u 'admin:<password>' \
   "https://vrli-prod-01.example.local/api/v2/cluster/stats" | \
   jq '.eventsIngested'
-```
-
-```d2
-direction: right
-
-hub: "Aria Operations for Logs\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin

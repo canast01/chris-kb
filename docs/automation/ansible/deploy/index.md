@@ -12,11 +12,6 @@ Step-by-step guide to installing Ansible, configuring inventory and SSH authenti
 
 *Applies to: Ansible 2.14+*
 </div>
-![Ansible — Environment Setup](../../../assets/automation-ansible-deploy-index.svg)
-
-
-
-
 
 ```mermaid
 flowchart TD

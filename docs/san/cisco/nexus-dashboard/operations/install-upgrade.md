@@ -6,7 +6,6 @@ tags:
 # Cisco Nexus Dashboard — Operations Install & Upgrade
 ![Cisco Nexus Dashboard — Operations Install & Upgrade](../../../../assets/san-cisco-nexus-dashboard-operations-install-upgrade.svg)
 
-
 ```bash
 # SSH to node 1 (the designated primary)
 ssh ndadmin@nd-dc1-1.corp.example.com
@@ -34,25 +33,6 @@ acs cluster add-node --node-ip 10.10.5.25 --app-ip 192.168.100.5
 # Monitor cluster expansion (takes 20-40 minutes)
 acs health
 acs nodes list
-```
-
-```d2
-direction: right
-
-hub: "Nexus Dashboard\nOperations" {shape: hexagon}
-upgrade_overview: "Upgrade Overview" {shape: rectangle}
-compatibility_matrix: "Compatibility Matrix" {shape: rectangle}
-preupgrade_checklist: "Pre-Upgrade Checklist" {shape: rectangle}
-backup_and_restore: "Backup and Restore" {shape: rectangle}
-eol_tracking: "EOL Tracking" {shape: rectangle}
-version_cadence: "Version Cadence" {shape: rectangle}
-
-hub -> upgrade_overview
-hub -> compatibility_matrix
-hub -> preupgrade_checklist
-hub -> backup_and_restore
-hub -> eol_tracking
-hub -> version_cadence
 ```
 
 ## Before you begin

@@ -5,7 +5,6 @@ tags:
 ---
 # Superna Eyeglass — Standards
 
-
 <div class="kb-summary">
 Standards reference covering SyncIQ Policy Naming, DR Readiness Score, Failover Test Frequency, Operational Standards, Policy Configuration.
 
@@ -13,20 +12,9 @@ Standards reference covering SyncIQ Policy Naming, DR Readiness Score, Failover 
 </div>
 ![Superna Eyeglass — Standards](../../../../assets/storage-netapp-superna-eyeglass-architecture-design-standard.svg)
 
-
-```d2
-direction: right
-
-center: "Superna Eyeglass" {shape: hexagon}
-synciq_policy_naming: "SyncIQ Policy Naming" {shape: rectangle}
-
-center -> synciq_policy_naming
-```
-
 ## SyncIQ Policy Naming
 
 SyncIQ policy names must be consistent between primary and DR clusters and follow the format:
-
 
 ### Viewing Policies
 

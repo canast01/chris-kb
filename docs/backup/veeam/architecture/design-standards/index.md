@@ -5,15 +5,11 @@ tags:
 ---
 # Veeam — Standards
 
-
 <div class="kb-summary">
 Standards reference covering Job Naming Convention, Retention Schedule, Backup Job Configuration Standards, Encryption Standard, Proxy Standards and 3 more sections.
 
 *Applies to: Veeam Backup & Replication 12.x*
 </div>
-![Veeam — Standards](../../../../assets/backup-veeam-architecture-design-standards-index.svg)
-
-
 
 ```d2
 direction: down
@@ -54,8 +50,6 @@ proxy_standards -> repository_standards: hardens
 SOBR capacity tier offload: configure automatic offload after 14 days → moves monthly/yearly points to object storage.
 
 ### Backup Job Types Comparison
-
-
 
 ## Backup Job Configuration Standards
 

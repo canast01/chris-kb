@@ -5,27 +5,12 @@ tags:
 ---
 # CloudIQ: Alert Types, Severity, and Notification Configuration
 
-
 <div class="kb-summary">
 CloudIQ: Alert Types, Severity, and Notification Configuration reference covering Notification Configuration, Dismissing and Acknowledging Alerts, Common Alert Issues.
 
 *Applies to: CloudIQ*
 </div>
 ![CloudIQ: Alert Types, Severity, and Notification Configuration](../../../../assets/storage-dell-cloudiq-operations-alerts.svg)
-
-
-
-
-```d2
-direction: right
-
-hub: "CloudIQ\nOperations" {shape: hexagon}
-common_alert_issues: "Common Alert Issues" {shape: rectangle}
-verify: "Verify" {shape: rectangle}
-
-hub -> common_alert_issues
-hub -> verify
-```
 
 ## Before you begin
 

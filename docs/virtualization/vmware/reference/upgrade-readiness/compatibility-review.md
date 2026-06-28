@@ -4,16 +4,11 @@ tags:
 ---
 # Compatibility Review
 
-
 <div class="kb-summary">
 Verify version compatibility across the full VMware stack before any upgrade. Upgrading out of order or with incompatible versions causes silent failures and unsupported configurations.
 
 *Applies to: vSphere 7.x / 8.x*
 </div>
-![Compatibility Review](../../../../assets/virtualization-vmware-reference-upgrade-readiness-compatibil.svg)
-
-
-
 
 ```d2
 direction: right

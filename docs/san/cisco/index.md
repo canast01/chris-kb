@@ -9,13 +9,6 @@ Cisco SAN knowledge base covering MDS switches, DCNM, and Nexus Dashboard. Inclu
 
 *Applies to: Cisco MDS · Nexus*
 </div>
-![Cisco SAN](../../assets/san-cisco-index.svg)
-
-
-
-
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="mds/"><strong>Cisco MDS</strong><span>MDS 9000 series switches — zoning, fabric configuration, CLI, health checks, and troubleshooting.</span></a>

@@ -9,10 +9,6 @@ OpenShift OAuth server, identity providers (LDAP, HTPasswd, OIDC/GitHub), token 
 
 *Applies to: OpenShift 4.x*
 </div>
-![OpenShift — Authentication](../../../../assets/virtualization-openshift-security-authentication-index.svg)
-
-
-
 
 ```mermaid
 graph LR

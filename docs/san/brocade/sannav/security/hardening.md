@@ -6,7 +6,6 @@ tags:
 # Brocade SANnav — Security Hardening
 ![Brocade SANnav — Security Hardening](../../../../assets/san-brocade-sannav-security-hardening.svg)
 
-
 ```bash
 # SSH to SANnav appliance
 ssh admin@sannav-dc1.corp.example.com
@@ -79,21 +78,6 @@ sudo vi /etc/issue.net
 sudo vi /etc/ssh/sshd_config
 # Banner /etc/issue.net
 sudo systemctl restart sshd
-```
-
-```d2
-direction: down
-
-external: External / Untrusted {shape: rectangle}
-perimeter_controls: "Perimeter Controls" {shape: rectangle}
-identity_access: "Identity & Access" {shape: rectangle}
-audit_logging: "Audit & Logging" {shape: rectangle}
-core: "SANnav Core" {shape: hexagon}
-
-external -> perimeter_controls: traffic in
-perimeter_controls -> identity_access
-identity_access -> audit_logging
-audit_logging -> core: secured path
 ```
 
 ## Before you begin

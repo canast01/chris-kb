@@ -12,10 +12,6 @@ Deploy a new Active Directory forest on Windows Server 2022 — first DC, DNS, N
 
 *Applies to: Windows Server 2019 / 2022*
 </div>
-![Active Directory — Initial Deployment](../../../../assets/compute-windows-server-active-directory-deploy-index.svg)
-
-
-
 
 ```mermaid
 flowchart TD
@@ -64,8 +60,6 @@ add_replica_domain_controllers -> validate
 - **Logging:** record every IP address, hostname, and credential set assigned during this deployment
 
 ---
-
-
 
 ---
 

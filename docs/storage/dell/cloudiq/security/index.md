@@ -10,9 +10,6 @@ CloudIQ — Security reference: Authentication, Access Control, Encryption, Hard
 
 *Applies to: CloudIQ*
 </div>
-![CloudIQ — Security](../../../../assets/storage-dell-cloudiq-security-index.svg)
-
-
 
 <div class="kb-grid kb-grid-3">
 <a class="kb-card" href="authentication/"><strong>Authentication</strong><span>SSO, LDAP, local accounts, and identity sources.</span></a>

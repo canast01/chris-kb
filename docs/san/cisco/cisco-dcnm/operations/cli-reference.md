@@ -6,7 +6,6 @@ tags:
 # Cisco DCNM — CLI Reference
 ![Cisco DCNM — CLI Reference](../../../../assets/san-cisco-cisco-dcnm-operations-cli-reference.svg)
 
-
 ```bash
 # Start all DCNM services
 /usr/local/cisco/dcm/dcnm/sbin/dcnm-server start
@@ -150,15 +149,6 @@ w = csv.DictWriter(sys.stdout, fieldnames=fields, extrasaction='ignore')
 w.writeheader()
 for s in data: w.writerow(s)
 " > switches-$(date +%Y%m%d).csv
-```
-
-```d2
-direction: right
-
-hub: "Cisco DCNM\nOperations" {shape: hexagon}
-verify: "Verify" {shape: rectangle}
-
-hub -> verify
 ```
 
 ## Before you begin
