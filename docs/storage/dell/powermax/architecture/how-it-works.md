@@ -252,84 +252,67 @@ Commonly used SYMCLI command families:
 
 ## SRDF Replication Topology — R1/R2 Groups, Director Ports, and Modes
 
-The diagram below shows a complete SRDF replication topology: the R1 (protected) array on the left, the R2 (target) array on the right, the RDF groups binding them, and how synchronous (SRDF/S) and asynchronous (SRDF/A) modes interact with the Global Cache and RA director ports at each end.
+**Part 1 — R1 site internal write path:** host I/O enters through FA directors, stages in Global Cache, and splits to either back-end NVMe (normal destage) or the RA directors (replication path).
 
-```mermaid
-flowchart LR
-    subgraph R1_SITE["Site A — R1 Protected Array (PowerMax 8500)"]
-        subgraph R1_HOST["Host I/O"]
-            H1["Production Hosts\nOracle RAC / SAP HANA\nFC 32 Gb/s"]
-        end
-        subgraph R1_FA["Front-End Directors"]
-            FA_R1["FA Director A/B\nHost FC / iSCSI ports\nMasking Views defined here"]
-        end
-        subgraph R1_CACHE["Global Cache — Site A"]
-            GC_R1["DRAM Cache\n2+ TB\nRAID-1 across directors\nAll writes stage here"]
-        end
-        subgraph R1_RA["RDF Directors — Site A"]
-            RA_R1_S["RA Director S\nRDF Group 1\nSRDF/S — Synchronous\nFC or ESCON link"]
-            RA_R1_A["RA Director A\nRDF Group 2\nSRDF/A — Asynchronous\nDelta set buffering"]
-        end
-        subgraph R1_DA["Back-End Directors"]
-            DA_R1["DA Director A/B\nNVMe drives\nRAID-5/6 protection"]
-        end
-        R1_DEV["R1 Devices (TDEVs)\nProtected volumes\nRead-write to hosts"]
-    end
+```d2
+direction: right
 
-    subgraph LINK["Inter-Site Links"]
-        LINK_S["Synchronous Link\nDedicated FC / DWDM\n< 10 ms RTT required\nNo write ACK until R2 confirms"]
-        LINK_A["Asynchronous Link\nFC or IP (GigE / 10GbE)\nAny distance tolerated\nDelta set transfer every 15–30 s"]
-    end
+hosts: Production Hosts {
+  h: Oracle RAC · SAP HANA\nFC 32 Gb/s dual-fabric {shape: rectangle}
+}
 
-    subgraph R2_SITE["Site B — R2 Target Array (PowerMax 2500 or 8500)"]
-        subgraph R2_RA["RDF Directors — Site B"]
-            RA_R2_S["RA Director S\nRDF Group 1\nReceives SRDF/S writes\nAcknowledges back to R1"]
-            RA_R2_A["RA Director A\nRDF Group 2\nReceives SRDF/A delta sets\nApplies in consistent order"]
-        end
-        subgraph R2_CACHE["Global Cache — Site B"]
-            GC_R2["DRAM Cache\nR2 write staging\nVault on power loss\nRAID-1 mirrored"]
-        end
-        subgraph R2_DA["Back-End Directors"]
-            DA_R2["DA Director A/B\nNVMe drives\nRAID-5/6 protection"]
-        end
-        R2_DEV["R2 Devices (TDEVs)\nTarget volumes\nRead-only during normal ops\nPromoted read-write on failover"]
-    end
+fa: FA Directors A/B\nHost FC · iSCSI · NVMe/FC\nMasking Views enforced here {shape: rectangle}
 
-    H1 -->|"Host write — FC"| FA_R1
-    FA_R1 --> GC_R1
-    GC_R1 --> R1_DEV
-    GC_R1 --> DA_R1
+gc: Global Cache — Site A\nDRAM 2 TB+ · RAID-1 mirrored\nAll host writes stage here first {shape: rectangle}
 
-    GC_R1 -->|"SRDF/S: write held\nuntil R2 ACK received"| RA_R1_S
-    GC_R1 -->|"SRDF/A: write ACK'd\nimmediately; delta buffered"| RA_R1_A
+ra: RDF Directors — Site A {
+  ra_s: RA Director S — RDF Group 1\nSRDF/S Synchronous\nHolds host write until R2 ACKs {shape: rectangle}
+  ra_a: RA Director A — RDF Group 2\nSRDF/A Asynchronous\nACKs host now — buffers delta set {shape: rectangle}
+}
 
-    RA_R1_S -->|"Synchronous\nRPO = 0\nHost latency += RTT"| LINK_S
-    RA_R1_A -->|"Asynchronous\nRPO ~30 s\nNo host latency impact"| LINK_A
+da: DA Directors A/B\nNVMe Flash Bays\nRAID-5/6 protection {shape: cylinder}
 
-    LINK_S --> RA_R2_S
-    LINK_A --> RA_R2_A
+hosts.h -> fa: FC host write
+fa -> gc: write to cache
+gc -> da: async destage
+gc -> ra.ra_s: SRDF/S path
+gc -> ra.ra_a: SRDF/A path
+```
 
-    RA_R2_S -->|"Confirm to R1 RA\nbefore R1 ACKs host"| GC_R2
-    RA_R2_A -->|"Apply delta set\nin order"| GC_R2
+**Part 2 — Inter-site SRDF topology:** the two RA director pairs connect over dedicated links; SRDF/S holds the host ACK until Site B confirms, SRDF/A releases the host immediately and transmits delta sets periodically.
 
-    GC_R2 --> DA_R2
-    DA_R2 --> R2_DEV
+```d2
+direction: right
 
-    classDef host fill:#1d4ed8,stroke:#1e3a8a,color:#fff
-    classDef fa fill:#15803d,stroke:#14532d,color:#fff
-    classDef cache fill:#0e7490,stroke:#155e75,color:#fff
-    classDef ra fill:#7c3aed,stroke:#5b21b6,color:#fff
-    classDef da fill:#b45309,stroke:#92400e,color:#fff
-    classDef dev fill:#374151,stroke:#1f2937,color:#fff
-    classDef link fill:#be185d,stroke:#9d174d,color:#fff
+ra1: Site A — RDF Directors {
+  s1: RA Director S\nRDF Group 1\nSRDF/S — Synchronous\nRPO = 0 {shape: rectangle}
+  a1: RA Director A\nRDF Group 2\nSRDF/A — Asynchronous\nRPO ~30 seconds {shape: rectangle}
+}
 
-    class H1 host
-    class FA_R1 fa
-    class GC_R1,GC_R2 cache
-    class RA_R1_S,RA_R1_A,RA_R2_S,RA_R2_A ra
-    class DA_R1,DA_R2 da
-    class R1_DEV,R2_DEV dev
-    class LINK_S,LINK_A link
+links: Inter-Site Links {
+  ls: Sync Link\nFC / DWDM dedicated\nMax 10 ms RTT {shape: diamond}
+  la: Async Link\nFC or IP (1 GbE / 10 GbE)\nAny distance tolerated {shape: diamond}
+}
+
+ra2: Site B — RDF Directors {
+  s2: RA Director S\nRDF Group 1\nReceives SRDF/S write\nACKs back to Site A RA {shape: rectangle}
+  a2: RA Director A\nRDF Group 2\nReceives SRDF/A delta sets\nApplies writes in order {shape: rectangle}
+}
+
+gc2: Global Cache — Site B\nDRAM · RAID-1 mirrored\nR2 write staging area {shape: rectangle}
+
+da2: DA Directors A/B\nNVMe Flash Bays\nRAID-5/6 protection {shape: cylinder}
+
+dev: R2 Devices (TDEVs)\nRead-only during normal ops\nPromoted read-write on failover {shape: rectangle}
+
+ra1.s1 -> links.ls: SRDF/S frames
+ra1.a1 -> links.la: delta sets every 15–30 s
+links.ls -> ra2.s2
+links.la -> ra2.a2
+ra2.s2 -> gc2: confirm to R1 RA\nbefore host ACK issued
+ra2.a2 -> gc2: apply delta set in order
+gc2 -> da2: destage
+da2 -> dev
 ```
 
 Key points illustrated:
