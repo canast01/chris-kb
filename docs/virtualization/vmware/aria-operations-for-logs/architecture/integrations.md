@@ -160,5 +160,5 @@ curl -sk -u 'admin:<password>' \
 
 ## See also
 
-- [Aria Operations for Logs — How It Works](how-it-works/)
+- [Aria Operations for Logs — How It Works](../how-it-works/)
 - [Aria Operations for Logs — Deploy](../deploy/)

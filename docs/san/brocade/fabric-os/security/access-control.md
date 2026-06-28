@@ -177,6 +177,6 @@ fabricbinding --show
 
 ## See also
 
-- [Fabric Os — Authentication](authentication/)
-- [Fabric Os — Hardening](hardening/)
-- [Fabric Os — Encryption](encryption/)
+- [Fabric Os — Authentication](../authentication/)
+- [Fabric Os — Hardening](../hardening/)
+- [Fabric Os — Encryption](../encryption/)

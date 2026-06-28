@@ -66,6 +66,6 @@ tfe_enterprise -> resolution
 
 ## See also
 
-- [Terraform — Common Issues](common-issues/)
+- [Terraform — Common Issues](../common-issues/)
 - [Ansible — Known Issues](../../ansible/troubleshooting/known-issues.md)
 - [GitHub Actions — Known Issues](../../github-actions/troubleshooting/known-issues.md)

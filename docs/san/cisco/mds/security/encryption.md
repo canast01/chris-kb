@@ -176,6 +176,6 @@ show interface fcip 1
 
 ## See also
 
-- [Mds — Hardening](hardening/)
-- [Mds — Authentication](authentication/)
-- [Mds — Access Control](access-control/)
+- [Mds — Hardening](../hardening/)
+- [Mds — Authentication](../authentication/)
+- [Mds — Access Control](../access-control/)

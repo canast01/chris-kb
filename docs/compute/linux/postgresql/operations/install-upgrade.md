@@ -94,6 +94,6 @@ psql -U postgres -d app_prod -c "ALTER EXTENSION pg_stat_statements UPDATE;"
 
 ## See also
 
-- [Postgresql — Procedures](procedures/)
-- [Postgresql — Health Checks](health-checks/)
-- [Postgresql — Deploy](../deploy/)
+- [Postgresql — Procedures](../procedures/)
+- [Postgresql — Health Checks](../health-checks/)
+- [Postgresql — Deploy](../../deploy/)

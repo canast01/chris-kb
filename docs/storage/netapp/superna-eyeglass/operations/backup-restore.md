@@ -163,6 +163,6 @@ Test backup integrity quarterly:
 
 ## See also
 
-- [Superna Eyeglass — Procedures](procedures/)
-- [Superna Eyeglass — Health Checks](health-checks/)
-- [Superna Eyeglass — Common Issues](../troubleshooting/common-issues/)
+- [Superna Eyeglass — Procedures](../procedures/)
+- [Superna Eyeglass — Health Checks](../health-checks/)
+- [Superna Eyeglass — Common Issues](../../troubleshooting/common-issues/)

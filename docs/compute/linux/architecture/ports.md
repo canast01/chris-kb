@@ -65,8 +65,8 @@ Firewall port reference for Linux servers in a managed enterprise environment. C
 ## Application Ports
 
 Application services (web servers, databases, etc.) expose their own ports on top of the base OS. See:
-- [MySQL — Ports](../mysql/architecture/ports/)
-- [PostgreSQL — Ports](../postgresql/architecture/ports/)
+- [MySQL — Ports](../../mysql/architecture/ports/)
+- [PostgreSQL — Ports](../../postgresql/architecture/ports/)
 
 ---
 
@@ -107,8 +107,8 @@ curl -sk -o /dev/null -w "%{http_code}" https://<satellite-or-repo-host>/
 
 ## See also
 
-- [Linux — Architecture](how-it-works/)
-- [Linux — Operations](../operations/)
+- [Linux — Architecture](../how-it-works/)
+- [Linux — Operations](../../operations/)
 - [MySQL — Ports](../mysql/architecture/ports.md)
 - [PostgreSQL — Ports](../postgresql/architecture/ports.md)
 - [Ansible — Ports](../../../automation/ansible/architecture/ports.md)

@@ -352,6 +352,6 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
 
 ## See also
 
-- [VCF — Procedures](procedures/)
-- [VCF Troubleshooting — Common Issues](../troubleshooting/common-issues/)
-- [VCF — Health Checks](health-checks/)
+- [VCF — Procedures](../procedures/)
+- [VCF Troubleshooting — Common Issues](../../troubleshooting/common-issues/)
+- [VCF — Health Checks](../health-checks/)

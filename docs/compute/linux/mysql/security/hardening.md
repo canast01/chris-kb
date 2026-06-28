@@ -97,6 +97,6 @@ SET GLOBAL server_audit_file_path = '/var/log/mysql/audit.log';
 
 ## See also
 
-- [Mysql — Authentication](authentication/)
-- [Mysql — Access Control](access-control/)
-- [Mysql — Encryption](encryption/)
+- [Mysql — Authentication](../authentication/)
+- [Mysql — Access Control](../access-control/)
+- [Mysql — Encryption](../encryption/)

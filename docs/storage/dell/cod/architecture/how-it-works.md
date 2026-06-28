@@ -160,5 +160,5 @@ graph LR
 
 ## See also
 
-- [Cod — Design Standards](design-standards/)
-- [Cod — Integrations](integrations/)
+- [Cod — Design Standards](../design-standards/)
+- [Cod — Integrations](../integrations/)

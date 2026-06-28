@@ -72,6 +72,6 @@ If appliance shows "Unlicensed" after an upgrade, re-import the license — appl
 
 ## See also
 
-- [Superna Eyeglass — Procedures](procedures/)
-- [Superna Eyeglass — Health Checks](health-checks/)
-- [Superna Eyeglass — Deploy](../deploy/)
+- [Superna Eyeglass — Procedures](../procedures/)
+- [Superna Eyeglass — Health Checks](../health-checks/)
+- [Superna Eyeglass — Deploy](../../deploy/)

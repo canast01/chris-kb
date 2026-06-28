@@ -104,6 +104,6 @@ pt-kill --busy-time 300 --kill            # kill queries running > 5 min
 
 ## See also
 
-- [Mysql — Procedures](procedures/)
-- [Mysql — Scripts](scripts/)
-- [Mysql — Health Checks](health-checks/)
+- [Mysql — Procedures](../procedures/)
+- [Mysql — Scripts](../scripts/)
+- [Mysql — Health Checks](../health-checks/)

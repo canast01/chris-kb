@@ -311,9 +311,9 @@ Veeam → Home → Restore → VMware VMs → Restore from backup
 
 ## See also
 
-- [Amazon EVS — Procedures](procedures/)
-- [Amazon EVS — Common Issues](../troubleshooting/common-issues/)
-- [Amazon EVS — Health Checks](health-checks/)
+- [Amazon EVS — Procedures](../procedures/)
+- [Amazon EVS — Common Issues](../../troubleshooting/common-issues/)
+- [Amazon EVS — Health Checks](../health-checks/)
 
 ## Verify
 

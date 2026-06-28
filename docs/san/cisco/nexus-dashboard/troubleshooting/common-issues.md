@@ -157,6 +157,6 @@ graph TD
 
 ## See also
 
-- [Nexus Dashboard — Diagnostics](diagnostics/)
-- [Nexus Dashboard — Escalation](escalation/)
-- [Nexus Dashboard — Health Checks](../operations/health-checks/)
+- [Nexus Dashboard — Diagnostics](../diagnostics/)
+- [Nexus Dashboard — Escalation](../escalation/)
+- [Nexus Dashboard — Health Checks](../../operations/health-checks/)

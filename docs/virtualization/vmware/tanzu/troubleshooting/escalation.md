@@ -290,8 +290,8 @@ tanzu package installed list -A
 
 ## See also
 
-- [Tanzu — Diagnostics](diagnostics/)
-- [Tanzu — Common Issues](common-issues/)
+- [Tanzu — Diagnostics](../diagnostics/)
+- [Tanzu — Common Issues](../common-issues/)
 
 ---
 

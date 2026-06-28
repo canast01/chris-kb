@@ -44,5 +44,5 @@ curl -sk $HDR "$BASE/data-sources/nsxv-managers" | python3 -m json.tool    # NSX
 
 ## See also
 
-- [Aria Networks Procedures](../../virtualization/vmware/aria-operations-for-networks/operations/procedures/)
-- [Aria Networks Troubleshooting](../../virtualization/vmware/aria-operations-for-networks/troubleshooting/common-issues/)
+- [Aria Networks Procedures](../../../virtualization/vmware/aria-operations-for-networks/operations/procedures/)
+- [Aria Networks Troubleshooting](../../../virtualization/vmware/aria-operations-for-networks/troubleshooting/common-issues/)

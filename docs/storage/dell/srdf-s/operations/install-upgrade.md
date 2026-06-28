@@ -58,6 +58,6 @@ flowchart TD
 
 ## See also
 
-- [Srdf S — Procedures](procedures/)
-- [Srdf S — Health Checks](health-checks/)
-- [Srdf S — Deploy](../deploy/)
+- [Srdf S — Procedures](../procedures/)
+- [Srdf S — Health Checks](../health-checks/)
+- [Srdf S — Deploy](../../deploy/)

@@ -121,8 +121,8 @@ Get-WindowsUpdateLog | Select-String "AU detected" | Select-Object -Last 5
 
 ## See also
 
-- [Windows Server — Architecture](how-it-works/)
-- [Windows Server — Operations](../operations/)
+- [Windows Server — Architecture](../how-it-works/)
+- [Windows Server — Operations](../../operations/)
 - [Active Directory — Ports](../active-directory/architecture/ports.md)
 - [SQL Server — Ports](../sql-server/architecture/ports.md)
 - [Ansible — Ports](../../../automation/ansible/architecture/ports.md)

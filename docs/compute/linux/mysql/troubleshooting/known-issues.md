@@ -73,5 +73,5 @@ group_replication -> resolution
 
 ## See also
 
-- [MySQL — Common Issues](common-issues/)
+- [MySQL — Common Issues](../common-issues/)
 - [Linux — Known Issues](../../troubleshooting/known-issues.md)

@@ -266,8 +266,8 @@ Test-NetConnection -ComputerName <ontap-mgmt-ip> -Port 443
 
 ## See also
 
-- [SnapCenter — Diagnostics](diagnostics/)
-- [SnapCenter — Common Issues](common-issues/)
+- [SnapCenter — Diagnostics](../diagnostics/)
+- [SnapCenter — Common Issues](../common-issues/)
 
 ---
 

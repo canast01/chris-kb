@@ -46,6 +46,6 @@ curl -sk $AUTH "$BASE/api/v1/logical-routers/<lr-id>/routing/bgp/neighbors" | py
 
 ## See also
 
-- [NSX Operations](../../virtualization/vmware/nsx/operations/procedures/)
-- [NSX Troubleshooting](../../virtualization/vmware/nsx/troubleshooting/common-issues/)
-- [NSX Health Checks](../../virtualization/vmware/nsx/operations/health-checks/)
+- [NSX Operations](../../../virtualization/vmware/nsx/operations/procedures/)
+- [NSX Troubleshooting](../../../virtualization/vmware/nsx/troubleshooting/common-issues/)
+- [NSX Health Checks](../../../virtualization/vmware/nsx/operations/health-checks/)

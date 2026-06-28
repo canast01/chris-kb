@@ -152,6 +152,6 @@ Upgrade SANnav during a scheduled maintenance window — fabric management is un
 
 ## See also
 
-- [Sannav — Health Checks](health-checks/)
-- [Sannav — CLI Reference](cli-reference/)
+- [Sannav — Health Checks](../health-checks/)
+- [Sannav — CLI Reference](../cli-reference/)
 - [Sannav — Common Issues](../troubleshooting/common-issues/)

@@ -403,6 +403,6 @@ vplexcli -q -e "ll /distributed-storage/consistency-groups/<cg_name>/"
 
 ## See also
 
-- [Vplex — Diagnostics](diagnostics/)
-- [Vplex — Escalation](escalation/)
-- [Vplex — Health Checks](../operations/health-checks/)
+- [Vplex — Diagnostics](../diagnostics/)
+- [Vplex — Escalation](../escalation/)
+- [Vplex — Health Checks](../../operations/health-checks/)

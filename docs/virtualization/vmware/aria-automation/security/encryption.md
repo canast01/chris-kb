@@ -150,5 +150,5 @@ The embedded Kubernetes cluster on Aria Automation appliances does not expose et
 
 ## See also
 
-- [Aria Automation — Hardening](hardening/)
-- [Aria Automation — Health Checks](../operations/health-checks/)
+- [Aria Automation — Hardening](../hardening/)
+- [Aria Automation — Health Checks](../../operations/health-checks/)

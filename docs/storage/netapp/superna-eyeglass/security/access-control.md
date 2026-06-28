@@ -36,6 +36,6 @@ All failover events are recorded in the Eyeglass audit log. The audit log must b
 
 ## See also
 
-- [Superna Eyeglass — Authentication](authentication/)
-- [Superna Eyeglass — Hardening](hardening/)
-- [Superna Eyeglass — Encryption](encryption/)
+- [Superna Eyeglass — Authentication](../authentication/)
+- [Superna Eyeglass — Hardening](../hardening/)
+- [Superna Eyeglass — Encryption](../encryption/)

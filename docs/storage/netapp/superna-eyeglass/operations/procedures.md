@@ -414,6 +414,6 @@ Weekly operations include running the Eyeglass DR readiness report to confirm al
 
 ## See also
 
-- [Superna Eyeglass — Health Checks](health-checks/)
-- [Superna Eyeglass — CLI Reference](cli-reference/)
+- [Superna Eyeglass — Health Checks](../health-checks/)
+- [Superna Eyeglass — CLI Reference](../cli-reference/)
 - [Superna Eyeglass — Common Issues](../troubleshooting/common-issues/)

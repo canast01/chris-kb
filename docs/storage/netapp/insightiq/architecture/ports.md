@@ -76,6 +76,6 @@ nc -zv <powerscale-mgmt-ip> 8080
 
 ## See also
 
-- [NetApp InsightIQ — Architecture](how-it-works/)
+- [NetApp InsightIQ — Architecture](../how-it-works/)
 - [Dell PowerScale — Ports](../../../dell/powerscale/architecture/ports.md)
 - [NetApp ONTAP — Ports](../../ontap/architecture/ports.md)

@@ -80,5 +80,5 @@ Permissions required: vCenter account with `Host → Configuration` and `Network
 
 ## See also
 
-- [vCenter — How It Works](how-it-works/)
+- [vCenter — How It Works](../how-it-works/)
 - [vCenter — Deploy](../deploy/)

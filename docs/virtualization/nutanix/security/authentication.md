@@ -204,5 +204,5 @@ ncc --health_checks ldap_check
 
 ## See also
 
-- [Nutanix — Access Control](access-control/)
-- [Nutanix — Hardening](hardening/)
+- [Nutanix — Access Control](../access-control/)
+- [Nutanix — Hardening](../hardening/)

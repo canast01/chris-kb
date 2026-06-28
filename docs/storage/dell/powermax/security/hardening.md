@@ -432,6 +432,6 @@ When a security advisory is published:
 
 ## See also
 
-- [Powermax — Authentication](authentication/)
-- [Powermax — Access Control](access-control/)
-- [Powermax — Encryption](encryption/)
+- [Powermax — Authentication](../authentication/)
+- [Powermax — Access Control](../access-control/)
+- [Powermax — Encryption](../encryption/)

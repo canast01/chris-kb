@@ -64,5 +64,5 @@ Note: always snapshot the R2 while it is in `Synchronized` state to ensure consi
 
 ## See also
 
-- [Srdf S — How It Works](how-it-works/)
-- [Srdf S — Design Standards](design-standards/)
+- [Srdf S — How It Works](../how-it-works/)
+- [Srdf S — Design Standards](../design-standards/)

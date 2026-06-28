@@ -183,6 +183,6 @@ Verify log ingestion in the SIEM within 24 hours of configuration. Set up SIEM a
 
 ## See also
 
-- [Vplex — Access Control](access-control/)
-- [Vplex — Hardening](hardening/)
-- [Vplex — Encryption](encryption/)
+- [Vplex — Access Control](../access-control/)
+- [Vplex — Hardening](../hardening/)
+- [Vplex — Encryption](../encryption/)

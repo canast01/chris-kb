@@ -399,8 +399,8 @@ journalctl -u cassandra --since "1 hour ago" | grep -iE "error|exception|heap"
 
 ## See also
 
-- [ECS — Common Issues](common-issues/)
-- [ECS — Escalation](escalation/)
+- [ECS — Common Issues](../common-issues/)
+- [ECS — Escalation](../escalation/)
 - [ECS — Health Checks](../operations/health-checks/)
 
 ## Verify resolution

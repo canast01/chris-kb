@@ -51,5 +51,5 @@ curl -sk $AUTH $BASE/plans/<id>/history | python3 -m json.tool             # pla
 
 ## See also
 
-- [SRM Operations](../../virtualization/vmware/srm/operations/procedures/)
-- [SRM Troubleshooting](../../virtualization/vmware/srm/troubleshooting/common-issues/)
+- [SRM Operations](../../../virtualization/vmware/srm/operations/procedures/)
+- [SRM Troubleshooting](../../../virtualization/vmware/srm/troubleshooting/common-issues/)

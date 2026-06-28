@@ -72,5 +72,5 @@ Understanding when COD makes more sense than buying standard licensed capacity u
 
 ## See also
 
-- [Cod — Procedures](procedures/)
-- [Cod — Health Checks](health-checks/)
+- [Cod — Procedures](../procedures/)
+- [Cod — Health Checks](../health-checks/)

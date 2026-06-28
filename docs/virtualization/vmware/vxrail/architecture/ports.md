@@ -18,7 +18,7 @@ Firewall port reference for Dell VxRail. VxRail runs the full vSphere stack, so 
 
 ## Before you begin
 
-- VxRail requires all standard vSphere ports: see [vCenter](../../vcenter/architecture/ports/), [ESXi](../../esxi/architecture/ports/), [vSAN](../../vsan/architecture/ports/), and [NSX](../../nsx/architecture/ports/) port pages
+- VxRail requires all standard vSphere ports: see [vCenter](../../../vcenter/architecture/ports/), [ESXi](../../../esxi/architecture/ports/), [vSAN](../../../vsan/architecture/ports/), and [NSX](../../../nsx/architecture/ports/) port pages
 - VxRail Manager VM must reach vCenter, all ESXi hosts, and Dell/Broadcom update servers
 - iDRAC ports are required for hardware monitoring, firmware updates, and RASR recovery — open from the iDRAC VLAN to management systems
 
@@ -77,7 +77,7 @@ When performing RASR (node re-image), access requirements:
 | 443 | TCP | Admin workstation | iDRAC IP | iDRAC UI for virtual media mount (RASR ISO) |
 | 5900 | TCP | Admin workstation | iDRAC IP | iDRAC Virtual Console (monitor RASR progress) |
 
-See [VxRail — RASR](../rasr/) for the full rebuild procedure.
+See [VxRail — RASR](../../rasr/) for the full rebuild procedure.
 
 ---
 
@@ -93,7 +93,7 @@ See [VxRail — RASR](../rasr/) for the full rebuild procedure.
 | iDRAC IPs | SNMP receiver | 162 UDP | Hardware alerts |
 | iDRAC IPs | Syslog server | 514 UDP | Hardware event logging |
 
-Also open all [vCenter ports](../../vcenter/architecture/ports/), [ESXi ports](../../esxi/architecture/ports/), [vSAN ports](../../vsan/architecture/ports/), and [NSX ports](../../nsx/architecture/ports/) as applicable to the deployment.
+Also open all [vCenter ports](../../../vcenter/architecture/ports/), [ESXi ports](../../../esxi/architecture/ports/), [vSAN ports](../../../vsan/architecture/ports/), and [NSX ports](../../../nsx/architecture/ports/) as applicable to the deployment.
 
 ---
 
@@ -120,8 +120,8 @@ curl -sk -o /dev/null -w "%{http_code}" https://downloads.dell.com
 
 ## See also
 
-- [VxRail — Architecture](how-it-works/)
-- [VxRail — RASR](../rasr/)
+- [VxRail — Architecture](../how-it-works/)
+- [VxRail — RASR](../../rasr/)
 - [vCenter — Ports](../../vcenter/architecture/ports.md)
 - [ESXi — Ports](../../esxi/architecture/ports.md)
 - [vSAN — Ports](../../vsan/architecture/ports.md)

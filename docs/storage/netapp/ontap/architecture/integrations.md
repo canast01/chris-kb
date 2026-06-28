@@ -91,5 +91,5 @@ ONTAP on-premises clusters can peer with Cloud Volumes ONTAP (CVO) deployments i
 
 ## See also
 
-- [Ontap — How It Works](how-it-works/)
-- [Ontap — Design Standards](design-standards/)
+- [Ontap — How It Works](../how-it-works/)
+- [Ontap — Design Standards](../design-standards/)

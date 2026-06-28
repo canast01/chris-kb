@@ -115,5 +115,5 @@ Replication groups define which VDCs participate in geo-replication. Every names
 
 ## See also
 
-- [Ecs — Design Standards](design-standards/)
-- [Ecs — Integrations](integrations/)
+- [Ecs — Design Standards](../design-standards/)
+- [Ecs — Integrations](../integrations/)

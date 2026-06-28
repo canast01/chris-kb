@@ -99,6 +99,6 @@ Restore to a different host or path:
 
 ## See also
 
-- [Snapcenter — Procedures](procedures/)
-- [Snapcenter — Health Checks](health-checks/)
-- [Snapcenter — Common Issues](../troubleshooting/common-issues/)
+- [Snapcenter — Procedures](../procedures/)
+- [Snapcenter — Health Checks](../health-checks/)
+- [Snapcenter — Common Issues](../../troubleshooting/common-issues/)

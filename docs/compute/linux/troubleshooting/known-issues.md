@@ -74,6 +74,6 @@ services -> resolution
 
 ## See also
 
-- [Linux — Common Issues](common-issues/)
-- [MySQL — Known Issues](../mysql/troubleshooting/known-issues/)
-- [PostgreSQL — Known Issues](../postgresql/troubleshooting/known-issues/)
+- [Linux — Common Issues](../common-issues/)
+- [MySQL — Known Issues](../../mysql/troubleshooting/known-issues/)
+- [PostgreSQL — Known Issues](../../postgresql/troubleshooting/known-issues/)

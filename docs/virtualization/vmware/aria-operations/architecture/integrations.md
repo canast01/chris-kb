@@ -108,5 +108,5 @@ Admin > Credentials > [Select Credential] > Edit
 
 ## See also
 
-- [Aria Operations — How It Works](how-it-works/)
+- [Aria Operations — How It Works](../how-it-works/)
 - [Aria Operations — Deploy](../deploy/)

@@ -197,5 +197,5 @@ If the consumption report shows unexpected usage:
 
 ## See also
 
-- [Keystone — Health Checks](health-checks/)
-- [Keystone — CLI Reference](cli-reference/)
+- [Keystone — Health Checks](../health-checks/)
+- [Keystone — CLI Reference](../cli-reference/)

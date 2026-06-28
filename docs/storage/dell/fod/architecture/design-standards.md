@@ -36,5 +36,5 @@ Standards reference covering Upgrade Notes, Design Standards.
 
 ## See also
 
-- [Fod — How It Works](how-it-works/)
-- [Fod — Integrations](integrations/)
+- [Fod — How It Works](../how-it-works/)
+- [Fod — Integrations](../integrations/)

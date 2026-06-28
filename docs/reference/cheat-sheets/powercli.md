@@ -61,6 +61,6 @@ Get-VM | Get-NetworkAdapter | Select VM,NetworkName,MacAddress                # 
 
 ## See also
 
-- [ESXi Cheat Sheet](esxi/)
-- [vCenter Cheat Sheet](vcenter/)
-- [vSAN Cheat Sheet](vsan/)
+- [ESXi Cheat Sheet](../esxi/)
+- [vCenter Cheat Sheet](../vcenter/)
+- [vSAN Cheat Sheet](../vsan/)

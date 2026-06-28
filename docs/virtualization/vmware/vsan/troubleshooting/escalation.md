@@ -327,8 +327,8 @@ esxcli vsan debug vmdk perf
 
 ## See also
 
-- [vSAN — Diagnostics](diagnostics/)
-- [vSAN — Common Issues](common-issues/)
+- [vSAN — Diagnostics](../diagnostics/)
+- [vSAN — Common Issues](../common-issues/)
 
 ---
 

@@ -107,5 +107,5 @@ The SnapCenter Plug-in for SQL Server uses VSS to quiesce SQL Server databases b
 
 ## See also
 
-- [Snapcenter — How It Works](how-it-works/)
-- [Snapcenter — Design Standards](design-standards/)
+- [Snapcenter — How It Works](../how-it-works/)
+- [Snapcenter — Design Standards](../design-standards/)

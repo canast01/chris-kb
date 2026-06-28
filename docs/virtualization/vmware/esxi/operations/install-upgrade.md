@@ -86,9 +86,9 @@ For vSAN clusters: if ESXi 8.x is rolled back, vSAN on-disk format may need down
 
 ## See also
 
-- [ESXi — Health Checks](health-checks/)
+- [ESXi — Health Checks](../health-checks/)
 - [ESXi — Common Issues](../troubleshooting/common-issues/)
-- [ESXi — Procedures](procedures/)
+- [ESXi — Procedures](../procedures/)
 
 ## Verify
 

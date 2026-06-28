@@ -70,6 +70,6 @@ Essential Veeam Backup &amp; Replication PowerShell cmdlets for server connectio
 
 ## See Also
 
-- [Veeam Operations](../../backup/veeam/operations/procedures/)
-- [Veeam Health Checks](../../backup/veeam/operations/health-checks/)
-- [Veeam Troubleshooting](../../backup/veeam/troubleshooting/common-issues/)
+- [Veeam Operations](../../../backup/veeam/operations/procedures/)
+- [Veeam Health Checks](../../../backup/veeam/operations/health-checks/)
+- [Veeam Troubleshooting](../../../backup/veeam/troubleshooting/common-issues/)

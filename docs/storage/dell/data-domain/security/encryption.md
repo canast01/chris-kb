@@ -283,6 +283,6 @@ Dell ProSupport manages physical disk returns. Confirm with Dell support that re
 
 ## See also
 
-- [Data Domain — Hardening](hardening/)
-- [Data Domain — Authentication](authentication/)
-- [Data Domain — Access Control](access-control/)
+- [Data Domain — Hardening](../hardening/)
+- [Data Domain — Authentication](../authentication/)
+- [Data Domain — Access Control](../access-control/)

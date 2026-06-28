@@ -183,6 +183,6 @@ Get-ADObject -Filter {DisplayName -eq "John Smith"} -IncludeDeletedObjects |
 
 ## See also
 
-- [Active Directory — Procedures](procedures/)
-- [Active Directory — Health Checks](health-checks/)
-- [Active Directory — Deploy](../deploy/)
+- [Active Directory — Procedures](../procedures/)
+- [Active Directory — Health Checks](../health-checks/)
+- [Active Directory — Deploy](../../deploy/)

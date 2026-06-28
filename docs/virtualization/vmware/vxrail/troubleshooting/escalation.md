@@ -285,8 +285,8 @@ racadm getsel | tail -30
 
 ## See also
 
-- [VxRail — Diagnostics](diagnostics/)
-- [VxRail — Common Issues](common-issues/)
+- [VxRail — Diagnostics](../diagnostics/)
+- [VxRail — Common Issues](../common-issues/)
 
 ---
 

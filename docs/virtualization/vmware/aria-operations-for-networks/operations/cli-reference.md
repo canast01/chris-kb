@@ -287,9 +287,9 @@ curl -sk -X PUT "${AON_URL}/api/ni/alerts/${ALERT_ID}/acknowledge" \
 
 ## See also
 
-- [AON Operational Procedures](procedures/)
-- [AON Scripts](scripts/)
-- [AON Health Checks](health-checks/)
+- [AON Operational Procedures](../procedures/)
+- [AON Scripts](../scripts/)
+- [AON Health Checks](../health-checks/)
 
 ## Verify
 

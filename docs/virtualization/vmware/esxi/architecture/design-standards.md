@@ -122,5 +122,5 @@ esxcli system settings advanced set -o /UserVars/ESXiShellInteractiveTimeOut -i 
 
 ## See also
 
-- [ESXi — How It Works](how-it-works/)
-- [ESXi Host Deployment](../deploy/)
+- [ESXi — How It Works](../how-it-works/)
+- [ESXi Host Deployment](../../deploy/)

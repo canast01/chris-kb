@@ -657,9 +657,9 @@ kubectl --kubeconfig=supervisor.kubeconfig delete namespace <namespace>
 
 ## See also
 
-- [Tanzu — Health Checks](health-checks/)
+- [Tanzu — Health Checks](../health-checks/)
 - [Virtualization Vmware Tanzu — Common Issues](../troubleshooting/common-issues/)
-- [Tanzu — CLI Reference](cli-reference/)
+- [Tanzu — CLI Reference](../cli-reference/)
 
 ## Verify
 

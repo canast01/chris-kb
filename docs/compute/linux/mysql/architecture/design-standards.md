@@ -59,6 +59,6 @@ Always test restores quarterly. Store backups off the DB host.
 
 ## See also
 
-- [Mysql — How It Works](how-it-works/)
-- [Mysql — Integrations](integrations/)
-- [Mysql — Deploy](../deploy/)
+- [Mysql — How It Works](../how-it-works/)
+- [Mysql — Integrations](../integrations/)
+- [Mysql — Deploy](../../deploy/)

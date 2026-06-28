@@ -228,6 +228,6 @@ Expected: backup file labelled with date and cluster name, stored off-system. Es
 
 ## See also
 
-- [vSAN Cluster Health — Internals](../../internals/vsan-cluster-health/)
-- [vSAN — Security](../../vsan/security/)
-- [vSAN — Operations](../../vsan/operations/)
+- [vSAN Cluster Health — Internals](../../../internals/vsan-cluster-health/)
+- [vSAN — Security](../../../vsan/security/)
+- [vSAN — Operations](../../../vsan/operations/)

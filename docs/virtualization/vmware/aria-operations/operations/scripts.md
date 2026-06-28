@@ -74,8 +74,8 @@ echo "Alerts saved to /tmp/aria-ops-alerts-$(date +%Y%m%d).json"
 
 ## See also
 
-- [Aria Operations — CLI Reference](cli-reference/)
-- [Aria Operations Procedures](procedures/)
+- [Aria Operations — CLI Reference](../cli-reference/)
+- [Aria Operations Procedures](../procedures/)
 
 ## Verify
 

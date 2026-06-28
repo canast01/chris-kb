@@ -18,5 +18,5 @@ tags:
 
 ## See also
 
-- [VMware Cloud Foundation — Authentication](authentication/)
-- [VCF — Hardening](hardening/)
+- [VMware Cloud Foundation — Authentication](../authentication/)
+- [VCF — Hardening](../hardening/)

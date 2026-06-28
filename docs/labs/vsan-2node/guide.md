@@ -171,7 +171,7 @@ vCenter > `Lab-Cluster` > **Monitor > vSAN > Proactive Tests**
 
 ## Next Steps
 
-- [Lab 3 — NSX-T in Nested ESXi](../nsx-nested/)
-- [Lab 4 — VCF on Nested ESXi](../vcf-nested/)
-- [vSAN Storage Policy Decision Tree](../../reference/decision-trees/vsan-policy/)
+- [Lab 3 — NSX-T in Nested ESXi](../../nsx-nested/)
+- [Lab 4 — VCF on Nested ESXi](../../vcf-nested/)
+- [vSAN Storage Policy Decision Tree](../../../reference/decision-trees/vsan-policy/)
 - [vSAN Cheat Sheet](../../reference/cheat-sheets/vsan/)

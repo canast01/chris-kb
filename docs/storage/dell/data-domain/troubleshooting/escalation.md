@@ -277,8 +277,8 @@ replication show
 
 ## See also
 
-- [Data Domain — Diagnostics](diagnostics/)
-- [Data Domain — Common Issues](common-issues/)
+- [Data Domain — Diagnostics](../diagnostics/)
+- [Data Domain — Common Issues](../common-issues/)
 
 ---
 

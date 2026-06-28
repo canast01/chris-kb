@@ -334,6 +334,6 @@ nltest /dsgetdc:corp.example.com /force
 
 ## See also
 
-- [Active Directory — Procedures](procedures/)
-- [Active Directory — Health Checks](health-checks/)
-- [Active Directory — Common Issues](../troubleshooting/common-issues/)
+- [Active Directory — Procedures](../procedures/)
+- [Active Directory — Health Checks](../health-checks/)
+- [Active Directory — Common Issues](../../troubleshooting/common-issues/)

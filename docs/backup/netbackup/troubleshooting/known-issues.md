@@ -76,5 +76,5 @@ certificates_nbu_8x -> resolution
 
 ## See also
 
-- [NetBackup — Common Issues](common-issues/)
+- [NetBackup — Common Issues](../common-issues/)
 - [Dell Data Domain — Known Issues](../../../storage/dell/data-domain/troubleshooting/known-issues.md)

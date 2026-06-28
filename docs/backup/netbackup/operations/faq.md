@@ -56,4 +56,4 @@ A: Yes — use `bprestore` with the `-f` flag for specific files, or use the BAR
 ## See Also
 
 - [Veritas NetBackup Operations](index.md)
-- [Veritas NetBackup Troubleshooting](../../troubleshooting/index.md)
+- [Veritas NetBackup Troubleshooting](../../troubleshooting//)

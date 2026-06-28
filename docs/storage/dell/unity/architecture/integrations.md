@@ -120,5 +120,5 @@ The API supports basic auth and session (cookie) auth. Use session auth for scri
 
 ## See also
 
-- [Unity — How It Works](how-it-works/)
-- [Unity — Design Standards](design-standards/)
+- [Unity — How It Works](../how-it-works/)
+- [Unity — Design Standards](../design-standards/)

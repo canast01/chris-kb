@@ -102,8 +102,8 @@ Get-VMHost | ForEach-Object {
 
 ## See also
 
-- [Aria Operations for Logs — CLI Reference](cli-reference/)
-- [Aria Ops for Logs — Procedures](procedures/)
+- [Aria Operations for Logs — CLI Reference](../cli-reference/)
+- [Aria Ops for Logs — Procedures](../procedures/)
 
 ## Verify
 

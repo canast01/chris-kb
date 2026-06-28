@@ -87,6 +87,6 @@ purepgroup list --replication
 
 ## See also
 
-- [FlashArray — Hardening](hardening/)
-- [FlashArray — Authentication](authentication/)
-- [FlashArray — Access Control](access-control/)
+- [FlashArray — Hardening](../hardening/)
+- [FlashArray — Authentication](../authentication/)
+- [FlashArray — Access Control](../access-control/)

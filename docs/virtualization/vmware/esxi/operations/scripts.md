@@ -415,8 +415,8 @@ echo === Diagnostic check complete ===
 
 ## See also
 
-- [ESXi CLI Reference](cli-reference/)
-- [ESXi — Procedures](procedures/)
+- [ESXi CLI Reference](../cli-reference/)
+- [ESXi — Procedures](../procedures/)
 
 ## Verify
 

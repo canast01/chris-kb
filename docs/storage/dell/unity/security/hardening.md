@@ -292,6 +292,6 @@ For regulated environments, supplement Unity's built-in controls with:
 
 ## See also
 
-- [Unity — Authentication](authentication/)
-- [Unity — Access Control](access-control/)
-- [Unity — Encryption](encryption/)
+- [Unity — Authentication](../authentication/)
+- [Unity — Access Control](../access-control/)
+- [Unity — Encryption](../encryption/)

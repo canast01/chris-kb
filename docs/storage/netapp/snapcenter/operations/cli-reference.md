@@ -174,6 +174,6 @@ curl -sk -X POST "https://snapcenter.example.com/api/4.9/backups" \
 
 ## See also
 
-- [Snapcenter — Procedures](procedures/)
-- [Snapcenter — Scripts](scripts/)
-- [Snapcenter — Health Checks](health-checks/)
+- [Snapcenter — Procedures](../procedures/)
+- [Snapcenter — Scripts](../scripts/)
+- [Snapcenter — Health Checks](../health-checks/)

@@ -227,6 +227,6 @@ CVMs communicate over the storage network for replication. Jumbo frames (MTU 900
 
 ## See also
 
-- [Nutanix — Design Standards](design-standards/)
+- [Nutanix — Design Standards](../design-standards/)
 - [Nutanix — Deploy](../deploy/)
-- [Nutanix — Integrations](integrations/)
+- [Nutanix — Integrations](../integrations/)

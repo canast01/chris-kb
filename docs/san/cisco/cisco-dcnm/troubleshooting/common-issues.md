@@ -165,6 +165,6 @@ graph TD
 
 ## See also
 
-- [Cisco Dcnm — Diagnostics](diagnostics/)
-- [Cisco Dcnm — Escalation](escalation/)
-- [Cisco Dcnm — Health Checks](../operations/health-checks/)
+- [Cisco Dcnm — Diagnostics](../diagnostics/)
+- [Cisco Dcnm — Escalation](../escalation/)
+- [Cisco Dcnm — Health Checks](../../operations/health-checks/)

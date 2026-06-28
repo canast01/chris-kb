@@ -587,6 +587,6 @@ echo "POST-CHECK PASSED — change completed successfully."
 
 ## See also
 
-- [Powermax — Procedures](procedures/)
-- [Powermax — CLI Reference](cli-reference/)
-- [Powermax — Health Checks](health-checks/)
+- [Powermax — Procedures](../procedures/)
+- [Powermax — CLI Reference](../cli-reference/)
+- [Powermax — Health Checks](../health-checks/)

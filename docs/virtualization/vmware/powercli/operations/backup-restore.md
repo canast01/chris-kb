@@ -305,9 +305,9 @@ foreach ($perm in $permData) {
 
 ## See also
 
-- [PowerCLI — Procedures](procedures/)
-- [PowerCLI — Common Issues](../troubleshooting/common-issues/)
-- [PowerCLI — Health Checks](health-checks/)
+- [PowerCLI — Procedures](../procedures/)
+- [PowerCLI — Common Issues](../../troubleshooting/common-issues/)
+- [PowerCLI — Health Checks](../health-checks/)
 
 ## Verify
 

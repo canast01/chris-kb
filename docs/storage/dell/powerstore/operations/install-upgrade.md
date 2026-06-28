@@ -255,6 +255,6 @@ Reconstruction time: approximately 1 hour per TB under moderate workload. During
 
 ## See also
 
-- [Powerstore — Procedures](procedures/)
-- [Powerstore — Health Checks](health-checks/)
-- [Powerstore — Deploy](../deploy/)
+- [Powerstore — Procedures](../procedures/)
+- [Powerstore — Health Checks](../health-checks/)
+- [Powerstore — Deploy](../../deploy/)

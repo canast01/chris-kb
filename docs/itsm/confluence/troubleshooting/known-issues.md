@@ -63,6 +63,6 @@ database -> resolution
 
 ## See also
 
-- [Confluence — Common Issues](common-issues/)
+- [Confluence — Common Issues](../common-issues/)
 - [Jira — Known Issues](../../jira/troubleshooting/known-issues.md)
 - [PostgreSQL — Known Issues](../../../compute/linux/postgresql/troubleshooting/known-issues.md)

@@ -1046,6 +1046,6 @@ For each APEX Block storage system: the system name, type, contracted capacity i
 
 ## See also
 
-- [Apex Storage As A Service — Procedures](procedures/)
-- [Apex Storage As A Service — CLI Reference](cli-reference/)
-- [Apex Storage As A Service — Health Checks](health-checks/)
+- [Apex Storage As A Service — Procedures](../procedures/)
+- [Apex Storage As A Service — CLI Reference](../cli-reference/)
+- [Apex Storage As A Service — Health Checks](../health-checks/)

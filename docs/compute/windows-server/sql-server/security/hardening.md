@@ -99,6 +99,6 @@ ALTER SERVER AUDIT DBA_Audit WITH (STATE = ON);
 
 ## See also
 
-- [Sql Server — Authentication](authentication/)
-- [Sql Server — Access Control](access-control/)
-- [Sql Server — Encryption](encryption/)
+- [Sql Server — Authentication](../authentication/)
+- [Sql Server — Access Control](../access-control/)
+- [Sql Server — Encryption](../encryption/)

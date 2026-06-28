@@ -246,6 +246,6 @@ kubectl vsphere login --server https://supervisor.example.local --username user@
 
 ## See also
 
-- [Tanzu — Access Control](access-control/)
-- [Tanzu — Authentication](authentication/)
+- [Tanzu — Access Control](../access-control/)
+- [Tanzu — Authentication](../authentication/)
 - [Tanzu — Health Checks](../operations/health-checks/)

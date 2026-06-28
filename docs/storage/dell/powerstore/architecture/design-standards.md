@@ -240,6 +240,6 @@ Every production PowerStore must be registered to CloudIQ via the Secure Connect
 
 ## See also
 
-- [Powerstore — How It Works](how-it-works/)
-- [Powerstore — Integrations](integrations/)
-- [Powerstore — Deploy](../deploy/)
+- [Powerstore — How It Works](../how-it-works/)
+- [Powerstore — Integrations](../integrations/)
+- [Powerstore — Deploy](../../deploy/)

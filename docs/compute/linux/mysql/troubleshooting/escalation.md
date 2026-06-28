@@ -282,8 +282,8 @@ dmesg | grep -i "kill process\|out of memory" | grep -i mysql | tail -20
 
 ## See also
 
-- [MySQL — Diagnostics](diagnostics/)
-- [MySQL — Common Issues](common-issues/)
+- [MySQL — Diagnostics](../diagnostics/)
+- [MySQL — Common Issues](../common-issues/)
 
 ---
 

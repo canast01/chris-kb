@@ -582,8 +582,8 @@ system node autosupport show -fields proxy-url,transport
 
 ## See also
 
-- [ONTAP — Common Issues](common-issues/)
-- [ONTAP — Escalation](escalation/)
+- [ONTAP — Common Issues](../common-issues/)
+- [ONTAP — Escalation](../escalation/)
 
 ## Verify resolution
 

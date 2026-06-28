@@ -76,5 +76,5 @@ Capacity consumed is measured in TiB of raw host-written data (before data reduc
 
 ## See also
 
-- [Evergreen//One — Design Standards](design-standards/)
-- [Evergreen//One — Integrations](integrations/)
+- [Evergreen//One — Design Standards](../design-standards/)
+- [Evergreen//One — Integrations](../integrations/)

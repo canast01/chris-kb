@@ -65,6 +65,6 @@ Data disk sizing: approximately 10 GB per monitored node per month of retention.
 
 ## See also
 
-- [Insightiq — How It Works](how-it-works/)
-- [Insightiq — Integrations](integrations/)
-- [Insightiq — Deploy](../deploy/)
+- [Insightiq — How It Works](../how-it-works/)
+- [Insightiq — Integrations](../integrations/)
+- [Insightiq — Deploy](../../deploy/)

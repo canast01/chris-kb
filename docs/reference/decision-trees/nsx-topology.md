@@ -61,7 +61,7 @@ flowchart TD
 
 ## See also
 
-- [NSX Cheat Sheet](../cheat-sheets/nsx/)
-- [NSX Architecture](../../virtualization/vmware/nsx/architecture/)
-- [NSX Network Interaction Map](../interaction-map/network/)
+- [NSX Cheat Sheet](../../cheat-sheets/nsx/)
+- [NSX Architecture](../../../virtualization/vmware/nsx/architecture/)
+- [NSX Network Interaction Map](../../interaction-map/network/)
 - [Back to Decision Trees](index.md)

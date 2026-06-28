@@ -177,5 +177,5 @@ For RF2, AOS places replicas on different **blocks** (chassis). If a block loses
 
 ## See also
 
-- [Nutanix — How It Works](how-it-works/)
-- [Nutanix — Deploy](../deploy/)
+- [Nutanix — How It Works](../how-it-works/)
+- [Nutanix — Deploy](../../deploy/)

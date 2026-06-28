@@ -270,8 +270,8 @@ dfsrdiag ReplicationState /member:* 2>&1
 
 ## See also
 
-- [Active Directory — Diagnostics](diagnostics/)
-- [Active Directory — Common Issues](common-issues/)
+- [Active Directory — Diagnostics](../diagnostics/)
+- [Active Directory — Common Issues](../common-issues/)
 
 ---
 

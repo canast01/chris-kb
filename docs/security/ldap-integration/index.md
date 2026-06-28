@@ -128,9 +128,9 @@ Each product documents its exact configuration path and any non-standard field n
 - [Jira — Authentication](../../tools/jira/security/authentication/index.md)
 - [Confluence — Authentication](../../tools/confluence/security/authentication/index.md)
 - [ServiceNow — Authentication](../../tools/servicenow/security/authentication/index.md)
-- [vCenter — Authentication](../../virtualization/vmware/vcenter/security/authentication/index.md)
-- [NSX — Authentication](../../virtualization/vmware/nsx/security/authentication/index.md)
-- [ONTAP — Authentication](../../storage/netapp/ontap/security/authentication/index.md)
+- [vCenter — Authentication](../../virtualization/vmware/vcenter/security/authentication//)
+- [NSX — Authentication](../../virtualization/vmware/nsx/security/authentication//)
+- [ONTAP — Authentication](../../storage/netapp/ontap/security/authentication//)
 - [Veeam — Authentication](../../backup/veeam/security/authentication/index.md)
 
 ---

@@ -295,8 +295,8 @@ ssh root@<vra-appliance-ip>
 
 ## See also
 
-- [Aria Automation — Common Issues](common-issues/)
-- [Aria Automation — Escalation](escalation/)
+- [Aria Automation — Common Issues](../common-issues/)
+- [Aria Automation — Escalation](../escalation/)
 
 ## Verify resolution
 

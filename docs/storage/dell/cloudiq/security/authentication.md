@@ -52,6 +52,6 @@ Best practices:
 
 ## See also
 
-- [Cloudiq — Access Control](access-control/)
-- [Cloudiq — Hardening](hardening/)
-- [Cloudiq — Encryption](encryption/)
+- [Cloudiq — Access Control](../access-control/)
+- [Cloudiq — Hardening](../hardening/)
+- [Cloudiq — Encryption](../encryption/)

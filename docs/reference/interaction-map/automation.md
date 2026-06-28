@@ -57,8 +57,8 @@ For **TKGs** (vSphere with Tanzu): the Supervisor runs directly on vSphere; no s
 
 ## See also
 
-- [Aria Automation Cheat Sheet](../cheat-sheets/aria-automation/)
-- [Aria Operations Cheat Sheet](../cheat-sheets/aria-operations/)
-- [Tanzu Cheat Sheet](../cheat-sheets/tanzu/)
-- [Horizon Cheat Sheet](../cheat-sheets/horizon/)
+- [Aria Automation Cheat Sheet](../../cheat-sheets/aria-automation/)
+- [Aria Operations Cheat Sheet](../../cheat-sheets/aria-operations/)
+- [Tanzu Cheat Sheet](../../cheat-sheets/tanzu/)
+- [Horizon Cheat Sheet](../../cheat-sheets/horizon/)
 - [Back to Interaction Map](index.md)

@@ -414,8 +414,8 @@ crontab -e
 
 ## See also
 
-- [VxRail — CLI Reference](cli-reference/)
-- [VxRail — Procedures](procedures/)
+- [VxRail — CLI Reference](../cli-reference/)
+- [VxRail — Procedures](../procedures/)
 
 ## Verify
 

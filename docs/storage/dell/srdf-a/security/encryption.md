@@ -33,6 +33,6 @@ SRDF/A encryption: in-flight data encryption over FCIP using GigE Encryption Mod
 
 ## See also
 
-- [Srdf A — Hardening](hardening/)
-- [Srdf A — Authentication](authentication/)
-- [Srdf A — Access Control](access-control/)
+- [Srdf A — Hardening](../hardening/)
+- [Srdf A — Authentication](../authentication/)
+- [Srdf A — Access Control](../access-control/)

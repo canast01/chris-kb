@@ -272,6 +272,6 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/host_volume_mapping" \
 
 ## See also
 
-- [Powerstore — Procedures](procedures/)
-- [Powerstore — Health Checks](health-checks/)
-- [Powerstore — Common Issues](../troubleshooting/common-issues/)
+- [Powerstore — Procedures](../procedures/)
+- [Powerstore — Health Checks](../health-checks/)
+- [Powerstore — Common Issues](../../troubleshooting/common-issues/)

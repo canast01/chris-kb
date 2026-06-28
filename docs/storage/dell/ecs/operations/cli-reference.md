@@ -397,6 +397,6 @@ curl -s -k -X POST \
 
 ## See also
 
-- [Ecs — Procedures](procedures/)
-- [Ecs — Scripts](scripts/)
-- [Ecs — Health Checks](health-checks/)
+- [Ecs — Procedures](../procedures/)
+- [Ecs — Scripts](../scripts/)
+- [Ecs — Health Checks](../health-checks/)

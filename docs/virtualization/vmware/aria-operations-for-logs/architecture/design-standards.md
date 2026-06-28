@@ -19,5 +19,5 @@ Follow the same naming scheme as other LCM-managed appliances:
 
 ## See also
 
-- [Aria Operations for Logs — How It Works](how-it-works/)
-- [Aria Operations for Logs — Deploy](../deploy/)
+- [Aria Operations for Logs — How It Works](../how-it-works/)
+- [Aria Operations for Logs — Deploy](../../deploy/)

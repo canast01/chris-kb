@@ -230,8 +230,8 @@ Test-NetConnection -ComputerName <remote-srm-server-fqdn> -Port 8095
 
 ## See also
 
-- [SRM — Common Issues](common-issues/)
-- [SRM — Escalation](escalation/)
+- [SRM — Common Issues](../common-issues/)
+- [SRM — Escalation](../escalation/)
 
 ## Verify resolution
 

@@ -441,6 +441,6 @@ Document the completion date, the engineer who performed the hardening, and the 
 
 ## See also
 
-- [FlashBlade — Authentication](authentication/)
-- [FlashBlade — Access Control](access-control/)
-- [FlashBlade — Encryption](encryption/)
+- [FlashBlade — Authentication](../authentication/)
+- [FlashBlade — Access Control](../access-control/)
+- [FlashBlade — Encryption](../encryption/)

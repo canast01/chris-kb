@@ -29,6 +29,6 @@ acs certificates show-ca
 
 ## See also
 
-- [Nexus Dashboard — Access Control](access-control/)
-- [Nexus Dashboard — Hardening](hardening/)
-- [Nexus Dashboard — Encryption](encryption/)
+- [Nexus Dashboard — Access Control](../access-control/)
+- [Nexus Dashboard — Hardening](../hardening/)
+- [Nexus Dashboard — Encryption](../encryption/)

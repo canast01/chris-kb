@@ -153,7 +153,7 @@ Test-NetConnection -ComputerName <sql-server> -Port 1433
 
 ## See also
 
-- [Venafi — Architecture](how-it-works/)
-- [Venafi — Operations](../operations/)
-- [Certificates — Architecture](../../certificates/architecture/)
+- [Venafi — Architecture](../how-it-works/)
+- [Venafi — Operations](../../operations/)
+- [Certificates — Architecture](../../../certificates/architecture/)
 - [Active Directory — Ports](../../../compute/windows-server/active-directory/architecture/ports.md)

@@ -165,7 +165,7 @@ ceph osd find 0
 
 ## See also
 
-- [Ceph — Architecture](how-it-works/)
-- [Ceph — Deploy](../deploy/)
-- [Ceph — Operations](../operations/)
-- [Ceph — Troubleshooting](../troubleshooting/)
+- [Ceph — Architecture](../how-it-works/)
+- [Ceph — Deploy](../../deploy/)
+- [Ceph — Operations](../../operations/)
+- [Ceph — Troubleshooting](../../troubleshooting/)

@@ -116,9 +116,9 @@ Then expand filesystem inside VRA:
 
 ## See also
 
-- [vSphere Replication — Diagnostics](diagnostics/)
-- [vSphere Replication — Escalation](escalation/)
-- [vSphere Replication — Health Checks](../operations/health-checks/)
+- [vSphere Replication — Diagnostics](../diagnostics/)
+- [vSphere Replication — Escalation](../escalation/)
+- [vSphere Replication — Health Checks](../../operations/health-checks/)
 
 ## Verify resolution
 

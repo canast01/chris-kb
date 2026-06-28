@@ -283,8 +283,8 @@ support-bundle generate
 
 ## See also
 
-- [vRNI Common Issues](common-issues/)
-- [vRNI Escalation](escalation/)
+- [vRNI Common Issues](../common-issues/)
+- [vRNI Escalation](../escalation/)
 
 ## Verify resolution
 

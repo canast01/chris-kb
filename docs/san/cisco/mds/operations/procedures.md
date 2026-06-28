@@ -338,6 +338,6 @@ switch# show module
 
 ## See also
 
-- [Mds — Health Checks](health-checks/)
-- [Mds — CLI Reference](cli-reference/)
+- [Mds — Health Checks](../health-checks/)
+- [Mds — CLI Reference](../cli-reference/)
 - [Mds — Common Issues](../troubleshooting/common-issues/)

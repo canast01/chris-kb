@@ -81,6 +81,6 @@ SELECT COUNT(*) FROM important_table;
 
 ## See also
 
-- [Mysql — Procedures](procedures/)
-- [Mysql — Health Checks](health-checks/)
-- [Mysql — Common Issues](../troubleshooting/common-issues/)
+- [Mysql — Procedures](../procedures/)
+- [Mysql — Health Checks](../health-checks/)
+- [Mysql — Common Issues](../../troubleshooting/common-issues/)

@@ -234,6 +234,6 @@ For purely internal file transfers on trusted networks, `sys` security is accept
 
 ## See also
 
-- [Powerstore — Hardening](hardening/)
-- [Powerstore — Authentication](authentication/)
-- [Powerstore — Access Control](access-control/)
+- [Powerstore — Hardening](../hardening/)
+- [Powerstore — Authentication](../authentication/)
+- [Powerstore — Access Control](../access-control/)

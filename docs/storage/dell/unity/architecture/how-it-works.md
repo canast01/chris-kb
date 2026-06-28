@@ -144,6 +144,6 @@ uemcli /stor/snap show                                 # snapshot inventory
 
 ## See also
 
-- [Unity — Design Standards](design-standards/)
-- [Unity — Integrations](integrations/)
+- [Unity — Design Standards](../design-standards/)
+- [Unity — Integrations](../integrations/)
 - [Unity — Deploy](../deploy/)

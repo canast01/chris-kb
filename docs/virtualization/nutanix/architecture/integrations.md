@@ -218,5 +218,5 @@ Nutanix Calm is a blueprint-based automation engine available through Prism Cent
 
 ## See also
 
-- [Nutanix — How It Works](how-it-works/)
+- [Nutanix — How It Works](../how-it-works/)
 - [Nutanix — Deploy](../deploy/)

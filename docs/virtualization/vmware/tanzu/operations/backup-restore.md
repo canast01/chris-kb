@@ -186,9 +186,9 @@ kubectl rollout restart deployment -n harbor
 
 ## See also
 
-- [Tanzu — Procedures](procedures/)
-- [Virtualization Vmware Tanzu — Common Issues](../troubleshooting/common-issues/)
-- [Tanzu — Health Checks](health-checks/)
+- [Tanzu — Procedures](../procedures/)
+- [Virtualization Vmware Tanzu — Common Issues](../../troubleshooting/common-issues/)
+- [Tanzu — Health Checks](../health-checks/)
 
 ## Verify
 

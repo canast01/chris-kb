@@ -326,6 +326,6 @@ Key points illustrated:
 
 ## See also
 
-- [FlashArray — Design Standards](design-standards/)
-- [FlashArray — Integrations](integrations/)
+- [FlashArray — Design Standards](../design-standards/)
+- [FlashArray — Integrations](../integrations/)
 - [FlashArray — Deploy](../deploy/)

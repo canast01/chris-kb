@@ -339,8 +339,8 @@ Write-Host "Triage data saved to: $OUT" -ForegroundColor Cyan
 
 ## See also
 
-- [vCenter — CLI Reference (PowerCLI & DCLI)](cli-reference/)
-- [vCenter — Procedures](procedures/)
+- [vCenter — CLI Reference (PowerCLI & DCLI)](../cli-reference/)
+- [vCenter — Procedures](../procedures/)
 
 ## Verify
 

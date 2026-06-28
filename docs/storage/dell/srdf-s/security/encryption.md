@@ -25,6 +25,6 @@ SRDF/S encryption: in-flight encryption over FCIP using GEM or Brocade encryptio
 
 ## See also
 
-- [Srdf S — Hardening](hardening/)
-- [Srdf S — Authentication](authentication/)
-- [Srdf S — Access Control](access-control/)
+- [Srdf S — Hardening](../hardening/)
+- [Srdf S — Authentication](../authentication/)
+- [Srdf S — Access Control](../access-control/)

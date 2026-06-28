@@ -155,5 +155,5 @@ For P1 incidents involving data loss risk, request immediate engineering involve
 
 ## See also
 
-- [FlashBlade — Diagnostics](diagnostics/)
-- [FlashBlade — Common Issues](common-issues/)
+- [FlashBlade — Diagnostics](../diagnostics/)
+- [FlashBlade — Common Issues](../common-issues/)

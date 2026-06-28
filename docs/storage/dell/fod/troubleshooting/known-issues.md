@@ -45,6 +45,6 @@ license_activation -> resolution
 
 ## See also
 
-- [Dell FOD — Common Issues](common-issues/)
+- [Dell FOD — Common Issues](../common-issues/)
 - [Dell COD — Known Issues](../../cod/troubleshooting/known-issues.md)
 - [Dell PowerStore — Known Issues](../../powerstore/troubleshooting/known-issues.md)

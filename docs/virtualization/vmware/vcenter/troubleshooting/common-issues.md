@@ -407,9 +407,9 @@ Alarm definitions are managed at **vCenter → Configure → Alarm Definitions**
 
 ## See also
 
-- [vCenter HA — Internals](../../internals/vcha-internals/)
-- [Certificate Chain — Internals](../../internals/certificate-chain/)
-- [Scenarios — vCenter Down](../../topics/scenarios/vcenter-down/)
+- [vCenter HA — Internals](../../../internals/vcha-internals/)
+- [Certificate Chain — Internals](../../../internals/certificate-chain/)
+- [Scenarios — vCenter Down](../../../topics/scenarios/vcenter-down/)
 
 ---
 

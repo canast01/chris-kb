@@ -68,7 +68,7 @@ nc -zv <linux-deploy-target> 22
 
 ## See also
 
-- [GitHub Actions — Architecture](how-it-works/)
+- [GitHub Actions — Architecture](../how-it-works/)
 - [Ansible — Ports](../../ansible/architecture/ports.md)
 - [Terraform — Ports](../../terraform/architecture/ports.md)
 - [Git — Ports](../../../itsm/git/architecture/ports.md)

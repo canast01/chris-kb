@@ -247,8 +247,8 @@ vracli db status
 
 ## See also
 
-- [Aria Automation — Diagnostics](diagnostics/)
-- [Aria Automation — Common Issues](common-issues/)
+- [Aria Automation — Diagnostics](../diagnostics/)
+- [Aria Automation — Common Issues](../common-issues/)
 
 ---
 

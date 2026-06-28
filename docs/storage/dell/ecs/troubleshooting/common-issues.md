@@ -160,6 +160,6 @@ graph TD
 
 ## See also
 
-- [Ecs — Diagnostics](diagnostics/)
-- [Ecs — Escalation](escalation/)
-- [Ecs — Health Checks](../operations/health-checks/)
+- [Ecs — Diagnostics](../diagnostics/)
+- [Ecs — Escalation](../escalation/)
+- [Ecs — Health Checks](../../operations/health-checks/)

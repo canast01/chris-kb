@@ -400,8 +400,8 @@ echo "Attach this file to your Dell support case."
 
 ## See also
 
-- [PowerPath — Common Issues](common-issues/)
-- [PowerPath — Escalation](escalation/)
+- [PowerPath — Common Issues](../common-issues/)
+- [PowerPath — Escalation](../escalation/)
 - [PowerPath — Health Checks](../operations/health-checks/)
 
 ## Verify resolution

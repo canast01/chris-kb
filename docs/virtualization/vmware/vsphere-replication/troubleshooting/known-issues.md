@@ -64,6 +64,6 @@ appliance -> resolution
 
 ## See also
 
-- [VMware vSphere Replication — Common Issues](common-issues/)
+- [VMware vSphere Replication — Common Issues](../common-issues/)
 - [VMware SRM — Known Issues](../../srm/troubleshooting/known-issues.md)
 - [VMware vCenter — Known Issues](../../vcenter/troubleshooting/known-issues.md)

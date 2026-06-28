@@ -111,7 +111,7 @@ esxcli vsan storage add -s <device-id> -d <cache-device-id>
 
 ### Option B — Add a new host to the cluster
 
-1. Follow the [ESXi Host Maintenance Mode Runbook](esxi-host-maintenance/) for any pre-work on the new host.
+1. Follow the [ESXi Host Maintenance Mode Runbook](../esxi-host-maintenance/) for any pre-work on the new host.
 2. Add host to cluster in vCenter: Cluster → Add Host.
 3. vSAN auto-discovers the new host's disks; claim them via Disk Management.
 4. Policy rebalance runs automatically; monitor object rebuild in vSAN Health.

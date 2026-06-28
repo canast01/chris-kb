@@ -405,6 +405,6 @@ Modify the synchronisation interval for a Consistency Group to adjust the RPO ta
 
 ## See also
 
-- [Recoverpoint — Health Checks](health-checks/)
-- [Recoverpoint — CLI Reference](cli-reference/)
+- [Recoverpoint — Health Checks](../health-checks/)
+- [Recoverpoint — CLI Reference](../cli-reference/)
 - [Recoverpoint — Common Issues](../troubleshooting/common-issues/)

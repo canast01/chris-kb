@@ -151,6 +151,6 @@ systemctl restart rsyslog
 
 ## See also
 
-- [Aria Automation — Access Control](access-control/)
-- [Aria Automation — Authentication](authentication/)
+- [Aria Automation — Access Control](../access-control/)
+- [Aria Automation — Authentication](../authentication/)
 - [Aria Automation — Health Checks](../operations/health-checks/)

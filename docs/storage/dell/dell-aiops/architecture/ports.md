@@ -41,5 +41,5 @@ Dell AIOps is a cloud-delivered (SaaS) analytics layer built on top of CloudIQ a
 
 ## See also
 
-- [Dell AIOps — Architecture](how-it-works/)
+- [Dell AIOps — Architecture](../how-it-works/)
 - [Dell CloudIQ — Ports](../../cloudiq/architecture/ports.md)

@@ -63,5 +63,5 @@ host_connectivity -> resolution
 
 ## See also
 
-- [Dell VPLEX — Common Issues](common-issues/)
+- [Dell VPLEX — Common Issues](../common-issues/)
 - [Dell RecoverPoint — Known Issues](../../recoverpoint/troubleshooting/known-issues.md)

@@ -170,6 +170,6 @@ pstcli -d <ip> -u admin "show /replication_session"
 
 ## See also
 
-- [Powerstore — Procedures](procedures/)
-- [Powerstore — Scripts](scripts/)
-- [Powerstore — Health Checks](health-checks/)
+- [Powerstore — Procedures](../procedures/)
+- [Powerstore — Scripts](../scripts/)
+- [Powerstore — Health Checks](../health-checks/)

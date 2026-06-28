@@ -242,8 +242,8 @@ tail -100 /var/log/loginsight/runtime.log
 
 ## See also
 
-- [Aria Operations for Logs — Diagnostics](diagnostics/)
-- [Aria Operations for Logs — Common Issues](common-issues/)
+- [Aria Operations for Logs — Diagnostics](../diagnostics/)
+- [Aria Operations for Logs — Common Issues](../common-issues/)
 
 ---
 

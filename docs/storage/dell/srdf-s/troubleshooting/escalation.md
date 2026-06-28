@@ -252,8 +252,8 @@ symevent -sid <R1-SID> list -last 20 | grep -iE "SRDF|RDF|partition|fault"
 
 ## See also
 
-- [SRDF/S — Diagnostics](diagnostics/)
-- [SRDF/S — Common Issues](common-issues/)
+- [SRDF/S — Diagnostics](../diagnostics/)
+- [SRDF/S — Common Issues](../common-issues/)
 
 ---
 

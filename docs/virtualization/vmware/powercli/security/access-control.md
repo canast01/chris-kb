@@ -121,5 +121,5 @@ $perms | Select-Object Principal, Role, Entity, Propagate | Format-Table -AutoSi
 
 ## See also
 
-- [PowerCLI — Authentication](authentication/)
-- [PowerCLI — Hardening](hardening/)
+- [PowerCLI — Authentication](../authentication/)
+- [PowerCLI — Hardening](../hardening/)

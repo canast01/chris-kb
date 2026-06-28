@@ -138,9 +138,9 @@ Get-HVLocalSession  # should return sessions from all CS nodes
 
 ## See also
 
-- [VMware Horizon — Health Checks](health-checks/)
+- [VMware Horizon — Health Checks](../health-checks/)
 - [VMware Horizon — Common Issues](../troubleshooting/common-issues/)
-- [Horizon — Procedures](procedures/)
+- [Horizon — Procedures](../procedures/)
 
 ## Verify
 

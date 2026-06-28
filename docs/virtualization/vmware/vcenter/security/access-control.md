@@ -266,5 +266,5 @@ Store the break-glass password for `administrator@vsphere.local` in an offline v
 
 ## See also
 
-- [vCenter Security — Authentication](authentication/)
-- [vCenter Security — Hardening](hardening/)
+- [vCenter Security — Authentication](../authentication/)
+- [vCenter Security — Hardening](../hardening/)

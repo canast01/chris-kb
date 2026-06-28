@@ -115,6 +115,6 @@ snmpget -v2c -c <community> <device-ip> 1.3.6.1.2.1.1.1.0
 
 ## See also
 
-- [ServiceNow — Architecture](how-it-works/)
-- [ServiceNow — Deploy](../deploy/)
-- [ServiceNow — Operations](../operations/)
+- [ServiceNow — Architecture](../how-it-works/)
+- [ServiceNow — Deploy](../../deploy/)
+- [ServiceNow — Operations](../../operations/)

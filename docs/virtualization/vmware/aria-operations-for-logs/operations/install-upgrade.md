@@ -46,9 +46,9 @@ curl -sk -u 'admin:<password>' \
 
 ## See also
 
-- [Aria Operations for Logs — Health Checks](health-checks/)
+- [Aria Operations for Logs — Health Checks](../health-checks/)
 - [Aria Operations for Logs — Common Issues](../troubleshooting/common-issues/)
-- [Aria Ops for Logs — Procedures](procedures/)
+- [Aria Ops for Logs — Procedures](../procedures/)
 
 ## Verify
 

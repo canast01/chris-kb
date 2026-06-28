@@ -59,6 +59,6 @@ graph TB
 
 ## See also
 
-- [Aria Ops for Logs — Standards](design-standards/)
+- [Aria Ops for Logs — Standards](../design-standards/)
 - [Aria Operations for Logs — Deploy](../deploy/)
-- [Aria Ops for Logs — Integrations](integrations/)
+- [Aria Ops for Logs — Integrations](../integrations/)

@@ -83,6 +83,6 @@ Native TDE is available in PostgreSQL 17+ and commercial forks (Percona, Enterpr
 
 ## See also
 
-- [Postgresql — Hardening](hardening/)
-- [Postgresql — Authentication](authentication/)
-- [Postgresql — Access Control](access-control/)
+- [Postgresql — Hardening](../hardening/)
+- [Postgresql — Authentication](../authentication/)
+- [Postgresql — Access Control](../access-control/)

@@ -79,6 +79,6 @@ symrdf -sg PROD_SG establish -force
 
 ## See also
 
-- [Srdf S — Procedures](procedures/)
-- [Srdf S — Health Checks](health-checks/)
-- [Srdf S — Common Issues](../troubleshooting/common-issues/)
+- [Srdf S — Procedures](../procedures/)
+- [Srdf S — Health Checks](../health-checks/)
+- [Srdf S — Common Issues](../../troubleshooting/common-issues/)

@@ -51,5 +51,5 @@ keystone-collector status
 
 ## See also
 
-- [Keystone — Procedures](procedures/)
-- [Keystone — Health Checks](health-checks/)
+- [Keystone — Procedures](../procedures/)
+- [Keystone — Health Checks](../health-checks/)

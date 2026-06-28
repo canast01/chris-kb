@@ -239,9 +239,9 @@ foreach ($vm in $vms) {
 
 ## See also
 
-- [SRM — Procedures](procedures/)
-- [VMware SRM — Common Issues](../troubleshooting/common-issues/)
-- [SRM — Health Checks](health-checks/)
+- [SRM — Procedures](../procedures/)
+- [VMware SRM — Common Issues](../../troubleshooting/common-issues/)
+- [SRM — Health Checks](../health-checks/)
 
 ## Verify
 

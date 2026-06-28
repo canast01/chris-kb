@@ -56,4 +56,4 @@ A: Not directly — etcd restores are full cluster restores. For namespace-level
 ## See Also
 
 - [Red Hat OpenShift Operations](index.md)
-- [Red Hat OpenShift Troubleshooting](../../troubleshooting/index.md)
+- [Red Hat OpenShift Troubleshooting](../../troubleshooting//)

@@ -20,7 +20,7 @@ Firewall port reference for VMware vSphere Replication (VR). Covers the VR Appli
 
 - The most critical firewall entry is ESXi → ESXi port 31031 TCP across the inter-site WAN firewall — this carries the actual VM replication data
 - The VR Appliance uses its management IP for all API communication (vCenter and inter-site); no separate data IP
-- If used with SRM, the SRM server also needs pairing ports — see [SRM — Ports](../../srm/architecture/ports/)
+- If used with SRM, the SRM server also needs pairing ports — see [SRM — Ports](../../../srm/architecture/ports/)
 
 ## Inbound — Admin to VR Appliance
 
@@ -81,6 +81,6 @@ curl -sk -o /dev/null -w "%{http_code}" https://<vcenter-ip>/rest/com/vmware/cis
 
 ## See also
 
-- [vSphere Replication — Architecture](how-it-works/)
+- [vSphere Replication — Architecture](../how-it-works/)
 - [SRM — Ports](../../srm/architecture/ports.md)
 - [ESXi — Ports](../../esxi/architecture/ports.md)

@@ -279,6 +279,6 @@ For each access review:
 
 ## See also
 
-- [Ecs — Authentication](authentication/)
-- [Ecs — Hardening](hardening/)
-- [Ecs — Encryption](encryption/)
+- [Ecs — Authentication](../authentication/)
+- [Ecs — Hardening](../hardening/)
+- [Ecs — Encryption](../encryption/)

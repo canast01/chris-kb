@@ -129,9 +129,9 @@ For clustered deployments, back up all 3 nodes together — inconsistent snapsho
 
 ## See also
 
-- [Aria Automation — Operational Procedures](procedures/)
-- [Aria Automation — Common Issues](../troubleshooting/common-issues/)
-- [Aria Automation — Health Checks](health-checks/)
+- [Aria Automation — Operational Procedures](../procedures/)
+- [Aria Automation — Common Issues](../../troubleshooting/common-issues/)
+- [Aria Automation — Health Checks](../health-checks/)
 
 ## Verify
 

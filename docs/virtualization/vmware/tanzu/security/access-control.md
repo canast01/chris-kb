@@ -214,5 +214,5 @@ spec:
 
 ## See also
 
-- [Tanzu — Authentication](authentication/)
-- [Tanzu — Hardening](hardening/)
+- [Tanzu — Authentication](../authentication/)
+- [Tanzu — Hardening](../hardening/)

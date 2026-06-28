@@ -236,8 +236,8 @@ kubectl get certificaterequests -A
 ## See also
 
 - [Virtualization Vmware Tanzu — Common Issues](../troubleshooting/common-issues/)
-- [Tanzu — Procedures](procedures/)
-- [Tanzu — CLI Reference](cli-reference/)
+- [Tanzu — Procedures](../procedures/)
+- [Tanzu — CLI Reference](../cli-reference/)
 
 ## Verify
 

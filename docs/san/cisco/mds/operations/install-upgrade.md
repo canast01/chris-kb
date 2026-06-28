@@ -62,6 +62,6 @@ show flogi database
 
 ## See also
 
-- [Mds — Procedures](procedures/)
-- [Mds — Health Checks](health-checks/)
+- [Mds — Procedures](../procedures/)
+- [Mds — Health Checks](../health-checks/)
 - [Mds — Deploy](../deploy/)

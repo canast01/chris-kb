@@ -73,6 +73,6 @@ Every new PowerScale cluster or access zone deployment must meet the following b
 
 ## See also
 
-- [Powerscale — How It Works](how-it-works/)
-- [Powerscale — Integrations](integrations/)
-- [Powerscale — Deploy](../deploy/)
+- [Powerscale — How It Works](../how-it-works/)
+- [Powerscale — Integrations](../integrations/)
+- [Powerscale — Deploy](../../deploy/)

@@ -44,6 +44,6 @@ acs backup list
 
 ## See also
 
-- [Nexus Dashboard — Procedures](procedures/)
-- [Nexus Dashboard — Health Checks](health-checks/)
-- [Nexus Dashboard — Common Issues](../troubleshooting/common-issues/)
+- [Nexus Dashboard — Procedures](../procedures/)
+- [Nexus Dashboard — Health Checks](../health-checks/)
+- [Nexus Dashboard — Common Issues](../../troubleshooting/common-issues/)

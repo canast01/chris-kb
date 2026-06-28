@@ -22,5 +22,5 @@ Dell AIOps is embedded in CloudIQ — integrations are shared. Supported Dell ar
 
 ## See also
 
-- [Dell Aiops — How It Works](how-it-works/)
-- [Dell Aiops — Design Standards](design-standards/)
+- [Dell Aiops — How It Works](../how-it-works/)
+- [Dell Aiops — Design Standards](../design-standards/)

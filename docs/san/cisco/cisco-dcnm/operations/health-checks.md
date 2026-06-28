@@ -64,6 +64,6 @@ show zoneset active vsan <vsan-id>
 
 ## See also
 
-- [Cisco Dcnm — Procedures](procedures/)
-- [Cisco Dcnm — CLI Reference](cli-reference/)
+- [Cisco Dcnm — Procedures](../procedures/)
+- [Cisco Dcnm — CLI Reference](../cli-reference/)
 - [Cisco Dcnm — Common Issues](../troubleshooting/common-issues/)

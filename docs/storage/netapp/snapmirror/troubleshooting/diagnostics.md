@@ -248,8 +248,8 @@ event log show -severity error -time-range <start>..<end> > /tmp/ems-error-$(dat
 
 ## See also
 
-- [SnapMirror — Common Issues](common-issues/)
-- [SnapMirror — Escalation](escalation/)
+- [SnapMirror — Common Issues](../common-issues/)
+- [SnapMirror — Escalation](../escalation/)
 - [SnapMirror — Health Checks](../operations/health-checks/)
 
 ## Verify resolution

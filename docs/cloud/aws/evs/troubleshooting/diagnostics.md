@@ -317,8 +317,8 @@ aws evs list-environments --query 'environmentSummaries[*].[name,environmentId,s
 
 ## See also
 
-- [Amazon EVS — Common Issues](common-issues/)
-- [Amazon EVS — Escalation](escalation/)
+- [Amazon EVS — Common Issues](../common-issues/)
+- [Amazon EVS — Escalation](../escalation/)
 
 ## Verify resolution
 

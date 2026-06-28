@@ -242,6 +242,6 @@ Close-SmConnection
 
 ## See also
 
-- [Snapcenter — Authentication](authentication/)
-- [Snapcenter — Access Control](access-control/)
-- [Snapcenter — Encryption](encryption/)
+- [Snapcenter — Authentication](../authentication/)
+- [Snapcenter — Access Control](../access-control/)
+- [Snapcenter — Encryption](../encryption/)

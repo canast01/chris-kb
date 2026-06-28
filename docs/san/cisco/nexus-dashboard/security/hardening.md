@@ -113,6 +113,6 @@ acs system ntp show
 
 ## See also
 
-- [Nexus Dashboard — Authentication](authentication/)
-- [Nexus Dashboard — Access Control](access-control/)
-- [Nexus Dashboard — Encryption](encryption/)
+- [Nexus Dashboard — Authentication](../authentication/)
+- [Nexus Dashboard — Access Control](../access-control/)
+- [Nexus Dashboard — Encryption](../encryption/)

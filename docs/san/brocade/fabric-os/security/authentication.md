@@ -210,6 +210,6 @@ NTP servers should be on the management network, reachable from the switch manag
 
 ## See also
 
-- [Fabric Os — Access Control](access-control/)
-- [Fabric Os — Hardening](hardening/)
-- [Fabric Os — Encryption](encryption/)
+- [Fabric Os — Access Control](../access-control/)
+- [Fabric Os — Hardening](../hardening/)
+- [Fabric Os — Encryption](../encryption/)

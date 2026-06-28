@@ -200,5 +200,5 @@ kubectl create clusterrole dev-no-secrets \
 
 ## See also
 
-- [Tanzu — Hardening](hardening/)
-- [Tanzu — Health Checks](../operations/health-checks/)
+- [Tanzu — Hardening](../hardening/)
+- [Tanzu — Health Checks](../../operations/health-checks/)

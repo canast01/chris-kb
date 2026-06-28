@@ -370,8 +370,8 @@ Evidence to collect before escalation:
 
 ## See also
 
-- [vCenter Troubleshooting — Common Issues](common-issues/)
-- [vCenter — Escalation](escalation/)
+- [vCenter Troubleshooting — Common Issues](../common-issues/)
+- [vCenter — Escalation](../escalation/)
 
 ## Verify resolution
 

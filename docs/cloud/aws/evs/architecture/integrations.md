@@ -292,5 +292,5 @@ aws cloudwatch get-metric-statistics \
 
 ## See also
 
-- [Amazon EVS — How It Works](how-it-works/)
+- [Amazon EVS — How It Works](../how-it-works/)
 - [Amazon EVS — Deploy](../deploy/)

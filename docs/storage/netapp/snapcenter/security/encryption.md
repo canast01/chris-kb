@@ -231,6 +231,6 @@ Get-SmHost | Select-Object HostName, PlugInStatus, OverallStatus
 
 ## See also
 
-- [Snapcenter — Hardening](hardening/)
-- [Snapcenter — Authentication](authentication/)
-- [Snapcenter — Access Control](access-control/)
+- [Snapcenter — Hardening](../hardening/)
+- [Snapcenter — Authentication](../authentication/)
+- [Snapcenter — Access Control](../access-control/)

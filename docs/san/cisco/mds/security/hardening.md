@@ -162,6 +162,6 @@ show cfs peers
 
 ## See also
 
-- [Mds — Authentication](authentication/)
-- [Mds — Access Control](access-control/)
-- [Mds — Encryption](encryption/)
+- [Mds — Authentication](../authentication/)
+- [Mds — Access Control](../access-control/)
+- [Mds — Encryption](../encryption/)

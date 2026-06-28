@@ -281,8 +281,8 @@ curl -sk https://<vidm-fqdn>/SAAS/API/1.0/REST/system/health/heartbeat
 
 ## See also
 
-- [Aria Suite Lifecycle — Diagnostics](diagnostics/)
-- [Aria Suite Lifecycle — Common Issues](common-issues/)
+- [Aria Suite Lifecycle — Diagnostics](../diagnostics/)
+- [Aria Suite Lifecycle — Common Issues](../common-issues/)
 
 ---
 

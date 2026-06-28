@@ -984,6 +984,6 @@ isi config dump
 
 ## See also
 
-- [Powerscale — Procedures](procedures/)
-- [Powerscale — Scripts](scripts/)
-- [Powerscale — Health Checks](health-checks/)
+- [Powerscale — Procedures](../procedures/)
+- [Powerscale — Scripts](../scripts/)
+- [Powerscale — Health Checks](../health-checks/)

@@ -236,6 +236,6 @@ For automation scripts, always log out at the end of the script to invalidate th
 
 ## See also
 
-- [Snapcenter — Access Control](access-control/)
-- [Snapcenter — Hardening](hardening/)
-- [Snapcenter — Encryption](encryption/)
+- [Snapcenter — Access Control](../access-control/)
+- [Snapcenter — Hardening](../hardening/)
+- [Snapcenter — Encryption](../encryption/)

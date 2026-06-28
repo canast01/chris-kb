@@ -66,5 +66,5 @@ api_and_cmdlet -> resolution
 
 ## See also
 
-- [VMware PowerCLI — Common Issues](common-issues/)
+- [VMware PowerCLI — Common Issues](../common-issues/)
 - [VMware vCenter — Known Issues](../../vcenter/troubleshooting/known-issues.md)

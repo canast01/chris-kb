@@ -47,6 +47,6 @@ Hardening reference covering Hardening Checklist, Network Access Controls.
 
 ## See also
 
-- [VMware Cloud Foundation — Access Control](access-control/)
-- [VMware Cloud Foundation — Authentication](authentication/)
+- [VMware Cloud Foundation — Access Control](../access-control/)
+- [VMware Cloud Foundation — Authentication](../authentication/)
 - [VCF — Health Checks](../operations/health-checks/)

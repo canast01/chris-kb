@@ -66,5 +66,5 @@ restore -> resolution
 
 ## See also
 
-- [NetApp SnapCenter — Common Issues](common-issues/)
+- [NetApp SnapCenter — Common Issues](../common-issues/)
 - [NetApp ONTAP — Known Issues](../../ontap/troubleshooting/known-issues.md)

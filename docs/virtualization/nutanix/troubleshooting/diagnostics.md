@@ -288,8 +288,8 @@ scp nutanix@<cvm-ip>:/home/nutanix/send/NCC_log_collector*.zip ./
 
 ## See also
 
-- [Nutanix — Common Issues](common-issues/)
-- [Nutanix — Escalation](escalation/)
+- [Nutanix — Common Issues](../common-issues/)
+- [Nutanix — Escalation](../escalation/)
 
 ## Verify resolution
 

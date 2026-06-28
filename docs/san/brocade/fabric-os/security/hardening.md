@@ -214,6 +214,6 @@ Hardening is not a one-time task. Schedule these reviews:
 
 ## See also
 
-- [Fabric Os — Authentication](authentication/)
-- [Fabric Os — Access Control](access-control/)
-- [Fabric Os — Encryption](encryption/)
+- [Fabric Os — Authentication](../authentication/)
+- [Fabric Os — Access Control](../access-control/)
+- [Fabric Os — Encryption](../encryption/)

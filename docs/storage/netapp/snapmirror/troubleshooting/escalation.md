@@ -266,8 +266,8 @@ snapmirror mediator show
 
 ## See also
 
-- [SnapMirror — Diagnostics](diagnostics/)
-- [SnapMirror — Common Issues](common-issues/)
+- [SnapMirror — Diagnostics](../diagnostics/)
+- [SnapMirror — Common Issues](../common-issues/)
 
 ---
 

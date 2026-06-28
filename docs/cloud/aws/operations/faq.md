@@ -56,4 +56,4 @@ A: Not natively. Restore the RDS snapshot to a temporary instance, export the ta
 ## See Also
 
 - [AWS Operations](index.md)
-- [AWS Troubleshooting](../../troubleshooting/index.md)
+- [AWS Troubleshooting](../../troubleshooting//)

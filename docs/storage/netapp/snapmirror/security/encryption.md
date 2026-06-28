@@ -181,6 +181,6 @@ snapmirror show -type automatedfailover \
 
 ## See also
 
-- [Snapmirror — Hardening](hardening/)
-- [Snapmirror — Authentication](authentication/)
-- [Snapmirror — Access Control](access-control/)
+- [Snapmirror — Hardening](../hardening/)
+- [Snapmirror — Authentication](../authentication/)
+- [Snapmirror — Access Control](../access-control/)

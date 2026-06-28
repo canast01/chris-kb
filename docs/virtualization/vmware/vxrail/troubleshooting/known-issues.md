@@ -76,6 +76,6 @@ vsphere_integration -> resolution
 
 ## See also
 
-- [Dell VxRail — Common Issues](common-issues/)
+- [Dell VxRail — Common Issues](../common-issues/)
 - [VMware vCenter — Known Issues](../../vcenter/troubleshooting/known-issues.md)
 - [VMware vSAN — Known Issues](../../vsan/troubleshooting/known-issues.md)

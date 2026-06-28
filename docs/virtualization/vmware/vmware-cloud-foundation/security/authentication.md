@@ -18,5 +18,5 @@ tags:
 
 ## See also
 
-- [VMware Cloud Foundation — Access Control](access-control/)
-- [VCF — Hardening](hardening/)
+- [VMware Cloud Foundation — Access Control](../access-control/)
+- [VCF — Hardening](../hardening/)

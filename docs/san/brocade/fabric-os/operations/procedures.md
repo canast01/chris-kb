@@ -411,6 +411,6 @@ A non-zero B2B credit 0 count in `portbuffershow` indicates the remote end is no
 
 ## See also
 
-- [Fabric Os — Health Checks](health-checks/)
-- [Fabric Os — CLI Reference](cli-reference/)
+- [Fabric Os — Health Checks](../health-checks/)
+- [Fabric Os — CLI Reference](../cli-reference/)
 - [Fabric Os — Common Issues](../troubleshooting/common-issues/)

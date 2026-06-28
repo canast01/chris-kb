@@ -49,6 +49,6 @@ tail -f /data/vcops/log/casa.log | grep -i "login\|logout\|admin\|role"
 
 ## See also
 
-- [Aria Operations — Access Control](access-control/)
-- [Aria Operations — Authentication](authentication/)
+- [Aria Operations — Access Control](../access-control/)
+- [Aria Operations — Authentication](../authentication/)
 - [Aria Operations Health Checks](../operations/health-checks/)

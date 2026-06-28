@@ -169,7 +169,7 @@ nc -zv <dc-ip> 636
 
 ## See also
 
-- [CyberArk — Architecture](how-it-works/)
-- [CyberArk — Deploy](../deploy/)
-- [CyberArk — Operations](../operations/)
-- [CyberArk — Security](../security/)
+- [CyberArk — Architecture](../how-it-works/)
+- [CyberArk — Deploy](../../deploy/)
+- [CyberArk — Operations](../../operations/)
+- [CyberArk — Security](../../security/)

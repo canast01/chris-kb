@@ -65,5 +65,5 @@ array_health -> resolution
 
 ## See also
 
-- [Pure Storage FlashBlade — Common Issues](common-issues/)
+- [Pure Storage FlashBlade — Common Issues](../common-issues/)
 - [Pure Storage FlashArray — Known Issues](../../flasharray/troubleshooting/known-issues.md)

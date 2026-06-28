@@ -29,5 +29,5 @@ Features on Demand integration with PowerMax/Unity management platforms and stor
 
 ## See also
 
-- [Fod — How It Works](how-it-works/)
-- [Fod — Design Standards](design-standards/)
+- [Fod — How It Works](../how-it-works/)
+- [Fod — Design Standards](../design-standards/)

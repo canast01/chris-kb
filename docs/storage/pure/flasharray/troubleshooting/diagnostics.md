@@ -499,8 +499,8 @@ Pure1 provides historical analytics and AI-driven anomaly detection that complem
 
 ## See also
 
-- [FlashArray — Common Issues](common-issues/)
-- [FlashArray — Escalation](escalation/)
+- [FlashArray — Common Issues](../common-issues/)
+- [FlashArray — Escalation](../escalation/)
 
 ## Verify resolution
 

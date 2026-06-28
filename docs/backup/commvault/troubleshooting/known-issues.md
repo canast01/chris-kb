@@ -66,5 +66,5 @@ commserve -> resolution
 
 ## See also
 
-- [Commvault — Common Issues](common-issues/)
+- [Commvault — Common Issues](../common-issues/)
 - [Dell Data Domain — Known Issues](../../../storage/dell/data-domain/troubleshooting/known-issues.md)

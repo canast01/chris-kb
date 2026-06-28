@@ -41,7 +41,7 @@ https://esxi-host/sdk                         # hostd API
 
 ## See also
 
-- [ESXi Cheat Sheet](../cheat-sheets/esxi/)
-- [vCenter Cheat Sheet](../cheat-sheets/vcenter/)
-- [PowerCLI Cheat Sheet](../cheat-sheets/powercli/)
+- [ESXi Cheat Sheet](../../cheat-sheets/esxi/)
+- [vCenter Cheat Sheet](../../cheat-sheets/vcenter/)
+- [PowerCLI Cheat Sheet](../../cheat-sheets/powercli/)
 - [Back to Interaction Map](index.md)

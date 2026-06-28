@@ -119,5 +119,5 @@ Review active tokens quarterly (Settings → API Tokens) and revoke any with no 
 
 ## See also
 
-- [Aria Operations for Networks — Access Control](access-control/)
-- [vRNI Security Hardening](hardening/)
+- [Aria Operations for Networks — Access Control](../access-control/)
+- [vRNI Security Hardening](../hardening/)

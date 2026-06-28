@@ -297,5 +297,5 @@ done
 
 ## See also
 
-- [Nutanix — CLI Reference](cli-reference/)
-- [Nutanix — Procedures](procedures/)
+- [Nutanix — CLI Reference](../cli-reference/)
+- [Nutanix — Procedures](../procedures/)

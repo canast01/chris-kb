@@ -281,8 +281,8 @@ SELECT pg_is_in_recovery() AS is_standby;
 
 ## See also
 
-- [PostgreSQL — Common Issues](common-issues/)
-- [PostgreSQL — Escalation](escalation/)
+- [PostgreSQL — Common Issues](../common-issues/)
+- [PostgreSQL — Escalation](../escalation/)
 - [PostgreSQL — Health Checks](../operations/health-checks/)
 
 ## Verify resolution

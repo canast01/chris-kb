@@ -167,6 +167,6 @@ purefb network interface list  # data and replication interface status
 
 ## See also
 
-- [FlashBlade — Design Standards](design-standards/)
-- [FlashBlade — Integrations](integrations/)
+- [FlashBlade — Design Standards](../design-standards/)
+- [FlashBlade — Integrations](../integrations/)
 - [FlashBlade — Deploy](../deploy/)

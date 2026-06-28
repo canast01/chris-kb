@@ -414,6 +414,6 @@ purepgroup eradicate <pg_name>
 
 ## See also
 
-- [FlashArray — Health Checks](health-checks/)
-- [FlashArray — CLI Reference](cli-reference/)
+- [FlashArray — Health Checks](../health-checks/)
+- [FlashArray — CLI Reference](../cli-reference/)
 - [FlashArray — Common Issues](../troubleshooting/common-issues/)

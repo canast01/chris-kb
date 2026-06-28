@@ -349,9 +349,9 @@ Key tasks available in VAMI:
 
 ## See also
 
-- [Aria Automation — Operational Procedures](procedures/)
-- [Aria Automation — Scripts Reference](scripts/)
-- [Aria Automation — Health Checks](health-checks/)
+- [Aria Automation — Operational Procedures](../procedures/)
+- [Aria Automation — Scripts Reference](../scripts/)
+- [Aria Automation — Health Checks](../health-checks/)
 
 ## Verify
 

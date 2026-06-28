@@ -169,6 +169,6 @@ purealert acknowledge --id 123
 
 ## See also
 
-- [Evergreen — Procedures](procedures/)
-- [Evergreen — Scripts](scripts/)
-- [Evergreen — Health Checks](health-checks/)
+- [Evergreen — Procedures](../procedures/)
+- [Evergreen — Scripts](../scripts/)
+- [Evergreen — Health Checks](../health-checks/)

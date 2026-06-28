@@ -305,8 +305,8 @@ netstat -an > C:\Logs\netstat.txt
 
 ## See also
 
-- [Active Directory — Common Issues](common-issues/)
-- [Active Directory — Escalation](escalation/)
+- [Active Directory — Common Issues](../common-issues/)
+- [Active Directory — Escalation](../escalation/)
 
 ## Verify resolution
 

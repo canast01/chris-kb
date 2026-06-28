@@ -269,5 +269,5 @@ purearray list --csv | grep phone_home
 
 ## See also
 
-- [Evergreen — Procedures](procedures/)
-- [Evergreen — CLI Reference](cli-reference/)
+- [Evergreen — Procedures](../procedures/)
+- [Evergreen — CLI Reference](../cli-reference/)

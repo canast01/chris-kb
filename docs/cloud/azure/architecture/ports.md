@@ -122,7 +122,7 @@ az network nic show-effective-nsg --name <nic-name> --resource-group <rg-name>
 
 ## See also
 
-- [Azure — Architecture](how-it-works/)
+- [Azure — Architecture](../how-it-works/)
 - [AWS — Ports](../../aws/architecture/ports.md)
 - [Terraform — Ports](../../../automation/terraform/architecture/ports.md)
 - [Ansible — Ports](../../../automation/ansible/architecture/ports.md)

@@ -46,5 +46,5 @@ vcf-password-ops --rotatepassword --component VCENTER --account root
 
 ## See also
 
-- [VCF Operations](../../virtualization/vmware/vmware-cloud-foundation/operations/procedures/)
-- [VCF Troubleshooting](../../virtualization/vmware/vmware-cloud-foundation/troubleshooting/common-issues/)
+- [VCF Operations](../../../virtualization/vmware/vmware-cloud-foundation/operations/procedures/)
+- [VCF Troubleshooting](../../../virtualization/vmware/vmware-cloud-foundation/troubleshooting/common-issues/)

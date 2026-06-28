@@ -95,9 +95,9 @@ journalctl -u sddc-manager --since "2 hours ago"
 
 ## See also
 
-- [VCF — Procedures](procedures/)
-- [VMware Cloud Foundation — Operational Scripts](scripts/)
-- [VCF — Health Checks](health-checks/)
+- [VCF — Procedures](../procedures/)
+- [VMware Cloud Foundation — Operational Scripts](../scripts/)
+- [VCF — Health Checks](../health-checks/)
 
 ## Verify
 

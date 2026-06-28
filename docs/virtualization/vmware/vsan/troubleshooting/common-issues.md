@@ -294,9 +294,9 @@ graph TD
 
 ## See also
 
-- [vSAN Cluster Health — Internals](../../internals/vsan-cluster-health/)
-- [vSAN — Operations](../operations/)
-- [Scenarios — vSAN Disk Failure](../../topics/scenarios/vsan-disk-component-failure/)
+- [vSAN Cluster Health — Internals](../../../internals/vsan-cluster-health/)
+- [vSAN — Operations](../../operations/)
+- [Scenarios — vSAN Disk Failure](../../../topics/scenarios/vsan-disk-component-failure/)
 
 ---
 

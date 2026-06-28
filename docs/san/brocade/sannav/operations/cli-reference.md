@@ -197,6 +197,6 @@ for p in data.get('ports', []):
 
 ## See also
 
-- [Sannav — Procedures](procedures/)
-- [Sannav — Scripts](scripts/)
-- [Sannav — Health Checks](health-checks/)
+- [Sannav — Procedures](../procedures/)
+- [Sannav — Scripts](../scripts/)
+- [Sannav — Health Checks](../health-checks/)

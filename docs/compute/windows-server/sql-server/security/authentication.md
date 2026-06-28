@@ -93,6 +93,6 @@ EXEC sp_readerrorlog 0, 1, 'Login failed';
 
 ## See also
 
-- [Sql Server — Access Control](access-control/)
-- [Sql Server — Hardening](hardening/)
-- [Sql Server — Encryption](encryption/)
+- [Sql Server — Access Control](../access-control/)
+- [Sql Server — Hardening](../hardening/)
+- [Sql Server — Encryption](../encryption/)

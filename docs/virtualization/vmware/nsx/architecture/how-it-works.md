@@ -323,6 +323,6 @@ get log-file auth.log        # authentication events
 
 ## See also
 
-- [NSX — Design Standards](design-standards/)
+- [NSX — Design Standards](../design-standards/)
 - [NSX — Deploy](../deploy/)
-- [NSX — Integrations](integrations/)
+- [NSX — Integrations](../integrations/)

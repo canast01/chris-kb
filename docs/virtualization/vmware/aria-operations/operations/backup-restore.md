@@ -66,9 +66,9 @@ vracli cluster cassandra repair
 
 ## See also
 
-- [Aria Operations Procedures](procedures/)
-- [Aria Operations Common Issues](../troubleshooting/common-issues/)
-- [Aria Operations Health Checks](health-checks/)
+- [Aria Operations Procedures](../procedures/)
+- [Aria Operations Common Issues](../../troubleshooting/common-issues/)
+- [Aria Operations Health Checks](../health-checks/)
 
 ## Verify
 

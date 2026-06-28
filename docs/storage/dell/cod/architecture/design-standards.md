@@ -78,5 +78,5 @@ After applying a COD license:
 
 ## See also
 
-- [Cod — How It Works](how-it-works/)
-- [Cod — Integrations](integrations/)
+- [Cod — How It Works](../how-it-works/)
+- [Cod — Integrations](../integrations/)

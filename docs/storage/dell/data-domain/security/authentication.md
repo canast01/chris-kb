@@ -342,6 +342,6 @@ Forward the audit log to a SIEM with at minimum 12 months of retention. Authenti
 
 ## See also
 
-- [Data Domain — Access Control](access-control/)
-- [Data Domain — Hardening](hardening/)
-- [Data Domain — Encryption](encryption/)
+- [Data Domain — Access Control](../access-control/)
+- [Data Domain — Hardening](../hardening/)
+- [Data Domain — Encryption](../encryption/)

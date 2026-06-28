@@ -167,6 +167,6 @@ SELECT session_id, blocking_session_id, wait_type, wait_time FROM sys.dm_exec_re
 
 ## See also
 
-- [Sql Server — Health Checks](health-checks/)
-- [Sql Server — CLI Reference](cli-reference/)
+- [Sql Server — Health Checks](../health-checks/)
+- [Sql Server — CLI Reference](../cli-reference/)
 - [Sql Server — Common Issues](../troubleshooting/common-issues/)

@@ -127,7 +127,7 @@ curl -sk -o /dev/null -w "%{http_code}" https://<vcenter-fqdn>/rest/com/vmware/c
 
 ## See also
 
-- [Ansible — Architecture](how-it-works/)
-- [Ansible — Deploy](../deploy/)
-- [Ansible — Operations](../operations/)
+- [Ansible — Architecture](../how-it-works/)
+- [Ansible — Deploy](../../deploy/)
+- [Ansible — Operations](../../operations/)
 - [Terraform — Ports](../../terraform/architecture/ports.md)

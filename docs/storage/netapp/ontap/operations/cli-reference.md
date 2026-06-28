@@ -631,6 +631,6 @@ autosupport check show
 
 ## See also
 
-- [Ontap — Procedures](procedures/)
-- [Ontap — Scripts](scripts/)
-- [Ontap — Health Checks](health-checks/)
+- [Ontap — Procedures](../procedures/)
+- [Ontap — Scripts](../scripts/)
+- [Ontap — Health Checks](../health-checks/)

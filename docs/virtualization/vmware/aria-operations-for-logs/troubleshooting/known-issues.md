@@ -65,5 +65,5 @@ cluster -> resolution
 
 ## See also
 
-- [VMware Aria Operations for Logs — Common Issues](common-issues/)
+- [VMware Aria Operations for Logs — Common Issues](../common-issues/)
 - [VMware Aria Operations — Known Issues](../../aria-operations/troubleshooting/known-issues.md)

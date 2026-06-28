@@ -1360,8 +1360,8 @@ Resync complete.
 
 ## See also
 
-- [vSAN Operations — CLI Reference](cli-reference/)
-- [vSAN — Procedures](procedures/)
+- [vSAN Operations — CLI Reference](../cli-reference/)
+- [vSAN — Procedures](../procedures/)
 
 ## Verify
 

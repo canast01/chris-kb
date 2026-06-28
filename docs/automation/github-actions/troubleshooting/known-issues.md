@@ -65,6 +65,6 @@ workflow_failures -> resolution
 
 ## See also
 
-- [GitHub Actions — Common Issues](common-issues/)
+- [GitHub Actions — Common Issues](../common-issues/)
 - [Ansible — Known Issues](../../ansible/troubleshooting/known-issues.md)
 - [Terraform — Known Issues](../../terraform/troubleshooting/known-issues.md)

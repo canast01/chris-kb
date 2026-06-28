@@ -87,6 +87,6 @@ Check current status: https://www.dell.com/support/home/en-us/product-support/pr
 
 ## See also
 
-- [Powerscale — Procedures](procedures/)
-- [Powerscale — Health Checks](health-checks/)
-- [Powerscale — Deploy](../deploy/)
+- [Powerscale — Procedures](../procedures/)
+- [Powerscale — Health Checks](../health-checks/)
+- [Powerscale — Deploy](../../deploy/)

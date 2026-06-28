@@ -260,6 +260,6 @@ Refer to the Dell PowerPath Management Suite Installation and Administration Gui
 
 ## See also
 
-- [Powerpath — Access Control](access-control/)
-- [Powerpath — Hardening](hardening/)
-- [Powerpath — Encryption](encryption/)
+- [Powerpath — Access Control](../access-control/)
+- [Powerpath — Hardening](../hardening/)
+- [Powerpath — Encryption](../encryption/)

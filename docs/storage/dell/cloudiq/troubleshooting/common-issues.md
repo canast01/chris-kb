@@ -186,6 +186,6 @@ graph TD
 
 ## See also
 
-- [Cloudiq — Diagnostics](diagnostics/)
-- [Cloudiq — Escalation](escalation/)
-- [Cloudiq — Health Checks](../operations/health-checks/)
+- [Cloudiq — Diagnostics](../diagnostics/)
+- [Cloudiq — Escalation](../escalation/)
+- [Cloudiq — Health Checks](../../operations/health-checks/)

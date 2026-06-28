@@ -45,6 +45,6 @@ openssl s_client -connect sannav-dc1.corp.example.com:443 -servername sannav-dc1
 
 ## See also
 
-- [Sannav — Hardening](hardening/)
-- [Sannav — Authentication](authentication/)
-- [Sannav — Access Control](access-control/)
+- [Sannav — Hardening](../hardening/)
+- [Sannav — Authentication](../authentication/)
+- [Sannav — Access Control](../access-control/)

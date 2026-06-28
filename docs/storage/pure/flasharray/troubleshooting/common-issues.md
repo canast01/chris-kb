@@ -576,6 +576,6 @@ purehost list --connection
 
 ## See also
 
-- [FlashArray — Diagnostics](diagnostics/)
-- [FlashArray — Escalation](escalation/)
-- [FlashArray — Health Checks](../operations/health-checks/)
+- [FlashArray — Diagnostics](../diagnostics/)
+- [FlashArray — Escalation](../escalation/)
+- [FlashArray — Health Checks](../../operations/health-checks/)

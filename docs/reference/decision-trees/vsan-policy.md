@@ -62,7 +62,7 @@ flowchart TD
 
 ## See also
 
-- [vSAN Cheat Sheet](../cheat-sheets/vsan/)
-- [vSAN Architecture](../../virtualization/vmware/vsan/architecture/)
+- [vSAN Cheat Sheet](../../cheat-sheets/vsan/)
+- [vSAN Architecture](../../../virtualization/vmware/vsan/architecture/)
 - [vSAN Operations](../../virtualization/vmware/vsan/operations/procedures/)
 - [Back to Decision Trees](index.md)

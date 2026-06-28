@@ -54,5 +54,5 @@ Authenticate with HTTP Basic or cluster-scoped API tokens. Use the ONTAP REST AP
 
 ## See also
 
-- [Snapmirror — How It Works](how-it-works/)
-- [Snapmirror — Design Standards](design-standards/)
+- [Snapmirror — How It Works](../how-it-works/)
+- [Snapmirror — Design Standards](../design-standards/)

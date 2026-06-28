@@ -65,6 +65,6 @@ satellite_and_agents -> resolution
 
 ## See also
 
-- [Venafi TPP — Common Issues](common-issues/)
+- [Venafi TPP — Common Issues](../common-issues/)
 - [Certificates — Known Issues](../../certificates/troubleshooting/known-issues.md)
 - [Active Directory — Known Issues](../../../compute/windows-server/active-directory/troubleshooting/known-issues.md)

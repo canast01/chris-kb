@@ -270,8 +270,8 @@ purediag --send
 
 ## See also
 
-- [FlashArray — Diagnostics](diagnostics/)
-- [FlashArray — Common Issues](common-issues/)
+- [FlashArray — Diagnostics](../diagnostics/)
+- [FlashArray — Common Issues](../common-issues/)
 
 ---
 

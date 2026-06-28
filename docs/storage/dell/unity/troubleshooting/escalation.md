@@ -260,8 +260,8 @@ uemcli -d <sp-ip> -u admin -p <password> /stor/pool show
 
 ## See also
 
-- [Unity — Diagnostics](diagnostics/)
-- [Unity — Common Issues](common-issues/)
+- [Unity — Diagnostics](../diagnostics/)
+- [Unity — Common Issues](../common-issues/)
 
 ---
 

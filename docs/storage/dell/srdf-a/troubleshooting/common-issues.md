@@ -242,6 +242,6 @@ symrdf -g <dgname> -sid <r2_sid> failback -noprompt
 
 ## See also
 
-- [Srdf A — Diagnostics](diagnostics/)
-- [Srdf A — Escalation](escalation/)
-- [Srdf A — Health Checks](../operations/health-checks/)
+- [Srdf A — Diagnostics](../diagnostics/)
+- [Srdf A — Escalation](../escalation/)
+- [Srdf A — Health Checks](../../operations/health-checks/)

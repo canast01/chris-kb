@@ -104,6 +104,6 @@ graph TD
 
 ## See also
 
-- [Snapcenter — Diagnostics](diagnostics/)
-- [Snapcenter — Escalation](escalation/)
-- [Snapcenter — Health Checks](../operations/health-checks/)
+- [Snapcenter — Diagnostics](../diagnostics/)
+- [Snapcenter — Escalation](../escalation/)
+- [Snapcenter — Health Checks](../../operations/health-checks/)

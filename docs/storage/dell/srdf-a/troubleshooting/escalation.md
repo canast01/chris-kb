@@ -244,8 +244,8 @@ symevent -sid <R1-SID> list -last 20 | grep -iE "SRDF|RDF|suspend|fault"
 
 ## See also
 
-- [SRDF/A — Diagnostics](diagnostics/)
-- [SRDF/A — Common Issues](common-issues/)
+- [SRDF/A — Diagnostics](../diagnostics/)
+- [SRDF/A — Common Issues](../common-issues/)
 
 ---
 

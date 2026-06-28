@@ -90,6 +90,6 @@ Get-WinEvent -ComputerName dc1 -FilterHashtable @{
 
 ## See also
 
-- [Active Directory — Access Control](access-control/)
-- [Active Directory — Hardening](hardening/)
-- [Active Directory — Encryption](encryption/)
+- [Active Directory — Access Control](../access-control/)
+- [Active Directory — Hardening](../hardening/)
+- [Active Directory — Encryption](../encryption/)

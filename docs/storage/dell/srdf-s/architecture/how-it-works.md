@@ -74,6 +74,6 @@ graph LR
 
 ## See also
 
-- [Srdf S — Design Standards](design-standards/)
-- [Srdf S — Integrations](integrations/)
+- [Srdf S — Design Standards](../design-standards/)
+- [Srdf S — Integrations](../integrations/)
 - [Srdf S — Deploy](../deploy/)

@@ -44,6 +44,6 @@ scp /opt/sannav/backups/sannav-backup-20260506.tar.gz \
 
 ## See also
 
-- [Sannav — Procedures](procedures/)
-- [Sannav — Health Checks](health-checks/)
-- [Sannav — Common Issues](../troubleshooting/common-issues/)
+- [Sannav — Procedures](../procedures/)
+- [Sannav — Health Checks](../health-checks/)
+- [Sannav — Common Issues](../../troubleshooting/common-issues/)

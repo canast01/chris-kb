@@ -294,8 +294,8 @@ SHOW BINARY LOG STATUS\G
 
 ## See also
 
-- [MySQL — Common Issues](common-issues/)
-- [MySQL — Escalation](escalation/)
+- [MySQL — Common Issues](../common-issues/)
+- [MySQL — Escalation](../escalation/)
 - [MySQL — Health Checks](../operations/health-checks/)
 
 ## Verify resolution

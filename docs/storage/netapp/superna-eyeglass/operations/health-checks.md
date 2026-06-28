@@ -325,6 +325,6 @@ nslookup <production-smartconnect-zone>
 
 ## See also
 
-- [Superna Eyeglass — Procedures](procedures/)
-- [Superna Eyeglass — CLI Reference](cli-reference/)
+- [Superna Eyeglass — Procedures](../procedures/)
+- [Superna Eyeglass — CLI Reference](../cli-reference/)
 - [Superna Eyeglass — Common Issues](../troubleshooting/common-issues/)

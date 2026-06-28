@@ -101,6 +101,6 @@ for n in nodes:
 
 ## See also
 
-- [Nexus Dashboard — Procedures](procedures/)
-- [Nexus Dashboard — CLI Reference](cli-reference/)
+- [Nexus Dashboard — Procedures](../procedures/)
+- [Nexus Dashboard — CLI Reference](../cli-reference/)
 - [Nexus Dashboard — Common Issues](../troubleshooting/common-issues/)

@@ -134,6 +134,6 @@ Migration from DCNM 11.x to NDFC requires re-deploying ND and re-discovering man
 
 ## See also
 
-- [Cisco Dcnm — Design Standards](design-standards/)
-- [Cisco Dcnm — Integrations](integrations/)
+- [Cisco Dcnm — Design Standards](../design-standards/)
+- [Cisco Dcnm — Integrations](../integrations/)
 - [Cisco Dcnm — Deploy](../deploy/)

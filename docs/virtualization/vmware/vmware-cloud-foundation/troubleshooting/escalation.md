@@ -275,8 +275,8 @@ Your entitlement level (Production, Premier, Mission Critical) may override thes
 
 ## See also
 
-- [VCF Troubleshooting — Diagnostics](diagnostics/)
-- [VCF Troubleshooting — Common Issues](common-issues/)
+- [VCF Troubleshooting — Diagnostics](../diagnostics/)
+- [VCF Troubleshooting — Common Issues](../common-issues/)
 
 ---
 

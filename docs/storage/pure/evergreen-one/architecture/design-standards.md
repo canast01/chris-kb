@@ -198,5 +198,5 @@ All Pure-initiated changes arrive with prior notification. Customer should not a
 
 ## See also
 
-- [Evergreen//One — How It Works](how-it-works/)
-- [Evergreen//One — Integrations](integrations/)
+- [Evergreen//One — How It Works](../how-it-works/)
+- [Evergreen//One — Integrations](../integrations/)

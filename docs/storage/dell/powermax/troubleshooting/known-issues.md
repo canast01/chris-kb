@@ -74,6 +74,6 @@ solutions_enabler -> resolution
 
 ## See also
 
-- [Dell PowerMax — Common Issues](common-issues/)
+- [Dell PowerMax — Common Issues](../common-issues/)
 - [Dell SRDF-A — Known Issues](../../srdf-a/troubleshooting/known-issues.md)
 - [Dell SRDF-S — Known Issues](../../srdf-s/troubleshooting/known-issues.md)

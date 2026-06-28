@@ -41,6 +41,6 @@ show running-config
 
 ## See also
 
-- [Mds — Procedures](procedures/)
-- [Mds — Health Checks](health-checks/)
-- [Mds — Common Issues](../troubleshooting/common-issues/)
+- [Mds — Procedures](../procedures/)
+- [Mds — Health Checks](../health-checks/)
+- [Mds — Common Issues](../../troubleshooting/common-issues/)

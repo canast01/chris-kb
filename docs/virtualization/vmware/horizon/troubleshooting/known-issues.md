@@ -79,5 +79,5 @@ connection_server -> resolution
 
 ## See also
 
-- [VMware Horizon — Common Issues](common-issues/)
+- [VMware Horizon — Common Issues](../common-issues/)
 - [VMware vCenter — Known Issues](../../vcenter/troubleshooting/known-issues.md)

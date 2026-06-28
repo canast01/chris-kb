@@ -360,6 +360,6 @@ isi auth users list | grep -v "Enabled: No"
 
 ## See also
 
-- [Powerscale — Authentication](authentication/)
-- [Powerscale — Access Control](access-control/)
-- [Powerscale — Encryption](encryption/)
+- [Powerscale — Authentication](../authentication/)
+- [Powerscale — Access Control](../access-control/)
+- [Powerscale — Encryption](../encryption/)

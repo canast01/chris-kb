@@ -295,6 +295,6 @@ lscfg --port <slot/port> -lport <fid>    # assign port as XISL
 
 ## See also
 
-- [Fabric Os — Procedures](procedures/)
-- [Fabric Os — Scripts](scripts/)
-- [Fabric Os — Health Checks](health-checks/)
+- [Fabric Os — Procedures](../procedures/)
+- [Fabric Os — Scripts](../scripts/)
+- [Fabric Os — Health Checks](../health-checks/)

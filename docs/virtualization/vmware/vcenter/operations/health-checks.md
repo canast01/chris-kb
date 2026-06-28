@@ -153,8 +153,8 @@ Restore from backup if:
 ## See also
 
 - [vCenter Troubleshooting — Common Issues](../troubleshooting/common-issues/)
-- [vCenter — Procedures](procedures/)
-- [vCenter — CLI Reference (PowerCLI & DCLI)](cli-reference/)
+- [vCenter — Procedures](../procedures/)
+- [vCenter — CLI Reference (PowerCLI & DCLI)](../cli-reference/)
 
 ## Verify
 

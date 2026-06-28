@@ -736,6 +736,6 @@ Write-Host "`n=== Health check complete ===" -ForegroundColor Cyan
 
 ## See also
 
-- [FlashBlade — Procedures](procedures/)
-- [FlashBlade — CLI Reference](cli-reference/)
-- [FlashBlade — Health Checks](health-checks/)
+- [FlashBlade — Procedures](../procedures/)
+- [FlashBlade — CLI Reference](../cli-reference/)
+- [FlashBlade — Health Checks](../health-checks/)

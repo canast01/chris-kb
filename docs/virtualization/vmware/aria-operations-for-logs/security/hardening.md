@@ -109,6 +109,6 @@ systemctl restart rsyslog
 
 ## See also
 
-- [Aria Ops for Logs — Access Control](access-control/)
-- [Aria Ops for Logs — Authentication](authentication/)
+- [Aria Ops for Logs — Access Control](../access-control/)
+- [Aria Ops for Logs — Authentication](../authentication/)
 - [Aria Operations for Logs — Health Checks](../operations/health-checks/)

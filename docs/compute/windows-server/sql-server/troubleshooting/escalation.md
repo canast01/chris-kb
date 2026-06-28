@@ -321,8 +321,8 @@ EXEC sp_readerrorlog 0, 1, 'Error';
 
 ## See also
 
-- [SQL Server — Diagnostics](diagnostics/)
-- [SQL Server — Common Issues](common-issues/)
+- [SQL Server — Diagnostics](../diagnostics/)
+- [SQL Server — Common Issues](../common-issues/)
 
 ---
 

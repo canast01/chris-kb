@@ -178,6 +178,6 @@ volume snapshot policy create -policy <policy-name> -enabled true \
 ## See Also
 
 - [ONTAP Cheat Sheet](../cheat-sheets/netapp/) — top CLI commands
-- [NetApp ONTAP Architecture](../../storage/netapp/ontap/architecture/)
+- [NetApp ONTAP Architecture](../../../storage/netapp/ontap/architecture/)
 - [ONTAP Health Check Runbook](../../storage/netapp/ontap/health-checks/)
-- [Pure FlashArray Day 1](pure-flasharray-day1/) — if Pure is also in the environment
+- [Pure FlashArray Day 1](../pure-flasharray-day1/) — if Pure is also in the environment

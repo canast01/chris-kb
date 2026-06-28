@@ -87,5 +87,5 @@ Refresh projects should be tracked in a capacity and lifecycle register updated 
 
 ## See also
 
-- [Ontap — Procedures](procedures/)
-- [Ontap — Health Checks](health-checks/)
+- [Ontap — Procedures](../procedures/)
+- [Ontap — Health Checks](../health-checks/)

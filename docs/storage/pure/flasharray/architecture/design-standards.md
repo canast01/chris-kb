@@ -20,6 +20,6 @@ For Linux DM-Multipath, use the Pure Storage recommended `multipath.conf` settin
 
 ## See also
 
-- [FlashArray — How It Works](how-it-works/)
-- [FlashArray — Integrations](integrations/)
-- [FlashArray — Deploy](../deploy/)
+- [FlashArray — How It Works](../how-it-works/)
+- [FlashArray — Integrations](../integrations/)
+- [FlashArray — Deploy](../../deploy/)

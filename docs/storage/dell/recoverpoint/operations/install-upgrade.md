@@ -359,6 +359,6 @@ boxmgmt cg disable_image_access <CG-name>
 
 ## See also
 
-- [Recoverpoint — Procedures](procedures/)
-- [Recoverpoint — Health Checks](health-checks/)
-- [Recoverpoint — Deploy](../deploy/)
+- [Recoverpoint — Procedures](../procedures/)
+- [Recoverpoint — Health Checks](../health-checks/)
+- [Recoverpoint — Deploy](../../deploy/)

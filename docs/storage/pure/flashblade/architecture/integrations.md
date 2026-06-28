@@ -129,5 +129,5 @@ GET /api/2.x/array-connections
 
 ## See also
 
-- [FlashBlade — How It Works](how-it-works/)
-- [FlashBlade — Design Standards](design-standards/)
+- [FlashBlade — How It Works](../how-it-works/)
+- [FlashBlade — Design Standards](../design-standards/)

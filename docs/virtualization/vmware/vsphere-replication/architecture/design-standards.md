@@ -123,5 +123,5 @@ vSphere Replication is tested and supported with up to 100ms RTT between sites. 
 
 ## See also
 
-- [vSphere Replication — How It Works](how-it-works/)
-- [vSphere Replication — Deploy](../deploy/)
+- [vSphere Replication — How It Works](../how-it-works/)
+- [vSphere Replication — Deploy](../../deploy/)

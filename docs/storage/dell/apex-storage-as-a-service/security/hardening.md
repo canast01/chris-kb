@@ -58,6 +58,6 @@ All other inbound connections to the SCG should be denied by default. SCG applia
 
 ## See also
 
-- [Apex Storage As A Service — Authentication](authentication/)
-- [Apex Storage As A Service — Access Control](access-control/)
-- [Apex Storage As A Service — Encryption](encryption/)
+- [Apex Storage As A Service — Authentication](../authentication/)
+- [Apex Storage As A Service — Access Control](../access-control/)
+- [Apex Storage As A Service — Encryption](../encryption/)

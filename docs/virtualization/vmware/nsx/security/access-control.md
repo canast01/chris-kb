@@ -98,5 +98,5 @@ foreach ($g in $groups) {
 
 ## See also
 
-- [NSX — Authentication](authentication/)
-- [NSX — Hardening](hardening/)
+- [NSX — Authentication](../authentication/)
+- [NSX — Hardening](../hardening/)

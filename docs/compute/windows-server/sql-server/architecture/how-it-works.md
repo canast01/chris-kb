@@ -88,6 +88,6 @@ T-SQL Query → Parse → Bind (object resolution) → Optimize (execution plan)
 
 ## See also
 
-- [Sql Server — Design Standards](design-standards/)
-- [Sql Server — Integrations](integrations/)
+- [Sql Server — Design Standards](../design-standards/)
+- [Sql Server — Integrations](../integrations/)
 - [Sql Server — Deploy](../deploy/)

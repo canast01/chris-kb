@@ -268,6 +268,6 @@ pg_basebackup -h <primary-host> -U replication -D /var/lib/postgresql/data-new -
 
 ## See also
 
-- [Postgresql — Procedures](procedures/)
-- [Postgresql — CLI Reference](cli-reference/)
+- [Postgresql — Procedures](../procedures/)
+- [Postgresql — CLI Reference](../cli-reference/)
 - [Postgresql — Common Issues](../troubleshooting/common-issues/)

@@ -89,6 +89,6 @@ upgrade_and_patching -> resolution
 
 ## See also
 
-- [VMware ESXi — Common Issues](common-issues/)
+- [VMware ESXi — Common Issues](../common-issues/)
 - [VMware vCenter — Known Issues](../../vcenter/troubleshooting/known-issues.md)
 - [VMware vSAN — Known Issues](../../vsan/troubleshooting/known-issues.md)

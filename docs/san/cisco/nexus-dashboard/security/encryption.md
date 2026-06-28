@@ -57,6 +57,6 @@ print(f'Certificate expires in {(exp - datetime.utcnow()).days} days ({exp.date(
 
 ## See also
 
-- [Nexus Dashboard — Hardening](hardening/)
-- [Nexus Dashboard — Authentication](authentication/)
-- [Nexus Dashboard — Access Control](access-control/)
+- [Nexus Dashboard — Hardening](../hardening/)
+- [Nexus Dashboard — Authentication](../authentication/)
+- [Nexus Dashboard — Access Control](../access-control/)

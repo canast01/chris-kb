@@ -309,5 +309,5 @@ Licensing issues (appliance reporting "Unlicensed") are handled via the Superna 
 
 ## See also
 
-- [Superna Eyeglass — Diagnostics](diagnostics/)
-- [Superna Eyeglass — Common Issues](common-issues/)
+- [Superna Eyeglass — Diagnostics](../diagnostics/)
+- [Superna Eyeglass — Common Issues](../common-issues/)

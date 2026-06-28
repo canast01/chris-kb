@@ -269,8 +269,8 @@ qos statistics performance show
 
 ## See also
 
-- [ONTAP — Diagnostics](diagnostics/)
-- [ONTAP — Common Issues](common-issues/)
+- [ONTAP — Diagnostics](../diagnostics/)
+- [ONTAP — Common Issues](../common-issues/)
 
 ---
 

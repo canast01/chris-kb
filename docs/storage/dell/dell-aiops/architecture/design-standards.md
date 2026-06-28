@@ -62,6 +62,6 @@ Thresholds are configured in CloudIQ and feed into the AIOps anomaly engine:
 
 ## See also
 
-- [Dell Aiops — How It Works](how-it-works/)
-- [Dell Aiops — Integrations](integrations/)
-- [Dell Aiops — Deploy](../deploy/)
+- [Dell Aiops — How It Works](../how-it-works/)
+- [Dell Aiops — Integrations](../integrations/)
+- [Dell Aiops — Deploy](../../deploy/)

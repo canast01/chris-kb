@@ -360,9 +360,9 @@ $machines | Group-Object -Property basic_state | Select-Object Name, Count | For
 
 ## See also
 
-- [Horizon — Procedures](procedures/)
-- [Horizon — Scripts](scripts/)
-- [VMware Horizon — Health Checks](health-checks/)
+- [Horizon — Procedures](../procedures/)
+- [Horizon — Scripts](../scripts/)
+- [VMware Horizon — Health Checks](../health-checks/)
 
 ## Verify
 

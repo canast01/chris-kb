@@ -277,5 +277,5 @@ grep "ERROR" /var/log/dsagw/application.log | tail -50
 
 ## See also
 
-- [CloudIQ — Diagnostics](diagnostics/)
-- [CloudIQ — Common Issues](common-issues/)
+- [CloudIQ — Diagnostics](../diagnostics/)
+- [CloudIQ — Common Issues](../common-issues/)

@@ -309,6 +309,6 @@ Forward audit events to a SIEM via syslog for long-term retention and alerting. 
 
 ## See also
 
-- [Unity — Authentication](authentication/)
-- [Unity — Hardening](hardening/)
-- [Unity — Encryption](encryption/)
+- [Unity — Authentication](../authentication/)
+- [Unity — Hardening](../hardening/)
+- [Unity — Encryption](../encryption/)

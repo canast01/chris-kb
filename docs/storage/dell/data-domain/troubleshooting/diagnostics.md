@@ -449,8 +449,8 @@ The support bundle is saved to `/ddr/var/support/` on the DD. For large arrays, 
 
 ## See also
 
-- [Data Domain — Common Issues](common-issues/)
-- [Data Domain — Escalation](escalation/)
+- [Data Domain — Common Issues](../common-issues/)
+- [Data Domain — Escalation](../escalation/)
 - [Data Domain — Health Checks](../operations/health-checks/)
 
 ## Verify resolution

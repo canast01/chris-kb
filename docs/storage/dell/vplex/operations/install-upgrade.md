@@ -106,6 +106,6 @@ For hardware EOL, replacement options are:
 
 ## See also
 
-- [Vplex — Procedures](procedures/)
-- [Vplex — Health Checks](health-checks/)
-- [Vplex — Deploy](../deploy/)
+- [Vplex — Procedures](../procedures/)
+- [Vplex — Health Checks](../health-checks/)
+- [Vplex — Deploy](../../deploy/)

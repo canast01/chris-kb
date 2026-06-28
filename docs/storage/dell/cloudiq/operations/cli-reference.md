@@ -128,6 +128,6 @@ curl -s -X DELETE "${BASE}/tags/${TAG_ID}" \
 
 ## See also
 
-- [Cloudiq — Procedures](procedures/)
-- [Cloudiq — Scripts](scripts/)
-- [Cloudiq — Health Checks](health-checks/)
+- [Cloudiq — Procedures](../procedures/)
+- [Cloudiq — Scripts](../scripts/)
+- [Cloudiq — Health Checks](../health-checks/)

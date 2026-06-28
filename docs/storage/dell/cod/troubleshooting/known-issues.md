@@ -44,6 +44,6 @@ license_activation -> resolution
 
 ## See also
 
-- [Dell COD — Common Issues](common-issues/)
+- [Dell COD — Common Issues](../common-issues/)
 - [Dell PowerMax — Known Issues](../../powermax/troubleshooting/known-issues.md)
 - [Dell FOD — Known Issues](../../fod/troubleshooting/known-issues.md)

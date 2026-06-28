@@ -167,6 +167,6 @@ ll /clusters/cluster-1/cluster-witness/
 
 ## See also
 
-- [Vplex — Design Standards](design-standards/)
-- [Vplex — Integrations](integrations/)
+- [Vplex — Design Standards](../design-standards/)
+- [Vplex — Integrations](../integrations/)
 - [Vplex — Deploy](../deploy/)

@@ -123,7 +123,7 @@ ssh admin@<mds-mgmt-ip> show topology
 
 ## See also
 
-- [Cisco MDS — Architecture](how-it-works/)
-- [Cisco MDS — Operations](../operations/)
+- [Cisco MDS — Architecture](../how-it-works/)
+- [Cisco MDS — Operations](../../operations/)
 - [Cisco Nexus Dashboard — Ports](../../nexus-dashboard/architecture/ports.md)
 - [Brocade FOS — Ports](../../../brocade/fabric-os/architecture/ports.md)

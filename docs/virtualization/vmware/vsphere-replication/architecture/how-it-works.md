@@ -345,6 +345,6 @@ SRM requires:
 
 ## See also
 
-- [vSphere Replication — Design Standards](design-standards/)
+- [vSphere Replication — Design Standards](../design-standards/)
 - [vSphere Replication — Deploy](../deploy/)
-- [vSphere Replication — Integrations](integrations/)
+- [vSphere Replication — Integrations](../integrations/)

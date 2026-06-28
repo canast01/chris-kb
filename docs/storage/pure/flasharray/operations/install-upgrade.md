@@ -113,6 +113,6 @@ Maintain a quarterly review of Pure's published compatibility matrix and EOL ann
 
 ## See also
 
-- [FlashArray — Procedures](procedures/)
-- [FlashArray — Health Checks](health-checks/)
+- [FlashArray — Procedures](../procedures/)
+- [FlashArray — Health Checks](../health-checks/)
 - [FlashArray — Deploy](../deploy/)

@@ -220,6 +220,6 @@ CRITICAL health score alerts and High AIOps recommendations that require infrast
 
 ## See also
 
-- [Cloudiq — How It Works](how-it-works/)
-- [Cloudiq — Integrations](integrations/)
-- [Cloudiq — Deploy](../deploy/)
+- [Cloudiq — How It Works](../how-it-works/)
+- [Cloudiq — Integrations](../integrations/)
+- [Cloudiq — Deploy](../../deploy/)

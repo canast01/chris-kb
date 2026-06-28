@@ -65,4 +65,4 @@ filesystem -> resolution
 
 ## See also
 
-- [Dell Data Domain — Common Issues](common-issues/)
+- [Dell Data Domain — Common Issues](../common-issues/)

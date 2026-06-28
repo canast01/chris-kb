@@ -96,6 +96,6 @@ graph TD
 
 ## See also
 
-- [Superna Eyeglass — Diagnostics](diagnostics/)
-- [Superna Eyeglass — Escalation](escalation/)
-- [Superna Eyeglass — Health Checks](../operations/health-checks/)
+- [Superna Eyeglass — Diagnostics](../diagnostics/)
+- [Superna Eyeglass — Escalation](../escalation/)
+- [Superna Eyeglass — Health Checks](../../operations/health-checks/)

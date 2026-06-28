@@ -429,6 +429,6 @@ Quota limits are enforced as hard limits. Users or groups that reach their limit
 
 ## See also
 
-- [FlashBlade — Health Checks](health-checks/)
-- [FlashBlade — CLI Reference](cli-reference/)
+- [FlashBlade — Health Checks](../health-checks/)
+- [FlashBlade — CLI Reference](../cli-reference/)
 - [FlashBlade — Common Issues](../troubleshooting/common-issues/)

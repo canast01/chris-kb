@@ -226,6 +226,6 @@ curl -sk $AUTH "$BASEURL/snapmirror/relationships/<uuid>/transfers" | python3 -m
 
 ## See also
 
-- [Snapmirror — Procedures](procedures/)
-- [Snapmirror — Scripts](scripts/)
-- [Snapmirror — Health Checks](health-checks/)
+- [Snapmirror — Procedures](../procedures/)
+- [Snapmirror — Scripts](../scripts/)
+- [Snapmirror — Health Checks](../health-checks/)

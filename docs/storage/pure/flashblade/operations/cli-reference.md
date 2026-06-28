@@ -634,6 +634,6 @@ purefb alert update --id <alert_id> --status closed
 
 ## See also
 
-- [FlashBlade — Procedures](procedures/)
-- [FlashBlade — Scripts](scripts/)
-- [FlashBlade — Health Checks](health-checks/)
+- [FlashBlade — Procedures](../procedures/)
+- [FlashBlade — Scripts](../scripts/)
+- [FlashBlade — Health Checks](../health-checks/)

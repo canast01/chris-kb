@@ -45,6 +45,6 @@ PowerPath itself is not a compliance boundary, but as a host-side component it i
 
 ## See also
 
-- [Powerpath — Authentication](authentication/)
-- [Powerpath — Access Control](access-control/)
-- [Powerpath — Encryption](encryption/)
+- [Powerpath — Authentication](../authentication/)
+- [Powerpath — Access Control](../access-control/)
+- [Powerpath — Encryption](../encryption/)

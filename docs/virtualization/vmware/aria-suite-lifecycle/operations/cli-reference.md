@@ -108,9 +108,9 @@ journalctl --since "2 hours ago" -u lcm
 
 ## See also
 
-- [Aria Suite Lifecycle — Procedures](procedures/)
-- [Aria Suite Lifecycle — Scripts](scripts/)
-- [Aria Suite Lifecycle — Health Checks](health-checks/)
+- [Aria Suite Lifecycle — Procedures](../procedures/)
+- [Aria Suite Lifecycle — Scripts](../scripts/)
+- [Aria Suite Lifecycle — Health Checks](../health-checks/)
 
 ## Verify
 

@@ -89,5 +89,5 @@ If FIPS is required:
 
 ## See also
 
-- [Aria Operations Security Hardening](hardening/)
-- [Aria Operations Health Checks](../operations/health-checks/)
+- [Aria Operations Security Hardening](../hardening/)
+- [Aria Operations Health Checks](../../operations/health-checks/)

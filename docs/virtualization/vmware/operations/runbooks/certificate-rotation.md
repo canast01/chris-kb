@@ -54,7 +54,7 @@ B --> A: OK
 
 ### Pre-rotation checks
 
-1. **Take a VCSA backup** — run the [vCenter File-Based Backup Runbook](vcenter-backup/) before any certificate change.
+1. **Take a VCSA backup** — run the [vCenter File-Based Backup Runbook](../vcenter-backup/) before any certificate change.
 
 2. **Check current certificate expiry**:
    ```bash
@@ -167,9 +167,9 @@ esxcli system certificate list  # run on each host
 
 ## See also
 
-- [Certificate Chain — Internals](../../internals/certificate-chain/)
-- [Scenarios — Certificate Expiry and Rotation](../../topics/scenarios/certificate-expiry-rotation/)
-- [vCenter — Security](../../vcenter/security/)
+- [Certificate Chain — Internals](../../../internals/certificate-chain/)
+- [Scenarios — Certificate Expiry and Rotation](../../../topics/scenarios/certificate-expiry-rotation/)
+- [vCenter — Security](../../../vcenter/security/)
 
 ---
 

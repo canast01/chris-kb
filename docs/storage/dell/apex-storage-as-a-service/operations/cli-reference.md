@@ -340,6 +340,6 @@ curl -s -X GET "${CIQ_BASE}/systems/${APEX_CIQ_ID}/capacity/forecast?days=90" \
 
 ## See also
 
-- [Apex Storage As A Service — Procedures](procedures/)
-- [Apex Storage As A Service — Scripts](scripts/)
-- [Apex Storage As A Service — Health Checks](health-checks/)
+- [Apex Storage As A Service — Procedures](../procedures/)
+- [Apex Storage As A Service — Scripts](../scripts/)
+- [Apex Storage As A Service — Health Checks](../health-checks/)

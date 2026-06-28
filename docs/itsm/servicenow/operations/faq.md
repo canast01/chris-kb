@@ -56,4 +56,4 @@ A: If the Audit table captured the deletion, data can be reconstructed. Use the 
 ## See Also
 
 - [ServiceNow Operations](index.md)
-- [ServiceNow Troubleshooting](../../troubleshooting/index.md)
+- [ServiceNow Troubleshooting](../../troubleshooting//)

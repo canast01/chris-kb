@@ -147,9 +147,9 @@ Run monthly or after every restore test:
 
 ## See also
 
-- [Aria Suite Lifecycle — Procedures](procedures/)
-- [Aria Suite Lifecycle — Common Issues](../troubleshooting/common-issues/)
-- [Aria Suite Lifecycle — Health Checks](health-checks/)
+- [Aria Suite Lifecycle — Procedures](../procedures/)
+- [Aria Suite Lifecycle — Common Issues](../../troubleshooting/common-issues/)
+- [Aria Suite Lifecycle — Health Checks](../health-checks/)
 
 ## Verify
 

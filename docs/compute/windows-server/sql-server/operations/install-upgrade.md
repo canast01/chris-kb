@@ -92,6 +92,6 @@ Keep databases on previous compatibility level immediately after upgrade. Test a
 
 ## See also
 
-- [Sql Server — Procedures](procedures/)
-- [Sql Server — Health Checks](health-checks/)
-- [Sql Server — Deploy](../deploy/)
+- [Sql Server — Procedures](../procedures/)
+- [Sql Server — Health Checks](../health-checks/)
+- [Sql Server — Deploy](../../deploy/)

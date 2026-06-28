@@ -199,6 +199,6 @@ graph LR
 
 ## See also
 
-- [Recoverpoint — Design Standards](design-standards/)
-- [Recoverpoint — Integrations](integrations/)
+- [Recoverpoint — Design Standards](../design-standards/)
+- [Recoverpoint — Integrations](../integrations/)
 - [Recoverpoint — Deploy](../deploy/)

@@ -87,6 +87,6 @@ flowchart TD
 
 ## See also
 
-- [Srdf A — Design Standards](design-standards/)
-- [Srdf A — Integrations](integrations/)
+- [Srdf A — Design Standards](../design-standards/)
+- [Srdf A — Integrations](../integrations/)
 - [Srdf A — Deploy](../deploy/)

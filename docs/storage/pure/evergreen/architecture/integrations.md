@@ -89,5 +89,5 @@ The REST API supports all array operations available in the GUI and CLI. Use API
 
 ## See also
 
-- [Evergreen — How It Works](how-it-works/)
-- [Evergreen — Design Standards](design-standards/)
+- [Evergreen — How It Works](../how-it-works/)
+- [Evergreen — Design Standards](../design-standards/)

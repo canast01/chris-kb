@@ -645,6 +645,6 @@ exit 0
 
 ## See also
 
-- [Recoverpoint — Procedures](procedures/)
-- [Recoverpoint — CLI Reference](cli-reference/)
-- [Recoverpoint — Health Checks](health-checks/)
+- [Recoverpoint — Procedures](../procedures/)
+- [Recoverpoint — CLI Reference](../cli-reference/)
+- [Recoverpoint — Health Checks](../health-checks/)

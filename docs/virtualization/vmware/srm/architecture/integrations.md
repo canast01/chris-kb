@@ -331,5 +331,5 @@ Example use cases:
 
 ## See also
 
-- [SRM — How It Works (VMware Platform)](how-it-works/)
+- [SRM — How It Works (VMware Platform)](../how-it-works/)
 - [SRM — Deploy](../deploy/)

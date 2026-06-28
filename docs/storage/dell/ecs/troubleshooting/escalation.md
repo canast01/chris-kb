@@ -141,5 +141,5 @@ Response times are governed by your specific Dell support contract tier (Basic, 
 
 ## See also
 
-- [Ecs — Diagnostics](diagnostics/)
-- [Ecs — Common Issues](common-issues/)
+- [Ecs — Diagnostics](../diagnostics/)
+- [Ecs — Common Issues](../common-issues/)

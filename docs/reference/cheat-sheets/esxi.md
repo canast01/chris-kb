@@ -51,6 +51,6 @@ esxtop -b -n 2 -d 2 > /tmp/esxtop.csv         # batch esxtop snapshot (2 iterati
 
 ## See also
 
-- [ESXi Operations](../../virtualization/vmware/esxi/operations/procedures/)
-- [ESXi Troubleshooting](../../virtualization/vmware/esxi/troubleshooting/common-issues/)
-- [PowerCLI Cheat Sheet](powercli/)
+- [ESXi Operations](../../../virtualization/vmware/esxi/operations/procedures/)
+- [ESXi Troubleshooting](../../../virtualization/vmware/esxi/troubleshooting/common-issues/)
+- [PowerCLI Cheat Sheet](../powercli/)

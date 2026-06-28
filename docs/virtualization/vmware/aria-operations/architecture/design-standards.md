@@ -166,5 +166,5 @@ Reports are distributed via email and archived in the shared drive capacity fold
 
 ## See also
 
-- [Aria Operations — How It Works](how-it-works/)
-- [Aria Operations — Deploy](../deploy/)
+- [Aria Operations — How It Works](../how-it-works/)
+- [Aria Operations — Deploy](../../deploy/)

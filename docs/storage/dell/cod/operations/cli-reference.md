@@ -122,6 +122,6 @@ symcfg list -sid <sid> -v 2>&1 | head -5
 
 ## See also
 
-- [Cod — Procedures](procedures/)
-- [Cod — Scripts](scripts/)
-- [Cod — Health Checks](health-checks/)
+- [Cod — Procedures](../procedures/)
+- [Cod — Scripts](../scripts/)
+- [Cod — Health Checks](../health-checks/)

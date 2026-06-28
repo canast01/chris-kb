@@ -421,6 +421,6 @@ event filter create -filter-name cert-filter -type include -messagename sslcert.
 
 ## See also
 
-- [Ontap — Hardening](hardening/)
-- [Ontap — Authentication](authentication/)
-- [Ontap — Access Control](access-control/)
+- [Ontap — Hardening](../hardening/)
+- [Ontap — Authentication](../authentication/)
+- [Ontap — Access Control](../access-control/)

@@ -75,6 +75,6 @@ iscsi_san -> resolution
 
 ## See also
 
-- [NetApp ONTAP — Common Issues](common-issues/)
+- [NetApp ONTAP — Common Issues](../common-issues/)
 - [NetApp SnapMirror — Known Issues](../../snapmirror/troubleshooting/known-issues.md)
 - [NetApp SnapCenter — Known Issues](../../snapcenter/troubleshooting/known-issues.md)

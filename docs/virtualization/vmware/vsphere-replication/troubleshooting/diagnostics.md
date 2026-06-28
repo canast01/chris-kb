@@ -299,8 +299,8 @@ scp admin@<vra-ip>:/tmp/vr-support-*.tar.gz /local/path/
 
 ## See also
 
-- [vSphere Replication — Common Issues](common-issues/)
-- [vSphere Replication — Escalation](escalation/)
+- [vSphere Replication — Common Issues](../common-issues/)
+- [vSphere Replication — Escalation](../escalation/)
 
 ## Verify resolution
 

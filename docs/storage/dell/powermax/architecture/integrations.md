@@ -193,5 +193,5 @@ curl -k -u admin:password -X POST \
 
 ## See also
 
-- [Powermax — How It Works](how-it-works/)
-- [Powermax — Design Standards](design-standards/)
+- [Powermax — How It Works](../how-it-works/)
+- [Powermax — Design Standards](../design-standards/)

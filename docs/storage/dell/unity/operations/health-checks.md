@@ -238,6 +238,6 @@ graph TD
 
 ## See also
 
-- [Unity — Procedures](procedures/)
-- [Unity — CLI Reference](cli-reference/)
+- [Unity — Procedures](../procedures/)
+- [Unity — CLI Reference](../cli-reference/)
 - [Unity — Common Issues](../troubleshooting/common-issues/)

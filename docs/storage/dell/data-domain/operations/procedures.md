@@ -356,6 +356,6 @@ Apply a throttle during business hours to protect production I/O from replicatio
 
 ## See also
 
-- [Data Domain — Health Checks](health-checks/)
-- [Data Domain — CLI Reference](cli-reference/)
+- [Data Domain — Health Checks](../health-checks/)
+- [Data Domain — CLI Reference](../cli-reference/)
 - [Data Domain — Common Issues](../troubleshooting/common-issues/)

@@ -357,6 +357,6 @@ Conduct full restore testing — including application startup from restored dat
 
 ## See also
 
-- [FlashBlade — Procedures](procedures/)
-- [FlashBlade — Health Checks](health-checks/)
-- [FlashBlade — Common Issues](../troubleshooting/common-issues/)
+- [FlashBlade — Procedures](../procedures/)
+- [FlashBlade — Health Checks](../health-checks/)
+- [FlashBlade — Common Issues](../../troubleshooting/common-issues/)

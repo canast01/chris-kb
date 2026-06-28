@@ -31,6 +31,6 @@ Configure Unisphere → Notifications → Syslog to forward SRDF events to SIEM.
 
 ## See also
 
-- [Srdf S — Authentication](authentication/)
-- [Srdf S — Hardening](hardening/)
-- [Srdf S — Encryption](encryption/)
+- [Srdf S — Authentication](../authentication/)
+- [Srdf S — Hardening](../hardening/)
+- [Srdf S — Encryption](../encryption/)

@@ -295,8 +295,8 @@ scp root@<esxi-host>:/tmp/esx-*.tgz /local/path/
 
 ## See also
 
-- [ESXi — Common Issues](common-issues/)
-- [ESXi — Escalation](escalation/)
+- [ESXi — Common Issues](../common-issues/)
+- [ESXi — Escalation](../escalation/)
 
 ## Verify resolution
 

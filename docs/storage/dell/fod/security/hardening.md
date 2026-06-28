@@ -57,6 +57,6 @@ All other inbound connections to the SCG should be denied by default.
 
 ## See also
 
-- [Fod — Authentication](authentication/)
-- [Fod — Access Control](access-control/)
-- [Fod — Encryption](encryption/)
+- [Fod — Authentication](../authentication/)
+- [Fod — Access Control](../access-control/)
+- [Fod — Encryption](../encryption/)

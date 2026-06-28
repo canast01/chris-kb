@@ -63,6 +63,6 @@ no username dcnm_mgmt
 
 ## See also
 
-- [Cisco Dcnm — Procedures](procedures/)
-- [Cisco Dcnm — Health Checks](health-checks/)
+- [Cisco Dcnm — Procedures](../procedures/)
+- [Cisco Dcnm — Health Checks](../health-checks/)
 - [Cisco Dcnm — Deploy](../deploy/)

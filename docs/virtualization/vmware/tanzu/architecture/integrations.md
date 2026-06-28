@@ -431,5 +431,5 @@ Key metrics collected: K8s node CPU/mem/disk, pod resource usage, JVM metrics (v
 
 ## See also
 
-- [Tanzu — How It Works](how-it-works/)
+- [Tanzu — How It Works](../how-it-works/)
 - [Tanzu — Deploy](../deploy/)

@@ -128,5 +128,5 @@ tail -100 /var/log/vmware/nsx-manager/audit.log | grep -i "login\|auth\|role"
 
 ## See also
 
-- [NSX — Access Control](access-control/)
-- [NSX — Hardening](hardening/)
+- [NSX — Access Control](../access-control/)
+- [NSX — Hardening](../hardening/)

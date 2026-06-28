@@ -56,4 +56,4 @@ A: Yes — `git log -p -- path/to/module.psm1` shows deleted function history. U
 ## See Also
 
 - [PowerShell Operations](index.md)
-- [PowerShell Troubleshooting](../../troubleshooting/index.md)
+- [PowerShell Troubleshooting](../../troubleshooting//)

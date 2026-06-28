@@ -53,6 +53,6 @@ Retain audit log exports for a minimum of 90 days in accordance with your organi
 
 ## See also
 
-- [Cloudiq — Authentication](authentication/)
-- [Cloudiq — Access Control](access-control/)
-- [Cloudiq — Encryption](encryption/)
+- [Cloudiq — Authentication](../authentication/)
+- [Cloudiq — Access Control](../access-control/)
+- [Cloudiq — Encryption](../encryption/)

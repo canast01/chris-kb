@@ -40,9 +40,9 @@ Backup and Restore reference covering Verify the Backup, App Volumes Manager Dat
 
 ## See also
 
-- [Horizon — Procedures](procedures/)
-- [VMware Horizon — Common Issues](../troubleshooting/common-issues/)
-- [VMware Horizon — Health Checks](health-checks/)
+- [Horizon — Procedures](../procedures/)
+- [VMware Horizon — Common Issues](../../troubleshooting/common-issues/)
+- [VMware Horizon — Health Checks](../health-checks/)
 
 ## Verify the Backup
 

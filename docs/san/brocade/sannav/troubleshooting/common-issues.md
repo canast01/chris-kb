@@ -141,6 +141,6 @@ graph TD
 
 ## See also
 
-- [Sannav — Diagnostics](diagnostics/)
-- [Sannav — Escalation](escalation/)
-- [Sannav — Health Checks](../operations/health-checks/)
+- [Sannav — Diagnostics](../diagnostics/)
+- [Sannav — Escalation](../escalation/)
+- [Sannav — Health Checks](../../operations/health-checks/)

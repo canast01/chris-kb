@@ -282,6 +282,6 @@ raid show all | grep -v "normal\|OK"
 
 ## See also
 
-- [Data Domain — Procedures](procedures/)
-- [Data Domain — CLI Reference](cli-reference/)
+- [Data Domain — Procedures](../procedures/)
+- [Data Domain — CLI Reference](../cli-reference/)
 - [Data Domain — Common Issues](../troubleshooting/common-issues/)

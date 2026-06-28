@@ -285,6 +285,6 @@ flowchart TD
 
 ## See also
 
-- [Powermax — Procedures](procedures/)
-- [Powermax — CLI Reference](cli-reference/)
+- [Powermax — Procedures](../procedures/)
+- [Powermax — CLI Reference](../cli-reference/)
 - [Powermax — Common Issues](../troubleshooting/common-issues/)

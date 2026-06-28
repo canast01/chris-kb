@@ -20,7 +20,7 @@ Nutanix RBAC in Prism Central — custom roles, categories-based VM access, proj
 ## Before you begin
 
 - **Access:** Prism Central admin (for custom roles, categories, projects); Prism Element admin (for PE built-in role mappings)
-- **Requires:** Active Directory integration configured — see [Authentication](authentication/) before setting up role mappings
+- **Requires:** Active Directory integration configured — see [Authentication](../authentication/) before setting up role mappings
 
 ---
 
@@ -45,7 +45,7 @@ Three roles — cannot be customised at the PE level:
 | User Admin | Add/remove users and role mappings only |
 | Viewer | Read-only access to all cluster data |
 
-Assign via directory role mapping (see [Authentication](authentication/)) or for local users:
+Assign via directory role mapping (see [Authentication](../authentication/)) or for local users:
 
 ```text
 Prism Element → Settings → Users → Local Users → edit user → assign role
@@ -191,5 +191,5 @@ ncc --health_checks audit_log_check 2>/dev/null
 
 ## See also
 
-- [Nutanix — Authentication](authentication/)
-- [Nutanix — Hardening](hardening/)
+- [Nutanix — Authentication](../authentication/)
+- [Nutanix — Hardening](../hardening/)

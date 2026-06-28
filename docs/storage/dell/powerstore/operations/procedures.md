@@ -520,6 +520,6 @@ GUI path: Storage → Storage Policies → Performance Policies → Create (set 
 
 ## See also
 
-- [Powerstore — Health Checks](health-checks/)
-- [Powerstore — CLI Reference](cli-reference/)
+- [Powerstore — Health Checks](../health-checks/)
+- [Powerstore — CLI Reference](../cli-reference/)
 - [Powerstore — Common Issues](../troubleshooting/common-issues/)

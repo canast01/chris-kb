@@ -92,6 +92,6 @@ graph TD
 
 ## See also
 
-- [Data Domain — Diagnostics](diagnostics/)
-- [Data Domain — Escalation](escalation/)
-- [Data Domain — Health Checks](../operations/health-checks/)
+- [Data Domain — Diagnostics](../diagnostics/)
+- [Data Domain — Escalation](../escalation/)
+- [Data Domain — Health Checks](../../operations/health-checks/)

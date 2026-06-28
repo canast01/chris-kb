@@ -75,5 +75,5 @@ patroni_ha -> resolution
 
 ## See also
 
-- [PostgreSQL — Common Issues](common-issues/)
+- [PostgreSQL — Common Issues](../common-issues/)
 - [Linux — Known Issues](../../troubleshooting/known-issues.md)

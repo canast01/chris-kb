@@ -101,6 +101,6 @@ Every new PowerMax deployment should meet the following baseline before handover
 
 ## See also
 
-- [Powermax — How It Works](how-it-works/)
-- [Powermax — Integrations](integrations/)
-- [Powermax — Deploy](../deploy/)
+- [Powermax — How It Works](../how-it-works/)
+- [Powermax — Integrations](../integrations/)
+- [Powermax — Deploy](../../deploy/)

@@ -221,5 +221,5 @@ volume show -fields vserver,volume,qos-policy-group -state online | grep " - "
 
 ## See also
 
-- [Keystone — Procedures](procedures/)
-- [Keystone — CLI Reference](cli-reference/)
+- [Keystone — Procedures](../procedures/)
+- [Keystone — CLI Reference](../cli-reference/)

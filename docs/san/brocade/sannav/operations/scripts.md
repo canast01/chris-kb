@@ -214,6 +214,6 @@ urllib.request.urlopen(req, context=ctx).close()
 
 ## See also
 
-- [Sannav — Procedures](procedures/)
-- [Sannav — CLI Reference](cli-reference/)
-- [Sannav — Health Checks](health-checks/)
+- [Sannav — Procedures](../procedures/)
+- [Sannav — CLI Reference](../cli-reference/)
+- [Sannav — Health Checks](../health-checks/)

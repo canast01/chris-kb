@@ -540,6 +540,6 @@ A lower Precedence number wins when multiple PSOs apply to the same user. Apply 
 
 ## See also
 
-- [Active Directory — Health Checks](health-checks/)
-- [Active Directory — CLI Reference](cli-reference/)
+- [Active Directory — Health Checks](../health-checks/)
+- [Active Directory — CLI Reference](../cli-reference/)
 - [Active Directory — Common Issues](../troubleshooting/common-issues/)

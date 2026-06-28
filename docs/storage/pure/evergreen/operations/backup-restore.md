@@ -106,5 +106,5 @@ Use Pure1 to review historical configuration changes before a restore decision.
 
 ## See also
 
-- [Evergreen — Procedures](procedures/)
-- [Evergreen — Health Checks](health-checks/)
+- [Evergreen — Procedures](../procedures/)
+- [Evergreen — Health Checks](../health-checks/)

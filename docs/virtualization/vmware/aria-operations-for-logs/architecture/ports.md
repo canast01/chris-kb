@@ -118,7 +118,7 @@ curl -sk -o /dev/null -w "%{http_code}" https://<aria-ops-fqdn>/suite-api/api/re
 
 ## See also
 
-- [Aria Operations for Logs — Architecture](how-it-works/)
+- [Aria Operations for Logs — Architecture](../how-it-works/)
 - [Aria Operations for Logs — Deploy](../deploy/)
 - [Aria Operations — Ports](../../aria-operations/architecture/ports.md)
 - [vCenter — Ports](../../vcenter/architecture/ports.md)

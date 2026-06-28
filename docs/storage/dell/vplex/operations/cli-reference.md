@@ -366,6 +366,6 @@ vplexcli -q -e "ls /storage-elements/storage-arrays/array-A/storage-volumes"
 
 ## See also
 
-- [Vplex — Procedures](procedures/)
-- [Vplex — Scripts](scripts/)
-- [Vplex — Health Checks](health-checks/)
+- [Vplex — Procedures](../procedures/)
+- [Vplex — Scripts](../scripts/)
+- [Vplex — Health Checks](../health-checks/)

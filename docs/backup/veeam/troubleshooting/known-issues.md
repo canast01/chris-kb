@@ -74,5 +74,5 @@ ports -> resolution
 
 ## See also
 
-- [Veeam — Common Issues](common-issues/)
+- [Veeam — Common Issues](../common-issues/)
 - [Dell Data Domain — Known Issues](../../../storage/dell/data-domain/troubleshooting/known-issues.md)

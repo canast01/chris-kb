@@ -210,5 +210,5 @@ For director hardware replacement (physical dispatch):
 
 ## See also
 
-- [Vplex — Diagnostics](diagnostics/)
-- [Vplex — Common Issues](common-issues/)
+- [Vplex — Diagnostics](../diagnostics/)
+- [Vplex — Common Issues](../common-issues/)

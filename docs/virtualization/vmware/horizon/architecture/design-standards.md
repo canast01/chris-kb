@@ -213,5 +213,5 @@ Examples:
 
 ## See also
 
-- [Horizon — How It Works](how-it-works/)
-- [Horizon — Deploy](../deploy/)
+- [Horizon — How It Works](../how-it-works/)
+- [Horizon — Deploy](../../deploy/)

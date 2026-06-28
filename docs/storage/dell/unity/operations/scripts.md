@@ -1339,6 +1339,6 @@ sys.exit(worst)
 
 ## See also
 
-- [Unity — Procedures](procedures/)
-- [Unity — CLI Reference](cli-reference/)
-- [Unity — Health Checks](health-checks/)
+- [Unity — Procedures](../procedures/)
+- [Unity — CLI Reference](../cli-reference/)
+- [Unity — Health Checks](../health-checks/)

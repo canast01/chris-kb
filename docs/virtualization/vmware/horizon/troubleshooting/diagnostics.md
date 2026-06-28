@@ -285,8 +285,8 @@ Get-ChildItem "C:\ProgramData\VMware\VDM\logs\*bundle*" |
 
 ## See also
 
-- [Horizon — Common Issues](common-issues/)
-- [Horizon — Escalation](escalation/)
+- [Horizon — Common Issues](../common-issues/)
+- [Horizon — Escalation](../escalation/)
 
 ## Verify resolution
 

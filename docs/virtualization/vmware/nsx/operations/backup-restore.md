@@ -110,9 +110,9 @@ else:
 
 ## See also
 
-- [NSX — Standard Procedures](procedures/)
-- [NSX — Common Issues](../troubleshooting/common-issues/)
-- [NSX — Health Checks](health-checks/)
+- [NSX — Standard Procedures](../procedures/)
+- [NSX — Common Issues](../../troubleshooting/common-issues/)
+- [NSX — Health Checks](../health-checks/)
 
 ## Verify
 

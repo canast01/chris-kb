@@ -129,5 +129,5 @@ Key events to alert on:
 
 ## See also
 
-- [vSphere Replication — Authentication](authentication/)
-- [vSphere Replication — Hardening](hardening/)
+- [vSphere Replication — Authentication](../authentication/)
+- [vSphere Replication — Hardening](../hardening/)

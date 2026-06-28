@@ -179,5 +179,5 @@ Harbor UI → Administration → Configuration → Authentication
 
 ## See also
 
-- [Tanzu — Access Control](access-control/)
-- [Tanzu — Hardening](hardening/)
+- [Tanzu — Access Control](../access-control/)
+- [Tanzu — Hardening](../hardening/)

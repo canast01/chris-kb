@@ -286,6 +286,6 @@ Document the allowed source IP ranges in the firewall change log and review them
 
 ## See also
 
-- [FlashArray — Authentication](authentication/)
-- [FlashArray — Hardening](hardening/)
-- [FlashArray — Encryption](encryption/)
+- [FlashArray — Authentication](../authentication/)
+- [FlashArray — Hardening](../hardening/)
+- [FlashArray — Encryption](../encryption/)

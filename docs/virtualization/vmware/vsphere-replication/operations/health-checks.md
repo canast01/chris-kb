@@ -104,8 +104,8 @@ for r in reps.get('list', []):
 ## See also
 
 - [vSphere Replication — Common Issues](../troubleshooting/common-issues/)
-- [vSphere Replication — Procedures](procedures/)
-- [vSphere Replication — CLI Reference](cli-reference/)
+- [vSphere Replication — Procedures](../procedures/)
+- [vSphere Replication — CLI Reference](../cli-reference/)
 
 ## Verify VRA Disk Space
 

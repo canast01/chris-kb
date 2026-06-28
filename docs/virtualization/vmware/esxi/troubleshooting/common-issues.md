@@ -388,9 +388,9 @@ For bulk certificate replacement across all hosts, use vCenter Certificate Manag
 
 ## See also
 
-- [Cluster Services — Internals](../../internals/cluster-services/)
-- [HA Deep Dive — Internals](../../internals/ha-deep-dive/)
-- [Scenarios — ESXi Host Disconnected](../../topics/scenarios/esxi-host-disconnected/)
+- [Cluster Services — Internals](../../../internals/cluster-services/)
+- [HA Deep Dive — Internals](../../../internals/ha-deep-dive/)
+- [Scenarios — ESXi Host Disconnected](../../../topics/scenarios/esxi-host-disconnected/)
 
 ---
 

@@ -160,6 +160,6 @@ finally:
 
 ## See also
 
-- [Cisco Dcnm — Procedures](procedures/)
-- [Cisco Dcnm — CLI Reference](cli-reference/)
-- [Cisco Dcnm — Health Checks](health-checks/)
+- [Cisco Dcnm — Procedures](../procedures/)
+- [Cisco Dcnm — CLI Reference](../cli-reference/)
+- [Cisco Dcnm — Health Checks](../health-checks/)

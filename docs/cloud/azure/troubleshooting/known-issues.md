@@ -76,6 +76,6 @@ aks -> resolution
 
 ## See also
 
-- [Azure — Common Issues](common-issues/)
+- [Azure — Common Issues](../common-issues/)
 - [AWS — Known Issues](../../aws/troubleshooting/known-issues.md)
 - [Active Directory — Known Issues](../../../compute/windows-server/active-directory/troubleshooting/known-issues.md)

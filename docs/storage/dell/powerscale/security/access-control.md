@@ -95,6 +95,6 @@ isi audit log view
 
 ## See also
 
-- [Powerscale — Authentication](authentication/)
-- [Powerscale — Hardening](hardening/)
-- [Powerscale — Encryption](encryption/)
+- [Powerscale — Authentication](../authentication/)
+- [Powerscale — Hardening](../hardening/)
+- [Powerscale — Encryption](../encryption/)

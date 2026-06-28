@@ -60,6 +60,6 @@ sequenceDiagram
 
 ## See also
 
-- [Recoverpoint — Procedures](procedures/)
-- [Recoverpoint — Health Checks](health-checks/)
-- [Recoverpoint — Common Issues](../troubleshooting/common-issues/)
+- [Recoverpoint — Procedures](../procedures/)
+- [Recoverpoint — Health Checks](../health-checks/)
+- [Recoverpoint — Common Issues](../../troubleshooting/common-issues/)

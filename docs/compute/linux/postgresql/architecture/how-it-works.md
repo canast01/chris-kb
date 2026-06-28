@@ -92,6 +92,6 @@ ORDER BY n_dead_tup DESC LIMIT 10;
 
 ## See also
 
-- [Postgresql — Design Standards](design-standards/)
-- [Postgresql — Integrations](integrations/)
+- [Postgresql — Design Standards](../design-standards/)
+- [Postgresql — Integrations](../integrations/)
 - [Postgresql — Deploy](../deploy/)

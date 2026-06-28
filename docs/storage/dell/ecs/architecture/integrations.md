@@ -321,5 +321,5 @@ ECS Portal → Settings → SNMP
 
 ## See also
 
-- [Ecs — How It Works](how-it-works/)
-- [Ecs — Design Standards](design-standards/)
+- [Ecs — How It Works](../how-it-works/)
+- [Ecs — Design Standards](../design-standards/)

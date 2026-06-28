@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-KB site audit — 41 checks.
+KB site audit — 42 checks.
 
 Usage:
     python3 scripts/site_audit.py               # run all checks, print summary
@@ -903,6 +903,19 @@ for _md in all_md():
             if re.search(r'^center:', _blk, re.MULTILINE):
                 warn(issues, f'{os.path.relpath(_md, DOCS)} — hexagon hub')
                 break
+
+# ── Check 42: .md extension links in "See also" sections ─────────────────────
+# MkDocs auto-converts .md links only in prose — not inside HTML blocks.
+# href="target.md" in a "See also" renders as a literal .md path → 404.
+# Fix: use [text](../target/) instead of [text](../target/index.md).
+issues = check(42, 'No .md extension links in "See also" sections (would 404)')
+_MD_LINK_PAT   = re.compile(r'\[([^\]]+)\]\(([^)#?]+\.md)\)')
+_SEE_ALSO_BLOCK = re.compile(r'## See also.*?(?=\n##|\Z)', re.DOTALL | re.IGNORECASE)
+for _md in all_md():
+    _txt = open(_md).read()
+    for _block in _SEE_ALSO_BLOCK.finditer(_txt):
+        for _lm in _MD_LINK_PAT.finditer(_block.group(0)):
+            warn(issues, f'{os.path.relpath(_md, DOCS)}: [{_lm.group(1)}]({_lm.group(2)})')
 
 
 # ── Report ────────────────────────────────────────────────────────────────────

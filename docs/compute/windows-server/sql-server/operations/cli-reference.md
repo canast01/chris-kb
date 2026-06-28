@@ -114,6 +114,6 @@ ORDER BY h.run_date DESC, h.run_time DESC;
 
 ## See also
 
-- [Sql Server — Procedures](procedures/)
-- [Sql Server — Scripts](scripts/)
-- [Sql Server — Health Checks](health-checks/)
+- [Sql Server — Procedures](../procedures/)
+- [Sql Server — Scripts](../scripts/)
+- [Sql Server — Health Checks](../health-checks/)

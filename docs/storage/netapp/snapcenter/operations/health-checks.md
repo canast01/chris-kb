@@ -94,6 +94,6 @@ Get-SmPolicy | Select PolicyName, PluginType, BackupType
 
 ## See also
 
-- [Snapcenter — Procedures](procedures/)
-- [Snapcenter — CLI Reference](cli-reference/)
+- [Snapcenter — Procedures](../procedures/)
+- [Snapcenter — CLI Reference](../cli-reference/)
 - [Snapcenter — Common Issues](../troubleshooting/common-issues/)

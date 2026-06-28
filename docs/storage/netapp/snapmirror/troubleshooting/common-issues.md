@@ -104,6 +104,6 @@ graph TD
 
 ## See also
 
-- [Snapmirror — Diagnostics](diagnostics/)
-- [Snapmirror — Escalation](escalation/)
-- [Snapmirror — Health Checks](../operations/health-checks/)
+- [Snapmirror — Diagnostics](../diagnostics/)
+- [Snapmirror — Escalation](../escalation/)
+- [Snapmirror — Health Checks](../../operations/health-checks/)

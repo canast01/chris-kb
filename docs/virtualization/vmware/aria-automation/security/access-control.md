@@ -114,5 +114,5 @@ Service accounts used in event broker subscriptions and ABX actions should have 
 
 ## See also
 
-- [Aria Automation — Authentication](authentication/)
-- [Aria Automation — Hardening](hardening/)
+- [Aria Automation — Authentication](../authentication/)
+- [Aria Automation — Hardening](../hardening/)

@@ -223,6 +223,6 @@ curl -s -k -H "X-SDS-AUTH-TOKEN: $TOKEN" \
 
 ## See also
 
-- [Ecs — Authentication](authentication/)
-- [Ecs — Access Control](access-control/)
-- [Ecs — Encryption](encryption/)
+- [Ecs — Authentication](../authentication/)
+- [Ecs — Access Control](../access-control/)
+- [Ecs — Encryption](../encryption/)

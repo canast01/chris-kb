@@ -100,9 +100,9 @@ curl -sk -u 'admin:password' \
 
 ## See also
 
-- [NSX — Health Checks](health-checks/)
+- [NSX — Health Checks](../health-checks/)
 - [NSX — Common Issues](../troubleshooting/common-issues/)
-- [NSX — Standard Procedures](procedures/)
+- [NSX — Standard Procedures](../procedures/)
 
 ## Verify
 

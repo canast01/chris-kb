@@ -36,5 +36,5 @@ Standards reference covering Upgrade Notes, Design Standards.
 
 ## See also
 
-- [Apex Storage As A Service — How It Works](how-it-works/)
-- [Apex Storage As A Service — Integrations](integrations/)
+- [Apex Storage As A Service — How It Works](../how-it-works/)
+- [Apex Storage As A Service — Integrations](../integrations/)

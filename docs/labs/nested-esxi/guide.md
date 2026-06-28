@@ -182,7 +182,7 @@ On each nested ESXi host in vCenter:
 
 ## Next Steps
 
-- [Lab 2 — vSAN 2-node + Witness](../vsan-2node/) — add shared storage to this cluster
-- [Lab 3 — NSX-T in Nested ESXi](../nsx-nested/) — add software-defined networking
-- [vCenter Cheat Sheet](../../reference/cheat-sheets/vcenter/)
-- [ESXi Cheat Sheet](../../reference/cheat-sheets/esxi/)
+- [Lab 2 — vSAN 2-node + Witness](../../vsan-2node/) — add shared storage to this cluster
+- [Lab 3 — NSX-T in Nested ESXi](../../nsx-nested/) — add software-defined networking
+- [vCenter Cheat Sheet](../../../reference/cheat-sheets/vcenter/)
+- [ESXi Cheat Sheet](../../../reference/cheat-sheets/esxi/)

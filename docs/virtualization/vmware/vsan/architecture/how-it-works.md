@@ -253,6 +253,6 @@ esxcli vsan debug object list | grep -E "Object|IOPS"
 
 ## See also
 
-- [vSAN — Design Standards](design-standards/)
+- [vSAN — Design Standards](../design-standards/)
 - [vSAN — Deploy](../deploy/)
-- [vSAN — Integrations](integrations/)
+- [vSAN — Integrations](../integrations/)

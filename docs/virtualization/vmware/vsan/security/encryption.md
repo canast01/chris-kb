@@ -233,5 +233,5 @@ grep -i "encrypt\|kmip\|kms" /var/log/vmkernel.log | tail -50
 
 ## See also
 
-- [vSAN — Hardening](hardening/)
-- [vSAN — Health Checks](../operations/health-checks/)
+- [vSAN — Hardening](../hardening/)
+- [vSAN — Health Checks](../../operations/health-checks/)

@@ -100,5 +100,5 @@ Infrastructure > Connections > Integrations    — check all integration endpoin
 
 ## See also
 
-- [Aria Automation — How It Works](how-it-works/)
+- [Aria Automation — How It Works](../how-it-works/)
 - [Aria Automation — Deploy](../deploy/)

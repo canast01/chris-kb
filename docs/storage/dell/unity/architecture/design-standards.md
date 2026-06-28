@@ -114,6 +114,6 @@ Complete this checklist before signing off a new Unity deployment or a post-upgr
 
 ## See also
 
-- [Unity — How It Works](how-it-works/)
-- [Unity — Integrations](integrations/)
-- [Unity — Deploy](../deploy/)
+- [Unity — How It Works](../how-it-works/)
+- [Unity — Integrations](../integrations/)
+- [Unity — Deploy](../../deploy/)

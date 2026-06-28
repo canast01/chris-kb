@@ -284,5 +284,5 @@ Open a Dell support case at [https://www.dell.com/support](https://www.dell.com/
 
 ## See also
 
-- [COD — Diagnostics](diagnostics/)
-- [COD — Common Issues](common-issues/)
+- [COD — Diagnostics](../diagnostics/)
+- [COD — Common Issues](../common-issues/)

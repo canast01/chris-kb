@@ -33,6 +33,6 @@ Automation scripts for Superna Eyeglass — DR test operations, configuration re
 
 ## See also
 
-- [Superna Eyeglass — Procedures](procedures/)
-- [Superna Eyeglass — CLI Reference](cli-reference/)
-- [Superna Eyeglass — Health Checks](health-checks/)
+- [Superna Eyeglass — Procedures](../procedures/)
+- [Superna Eyeglass — CLI Reference](../cli-reference/)
+- [Superna Eyeglass — Health Checks](../health-checks/)

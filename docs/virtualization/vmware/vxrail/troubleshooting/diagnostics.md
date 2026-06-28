@@ -286,8 +286,8 @@ curl -sk -O \
 
 ## See also
 
-- [VxRail — Common Issues](common-issues/)
-- [VxRail — Escalation](escalation/)
+- [VxRail — Common Issues](../common-issues/)
+- [VxRail — Escalation](../escalation/)
 
 ## Verify resolution
 

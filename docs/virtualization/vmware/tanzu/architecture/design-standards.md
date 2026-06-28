@@ -421,5 +421,5 @@ VSPHERE_CONTROL_PLANE_ENDPOINT: 10.10.10.30  # static VIP (via NSX LB or keepali
 
 ## See also
 
-- [Tanzu — How It Works](how-it-works/)
-- [Tanzu — Deploy](../deploy/)
+- [Tanzu — How It Works](../how-it-works/)
+- [Tanzu — Deploy](../../deploy/)

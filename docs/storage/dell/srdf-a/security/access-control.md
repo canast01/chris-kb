@@ -35,6 +35,6 @@ For async operations, accidentally re-syncing from target to source (after a fai
 
 ## See also
 
-- [Srdf A — Authentication](authentication/)
-- [Srdf A — Hardening](hardening/)
-- [Srdf A — Encryption](encryption/)
+- [Srdf A — Authentication](../authentication/)
+- [Srdf A — Hardening](../hardening/)
+- [Srdf A — Encryption](../encryption/)

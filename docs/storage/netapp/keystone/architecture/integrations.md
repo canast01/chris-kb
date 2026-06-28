@@ -32,5 +32,5 @@ For hybrid cloud strategies, Keystone Flex extends the subscription model to Clo
 
 ## See also
 
-- [Keystone — How It Works](how-it-works/)
-- [Keystone — Design Standards](design-standards/)
+- [Keystone — How It Works](../how-it-works/)
+- [Keystone — Design Standards](../design-standards/)

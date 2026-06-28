@@ -184,8 +184,8 @@ if ($alerts.Count -gt 0) {
 
 ## See also
 
-- [vSphere Replication — CLI Reference](cli-reference/)
-- [vSphere Replication — Procedures](procedures/)
+- [vSphere Replication — CLI Reference](../cli-reference/)
+- [vSphere Replication — Procedures](../procedures/)
 
 ## Verify
 

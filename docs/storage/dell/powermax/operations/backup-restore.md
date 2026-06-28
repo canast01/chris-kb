@@ -516,6 +516,6 @@ The split window is typically 2–5 seconds for a consistent delta set handoff. 
 
 ## See also
 
-- [Powermax — Procedures](procedures/)
-- [Powermax — Health Checks](health-checks/)
-- [Powermax — Common Issues](../troubleshooting/common-issues/)
+- [Powermax — Procedures](../procedures/)
+- [Powermax — Health Checks](../health-checks/)
+- [Powermax — Common Issues](../../troubleshooting/common-issues/)

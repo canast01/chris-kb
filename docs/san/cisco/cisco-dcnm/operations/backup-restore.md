@@ -92,6 +92,6 @@ tail -f /var/log/dcnm/server.log
 
 ## See also
 
-- [Cisco Dcnm — Procedures](procedures/)
-- [Cisco Dcnm — Health Checks](health-checks/)
-- [Cisco Dcnm — Common Issues](../troubleshooting/common-issues/)
+- [Cisco Dcnm — Procedures](../procedures/)
+- [Cisco Dcnm — Health Checks](../health-checks/)
+- [Cisco Dcnm — Common Issues](../../troubleshooting/common-issues/)

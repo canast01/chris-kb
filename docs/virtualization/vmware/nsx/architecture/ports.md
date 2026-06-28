@@ -171,6 +171,6 @@ curl -sk -u admin:<pass> https://<nsx-mgr>/api/v1/transport-nodes | python3 -m j
 
 - [vCenter — Ports](../../vcenter/architecture/ports.md)
 - [ESXi — Ports](../../esxi/architecture/ports.md)
-- [NSX — Architecture](how-it-works/)
-- [NSX — Deploy](../../nsx/deploy/)
-- [NSX — Operations](../../nsx/operations/)
+- [NSX — Architecture](../how-it-works/)
+- [NSX — Deploy](../../../nsx/deploy/)
+- [NSX — Operations](../../../nsx/operations/)

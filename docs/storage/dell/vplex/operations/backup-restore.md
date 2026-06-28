@@ -117,6 +117,6 @@ After any recovery:
 
 ## See also
 
-- [Vplex — Procedures](procedures/)
-- [Vplex — Health Checks](health-checks/)
-- [Vplex — Common Issues](../troubleshooting/common-issues/)
+- [Vplex — Procedures](../procedures/)
+- [Vplex — Health Checks](../health-checks/)
+- [Vplex — Common Issues](../../troubleshooting/common-issues/)

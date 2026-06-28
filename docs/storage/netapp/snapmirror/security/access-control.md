@@ -56,6 +56,6 @@ security audit log show
 
 ## See also
 
-- [Snapmirror — Authentication](authentication/)
-- [Snapmirror — Hardening](hardening/)
-- [Snapmirror — Encryption](encryption/)
+- [Snapmirror — Authentication](../authentication/)
+- [Snapmirror — Hardening](../hardening/)
+- [Snapmirror — Encryption](../encryption/)

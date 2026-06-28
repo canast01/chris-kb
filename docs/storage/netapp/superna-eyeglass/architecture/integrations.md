@@ -61,5 +61,5 @@ Eyeglass Admin UI: Configuration → Notifications → Email:
 
 ## See also
 
-- [Superna Eyeglass — How It Works](how-it-works/)
-- [Superna Eyeglass — Design Standards](design-standards/)
+- [Superna Eyeglass — How It Works](../how-it-works/)
+- [Superna Eyeglass — Design Standards](../design-standards/)

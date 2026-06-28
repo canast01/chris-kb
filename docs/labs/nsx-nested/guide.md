@@ -194,7 +194,7 @@ After Edge deployment, create a T0 Gateway with Active/Standby HA using the Edge
 
 ## Next Steps
 
-- [Lab 4 — VCF on Nested ESXi](../vcf-nested/)
-- [NSX Topology Decision Tree](../../reference/decision-trees/nsx-topology/)
-- [NSX Cheat Sheet](../../reference/cheat-sheets/nsx/)
-- [NSX Architecture](../../virtualization/vmware/nsx/architecture/)
+- [Lab 4 — VCF on Nested ESXi](../../vcf-nested/)
+- [NSX Topology Decision Tree](../../../reference/decision-trees/nsx-topology/)
+- [NSX Cheat Sheet](../../../reference/cheat-sheets/nsx/)
+- [NSX Architecture](../../../virtualization/vmware/nsx/architecture/)

@@ -105,5 +105,5 @@ API documentation is available at `https://<cluster-node>:8080/platform/latest/`
 
 ## See also
 
-- [Powerscale — How It Works](how-it-works/)
-- [Powerscale — Design Standards](design-standards/)
+- [Powerscale — How It Works](../how-it-works/)
+- [Powerscale — Design Standards](../design-standards/)

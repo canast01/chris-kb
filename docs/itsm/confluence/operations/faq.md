@@ -56,4 +56,4 @@ A: For Data Center, use the Space Export/Import feature (Space Settings → Expo
 ## See Also
 
 - [Confluence Operations](index.md)
-- [Confluence Troubleshooting](../../troubleshooting/index.md)
+- [Confluence Troubleshooting](../../troubleshooting//)

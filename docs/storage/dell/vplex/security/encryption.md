@@ -212,6 +212,6 @@ Confirm ICL encryption does not add RTT that would push the cluster-to-cluster l
 
 ## See also
 
-- [Vplex — Hardening](hardening/)
-- [Vplex — Authentication](authentication/)
-- [Vplex — Access Control](access-control/)
+- [Vplex — Hardening](../hardening/)
+- [Vplex — Authentication](../authentication/)
+- [Vplex — Access Control](../access-control/)

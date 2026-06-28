@@ -55,5 +55,5 @@ portal -> resolution
 
 ## See also
 
-- [Dell CloudIQ — Common Issues](common-issues/)
+- [Dell CloudIQ — Common Issues](../common-issues/)
 - [Dell PowerStore — Known Issues](../../powerstore/troubleshooting/known-issues.md)

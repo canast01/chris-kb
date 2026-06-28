@@ -404,6 +404,6 @@ UI --> Admin: vSphere Client dashboard (roles from group mapping)
 
 ## See also
 
-- [vCenter — Design Standards](design-standards/)
+- [vCenter — Design Standards](../design-standards/)
 - [vCenter — Deploy](../deploy/)
-- [vCenter — Integrations](integrations/)
+- [vCenter — Integrations](../integrations/)

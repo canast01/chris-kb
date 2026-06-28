@@ -24,9 +24,9 @@ Evergreen//One deploys Pure hardware on-premises under a consumption billing mod
 
 | Component | Ports Page |
 |---|---|
-| FlashArray (block storage) | [Pure Storage FlashArray — Ports](../flasharray/architecture/ports/) |
-| FlashBlade (file/object) | [Pure Storage FlashBlade — Ports](../flashblade/architecture/ports/) |
-| Pure1 cloud management | [Pure1 — Ports](../pure1/architecture/ports/) |
+| FlashArray (block storage) | [Pure Storage FlashArray — Ports](../../../flasharray/architecture/ports/) |
+| FlashBlade (file/object) | [Pure Storage FlashBlade — Ports](../../../flashblade/architecture/ports/) |
+| Pure1 cloud management | [Pure1 — Ports](../../../pure1/architecture/ports/) |
 
 ## Evergreen//One Specific — Pure Cloud Connectivity (Required)
 
@@ -47,4 +47,4 @@ Pure requires uninterrupted outbound access to Pure1 for remote management, mete
 
 ## See also
 
-- [Pure Storage Evergreen//One — Architecture](how-it-works/)
+- [Pure Storage Evergreen//One — Architecture](../how-it-works/)

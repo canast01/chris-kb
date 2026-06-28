@@ -189,9 +189,9 @@ curl -sk \
 
 ## See also
 
-- [VxRail — Procedures](procedures/)
-- [VxRail — Common Issues](../troubleshooting/common-issues/)
-- [VxRail — Health Checks](health-checks/)
+- [VxRail — Procedures](../procedures/)
+- [VxRail — Common Issues](../../troubleshooting/common-issues/)
+- [VxRail — Health Checks](../health-checks/)
 
 ## Verify
 

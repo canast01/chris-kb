@@ -259,9 +259,9 @@ Always verify the VMware Product Interoperability Matrix before upgrading EVS co
 
 ## See also
 
-- [Amazon EVS — Health Checks](health-checks/)
+- [Amazon EVS — Health Checks](../health-checks/)
 - [Amazon EVS — Common Issues](../troubleshooting/common-issues/)
-- [Amazon EVS — Procedures](procedures/)
+- [Amazon EVS — Procedures](../procedures/)
 
 ## Verify
 

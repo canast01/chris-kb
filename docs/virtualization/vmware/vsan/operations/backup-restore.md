@@ -233,9 +233,9 @@ vSAN stretched cluster does not improve RPO for logical failures — it only pro
 
 ## See also
 
-- [vSAN — Procedures](procedures/)
-- [vSAN — Common Issues](../troubleshooting/common-issues/)
-- [vSAN — Health Checks](health-checks/)
+- [vSAN — Procedures](../procedures/)
+- [vSAN — Common Issues](../../troubleshooting/common-issues/)
+- [vSAN — Health Checks](../health-checks/)
 
 ## Verify
 

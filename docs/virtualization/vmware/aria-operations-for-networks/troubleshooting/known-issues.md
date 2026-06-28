@@ -64,6 +64,6 @@ platform -> resolution
 
 ## See also
 
-- [VMware Aria Operations for Networks — Common Issues](common-issues/)
+- [VMware Aria Operations for Networks — Common Issues](../common-issues/)
 - [VMware NSX — Known Issues](../../nsx/troubleshooting/known-issues.md)
 - [VMware Aria Operations — Known Issues](../../aria-operations/troubleshooting/known-issues.md)

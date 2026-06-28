@@ -269,8 +269,8 @@ For recurring issues (same root cause appearing more than once), escalate to you
 
 ## See also
 
-- [Amazon EVS — Diagnostics](diagnostics/)
-- [Amazon EVS — Common Issues](common-issues/)
+- [Amazon EVS — Diagnostics](../diagnostics/)
+- [Amazon EVS — Common Issues](../common-issues/)
 
 ## Verify resolution
 

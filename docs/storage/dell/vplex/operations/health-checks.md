@@ -169,6 +169,6 @@ All directors should be `operational-status: ok` and `health-state: ok`.
 
 ## See also
 
-- [Vplex — Procedures](procedures/)
-- [Vplex — CLI Reference](cli-reference/)
+- [Vplex — Procedures](../procedures/)
+- [Vplex — CLI Reference](../cli-reference/)
 - [Vplex — Common Issues](../troubleshooting/common-issues/)

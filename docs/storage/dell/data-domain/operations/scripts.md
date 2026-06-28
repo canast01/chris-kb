@@ -617,6 +617,6 @@ exit "$STATE"
 
 ## See also
 
-- [Data Domain — Procedures](procedures/)
-- [Data Domain — CLI Reference](cli-reference/)
-- [Data Domain — Health Checks](health-checks/)
+- [Data Domain — Procedures](../procedures/)
+- [Data Domain — CLI Reference](../cli-reference/)
+- [Data Domain — Health Checks](../health-checks/)

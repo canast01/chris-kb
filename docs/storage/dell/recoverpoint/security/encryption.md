@@ -61,6 +61,6 @@ Track certificate expiry — RecoverPoint management console becomes inaccessibl
 
 ## See also
 
-- [Recoverpoint — Hardening](hardening/)
-- [Recoverpoint — Authentication](authentication/)
-- [Recoverpoint — Access Control](access-control/)
+- [Recoverpoint — Hardening](../hardening/)
+- [Recoverpoint — Authentication](../authentication/)
+- [Recoverpoint — Access Control](../access-control/)

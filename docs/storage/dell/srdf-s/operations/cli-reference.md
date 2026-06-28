@@ -120,6 +120,6 @@ symdg show <group_name>
 
 ## See also
 
-- [Srdf S — Procedures](procedures/)
-- [Srdf S — Scripts](scripts/)
-- [Srdf S — Health Checks](health-checks/)
+- [Srdf S — Procedures](../procedures/)
+- [Srdf S — Scripts](../scripts/)
+- [Srdf S — Health Checks](../health-checks/)

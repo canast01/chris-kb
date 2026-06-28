@@ -227,6 +227,6 @@ for s in data: w.writerow(s)
 
 ## See also
 
-- [Nexus Dashboard — Procedures](procedures/)
-- [Nexus Dashboard — Scripts](scripts/)
-- [Nexus Dashboard — Health Checks](health-checks/)
+- [Nexus Dashboard — Procedures](../procedures/)
+- [Nexus Dashboard — Scripts](../scripts/)
+- [Nexus Dashboard — Health Checks](../health-checks/)

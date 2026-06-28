@@ -159,6 +159,6 @@ Collectors run a lightweight agent that communicates only outbound to the Platfo
 
 ## See also
 
-- [Aria Operations for Networks — Design Standards](design-standards/)
+- [Aria Operations for Networks — Design Standards](../design-standards/)
 - [Aria Operations for Networks — Deploy](../deploy/)
-- [vRNI Integrations](integrations/)
+- [vRNI Integrations](../integrations/)

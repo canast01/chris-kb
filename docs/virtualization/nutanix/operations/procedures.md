@@ -266,6 +266,6 @@ ncli ctr edit name=<container-name> advertised-capacity=<size-in-bytes>
 
 ## See also
 
-- [Nutanix — Health Checks](health-checks/)
+- [Nutanix — Health Checks](../health-checks/)
 - [Nutanix — Common Issues](../troubleshooting/common-issues/)
-- [Nutanix — CLI Reference](cli-reference/)
+- [Nutanix — CLI Reference](../cli-reference/)

@@ -46,5 +46,5 @@ Hardware firmware and lifecycle upgrades for APEX STaaS are Dell's responsibilit
 
 ## See also
 
-- [Apex Storage As A Service — Procedures](procedures/)
-- [Apex Storage As A Service — Health Checks](health-checks/)
+- [Apex Storage As A Service — Procedures](../procedures/)
+- [Apex Storage As A Service — Health Checks](../health-checks/)

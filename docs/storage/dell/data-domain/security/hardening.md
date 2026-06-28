@@ -308,6 +308,6 @@ net show all
 
 ## See also
 
-- [Data Domain — Authentication](authentication/)
-- [Data Domain — Access Control](access-control/)
-- [Data Domain — Encryption](encryption/)
+- [Data Domain — Authentication](../authentication/)
+- [Data Domain — Access Control](../access-control/)
+- [Data Domain — Encryption](../encryption/)

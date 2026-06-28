@@ -39,6 +39,6 @@ APEX STaaS authentication: CloudIQ portal SSO with SAML 2.0, API OAuth2 token ge
 
 ## See also
 
-- [Apex Storage As A Service — Access Control](access-control/)
-- [Apex Storage As A Service — Hardening](hardening/)
-- [Apex Storage As A Service — Encryption](encryption/)
+- [Apex Storage As A Service — Access Control](../access-control/)
+- [Apex Storage As A Service — Hardening](../hardening/)
+- [Apex Storage As A Service — Encryption](../encryption/)

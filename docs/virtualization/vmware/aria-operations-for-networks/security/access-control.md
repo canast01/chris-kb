@@ -125,5 +125,5 @@ Forward to SIEM via syslog (Settings → Notifications → Syslog). Alert on:
 
 ## See also
 
-- [Aria Operations for Networks — Authentication](authentication/)
-- [vRNI Security Hardening](hardening/)
+- [Aria Operations for Networks — Authentication](../authentication/)
+- [vRNI Security Hardening](../hardening/)

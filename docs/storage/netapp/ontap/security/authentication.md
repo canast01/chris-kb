@@ -412,6 +412,6 @@ vserver export-policy rule modify \
 
 ## See also
 
-- [Ontap — Access Control](access-control/)
-- [Ontap — Hardening](hardening/)
-- [Ontap — Encryption](encryption/)
+- [Ontap — Access Control](../access-control/)
+- [Ontap — Hardening](../hardening/)
+- [Ontap — Encryption](../encryption/)

@@ -895,9 +895,9 @@ Test-VMHostProfileCompliance -VMHost (Get-VMHost -Location $cluster) -VMHostProf
 
 ## See also
 
-- [ESXi — Health Checks](health-checks/)
+- [ESXi — Health Checks](../health-checks/)
 - [ESXi — Common Issues](../troubleshooting/common-issues/)
-- [ESXi CLI Reference](cli-reference/)
+- [ESXi CLI Reference](../cli-reference/)
 
 ## Verify
 

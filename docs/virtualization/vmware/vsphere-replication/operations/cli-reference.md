@@ -152,9 +152,9 @@ curl -sk -X POST -H "Authorization: Bearer $TOKEN" \
 
 ## See also
 
-- [vSphere Replication — Procedures](procedures/)
-- [vSphere Replication — Scripts](scripts/)
-- [vSphere Replication — Health Checks](health-checks/)
+- [vSphere Replication — Procedures](../procedures/)
+- [vSphere Replication — Scripts](../scripts/)
+- [vSphere Replication — Health Checks](../health-checks/)
 
 ## Verify
 

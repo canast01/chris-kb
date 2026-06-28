@@ -45,5 +45,5 @@ kubectl get tkc -n my-ns                               # TanzuKubernetesCluster 
 
 ## See also
 
-- [Tanzu Operations](../../virtualization/vmware/tanzu/operations/procedures/)
-- [Tanzu Troubleshooting](../../virtualization/vmware/tanzu/troubleshooting/common-issues/)
+- [Tanzu Operations](../../../virtualization/vmware/tanzu/operations/procedures/)
+- [Tanzu Troubleshooting](../../../virtualization/vmware/tanzu/troubleshooting/common-issues/)

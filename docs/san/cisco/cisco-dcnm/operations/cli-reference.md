@@ -172,6 +172,6 @@ for s in data: w.writerow(s)
 
 ## See also
 
-- [Cisco Dcnm — Procedures](procedures/)
-- [Cisco Dcnm — Scripts](scripts/)
-- [Cisco Dcnm — Health Checks](health-checks/)
+- [Cisco Dcnm — Procedures](../procedures/)
+- [Cisco Dcnm — Scripts](../scripts/)
+- [Cisco Dcnm — Health Checks](../health-checks/)

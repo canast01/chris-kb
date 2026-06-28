@@ -405,6 +405,6 @@ Set capacity alerts in Unisphere at 70% and 80% consumed to get early warning be
 
 ## See also
 
-- [Unity — Procedures](procedures/)
-- [Unity — Health Checks](health-checks/)
-- [Unity — Common Issues](../troubleshooting/common-issues/)
+- [Unity — Procedures](../procedures/)
+- [Unity — Health Checks](../health-checks/)
+- [Unity — Common Issues](../../troubleshooting/common-issues/)

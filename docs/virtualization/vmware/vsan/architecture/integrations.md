@@ -112,5 +112,5 @@ The vSAN management pack connects through the vCenter adapter; no separate vSAN 
 
 ## See also
 
-- [vSAN — How It Works](how-it-works/)
+- [vSAN — How It Works](../how-it-works/)
 - [vSAN — Deploy](../deploy/)

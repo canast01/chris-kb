@@ -351,5 +351,5 @@ Do not size clusters close to these maximums — leave at least 20% headroom for
 
 ## See also
 
-- [vSAN — How It Works](how-it-works/)
-- [vSAN — Deploy](../deploy/)
+- [vSAN — How It Works](../how-it-works/)
+- [vSAN — Deploy](../../deploy/)

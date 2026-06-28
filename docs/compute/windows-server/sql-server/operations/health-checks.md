@@ -267,6 +267,6 @@ pg_basebackup -h <primary-host> -U replication -D /var/lib/postgresql/data-new -
 
 ## See also
 
-- [Sql Server — Procedures](procedures/)
-- [Sql Server — CLI Reference](cli-reference/)
+- [Sql Server — Procedures](../procedures/)
+- [Sql Server — CLI Reference](../cli-reference/)
 - [Sql Server — Common Issues](../troubleshooting/common-issues/)

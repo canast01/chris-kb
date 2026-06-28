@@ -253,8 +253,8 @@ symevent -sid <SID> list -last 20
 
 ## See also
 
-- [PowerMax — Diagnostics](diagnostics/)
-- [PowerMax — Common Issues](common-issues/)
+- [PowerMax — Diagnostics](../diagnostics/)
+- [PowerMax — Common Issues](../common-issues/)
 
 ---
 

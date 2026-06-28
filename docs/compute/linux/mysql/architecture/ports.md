@@ -63,7 +63,7 @@ mysqlsh admin@<cluster-host>:3306 -- cluster status
 
 ## See also
 
-- [MySQL — Architecture](how-it-works/)
-- [MySQL — Operations](../operations/)
+- [MySQL — Architecture](../how-it-works/)
+- [MySQL — Operations](../../operations/)
 - [Linux — Ports](../../architecture/ports.md)
 - [PostgreSQL — Ports](../../postgresql/architecture/ports.md)

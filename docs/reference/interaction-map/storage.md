@@ -45,6 +45,6 @@ FTT (Failures to Tolerate) and RAID level are set per VM via SPBM storage policy
 
 ## See also
 
-- [vSAN Cheat Sheet](../cheat-sheets/vsan/)
+- [vSAN Cheat Sheet](../../cheat-sheets/vsan/)
 - [vSAN Architecture](../../virtualization/vmware/vsan/architecture/)
 - [Back to Interaction Map](index.md)

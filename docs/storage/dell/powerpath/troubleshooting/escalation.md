@@ -260,8 +260,8 @@ dmesg | grep -i "emcp\|powerpath" | tail -20
 
 ## See also
 
-- [PowerPath — Diagnostics](diagnostics/)
-- [PowerPath — Common Issues](common-issues/)
+- [PowerPath — Diagnostics](../diagnostics/)
+- [PowerPath — Common Issues](../common-issues/)
 
 ---
 

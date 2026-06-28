@@ -65,6 +65,6 @@ rest_api_integration -> resolution
 
 ## See also
 
-- [Python — Common Issues](common-issues/)
+- [Python — Common Issues](../common-issues/)
 - [Ansible — Known Issues](../../ansible/troubleshooting/known-issues.md)
 - [Terraform — Known Issues](../../terraform/troubleshooting/known-issues.md)

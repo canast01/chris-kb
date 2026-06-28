@@ -61,8 +61,8 @@ if ($Results) {
 
 ## See also
 
-- [Aria Automation — CLI Reference](cli-reference/)
-- [Aria Automation — Operational Procedures](procedures/)
+- [Aria Automation — CLI Reference](../cli-reference/)
+- [Aria Automation — Operational Procedures](../procedures/)
 
 ## Verify
 

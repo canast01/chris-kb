@@ -394,5 +394,5 @@ Key points illustrated:
 
 ## See also
 
-- [Ontap — Design Standards](design-standards/)
-- [Ontap — Integrations](integrations/)
+- [Ontap — Design Standards](../design-standards/)
+- [Ontap — Integrations](../integrations/)

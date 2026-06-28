@@ -476,5 +476,5 @@ Confirm the upgrade readiness check passes without blockers before setting the m
 
 ## See also
 
-- [Evergreen — Health Checks](health-checks/)
-- [Evergreen — CLI Reference](cli-reference/)
+- [Evergreen — Health Checks](../health-checks/)
+- [Evergreen — CLI Reference](../cli-reference/)

@@ -954,6 +954,6 @@ echo "Triage collection complete. Output saved to: $OUTFILE"
 
 ## See also
 
-- [FlashArray — Procedures](procedures/)
-- [FlashArray — CLI Reference](cli-reference/)
-- [FlashArray — Health Checks](health-checks/)
+- [FlashArray — Procedures](../procedures/)
+- [FlashArray — CLI Reference](../cli-reference/)
+- [FlashArray — Health Checks](../health-checks/)

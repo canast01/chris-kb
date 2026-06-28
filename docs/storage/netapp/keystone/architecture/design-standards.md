@@ -47,5 +47,5 @@ Standards reference covering Service Level Selection, Naming Conventions, Capaci
 
 ## See also
 
-- [Keystone — How It Works](how-it-works/)
-- [Keystone — Integrations](integrations/)
+- [Keystone — How It Works](../how-it-works/)
+- [Keystone — Integrations](../integrations/)

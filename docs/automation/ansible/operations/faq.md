@@ -56,4 +56,4 @@ A: Yes — use `git checkout <commit> -- roles/rolename/` to restore a specific 
 ## See Also
 
 - [Ansible Operations](index.md)
-- [Ansible Troubleshooting](../../troubleshooting/index.md)
+- [Ansible Troubleshooting](../../troubleshooting//)

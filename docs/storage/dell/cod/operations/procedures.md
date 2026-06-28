@@ -123,6 +123,6 @@ Procedures reference covering COD Activation Procedure, Incident Triage.
 
 ## See also
 
-- [Cod — Health Checks](health-checks/)
-- [Cod — CLI Reference](cli-reference/)
+- [Cod — Health Checks](../health-checks/)
+- [Cod — CLI Reference](../cli-reference/)
 - [Cod — Common Issues](../troubleshooting/common-issues/)

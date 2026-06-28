@@ -54,6 +54,6 @@ Log `powermt check_registration` and `powermt save` operations as part of any ch
 
 ## See also
 
-- [Powerpath — Authentication](authentication/)
-- [Powerpath — Hardening](hardening/)
-- [Powerpath — Encryption](encryption/)
+- [Powerpath — Authentication](../authentication/)
+- [Powerpath — Hardening](../hardening/)
+- [Powerpath — Encryption](../encryption/)

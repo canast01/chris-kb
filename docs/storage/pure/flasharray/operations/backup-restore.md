@@ -362,6 +362,6 @@ purepgroup list | grep -i veeam
 
 ## See also
 
-- [FlashArray — Procedures](procedures/)
-- [FlashArray — Health Checks](health-checks/)
-- [FlashArray — Common Issues](../troubleshooting/common-issues/)
+- [FlashArray — Procedures](../procedures/)
+- [FlashArray — Health Checks](../health-checks/)
+- [FlashArray — Common Issues](../../troubleshooting/common-issues/)

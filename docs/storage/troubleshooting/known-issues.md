@@ -38,38 +38,38 @@ Storage issues often surface as application errors (I/O timeout, permission deni
 
 | Product | Known Issues |
 |---|---|
-| ONTAP | [ONTAP — Known Issues](netapp/ontap/troubleshooting/known-issues/) |
-| SnapCenter | [SnapCenter — Known Issues](netapp/snapcenter/troubleshooting/known-issues/) |
-| SnapMirror | [SnapMirror — Known Issues](netapp/snapmirror/troubleshooting/known-issues/) |
-| InsightIQ | [InsightIQ — Known Issues](netapp/insightiq/troubleshooting/known-issues/) |
-| Keystone | [Keystone — Known Issues](netapp/keystone/troubleshooting/known-issues/) |
-| Superna Eyeglass | [Superna Eyeglass — Known Issues](netapp/superna-eyeglass/troubleshooting/known-issues/) |
+| ONTAP | [ONTAP — Known Issues](../../netapp/ontap/troubleshooting/known-issues/) |
+| SnapCenter | [SnapCenter — Known Issues](../../netapp/snapcenter/troubleshooting/known-issues/) |
+| SnapMirror | [SnapMirror — Known Issues](../../netapp/snapmirror/troubleshooting/known-issues/) |
+| InsightIQ | [InsightIQ — Known Issues](../../netapp/insightiq/troubleshooting/known-issues/) |
+| Keystone | [Keystone — Known Issues](../../netapp/keystone/troubleshooting/known-issues/) |
+| Superna Eyeglass | [Superna Eyeglass — Known Issues](../../netapp/superna-eyeglass/troubleshooting/known-issues/) |
 
 ### Pure Storage
 
 | Product | Known Issues |
 |---|---|
-| FlashArray | [FlashArray — Known Issues](pure/flasharray/troubleshooting/known-issues/) |
-| FlashBlade | [FlashBlade — Known Issues](pure/flashblade/troubleshooting/known-issues/) |
-| Pure1 | [Pure1 — Known Issues](pure/pure1/troubleshooting/known-issues/) |
+| FlashArray | [FlashArray — Known Issues](../../pure/flasharray/troubleshooting/known-issues/) |
+| FlashBlade | [FlashBlade — Known Issues](../../pure/flashblade/troubleshooting/known-issues/) |
+| Pure1 | [Pure1 — Known Issues](../../pure/pure1/troubleshooting/known-issues/) |
 
 ### Dell Storage
 
 | Product | Known Issues |
 |---|---|
-| PowerStore | [PowerStore — Known Issues](dell/powerstore/troubleshooting/known-issues/) |
-| PowerScale | [PowerScale — Known Issues](dell/powerscale/troubleshooting/known-issues/) |
-| PowerMax | [PowerMax — Known Issues](dell/powermax/troubleshooting/known-issues/) |
-| Data Domain | [Data Domain — Known Issues](dell/data-domain/troubleshooting/known-issues/) |
-| Unity | [Unity — Known Issues](dell/unity/troubleshooting/known-issues/) |
-| VPLEX | [VPLEX — Known Issues](dell/vplex/troubleshooting/known-issues/) |
-| RecoverPoint | [RecoverPoint — Known Issues](dell/recoverpoint/troubleshooting/known-issues/) |
+| PowerStore | [PowerStore — Known Issues](../../dell/powerstore/troubleshooting/known-issues/) |
+| PowerScale | [PowerScale — Known Issues](../../dell/powerscale/troubleshooting/known-issues/) |
+| PowerMax | [PowerMax — Known Issues](../../dell/powermax/troubleshooting/known-issues/) |
+| Data Domain | [Data Domain — Known Issues](../../dell/data-domain/troubleshooting/known-issues/) |
+| Unity | [Unity — Known Issues](../../dell/unity/troubleshooting/known-issues/) |
+| VPLEX | [VPLEX — Known Issues](../../dell/vplex/troubleshooting/known-issues/) |
+| RecoverPoint | [RecoverPoint — Known Issues](../../dell/recoverpoint/troubleshooting/known-issues/) |
 
 ### Open Source
 
 | Product | Known Issues |
 |---|---|
-| Ceph | [Ceph — Known Issues](ceph/troubleshooting/known-issues/) |
+| Ceph | [Ceph — Known Issues](../../ceph/troubleshooting/known-issues/) |
 
 ## See also
 

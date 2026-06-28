@@ -81,6 +81,6 @@ summarize-dvfilter | grep -c "vmware-sfw"
 
 ## See also
 
-- [NSX — Access Control](access-control/)
-- [NSX — Authentication](authentication/)
+- [NSX — Access Control](../access-control/)
+- [NSX — Authentication](../authentication/)
 - [NSX — Health Checks](../operations/health-checks/)

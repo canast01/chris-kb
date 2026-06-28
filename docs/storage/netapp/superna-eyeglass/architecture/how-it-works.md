@@ -79,6 +79,6 @@ graph LR
 
 ## See also
 
-- [Superna Eyeglass — Design Standards](design-standards/)
-- [Superna Eyeglass — Integrations](integrations/)
+- [Superna Eyeglass — Design Standards](../design-standards/)
+- [Superna Eyeglass — Integrations](../integrations/)
 - [Superna Eyeglass — Deploy](../deploy/)

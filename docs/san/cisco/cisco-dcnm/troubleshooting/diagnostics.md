@@ -316,8 +316,8 @@ exit
 
 ## See also
 
-- [Cisco DCNM — Common Issues](common-issues/)
-- [Cisco DCNM — Escalation](escalation/)
+- [Cisco DCNM — Common Issues](../common-issues/)
+- [Cisco DCNM — Escalation](../escalation/)
 
 ## Verify resolution
 

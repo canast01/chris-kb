@@ -378,9 +378,9 @@ Get-VMHostFirmware -VMHost "vxrail-node-01.example.local" \
 
 ## See also
 
-- [VxRail — Procedures](procedures/)
-- [VxRail Appliance — Scripts](scripts/)
-- [VxRail — Health Checks](health-checks/)
+- [VxRail — Procedures](../procedures/)
+- [VxRail Appliance — Scripts](../scripts/)
+- [VxRail — Health Checks](../health-checks/)
 
 ## Verify
 

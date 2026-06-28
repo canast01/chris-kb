@@ -235,5 +235,5 @@ openssl s_client -connect $VCENTER:443 </dev/null 2>/dev/null | grep -E "Protoco
 
 ## See also
 
-- [Amazon EVS — Hardening](hardening/)
-- [Amazon EVS — Health Checks](../operations/health-checks/)
+- [Amazon EVS — Hardening](../hardening/)
+- [Amazon EVS — Health Checks](../../operations/health-checks/)

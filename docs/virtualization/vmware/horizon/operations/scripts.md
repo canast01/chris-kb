@@ -177,8 +177,8 @@ Get-HVPool | ForEach-Object {
 
 ## See also
 
-- [Horizon — CLI Reference](cli-reference/)
-- [Horizon — Procedures](procedures/)
+- [Horizon — CLI Reference](../cli-reference/)
+- [Horizon — Procedures](../procedures/)
 
 ## Verify
 

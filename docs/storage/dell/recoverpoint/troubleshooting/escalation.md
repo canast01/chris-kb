@@ -249,8 +249,8 @@ get rpa_state
 
 ## See also
 
-- [RecoverPoint — Diagnostics](diagnostics/)
-- [RecoverPoint — Common Issues](common-issues/)
+- [RecoverPoint — Diagnostics](../diagnostics/)
+- [RecoverPoint — Common Issues](../common-issues/)
 
 ---
 

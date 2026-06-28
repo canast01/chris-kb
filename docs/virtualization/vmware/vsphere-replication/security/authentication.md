@@ -130,5 +130,5 @@ The ESXi replication service (hbrsvc) authenticates to the target VRA to establi
 
 ## See also
 
-- [vSphere Replication — Access Control](access-control/)
-- [vSphere Replication — Hardening](hardening/)
+- [vSphere Replication — Access Control](../access-control/)
+- [vSphere Replication — Hardening](../hardening/)

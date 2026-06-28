@@ -71,9 +71,9 @@ sudo systemctl status vrni-platform nginx kafka elasticsearch postgres
 
 ## See also
 
-- [AON Operational Procedures](procedures/)
-- [vRNI Common Issues](../troubleshooting/common-issues/)
-- [vRNI Health Checks](health-checks/)
+- [AON Operational Procedures](../procedures/)
+- [vRNI Common Issues](../../troubleshooting/common-issues/)
+- [vRNI Health Checks](../health-checks/)
 
 ## Verify
 

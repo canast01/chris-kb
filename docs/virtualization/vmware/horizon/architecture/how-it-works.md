@@ -200,6 +200,6 @@ The replica and parent VMs consume resources on the ESXi host and datastore — 
 
 ## See also
 
-- [Horizon — Design Standards](design-standards/)
+- [Horizon — Design Standards](../design-standards/)
 - [Horizon — Deploy](../deploy/)
-- [VMware Horizon — Integrations](integrations/)
+- [VMware Horizon — Integrations](../integrations/)

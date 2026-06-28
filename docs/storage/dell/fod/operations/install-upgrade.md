@@ -61,5 +61,5 @@ symcfg -sid <sid> list -license
 
 ## See also
 
-- [Fod — Procedures](procedures/)
-- [Fod — Health Checks](health-checks/)
+- [Fod — Procedures](../procedures/)
+- [Fod — Health Checks](../health-checks/)

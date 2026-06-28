@@ -268,6 +268,6 @@ ncli pd restore-vm name=<pd-name> \
 
 ## See also
 
-- [Nutanix — Procedures](procedures/)
-- [Nutanix — Common Issues](../troubleshooting/common-issues/)
-- [Nutanix — Health Checks](health-checks/)
+- [Nutanix — Procedures](../procedures/)
+- [Nutanix — Common Issues](../../troubleshooting/common-issues/)
+- [Nutanix — Health Checks](../health-checks/)

@@ -471,8 +471,8 @@ python /usr/lib/vmware/vsan/bin/cmmds-tool.py enumerate -d /tmp/cmmds-dump.json
 
 ## See also
 
-- [vSAN — Common Issues](common-issues/)
-- [vSAN — Escalation](escalation/)
+- [vSAN — Common Issues](../common-issues/)
+- [vSAN — Escalation](../escalation/)
 
 ## Verify resolution
 

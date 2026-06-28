@@ -224,5 +224,5 @@ logger -t esxi-auth-test "Test auth log entry $(date)"
 
 ## See also
 
-- [ESXi Access Control](access-control/)
-- [ESXi — Hardening](hardening/)
+- [ESXi Access Control](../access-control/)
+- [ESXi — Hardening](../hardening/)

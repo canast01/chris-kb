@@ -344,6 +344,6 @@ purefb filesystem list
 
 ## See also
 
-- [FlashBlade — Authentication](authentication/)
-- [FlashBlade — Hardening](hardening/)
-- [FlashBlade — Encryption](encryption/)
+- [FlashBlade — Authentication](../authentication/)
+- [FlashBlade — Hardening](../hardening/)
+- [FlashBlade — Encryption](../encryption/)

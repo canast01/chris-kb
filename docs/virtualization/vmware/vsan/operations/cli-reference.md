@@ -431,9 +431,9 @@ Get-VM -Location $cluster | ForEach-Object {
 
 ## See also
 
-- [vSAN — Procedures](procedures/)
-- [vSAN — Scripts](scripts/)
-- [vSAN — Health Checks](health-checks/)
+- [vSAN — Procedures](../procedures/)
+- [vSAN — Scripts](../scripts/)
+- [vSAN — Health Checks](../health-checks/)
 
 ## Verify
 

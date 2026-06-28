@@ -80,7 +80,7 @@ vSAN requires a dedicated VMkernel adapter. If vSAN traffic crosses L3 (stretche
 | 12346 | UDP | vSAN VMkernel adapters | CMMDS — unicast heartbeat |
 | 2233 | TCP | vSAN VMkernel adapters | RDT — Reliable Datagram Transport (vSAN I/O) |
 
-See [vSAN — Ports](../../vsan/architecture/ports/) for witness appliance and stretched cluster port requirements.
+See [vSAN — Ports](../../../vsan/architecture/ports/) for witness appliance and stretched cluster port requirements.
 
 ---
 
@@ -162,5 +162,5 @@ vmkping -I vmk1 <destination-esxi-vmk1-ip>
 - [vCenter — Ports](../../vcenter/architecture/ports.md)
 - [vSAN — Ports](../../vsan/architecture/ports.md)
 - [NSX — Ports](../../nsx/architecture/ports.md)
-- [ESXi — Architecture](how-it-works/)
-- [ESXi — Deploy](../../esxi/deploy/)
+- [ESXi — Architecture](../how-it-works/)
+- [ESXi — Deploy](../../../esxi/deploy/)

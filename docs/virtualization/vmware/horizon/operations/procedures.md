@@ -690,9 +690,9 @@ Users must connect to a single URL that resolves to a Connection Server in their
 
 ## See also
 
-- [VMware Horizon — Health Checks](health-checks/)
+- [VMware Horizon — Health Checks](../health-checks/)
 - [VMware Horizon — Common Issues](../troubleshooting/common-issues/)
-- [Horizon — CLI Reference](cli-reference/)
+- [Horizon — CLI Reference](../cli-reference/)
 
 ## Verify
 

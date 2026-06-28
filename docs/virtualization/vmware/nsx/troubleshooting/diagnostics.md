@@ -369,8 +369,8 @@ get tunnel status >> /tmp/cluster-status.txt
 
 ## See also
 
-- [NSX — Common Issues](common-issues/)
-- [NSX — Escalation](escalation/)
+- [NSX — Common Issues](../common-issues/)
+- [NSX — Escalation](../escalation/)
 
 ## Verify resolution
 

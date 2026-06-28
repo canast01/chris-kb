@@ -675,6 +675,6 @@ uemcli -d <ip> -u admin /sys/battery show -detail
 
 ## See also
 
-- [Unity — Procedures](procedures/)
-- [Unity — Scripts](scripts/)
-- [Unity — Health Checks](health-checks/)
+- [Unity — Procedures](../procedures/)
+- [Unity — Scripts](../scripts/)
+- [Unity — Health Checks](../health-checks/)

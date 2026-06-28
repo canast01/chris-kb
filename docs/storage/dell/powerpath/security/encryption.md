@@ -42,6 +42,6 @@ PowerPath operates at the block I/O layer and does not encrypt data in transit b
 
 ## See also
 
-- [Powerpath — Hardening](hardening/)
-- [Powerpath — Authentication](authentication/)
-- [Powerpath — Access Control](access-control/)
+- [Powerpath — Hardening](../hardening/)
+- [Powerpath — Authentication](../authentication/)
+- [Powerpath — Access Control](../access-control/)

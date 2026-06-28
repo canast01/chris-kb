@@ -97,5 +97,5 @@ Standards reference covering Naming Conventions, Build Baseline, Configuration C
 
 ## See also
 
-- [Aria Automation — How It Works](how-it-works/)
-- [Aria Automation — Deploy](../deploy/)
+- [Aria Automation — How It Works](../how-it-works/)
+- [Aria Automation — Deploy](../../deploy/)

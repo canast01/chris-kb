@@ -298,6 +298,6 @@ systemctl status multipathd
 
 ## See also
 
-- [Powerpath — Procedures](procedures/)
-- [Powerpath — CLI Reference](cli-reference/)
+- [Powerpath — Procedures](../procedures/)
+- [Powerpath — CLI Reference](../cli-reference/)
 - [Powerpath — Common Issues](../troubleshooting/common-issues/)

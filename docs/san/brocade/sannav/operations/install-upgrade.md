@@ -50,6 +50,6 @@ userconfig --delete sannav_svc
 
 ## See also
 
-- [Sannav — Procedures](procedures/)
-- [Sannav — Health Checks](health-checks/)
+- [Sannav — Procedures](../procedures/)
+- [Sannav — Health Checks](../health-checks/)
 - [Sannav — Deploy](../deploy/)

@@ -26,5 +26,5 @@ Authentication reference covering Site Pairing Authentication (Certificate-Based
 
 ## See also
 
-- [SRM — Access Control](access-control/)
-- [SRM — Hardening](hardening/)
+- [SRM — Access Control](../access-control/)
+- [SRM — Hardening](../hardening/)

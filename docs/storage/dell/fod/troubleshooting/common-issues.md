@@ -96,6 +96,6 @@ graph TD
 
 ## See also
 
-- [Fod — Diagnostics](diagnostics/)
-- [Fod — Escalation](escalation/)
-- [Fod — Health Checks](../operations/health-checks/)
+- [Fod — Diagnostics](../diagnostics/)
+- [Fod — Escalation](../escalation/)
+- [Fod — Health Checks](../../operations/health-checks/)

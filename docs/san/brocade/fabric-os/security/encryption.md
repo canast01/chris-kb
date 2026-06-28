@@ -233,6 +233,6 @@ Encryption settings work in conjunction with:
 
 ## See also
 
-- [Fabric Os — Hardening](hardening/)
-- [Fabric Os — Authentication](authentication/)
-- [Fabric Os — Access Control](access-control/)
+- [Fabric Os — Hardening](../hardening/)
+- [Fabric Os — Authentication](../authentication/)
+- [Fabric Os — Access Control](../access-control/)

@@ -121,6 +121,6 @@ For automated monitoring, configure Events Database (SQL Server) and query it wi
 
 ## See also
 
-- [Horizon — Access Control](access-control/)
-- [Horizon — Authentication](authentication/)
+- [Horizon — Access Control](../access-control/)
+- [Horizon — Authentication](../authentication/)
 - [VMware Horizon — Health Checks](../operations/health-checks/)

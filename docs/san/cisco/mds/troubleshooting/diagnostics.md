@@ -245,6 +245,6 @@ verify_resolution -> resolution
 
 ## See also
 
-- [Mds — Common Issues](common-issues/)
-- [Mds — Escalation](escalation/)
+- [Mds — Common Issues](../common-issues/)
+- [Mds — Escalation](../escalation/)
 - [Mds — Health Checks](../operations/health-checks/)

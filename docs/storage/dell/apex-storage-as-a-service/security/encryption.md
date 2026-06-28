@@ -49,6 +49,6 @@ Encryption reference covering Encryption Controls, Key Points.
 
 ## See also
 
-- [Apex Storage As A Service — Hardening](hardening/)
-- [Apex Storage As A Service — Authentication](authentication/)
-- [Apex Storage As A Service — Access Control](access-control/)
+- [Apex Storage As A Service — Hardening](../hardening/)
+- [Apex Storage As A Service — Authentication](../authentication/)
+- [Apex Storage As A Service — Access Control](../access-control/)

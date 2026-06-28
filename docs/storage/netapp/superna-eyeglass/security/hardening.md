@@ -49,6 +49,6 @@ Alert in SIEM on:
 
 ## See also
 
-- [Superna Eyeglass — Authentication](authentication/)
-- [Superna Eyeglass — Access Control](access-control/)
-- [Superna Eyeglass — Encryption](encryption/)
+- [Superna Eyeglass — Authentication](../authentication/)
+- [Superna Eyeglass — Access Control](../access-control/)
+- [Superna Eyeglass — Encryption](../encryption/)

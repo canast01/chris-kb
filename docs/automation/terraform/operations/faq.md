@@ -56,4 +56,4 @@ A: Yes — use `terraform state rm <resource>` to remove a drifted resource, the
 ## See Also
 
 - [Terraform Operations](index.md)
-- [Terraform Troubleshooting](../../troubleshooting/index.md)
+- [Terraform Troubleshooting](../../troubleshooting//)

@@ -33,7 +33,7 @@ VxRail Manager has two built-in access levels. When LDAP is not configured, only
 | Admin (`mystic` or LDAP-mapped) | Full VxRail Manager access: LCM, cluster config, support upload, health | Required for all LCM operations. Assign to `GRP-VxRail-Admins` AD group |
 | Read-only (LDAP-mapped only) | View cluster health, node status, LCM status — no changes | Assign to monitoring teams and `GRP-VxRail-ReadOnly` AD group |
 
-LDAP group-based role assignment is configured in **VxRail Plugin → Settings → LDAP Configuration → Role Mapping**. Refer to the [Authentication](authentication/) page for LDAP setup steps.
+LDAP group-based role assignment is configured in **VxRail Plugin → Settings → LDAP Configuration → Role Mapping**. Refer to the [Authentication](../authentication/) page for LDAP setup steps.
 
 ---
 
@@ -264,5 +264,5 @@ Verify the vSAN VLAN is not present as a trunked VLAN on any VM-facing port grou
 
 ## See also
 
-- [VxRail — Authentication](authentication/)
-- [VxRail — Hardening](hardening/)
+- [VxRail — Authentication](../authentication/)
+- [VxRail — Hardening](../hardening/)

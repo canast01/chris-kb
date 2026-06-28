@@ -151,6 +151,6 @@ graph TB
 
 ## See also
 
-- [Nexus Dashboard — Design Standards](design-standards/)
-- [Nexus Dashboard — Integrations](integrations/)
+- [Nexus Dashboard — Design Standards](../design-standards/)
+- [Nexus Dashboard — Integrations](../integrations/)
 - [Nexus Dashboard — Deploy](../deploy/)

@@ -350,6 +350,6 @@ exit 0
 
 ## See also
 
-- [Powermax — Access Control](access-control/)
-- [Powermax — Hardening](hardening/)
-- [Powermax — Encryption](encryption/)
+- [Powermax — Access Control](../access-control/)
+- [Powermax — Hardening](../hardening/)
+- [Powermax — Encryption](../encryption/)

@@ -102,6 +102,6 @@ graph TD
 
 ## See also
 
-- [Recoverpoint — Diagnostics](diagnostics/)
-- [Recoverpoint — Escalation](escalation/)
-- [Recoverpoint — Health Checks](../operations/health-checks/)
+- [Recoverpoint — Diagnostics](../diagnostics/)
+- [Recoverpoint — Escalation](../escalation/)
+- [Recoverpoint — Health Checks](../../operations/health-checks/)

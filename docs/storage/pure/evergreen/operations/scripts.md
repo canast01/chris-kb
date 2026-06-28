@@ -141,6 +141,6 @@ curl -s -k -H "x-auth-token: $TOKEN" \
 
 ## See also
 
-- [Evergreen — Procedures](procedures/)
-- [Evergreen — CLI Reference](cli-reference/)
-- [Evergreen — Health Checks](health-checks/)
+- [Evergreen — Procedures](../procedures/)
+- [Evergreen — CLI Reference](../cli-reference/)
+- [Evergreen — Health Checks](../health-checks/)

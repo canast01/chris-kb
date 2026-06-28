@@ -421,6 +421,6 @@ symaccess list -sid <SID> view | grep -iE "old|decom|unused|retired"
 
 ## See also
 
-- [Powermax — Authentication](authentication/)
-- [Powermax — Hardening](hardening/)
-- [Powermax — Encryption](encryption/)
+- [Powermax — Authentication](../authentication/)
+- [Powermax — Hardening](../hardening/)
+- [Powermax — Encryption](../encryption/)

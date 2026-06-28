@@ -34,6 +34,6 @@ API tokens used by automation scripts must be stored in a secrets manager (e.g. 
 
 ## See also
 
-- [Superna Eyeglass — Hardening](hardening/)
-- [Superna Eyeglass — Authentication](authentication/)
-- [Superna Eyeglass — Access Control](access-control/)
+- [Superna Eyeglass — Hardening](../hardening/)
+- [Superna Eyeglass — Authentication](../authentication/)
+- [Superna Eyeglass — Access Control](../access-control/)

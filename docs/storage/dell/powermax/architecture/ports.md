@@ -117,7 +117,7 @@ iscsiadm -m discovery -t sendtargets -p <powermax-iscsi-ip>:3260
 
 ## See also
 
-- [Dell PowerMax — Architecture](how-it-works/)
-- [Dell PowerMax — Operations](../operations/)
+- [Dell PowerMax — Architecture](../how-it-works/)
+- [Dell PowerMax — Operations](../../operations/)
 - [Dell SRDF-A — Ports](../../srdf-a/architecture/ports.md)
 - [Dell SRDF-S — Ports](../../srdf-s/architecture/ports.md)

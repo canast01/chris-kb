@@ -398,6 +398,6 @@ symrdf -g 10 query -detail | grep OLPAIRS
 
 ## See also
 
-- [Srdf S — Procedures](procedures/)
-- [Srdf S — CLI Reference](cli-reference/)
+- [Srdf S — Procedures](../procedures/)
+- [Srdf S — CLI Reference](../cli-reference/)
 - [Srdf S — Common Issues](../troubleshooting/common-issues/)

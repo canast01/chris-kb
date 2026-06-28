@@ -71,6 +71,6 @@ ONTAP Mediator provides the out-of-band witness for SMBC automatic failover deci
 
 ## See also
 
-- [Snapmirror — Procedures](procedures/)
-- [Snapmirror — Health Checks](health-checks/)
+- [Snapmirror — Procedures](../procedures/)
+- [Snapmirror — Health Checks](../health-checks/)
 - [Snapmirror — Deploy](../deploy/)

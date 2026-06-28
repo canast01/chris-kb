@@ -65,6 +65,6 @@ All MDS switches should be managed through Cisco NDFC (Nexus Dashboard Fabric Co
 
 ## See also
 
-- [Mds — How It Works](how-it-works/)
-- [Mds — Integrations](integrations/)
-- [Mds — Deploy](../deploy/)
+- [Mds — How It Works](../how-it-works/)
+- [Mds — Integrations](../integrations/)
+- [Mds — Deploy](../../deploy/)

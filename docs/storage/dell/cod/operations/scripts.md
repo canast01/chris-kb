@@ -461,6 +461,6 @@ exit $EXIT
 
 ## See also
 
-- [Cod — Procedures](procedures/)
-- [Cod — CLI Reference](cli-reference/)
-- [Cod — Health Checks](health-checks/)
+- [Cod — Procedures](../procedures/)
+- [Cod — CLI Reference](../cli-reference/)
+- [Cod — Health Checks](../health-checks/)

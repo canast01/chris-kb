@@ -98,6 +98,6 @@ curl -s -k \
 
 ## See also
 
-- [Fod — Procedures](procedures/)
-- [Fod — CLI Reference](cli-reference/)
+- [Fod — Procedures](../procedures/)
+- [Fod — CLI Reference](../cli-reference/)
 - [Fod — Common Issues](../troubleshooting/common-issues/)

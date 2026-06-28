@@ -339,6 +339,6 @@ Host profiles are the recommended mechanism for maintaining configuration consis
 
 ## See also
 
-- [vSAN — Access Control](access-control/)
-- [vSAN — Authentication](authentication/)
+- [vSAN — Access Control](../access-control/)
+- [vSAN — Authentication](../authentication/)
 - [vSAN — Health Checks](../operations/health-checks/)

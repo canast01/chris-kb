@@ -38,7 +38,7 @@ connectivity_and_data -> resolution
 
 | Error / Symptom | Affected Versions | Cause | Workaround / Fix | Fixed In |
 |---|---|---|---|---|
-| AIOps recommendations not appearing | AIOps | Array not sending telemetry to CloudIQ | Verify array phone-home (TCP 443 to cloudiq.dell.com); see [CloudIQ Known Issues](../../cloudiq/troubleshooting/known-issues/) | N/A |
+| AIOps recommendations not appearing | AIOps | Array not sending telemetry to CloudIQ | Verify array phone-home (TCP 443 to cloudiq.dell.com); see [CloudIQ Known Issues](../../../cloudiq/troubleshooting/known-issues/) | N/A |
 | AIOps portal shows stale predictions | AIOps | CloudIQ data lag (up to 24h for analytics engine refresh) | Wait 24 hours; if persistent, contact Dell support | N/A |
 
 ## See also

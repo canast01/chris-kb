@@ -93,6 +93,6 @@ sudo systemctl restart sshd
 
 ## See also
 
-- [Sannav — Authentication](authentication/)
-- [Sannav — Access Control](access-control/)
-- [Sannav — Encryption](encryption/)
+- [Sannav — Authentication](../authentication/)
+- [Sannav — Access Control](../access-control/)
+- [Sannav — Encryption](../encryption/)

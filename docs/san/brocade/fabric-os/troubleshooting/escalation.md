@@ -257,8 +257,8 @@ version
 
 ## See also
 
-- [Brocade Fabric OS — Diagnostics](diagnostics/)
-- [Brocade Fabric OS — Common Issues](common-issues/)
+- [Brocade Fabric OS — Diagnostics](../diagnostics/)
+- [Brocade Fabric OS — Common Issues](../common-issues/)
 
 ---
 

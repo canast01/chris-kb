@@ -133,5 +133,5 @@ Disconnect-VIServer -Server * -Confirm:$false
 
 ## See also
 
-- [PowerCLI — Access Control](access-control/)
-- [PowerCLI — Hardening](hardening/)
+- [PowerCLI — Access Control](../access-control/)
+- [PowerCLI — Hardening](../hardening/)

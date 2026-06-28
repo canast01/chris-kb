@@ -338,6 +338,6 @@ zeus_config_printer | head -50
 
 ## See also
 
-- [Nutanix — Procedures](procedures/)
-- [Nutanix — Scripts](scripts/)
-- [Nutanix — Health Checks](health-checks/)
+- [Nutanix — Procedures](../procedures/)
+- [Nutanix — Scripts](../scripts/)
+- [Nutanix — Health Checks](../health-checks/)

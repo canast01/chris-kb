@@ -220,8 +220,8 @@ curl -sk -u <user>:<pass> \
 
 ## See also
 
-- [COD — Common Issues](common-issues/)
-- [COD — Escalation](escalation/)
+- [COD — Common Issues](../common-issues/)
+- [COD — Escalation](../escalation/)
 - [COD — Health Checks](../operations/health-checks/)
 
 ## Verify resolution

@@ -101,6 +101,6 @@ Health Checks reference covering Daily Checks, Health Check Commands, Change Rea
 
 ## See also
 
-- [Cloudiq — Procedures](procedures/)
-- [Cloudiq — CLI Reference](cli-reference/)
+- [Cloudiq — Procedures](../procedures/)
+- [Cloudiq — CLI Reference](../cli-reference/)
 - [Cloudiq — Common Issues](../troubleshooting/common-issues/)

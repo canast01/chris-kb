@@ -244,6 +244,6 @@ curl -s -X PUT $AUTH "$RP/group/${CG_UID}/copy/${COPY_UID}/disable_image_access"
 
 ## See also
 
-- [Recoverpoint — Procedures](procedures/)
-- [Recoverpoint — Scripts](scripts/)
-- [Recoverpoint — Health Checks](health-checks/)
+- [Recoverpoint — Procedures](../procedures/)
+- [Recoverpoint — Scripts](../scripts/)
+- [Recoverpoint — Health Checks](../health-checks/)

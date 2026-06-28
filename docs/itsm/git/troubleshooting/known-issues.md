@@ -67,6 +67,6 @@ gitlab_runner -> resolution
 
 ## See also
 
-- [Git — Common Issues](common-issues/)
+- [Git — Common Issues](../common-issues/)
 - [Jira — Known Issues](../../jira/troubleshooting/known-issues.md)
 - [Ansible — Known Issues](../../../automation/ansible/troubleshooting/known-issues.md)

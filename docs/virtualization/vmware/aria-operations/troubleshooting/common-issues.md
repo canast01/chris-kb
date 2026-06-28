@@ -160,9 +160,9 @@ graph TD
 
 ## See also
 
-- [Aria Operations — Diagnostics](diagnostics/)
-- [Aria Operations — Escalation](escalation/)
-- [Aria Operations Health Checks](../operations/health-checks/)
+- [Aria Operations — Diagnostics](../diagnostics/)
+- [Aria Operations — Escalation](../escalation/)
+- [Aria Operations Health Checks](../../operations/health-checks/)
 
 ## Verify resolution
 

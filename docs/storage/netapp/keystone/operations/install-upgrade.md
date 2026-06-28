@@ -127,5 +127,5 @@ journalctl -u keystone-collector --since "30 min ago" | grep -i error
 
 ## See also
 
-- [Keystone — Procedures](procedures/)
-- [Keystone — Health Checks](health-checks/)
+- [Keystone — Procedures](../procedures/)
+- [Keystone — Health Checks](../health-checks/)

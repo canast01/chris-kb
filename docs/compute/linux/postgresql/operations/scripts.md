@@ -99,6 +99,6 @@ psql -U monitor -Atc "SELECT now(), count(*) FROM pg_stat_activity;" \
 
 ## See also
 
-- [Postgresql — Procedures](procedures/)
-- [Postgresql — CLI Reference](cli-reference/)
-- [Postgresql — Health Checks](health-checks/)
+- [Postgresql — Procedures](../procedures/)
+- [Postgresql — CLI Reference](../cli-reference/)
+- [Postgresql — Health Checks](../health-checks/)

@@ -63,5 +63,5 @@ vsan -> resolution
 
 ## See also
 
-- [Cisco MDS — Common Issues](common-issues/)
+- [Cisco MDS — Common Issues](../common-issues/)
 - [Cisco DCNM — Known Issues](../../cisco-dcnm/troubleshooting/known-issues.md)

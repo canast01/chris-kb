@@ -100,6 +100,6 @@ snmpconfig --show snmpv1
 
 ## See also
 
-- [Brocade SANnav — Architecture](how-it-works/)
+- [Brocade SANnav — Architecture](../how-it-works/)
 - [Brocade FOS — Ports](../../fabric-os/architecture/ports.md)
 - [Cisco MDS — Ports](../../../cisco/mds/architecture/ports.md)

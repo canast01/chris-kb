@@ -65,6 +65,6 @@ upgrade -> resolution
 
 ## See also
 
-- [Cisco Nexus Dashboard — Common Issues](common-issues/)
+- [Cisco Nexus Dashboard — Common Issues](../common-issues/)
 - [Cisco DCNM — Known Issues](../../cisco-dcnm/troubleshooting/known-issues.md)
 - [Cisco MDS — Known Issues](../../mds/troubleshooting/known-issues.md)

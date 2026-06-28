@@ -262,8 +262,8 @@ isi sync policies list
 
 ## See also
 
-- [PowerScale — Diagnostics](diagnostics/)
-- [PowerScale — Common Issues](common-issues/)
+- [PowerScale — Diagnostics](../diagnostics/)
+- [PowerScale — Common Issues](../common-issues/)
 
 ---
 

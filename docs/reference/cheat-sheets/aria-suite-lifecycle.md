@@ -43,5 +43,5 @@ curl -sk $AUTH $BASE/v2/requests | python3 -m json.tool                    # all
 
 ## See also
 
-- [Aria Suite Lifecycle Procedures](../../virtualization/vmware/aria-suite-lifecycle/operations/procedures/)
-- [Aria Suite Lifecycle Troubleshooting](../../virtualization/vmware/aria-suite-lifecycle/troubleshooting/common-issues/)
+- [Aria Suite Lifecycle Procedures](../../../virtualization/vmware/aria-suite-lifecycle/operations/procedures/)
+- [Aria Suite Lifecycle Troubleshooting](../../../virtualization/vmware/aria-suite-lifecycle/troubleshooting/common-issues/)

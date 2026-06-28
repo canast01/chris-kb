@@ -566,6 +566,6 @@ purevol remove --array PFAX70-REMOTE --with-unknown MYPOD001
 
 ## See also
 
-- [FlashArray — Procedures](procedures/)
-- [FlashArray — Scripts](scripts/)
-- [FlashArray — Health Checks](health-checks/)
+- [FlashArray — Procedures](../procedures/)
+- [FlashArray — Scripts](../scripts/)
+- [FlashArray — Health Checks](../health-checks/)

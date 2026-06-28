@@ -28,6 +28,6 @@ snmpconfig --show trapdest
 
 ## See also
 
-- [Sannav — How It Works](how-it-works/)
-- [Sannav — Integrations](integrations/)
-- [Sannav — Deploy](../deploy/)
+- [Sannav — How It Works](../how-it-works/)
+- [Sannav — Integrations](../integrations/)
+- [Sannav — Deploy](../../deploy/)

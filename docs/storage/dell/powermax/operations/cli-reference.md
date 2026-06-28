@@ -404,6 +404,6 @@ symrdf -g <dg_name> -sid <sid> restore -noprompt
 
 ## See also
 
-- [Powermax — Procedures](procedures/)
-- [Powermax — Scripts](scripts/)
-- [Powermax — Health Checks](health-checks/)
+- [Powermax — Procedures](../procedures/)
+- [Powermax — Scripts](../scripts/)
+- [Powermax — Health Checks](../health-checks/)

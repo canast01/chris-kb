@@ -91,6 +91,6 @@ print(f'Expires in {(exp-datetime.utcnow()).days} days: {exp.date()}')
 
 ## See also
 
-- [Cisco Dcnm — Hardening](hardening/)
-- [Cisco Dcnm — Authentication](authentication/)
-- [Cisco Dcnm — Access Control](access-control/)
+- [Cisco Dcnm — Hardening](../hardening/)
+- [Cisco Dcnm — Authentication](../authentication/)
+- [Cisco Dcnm — Access Control](../access-control/)

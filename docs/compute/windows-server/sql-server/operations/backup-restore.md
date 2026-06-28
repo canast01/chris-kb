@@ -81,6 +81,6 @@ SELECT COUNT(*) FROM important_table;
 
 ## See also
 
-- [Sql Server — Procedures](procedures/)
-- [Sql Server — Health Checks](health-checks/)
-- [Sql Server — Common Issues](../troubleshooting/common-issues/)
+- [Sql Server — Procedures](../procedures/)
+- [Sql Server — Health Checks](../health-checks/)
+- [Sql Server — Common Issues](../../troubleshooting/common-issues/)

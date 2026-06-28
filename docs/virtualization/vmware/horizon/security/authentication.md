@@ -128,5 +128,5 @@ This allows external SAML-authenticated users to transparently access Kerberos-p
 
 ## See also
 
-- [Horizon — Access Control](access-control/)
-- [Horizon — Hardening](hardening/)
+- [Horizon — Access Control](../access-control/)
+- [Horizon — Hardening](../hardening/)

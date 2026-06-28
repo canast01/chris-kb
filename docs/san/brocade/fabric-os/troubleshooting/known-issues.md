@@ -66,5 +66,5 @@ isl_trunking -> resolution
 
 ## See also
 
-- [Brocade Fabric OS — Common Issues](common-issues/)
+- [Brocade Fabric OS — Common Issues](../common-issues/)
 - [Brocade SANnav — Known Issues](../../sannav/troubleshooting/known-issues.md)

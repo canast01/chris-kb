@@ -485,6 +485,6 @@ powermt save
 
 ## See also
 
-- [Powerpath — Procedures](procedures/)
-- [Powerpath — Scripts](scripts/)
-- [Powerpath — Health Checks](health-checks/)
+- [Powerpath — Procedures](../procedures/)
+- [Powerpath — Scripts](../scripts/)
+- [Powerpath — Health Checks](../health-checks/)

@@ -203,9 +203,9 @@ curl -sk -H "x-xenon-auth-token: $TOKEN" \
 
 ## See also
 
-- [Aria Suite Lifecycle — Diagnostics](diagnostics/)
-- [Aria Suite Lifecycle — Escalation](escalation/)
-- [Aria Suite Lifecycle — Health Checks](../operations/health-checks/)
+- [Aria Suite Lifecycle — Diagnostics](../diagnostics/)
+- [Aria Suite Lifecycle — Escalation](../escalation/)
+- [Aria Suite Lifecycle — Health Checks](../../operations/health-checks/)
 
 ## Verify resolution
 

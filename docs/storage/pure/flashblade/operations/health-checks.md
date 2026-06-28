@@ -178,6 +178,6 @@ Verify replica links show `lag-time` within expected RPO.
 
 ## See also
 
-- [FlashBlade — Procedures](procedures/)
-- [FlashBlade — CLI Reference](cli-reference/)
+- [FlashBlade — Procedures](../procedures/)
+- [FlashBlade — CLI Reference](../cli-reference/)
 - [FlashBlade — Common Issues](../troubleshooting/common-issues/)

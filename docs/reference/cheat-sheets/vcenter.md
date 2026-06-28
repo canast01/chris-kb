@@ -52,6 +52,6 @@ dcli com vmware cis tagging tag list           # list all tags via dcli
 
 ## See also
 
-- [vCenter Operations](../../virtualization/vmware/vcenter/operations/procedures/)
-- [vCenter Troubleshooting](../../virtualization/vmware/vcenter/troubleshooting/common-issues/)
-- [PowerCLI Cheat Sheet](powercli/)
+- [vCenter Operations](../../../virtualization/vmware/vcenter/operations/procedures/)
+- [vCenter Troubleshooting](../../../virtualization/vmware/vcenter/troubleshooting/common-issues/)
+- [PowerCLI Cheat Sheet](../powercli/)

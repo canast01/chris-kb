@@ -121,5 +121,5 @@ C:\Windows\Temp\vmware-viewcomposer-ga-new-*
 
 ## See also
 
-- [Horizon — How It Works](how-it-works/)
+- [Horizon — How It Works](../how-it-works/)
 - [Horizon — Deploy](../deploy/)

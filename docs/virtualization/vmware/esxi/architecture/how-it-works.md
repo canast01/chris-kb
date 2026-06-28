@@ -306,6 +306,6 @@ Get-VMHost | ForEach-Object {
 
 ## See also
 
-- [ESXi — Design Standards](design-standards/)
+- [ESXi — Design Standards](../design-standards/)
 - [ESXi Host Deployment](../deploy/)
-- [ESXi — Integrations](integrations/)
+- [ESXi — Integrations](../integrations/)

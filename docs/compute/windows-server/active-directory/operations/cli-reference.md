@@ -190,6 +190,6 @@ Get-ADTrust -Filter * | Select Name, TrustType, Direction, TrustAttributes
 
 ## See also
 
-- [Active Directory — Procedures](procedures/)
-- [Active Directory — Scripts](scripts/)
-- [Active Directory — Health Checks](health-checks/)
+- [Active Directory — Procedures](../procedures/)
+- [Active Directory — Scripts](../scripts/)
+- [Active Directory — Health Checks](../health-checks/)

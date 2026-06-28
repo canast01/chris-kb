@@ -123,6 +123,6 @@ CloudIQ operational procedures: scheduling maintenance windows to suppress alert
 
 ## See also
 
-- [Cloudiq — Health Checks](health-checks/)
-- [Cloudiq — CLI Reference](cli-reference/)
+- [Cloudiq — Health Checks](../health-checks/)
+- [Cloudiq — CLI Reference](../cli-reference/)
 - [Cloudiq — Common Issues](../troubleshooting/common-issues/)

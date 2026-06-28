@@ -100,6 +100,6 @@ pg_upgrade \
 
 ## See also
 
-- [Postgresql — Procedures](procedures/)
-- [Postgresql — Scripts](scripts/)
-- [Postgresql — Health Checks](health-checks/)
+- [Postgresql — Procedures](../procedures/)
+- [Postgresql — Scripts](../scripts/)
+- [Postgresql — Health Checks](../health-checks/)

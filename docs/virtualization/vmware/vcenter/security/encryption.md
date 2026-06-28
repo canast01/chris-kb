@@ -199,5 +199,5 @@ vSAN encryption is preferred over per-VM encryption in all-vSAN environments —
 
 ## See also
 
-- [vCenter Security — Hardening](hardening/)
-- [vCenter — Health Checks](../operations/health-checks/)
+- [vCenter Security — Hardening](../hardening/)
+- [vCenter — Health Checks](../../operations/health-checks/)

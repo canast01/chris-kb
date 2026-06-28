@@ -249,6 +249,6 @@ Fill in this form before opening a Dell support case or escalating internally. I
 
 ## See also
 
-- [Unity — Diagnostics](diagnostics/)
-- [Unity — Escalation](escalation/)
-- [Unity — Health Checks](../operations/health-checks/)
+- [Unity — Diagnostics](../diagnostics/)
+- [Unity — Escalation](../escalation/)
+- [Unity — Health Checks](../../operations/health-checks/)

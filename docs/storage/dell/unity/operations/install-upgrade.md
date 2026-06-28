@@ -89,6 +89,6 @@ Maintain a lifecycle register that records each Unity system's hardware model, c
 
 ## See also
 
-- [Unity — Procedures](procedures/)
-- [Unity — Health Checks](health-checks/)
-- [Unity — Deploy](../deploy/)
+- [Unity — Procedures](../procedures/)
+- [Unity — Health Checks](../health-checks/)
+- [Unity — Deploy](../../deploy/)

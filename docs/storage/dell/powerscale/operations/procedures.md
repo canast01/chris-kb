@@ -468,6 +468,6 @@ Run `isi job list` after modifying pool assignments — a Restripe job will star
 
 ## See also
 
-- [Powerscale — Health Checks](health-checks/)
-- [Powerscale — CLI Reference](cli-reference/)
+- [Powerscale — Health Checks](../health-checks/)
+- [Powerscale — CLI Reference](../cli-reference/)
 - [Powerscale — Common Issues](../troubleshooting/common-issues/)

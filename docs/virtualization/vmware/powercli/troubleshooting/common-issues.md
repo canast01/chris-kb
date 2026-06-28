@@ -227,9 +227,9 @@ Import-Module VMware.VimAutomation.Storage
 
 ## See also
 
-- [PowerCLI — Diagnostics](diagnostics/)
-- [PowerCLI — Escalation](escalation/)
-- [PowerCLI — Health Checks](../operations/health-checks/)
+- [PowerCLI — Diagnostics](../diagnostics/)
+- [PowerCLI — Escalation](../escalation/)
+- [PowerCLI — Health Checks](../../operations/health-checks/)
 
 ## Verify resolution
 

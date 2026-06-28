@@ -167,5 +167,5 @@ NSX-V compatibility was dropped in AON 6.13. If you have NSX-V data sources, pin
 
 ## See also
 
-- [Aria Operations for Networks — How It Works](how-it-works/)
-- [Aria Operations for Networks — Deploy](../deploy/)
+- [Aria Operations for Networks — How It Works](../how-it-works/)
+- [Aria Operations for Networks — Deploy](../../deploy/)

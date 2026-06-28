@@ -258,5 +258,5 @@ systool -c fc_host -v | grep -E "node_name|port_name|port_state|speed"
 
 ## See also
 
-- [APEX Storage as a Service — Diagnostics](diagnostics/)
-- [APEX Storage as a Service — Common Issues](common-issues/)
+- [APEX Storage as a Service — Diagnostics](../diagnostics/)
+- [APEX Storage as a Service — Common Issues](../common-issues/)

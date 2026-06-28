@@ -427,6 +427,6 @@ Document operational known issues here as they are encountered. Include:
 
 ## See also
 
-- [Fabric Os — Diagnostics](diagnostics/)
-- [Fabric Os — Escalation](escalation/)
-- [Fabric Os — Health Checks](../operations/health-checks/)
+- [Fabric Os — Diagnostics](../diagnostics/)
+- [Fabric Os — Escalation](../escalation/)
+- [Fabric Os — Health Checks](../../operations/health-checks/)

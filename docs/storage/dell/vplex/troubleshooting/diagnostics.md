@@ -373,8 +373,8 @@ Gather all of the following before opening a Dell Support case:
 
 ## See also
 
-- [VPLEX — Common Issues](common-issues/)
-- [VPLEX — Escalation](escalation/)
+- [VPLEX — Common Issues](../common-issues/)
+- [VPLEX — Escalation](../escalation/)
 - [VPLEX — Health Checks](../operations/health-checks/)
 
 ## Verify resolution

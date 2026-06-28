@@ -56,4 +56,4 @@ A: Yes — `git log --all -S 'def function_name'` finds the commit where it exis
 ## See Also
 
 - [Python Operations](index.md)
-- [Python Troubleshooting](../../troubleshooting/index.md)
+- [Python Troubleshooting](../../troubleshooting//)

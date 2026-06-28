@@ -169,5 +169,5 @@ done
 
 ## See also
 
-- [Aria Operations — Access Control](access-control/)
-- [Aria Operations Security Hardening](hardening/)
+- [Aria Operations — Access Control](../access-control/)
+- [Aria Operations Security Hardening](../hardening/)

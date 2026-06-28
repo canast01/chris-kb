@@ -59,5 +59,5 @@ Group Policy → Computer Configuration → VMware Horizon Agent
 
 ## See also
 
-- [Horizon — Hardening](hardening/)
-- [VMware Horizon — Health Checks](../operations/health-checks/)
+- [Horizon — Hardening](../hardening/)
+- [VMware Horizon — Health Checks](../../operations/health-checks/)

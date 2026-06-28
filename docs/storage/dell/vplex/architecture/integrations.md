@@ -269,5 +269,5 @@ Key log sources to forward:
 
 ## See also
 
-- [Vplex — How It Works](how-it-works/)
-- [Vplex — Design Standards](design-standards/)
+- [Vplex — How It Works](../how-it-works/)
+- [Vplex — Design Standards](../design-standards/)

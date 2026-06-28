@@ -270,6 +270,6 @@ Patch response SLAs (align with your security policy):
 
 ## See also
 
-- [vCenter Security — Access Control](access-control/)
-- [vCenter Security — Authentication](authentication/)
+- [vCenter Security — Access Control](../access-control/)
+- [vCenter Security — Authentication](../authentication/)
 - [vCenter — Health Checks](../operations/health-checks/)

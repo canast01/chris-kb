@@ -33,6 +33,6 @@ Scripts reference covering Available Scripts, Script Pattern — State Check.
 
 ## See also
 
-- [Srdf S — Procedures](procedures/)
-- [Srdf S — CLI Reference](cli-reference/)
-- [Srdf S — Health Checks](health-checks/)
+- [Srdf S — Procedures](../procedures/)
+- [Srdf S — CLI Reference](../cli-reference/)
+- [Srdf S — Health Checks](../health-checks/)

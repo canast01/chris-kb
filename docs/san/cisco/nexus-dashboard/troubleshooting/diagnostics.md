@@ -225,6 +225,6 @@ verify_resolution -> resolution
 
 ## See also
 
-- [Nexus Dashboard — Common Issues](common-issues/)
-- [Nexus Dashboard — Escalation](escalation/)
+- [Nexus Dashboard — Common Issues](../common-issues/)
+- [Nexus Dashboard — Escalation](../escalation/)
 - [Nexus Dashboard — Health Checks](../operations/health-checks/)

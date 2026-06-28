@@ -397,6 +397,6 @@ volume clone delete -vserver <svm> -flexclone <vol>-restore-test
 
 ## See also
 
-- [Ontap — Procedures](procedures/)
-- [Ontap — Health Checks](health-checks/)
-- [Ontap — Common Issues](../troubleshooting/common-issues/)
+- [Ontap — Procedures](../procedures/)
+- [Ontap — Health Checks](../health-checks/)
+- [Ontap — Common Issues](../../troubleshooting/common-issues/)

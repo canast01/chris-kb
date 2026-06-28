@@ -182,5 +182,5 @@ renderXml = true
 
 ## See also
 
-- [Active Directory — How It Works](how-it-works/)
-- [Active Directory — Design Standards](design-standards/)
+- [Active Directory — How It Works](../how-it-works/)
+- [Active Directory — Design Standards](../design-standards/)

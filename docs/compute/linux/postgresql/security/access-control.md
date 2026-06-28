@@ -96,6 +96,6 @@ ORDER BY role;
 
 ## See also
 
-- [Postgresql — Authentication](authentication/)
-- [Postgresql — Hardening](hardening/)
-- [Postgresql — Encryption](encryption/)
+- [Postgresql — Authentication](../authentication/)
+- [Postgresql — Hardening](../hardening/)
+- [Postgresql — Encryption](../encryption/)

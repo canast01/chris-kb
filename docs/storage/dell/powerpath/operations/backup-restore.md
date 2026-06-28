@@ -285,6 +285,6 @@ If the restored `powermt.custom` references devices or paths that no longer exis
 
 ## See also
 
-- [Powerpath — Procedures](procedures/)
-- [Powerpath — Health Checks](health-checks/)
-- [Powerpath — Common Issues](../troubleshooting/common-issues/)
+- [Powerpath — Procedures](../procedures/)
+- [Powerpath — Health Checks](../health-checks/)
+- [Powerpath — Common Issues](../../troubleshooting/common-issues/)

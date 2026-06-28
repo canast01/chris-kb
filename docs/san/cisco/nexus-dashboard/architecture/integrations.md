@@ -120,5 +120,5 @@ Aria Operations > Admin > Solutions > Cisco Network Insights MP
 
 ## See also
 
-- [Nexus Dashboard — How It Works](how-it-works/)
-- [Nexus Dashboard — Design Standards](design-standards/)
+- [Nexus Dashboard — How It Works](../how-it-works/)
+- [Nexus Dashboard — Design Standards](../design-standards/)

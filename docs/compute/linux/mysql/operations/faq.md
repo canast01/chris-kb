@@ -56,4 +56,4 @@ A: Yes — with `mysqldump`, restore the specific table: `mysql db_name < table_
 ## See Also
 
 - [MySQL Operations](index.md)
-- [MySQL Troubleshooting](../../../troubleshooting/index.md)
+- [MySQL Troubleshooting](../../../troubleshooting//)

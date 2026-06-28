@@ -65,4 +65,4 @@ module_loading -> resolution
 
 ## See also
 
-- [PowerShell — Common Issues](common-issues/)
+- [PowerShell — Common Issues](../common-issues/)

@@ -75,4 +75,4 @@ upgrades -> resolution
 
 ## See also
 
-- [OpenShift — Common Issues](common-issues/)
+- [OpenShift — Common Issues](../common-issues/)

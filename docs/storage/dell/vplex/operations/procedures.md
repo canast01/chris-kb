@@ -381,6 +381,6 @@ After the test, confirm all distributed devices return to `in-sync` status and t
 
 ## See also
 
-- [Vplex — Health Checks](health-checks/)
-- [Vplex — CLI Reference](cli-reference/)
+- [Vplex — Health Checks](../health-checks/)
+- [Vplex — CLI Reference](../cli-reference/)
 - [Vplex — Common Issues](../troubleshooting/common-issues/)

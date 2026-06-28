@@ -254,8 +254,8 @@ grep -i "error\|exception" /opt/superna/log/eyeglass.log | tail -100
 
 ## See also
 
-- [Superna Eyeglass — Common Issues](common-issues/)
-- [Superna Eyeglass — Escalation](escalation/)
+- [Superna Eyeglass — Common Issues](../common-issues/)
+- [Superna Eyeglass — Escalation](../escalation/)
 - [Superna Eyeglass — Health Checks](../operations/health-checks/)
 
 ## Verify resolution

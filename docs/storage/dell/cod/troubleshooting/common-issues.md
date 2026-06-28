@@ -105,6 +105,6 @@ graph TD
 
 ## See also
 
-- [Cod — Diagnostics](diagnostics/)
-- [Cod — Escalation](escalation/)
-- [Cod — Health Checks](../operations/health-checks/)
+- [Cod — Diagnostics](../diagnostics/)
+- [Cod — Escalation](../escalation/)
+- [Cod — Health Checks](../../operations/health-checks/)

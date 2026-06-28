@@ -232,5 +232,5 @@ aws ec2 delete-key-pair --key-name evs-cluster-key
 
 ## See also
 
-- [Amazon EVS — Access Control](access-control/)
-- [Amazon EVS — Hardening](hardening/)
+- [Amazon EVS — Access Control](../access-control/)
+- [Amazon EVS — Hardening](../hardening/)

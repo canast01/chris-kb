@@ -337,8 +337,8 @@ scp vcf@sddc-manager.corp.example.com:/var/log/vmware/vcf/sddc-support/<bundle>.
 
 ## See also
 
-- [VCF Troubleshooting — Common Issues](common-issues/)
-- [VCF Troubleshooting — Escalation](escalation/)
+- [VCF Troubleshooting — Common Issues](../common-issues/)
+- [VCF Troubleshooting — Escalation](../escalation/)
 
 ## Verify resolution
 

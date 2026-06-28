@@ -164,6 +164,6 @@ flowchart TD
 
 ## See also
 
-- [Powermax — Diagnostics](diagnostics/)
-- [Powermax — Escalation](escalation/)
-- [Powermax — Health Checks](../operations/health-checks/)
+- [Powermax — Diagnostics](../diagnostics/)
+- [Powermax — Escalation](../escalation/)
+- [Powermax — Health Checks](../../operations/health-checks/)

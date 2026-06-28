@@ -156,6 +156,6 @@ Get-VsanView -Id "VsanVcNetworkConfigSystem-vsan-vc-network-config-system" |
 
 - [ESXi — Ports](../../esxi/architecture/ports.md)
 - [vCenter — Ports](../../vcenter/architecture/ports.md)
-- [vSAN — Architecture](how-it-works/)
-- [vSAN — Deploy](../../vsan/deploy/)
-- [vSAN — Operations](../../vsan/operations/)
+- [vSAN — Architecture](../how-it-works/)
+- [vSAN — Deploy](../../../vsan/deploy/)
+- [vSAN — Operations](../../../vsan/operations/)

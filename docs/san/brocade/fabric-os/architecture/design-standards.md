@@ -40,6 +40,6 @@ FabricOS design standards: ISL oversubscription limits, trunking requirements, f
 
 ## See also
 
-- [Fabric Os — How It Works](how-it-works/)
-- [Fabric Os — Integrations](integrations/)
-- [Fabric Os — Deploy](../deploy/)
+- [Fabric Os — How It Works](../how-it-works/)
+- [Fabric Os — Integrations](../integrations/)
+- [Fabric Os — Deploy](../../deploy/)

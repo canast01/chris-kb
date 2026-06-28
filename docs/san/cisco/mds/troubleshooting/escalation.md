@@ -263,8 +263,8 @@ show interface fc brief counters errors
 
 ## See also
 
-- [MDS — Diagnostics](diagnostics/)
-- [MDS — Common Issues](common-issues/)
+- [MDS — Diagnostics](../diagnostics/)
+- [MDS — Common Issues](../common-issues/)
 
 ---
 

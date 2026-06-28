@@ -75,5 +75,5 @@ nc -zv <peer-confluence-node> 25500
 
 ## See also
 
-- [Confluence — Architecture](how-it-works/)
+- [Confluence — Architecture](../how-it-works/)
 - [Jira — Ports](../../jira/architecture/ports.md)

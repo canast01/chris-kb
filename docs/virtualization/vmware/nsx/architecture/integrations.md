@@ -187,5 +187,5 @@ Key log sources to forward:
 
 ## See also
 
-- [NSX — How It Works](how-it-works/)
+- [NSX — How It Works](../how-it-works/)
 - [NSX — Deploy](../deploy/)

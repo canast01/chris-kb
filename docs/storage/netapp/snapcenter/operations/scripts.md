@@ -226,6 +226,6 @@ if ($Failed -gt 0) { exit 1 } else { exit 0 }
 
 ## See also
 
-- [Snapcenter — Procedures](procedures/)
-- [Snapcenter — CLI Reference](cli-reference/)
-- [Snapcenter — Health Checks](health-checks/)
+- [Snapcenter — Procedures](../procedures/)
+- [Snapcenter — CLI Reference](../cli-reference/)
+- [Snapcenter — Health Checks](../health-checks/)

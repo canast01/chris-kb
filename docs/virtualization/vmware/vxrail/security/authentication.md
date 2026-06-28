@@ -236,5 +236,5 @@ Dedicated service accounts must be used for VxRail component automation. Do not 
 
 ## See also
 
-- [VxRail — Access Control](access-control/)
-- [VxRail — Hardening](hardening/)
+- [VxRail — Access Control](../access-control/)
+- [VxRail — Hardening](../hardening/)

@@ -164,7 +164,7 @@ purearray list --connection
 
 ## See also
 
-- [Pure FlashArray — Architecture](how-it-works/)
+- [Pure FlashArray — Architecture](../how-it-works/)
 - [Pure FlashArray — Deploy](../deploy/)
-- [Pure FlashArray — Operations](../operations/)
-- [Pure FlashArray — Troubleshooting](../troubleshooting/)
+- [Pure FlashArray — Operations](../../operations/)
+- [Pure FlashArray — Troubleshooting](../../troubleshooting/)

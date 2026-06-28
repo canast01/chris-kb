@@ -28,8 +28,8 @@ SRM automation scripts: PowerCLI `Get-SrmRecoveryPlan`, `Start-SrmRecoveryPlan -
 
 ## See also
 
-- [SRM — CLI Reference](cli-reference/)
-- [SRM — Procedures](procedures/)
+- [SRM — CLI Reference](../cli-reference/)
+- [SRM — Procedures](../procedures/)
 
 ## Verify
 

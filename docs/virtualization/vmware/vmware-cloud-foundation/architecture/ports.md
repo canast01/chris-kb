@@ -84,10 +84,10 @@ VCF requires all ports from:
 
 | Product | Ports Reference |
 |---|---|
-| vCenter | [vCenter — Ports](../../vcenter/architecture/ports/) |
-| ESXi | [ESXi — Ports](../../esxi/architecture/ports/) |
-| vSAN | [vSAN — Ports](../../vsan/architecture/ports/) |
-| NSX | [NSX — Ports](../../nsx/architecture/ports/) |
+| vCenter | [vCenter — Ports](../../../vcenter/architecture/ports/) |
+| ESXi | [ESXi — Ports](../../../esxi/architecture/ports/) |
+| vSAN | [vSAN — Ports](../../../vsan/architecture/ports/) |
+| NSX | [NSX — Ports](../../../nsx/architecture/ports/) |
 
 ---
 
@@ -127,9 +127,9 @@ curl -sk -u admin:<pass> https://localhost/v1/bundles | python3 -m json.tool | g
 
 ## See also
 
-- [VCF — Architecture](how-it-works/)
+- [VCF — Architecture](../how-it-works/)
 - [VCF — Deploy](../deploy/)
-- [VCF — Operations](../operations/)
+- [VCF — Operations](../../operations/)
 - [vCenter — Ports](../../vcenter/architecture/ports.md)
 - [NSX — Ports](../../nsx/architecture/ports.md)
 - [vSAN — Ports](../../vsan/architecture/ports.md)

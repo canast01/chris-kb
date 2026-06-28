@@ -66,6 +66,6 @@ site_pairing -> resolution
 
 ## See also
 
-- [VMware SRM — Common Issues](common-issues/)
+- [VMware SRM — Common Issues](../common-issues/)
 - [VMware vSphere Replication — Known Issues](../../vsphere-replication/troubleshooting/known-issues.md)
 - [VMware vCenter — Known Issues](../../vcenter/troubleshooting/known-issues.md)

@@ -271,8 +271,8 @@ sudo tail -100 /var/log/vrni/platform.log | grep -i "error\|fail\|exception"
 
 ## See also
 
-- [Aria Operations for Networks — Diagnostics](diagnostics/)
-- [Aria Operations for Networks — Common Issues](common-issues/)
+- [Aria Operations for Networks — Diagnostics](../diagnostics/)
+- [Aria Operations for Networks — Common Issues](../common-issues/)
 
 ---
 

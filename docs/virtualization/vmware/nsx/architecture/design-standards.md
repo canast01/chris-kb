@@ -214,5 +214,5 @@ curl -sk -u 'admin:password' \
 
 ## See also
 
-- [NSX — How It Works](how-it-works/)
-- [NSX — Deploy](../deploy/)
+- [NSX — How It Works](../how-it-works/)
+- [NSX — Deploy](../../deploy/)

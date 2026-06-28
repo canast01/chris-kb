@@ -81,6 +81,6 @@ SELECT COUNT(*) FROM important_table;
 
 ## See also
 
-- [Postgresql — Procedures](procedures/)
-- [Postgresql — Health Checks](health-checks/)
-- [Postgresql — Common Issues](../troubleshooting/common-issues/)
+- [Postgresql — Procedures](../procedures/)
+- [Postgresql — Health Checks](../health-checks/)
+- [Postgresql — Common Issues](../../troubleshooting/common-issues/)

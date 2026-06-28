@@ -379,6 +379,6 @@ foreach ($rel in $resp.records | Sort-Object { $_.healthy }) {
 
 ## See also
 
-- [Snapmirror — Procedures](procedures/)
-- [Snapmirror — CLI Reference](cli-reference/)
-- [Snapmirror — Health Checks](health-checks/)
+- [Snapmirror — Procedures](../procedures/)
+- [Snapmirror — CLI Reference](../cli-reference/)
+- [Snapmirror — Health Checks](../health-checks/)

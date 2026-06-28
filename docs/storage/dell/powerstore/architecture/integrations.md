@@ -301,5 +301,5 @@ resource "powerstore_volume" "db_lun" {
 
 ## See also
 
-- [Powerstore — How It Works](how-it-works/)
-- [Powerstore — Design Standards](design-standards/)
+- [Powerstore — How It Works](../how-it-works/)
+- [Powerstore — Design Standards](../design-standards/)

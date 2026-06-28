@@ -43,5 +43,5 @@ Full API reference: [Pure Storage API documentation](https://support.purestorage
 
 ## See also
 
-- [FlashArray — How It Works](how-it-works/)
-- [FlashArray — Design Standards](design-standards/)
+- [FlashArray — How It Works](../how-it-works/)
+- [FlashArray — Design Standards](../design-standards/)

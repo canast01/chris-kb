@@ -916,6 +916,6 @@ sys.exit(worst)
 
 ## See also
 
-- [Powerpath — Procedures](procedures/)
-- [Powerpath — CLI Reference](cli-reference/)
-- [Powerpath — Health Checks](health-checks/)
+- [Powerpath — Procedures](../procedures/)
+- [Powerpath — CLI Reference](../cli-reference/)
+- [Powerpath — Health Checks](../health-checks/)

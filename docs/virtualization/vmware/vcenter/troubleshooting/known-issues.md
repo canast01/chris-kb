@@ -99,7 +99,7 @@ disk_space -> resolution
 
 ## See also
 
-- [vCenter — Common Issues](common-issues/)
+- [vCenter — Common Issues](../common-issues/)
 - [vCenter — Diagnostics](diagnostics.md)
 - [VMware ESXi — Known Issues](../../esxi/troubleshooting/known-issues.md)
 - [VMware vSAN — Known Issues](../../vsan/troubleshooting/known-issues.md)

@@ -689,6 +689,6 @@ exit "$STATE"
 
 ## See also
 
-- [Cloudiq — Procedures](procedures/)
-- [Cloudiq — CLI Reference](cli-reference/)
-- [Cloudiq — Health Checks](health-checks/)
+- [Cloudiq — Procedures](../procedures/)
+- [Cloudiq — CLI Reference](../cli-reference/)
+- [Cloudiq — Health Checks](../health-checks/)

@@ -247,5 +247,5 @@ Replacing a failed node requires draining it from the cluster before physical re
 
 ## See also
 
-- [Ecs — Procedures](procedures/)
-- [Ecs — Health Checks](health-checks/)
+- [Ecs — Procedures](../procedures/)
+- [Ecs — Health Checks](../health-checks/)

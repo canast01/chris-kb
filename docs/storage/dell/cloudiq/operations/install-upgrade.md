@@ -133,6 +133,6 @@ Review CloudIQ release notes when notified by Dell (typically monthly). Check fo
 
 ## See also
 
-- [Cloudiq — Procedures](procedures/)
-- [Cloudiq — Health Checks](health-checks/)
+- [Cloudiq — Procedures](../procedures/)
+- [Cloudiq — Health Checks](../health-checks/)
 - [Cloudiq — Deploy](../deploy/)

@@ -74,5 +74,5 @@ CREATE SUBSCRIPTION my_sub
 
 ## See also
 
-- [Postgresql — How It Works](how-it-works/)
-- [Postgresql — Design Standards](design-standards/)
+- [Postgresql — How It Works](../how-it-works/)
+- [Postgresql — Design Standards](../design-standards/)

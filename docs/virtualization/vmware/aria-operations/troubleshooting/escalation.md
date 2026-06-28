@@ -259,8 +259,8 @@ tail -100 /data/vcops/log/solutions/<adapter-name>/<adapter>.log
 
 ## See also
 
-- [Aria Operations — Diagnostics](diagnostics/)
-- [Aria Operations — Common Issues](common-issues/)
+- [Aria Operations — Diagnostics](../diagnostics/)
+- [Aria Operations — Common Issues](../common-issues/)
 
 ---
 

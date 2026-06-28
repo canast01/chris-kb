@@ -44,8 +44,8 @@ Firewall port reference for NetApp SnapMirror. SnapMirror is a replication featu
 ## ONTAP System Manager / SnapCenter (Management)
 
 SnapMirror relationships are managed through ONTAP System Manager or SnapCenter. See:
-- [NetApp ONTAP — Ports](../../ontap/architecture/ports/) for ONTAP management port requirements
-- [NetApp SnapCenter — Ports](../../snapcenter/architecture/ports/) for backup orchestration
+- [NetApp ONTAP — Ports](../../../ontap/architecture/ports/) for ONTAP management port requirements
+- [NetApp SnapCenter — Ports](../../../snapcenter/architecture/ports/) for backup orchestration
 
 ## Firewall Zone Summary
 
@@ -76,4 +76,4 @@ network interface show -role intercluster
 
 - [NetApp ONTAP — Ports](../../ontap/architecture/ports.md)
 - [NetApp SnapCenter — Ports](../../snapcenter/architecture/ports.md)
-- [NetApp ONTAP — Architecture](../../ontap/architecture/how-it-works/)
+- [NetApp ONTAP — Architecture](../../../ontap/architecture/how-it-works/)

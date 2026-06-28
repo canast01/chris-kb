@@ -165,6 +165,6 @@ curl -s $AUTH "$UNISPHERE/performance/RDFGroup/metrics" \
 
 ## See also
 
-- [Srdf A — Procedures](procedures/)
-- [Srdf A — Scripts](scripts/)
-- [Srdf A — Health Checks](health-checks/)
+- [Srdf A — Procedures](../procedures/)
+- [Srdf A — Scripts](../scripts/)
+- [Srdf A — Health Checks](../health-checks/)

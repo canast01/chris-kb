@@ -42,6 +42,6 @@ flowchart TD
 
 ## See also
 
-- [Srdf A — How It Works](how-it-works/)
-- [Srdf A — Integrations](integrations/)
-- [Srdf A — Deploy](../deploy/)
+- [Srdf A — How It Works](../how-it-works/)
+- [Srdf A — Integrations](../integrations/)
+- [Srdf A — Deploy](../../deploy/)

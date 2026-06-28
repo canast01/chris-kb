@@ -476,6 +476,6 @@ Alternatively, add drives to the pool via Unisphere: navigate to **Storage → P
 
 ## See also
 
-- [Unity — Health Checks](health-checks/)
-- [Unity — CLI Reference](cli-reference/)
+- [Unity — Health Checks](../health-checks/)
+- [Unity — CLI Reference](../cli-reference/)
 - [Unity — Common Issues](../troubleshooting/common-issues/)

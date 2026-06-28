@@ -325,8 +325,8 @@ ssh admin@<lcm-fqdn>
 
 ## See also
 
-- [Aria Suite Lifecycle — Common Issues](common-issues/)
-- [Aria Suite Lifecycle — Escalation](escalation/)
+- [Aria Suite Lifecycle — Common Issues](../common-issues/)
+- [Aria Suite Lifecycle — Escalation](../escalation/)
 
 ## Verify resolution
 

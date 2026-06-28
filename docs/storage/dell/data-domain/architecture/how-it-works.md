@@ -107,5 +107,5 @@ mtree list                        # all MTrees and their quota status
 
 ## See also
 
-- [Data Domain — Design Standards](design-standards/)
-- [Data Domain — Integrations](integrations/)
+- [Data Domain — Design Standards](../design-standards/)
+- [Data Domain — Integrations](../integrations/)

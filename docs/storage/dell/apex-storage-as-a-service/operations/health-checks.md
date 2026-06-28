@@ -100,6 +100,6 @@ curl -s -H "Authorization: Bearer ${CLOUDIQ_TOKEN}" \
 
 ## See also
 
-- [Apex Storage As A Service — Procedures](procedures/)
-- [Apex Storage As A Service — CLI Reference](cli-reference/)
+- [Apex Storage As A Service — Procedures](../procedures/)
+- [Apex Storage As A Service — CLI Reference](../cli-reference/)
 - [Apex Storage As A Service — Common Issues](../troubleshooting/common-issues/)

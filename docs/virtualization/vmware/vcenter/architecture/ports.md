@@ -21,7 +21,7 @@ Firewall port reference for vCenter Server Appliance (VCSA). Use this to build f
 
 - Identify source IP ranges for each traffic category (admin workstations, backup proxies, monitoring)
 - vCenter HA nodes must reach each other on the HA network — same L2 subnet is strongly recommended
-- The vSAN VMkernel and vMotion VMkernel ports are on ESXi hosts, not vCenter — see [ESXi ports](../../esxi/architecture/ports/)
+- The vSAN VMkernel and vMotion VMkernel ports are on ESXi hosts, not vCenter — see [ESXi ports](../../../esxi/architecture/ports/)
 
 ---
 
@@ -122,5 +122,5 @@ ntpq -p
 - [ESXi — Ports](../../esxi/architecture/ports.md)
 - [vSAN — Ports](../../vsan/architecture/ports.md)
 - [NSX — Ports](../../nsx/architecture/ports.md)
-- [vCenter — Architecture](how-it-works/)
-- [vCenter — Deploy](../../vcenter/deploy/)
+- [vCenter — Architecture](../how-it-works/)
+- [vCenter — Deploy](../../../vcenter/deploy/)

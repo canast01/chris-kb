@@ -39,13 +39,13 @@ For network issues, identify the protocol layer first before looking up specific
 
 | Protocol | Known Issues |
 |---|---|
-| DNS | [DNS — Known Issues](protocols/dns/troubleshooting/known-issues/) |
-| NFS | [NFS — Known Issues](protocols/nfs/troubleshooting/known-issues/) |
-| SMB / CIFS | [SMB — Known Issues](protocols/smb/troubleshooting/known-issues/) |
-| iSCSI | [iSCSI — Known Issues](protocols/iscsi/troubleshooting/known-issues/) |
-| Fibre Channel | [FC — Known Issues](protocols/fibre-channel/troubleshooting/known-issues/) |
-| TLS / SSL | [TLS — Known Issues](protocols/tls/troubleshooting/known-issues/) |
-| LDAP / LDAPS | [LDAP — Known Issues](protocols/ldap/troubleshooting/known-issues/) |
+| DNS | [DNS — Known Issues](../../protocols/dns/troubleshooting/known-issues/) |
+| NFS | [NFS — Known Issues](../../protocols/nfs/troubleshooting/known-issues/) |
+| SMB / CIFS | [SMB — Known Issues](../../protocols/smb/troubleshooting/known-issues/) |
+| iSCSI | [iSCSI — Known Issues](../../protocols/iscsi/troubleshooting/known-issues/) |
+| Fibre Channel | [FC — Known Issues](../../protocols/fibre-channel/troubleshooting/known-issues/) |
+| TLS / SSL | [TLS — Known Issues](../../protocols/tls/troubleshooting/known-issues/) |
+| LDAP / LDAPS | [LDAP — Known Issues](../../protocols/ldap/troubleshooting/known-issues/) |
 
 ## See also
 

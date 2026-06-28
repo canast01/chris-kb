@@ -68,8 +68,8 @@ tags:
 
 ## See also
 
-- [VCF Operations — CLI Reference](cli-reference/)
-- [VCF — Procedures](procedures/)
+- [VCF Operations — CLI Reference](../cli-reference/)
+- [VCF — Procedures](../procedures/)
 
 ## Verify
 

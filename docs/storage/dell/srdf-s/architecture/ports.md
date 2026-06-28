@@ -58,6 +58,6 @@ symcfg list -rdfg all -detail | grep -i latency
 
 ## See also
 
-- [Dell SRDF/S — Architecture](how-it-works/)
+- [Dell SRDF/S — Architecture](../how-it-works/)
 - [Dell SRDF/A — Ports](../../srdf-a/architecture/ports.md)
 - [Dell PowerMax — Ports](../../powermax/architecture/ports.md)

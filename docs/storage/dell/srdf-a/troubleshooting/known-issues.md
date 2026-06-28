@@ -63,6 +63,6 @@ performance -> resolution
 
 ## See also
 
-- [Dell SRDF-A — Common Issues](common-issues/)
+- [Dell SRDF-A — Common Issues](../common-issues/)
 - [Dell PowerMax — Known Issues](../../powermax/troubleshooting/known-issues.md)
 - [Dell SRDF-S — Known Issues](../../srdf-s/troubleshooting/known-issues.md)

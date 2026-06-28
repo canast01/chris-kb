@@ -330,8 +330,8 @@ kubectl get clusterrole,clusterrolebinding,storageclass,pv -o yaml \
 
 ## See also
 
-- [Tanzu — Common Issues](common-issues/)
-- [Tanzu — Escalation](escalation/)
+- [Tanzu — Common Issues](../common-issues/)
+- [Tanzu — Escalation](../escalation/)
 
 ## Verify resolution
 

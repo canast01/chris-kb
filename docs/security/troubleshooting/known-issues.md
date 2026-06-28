@@ -36,9 +36,9 @@ Security product issues often cascade — a CyberArk CPM failure may stem from a
 
 | Product | Known Issues |
 |---|---|
-| CyberArk PAM | [CyberArk — Known Issues](cyberark/troubleshooting/known-issues/) |
-| Venafi TPP | [Venafi — Known Issues](venafi/troubleshooting/known-issues/) |
-| Certificates / PKI | [Certificates — Known Issues](certificates/troubleshooting/known-issues/) |
+| CyberArk PAM | [CyberArk — Known Issues](../../cyberark/troubleshooting/known-issues/) |
+| Venafi TPP | [Venafi — Known Issues](../../venafi/troubleshooting/known-issues/) |
+| Certificates / PKI | [Certificates — Known Issues](../../certificates/troubleshooting/known-issues/) |
 
 ## See also
 

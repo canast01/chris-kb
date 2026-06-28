@@ -47,8 +47,8 @@ After configuration, the Aria Ops for Logs login page shows a "VMware Identity M
 
 ## See also
 
-- [Aria Ops for Logs — Access Control](access-control/)
-- [Aria Ops for Logs — Hardening](hardening/)
+- [Aria Ops for Logs — Access Control](../access-control/)
+- [Aria Ops for Logs — Hardening](../hardening/)
 
 ## Verify LDAP Authentication from CLI
 

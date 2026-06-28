@@ -152,6 +152,6 @@ When clients report NFS/SMB errors, SyncIQ failures, or a node is unreachable, w
 
 ## See also
 
-- [Powerscale — Diagnostics](diagnostics/)
-- [Powerscale — Escalation](escalation/)
-- [Powerscale — Health Checks](../operations/health-checks/)
+- [Powerscale — Diagnostics](../diagnostics/)
+- [Powerscale — Escalation](../escalation/)
+- [Powerscale — Health Checks](../../operations/health-checks/)

@@ -251,8 +251,8 @@ curl -sk -H "Authorization: Basic $(echo -n admin:<password> | base64)" \
 
 ## See also
 
-- [APEX Storage As A Service — Common Issues](common-issues/)
-- [APEX Storage As A Service — Escalation](escalation/)
+- [APEX Storage As A Service — Common Issues](../common-issues/)
+- [APEX Storage As A Service — Escalation](../escalation/)
 - [APEX Storage As A Service — Health Checks](../operations/health-checks/)
 
 ## Verify resolution

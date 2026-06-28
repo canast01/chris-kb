@@ -337,6 +337,6 @@ exit 0
 
 ## See also
 
-- [Vplex — Procedures](procedures/)
-- [Vplex — CLI Reference](cli-reference/)
-- [Vplex — Health Checks](health-checks/)
+- [Vplex — Procedures](../procedures/)
+- [Vplex — CLI Reference](../cli-reference/)
+- [Vplex — Health Checks](../health-checks/)

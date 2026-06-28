@@ -106,5 +106,5 @@ systemctl restart rsyslog
 
 ## See also
 
-- [Aria Ops for Logs — Authentication](authentication/)
-- [Aria Ops for Logs — Hardening](hardening/)
+- [Aria Ops for Logs — Authentication](../authentication/)
+- [Aria Ops for Logs — Hardening](../hardening/)

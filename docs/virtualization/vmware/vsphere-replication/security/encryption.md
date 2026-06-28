@@ -127,5 +127,5 @@ sudo systemctl reload nginx
 
 ## See also
 
-- [vSphere Replication — Hardening](hardening/)
-- [vSphere Replication — Health Checks](../operations/health-checks/)
+- [vSphere Replication — Hardening](../hardening/)
+- [vSphere Replication — Health Checks](../../operations/health-checks/)

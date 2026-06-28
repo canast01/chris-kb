@@ -299,6 +299,6 @@ When using an external KMIP server, key rotation is initiated from the KMIP serv
 
 ## See also
 
-- [Powermax — Hardening](hardening/)
-- [Powermax — Authentication](authentication/)
-- [Powermax — Access Control](access-control/)
+- [Powermax — Hardening](../hardening/)
+- [Powermax — Authentication](../authentication/)
+- [Powermax — Access Control](../access-control/)

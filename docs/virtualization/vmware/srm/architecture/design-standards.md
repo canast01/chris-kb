@@ -126,5 +126,5 @@ Install SRA on both SRM servers (protected and recovery site). Re-scan array man
 
 ## See also
 
-- [SRM — How It Works (VMware Platform)](how-it-works/)
-- [SRM — Deploy](../deploy/)
+- [SRM — How It Works (VMware Platform)](../how-it-works/)
+- [SRM — Deploy](../../deploy/)

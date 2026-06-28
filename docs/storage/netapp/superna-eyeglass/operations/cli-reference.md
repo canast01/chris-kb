@@ -109,6 +109,6 @@ curl -k -X GET https://<eyeglass_ip>/eca/api/v1/jobs/failover \
 
 ## See also
 
-- [Superna Eyeglass — Procedures](procedures/)
-- [Superna Eyeglass — Scripts](scripts/)
-- [Superna Eyeglass — Health Checks](health-checks/)
+- [Superna Eyeglass — Procedures](../procedures/)
+- [Superna Eyeglass — Scripts](../scripts/)
+- [Superna Eyeglass — Health Checks](../health-checks/)

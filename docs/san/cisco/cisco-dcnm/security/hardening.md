@@ -104,6 +104,6 @@ logger -t dcnm-test "Syslog forwarding test message"
 
 ## See also
 
-- [Cisco Dcnm — Authentication](authentication/)
-- [Cisco Dcnm — Access Control](access-control/)
-- [Cisco Dcnm — Encryption](encryption/)
+- [Cisco Dcnm — Authentication](../authentication/)
+- [Cisco Dcnm — Access Control](../access-control/)
+- [Cisco Dcnm — Encryption](../encryption/)

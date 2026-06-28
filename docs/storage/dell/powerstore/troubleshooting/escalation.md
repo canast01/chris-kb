@@ -254,8 +254,8 @@ curl -k -X GET "https://<powerstore-mgmt-ip>/api/rest/replication_session" \
 
 ## See also
 
-- [PowerStore — Diagnostics](diagnostics/)
-- [PowerStore — Common Issues](common-issues/)
+- [PowerStore — Diagnostics](../diagnostics/)
+- [PowerStore — Common Issues](../common-issues/)
 
 ---
 

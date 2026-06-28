@@ -259,8 +259,8 @@ scp admin@<vRLI-IP>:/tmp/support-bundle-*.tar.gz ./
 
 ## See also
 
-- [Aria Operations for Logs — Common Issues](common-issues/)
-- [Aria Ops for Logs — Escalation](escalation/)
+- [Aria Operations for Logs — Common Issues](../common-issues/)
+- [Aria Ops for Logs — Escalation](../escalation/)
 
 ## Verify resolution
 

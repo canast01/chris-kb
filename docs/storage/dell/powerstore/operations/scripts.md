@@ -520,6 +520,6 @@ exit 0
 
 ## See also
 
-- [Powerstore — Procedures](procedures/)
-- [Powerstore — CLI Reference](cli-reference/)
-- [Powerstore — Health Checks](health-checks/)
+- [Powerstore — Procedures](../procedures/)
+- [Powerstore — CLI Reference](../cli-reference/)
+- [Powerstore — Health Checks](../health-checks/)

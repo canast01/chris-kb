@@ -55,5 +55,5 @@ performance_data -> resolution
 
 ## See also
 
-- [Brocade SANnav — Common Issues](common-issues/)
+- [Brocade SANnav — Common Issues](../common-issues/)
 - [Brocade Fabric OS — Known Issues](../../fabric-os/troubleshooting/known-issues.md)

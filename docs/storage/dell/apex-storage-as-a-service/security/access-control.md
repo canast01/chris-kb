@@ -75,6 +75,6 @@ APEX Console supports federated authentication via SAML 2.0. When SSO is configu
 
 ## See also
 
-- [Apex Storage As A Service — Authentication](authentication/)
-- [Apex Storage As A Service — Hardening](hardening/)
-- [Apex Storage As A Service — Encryption](encryption/)
+- [Apex Storage As A Service — Authentication](../authentication/)
+- [Apex Storage As A Service — Hardening](../hardening/)
+- [Apex Storage As A Service — Encryption](../encryption/)

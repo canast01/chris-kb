@@ -125,7 +125,7 @@ Use this page for VxRail operations, support checks, lifecycle work, troubleshoo
 
 ## See also
 
-- [VxRail — Common Issues](common-issues/)
+- [VxRail — Common Issues](../common-issues/)
 - [VxRail — Diagnostics](diagnostics.md)
 - [VxRail — Escalation](escalation.md)
 - [VxRail Troubleshooting](index.md)

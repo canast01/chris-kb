@@ -69,6 +69,6 @@ Pure1 applies AI-driven thresholds by default. Override only when the default pr
 
 ## See also
 
-- [Pure1 — How It Works](how-it-works/)
-- [Pure1 — Integrations](integrations/)
-- [Pure1 — Deploy](../deploy/)
+- [Pure1 — How It Works](../how-it-works/)
+- [Pure1 — Integrations](../integrations/)
+- [Pure1 — Deploy](../../deploy/)

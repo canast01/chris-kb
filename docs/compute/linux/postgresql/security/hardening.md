@@ -88,6 +88,6 @@ DROP EXTENSION IF EXISTS file_fdw;
 
 ## See also
 
-- [Postgresql — Authentication](authentication/)
-- [Postgresql — Access Control](access-control/)
-- [Postgresql — Encryption](encryption/)
+- [Postgresql — Authentication](../authentication/)
+- [Postgresql — Access Control](../access-control/)
+- [Postgresql — Encryption](../encryption/)

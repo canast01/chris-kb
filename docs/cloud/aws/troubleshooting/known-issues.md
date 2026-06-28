@@ -76,5 +76,5 @@ service_limits -> resolution
 
 ## See also
 
-- [AWS — Common Issues](common-issues/)
+- [AWS — Common Issues](../common-issues/)
 - [AWS EVS — Known Issues](../evs/troubleshooting/known-issues.md)

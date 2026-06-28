@@ -60,6 +60,6 @@ SnapCenter design standards: plugin server placement, SQL/Oracle/VMware plugin s
 
 ## See also
 
-- [Snapcenter — How It Works](how-it-works/)
-- [Snapcenter — Integrations](integrations/)
-- [Snapcenter — Deploy](../deploy/)
+- [Snapcenter — How It Works](../how-it-works/)
+- [Snapcenter — Integrations](../integrations/)
+- [Snapcenter — Deploy](../../deploy/)

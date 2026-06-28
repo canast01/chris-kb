@@ -152,5 +152,5 @@ $cred = New-Object System.Management.Automation.PSCredential(
 
 ## See also
 
-- [PowerCLI — Deploy](../deploy/)
-- [PowerCLI — Integrations](integrations/)
+- [PowerCLI — Deploy](../../deploy/)
+- [PowerCLI — Integrations](../integrations/)

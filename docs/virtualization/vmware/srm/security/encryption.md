@@ -26,5 +26,5 @@ Encryption reference covering Encryption at Recovery Site, Certificate Managemen
 
 ## See also
 
-- [SRM — Hardening](hardening/)
-- [SRM — Health Checks](../operations/health-checks/)
+- [SRM — Hardening](../hardening/)
+- [SRM — Health Checks](../../operations/health-checks/)

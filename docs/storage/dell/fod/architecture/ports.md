@@ -39,6 +39,6 @@ Firewall port reference for Dell FOD (Feature on Demand). FOD enables software f
 
 ## See also
 
-- [Dell FOD — Architecture](how-it-works/)
+- [Dell FOD — Architecture](../how-it-works/)
 - [Dell COD — Ports](../../cod/architecture/ports.md)
 - [Dell PowerStore — Ports](../../powerstore/architecture/ports.md)

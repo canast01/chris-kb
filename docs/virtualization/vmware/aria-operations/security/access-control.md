@@ -103,5 +103,5 @@ curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
 
 ## See also
 
-- [Aria Operations — Authentication](authentication/)
-- [Aria Operations Security Hardening](hardening/)
+- [Aria Operations — Authentication](../authentication/)
+- [Aria Operations Security Hardening](../hardening/)

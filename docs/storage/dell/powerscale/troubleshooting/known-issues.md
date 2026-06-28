@@ -65,5 +65,5 @@ synciq -> resolution
 
 ## See also
 
-- [Dell PowerScale — Common Issues](common-issues/)
+- [Dell PowerScale — Common Issues](../common-issues/)
 - [Superna Eyeglass — Known Issues](../../../netapp/superna-eyeglass/troubleshooting/known-issues.md)

@@ -315,6 +315,6 @@ Document baseline values in the CMDB operational record for the VPLEX cluster.
 
 ## See also
 
-- [Vplex — How It Works](how-it-works/)
-- [Vplex — Integrations](integrations/)
-- [Vplex — Deploy](../deploy/)
+- [Vplex — How It Works](../how-it-works/)
+- [Vplex — Integrations](../integrations/)
+- [Vplex — Deploy](../../deploy/)

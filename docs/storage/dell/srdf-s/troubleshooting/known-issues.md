@@ -54,6 +54,6 @@ failover -> resolution
 
 ## See also
 
-- [Dell SRDF-S — Common Issues](common-issues/)
+- [Dell SRDF-S — Common Issues](../common-issues/)
 - [Dell PowerMax — Known Issues](../../powermax/troubleshooting/known-issues.md)
 - [Dell SRDF-A — Known Issues](../../srdf-a/troubleshooting/known-issues.md)

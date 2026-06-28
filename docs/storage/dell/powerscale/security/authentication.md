@@ -475,6 +475,6 @@ Ensure all NFS clients with Kerberos mounts also use the same NTP source as the 
 
 ## See also
 
-- [Powerscale — Access Control](access-control/)
-- [Powerscale — Hardening](hardening/)
-- [Powerscale — Encryption](encryption/)
+- [Powerscale — Access Control](../access-control/)
+- [Powerscale — Hardening](../hardening/)
+- [Powerscale — Encryption](../encryption/)

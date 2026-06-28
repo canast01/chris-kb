@@ -460,8 +460,8 @@ echo "  Generated: $(date)"
 
 ## See also
 
-- [Amazon EVS — CLI Reference](cli-reference/)
-- [Amazon EVS — Procedures](procedures/)
+- [Amazon EVS — CLI Reference](../cli-reference/)
+- [Amazon EVS — Procedures](../procedures/)
 
 ## Verify
 

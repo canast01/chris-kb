@@ -18,5 +18,5 @@ tags:
 
 ## See also
 
-- [VCF — Hardening](hardening/)
-- [VCF — Health Checks](../operations/health-checks/)
+- [VCF — Hardening](../hardening/)
+- [VCF — Health Checks](../../operations/health-checks/)

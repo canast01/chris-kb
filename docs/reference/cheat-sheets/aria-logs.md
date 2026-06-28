@@ -54,5 +54,5 @@ curl -sk $HDR "$BASE/alerts" | python3 -m json.tool                      # confi
 
 ## See also
 
-- [Aria Logs Procedures](../../virtualization/vmware/aria-operations-for-logs/operations/procedures/)
-- [Aria Logs Troubleshooting](../../virtualization/vmware/aria-operations-for-logs/troubleshooting/common-issues/)
+- [Aria Logs Procedures](../../../virtualization/vmware/aria-operations-for-logs/operations/procedures/)
+- [Aria Logs Troubleshooting](../../../virtualization/vmware/aria-operations-for-logs/troubleshooting/common-issues/)

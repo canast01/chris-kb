@@ -54,7 +54,7 @@ Store the new password in the vault immediately. Document the vault path in the 
 
 **2 — Configure LDAP**
 
-VxRail Plugin → Settings → LDAP Configuration → Enable LDAP → Enter server, base DN, bind account details, and role group mappings. Refer to the [Authentication](authentication/) page for the full LDAP configuration reference.
+VxRail Plugin → Settings → LDAP Configuration → Enable LDAP → Enter server, base DN, bind account details, and role group mappings. Refer to the [Authentication](../authentication/) page for the full LDAP configuration reference.
 
 **3 — Restrict API access at network layer**
 
@@ -235,7 +235,7 @@ Get-Cluster "VxRail-Cluster" | Get-VMHost | Test-VMHostProfileCompliance |
 
 **4 — Enable vSAN encryption**
 
-Refer to the [Encryption](encryption/) page for the full vSAN at-rest and in-transit encryption procedures, including the pre-enable checklist and rebuild warning.
+Refer to the [Encryption](../encryption/) page for the full vSAN at-rest and in-transit encryption procedures, including the pre-enable checklist and rebuild warning.
 
 **5 — Configure vCenter backup**
 
@@ -347,6 +347,6 @@ If SupportAssist cannot be approved for regulated clusters, disable it on those 
 
 ## See also
 
-- [VxRail — Access Control](access-control/)
-- [VxRail — Authentication](authentication/)
+- [VxRail — Access Control](../access-control/)
+- [VxRail — Authentication](../authentication/)
 - [VxRail — Health Checks](../operations/health-checks/)

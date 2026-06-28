@@ -350,9 +350,9 @@ aws service-quotas request-service-quota-increase \
 
 ## See also
 
-- [Amazon EVS — Diagnostics](diagnostics/)
-- [Amazon EVS — Escalation](escalation/)
-- [Amazon EVS — Health Checks](../operations/health-checks/)
+- [Amazon EVS — Diagnostics](../diagnostics/)
+- [Amazon EVS — Escalation](../escalation/)
+- [Amazon EVS — Health Checks](../../operations/health-checks/)
 
 ## Verify resolution
 

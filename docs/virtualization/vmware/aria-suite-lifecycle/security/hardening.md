@@ -84,6 +84,6 @@ Run this checklist after initial deployment and after each major upgrade:
 
 ## See also
 
-- [Aria Suite Lifecycle — Access Control](access-control/)
-- [Aria Suite Lifecycle — Authentication](authentication/)
+- [Aria Suite Lifecycle — Access Control](../access-control/)
+- [Aria Suite Lifecycle — Authentication](../authentication/)
 - [Aria Suite Lifecycle — Health Checks](../operations/health-checks/)

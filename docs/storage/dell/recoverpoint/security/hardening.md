@@ -60,6 +60,6 @@ All other inbound connections to RPA nodes should be denied by perimeter and int
 
 ## See also
 
-- [Recoverpoint — Authentication](authentication/)
-- [Recoverpoint — Access Control](access-control/)
-- [Recoverpoint — Encryption](encryption/)
+- [Recoverpoint — Authentication](../authentication/)
+- [Recoverpoint — Access Control](../access-control/)
+- [Recoverpoint — Encryption](../encryption/)

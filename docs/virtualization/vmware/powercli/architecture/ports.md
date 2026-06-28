@@ -66,7 +66,7 @@ $global:DefaultVIServer
 
 ## See also
 
-- [PowerCLI — Architecture](how-it-works/)
+- [PowerCLI — Architecture](../how-it-works/)
 - [vCenter — Ports](../../vcenter/architecture/ports.md)
 - [NSX — Ports](../../nsx/architecture/ports.md)
 - [Ansible — Ports](../../../../automation/ansible/architecture/ports.md)

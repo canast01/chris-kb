@@ -62,6 +62,6 @@ RECONFIGURE WITH OVERRIDE;
 
 ## See also
 
-- [Sql Server — How It Works](how-it-works/)
-- [Sql Server — Integrations](integrations/)
-- [Sql Server — Deploy](../deploy/)
+- [Sql Server — How It Works](../how-it-works/)
+- [Sql Server — Integrations](../integrations/)
+- [Sql Server — Deploy](../../deploy/)

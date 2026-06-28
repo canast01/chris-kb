@@ -109,6 +109,6 @@ graph TB
 
 ## See also
 
-- [Aria Automation — Standards](design-standards/)
+- [Aria Automation — Standards](../design-standards/)
 - [Aria Automation — Deploy](../deploy/)
-- [Aria Automation — Integrations](integrations/)
+- [Aria Automation — Integrations](../integrations/)

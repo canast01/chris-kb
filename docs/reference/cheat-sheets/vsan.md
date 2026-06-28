@@ -47,6 +47,6 @@ Get-VM | Get-SpbmEntityConfiguration | Where { $_.ComplianceStatus -ne "complian
 
 ## See also
 
-- [vSAN Operations](../../virtualization/vmware/vsan/operations/procedures/)
-- [vSAN Health Checks](../../virtualization/vmware/vsan/operations/health-checks/)
-- [vSAN Troubleshooting](../../virtualization/vmware/vsan/troubleshooting/common-issues/)
+- [vSAN Operations](../../../virtualization/vmware/vsan/operations/procedures/)
+- [vSAN Health Checks](../../../virtualization/vmware/vsan/operations/health-checks/)
+- [vSAN Troubleshooting](../../../virtualization/vmware/vsan/troubleshooting/common-issues/)

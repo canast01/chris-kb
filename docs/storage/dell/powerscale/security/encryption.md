@@ -337,6 +337,6 @@ done
 
 ## See also
 
-- [Powerscale — Hardening](hardening/)
-- [Powerscale — Authentication](authentication/)
-- [Powerscale — Access Control](access-control/)
+- [Powerscale — Hardening](../hardening/)
+- [Powerscale — Authentication](../authentication/)
+- [Powerscale — Access Control](../access-control/)

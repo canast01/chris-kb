@@ -91,6 +91,6 @@ Ordered steps for initial FlashBlade setup:
 
 ## See also
 
-- [FlashBlade — How It Works](how-it-works/)
-- [FlashBlade — Integrations](integrations/)
-- [FlashBlade — Deploy](../deploy/)
+- [FlashBlade — How It Works](../how-it-works/)
+- [FlashBlade — Integrations](../integrations/)
+- [FlashBlade — Deploy](../../deploy/)

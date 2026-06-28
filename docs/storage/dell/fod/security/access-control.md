@@ -73,6 +73,6 @@ Apply the Read Only role to all non-operational accounts. Audit CloudIQ user mem
 
 ## See also
 
-- [Fod — Authentication](authentication/)
-- [Fod — Hardening](hardening/)
-- [Fod — Encryption](encryption/)
+- [Fod — Authentication](../authentication/)
+- [Fod — Hardening](../hardening/)
+- [Fod — Encryption](../encryption/)

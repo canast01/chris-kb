@@ -65,5 +65,5 @@ failover -> resolution
 
 ## See also
 
-- [Dell RecoverPoint — Common Issues](common-issues/)
+- [Dell RecoverPoint — Common Issues](../common-issues/)
 - [Dell VPLEX — Known Issues](../../vplex/troubleshooting/known-issues.md)

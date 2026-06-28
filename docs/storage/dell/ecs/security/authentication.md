@@ -202,6 +202,6 @@ ECS Portal → Settings → Syslog
 
 ## See also
 
-- [Ecs — Access Control](access-control/)
-- [Ecs — Hardening](hardening/)
-- [Ecs — Encryption](encryption/)
+- [Ecs — Access Control](../access-control/)
+- [Ecs — Hardening](../hardening/)
+- [Ecs — Encryption](../encryption/)

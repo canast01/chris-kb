@@ -121,9 +121,9 @@ Measure-Command { Import-Module VMware.PowerCLI } | Select-Object TotalSeconds
 
 ## See also
 
-- [PowerCLI — Health Checks](health-checks/)
+- [PowerCLI — Health Checks](../health-checks/)
 - [PowerCLI — Common Issues](../troubleshooting/common-issues/)
-- [PowerCLI — Procedures](procedures/)
+- [PowerCLI — Procedures](../procedures/)
 
 ## Verify
 

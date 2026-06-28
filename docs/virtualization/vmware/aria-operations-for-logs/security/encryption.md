@@ -100,5 +100,5 @@ testssl.sh --severity HIGH vrli-prod-01.example.local:443
 
 ## See also
 
-- [Aria Ops for Logs — Hardening](hardening/)
-- [Aria Operations for Logs — Health Checks](../operations/health-checks/)
+- [Aria Ops for Logs — Hardening](../hardening/)
+- [Aria Operations for Logs — Health Checks](../../operations/health-checks/)

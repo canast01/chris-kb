@@ -303,6 +303,6 @@ AON UI → Settings → Infrastructure and Support → Platform Settings
 
 ## See also
 
-- [AON Diagnostics](diagnostics/)
-- [AON Escalation](escalation/)
-- [AON Health Checks](../operations/health-checks/)
+- [AON Diagnostics](../diagnostics/)
+- [AON Escalation](../escalation/)
+- [AON Health Checks](../../operations/health-checks/)

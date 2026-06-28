@@ -83,6 +83,6 @@ Get-ADUser -Filter { AdminCount -eq 1 } |
 
 ## See also
 
-- [Active Directory — Authentication](authentication/)
-- [Active Directory — Hardening](hardening/)
-- [Active Directory — Encryption](encryption/)
+- [Active Directory — Authentication](../authentication/)
+- [Active Directory — Hardening](../hardening/)
+- [Active Directory — Encryption](../encryption/)

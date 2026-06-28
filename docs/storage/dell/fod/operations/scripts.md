@@ -836,6 +836,6 @@ else:
 
 ## See also
 
-- [Fod — Procedures](procedures/)
-- [Fod — CLI Reference](cli-reference/)
-- [Fod — Health Checks](health-checks/)
+- [Fod — Procedures](../procedures/)
+- [Fod — CLI Reference](../cli-reference/)
+- [Fod — Health Checks](../health-checks/)

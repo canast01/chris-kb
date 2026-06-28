@@ -579,6 +579,6 @@ exit 0
 
 ## See also
 
-- [Srdf A — Procedures](procedures/)
-- [Srdf A — CLI Reference](cli-reference/)
-- [Srdf A — Health Checks](health-checks/)
+- [Srdf A — Procedures](../procedures/)
+- [Srdf A — CLI Reference](../cli-reference/)
+- [Srdf A — Health Checks](../health-checks/)

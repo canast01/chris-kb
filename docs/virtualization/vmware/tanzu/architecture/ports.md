@@ -21,7 +21,7 @@ Firewall port reference for VMware Tanzu (vSphere with Tanzu / TKG). Covers the 
 
 - vSphere with Tanzu uses the Supervisor Cluster as the management plane — it runs on ESXi hosts managed by vCenter
 - Each Tanzu Kubernetes Grid (TKG) workload cluster has its own API server endpoint (FQDN or VIP); open 6443 per cluster
-- NSX-T handles overlay traffic — see [NSX Ports](../../nsx/architecture/ports/) for TEP/Geneve port requirements
+- NSX-T handles overlay traffic — see [NSX Ports](../../../nsx/architecture/ports/) for TEP/Geneve port requirements
 - Tanzu Mission Control (TMC) is a SaaS service — clusters must reach cloud.vmware.com or tmc.cloud.vmware.com on 443
 
 ---
@@ -131,7 +131,7 @@ tanzu cluster list
 
 ## See also
 
-- [Tanzu — Architecture](how-it-works/)
+- [Tanzu — Architecture](../how-it-works/)
 - [Tanzu — Deploy](../deploy/)
 - [NSX — Ports](../../nsx/architecture/ports.md)
 - [OpenShift — Ports](../../../openshift/architecture/ports.md)

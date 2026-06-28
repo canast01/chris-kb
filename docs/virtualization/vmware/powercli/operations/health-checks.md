@@ -149,8 +149,8 @@ Get-VM | Where-Object { $_.PowerState -eq 'PoweredOn' } |
 ## See also
 
 - [PowerCLI — Common Issues](../troubleshooting/common-issues/)
-- [PowerCLI — Procedures](procedures/)
-- [PowerCLI — CLI Reference](cli-reference/)
+- [PowerCLI — Procedures](../procedures/)
+- [PowerCLI — CLI Reference](../cli-reference/)
 
 ## Verify
 

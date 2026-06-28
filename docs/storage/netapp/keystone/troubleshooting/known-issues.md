@@ -36,7 +36,7 @@ keystone_portal -> resolution
 
 - Keystone Collector logs: `journalctl -u keystone-collector` on the Collector VM.
 - Portal access issues should be reported to NetApp Keystone support at `keystone.netapp.com`.
-- ONTAP-layer issues (NFS, SMB, iSCSI, SnapMirror) are tracked in [ONTAP Known Issues](../../ontap/troubleshooting/known-issues/).
+- ONTAP-layer issues (NFS, SMB, iSCSI, SnapMirror) are tracked in [ONTAP Known Issues](../../../ontap/troubleshooting/known-issues/).
 
 ## Keystone Collector
 

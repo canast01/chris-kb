@@ -62,6 +62,6 @@ for sub in resp.json().get("subscriptions", []):
 
 ## See also
 
-- [Keystone — Procedures](procedures/)
-- [Keystone — Scripts](scripts/)
-- [Keystone — Health Checks](health-checks/)
+- [Keystone — Procedures](../procedures/)
+- [Keystone — Scripts](../scripts/)
+- [Keystone — Health Checks](../health-checks/)

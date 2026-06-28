@@ -112,6 +112,6 @@ ORDER BY OBJECT_SCHEMA, OBJECT_NAME;
 
 ## See also
 
-- [Mysql — Procedures](procedures/)
-- [Mysql — CLI Reference](cli-reference/)
-- [Mysql — Health Checks](health-checks/)
+- [Mysql — Procedures](../procedures/)
+- [Mysql — CLI Reference](../cli-reference/)
+- [Mysql — Health Checks](../health-checks/)

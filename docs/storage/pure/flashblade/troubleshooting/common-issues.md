@@ -107,6 +107,6 @@ graph TD
 
 ## See also
 
-- [FlashBlade — Diagnostics](diagnostics/)
-- [FlashBlade — Escalation](escalation/)
-- [FlashBlade — Health Checks](../operations/health-checks/)
+- [FlashBlade — Diagnostics](../diagnostics/)
+- [FlashBlade — Escalation](../escalation/)
+- [FlashBlade — Health Checks](../../operations/health-checks/)

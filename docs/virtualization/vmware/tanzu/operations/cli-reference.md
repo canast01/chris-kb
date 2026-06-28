@@ -192,9 +192,9 @@ kubectl get pods -n velero
 
 ## See also
 
-- [Tanzu — Procedures](procedures/)
-- [Tanzu — Scripts](scripts/)
-- [Tanzu — Health Checks](health-checks/)
+- [Tanzu — Procedures](../procedures/)
+- [Tanzu — Scripts](../scripts/)
+- [Tanzu — Health Checks](../health-checks/)
 
 ## Verify
 

@@ -213,6 +213,6 @@ A valid config backup file begins with a comment block identifying the switch ho
 
 ## See also
 
-- [Fabric Os — Procedures](procedures/)
-- [Fabric Os — Health Checks](health-checks/)
-- [Fabric Os — Common Issues](../troubleshooting/common-issues/)
+- [Fabric Os — Procedures](../procedures/)
+- [Fabric Os — Health Checks](../health-checks/)
+- [Fabric Os — Common Issues](../../troubleshooting/common-issues/)

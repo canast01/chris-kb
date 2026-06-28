@@ -323,6 +323,6 @@ Audit events to monitor in the SIEM:
 
 ## See also
 
-- [Powerstore — Authentication](authentication/)
-- [Powerstore — Access Control](access-control/)
-- [Powerstore — Encryption](encryption/)
+- [Powerstore — Authentication](../authentication/)
+- [Powerstore — Access Control](../access-control/)
+- [Powerstore — Encryption](../encryption/)

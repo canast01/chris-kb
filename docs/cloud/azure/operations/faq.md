@@ -56,4 +56,4 @@ A: Yes — in Recovery Services Vault, select the restore point, choose 'File Re
 ## See Also
 
 - [Microsoft Azure Operations](index.md)
-- [Microsoft Azure Troubleshooting](../../troubleshooting/index.md)
+- [Microsoft Azure Troubleshooting](../../troubleshooting//)

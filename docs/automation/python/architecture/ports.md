@@ -75,6 +75,6 @@ c.close()
 
 ## See also
 
-- [Python — Architecture](how-it-works/)
+- [Python — Architecture](../how-it-works/)
 - [Ansible — Ports](../../ansible/architecture/ports.md)
 - [Terraform — Ports](../../terraform/architecture/ports.md)

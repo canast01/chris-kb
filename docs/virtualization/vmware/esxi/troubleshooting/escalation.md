@@ -300,8 +300,8 @@ esxcli vm process list
 
 ## See also
 
-- [ESXi — Diagnostics](diagnostics/)
-- [ESXi — Common Issues](common-issues/)
+- [ESXi — Diagnostics](../diagnostics/)
+- [ESXi — Common Issues](../common-issues/)
 
 ---
 

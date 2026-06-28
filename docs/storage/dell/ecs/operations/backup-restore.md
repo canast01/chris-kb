@@ -310,6 +310,6 @@ After any restore or VDC failover, validate the following before declaring recov
 
 ## See also
 
-- [Ecs — Procedures](procedures/)
-- [Ecs — Health Checks](health-checks/)
-- [Ecs — Common Issues](../troubleshooting/common-issues/)
+- [Ecs — Procedures](../procedures/)
+- [Ecs — Health Checks](../health-checks/)
+- [Ecs — Common Issues](../../troubleshooting/common-issues/)

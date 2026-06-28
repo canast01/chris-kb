@@ -43,6 +43,6 @@ purearray syslog list
 
 ## See also
 
-- [FlashBlade — Hardening](hardening/)
-- [FlashBlade — Authentication](authentication/)
-- [FlashBlade — Access Control](access-control/)
+- [FlashBlade — Hardening](../hardening/)
+- [FlashBlade — Authentication](../authentication/)
+- [FlashBlade — Access Control](../access-control/)

@@ -56,4 +56,4 @@ A: Yes — use AD Recycle Bin: `Get-ADObject -Filter {DisplayName -eq 'John Smit
 ## See Also
 
 - [Active Directory Operations](index.md)
-- [Active Directory Troubleshooting](../../../troubleshooting/index.md)
+- [Active Directory Troubleshooting](../../../troubleshooting//)

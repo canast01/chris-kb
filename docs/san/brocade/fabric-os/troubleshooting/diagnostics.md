@@ -390,8 +390,8 @@ porterrshow
 
 ## See also
 
-- [Fabric OS — Common Issues](common-issues/)
-- [Fabric OS — Escalation](escalation/)
+- [Fabric OS — Common Issues](../common-issues/)
+- [Fabric OS — Escalation](../escalation/)
 - [Fabric OS — Health Checks](../operations/health-checks/)
 
 ## Verify resolution

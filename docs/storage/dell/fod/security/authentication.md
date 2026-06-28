@@ -41,6 +41,6 @@ FOD metering access is managed through the underlying array management interface
 
 ## See also
 
-- [Fod — Access Control](access-control/)
-- [Fod — Hardening](hardening/)
-- [Fod — Encryption](encryption/)
+- [Fod — Access Control](../access-control/)
+- [Fod — Hardening](../hardening/)
+- [Fod — Encryption](../encryption/)

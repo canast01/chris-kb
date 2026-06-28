@@ -89,5 +89,5 @@ powermt display dev=all
 
 ## See also
 
-- [Powerpath — Procedures](procedures/)
-- [Powerpath — Health Checks](health-checks/)
+- [Powerpath — Procedures](../procedures/)
+- [Powerpath — Health Checks](../health-checks/)

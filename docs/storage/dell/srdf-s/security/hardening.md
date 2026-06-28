@@ -40,6 +40,6 @@ Hardening reference covering Management API Security, Operational Hardening Chec
 
 ## See also
 
-- [Srdf S — Authentication](authentication/)
-- [Srdf S — Access Control](access-control/)
-- [Srdf S — Encryption](encryption/)
+- [Srdf S — Authentication](../authentication/)
+- [Srdf S — Access Control](../access-control/)
+- [Srdf S — Encryption](../encryption/)

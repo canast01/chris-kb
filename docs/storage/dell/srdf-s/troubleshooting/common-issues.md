@@ -263,6 +263,6 @@ symrdf -g <dgname> -sid <r1_sid> query
 
 ## See also
 
-- [Srdf S — Diagnostics](diagnostics/)
-- [Srdf S — Escalation](escalation/)
-- [Srdf S — Health Checks](../operations/health-checks/)
+- [Srdf S — Diagnostics](../diagnostics/)
+- [Srdf S — Escalation](../escalation/)
+- [Srdf S — Health Checks](../../operations/health-checks/)

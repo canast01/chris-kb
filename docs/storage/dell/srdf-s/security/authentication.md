@@ -25,6 +25,6 @@ SRDF/S authentication: Solutions Enabler RBAC role assignment, `symauth` command
 
 ## See also
 
-- [Srdf S — Access Control](access-control/)
-- [Srdf S — Hardening](hardening/)
-- [Srdf S — Encryption](encryption/)
+- [Srdf S — Access Control](../access-control/)
+- [Srdf S — Hardening](../hardening/)
+- [Srdf S — Encryption](../encryption/)

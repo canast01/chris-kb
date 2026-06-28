@@ -124,6 +124,6 @@ Restart-Service -Name "SnapCenter Plug-in for Windows"
 
 ## See also
 
-- [Snapcenter — Design Standards](design-standards/)
-- [Snapcenter — Integrations](integrations/)
+- [Snapcenter — Design Standards](../design-standards/)
+- [Snapcenter — Integrations](../integrations/)
 - [Snapcenter — Deploy](../deploy/)

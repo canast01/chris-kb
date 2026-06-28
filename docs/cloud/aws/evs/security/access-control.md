@@ -288,5 +288,5 @@ This SCP blocks all EVS deletion except from a designated `evs-break-glass` role
 
 ## See also
 
-- [Amazon EVS — Authentication](authentication/)
-- [Amazon EVS — Hardening](hardening/)
+- [Amazon EVS — Authentication](../authentication/)
+- [Amazon EVS — Hardening](../hardening/)

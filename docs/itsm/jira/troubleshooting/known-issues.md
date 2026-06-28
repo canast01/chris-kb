@@ -64,6 +64,6 @@ index -> resolution
 
 ## See also
 
-- [Jira — Common Issues](common-issues/)
+- [Jira — Common Issues](../common-issues/)
 - [Confluence — Known Issues](../../confluence/troubleshooting/known-issues.md)
 - [PostgreSQL — Known Issues](../../../compute/linux/postgresql/troubleshooting/known-issues.md)

@@ -432,6 +432,6 @@ Document the completion date, the engineer who performed the hardening, and the 
 
 ## See also
 
-- [FlashArray — Authentication](authentication/)
-- [FlashArray — Access Control](access-control/)
-- [FlashArray — Encryption](encryption/)
+- [FlashArray — Authentication](../authentication/)
+- [FlashArray — Access Control](../access-control/)
+- [FlashArray — Encryption](../encryption/)

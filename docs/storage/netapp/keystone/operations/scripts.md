@@ -147,6 +147,6 @@ echo "Keystone Collector OK - last collection ${AGE_HOURS}h ago"
 
 ## See also
 
-- [Keystone — Procedures](procedures/)
-- [Keystone — CLI Reference](cli-reference/)
-- [Keystone — Health Checks](health-checks/)
+- [Keystone — Procedures](../procedures/)
+- [Keystone — CLI Reference](../cli-reference/)
+- [Keystone — Health Checks](../health-checks/)

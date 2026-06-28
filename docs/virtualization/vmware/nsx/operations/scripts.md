@@ -663,8 +663,8 @@ nsxt_plink_check.bat
 
 ## See also
 
-- [NSX — CLI Reference](cli-reference/)
-- [NSX — Standard Procedures](procedures/)
+- [NSX — CLI Reference](../cli-reference/)
+- [NSX — Standard Procedures](../procedures/)
 
 ## Verify
 

@@ -149,6 +149,6 @@ For LDAP-authenticated users: removing the user from the AD group is sufficient 
 
 ## See also
 
-- [Sannav — Authentication](authentication/)
-- [Sannav — Hardening](hardening/)
-- [Sannav — Encryption](encryption/)
+- [Sannav — Authentication](../authentication/)
+- [Sannav — Hardening](../hardening/)
+- [Sannav — Encryption](../encryption/)

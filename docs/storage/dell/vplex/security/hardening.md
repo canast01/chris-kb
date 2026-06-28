@@ -204,6 +204,6 @@ vplexcli -q -e "health-check --full"
 
 ## See also
 
-- [Vplex — Authentication](authentication/)
-- [Vplex — Access Control](access-control/)
-- [Vplex — Encryption](encryption/)
+- [Vplex — Authentication](../authentication/)
+- [Vplex — Access Control](../access-control/)
+- [Vplex — Encryption](../encryption/)

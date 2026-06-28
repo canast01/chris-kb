@@ -39,6 +39,6 @@ Assign roles under **Settings > Users**. Apply the principle of least privilege 
 
 ## See also
 
-- [Cloudiq — Authentication](authentication/)
-- [Cloudiq — Hardening](hardening/)
-- [Cloudiq — Encryption](encryption/)
+- [Cloudiq — Authentication](../authentication/)
+- [Cloudiq — Hardening](../hardening/)
+- [Cloudiq — Encryption](../encryption/)

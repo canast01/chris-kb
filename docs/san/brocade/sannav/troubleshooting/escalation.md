@@ -285,8 +285,8 @@ free -h && uptime
 
 ## See also
 
-- [SANnav — Diagnostics](diagnostics/)
-- [SANnav — Common Issues](common-issues/)
+- [SANnav — Diagnostics](../diagnostics/)
+- [SANnav — Common Issues](../common-issues/)
 
 ---
 

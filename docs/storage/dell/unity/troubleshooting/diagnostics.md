@@ -358,8 +358,8 @@ Attach the resulting file to the support case along with the support bundle.
 
 ## See also
 
-- [Unity — Common Issues](common-issues/)
-- [Unity — Escalation](escalation/)
+- [Unity — Common Issues](../common-issues/)
+- [Unity — Escalation](../escalation/)
 
 ## Verify resolution
 

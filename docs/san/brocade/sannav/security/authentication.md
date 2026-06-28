@@ -36,6 +36,6 @@ sudo sannav restart
 
 ## See also
 
-- [Sannav — Access Control](access-control/)
-- [Sannav — Hardening](hardening/)
-- [Sannav — Encryption](encryption/)
+- [Sannav — Access Control](../access-control/)
+- [Sannav — Hardening](../hardening/)
+- [Sannav — Encryption](../encryption/)

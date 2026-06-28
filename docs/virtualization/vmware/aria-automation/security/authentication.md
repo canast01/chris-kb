@@ -97,5 +97,5 @@ requests.get("https://vra-prod-01.example.local/iaas/api/zones",
 
 ## See also
 
-- [Aria Automation — Access Control](access-control/)
-- [Aria Automation — Hardening](hardening/)
+- [Aria Automation — Access Control](../access-control/)
+- [Aria Automation — Hardening](../hardening/)

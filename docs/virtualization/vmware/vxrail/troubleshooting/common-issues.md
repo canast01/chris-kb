@@ -497,9 +497,9 @@ racadm -r <idrac-ip> -u root -p <password> getsysinfo
 
 ## See also
 
-- [VxRail — Diagnostics](diagnostics/)
-- [VxRail — Escalation](escalation/)
-- [VxRail — Health Checks](../operations/health-checks/)
+- [VxRail — Diagnostics](../diagnostics/)
+- [VxRail — Escalation](../escalation/)
+- [VxRail — Health Checks](../../operations/health-checks/)
 
 ## Verify resolution
 

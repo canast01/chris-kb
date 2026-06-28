@@ -69,6 +69,6 @@ Health Checks reference covering Daily Checks, Health Check Commands, Change Rea
 
 ## See also
 
-- [Cod — Procedures](procedures/)
-- [Cod — CLI Reference](cli-reference/)
+- [Cod — Procedures](../procedures/)
+- [Cod — CLI Reference](../cli-reference/)
 - [Cod — Common Issues](../troubleshooting/common-issues/)

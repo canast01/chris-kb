@@ -366,8 +366,8 @@ $VerbosePreference = 'SilentlyContinue'
 
 ## See also
 
-- [PowerCLI — Diagnostics](diagnostics/)
-- [PowerCLI — Common Issues](common-issues/)
+- [PowerCLI — Diagnostics](../diagnostics/)
+- [PowerCLI — Common Issues](../common-issues/)
 
 ---
 

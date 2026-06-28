@@ -129,5 +129,5 @@ curl -sk -u 'admin:password' \
 
 ## See also
 
-- [NSX — Hardening](hardening/)
-- [NSX — Health Checks](../operations/health-checks/)
+- [NSX — Hardening](../hardening/)
+- [NSX — Health Checks](../../operations/health-checks/)

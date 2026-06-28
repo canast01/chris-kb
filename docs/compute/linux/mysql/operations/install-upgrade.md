@@ -100,6 +100,6 @@ mysql -u root -p -e "SHOW VARIABLES LIKE 'slow_query%';"
 
 ## See also
 
-- [Mysql — Procedures](procedures/)
-- [Mysql — Health Checks](health-checks/)
-- [Mysql — Deploy](../deploy/)
+- [Mysql — Procedures](../procedures/)
+- [Mysql — Health Checks](../health-checks/)
+- [Mysql — Deploy](../../deploy/)

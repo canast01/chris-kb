@@ -110,5 +110,5 @@ graph TB
 
 ## See also
 
-- [Apex Storage As A Service — Design Standards](design-standards/)
-- [Apex Storage As A Service — Integrations](integrations/)
+- [Apex Storage As A Service — Design Standards](../design-standards/)
+- [Apex Storage As A Service — Integrations](../integrations/)

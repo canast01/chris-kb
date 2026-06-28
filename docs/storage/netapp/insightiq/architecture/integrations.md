@@ -22,5 +22,5 @@ InsightIQ integrates exclusively with PowerScale (Isilon) clusters via the OneFS
 
 ## See also
 
-- [Insightiq — How It Works](how-it-works/)
-- [Insightiq — Design Standards](design-standards/)
+- [Insightiq — How It Works](../how-it-works/)
+- [Insightiq — Design Standards](../design-standards/)

@@ -154,5 +154,5 @@ purecli alert list     # No post-upgrade alerts
 
 ## See also
 
-- [Evergreen — Procedures](procedures/)
-- [Evergreen — Health Checks](health-checks/)
+- [Evergreen — Procedures](../procedures/)
+- [Evergreen — Health Checks](../health-checks/)

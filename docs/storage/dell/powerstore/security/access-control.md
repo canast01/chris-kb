@@ -248,6 +248,6 @@ Best practices:
 
 ## See also
 
-- [Powerstore — Authentication](authentication/)
-- [Powerstore — Hardening](hardening/)
-- [Powerstore — Encryption](encryption/)
+- [Powerstore — Authentication](../authentication/)
+- [Powerstore — Hardening](../hardening/)
+- [Powerstore — Encryption](../encryption/)

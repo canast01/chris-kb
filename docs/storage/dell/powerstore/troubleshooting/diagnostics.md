@@ -302,8 +302,8 @@ curl -sk -b /tmp/ps-cookie.txt \
 
 ## See also
 
-- [PowerStore — Common Issues](common-issues/)
-- [PowerStore — Escalation](escalation/)
+- [PowerStore — Common Issues](../common-issues/)
+- [PowerStore — Escalation](../escalation/)
 
 ## Verify resolution
 

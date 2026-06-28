@@ -121,6 +121,6 @@ ORDER BY database_id, type;
 
 ## See also
 
-- [Sql Server — Procedures](procedures/)
-- [Sql Server — CLI Reference](cli-reference/)
-- [Sql Server — Health Checks](health-checks/)
+- [Sql Server — Procedures](../procedures/)
+- [Sql Server — CLI Reference](../cli-reference/)
+- [Sql Server — Health Checks](../health-checks/)

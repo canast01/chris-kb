@@ -47,6 +47,6 @@ symrdf -g <dgname> -sid <r1_sid> query
 
 ## See also
 
-- [Srdf A — Procedures](procedures/)
-- [Srdf A — Health Checks](health-checks/)
-- [Srdf A — Deploy](../deploy/)
+- [Srdf A — Procedures](../procedures/)
+- [Srdf A — Health Checks](../health-checks/)
+- [Srdf A — Deploy](../../deploy/)

@@ -65,5 +65,5 @@ A host with 2 dual-port HBAs connected to 2 storage ports per fabric typically h
 
 ## See also
 
-- [Powerpath — How It Works](how-it-works/)
-- [Powerpath — Integrations](integrations/)
+- [Powerpath — How It Works](../how-it-works/)
+- [Powerpath — Integrations](../integrations/)

@@ -124,8 +124,8 @@ nc -zv <remote-vr-appliance-ip> 10443
 
 ## See also
 
-- [SRM — Architecture](how-it-works/)
+- [SRM — Architecture](../how-it-works/)
 - [SRM — Deploy](../deploy/)
-- [SRM — Operations](../operations/)
+- [SRM — Operations](../../operations/)
 - [vCenter — Ports](../../vcenter/architecture/ports.md)
 - [ESXi — Ports](../../esxi/architecture/ports.md)

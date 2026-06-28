@@ -321,8 +321,8 @@ psql -U postgres -c "SELECT datname, age(datfrozenxid) FROM pg_database ORDER BY
 
 ## See also
 
-- [PostgreSQL — Diagnostics](diagnostics/)
-- [PostgreSQL — Common Issues](common-issues/)
+- [PostgreSQL — Diagnostics](../diagnostics/)
+- [PostgreSQL — Common Issues](../common-issues/)
 
 ---
 

@@ -253,5 +253,5 @@ uemcli -d <mgmt-ip> /event/alert show -filter "severity eq error" | head -20
 
 ## See also
 
-- [FOD — Diagnostics](diagnostics/)
-- [FOD — Common Issues](common-issues/)
+- [FOD — Diagnostics](../diagnostics/)
+- [FOD — Common Issues](../common-issues/)

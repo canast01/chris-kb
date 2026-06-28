@@ -322,6 +322,6 @@ aws cloudwatch put-metric-alarm \
 
 ## See also
 
-- [Amazon EVS — Access Control](access-control/)
-- [Amazon EVS — Authentication](authentication/)
+- [Amazon EVS — Access Control](../access-control/)
+- [Amazon EVS — Authentication](../authentication/)
 - [Amazon EVS — Health Checks](../operations/health-checks/)

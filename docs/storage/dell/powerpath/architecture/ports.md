@@ -49,6 +49,6 @@ No additional firewall rules are required for PowerPath itself — only for PPMA
 
 ## See also
 
-- [Dell PowerPath — Architecture](how-it-works/)
+- [Dell PowerPath — Architecture](../how-it-works/)
 - [Dell PowerStore — Ports](../../powerstore/architecture/ports.md)
 - [NetApp ONTAP — Ports](../../../netapp/ontap/architecture/ports.md)

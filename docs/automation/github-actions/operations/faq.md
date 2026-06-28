@@ -56,4 +56,4 @@ A: No — once a run is deleted or expired (default 90 days), logs are gone. Dow
 ## See Also
 
 - [GitHub Actions Operations](index.md)
-- [GitHub Actions Troubleshooting](../../troubleshooting/index.md)
+- [GitHub Actions Troubleshooting](../../troubleshooting//)

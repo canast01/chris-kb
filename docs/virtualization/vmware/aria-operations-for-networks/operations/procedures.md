@@ -702,9 +702,9 @@ If micro-segmentation recommendations for this application were pushed to NSX DF
 
 ## See also
 
-- [vRNI Health Checks](health-checks/)
+- [vRNI Health Checks](../health-checks/)
 - [vRNI Common Issues](../troubleshooting/common-issues/)
-- [vRNI CLI Reference](cli-reference/)
+- [vRNI CLI Reference](../cli-reference/)
 
 ## Verify
 

@@ -43,6 +43,6 @@ COD does not manage data backup directly. Key items to protect:
 
 ## See also
 
-- [Cod — Procedures](procedures/)
-- [Cod — Health Checks](health-checks/)
-- [Cod — Common Issues](../troubleshooting/common-issues/)
+- [Cod — Procedures](../procedures/)
+- [Cod — Health Checks](../health-checks/)
+- [Cod — Common Issues](../../troubleshooting/common-issues/)

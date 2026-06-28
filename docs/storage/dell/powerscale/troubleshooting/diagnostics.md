@@ -307,8 +307,8 @@ isi sync reports list > /tmp/synciq-reports.txt  # if SyncIQ related
 
 ## See also
 
-- [PowerScale — Common Issues](common-issues/)
-- [PowerScale — Escalation](escalation/)
+- [PowerScale — Common Issues](../common-issues/)
+- [PowerScale — Escalation](../escalation/)
 
 ## Verify resolution
 

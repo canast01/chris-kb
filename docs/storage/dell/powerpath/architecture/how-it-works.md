@@ -105,5 +105,5 @@ powermt check_registration   # verify PowerPath license is registered
 
 ## See also
 
-- [Powerpath — Design Standards](design-standards/)
-- [Powerpath — Integrations](integrations/)
+- [Powerpath — Design Standards](../design-standards/)
+- [Powerpath — Integrations](../integrations/)

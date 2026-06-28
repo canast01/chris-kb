@@ -48,7 +48,7 @@ graph LR
 
 **Read in this order**:
 
-- [Health Checks](../operations/health-checks/) — Run the routine first on every shift; verify collection jobs are running, check for data gaps, review cluster reachability status
+- [Health Checks](../../operations/health-checks/) — Run the routine first on every shift; verify collection jobs are running, check for data gaps, review cluster reachability status
 - [Performance](../performance/) — Throughput/IOPS/latency dashboards, workload heatmaps, top-N client and protocol analysis, percentile latency trending
 - [Workloads](../workloads/) — Workload classification, identifying noisy-neighbour volumes, correlating client activity with storage performance
 - [Capacity](../capacity/) — Capacity trend projections, aggregate and volume fill-rate analysis, thin-provisioning overcommit risk reporting

@@ -116,5 +116,5 @@ Track DDOS EOL dates in the team's capacity/lifecycle spreadsheet. Dell publishe
 
 ## See also
 
-- [Data Domain — Procedures](procedures/)
-- [Data Domain — Health Checks](health-checks/)
+- [Data Domain — Procedures](../procedures/)
+- [Data Domain — Health Checks](../health-checks/)

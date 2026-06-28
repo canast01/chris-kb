@@ -289,8 +289,8 @@ curl -sk -u admin:<pw> "https://<mgr>/api/v1/logical-routers" | python3 -m json.
 
 ## See also
 
-- [NSX — Diagnostics](diagnostics/)
-- [NSX — Common Issues](common-issues/)
+- [NSX — Diagnostics](../diagnostics/)
+- [NSX — Common Issues](../common-issues/)
 
 ---
 

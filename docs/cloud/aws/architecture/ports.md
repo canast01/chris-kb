@@ -114,6 +114,6 @@ aws ec2 describe-flow-logs --filter Name=resource-id,Values=<vpc-id>
 ## See also
 
 - [AWS EVS — Ports](../evs/architecture/ports.md)
-- [AWS — Architecture](how-it-works/)
+- [AWS — Architecture](../how-it-works/)
 - [Terraform — Ports](../../../automation/terraform/architecture/ports.md)
 - [Ansible — Ports](../../../automation/ansible/architecture/ports.md)

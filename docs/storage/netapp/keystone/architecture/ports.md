@@ -39,7 +39,7 @@ Keystone uses ONTAP or StorageGRID hardware with identical data protocols:
 
 | Underlying System | Relevant Ports Page |
 |---|---|
-| ONTAP (NAS/SAN/NVMe) | [NetApp ONTAP — Ports](../../ontap/architecture/ports/) |
+| ONTAP (NAS/SAN/NVMe) | [NetApp ONTAP — Ports](../../../ontap/architecture/ports/) |
 | StorageGRID (Object) | S3 443 / 9000 inbound from clients |
 
 ## Firewall Zone Summary
@@ -66,6 +66,6 @@ systemctl status keystone-collector
 
 ## See also
 
-- [NetApp Keystone — Architecture](how-it-works/)
+- [NetApp Keystone — Architecture](../how-it-works/)
 - [NetApp ONTAP — Ports](../../ontap/architecture/ports.md)
 - [NetApp SnapCenter — Ports](../../snapcenter/architecture/ports.md)

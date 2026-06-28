@@ -255,8 +255,8 @@ Get-EventLog -LogName Application -Source "VMware*" -EntryType Error,Warning -Ne
 
 ## See also
 
-- [Horizon — Diagnostics](diagnostics/)
-- [Horizon — Common Issues](common-issues/)
+- [Horizon — Diagnostics](../diagnostics/)
+- [Horizon — Common Issues](../common-issues/)
 
 ---
 

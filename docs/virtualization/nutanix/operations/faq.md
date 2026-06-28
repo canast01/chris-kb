@@ -56,4 +56,4 @@ A: Yes — Prism Element → VM → Snapshots → Restore. This restores only th
 ## See Also
 
 - [Nutanix AOS Operations](index.md)
-- [Nutanix AOS Troubleshooting](../../troubleshooting/index.md)
+- [Nutanix AOS Troubleshooting](../../troubleshooting//)

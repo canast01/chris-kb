@@ -95,5 +95,5 @@ Settings → Data Sources → [source] → Edit → update password → Save
 
 ## See also
 
-- [vRNI Security Hardening](hardening/)
-- [vRNI Health Checks](../operations/health-checks/)
+- [vRNI Security Hardening](../hardening/)
+- [vRNI Health Checks](../../operations/health-checks/)

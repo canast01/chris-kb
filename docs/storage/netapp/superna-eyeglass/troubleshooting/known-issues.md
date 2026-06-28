@@ -55,6 +55,6 @@ share_and_quota_replication -> resolution
 
 ## See also
 
-- [Superna Eyeglass — Common Issues](common-issues/)
+- [Superna Eyeglass — Common Issues](../common-issues/)
 - [Dell PowerScale — Known Issues](../../../dell/powerscale/troubleshooting/known-issues.md)
 - [NetApp ONTAP — Known Issues](../../ontap/troubleshooting/known-issues.md)

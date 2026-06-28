@@ -191,6 +191,6 @@ event notification destination show
 
 ## See also
 
-- [Snapmirror — Authentication](authentication/)
-- [Snapmirror — Access Control](access-control/)
-- [Snapmirror — Encryption](encryption/)
+- [Snapmirror — Authentication](../authentication/)
+- [Snapmirror — Access Control](../access-control/)
+- [Snapmirror — Encryption](../encryption/)

@@ -52,6 +52,6 @@ data_access -> resolution
 
 ## See also
 
-- [Dell APEX — Common Issues](common-issues/)
+- [Dell APEX — Common Issues](../common-issues/)
 - [Dell PowerStore — Known Issues](../../powerstore/troubleshooting/known-issues.md)
 - [Dell CloudIQ — Known Issues](../../cloudiq/troubleshooting/known-issues.md)

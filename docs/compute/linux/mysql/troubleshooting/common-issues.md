@@ -144,6 +144,6 @@ mysql -e "SHOW VARIABLES LIKE 'max_connections';"
 
 ## See also
 
-- [Mysql — Diagnostics](diagnostics/)
-- [Mysql — Escalation](escalation/)
-- [Mysql — Health Checks](../operations/health-checks/)
+- [Mysql — Diagnostics](../diagnostics/)
+- [Mysql — Escalation](../escalation/)
+- [Mysql — Health Checks](../../operations/health-checks/)

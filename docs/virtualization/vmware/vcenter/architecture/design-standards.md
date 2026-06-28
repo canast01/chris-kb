@@ -125,5 +125,5 @@ CPU and memory hot-add must be enabled on all VMs to allow online scaling withou
 
 ## See also
 
-- [vCenter — How It Works](how-it-works/)
-- [vCenter — Deploy](../deploy/)
+- [vCenter — How It Works](../how-it-works/)
+- [vCenter — Deploy](../../deploy/)

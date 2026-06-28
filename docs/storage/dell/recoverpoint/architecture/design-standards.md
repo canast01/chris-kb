@@ -22,6 +22,6 @@ RecoverPoint design standards: RPA cluster sizing, consistency group limits, jou
 
 ## See also
 
-- [Recoverpoint — How It Works](how-it-works/)
-- [Recoverpoint — Integrations](integrations/)
-- [Recoverpoint — Deploy](../deploy/)
+- [Recoverpoint — How It Works](../how-it-works/)
+- [Recoverpoint — Integrations](../integrations/)
+- [Recoverpoint — Deploy](../../deploy/)

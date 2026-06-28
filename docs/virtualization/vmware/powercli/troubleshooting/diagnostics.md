@@ -295,8 +295,8 @@ Write-Host "Diagnostic bundle: $diagDir.zip"
 
 ## See also
 
-- [PowerCLI — Common Issues](common-issues/)
-- [PowerCLI — Escalation](escalation/)
+- [PowerCLI — Common Issues](../common-issues/)
+- [PowerCLI — Escalation](../escalation/)
 
 ## Verify resolution
 

@@ -184,5 +184,5 @@ Prism Element → Settings → Data Encryption → select container
 
 ## See also
 
-- [Nutanix — Hardening](hardening/)
-- [Nutanix — Health Checks](../operations/health-checks/)
+- [Nutanix — Hardening](../hardening/)
+- [Nutanix — Health Checks](../../operations/health-checks/)

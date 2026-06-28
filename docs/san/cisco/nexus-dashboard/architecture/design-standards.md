@@ -183,6 +183,6 @@ For zone changes: export the before and after zone set and attach both to the ch
 
 ## See also
 
-- [Nexus Dashboard — How It Works](how-it-works/)
-- [Nexus Dashboard — Integrations](integrations/)
-- [Nexus Dashboard — Deploy](../deploy/)
+- [Nexus Dashboard — How It Works](../how-it-works/)
+- [Nexus Dashboard — Integrations](../integrations/)
+- [Nexus Dashboard — Deploy](../../deploy/)

@@ -668,6 +668,6 @@ exit 0
 
 ## See also
 
-- [Mds — Procedures](procedures/)
-- [Mds — CLI Reference](cli-reference/)
-- [Mds — Health Checks](health-checks/)
+- [Mds — Procedures](../procedures/)
+- [Mds — CLI Reference](../cli-reference/)
+- [Mds — Health Checks](../health-checks/)

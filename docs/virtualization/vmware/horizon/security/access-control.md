@@ -103,5 +103,5 @@ For long-term audit storage, configure an Events database (SQL Server) during Co
 
 ## See also
 
-- [Horizon — Authentication](authentication/)
-- [Horizon — Hardening](hardening/)
+- [Horizon — Authentication](../authentication/)
+- [Horizon — Hardening](../hardening/)

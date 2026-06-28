@@ -88,6 +88,6 @@ certificates -> resolution
 
 ## See also
 
-- [VMware NSX — Common Issues](common-issues/)
+- [VMware NSX — Common Issues](../common-issues/)
 - [VMware vCenter — Known Issues](../../vcenter/troubleshooting/known-issues.md)
 - [VMware ESXi — Known Issues](../../esxi/troubleshooting/known-issues.md)

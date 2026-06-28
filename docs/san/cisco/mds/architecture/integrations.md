@@ -121,5 +121,5 @@ snmpwalk -v3 -u <username> -l authPriv -a SHA -A <auth-pass> -x AES -X <priv-pas
 
 ## See also
 
-- [Mds — How It Works](how-it-works/)
-- [Mds — Design Standards](design-standards/)
+- [Mds — How It Works](../how-it-works/)
+- [Mds — Design Standards](../design-standards/)

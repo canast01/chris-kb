@@ -107,5 +107,5 @@ Integrate the path health check script from the scripts section into your monito
 
 ## See also
 
-- [Powerpath — How It Works](how-it-works/)
-- [Powerpath — Design Standards](design-standards/)
+- [Powerpath — How It Works](../how-it-works/)
+- [Powerpath — Design Standards](../design-standards/)

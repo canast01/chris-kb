@@ -21,7 +21,7 @@ Firewall port reference for VMware Aria Automation (formerly vRealize Automation
 - Aria Automation deploys as a single appliance or 3-node HA cluster; all nodes share the same VIP — open ports to the VIP and all node IPs
 - Aria Automation requires outbound HTTPS to every infrastructure endpoint it manages (vCenter, NSX, cloud providers, Git repos)
 - If Aria Orchestrator (vRO) is embedded in Aria Automation (default for 8.x), no separate vRO ports are needed; embedded Orchestrator uses Aria's 443 endpoint
-- For Aria Suite deployed via Aria Suite Lifecycle Manager, also see [Aria Suite Lifecycle — Ports](../../aria-suite-lifecycle/architecture/ports/)
+- For Aria Suite deployed via Aria Suite Lifecycle Manager, also see [Aria Suite Lifecycle — Ports](../../../aria-suite-lifecycle/architecture/ports/)
 
 ---
 
@@ -145,9 +145,9 @@ curl -sk -X POST https://<aria-automation-fqdn>/csp/gateway/am/api/login \
 
 ## See also
 
-- [Aria Automation — Architecture](how-it-works/)
+- [Aria Automation — Architecture](../how-it-works/)
 - [Aria Automation — Deploy](../deploy/)
-- [Aria Automation — Operations](../operations/)
+- [Aria Automation — Operations](../../operations/)
 - [Aria Suite Lifecycle — Ports](../../aria-suite-lifecycle/architecture/ports.md)
 - [vCenter — Ports](../../vcenter/architecture/ports.md)
 - [NSX — Ports](../../nsx/architecture/ports.md)

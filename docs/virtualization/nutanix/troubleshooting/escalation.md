@@ -69,7 +69,7 @@ Escalate to Nutanix GSS without delay for any of these:
 - **Cluster will not accept writes** — storage full with no quick way to free space
 - **Cluster upgrade failure** — AOS/AHV upgrade stuck or failed mid-way
 
-For all other issues: attempt NCC triage and log review first (see [Diagnostics](diagnostics/)), then open a lower-severity case.
+For all other issues: attempt NCC triage and log review first (see [Diagnostics](../diagnostics/)), then open a lower-severity case.
 
 ---
 
@@ -301,8 +301,8 @@ After issue resolution:
 
 ## See also
 
-- [Nutanix — Diagnostics](diagnostics/)
-- [Nutanix — Common Issues](common-issues/)
+- [Nutanix — Diagnostics](../diagnostics/)
+- [Nutanix — Common Issues](../common-issues/)
 
 ---
 

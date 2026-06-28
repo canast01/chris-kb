@@ -76,4 +76,4 @@ dashboard -> resolution
 
 ## See also
 
-- [Ceph — Common Issues](common-issues/)
+- [Ceph — Common Issues](../common-issues/)

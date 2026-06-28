@@ -95,6 +95,6 @@ symdev show -sid <target_SID> <dev_id> | grep -E "Size|Emulation|Track"
 
 ## See also
 
-- [Srdf S — How It Works](how-it-works/)
-- [Srdf S — Integrations](integrations/)
-- [Srdf S — Deploy](../deploy/)
+- [Srdf S — How It Works](../how-it-works/)
+- [Srdf S — Integrations](../integrations/)
+- [Srdf S — Deploy](../../deploy/)

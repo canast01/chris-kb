@@ -219,5 +219,5 @@ New-VIPermission `
 
 ## See also
 
-- [vSAN — Authentication](authentication/)
-- [vSAN — Hardening](hardening/)
+- [vSAN — Authentication](../authentication/)
+- [vSAN — Hardening](../hardening/)

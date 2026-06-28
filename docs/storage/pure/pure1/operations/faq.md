@@ -56,4 +56,4 @@ A: Custom dashboards and reports cannot be restored if deleted. Re-create them m
 ## See Also
 
 - [Pure1 Operations](index.md)
-- [Pure1 Troubleshooting](../../troubleshooting/index.md)
+- [Pure1 Troubleshooting](../../troubleshooting//)

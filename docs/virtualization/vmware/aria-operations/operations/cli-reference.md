@@ -141,9 +141,9 @@ curl -sk -H "Authorization: vRealizeOpsToken <token>" \
 
 ## See also
 
-- [Aria Operations Procedures](procedures/)
-- [Aria Operations Scripts](scripts/)
-- [Aria Operations Health Checks](health-checks/)
+- [Aria Operations Procedures](../procedures/)
+- [Aria Operations Scripts](../scripts/)
+- [Aria Operations Health Checks](../health-checks/)
 
 ## Verify
 

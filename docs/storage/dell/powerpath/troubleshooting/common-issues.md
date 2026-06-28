@@ -468,6 +468,6 @@ systemctl disable --now multipathd
 
 ## See also
 
-- [Powerpath — Diagnostics](diagnostics/)
-- [Powerpath — Escalation](escalation/)
-- [Powerpath — Health Checks](../operations/health-checks/)
+- [Powerpath — Diagnostics](../diagnostics/)
+- [Powerpath — Escalation](../escalation/)
+- [Powerpath — Health Checks](../../operations/health-checks/)

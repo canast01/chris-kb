@@ -378,6 +378,6 @@ puresyslog list
 
 ## See also
 
-- [FlashArray — Access Control](access-control/)
-- [FlashArray — Hardening](hardening/)
-- [FlashArray — Encryption](encryption/)
+- [FlashArray — Access Control](../access-control/)
+- [FlashArray — Hardening](../hardening/)
+- [FlashArray — Encryption](../encryption/)

@@ -98,6 +98,6 @@ curl -s -X POST "${BASE}/notification-rules/<rule-id>/test" \
 
 ## See also
 
-- [Cloudiq — Procedures](procedures/)
-- [Cloudiq — Health Checks](health-checks/)
-- [Cloudiq — Common Issues](../troubleshooting/common-issues/)
+- [Cloudiq — Procedures](../procedures/)
+- [Cloudiq — Health Checks](../health-checks/)
+- [Cloudiq — Common Issues](../../troubleshooting/common-issues/)

@@ -252,6 +252,6 @@ show logging server
 
 ## See also
 
-- [Mds — Authentication](authentication/)
-- [Mds — Hardening](hardening/)
-- [Mds — Encryption](encryption/)
+- [Mds — Authentication](../authentication/)
+- [Mds — Hardening](../hardening/)
+- [Mds — Encryption](../encryption/)

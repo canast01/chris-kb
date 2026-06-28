@@ -286,8 +286,8 @@ appmgr database-status
 
 ## See also
 
-- [Cisco DCNM — Diagnostics](diagnostics/)
-- [Cisco DCNM — Common Issues](common-issues/)
+- [Cisco DCNM — Diagnostics](../diagnostics/)
+- [Cisco DCNM — Common Issues](../common-issues/)
 
 ---
 

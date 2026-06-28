@@ -56,4 +56,4 @@ A: Not natively with standard restore. You need to restore to a separate Jira in
 ## See Also
 
 - [Jira Operations](index.md)
-- [Jira Troubleshooting](../../troubleshooting/index.md)
+- [Jira Troubleshooting](../../troubleshooting//)

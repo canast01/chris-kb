@@ -214,6 +214,6 @@ Get-GPO -All | ForEach-Object {
 
 ## See also
 
-- [Active Directory — Procedures](procedures/)
-- [Active Directory — CLI Reference](cli-reference/)
-- [Active Directory — Health Checks](health-checks/)
+- [Active Directory — Procedures](../procedures/)
+- [Active Directory — CLI Reference](../cli-reference/)
+- [Active Directory — Health Checks](../health-checks/)

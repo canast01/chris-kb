@@ -144,7 +144,7 @@ dnscmd dc01 /zoneprint corp.local | head -30
 
 ## See also
 
-- [Active Directory — Architecture](how-it-works/)
+- [Active Directory — Architecture](../how-it-works/)
 - [Active Directory — Deploy](../deploy/)
-- [Active Directory — Operations](../operations/)
-- [Active Directory — Security](../security/)
+- [Active Directory — Operations](../../operations/)
+- [Active Directory — Security](../../security/)

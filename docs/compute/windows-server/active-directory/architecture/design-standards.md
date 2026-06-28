@@ -178,6 +178,6 @@ graph TD
 
 ## See also
 
-- [Active Directory — How It Works](how-it-works/)
-- [Active Directory — Integrations](integrations/)
-- [Active Directory — Deploy](../deploy/)
+- [Active Directory — How It Works](../how-it-works/)
+- [Active Directory — Integrations](../integrations/)
+- [Active Directory — Deploy](../../deploy/)

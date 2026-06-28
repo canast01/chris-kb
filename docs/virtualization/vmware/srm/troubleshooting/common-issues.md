@@ -268,9 +268,9 @@ Cause: Certificate mismatch, vCenter connectivity, or credential expiry
 
 ## See also
 
-- [SRM — Diagnostics](diagnostics/)
-- [SRM — Escalation](escalation/)
-- [SRM — Health Checks](../operations/health-checks/)
+- [SRM — Diagnostics](../diagnostics/)
+- [SRM — Escalation](../escalation/)
+- [SRM — Health Checks](../../operations/health-checks/)
 
 ## Verify resolution
 

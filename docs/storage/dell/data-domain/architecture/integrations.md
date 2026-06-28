@@ -146,5 +146,5 @@ authentication ldap test user <username>
 
 ## See also
 
-- [Data Domain — How It Works](how-it-works/)
-- [Data Domain — Design Standards](design-standards/)
+- [Data Domain — How It Works](../how-it-works/)
+- [Data Domain — Design Standards](../design-standards/)

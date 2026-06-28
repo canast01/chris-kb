@@ -676,9 +676,9 @@ esxcli vsan health cluster get
 
 ## See also
 
-- [VxRail — Health Checks](health-checks/)
+- [VxRail — Health Checks](../health-checks/)
 - [VxRail — Common Issues](../troubleshooting/common-issues/)
-- [VxRail — CLI Reference](cli-reference/)
+- [VxRail — CLI Reference](../cli-reference/)
 
 ## Verify
 

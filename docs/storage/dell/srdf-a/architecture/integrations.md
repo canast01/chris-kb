@@ -46,5 +46,5 @@ graph TD
 
 ## See also
 
-- [Srdf A — How It Works](how-it-works/)
-- [Srdf A — Design Standards](design-standards/)
+- [Srdf A — How It Works](../how-it-works/)
+- [Srdf A — Design Standards](../design-standards/)

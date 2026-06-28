@@ -43,6 +43,6 @@ FOD does not manage data backup directly. Key items to protect:
 
 ## See also
 
-- [Fod — Procedures](procedures/)
-- [Fod — Health Checks](health-checks/)
-- [Fod — Common Issues](../troubleshooting/common-issues/)
+- [Fod — Procedures](../procedures/)
+- [Fod — Health Checks](../health-checks/)
+- [Fod — Common Issues](../../troubleshooting/common-issues/)

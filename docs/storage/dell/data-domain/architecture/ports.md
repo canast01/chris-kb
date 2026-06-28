@@ -157,5 +157,5 @@ replication show config all
 
 ## See also
 
-- [Dell Data Domain — Architecture](how-it-works/)
-- [Dell Data Domain — Operations](../operations/)
+- [Dell Data Domain — Architecture](../how-it-works/)
+- [Dell Data Domain — Operations](../../operations/)

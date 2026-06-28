@@ -66,6 +66,6 @@ performance -> resolution
 
 ## See also
 
-- [SQL Server — Common Issues](common-issues/)
+- [SQL Server — Common Issues](../common-issues/)
 - [Windows Server — Known Issues](../../troubleshooting/known-issues.md)
 - [Active Directory — Known Issues](../../active-directory/troubleshooting/known-issues.md)

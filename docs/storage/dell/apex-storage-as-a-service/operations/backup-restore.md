@@ -45,6 +45,6 @@ Key items to document and protect:
 
 ## See also
 
-- [Apex Storage As A Service — Procedures](procedures/)
-- [Apex Storage As A Service — Health Checks](health-checks/)
-- [Apex Storage As A Service — Common Issues](../troubleshooting/common-issues/)
+- [Apex Storage As A Service — Procedures](../procedures/)
+- [Apex Storage As A Service — Health Checks](../health-checks/)
+- [Apex Storage As A Service — Common Issues](../../troubleshooting/common-issues/)

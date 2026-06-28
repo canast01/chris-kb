@@ -38,6 +38,6 @@ CloudIQ telemetry does not include: file names, directory paths, user credential
 
 ## See also
 
-- [Cloudiq — Hardening](hardening/)
-- [Cloudiq — Authentication](authentication/)
-- [Cloudiq — Access Control](access-control/)
+- [Cloudiq — Hardening](../hardening/)
+- [Cloudiq — Authentication](../authentication/)
+- [Cloudiq — Access Control](../access-control/)

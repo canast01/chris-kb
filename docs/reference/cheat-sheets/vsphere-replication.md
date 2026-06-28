@@ -47,5 +47,5 @@ curl -sk $AUTH $BASE/health | python3 -m json.tool                         # VRM
 
 ## See also
 
-- [vSphere Replication Operations](../../virtualization/vmware/vsphere-replication/operations/procedures/)
-- [vSphere Replication Troubleshooting](../../virtualization/vmware/vsphere-replication/troubleshooting/common-issues/)
+- [vSphere Replication Operations](../../../virtualization/vmware/vsphere-replication/operations/procedures/)
+- [vSphere Replication Troubleshooting](../../../virtualization/vmware/vsphere-replication/troubleshooting/common-issues/)

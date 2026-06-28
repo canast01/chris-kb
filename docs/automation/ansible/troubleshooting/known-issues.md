@@ -75,5 +75,5 @@ winrm_windows -> resolution
 
 ## See also
 
-- [Ansible — Common Issues](common-issues/)
+- [Ansible — Common Issues](../common-issues/)
 - [Terraform — Known Issues](../../terraform/troubleshooting/known-issues.md)

@@ -66,6 +66,6 @@ storage -> resolution
 
 ## See also
 
-- [VMware Tanzu — Common Issues](common-issues/)
+- [VMware Tanzu — Common Issues](../common-issues/)
 - [VMware NSX — Known Issues](../../nsx/troubleshooting/known-issues.md)
 - [VMware vCenter — Known Issues](../../vcenter/troubleshooting/known-issues.md)

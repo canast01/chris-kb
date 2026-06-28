@@ -131,5 +131,5 @@ Complete this checklist when commissioning a new Data Domain or adding a new MTr
 
 ## See also
 
-- [Data Domain — How It Works](how-it-works/)
-- [Data Domain — Integrations](integrations/)
+- [Data Domain — How It Works](../how-it-works/)
+- [Data Domain — Integrations](../integrations/)

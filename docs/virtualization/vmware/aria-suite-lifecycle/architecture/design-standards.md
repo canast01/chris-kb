@@ -83,5 +83,5 @@ Review and update this table after every upgrade cycle and monthly for new relea
 
 ## See also
 
-- [Aria Suite Lifecycle — How It Works](how-it-works/)
-- [Aria Suite Lifecycle — Deploy](../deploy/)
+- [Aria Suite Lifecycle — How It Works](../how-it-works/)
+- [Aria Suite Lifecycle — Deploy](../../deploy/)

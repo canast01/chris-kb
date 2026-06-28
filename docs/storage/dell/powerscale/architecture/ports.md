@@ -117,6 +117,6 @@ isi sync target list
 
 ## See also
 
-- [Dell PowerScale — Architecture](how-it-works/)
-- [Dell PowerScale — Operations](../operations/)
+- [Dell PowerScale — Architecture](../how-it-works/)
+- [Dell PowerScale — Operations](../../operations/)
 - [NetApp ONTAP — Ports](../../../netapp/ontap/architecture/ports.md)

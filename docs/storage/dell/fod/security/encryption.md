@@ -47,6 +47,6 @@ Encryption reference covering Encryption Controls, Key Points.
 
 ## See also
 
-- [Fod — Hardening](hardening/)
-- [Fod — Authentication](authentication/)
-- [Fod — Access Control](access-control/)
+- [Fod — Hardening](../hardening/)
+- [Fod — Authentication](../authentication/)
+- [Fod — Access Control](../access-control/)

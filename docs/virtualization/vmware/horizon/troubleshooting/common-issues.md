@@ -203,9 +203,9 @@ graph TD
 
 ## See also
 
-- [Horizon — Diagnostics](diagnostics/)
-- [Horizon — Escalation](escalation/)
-- [VMware Horizon — Health Checks](../operations/health-checks/)
+- [Horizon — Diagnostics](../diagnostics/)
+- [Horizon — Escalation](../escalation/)
+- [VMware Horizon — Health Checks](../../operations/health-checks/)
 
 ## Verify resolution
 

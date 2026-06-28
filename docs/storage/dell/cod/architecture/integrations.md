@@ -28,5 +28,5 @@ Capacity on Demand integration with VMware, Unisphere, and storage management pl
 
 ## See also
 
-- [Cod — How It Works](how-it-works/)
-- [Cod — Design Standards](design-standards/)
+- [Cod — How It Works](../how-it-works/)
+- [Cod — Design Standards](../design-standards/)

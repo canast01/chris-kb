@@ -313,6 +313,6 @@ genesis restart
 
 ## See also
 
-- [Nutanix — Diagnostics](diagnostics/)
-- [Nutanix — Escalation](escalation/)
-- [Nutanix — Health Checks](../operations/health-checks/)
+- [Nutanix — Diagnostics](../diagnostics/)
+- [Nutanix — Escalation](../escalation/)
+- [Nutanix — Health Checks](../../operations/health-checks/)

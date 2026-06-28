@@ -66,6 +66,6 @@ snapmirror_to_cloud -> resolution
 
 ## See also
 
-- [NetApp SnapMirror — Common Issues](common-issues/)
+- [NetApp SnapMirror — Common Issues](../common-issues/)
 - [NetApp ONTAP — Known Issues](../../ontap/troubleshooting/known-issues.md)
 - [NetApp SnapCenter — Known Issues](../../snapcenter/troubleshooting/known-issues.md)

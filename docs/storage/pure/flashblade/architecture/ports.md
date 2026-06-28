@@ -100,4 +100,4 @@ purealertalert test
 
 ## See also
 
-- [Pure Storage FlashBlade — Architecture](how-it-works/)
+- [Pure Storage FlashBlade — Architecture](../how-it-works/)

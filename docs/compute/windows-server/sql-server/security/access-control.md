@@ -95,6 +95,6 @@ ORDER BY principal, permission_name;
 
 ## See also
 
-- [Sql Server — Authentication](authentication/)
-- [Sql Server — Hardening](hardening/)
-- [Sql Server — Encryption](encryption/)
+- [Sql Server — Authentication](../authentication/)
+- [Sql Server — Hardening](../hardening/)
+- [Sql Server — Encryption](../encryption/)

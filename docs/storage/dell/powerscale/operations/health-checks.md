@@ -256,6 +256,6 @@ isi job jobs list | grep -i "FlexProtect\|Repair"
 
 ## See also
 
-- [Powerscale — Procedures](procedures/)
-- [Powerscale — CLI Reference](cli-reference/)
+- [Powerscale — Procedures](../procedures/)
+- [Powerscale — CLI Reference](../cli-reference/)
 - [Powerscale — Common Issues](../troubleshooting/common-issues/)

@@ -346,6 +346,6 @@ Key points illustrated:
 
 ## See also
 
-- [Powermax — Design Standards](design-standards/)
-- [Powermax — Integrations](integrations/)
+- [Powermax — Design Standards](../design-standards/)
+- [Powermax — Integrations](../integrations/)
 - [Powermax — Deploy](../deploy/)

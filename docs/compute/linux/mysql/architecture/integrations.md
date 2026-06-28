@@ -60,5 +60,5 @@ Key metrics to export: `Threads_connected`, `Queries`, `Innodb_buffer_pool_read_
 
 ## See also
 
-- [Mysql — How It Works](how-it-works/)
-- [Mysql — Design Standards](design-standards/)
+- [Mysql — How It Works](../how-it-works/)
+- [Mysql — Design Standards](../design-standards/)

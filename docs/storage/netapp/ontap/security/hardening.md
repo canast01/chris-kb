@@ -428,6 +428,6 @@ For regulated environments (PCI-DSS, HIPAA, FedRAMP, ISO 27001):
 
 ## See also
 
-- [Ontap — Authentication](authentication/)
-- [Ontap — Access Control](access-control/)
-- [Ontap — Encryption](encryption/)
+- [Ontap — Authentication](../authentication/)
+- [Ontap — Access Control](../access-control/)
+- [Ontap — Encryption](../encryption/)

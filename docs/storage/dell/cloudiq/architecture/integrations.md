@@ -94,5 +94,5 @@ Aria Operations > Admin > Solutions > Dell CloudIQ Management Pack
 
 ## See also
 
-- [Cloudiq — How It Works](how-it-works/)
-- [Cloudiq — Design Standards](design-standards/)
+- [Cloudiq — How It Works](../how-it-works/)
+- [Cloudiq — Design Standards](../design-standards/)

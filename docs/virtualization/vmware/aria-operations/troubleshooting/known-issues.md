@@ -65,6 +65,6 @@ cluster -> resolution
 
 ## See also
 
-- [VMware Aria Operations — Common Issues](common-issues/)
+- [VMware Aria Operations — Common Issues](../common-issues/)
 - [VMware Aria Operations for Logs — Known Issues](../../aria-operations-for-logs/troubleshooting/known-issues.md)
 - [VMware vCenter — Known Issues](../../vcenter/troubleshooting/known-issues.md)

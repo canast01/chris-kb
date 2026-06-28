@@ -162,6 +162,6 @@ Configure alerting for RPO violations — do not rely solely on manual dashboard
 
 ## See also
 
-- [vSphere Replication — Access Control](access-control/)
-- [vSphere Replication — Authentication](authentication/)
+- [vSphere Replication — Access Control](../access-control/)
+- [vSphere Replication — Authentication](../authentication/)
 - [vSphere Replication — Health Checks](../operations/health-checks/)

@@ -570,6 +570,6 @@ If no spare disks are available, RAID reconstruction cannot proceed. Escalate im
 
 ## See also
 
-- [Ontap — Diagnostics](diagnostics/)
-- [Ontap — Escalation](escalation/)
-- [Ontap — Health Checks](../operations/health-checks/)
+- [Ontap — Diagnostics](../diagnostics/)
+- [Ontap — Escalation](../escalation/)
+- [Ontap — Health Checks](../../operations/health-checks/)

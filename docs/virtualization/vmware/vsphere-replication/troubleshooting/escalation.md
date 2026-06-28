@@ -270,8 +270,8 @@ esxcli network ip interface list | grep -i "replication\|hbr"
 
 ## See also
 
-- [vSphere Replication — Diagnostics](diagnostics/)
-- [vSphere Replication — Common Issues](common-issues/)
+- [vSphere Replication — Diagnostics](../diagnostics/)
+- [vSphere Replication — Common Issues](../common-issues/)
 
 ---
 

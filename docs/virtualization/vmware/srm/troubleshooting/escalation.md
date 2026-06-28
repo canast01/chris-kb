@@ -272,8 +272,8 @@ tail -200 /var/log/vmware/hbrsrv/hbrsrv.log | grep -i "error\|fail"
 
 ## See also
 
-- [SRM — Diagnostics](diagnostics/)
-- [SRM — Common Issues](common-issues/)
+- [SRM — Diagnostics](../diagnostics/)
+- [SRM — Common Issues](../common-issues/)
 
 ---
 

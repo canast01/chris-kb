@@ -41,5 +41,5 @@ Integrations reference covering Notes on APEX Management Boundaries.
 
 ## See also
 
-- [Apex Storage As A Service — How It Works](how-it-works/)
-- [Apex Storage As A Service — Design Standards](design-standards/)
+- [Apex Storage As A Service — How It Works](../how-it-works/)
+- [Apex Storage As A Service — Design Standards](../design-standards/)

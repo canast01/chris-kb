@@ -378,7 +378,7 @@ pureprotection enable pg_prod
 ## See Also
 
 - [Storage Runbooks Index](index/)
-- [Veeam + ONTAP SnapVault Integration](veeam-ontap-snapvault-integration/)
-- [DR Failover: SRM + SnapMirror](dr-failover-vmware-srm-snapmirror/)
+- [Veeam + ONTAP SnapVault Integration](../veeam-ontap-snapvault-integration/)
+- [DR Failover: SRM + SnapMirror](../dr-failover-vmware-srm-snapmirror/)
 - [Pure Storage FlashArray](../../storage/flasharray/)
-- [Veeam Backup and Replication](../../backup/veeam/)
+- [Veeam Backup and Replication](../../../backup/veeam/)

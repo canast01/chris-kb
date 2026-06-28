@@ -172,5 +172,5 @@ graph TB
 
 ## See also
 
-- [Ecs — How It Works](how-it-works/)
-- [Ecs — Integrations](integrations/)
+- [Ecs — How It Works](../how-it-works/)
+- [Ecs — Integrations](../integrations/)

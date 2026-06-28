@@ -75,5 +75,5 @@ prism -> resolution
 
 ## See also
 
-- [Nutanix — Common Issues](common-issues/)
+- [Nutanix — Common Issues](../common-issues/)
 - [Nutanix — Diagnostics](diagnostics.md)

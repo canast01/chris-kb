@@ -192,6 +192,6 @@ Pure1 provides proactive health monitoring and AI-driven alerts:
 
 ## See also
 
-- [FlashArray — Procedures](procedures/)
-- [FlashArray — CLI Reference](cli-reference/)
+- [FlashArray — Procedures](../procedures/)
+- [FlashArray — CLI Reference](../cli-reference/)
 - [FlashArray — Common Issues](../troubleshooting/common-issues/)

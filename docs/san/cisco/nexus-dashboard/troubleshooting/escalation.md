@@ -281,8 +281,8 @@ kubectl get events --all-namespaces --sort-by='.lastTimestamp' | tail -20
 
 ## See also
 
-- [Nexus Dashboard — Diagnostics](diagnostics/)
-- [Nexus Dashboard — Common Issues](common-issues/)
+- [Nexus Dashboard — Diagnostics](../diagnostics/)
+- [Nexus Dashboard — Common Issues](../common-issues/)
 
 ---
 

@@ -67,6 +67,6 @@ cluster_and_services -> resolution
 
 ## See also
 
-- [VMware Aria Automation — Common Issues](common-issues/)
+- [VMware Aria Automation — Common Issues](../common-issues/)
 - [VMware Aria Suite Lifecycle — Known Issues](../../aria-suite-lifecycle/troubleshooting/known-issues.md)
 - [VMware vCenter — Known Issues](../../vcenter/troubleshooting/known-issues.md)

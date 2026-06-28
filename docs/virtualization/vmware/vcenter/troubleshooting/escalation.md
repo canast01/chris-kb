@@ -290,8 +290,8 @@ Your support tier (Production, Premier, Mission Critical) may reduce these SLAs.
 
 ## See also
 
-- [vCenter — Diagnostics](diagnostics/)
-- [vCenter — Common Issues](common-issues/)
+- [vCenter — Diagnostics](../diagnostics/)
+- [vCenter — Common Issues](../common-issues/)
 
 ---
 

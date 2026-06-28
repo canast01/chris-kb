@@ -64,5 +64,5 @@ unisphere_for_unity -> resolution
 
 ## See also
 
-- [Dell Unity — Common Issues](common-issues/)
+- [Dell Unity — Common Issues](../common-issues/)
 - [Dell CloudIQ — Known Issues](../../cloudiq/troubleshooting/known-issues.md)

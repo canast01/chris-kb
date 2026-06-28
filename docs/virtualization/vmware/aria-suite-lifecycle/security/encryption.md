@@ -66,8 +66,8 @@ curl -sk -X POST -H "x-xenon-auth-token: $TOKEN" \
 
 ## See also
 
-- [Aria Suite Lifecycle — Hardening](hardening/)
-- [Aria Suite Lifecycle — Health Checks](../operations/health-checks/)
+- [Aria Suite Lifecycle — Hardening](../hardening/)
+- [Aria Suite Lifecycle — Health Checks](../../operations/health-checks/)
 
 ## Verifying a Certificate Before Import
 

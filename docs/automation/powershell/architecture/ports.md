@@ -62,6 +62,6 @@ Enter-PSSession -HostName <linux-host> -UserName ansible
 
 ## See also
 
-- [PowerShell — Architecture](how-it-works/)
+- [PowerShell — Architecture](../how-it-works/)
 - [Windows Server — Ports](../../../compute/windows-server/architecture/ports.md)
 - [Ansible — Ports](../../ansible/architecture/ports.md)

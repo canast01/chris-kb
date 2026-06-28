@@ -50,6 +50,6 @@ SnapMirror design standards: async vs. sync policy selection, RPO and retention 
 
 ## See also
 
-- [Snapmirror — How It Works](how-it-works/)
-- [Snapmirror — Integrations](integrations/)
-- [Snapmirror — Deploy](../deploy/)
+- [Snapmirror — How It Works](../how-it-works/)
+- [Snapmirror — Integrations](../integrations/)
+- [Snapmirror — Deploy](../../deploy/)

@@ -334,6 +334,6 @@ snmp-server user <user> <group> v3 auth sha <auth_pass> priv aes 128 <priv_pass>
 
 ## See also
 
-- [Mds — Procedures](procedures/)
-- [Mds — Scripts](scripts/)
-- [Mds — Health Checks](health-checks/)
+- [Mds — Procedures](../procedures/)
+- [Mds — Scripts](../scripts/)
+- [Mds — Health Checks](../health-checks/)

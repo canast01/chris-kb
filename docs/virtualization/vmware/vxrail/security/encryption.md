@@ -276,5 +276,5 @@ Store the NKP backup password and `.p12` file in separate vault entries. An atta
 
 ## See also
 
-- [VxRail — Hardening](hardening/)
-- [VxRail — Health Checks](../operations/health-checks/)
+- [VxRail — Hardening](../hardening/)
+- [VxRail — Health Checks](../../operations/health-checks/)

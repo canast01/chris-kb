@@ -218,7 +218,7 @@ Each product documents its exact ACS URL, Entity ID format, and any quirks:
 - [Confluence — Authentication](../../tools/confluence/security/authentication/index.md)
 - [ServiceNow — Authentication](../../tools/servicenow/security/authentication/index.md)
 - [vCenter — Authentication](../../virtualization/vmware/vcenter/security/authentication/index.md)
-- [VCF — Authentication](../../virtualization/vmware/vmware-cloud-foundation/security/authentication/index.md)
+- [VCF — Authentication](../../virtualization/vmware/vmware-cloud-foundation/security/authentication//)
 - [ONTAP System Manager — Authentication](../../storage/netapp/ontap/security/authentication/index.md)
 - [CyberArk — Authentication](../../security/cyberark/security/authentication/index.md)
 

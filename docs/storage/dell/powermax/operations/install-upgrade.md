@@ -113,6 +113,6 @@ Check current EOL status at: https://www.dell.com/support/home/en-us/product-sup
 
 ## See also
 
-- [Powermax — Procedures](procedures/)
-- [Powermax — Health Checks](health-checks/)
-- [Powermax — Deploy](../deploy/)
+- [Powermax — Procedures](../procedures/)
+- [Powermax — Health Checks](../health-checks/)
+- [Powermax — Deploy](../../deploy/)

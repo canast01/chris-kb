@@ -256,5 +256,5 @@ Configure via Host Profile to enforce consistently across all cluster hosts.
 
 ## See also
 
-- [ESXi — Authentication](authentication/)
-- [ESXi — Hardening](hardening/)
+- [ESXi — Authentication](../authentication/)
+- [ESXi — Hardening](../hardening/)

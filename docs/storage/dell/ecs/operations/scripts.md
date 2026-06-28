@@ -529,6 +529,6 @@ exit 0
 
 ## See also
 
-- [Ecs — Procedures](procedures/)
-- [Ecs — CLI Reference](cli-reference/)
-- [Ecs — Health Checks](health-checks/)
+- [Ecs — Procedures](../procedures/)
+- [Ecs — CLI Reference](../cli-reference/)
+- [Ecs — Health Checks](../health-checks/)

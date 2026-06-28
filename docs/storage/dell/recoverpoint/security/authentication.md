@@ -30,6 +30,6 @@ Forward to SIEM via syslog: Management Console → System Settings → Syslog No
 
 ## See also
 
-- [Recoverpoint — Access Control](access-control/)
-- [Recoverpoint — Hardening](hardening/)
-- [Recoverpoint — Encryption](encryption/)
+- [Recoverpoint — Access Control](../access-control/)
+- [Recoverpoint — Hardening](../hardening/)
+- [Recoverpoint — Encryption](../encryption/)

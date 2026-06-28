@@ -327,6 +327,6 @@ FastCopy is not a substitute for replication — it creates a local copy on the 
 
 ## See also
 
-- [Data Domain — Procedures](procedures/)
-- [Data Domain — Health Checks](health-checks/)
-- [Data Domain — Common Issues](../troubleshooting/common-issues/)
+- [Data Domain — Procedures](../procedures/)
+- [Data Domain — Health Checks](../health-checks/)
+- [Data Domain — Common Issues](../../troubleshooting/common-issues/)

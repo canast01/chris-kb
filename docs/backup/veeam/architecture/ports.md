@@ -169,7 +169,7 @@ Test-NetConnection -ComputerName <vm-ip> -Port 6160
 
 ## See also
 
-- [Veeam — Architecture](how-it-works/)
-- [Veeam — Deploy](../deploy/)
-- [Veeam — Operations](../operations/)
-- [Veeam — Troubleshooting](../troubleshooting/)
+- [Veeam — Architecture](../how-it-works/)
+- [Veeam — Deploy](../../deploy/)
+- [Veeam — Operations](../../operations/)
+- [Veeam — Troubleshooting](../../troubleshooting/)

@@ -58,10 +58,10 @@ Cisco MDS 9000 series switches knowledge base covering fabric architecture, zoni
 
 | Task | Go To |
 |---|---|
-| Zone a new host | [Procedures — Zoning](operations/procedures/index.md) |
-| Troubleshoot a down FC port | [Troubleshooting — Common Issues](troubleshooting/common-issues/index.md) |
-| Run NX-OS upgrade | [Install & Upgrade](operations/install-upgrade/index.md) |
-| Backup / restore config | [Backup & Restore](operations/backup-restore/index.md) |
-| Full CLI reference | [CLI Reference](operations/cli-reference/index.md) |
-| Automation scripts | [Scripts](operations/scripts/index.md) |
-| Security hardening | [Security — Hardening](security/hardening/index.md) |
+| Zone a new host | [Procedures — Zoning](operations/procedures//) |
+| Troubleshoot a down FC port | [Troubleshooting — Common Issues](troubleshooting/common-issues//) |
+| Run NX-OS upgrade | [Install & Upgrade](operations/install-upgrade//) |
+| Backup / restore config | [Backup & Restore](operations/backup-restore//) |
+| Full CLI reference | [CLI Reference](operations/cli-reference//) |
+| Automation scripts | [Scripts](operations/scripts//) |
+| Security hardening | [Security — Hardening](security/hardening//) |

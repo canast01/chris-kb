@@ -54,6 +54,6 @@ deployment -> resolution
 
 ## See also
 
-- [Cisco DCNM — Common Issues](common-issues/)
+- [Cisco DCNM — Common Issues](../common-issues/)
 - [Cisco MDS — Known Issues](../../mds/troubleshooting/known-issues.md)
 - [Cisco Nexus Dashboard — Known Issues](../../nexus-dashboard/troubleshooting/known-issues.md)

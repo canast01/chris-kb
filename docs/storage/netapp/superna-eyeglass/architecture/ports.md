@@ -91,6 +91,6 @@ curl -sk -o /dev/null -w "%{http_code}" https://<eyeglass-ip>:8081/
 
 ## See also
 
-- [Superna Eyeglass — Architecture](how-it-works/)
+- [Superna Eyeglass — Architecture](../how-it-works/)
 - [Dell PowerScale — Ports](../../../dell/powerscale/architecture/ports.md)
 - [NetApp ONTAP — Ports](../../ontap/architecture/ports.md)

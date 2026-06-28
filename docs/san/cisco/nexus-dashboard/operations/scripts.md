@@ -224,6 +224,6 @@ urllib.request.urlopen(
 
 ## See also
 
-- [Nexus Dashboard — Procedures](procedures/)
-- [Nexus Dashboard — CLI Reference](cli-reference/)
-- [Nexus Dashboard — Health Checks](health-checks/)
+- [Nexus Dashboard — Procedures](../procedures/)
+- [Nexus Dashboard — CLI Reference](../cli-reference/)
+- [Nexus Dashboard — Health Checks](../health-checks/)

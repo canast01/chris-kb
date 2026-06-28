@@ -72,5 +72,5 @@ systemctl restart rsyslog
 
 ## See also
 
-- [Aria Suite Lifecycle — Authentication](authentication/)
-- [Aria Suite Lifecycle — Hardening](hardening/)
+- [Aria Suite Lifecycle — Authentication](../authentication/)
+- [Aria Suite Lifecycle — Hardening](../hardening/)

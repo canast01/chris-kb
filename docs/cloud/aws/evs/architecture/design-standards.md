@@ -154,5 +154,5 @@ Use Direct Connect dedicated connection (1 Gbps or 10 Gbps) for production. VPN 
 
 ## See also
 
-- [Amazon EVS — How It Works](how-it-works/)
-- [Amazon EVS — Deploy](../deploy/)
+- [Amazon EVS — How It Works](../how-it-works/)
+- [Amazon EVS — Deploy](../../deploy/)

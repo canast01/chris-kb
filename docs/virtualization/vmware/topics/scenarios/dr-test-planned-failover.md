@@ -189,6 +189,6 @@ failback. A failback to a site still under maintenance causes an immediate secon
 
 ## See also
 
-- [SRM — Operations](../../srm/operations/)
-- [vSphere Replication — Operations](../../vsphere-replication/operations/)
-- [Scenarios — SRM RPO Violation](srm-replication-lag-rpo-violation/)
+- [SRM — Operations](../../../srm/operations/)
+- [vSphere Replication — Operations](../../../vsphere-replication/operations/)
+- [Scenarios — SRM RPO Violation](../srm-replication-lag-rpo-violation/)

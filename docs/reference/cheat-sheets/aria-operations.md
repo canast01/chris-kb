@@ -40,5 +40,5 @@ curl -sk $AUTH -X POST "$BASE/adapters/<id>/monitoringstate/start"        # star
 
 ## See also
 
-- [Aria Operations Procedures](../../virtualization/vmware/aria-operations/operations/procedures/)
-- [Aria Operations Troubleshooting](../../virtualization/vmware/aria-operations/troubleshooting/common-issues/)
+- [Aria Operations Procedures](../../../virtualization/vmware/aria-operations/operations/procedures/)
+- [Aria Operations Troubleshooting](../../../virtualization/vmware/aria-operations/troubleshooting/common-issues/)

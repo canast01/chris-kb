@@ -165,8 +165,8 @@ curl -sk -o /dev/null -w "%{http_code}" https://<connection-server-ip>/broker/xm
 
 ## See also
 
-- [Horizon — Architecture](how-it-works/)
+- [Horizon — Architecture](../how-it-works/)
 - [Horizon — Deploy](../deploy/)
-- [Horizon — Operations](../operations/)
-- [Horizon — Troubleshooting](../troubleshooting/)
+- [Horizon — Operations](../../operations/)
+- [Horizon — Troubleshooting](../../troubleshooting/)
 - [vCenter — Ports](../../vcenter/architecture/ports.md)

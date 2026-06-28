@@ -240,5 +240,5 @@ vSphere Client → vCenter → Configure → Advanced Settings → `config.tls.m
 
 ## See also
 
-- [vSAN — Access Control](access-control/)
-- [vSAN — Hardening](hardening/)
+- [vSAN — Access Control](../access-control/)
+- [vSAN — Hardening](../hardening/)

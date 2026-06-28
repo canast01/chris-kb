@@ -121,6 +121,6 @@ snmpget -v2c -c <community> <switch-mgmt-ip> 1.3.6.1.2.1.1.1.0
 
 ## See also
 
-- [Brocade FOS — Architecture](how-it-works/)
-- [Brocade FOS — Operations](../operations/)
+- [Brocade FOS — Architecture](../how-it-works/)
+- [Brocade FOS — Operations](../../operations/)
 - [Brocade SANnav — Ports](../../sannav/architecture/ports.md)

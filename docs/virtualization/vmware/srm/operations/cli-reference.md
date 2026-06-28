@@ -117,9 +117,9 @@ curl -k -X POST "https://<srm_fqdn>/api/plans/<plan_id>/actions/test"   -H "Auth
 
 ## See also
 
-- [SRM — Procedures](procedures/)
-- [SRM — Scripts](scripts/)
-- [SRM — Health Checks](health-checks/)
+- [SRM — Procedures](../procedures/)
+- [SRM — Scripts](../scripts/)
+- [SRM — Health Checks](../health-checks/)
 
 ## Verify
 

@@ -232,5 +232,5 @@ Set `required` only for VMs that handle sensitive data. `opportunistic` is the s
 
 ## See also
 
-- [ESXi — Hardening](hardening/)
-- [ESXi — Health Checks](../operations/health-checks/)
+- [ESXi — Hardening](../hardening/)
+- [ESXi — Health Checks](../../operations/health-checks/)

@@ -1492,6 +1492,6 @@ sys.exit(worst)
 
 ## See also
 
-- [Ontap — Procedures](procedures/)
-- [Ontap — CLI Reference](cli-reference/)
-- [Ontap — Health Checks](health-checks/)
+- [Ontap — Procedures](../procedures/)
+- [Ontap — CLI Reference](../cli-reference/)
+- [Ontap — Health Checks](../health-checks/)

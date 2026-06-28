@@ -961,6 +961,6 @@ echo "Triage data written to: $OUTFILE"
 
 ## See also
 
-- [Powerscale — Procedures](procedures/)
-- [Powerscale — CLI Reference](cli-reference/)
-- [Powerscale — Health Checks](health-checks/)
+- [Powerscale — Procedures](../procedures/)
+- [Powerscale — CLI Reference](../cli-reference/)
+- [Powerscale — Health Checks](../health-checks/)

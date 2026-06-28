@@ -87,6 +87,6 @@ stretched_cluster -> resolution
 
 ## See also
 
-- [VMware vSAN — Common Issues](common-issues/)
+- [VMware vSAN — Common Issues](../common-issues/)
 - [VMware ESXi — Known Issues](../../esxi/troubleshooting/known-issues.md)
 - [VMware vCenter — Known Issues](../../vcenter/troubleshooting/known-issues.md)

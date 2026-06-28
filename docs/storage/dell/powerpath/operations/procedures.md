@@ -143,6 +143,6 @@ Run `powermt config` after new LUNs have been zoned and masked to the host at th
 
 ## See also
 
-- [Powerpath — Health Checks](health-checks/)
-- [Powerpath — CLI Reference](cli-reference/)
+- [Powerpath — Health Checks](../health-checks/)
+- [Powerpath — CLI Reference](../cli-reference/)
 - [Powerpath — Common Issues](../troubleshooting/common-issues/)

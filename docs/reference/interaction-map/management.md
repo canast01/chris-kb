@@ -44,7 +44,7 @@ When LCM deploys the full Aria Suite, the order matters:
 
 ## See also
 
-- [VCF Cheat Sheet](../cheat-sheets/vcf/)
-- [Aria Suite Lifecycle Cheat Sheet](../cheat-sheets/aria-suite-lifecycle/)
-- [VCF Architecture](../../virtualization/vmware/vmware-cloud-foundation/architecture/)
+- [VCF Cheat Sheet](../../cheat-sheets/vcf/)
+- [Aria Suite Lifecycle Cheat Sheet](../../cheat-sheets/aria-suite-lifecycle/)
+- [VCF Architecture](../../../virtualization/vmware/vmware-cloud-foundation/architecture/)
 - [Back to Interaction Map](index.md)

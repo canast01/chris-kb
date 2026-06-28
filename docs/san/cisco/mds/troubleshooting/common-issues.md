@@ -213,6 +213,6 @@ graph TD
 
 ## See also
 
-- [Mds — Diagnostics](diagnostics/)
-- [Mds — Escalation](escalation/)
-- [Mds — Health Checks](../operations/health-checks/)
+- [Mds — Diagnostics](../diagnostics/)
+- [Mds — Escalation](../escalation/)
+- [Mds — Health Checks](../../operations/health-checks/)

@@ -247,6 +247,6 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/smb_server" \
 
 ## See also
 
-- [Powerstore — Access Control](access-control/)
-- [Powerstore — Hardening](hardening/)
-- [Powerstore — Encryption](encryption/)
+- [Powerstore — Access Control](../access-control/)
+- [Powerstore — Hardening](../hardening/)
+- [Powerstore — Encryption](../encryption/)

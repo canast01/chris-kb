@@ -214,6 +214,6 @@ Mediator credentials are configured during Mediator VM installation. The Mediato
 
 ## See also
 
-- [Snapmirror — Access Control](access-control/)
-- [Snapmirror — Hardening](hardening/)
-- [Snapmirror — Encryption](encryption/)
+- [Snapmirror — Access Control](../access-control/)
+- [Snapmirror — Hardening](../hardening/)
+- [Snapmirror — Encryption](../encryption/)

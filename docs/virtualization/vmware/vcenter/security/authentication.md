@@ -195,5 +195,5 @@ AD account lockouts caused by vCenter (e.g. cached wrong password in identity so
 
 ## See also
 
-- [vCenter Security — Access Control](access-control/)
-- [vCenter Security — Hardening](hardening/)
+- [vCenter Security — Access Control](../access-control/)
+- [vCenter Security — Hardening](../hardening/)

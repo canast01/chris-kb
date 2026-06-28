@@ -308,8 +308,8 @@ scp admin@<vrops-master-ip>:/tmp/vcops-support-*.zip ./
 
 ## See also
 
-- [Aria Operations — Common Issues](common-issues/)
-- [Aria Operations — Escalation](escalation/)
+- [Aria Operations — Common Issues](../common-issues/)
+- [Aria Operations — Escalation](../escalation/)
 
 ## Verify resolution
 

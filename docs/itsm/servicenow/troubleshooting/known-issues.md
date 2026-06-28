@@ -65,5 +65,5 @@ performance -> resolution
 
 ## See also
 
-- [ServiceNow — Common Issues](common-issues/)
+- [ServiceNow — Common Issues](../common-issues/)
 - [Ansible — Known Issues](../../../automation/ansible/troubleshooting/known-issues.md)

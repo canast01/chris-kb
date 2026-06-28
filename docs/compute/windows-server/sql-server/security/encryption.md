@@ -92,6 +92,6 @@ BACKUP DATABASE app_prod
 
 ## See also
 
-- [Sql Server — Hardening](hardening/)
-- [Sql Server — Authentication](authentication/)
-- [Sql Server — Access Control](access-control/)
+- [Sql Server — Hardening](../hardening/)
+- [Sql Server — Authentication](../authentication/)
+- [Sql Server — Access Control](../access-control/)

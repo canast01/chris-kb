@@ -81,6 +81,6 @@ security login create -username svc-snapcenter -application http -authmethod pas
 
 ## See also
 
-- [Snapcenter — Authentication](authentication/)
-- [Snapcenter — Hardening](hardening/)
-- [Snapcenter — Encryption](encryption/)
+- [Snapcenter — Authentication](../authentication/)
+- [Snapcenter — Hardening](../hardening/)
+- [Snapcenter — Encryption](../encryption/)

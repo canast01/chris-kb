@@ -229,6 +229,6 @@ echo "Certificate expires in $DAYS_LEFT days"
 
 ## See also
 
-- [Ecs — Hardening](hardening/)
-- [Ecs — Authentication](authentication/)
-- [Ecs — Access Control](access-control/)
+- [Ecs — Hardening](../hardening/)
+- [Ecs — Authentication](../authentication/)
+- [Ecs — Access Control](../access-control/)

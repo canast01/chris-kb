@@ -107,6 +107,6 @@ graph TD
 
 ## See also
 
-- [Apex Storage As A Service — Diagnostics](diagnostics/)
-- [Apex Storage As A Service — Escalation](escalation/)
-- [Apex Storage As A Service — Health Checks](../operations/health-checks/)
+- [Apex Storage As A Service — Diagnostics](../diagnostics/)
+- [Apex Storage As A Service — Escalation](../escalation/)
+- [Apex Storage As A Service — Health Checks](../../operations/health-checks/)

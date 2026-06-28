@@ -398,6 +398,6 @@ ls /ifs/replicated/project1/
 
 ## See also
 
-- [Powerscale — Procedures](procedures/)
-- [Powerscale — Health Checks](health-checks/)
-- [Powerscale — Common Issues](../troubleshooting/common-issues/)
+- [Powerscale — Procedures](../procedures/)
+- [Powerscale — Health Checks](../health-checks/)
+- [Powerscale — Common Issues](../../troubleshooting/common-issues/)

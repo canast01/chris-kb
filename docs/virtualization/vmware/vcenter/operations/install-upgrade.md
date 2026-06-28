@@ -92,9 +92,9 @@ Baseline-based patching. Still available in vSphere 7 but deprecated in 8. Use f
 
 ## See also
 
-- [vCenter — Health Checks](health-checks/)
+- [vCenter — Health Checks](../health-checks/)
 - [vCenter Troubleshooting — Common Issues](../troubleshooting/common-issues/)
-- [vCenter — Procedures](procedures/)
+- [vCenter — Procedures](../procedures/)
 
 ## Verify
 

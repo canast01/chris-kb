@@ -371,6 +371,6 @@ TOKEN=$(curl -ks -X POST "https://<mgmt-ip>/api/rest/login_session" \
 
 ## See also
 
-- [Powerstore — Diagnostics](diagnostics/)
-- [Powerstore — Escalation](escalation/)
-- [Powerstore — Health Checks](../operations/health-checks/)
+- [Powerstore — Diagnostics](../diagnostics/)
+- [Powerstore — Escalation](../escalation/)
+- [Powerstore — Health Checks](../../operations/health-checks/)

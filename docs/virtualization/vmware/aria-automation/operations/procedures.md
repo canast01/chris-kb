@@ -585,9 +585,9 @@ Submit a test deployment request and verify the email is received with the corre
 
 ## See also
 
-- [Aria Automation — Health Checks](health-checks/)
+- [Aria Automation — Health Checks](../health-checks/)
 - [Aria Automation — Common Issues](../troubleshooting/common-issues/)
-- [Aria Automation — CLI Reference](cli-reference/)
+- [Aria Automation — CLI Reference](../cli-reference/)
 
 ## Verify
 

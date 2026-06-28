@@ -117,6 +117,6 @@ Cisco releases ND major versions approximately annually and maintenance releases
 
 ## See also
 
-- [Nexus Dashboard — Procedures](procedures/)
-- [Nexus Dashboard — Health Checks](health-checks/)
+- [Nexus Dashboard — Procedures](../procedures/)
+- [Nexus Dashboard — Health Checks](../health-checks/)
 - [Nexus Dashboard — Deploy](../deploy/)

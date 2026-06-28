@@ -95,6 +95,6 @@ SELECT * FROM information_schema.SCHEMA_PRIVILEGES WHERE GRANTEE LIKE '%appuser%
 
 ## See also
 
-- [Mysql — Authentication](authentication/)
-- [Mysql — Hardening](hardening/)
-- [Mysql — Encryption](encryption/)
+- [Mysql — Authentication](../authentication/)
+- [Mysql — Hardening](../hardening/)
+- [Mysql — Encryption](../encryption/)

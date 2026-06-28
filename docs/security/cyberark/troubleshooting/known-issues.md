@@ -66,4 +66,4 @@ psm_privileged_session_manager -> resolution
 
 ## See also
 
-- [CyberArk — Common Issues](common-issues/)
+- [CyberArk — Common Issues](../common-issues/)

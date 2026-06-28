@@ -84,5 +84,5 @@ Metering is based on the **maximum capacity used in any hour** during the billin
 
 ## See also
 
-- [Fod — Design Standards](design-standards/)
-- [Fod — Integrations](integrations/)
+- [Fod — Design Standards](../design-standards/)
+- [Fod — Integrations](../integrations/)

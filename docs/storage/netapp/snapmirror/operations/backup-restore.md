@@ -269,6 +269,6 @@ snapmirror show -fields healthy,lag-time
 
 ## See also
 
-- [Snapmirror — Procedures](procedures/)
-- [Snapmirror — Health Checks](health-checks/)
-- [Snapmirror — Common Issues](../troubleshooting/common-issues/)
+- [Snapmirror — Procedures](../procedures/)
+- [Snapmirror — Health Checks](../health-checks/)
+- [Snapmirror — Common Issues](../../troubleshooting/common-issues/)

@@ -295,6 +295,6 @@ echo "Monthly FOD report written to ${OUT}"
 
 ## See also
 
-- [Fod — Procedures](procedures/)
-- [Fod — Scripts](scripts/)
-- [Fod — Health Checks](health-checks/)
+- [Fod — Procedures](../procedures/)
+- [Fod — Scripts](../scripts/)
+- [Fod — Health Checks](../health-checks/)

@@ -127,6 +127,6 @@ isi sync policies list
 
 ## See also
 
-- [Superna Eyeglass — How It Works](how-it-works/)
-- [Superna Eyeglass — Integrations](integrations/)
-- [Superna Eyeglass — Deploy](../deploy/)
+- [Superna Eyeglass — How It Works](../how-it-works/)
+- [Superna Eyeglass — Integrations](../integrations/)
+- [Superna Eyeglass — Deploy](../../deploy/)

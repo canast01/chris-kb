@@ -28,10 +28,10 @@ APEX Storage uses the same data access ports as the underlying array type:
 
 | Array Type | Relevant Ports Page |
 |---|---|
-| APEX Block Storage (PowerStore-based) | [Dell PowerStore — Ports](../../powerstore/architecture/ports/) |
+| APEX Block Storage (PowerStore-based) | [Dell PowerStore — Ports](../../../powerstore/architecture/ports/) |
 | APEX Block Storage (PowerFlex-based) | iSCSI 3260, NVMe-oF 4420 |
-| APEX File Storage (PowerScale-based) | [Dell PowerScale — Ports](../../powerscale/architecture/ports/) |
-| APEX Object Storage (ECS-based) | [Dell ECS — Ports](../../ecs/architecture/ports/) |
+| APEX File Storage (PowerScale-based) | [Dell PowerScale — Ports](../../../powerscale/architecture/ports/) |
+| APEX Object Storage (ECS-based) | [Dell ECS — Ports](../../../ecs/architecture/ports/) |
 
 ## Admin Access to APEX Portal (SaaS)
 
@@ -48,6 +48,6 @@ APEX Storage uses the same data access ports as the underlying array type:
 
 ## See also
 
-- [Dell APEX — Architecture](how-it-works/)
+- [Dell APEX — Architecture](../how-it-works/)
 - [Dell CloudIQ — Ports](../../cloudiq/architecture/ports.md)
 - [Dell PowerStore — Ports](../../powerstore/architecture/ports.md)

@@ -512,6 +512,6 @@ foreach ($p in $ports | Sort-Object { [int]$_.Port }) {
 
 ## See also
 
-- [Fabric Os — Procedures](procedures/)
-- [Fabric Os — CLI Reference](cli-reference/)
-- [Fabric Os — Health Checks](health-checks/)
+- [Fabric Os — Procedures](../procedures/)
+- [Fabric Os — CLI Reference](../cli-reference/)
+- [Fabric Os — Health Checks](../health-checks/)

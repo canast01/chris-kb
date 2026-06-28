@@ -103,5 +103,5 @@ Body: {"scenario": "LOGGED_ACCESS", "consistency": "CRASH_CONSISTENT"}
 
 ## See also
 
-- [Recoverpoint — How It Works](how-it-works/)
-- [Recoverpoint — Design Standards](design-standards/)
+- [Recoverpoint — How It Works](../how-it-works/)
+- [Recoverpoint — Design Standards](../design-standards/)

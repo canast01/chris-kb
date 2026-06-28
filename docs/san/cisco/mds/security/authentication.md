@@ -271,6 +271,6 @@ Unauthorized access is prohibited and will be prosecuted.
 
 ## See also
 
-- [Mds — Access Control](access-control/)
-- [Mds — Hardening](hardening/)
-- [Mds — Encryption](encryption/)
+- [Mds — Access Control](../access-control/)
+- [Mds — Hardening](../hardening/)
+- [Mds — Encryption](../encryption/)

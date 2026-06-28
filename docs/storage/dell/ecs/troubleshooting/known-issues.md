@@ -65,5 +65,5 @@ cluster_health -> resolution
 
 ## See also
 
-- [Dell ECS — Common Issues](common-issues/)
+- [Dell ECS — Common Issues](../common-issues/)
 - [Dell CloudIQ — Known Issues](../../cloudiq/troubleshooting/known-issues.md)

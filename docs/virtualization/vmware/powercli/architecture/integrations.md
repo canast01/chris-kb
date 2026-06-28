@@ -124,5 +124,5 @@ jobs:
 
 ## See also
 
-- [PowerCLI — How It Works](how-it-works/)
+- [PowerCLI — How It Works](../how-it-works/)
 - [PowerCLI — Deploy](../deploy/)

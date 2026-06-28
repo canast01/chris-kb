@@ -87,5 +87,5 @@ Before every Ever Modern controller upgrade:
 
 ## See also
 
-- [Evergreen — How It Works](how-it-works/)
-- [Evergreen — Integrations](integrations/)
+- [Evergreen — How It Works](../how-it-works/)
+- [Evergreen — Integrations](../integrations/)

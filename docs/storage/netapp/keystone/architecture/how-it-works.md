@@ -156,5 +156,5 @@ graph LR
 
 ## See also
 
-- [Keystone — Design Standards](design-standards/)
-- [Keystone — Integrations](integrations/)
+- [Keystone — Design Standards](../design-standards/)
+- [Keystone — Integrations](../integrations/)

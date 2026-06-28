@@ -113,6 +113,6 @@ symrdf -g PROD_RDF_GROUP query | grep -E "RPO|Mode"
 
 ## See also
 
-- [Srdf A — Procedures](procedures/)
-- [Srdf A — Health Checks](health-checks/)
-- [Srdf A — Common Issues](../troubleshooting/common-issues/)
+- [Srdf A — Procedures](../procedures/)
+- [Srdf A — Health Checks](../health-checks/)
+- [Srdf A — Common Issues](../../troubleshooting/common-issues/)

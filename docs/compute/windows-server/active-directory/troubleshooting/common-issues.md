@@ -215,6 +215,6 @@ Get-WinEvent -LogName Security |
 
 ## See also
 
-- [Active Directory — Diagnostics](diagnostics/)
-- [Active Directory — Escalation](escalation/)
-- [Active Directory — Health Checks](../operations/health-checks/)
+- [Active Directory — Diagnostics](../diagnostics/)
+- [Active Directory — Escalation](../escalation/)
+- [Active Directory — Health Checks](../../operations/health-checks/)

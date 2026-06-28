@@ -206,5 +206,5 @@ Key events to alert on:
 
 ## See also
 
-- [Evergreen//One — How It Works](how-it-works/)
-- [Evergreen//One — Design Standards](design-standards/)
+- [Evergreen//One — How It Works](../how-it-works/)
+- [Evergreen//One — Design Standards](../design-standards/)

@@ -89,6 +89,6 @@ ALTER USER 'appuser'@'%' FAILED_LOGIN_ATTEMPTS 5 PASSWORD_LOCK_TIME 1;
 
 ## See also
 
-- [Mysql — Access Control](access-control/)
-- [Mysql — Hardening](hardening/)
-- [Mysql — Encryption](encryption/)
+- [Mysql — Access Control](../access-control/)
+- [Mysql — Hardening](../hardening/)
+- [Mysql — Encryption](../encryption/)

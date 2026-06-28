@@ -76,6 +76,6 @@ fsmo_roles -> resolution
 
 ## See also
 
-- [Active Directory — Common Issues](common-issues/)
+- [Active Directory — Common Issues](../common-issues/)
 - [Windows Server — Known Issues](../../troubleshooting/known-issues.md)
 - [CyberArk — Known Issues](../../../../security/cyberark/troubleshooting/known-issues.md)

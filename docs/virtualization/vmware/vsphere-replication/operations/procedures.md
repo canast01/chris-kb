@@ -505,9 +505,9 @@ vSphere Replication will calculate the delta between the source and the seed and
 
 ## See also
 
-- [vSphere Replication — Health Checks](health-checks/)
+- [vSphere Replication — Health Checks](../health-checks/)
 - [vSphere Replication — Common Issues](../troubleshooting/common-issues/)
-- [vSphere Replication — CLI Reference](cli-reference/)
+- [vSphere Replication — CLI Reference](../cli-reference/)
 
 ## Verify
 

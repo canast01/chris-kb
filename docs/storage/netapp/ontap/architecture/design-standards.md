@@ -73,5 +73,5 @@ Standards reference covering Naming Conventions, Build Baseline, Sizing Guidelin
 
 ## See also
 
-- [Ontap — How It Works](how-it-works/)
-- [Ontap — Integrations](integrations/)
+- [Ontap — How It Works](../how-it-works/)
+- [Ontap — Integrations](../integrations/)

@@ -266,6 +266,6 @@ In Unisphere: **Settings > Security** — FIPS mode is shown and can be toggled.
 
 ## See also
 
-- [Unity — Hardening](hardening/)
-- [Unity — Authentication](authentication/)
-- [Unity — Access Control](access-control/)
+- [Unity — Hardening](../hardening/)
+- [Unity — Authentication](../authentication/)
+- [Unity — Access Control](../access-control/)

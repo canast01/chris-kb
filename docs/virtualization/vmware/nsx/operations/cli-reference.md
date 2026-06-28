@@ -518,9 +518,9 @@ get backup history
 
 ## See also
 
-- [NSX — Standard Procedures](procedures/)
-- [NSX — Scripts](scripts/)
-- [NSX — Health Checks](health-checks/)
+- [NSX — Standard Procedures](../procedures/)
+- [NSX — Scripts](../scripts/)
+- [NSX — Health Checks](../health-checks/)
 
 ## Verify
 

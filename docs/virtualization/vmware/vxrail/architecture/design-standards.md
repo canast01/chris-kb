@@ -80,5 +80,5 @@ VxRail requires four VMkernel networks per node, separated by VLAN:
 
 ## See also
 
-- [VxRail — How It Works (VMware Platform)](how-it-works/)
-- [VxRail — Deploy](../deploy/)
+- [VxRail — How It Works (VMware Platform)](../how-it-works/)
+- [VxRail — Deploy](../../deploy/)

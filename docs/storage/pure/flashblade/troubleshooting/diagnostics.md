@@ -271,8 +271,8 @@ purefb support diag
 
 ## See also
 
-- [FlashBlade — Common Issues](common-issues/)
-- [FlashBlade — Escalation](escalation/)
+- [FlashBlade — Common Issues](../common-issues/)
+- [FlashBlade — Escalation](../escalation/)
 - [FlashBlade — Health Checks](../operations/health-checks/)
 
 ## Verify resolution

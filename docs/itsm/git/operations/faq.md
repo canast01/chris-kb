@@ -56,4 +56,4 @@ A: Yes — if the commits are still in the reflog: `git reflog | grep 'checkout:
 ## See Also
 
 - [Git Operations](index.md)
-- [Git Troubleshooting](../../troubleshooting/index.md)
+- [Git Troubleshooting](../../troubleshooting//)

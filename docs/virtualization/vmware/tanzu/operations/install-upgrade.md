@@ -178,9 +178,9 @@ Check VMware Tanzu Kubernetes releases compatibility before upgrade:
 
 ## See also
 
-- [Tanzu — Health Checks](health-checks/)
+- [Tanzu — Health Checks](../health-checks/)
 - [Virtualization Vmware Tanzu — Common Issues](../troubleshooting/common-issues/)
-- [Tanzu — Procedures](procedures/)
+- [Tanzu — Procedures](../procedures/)
 
 ## Verify
 

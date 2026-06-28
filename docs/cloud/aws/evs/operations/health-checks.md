@@ -101,8 +101,8 @@ curl -sk -u "admin:$NSX_PASSWORD" \
 ## See also
 
 - [Amazon EVS — Common Issues](../troubleshooting/common-issues/)
-- [Amazon EVS — Procedures](procedures/)
-- [Amazon EVS — CLI Reference](cli-reference/)
+- [Amazon EVS — Procedures](../procedures/)
+- [Amazon EVS — CLI Reference](../cli-reference/)
 
 ## Verify
 

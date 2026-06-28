@@ -67,7 +67,7 @@ lifecycle_management -> resolution
 
 ## See also
 
-- [VMware VCF — Common Issues](common-issues/)
+- [VMware VCF — Common Issues](../common-issues/)
 - [VMware vCenter — Known Issues](../../vcenter/troubleshooting/known-issues.md)
 - [VMware NSX — Known Issues](../../nsx/troubleshooting/known-issues.md)
 - [VMware vSAN — Known Issues](../../vsan/troubleshooting/known-issues.md)

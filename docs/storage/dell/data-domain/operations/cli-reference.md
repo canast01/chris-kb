@@ -703,6 +703,6 @@ log dump system | grep -i auth
 
 ## See also
 
-- [Data Domain — Procedures](procedures/)
-- [Data Domain — Scripts](scripts/)
-- [Data Domain — Health Checks](health-checks/)
+- [Data Domain — Procedures](../procedures/)
+- [Data Domain — Scripts](../scripts/)
+- [Data Domain — Health Checks](../health-checks/)

@@ -441,9 +441,9 @@ vim-cmd vmsvc/getallvms
 
 ## See also
 
-- [Amazon EVS — Procedures](procedures/)
-- [Amazon EVS — Scripts](scripts/)
-- [Amazon EVS — Health Checks](health-checks/)
+- [Amazon EVS — Procedures](../procedures/)
+- [Amazon EVS — Scripts](../scripts/)
+- [Amazon EVS — Health Checks](../health-checks/)
 
 ## Verify
 

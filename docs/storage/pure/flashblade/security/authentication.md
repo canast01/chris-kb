@@ -338,6 +338,6 @@ purefb audit list | grep -i "login\|auth\|token" | head -40
 
 ## See also
 
-- [FlashBlade — Access Control](access-control/)
-- [FlashBlade — Hardening](hardening/)
-- [FlashBlade — Encryption](encryption/)
+- [FlashBlade — Access Control](../access-control/)
+- [FlashBlade — Hardening](../hardening/)
+- [FlashBlade — Encryption](../encryption/)

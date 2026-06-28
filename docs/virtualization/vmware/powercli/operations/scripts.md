@@ -247,8 +247,8 @@ Disconnect-VIServer -Confirm:$false
 
 ## See also
 
-- [PowerCLI — CLI Reference](cli-reference/)
-- [PowerCLI — Procedures](procedures/)
+- [PowerCLI — CLI Reference](../cli-reference/)
+- [PowerCLI — Procedures](../procedures/)
 
 ## Verify
 

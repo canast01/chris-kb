@@ -150,5 +150,5 @@ trust anchor lcm-ca.crt  # RHEL/Fedora
 
 ## See also
 
-- [Aria Suite Lifecycle — Access Control](access-control/)
-- [Aria Suite Lifecycle — Hardening](hardening/)
+- [Aria Suite Lifecycle — Access Control](../access-control/)
+- [Aria Suite Lifecycle — Hardening](../hardening/)

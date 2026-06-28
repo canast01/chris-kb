@@ -64,5 +64,5 @@ powerstore_manager -> resolution
 
 ## See also
 
-- [Dell PowerStore — Common Issues](common-issues/)
+- [Dell PowerStore — Common Issues](../common-issues/)
 - [Dell CloudIQ — Known Issues](../../cloudiq/troubleshooting/known-issues.md)

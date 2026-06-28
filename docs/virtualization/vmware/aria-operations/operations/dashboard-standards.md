@@ -53,6 +53,6 @@ Monitoring Dashboard Standards reference covering Grafana — Dashboard as Code,
 
 ## See also
 
-- [Aria Operations — Procedures](procedures/)
-- [Aria Operations — Health Checks](health-checks/)
+- [Aria Operations — Procedures](../procedures/)
+- [Aria Operations — Health Checks](../health-checks/)
 - [Aria Operations — Common Issues](../troubleshooting/common-issues/)

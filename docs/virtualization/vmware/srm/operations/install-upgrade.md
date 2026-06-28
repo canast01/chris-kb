@@ -160,9 +160,9 @@ flowchart TD
 
 ## See also
 
-- [SRM — Health Checks](health-checks/)
+- [SRM — Health Checks](../health-checks/)
 - [VMware SRM — Common Issues](../troubleshooting/common-issues/)
-- [SRM — Procedures](procedures/)
+- [SRM — Procedures](../procedures/)
 
 ## Verify
 

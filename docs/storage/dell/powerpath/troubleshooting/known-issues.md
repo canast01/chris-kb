@@ -65,6 +65,6 @@ ppma_powerpath_management_appliance -> resolution
 
 ## See also
 
-- [Dell PowerPath — Common Issues](common-issues/)
+- [Dell PowerPath — Common Issues](../common-issues/)
 - [Dell PowerStore — Known Issues](../../powerstore/troubleshooting/known-issues.md)
 - [Dell PowerMax — Known Issues](../../powermax/troubleshooting/known-issues.md)

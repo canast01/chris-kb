@@ -60,5 +60,5 @@ Key DMVs for monitoring: `sys.dm_os_wait_stats`, `sys.dm_exec_query_stats`, `sys
 
 ## See also
 
-- [Sql Server — How It Works](how-it-works/)
-- [Sql Server — Design Standards](design-standards/)
+- [Sql Server — How It Works](../how-it-works/)
+- [Sql Server — Design Standards](../design-standards/)

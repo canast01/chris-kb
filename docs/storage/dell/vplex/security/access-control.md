@@ -230,6 +230,6 @@ For production environments handling sensitive workloads:
 
 ## See also
 
-- [Vplex — Authentication](authentication/)
-- [Vplex — Hardening](hardening/)
-- [Vplex — Encryption](encryption/)
+- [Vplex — Authentication](../authentication/)
+- [Vplex — Hardening](../hardening/)
+- [Vplex — Encryption](../encryption/)
