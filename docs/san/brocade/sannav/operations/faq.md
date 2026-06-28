@@ -56,4 +56,4 @@ A: Yes — if the upgrade fails and a rollback is needed, restore from the pre-u
 ## See Also
 
 - [Brocade SANnav Operations](index.md)
-- [Brocade SANnav Troubleshooting](../../../troubleshooting/index.md)
+- [Brocade SANnav Troubleshooting](../troubleshooting/index.md)

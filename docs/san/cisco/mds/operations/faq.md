@@ -56,4 +56,4 @@ A: Yes — use `show zoneset active vsan 10` to view current active zones. Edit 
 ## See Also
 
 - [Cisco MDS Operations](index.md)
-- [Cisco MDS Troubleshooting](../../../troubleshooting/index.md)
+- [Cisco MDS Troubleshooting](../troubleshooting/index.md)

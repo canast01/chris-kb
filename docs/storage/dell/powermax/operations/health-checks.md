@@ -287,4 +287,4 @@ flowchart TD
 
 - [Powermax — Procedures](../procedures/)
 - [Powermax — CLI Reference](../cli-reference/)
-- [Powermax — Common Issues](../troubleshooting/common-issues/)
+- [Powermax — Common Issues](../../troubleshooting/common-issues/)

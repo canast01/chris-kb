@@ -208,7 +208,7 @@ uemcli -d <mgmt-ip> /sys/general show
 
 - [FOD — Common Issues](../common-issues/)
 - [FOD — Escalation](../escalation/)
-- [FOD — Health Checks](../operations/health-checks/)
+- [FOD — Health Checks](../../operations/health-checks/)
 
 ## Verify resolution
 

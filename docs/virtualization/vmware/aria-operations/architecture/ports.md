@@ -149,7 +149,7 @@ nc -zv <aria-ops-vip> 3331
 ## See also
 
 - [Aria Operations — Architecture](../how-it-works/)
-- [Aria Operations — Deploy](../deploy/)
+- [Aria Operations — Deploy](../../deploy/)
 - [Aria Operations — Operations](../../operations/)
 - [Aria Automation — Ports](../../aria-automation/architecture/ports.md)
 - [vCenter — Ports](../../vcenter/architecture/ports.md)

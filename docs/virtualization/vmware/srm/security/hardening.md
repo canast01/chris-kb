@@ -28,4 +28,4 @@ Hardening reference covering Least-Privilege SRA Service Accounts, Rotate SRA Cr
 
 - [SRM — Access Control](../access-control/)
 - [SRM — Authentication](../authentication/)
-- [SRM — Health Checks](../operations/health-checks/)
+- [SRM — Health Checks](../../operations/health-checks/)

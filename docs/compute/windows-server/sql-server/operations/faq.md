@@ -56,4 +56,4 @@ A: Not natively. Restore the backup to a separate instance using `RESTORE DATABA
 ## See Also
 
 - [Microsoft SQL Server Operations](index.md)
-- [Microsoft SQL Server Troubleshooting](../../../troubleshooting/index.md)
+- [Microsoft SQL Server Troubleshooting](../../troubleshooting/index.md)

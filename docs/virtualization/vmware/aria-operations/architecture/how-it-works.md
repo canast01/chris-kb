@@ -164,5 +164,5 @@ Remote Collector: 2 vCPUs, 4 GB RAM per site.
 ## See also
 
 - [Aria Operations — Standards](../design-standards/)
-- [Aria Operations — Deploy](../deploy/)
+- [Aria Operations — Deploy](../../deploy/)
 - [Aria Operations Integrations](../integrations/)

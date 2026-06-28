@@ -338,7 +338,7 @@ Get-VsanResyncDashboard -Cluster $cluster | Select BytesToSync, ActiveTasks, Rec
 ## See also
 
 - [Amazon EVS — Health Checks](../health-checks/)
-- [Amazon EVS — Common Issues](../troubleshooting/common-issues/)
+- [Amazon EVS — Common Issues](../../troubleshooting/common-issues/)
 - [Amazon EVS — CLI Reference](../cli-reference/)
 
 ## Verify

@@ -76,4 +76,4 @@ After LCM deploys Aria Automation:
 ## See also
 
 - [Aria Suite Lifecycle — How It Works](../how-it-works/)
-- [Aria Suite Lifecycle — Deploy](../deploy/)
+- [Aria Suite Lifecycle — Deploy](../../deploy/)

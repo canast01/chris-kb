@@ -108,4 +108,4 @@ flowchart TD
 
 - [Srdf A — Procedures](../procedures/)
 - [Srdf A — CLI Reference](../cli-reference/)
-- [Srdf A — Common Issues](../troubleshooting/common-issues/)
+- [Srdf A — Common Issues](../../troubleshooting/common-issues/)

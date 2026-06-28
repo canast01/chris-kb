@@ -240,4 +240,4 @@ Use Dell SupportAssist (if licensed) to automatically collect and upload diagnos
 
 - [Powermax — Common Issues](../common-issues/)
 - [Powermax — Escalation](../escalation/)
-- [Powermax — Health Checks](../operations/health-checks/)
+- [Powermax — Health Checks](../../operations/health-checks/)

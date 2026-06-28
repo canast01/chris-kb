@@ -56,4 +56,4 @@ A: Yes — VCSA restore is independent of ESXi hosts. Restore VCSA to a new appl
 ## See Also
 
 - [VMware vSphere Operations](index.md)
-- [VMware vSphere Troubleshooting](../../troubleshooting/index.md)
+- [VMware vSphere Troubleshooting](troubleshooting/index.md)

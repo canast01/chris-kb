@@ -172,7 +172,7 @@ After recovery is confirmed and validated:
 
 ## See Also
 
-- [NSX Security Operations](../../../compute/vmware/nsx/security/index.md)
+- [NSX Security Operations](../../virtualization/vmware/nsx/security/index.md)
 - [Veeam Backup Operations](../../../backup/veeam/operations//)
 - [Pure FlashArray Operations](../../../storage/pure/flasharray/operations//)
 - [DR Failover Runbook](../../../storage/runbooks/dr-failover-vmware-srm-snapmirror/)

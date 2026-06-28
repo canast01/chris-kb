@@ -256,7 +256,7 @@ ssh admin@<rpa-mgmt-ip> "
 
 - [RecoverPoint — Common Issues](../common-issues/)
 - [RecoverPoint — Escalation](../escalation/)
-- [RecoverPoint — Health Checks](../operations/health-checks/)
+- [RecoverPoint — Health Checks](../../operations/health-checks/)
 
 ## Verify resolution
 

@@ -56,4 +56,4 @@ A: If one node fails, vSAN reprotects data to remaining nodes (for FTT=1 cluster
 ## See Also
 
 - [Dell VxRail Operations](index.md)
-- [Dell VxRail Troubleshooting](../../../troubleshooting/index.md)
+- [Dell VxRail Troubleshooting](../troubleshooting/index.md)

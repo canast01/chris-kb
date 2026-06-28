@@ -349,4 +349,4 @@ If SupportAssist cannot be approved for regulated clusters, disable it on those 
 
 - [VxRail — Access Control](../access-control/)
 - [VxRail — Authentication](../authentication/)
-- [VxRail — Health Checks](../operations/health-checks/)
+- [VxRail — Health Checks](../../operations/health-checks/)

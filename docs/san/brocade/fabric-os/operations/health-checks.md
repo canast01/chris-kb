@@ -60,4 +60,4 @@ Health Checks reference covering Daily Checks, Health Check Checklist, Post-Chan
 
 - [Fabric Os — Procedures](../procedures/)
 - [Fabric Os — CLI Reference](../cli-reference/)
-- [Fabric Os — Common Issues](../troubleshooting/common-issues/)
+- [Fabric Os — Common Issues](../../troubleshooting/common-issues/)

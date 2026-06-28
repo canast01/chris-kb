@@ -133,4 +133,4 @@ ML-based capacity models predict when a system will reach capacity thresholds:
 
 - [Dell Aiops — Design Standards](../design-standards/)
 - [Dell Aiops — Integrations](../integrations/)
-- [Dell Aiops — Deploy](../deploy/)
+- [Dell Aiops — Deploy](../../deploy/)

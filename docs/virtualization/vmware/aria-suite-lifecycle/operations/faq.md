@@ -56,4 +56,4 @@ A: Yes — LCM restore only restores the LCM management plane (inventory, mappin
 ## See Also
 
 - [VMware Aria Suite Lifecycle Manager Operations](index.md)
-- [VMware Aria Suite Lifecycle Manager Troubleshooting](../../../troubleshooting/index.md)
+- [VMware Aria Suite Lifecycle Manager Troubleshooting](../troubleshooting/index.md)

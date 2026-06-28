@@ -121,4 +121,4 @@ CloudIQ health scores range from 0 to 100. Scores below 80 indicate a condition 
 
 - [Cloudiq — Design Standards](../design-standards/)
 - [Cloudiq — Integrations](../integrations/)
-- [Cloudiq — Deploy](../deploy/)
+- [Cloudiq — Deploy](../../deploy/)

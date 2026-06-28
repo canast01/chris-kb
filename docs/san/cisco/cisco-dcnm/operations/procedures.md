@@ -221,4 +221,4 @@ curl -sk -b dcnm-cookie.txt -X POST \
 
 - [Cisco Dcnm — Health Checks](../health-checks/)
 - [Cisco Dcnm — CLI Reference](../cli-reference/)
-- [Cisco Dcnm — Common Issues](../troubleshooting/common-issues/)
+- [Cisco Dcnm — Common Issues](../../troubleshooting/common-issues/)

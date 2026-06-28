@@ -340,4 +340,4 @@ switch# show module
 
 - [Mds — Health Checks](../health-checks/)
 - [Mds — CLI Reference](../cli-reference/)
-- [Mds — Common Issues](../troubleshooting/common-issues/)
+- [Mds — Common Issues](../../troubleshooting/common-issues/)

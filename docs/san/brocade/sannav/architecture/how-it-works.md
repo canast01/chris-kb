@@ -157,4 +157,4 @@ graph TB
 
 - [Sannav — Design Standards](../design-standards/)
 - [Sannav — Integrations](../integrations/)
-- [Sannav — Deploy](../deploy/)
+- [Sannav — Deploy](../../deploy/)

@@ -247,4 +247,4 @@ When a CRITICAL alert fires on PowerStore:
 
 - [Powerstore — Procedures](../procedures/)
 - [Powerstore — CLI Reference](../cli-reference/)
-- [Powerstore — Common Issues](../troubleshooting/common-issues/)
+- [Powerstore — Common Issues](../../troubleshooting/common-issues/)

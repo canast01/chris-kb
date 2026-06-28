@@ -56,4 +56,4 @@ A: Yes — `pg_dump -t tablename dbname > table.sql` for export; `psql dbname < 
 ## See Also
 
 - [PostgreSQL Operations](index.md)
-- [PostgreSQL Troubleshooting](../../../troubleshooting/index.md)
+- [PostgreSQL Troubleshooting](../../troubleshooting/index.md)

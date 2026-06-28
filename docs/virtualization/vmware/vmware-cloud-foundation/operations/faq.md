@@ -56,4 +56,4 @@ A: Not independently — VCF configuration is holistic within SDDC Manager. For 
 ## See Also
 
 - [VMware Cloud Foundation Operations](index.md)
-- [VMware Cloud Foundation Troubleshooting](../../../troubleshooting/index.md)
+- [VMware Cloud Foundation Troubleshooting](../troubleshooting/index.md)

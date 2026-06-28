@@ -64,4 +64,4 @@ timedatectl status
 
 - [Sannav — Procedures](../procedures/)
 - [Sannav — CLI Reference](../cli-reference/)
-- [Sannav — Common Issues](../troubleshooting/common-issues/)
+- [Sannav — Common Issues](../../troubleshooting/common-issues/)

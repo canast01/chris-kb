@@ -56,4 +56,4 @@ A: If Velero backups were configured, restore the namespace: `velero restore cre
 ## See Also
 
 - [VMware Tanzu Operations](index.md)
-- [VMware Tanzu Troubleshooting](../../../troubleshooting/index.md)
+- [VMware Tanzu Troubleshooting](../troubleshooting/index.md)

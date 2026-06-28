@@ -131,5 +131,5 @@ graph TB
 ## See also
 
 - [VMware Cloud Foundation — Design Standards](../design-standards/)
-- [VMware Cloud Foundation — Deploy](../deploy/)
+- [VMware Cloud Foundation — Deploy](../../deploy/)
 - [VMware Cloud Foundation — Integrations](../integrations/)

@@ -392,7 +392,7 @@ porterrshow
 
 - [Fabric OS — Common Issues](../common-issues/)
 - [Fabric OS — Escalation](../escalation/)
-- [Fabric OS — Health Checks](../operations/health-checks/)
+- [Fabric OS — Health Checks](../../operations/health-checks/)
 
 ## Verify resolution
 

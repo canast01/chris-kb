@@ -144,4 +144,4 @@ InsightIQ version compatibility with OneFS must be validated using the NetApp In
 
 - [Insightiq — Design Standards](../design-standards/)
 - [Insightiq — Integrations](../integrations/)
-- [Insightiq — Deploy](../deploy/)
+- [Insightiq — Deploy](../../deploy/)

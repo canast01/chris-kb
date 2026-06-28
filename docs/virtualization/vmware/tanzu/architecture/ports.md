@@ -132,7 +132,7 @@ tanzu cluster list
 ## See also
 
 - [Tanzu — Architecture](../how-it-works/)
-- [Tanzu — Deploy](../deploy/)
+- [Tanzu — Deploy](../../deploy/)
 - [NSX — Ports](../../nsx/architecture/ports.md)
 - [OpenShift — Ports](../../../openshift/architecture/ports.md)
 - [vCenter — Ports](../../vcenter/architecture/ports.md)

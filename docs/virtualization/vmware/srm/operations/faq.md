@@ -56,4 +56,4 @@ A: Test: isolated test (production unaffected). Planned Failover: orderly migrat
 ## See Also
 
 - [VMware Site Recovery Manager Operations](index.md)
-- [VMware Site Recovery Manager Troubleshooting](../../../troubleshooting/index.md)
+- [VMware Site Recovery Manager Troubleshooting](../troubleshooting/index.md)

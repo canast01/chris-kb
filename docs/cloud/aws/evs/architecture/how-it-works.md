@@ -175,5 +175,5 @@ You manage:
 ## See also
 
 - [Amazon EVS — Design Standards](../design-standards/)
-- [Amazon EVS — Deploy](../deploy/)
+- [Amazon EVS — Deploy](../../deploy/)
 - [Amazon EVS — Integrations](../integrations/)

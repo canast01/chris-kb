@@ -348,4 +348,4 @@ Key points illustrated:
 
 - [Powermax — Design Standards](../design-standards/)
 - [Powermax — Integrations](../integrations/)
-- [Powermax — Deploy](../deploy/)
+- [Powermax — Deploy](../../deploy/)

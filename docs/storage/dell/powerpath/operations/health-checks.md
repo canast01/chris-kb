@@ -300,4 +300,4 @@ systemctl status multipathd
 
 - [Powerpath — Procedures](../procedures/)
 - [Powerpath — CLI Reference](../cli-reference/)
-- [Powerpath — Common Issues](../troubleshooting/common-issues/)
+- [Powerpath — Common Issues](../../troubleshooting/common-issues/)

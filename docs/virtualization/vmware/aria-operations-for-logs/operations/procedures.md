@@ -615,7 +615,7 @@ In Aria Logs: **Administration → Log Sources** — the removed source should n
 ## See also
 
 - [Aria Operations for Logs — Health Checks](../health-checks/)
-- [Aria Operations for Logs — Common Issues](../troubleshooting/common-issues/)
+- [Aria Operations for Logs — Common Issues](../../troubleshooting/common-issues/)
 - [Aria Operations for Logs — CLI Reference](../cli-reference/)
 
 ## Verify

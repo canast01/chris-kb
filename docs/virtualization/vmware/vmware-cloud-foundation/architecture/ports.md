@@ -128,7 +128,7 @@ curl -sk -u admin:<pass> https://localhost/v1/bundles | python3 -m json.tool | g
 ## See also
 
 - [VCF — Architecture](../how-it-works/)
-- [VCF — Deploy](../deploy/)
+- [VCF — Deploy](../../deploy/)
 - [VCF — Operations](../../operations/)
 - [vCenter — Ports](../../vcenter/architecture/ports.md)
 - [NSX — Ports](../../nsx/architecture/ports.md)

@@ -56,4 +56,4 @@ A: No — flow data stored on the appliance is lost if the appliance is rebuilt.
 ## See Also
 
 - [VMware Aria Operations for Networks Operations](index.md)
-- [VMware Aria Operations for Networks Troubleshooting](../../../troubleshooting/index.md)
+- [VMware Aria Operations for Networks Troubleshooting](../troubleshooting/index.md)

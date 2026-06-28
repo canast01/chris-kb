@@ -667,7 +667,7 @@ PowerCLI exposes typed event classes — use `Where-Object {$_.GetType().Name -e
 
 - [PowerCLI — Health Checks](../health-checks/)
 - [PowerCLI — CLI Reference](../cli-reference/)
-- [PowerCLI — Common Issues](../troubleshooting/common-issues/)
+- [PowerCLI — Common Issues](../../troubleshooting/common-issues/)
 
 ## Verify
 

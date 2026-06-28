@@ -311,4 +311,4 @@ Run `Invoke-SCCatalogCleanup` after any out-of-band snapshot deletions on ONTAP 
 
 - [Snapcenter — Health Checks](../health-checks/)
 - [Snapcenter — CLI Reference](../cli-reference/)
-- [Snapcenter — Common Issues](../troubleshooting/common-issues/)
+- [Snapcenter — Common Issues](../../troubleshooting/common-issues/)

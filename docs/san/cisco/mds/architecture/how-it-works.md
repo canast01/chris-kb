@@ -157,4 +157,4 @@ Director-class MDS switches (9710, 9718) and high-end fixed switches provide mul
 
 - [Mds — Design Standards](../design-standards/)
 - [Mds — Integrations](../integrations/)
-- [Mds — Deploy](../deploy/)
+- [Mds — Deploy](../../deploy/)

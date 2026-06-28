@@ -248,7 +248,7 @@ Run before any host maintenance, upgrade, or cluster configuration change.
 
 ## See also
 
-- [vSAN — Common Issues](../troubleshooting/common-issues/)
+- [vSAN — Common Issues](../../troubleshooting/common-issues/)
 - [vSAN — Procedures](../procedures/)
 - [vSAN Operations — CLI Reference](../cli-reference/)
 

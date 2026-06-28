@@ -179,7 +179,7 @@ Check VMware Tanzu Kubernetes releases compatibility before upgrade:
 ## See also
 
 - [Tanzu — Health Checks](../health-checks/)
-- [Virtualization Vmware Tanzu — Common Issues](../troubleshooting/common-issues/)
+- [Virtualization Vmware Tanzu — Common Issues](../../troubleshooting/common-issues/)
 - [Tanzu — Procedures](../procedures/)
 
 ## Verify

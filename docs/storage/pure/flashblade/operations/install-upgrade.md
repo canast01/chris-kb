@@ -117,4 +117,4 @@ Maintain a quarterly review cadence against Pure's published hardware and softwa
 
 - [FlashBlade — Procedures](../procedures/)
 - [FlashBlade — Health Checks](../health-checks/)
-- [FlashBlade — Deploy](../deploy/)
+- [FlashBlade — Deploy](../../deploy/)

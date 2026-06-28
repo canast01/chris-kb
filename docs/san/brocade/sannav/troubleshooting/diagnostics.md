@@ -266,7 +266,7 @@ supportsave
 
 - [SANnav — Common Issues](../common-issues/)
 - [SANnav — Escalation](../escalation/)
-- [SANnav — Health Checks](../operations/health-checks/)
+- [SANnav — Health Checks](../../operations/health-checks/)
 
 ## Verify resolution
 

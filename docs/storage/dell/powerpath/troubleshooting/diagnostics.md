@@ -402,7 +402,7 @@ echo "Attach this file to your Dell support case."
 
 - [PowerPath — Common Issues](../common-issues/)
 - [PowerPath — Escalation](../escalation/)
-- [PowerPath — Health Checks](../operations/health-checks/)
+- [PowerPath — Health Checks](../../operations/health-checks/)
 
 ## Verify resolution
 

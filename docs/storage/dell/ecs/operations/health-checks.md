@@ -267,4 +267,4 @@ Complete all items before any planned maintenance. Do not proceed if any item is
 
 - [Ecs — Procedures](../procedures/)
 - [Ecs — CLI Reference](../cli-reference/)
-- [Ecs — Common Issues](../troubleshooting/common-issues/)
+- [Ecs — Common Issues](../../troubleshooting/common-issues/)

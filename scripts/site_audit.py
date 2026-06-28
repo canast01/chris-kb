@@ -9,6 +9,7 @@ Usage:
 """
 
 import os, re, sys, xml.etree.ElementTree as ET
+from pathlib import Path
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DOCS = os.path.join(REPO, 'docs')
@@ -207,6 +208,12 @@ KNOWN_STUB_OK = {'docs/tags.md'}
 # Directories whose pages are intentional stubs (new sections under construction)
 KNOWN_STUB_DIRS = {
     'docs/virtualization/nutanix',
+    'docs/offline',   # PWA offline page — intentionally minimal
+    'docs/stats',     # Stats page — intentionally minimal
+    'docs/virtualization/vmware/reference/certification',  # placeholder cert notes
+    'docs/itsm/servicenow/change-management',  # skeleton sections
+    'docs/itsm/servicenow/templates',          # skeleton sections
+    'docs/virtualization/vmware/reference/inventory',  # version/tool inventory stubs
 }
 issues = check(13, 'Stub/empty pages')
 for path in all_md():
@@ -462,13 +469,18 @@ _SKIP_DIAG = {'tags.md', 'site-map.md', 'usage-metrics.md', 'site-quality.md'}
 _missing_diag = []
 for _path in all_md():
     _rel = os.path.relpath(_path, DOCS)
+    _abs_rel = os.path.relpath(_path, REPO)
     if _rel in _SKIP_DIAG or _rel.startswith('stats/'):
+        continue
+    if any(_abs_rel.startswith(d) for d in KNOWN_STUB_DIRS):
         continue
     _c = open(_path).read()
     if 'kb-card' in _c or 'kb-grid' in _c:
         continue  # nav pages don't need diagrams
     if re.search(r'\.(svg|png|jpg)\)', _c) or '<img ' in _c:
         continue  # pages with embedded images satisfy the diagram requirement
+    if re.search(r'```(mermaid|d2|plantuml|vegalite)\b', _c):
+        continue  # Mermaid/Kroki-rendered diagrams satisfy the requirement
     if not re.search(r'[┌│└┐┘]', _c):
         _missing_diag.append(_rel)
 if _missing_diag:
@@ -661,7 +673,10 @@ else:
             if not _line.startswith('### '):
                 continue
             _nxt = [l.strip() for l in _lines[_i+1:_i+4] if l.strip()]
-            _has_svg = bool(_nxt and re.match(r'!\[.*\]\(.*\.svg\)', _nxt[0]))
+            _has_svg = bool(_nxt and (
+                re.match(r'!\[.*\]\(.*\.svg\)', _nxt[0]) or
+                re.match(r'```(d2|plantuml|vegalite)', _nxt[0])
+            ))
             if not _has_svg:
                 warn(issues, f'{_rel}: "### {_line[4:].strip()}" missing SVG ref')
 
@@ -735,21 +750,46 @@ for _path in all_md():
 
 
 # ── Check 35: "See also" link validity ───────────────────────────────────────
+# Validates against site/ (built output) to account for MkDocs converting
+# flat file.md → file/index.html, which shifts relative link depth by one.
+# Falls back to docs/ resolution if site/ doesn't exist.
 issues = check(35, '"See also" internal link validity')
+_SITE = os.path.join(REPO, 'site')
+_use_site = os.path.isdir(_SITE)
 for _path in all_md():
     _c = open(_path).read()
     _sm = re.search(r'## See also\n(.*?)(?=\n##|\Z)', _c, re.DOTALL)
     if not _sm:
         continue
-    _page_dir = os.path.dirname(_path)
+    if _use_site:
+        # Compute the effective directory in site/ space
+        _rel_to_docs = os.path.relpath(_path, DOCS)
+        _p = Path(_rel_to_docs)
+        if _p.name == 'index.md':
+            _eff_dir = os.path.join(_SITE, str(_p.parent))
+        else:
+            _eff_dir = os.path.join(_SITE, str(_p.parent), _p.stem)
+    else:
+        _eff_dir = os.path.dirname(_path)
     for _lm in re.finditer(r'\[.*?\]\(([^)]+)\)', _sm.group(1)):
         _href = _lm.group(1).split('#')[0]
-        if not _href or _href.startswith('http') or _href.startswith('mailto'):
+        if not _href or _href.startswith(('http', 'mailto', 'data:')):
             continue
-        _target = os.path.normpath(os.path.join(_page_dir, _href))
-        _exists = (os.path.exists(_target)
-                   or os.path.exists(_target + '.md')
-                   or os.path.exists(os.path.join(_target, 'index.md')))
+        if _href.endswith('.md'):
+            # .md links: MkDocs resolves from docs/ source position (not site/)
+            _src_dir = os.path.dirname(_path)
+            _tgt = os.path.normpath(os.path.join(_src_dir, _href[:-3]))
+            _exists = (os.path.exists(_tgt + '.md')
+                       or os.path.exists(os.path.join(_tgt, 'index.md')))
+        else:
+            _target = os.path.normpath(os.path.join(_eff_dir, _href))
+            if _use_site:
+                _exists = (os.path.exists(_target)
+                           or os.path.exists(os.path.join(_target, 'index.html')))
+            else:
+                _exists = (os.path.exists(_target)
+                           or os.path.exists(_target + '.md')
+                           or os.path.exists(os.path.join(_target, 'index.md')))
         if not _exists:
             _rel = os.path.relpath(_path, DOCS)
             warn(issues, f'{_rel}: broken "See also" link "{_href}"')
@@ -904,18 +944,24 @@ for _md in all_md():
                 warn(issues, f'{os.path.relpath(_md, DOCS)} — hexagon hub')
                 break
 
-# ── Check 42: .md extension links in "See also" sections ─────────────────────
-# MkDocs auto-converts .md links only in prose — not inside HTML blocks.
-# href="target.md" in a "See also" renders as a literal .md path → 404.
-# Fix: use [text](../target/) instead of [text](../target/index.md).
-issues = check(42, 'No .md extension links in "See also" sections (would 404)')
+# ── Check 42: Broken .md extension links in "See also" sections ──────────────
+# MkDocs resolves .md links from docs/ source position, so valid .md links are
+# fine. Only flag .md links where the target file doesn't exist in docs/ — those
+# will 404 since MkDocs has no target to convert.
+issues = check(42, 'No broken .md extension links in "See also" sections (would 404)')
 _MD_LINK_PAT   = re.compile(r'\[([^\]]+)\]\(([^)#?]+\.md)\)')
 _SEE_ALSO_BLOCK = re.compile(r'## See also.*?(?=\n##|\Z)', re.DOTALL | re.IGNORECASE)
 for _md in all_md():
     _txt = open(_md).read()
+    _src_dir = os.path.dirname(_md)
     for _block in _SEE_ALSO_BLOCK.finditer(_txt):
         for _lm in _MD_LINK_PAT.finditer(_block.group(0)):
-            warn(issues, f'{os.path.relpath(_md, DOCS)}: [{_lm.group(1)}]({_lm.group(2)})')
+            _href = _lm.group(2)
+            _tgt = os.path.normpath(os.path.join(_src_dir, _href[:-3]))
+            _exists = (os.path.exists(_tgt + '.md')
+                       or os.path.exists(os.path.join(_tgt, 'index.md')))
+            if not _exists:
+                warn(issues, f'{os.path.relpath(_md, DOCS)}: [{_lm.group(1)}]({_href})')
 
 
 # ── Report ────────────────────────────────────────────────────────────────────

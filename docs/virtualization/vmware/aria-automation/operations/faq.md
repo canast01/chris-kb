@@ -56,4 +56,4 @@ A: Yes — export the blueprint to YAML (Cloud Template → Export). Re-import v
 ## See Also
 
 - [VMware Aria Automation Operations](index.md)
-- [VMware Aria Automation Troubleshooting](../../../troubleshooting/index.md)
+- [VMware Aria Automation Troubleshooting](../troubleshooting/index.md)

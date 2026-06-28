@@ -56,4 +56,4 @@ A: vSAN automatically re-replicates data after a disk or host failure, as long a
 ## See Also
 
 - [VMware vSAN Operations](index.md)
-- [VMware vSAN Troubleshooting](../../../troubleshooting/index.md)
+- [VMware vSAN Troubleshooting](../troubleshooting/index.md)

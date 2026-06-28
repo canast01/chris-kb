@@ -64,4 +64,4 @@ show flogi database
 
 - [Mds — Procedures](../procedures/)
 - [Mds — Health Checks](../health-checks/)
-- [Mds — Deploy](../deploy/)
+- [Mds — Deploy](../../deploy/)

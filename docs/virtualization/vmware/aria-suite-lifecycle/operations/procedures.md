@@ -415,7 +415,7 @@ Required when the vCenter that hosts Aria product VMs is migrated to a new FQDN,
 ## See also
 
 - [Aria Suite Lifecycle — Health Checks](../health-checks/)
-- [Aria Suite Lifecycle — Common Issues](../troubleshooting/common-issues/)
+- [Aria Suite Lifecycle — Common Issues](../../troubleshooting/common-issues/)
 - [Aria Suite Lifecycle — CLI Reference](../cli-reference/)
 
 ## Verify

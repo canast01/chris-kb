@@ -98,7 +98,7 @@ esxcli storage core device list
 ## See also
 
 - [vSAN — Health Checks](../health-checks/)
-- [vSAN — Common Issues](../troubleshooting/common-issues/)
+- [vSAN — Common Issues](../../troubleshooting/common-issues/)
 - [vSAN — Procedures](../procedures/)
 
 ## Verify

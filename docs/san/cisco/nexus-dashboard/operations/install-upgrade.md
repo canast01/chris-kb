@@ -119,4 +119,4 @@ Cisco releases ND major versions approximately annually and maintenance releases
 
 - [Nexus Dashboard — Procedures](../procedures/)
 - [Nexus Dashboard — Health Checks](../health-checks/)
-- [Nexus Dashboard — Deploy](../deploy/)
+- [Nexus Dashboard — Deploy](../../deploy/)

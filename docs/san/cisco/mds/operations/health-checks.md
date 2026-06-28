@@ -104,4 +104,4 @@ show logging last 50
 
 - [Mds — Procedures](../procedures/)
 - [Mds — CLI Reference](../cli-reference/)
-- [Mds — Common Issues](../troubleshooting/common-issues/)
+- [Mds — Common Issues](../../troubleshooting/common-issues/)

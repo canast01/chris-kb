@@ -541,7 +541,7 @@ Plugins alone don't send anything — they must be referenced in a Notification 
 ## See also
 
 - [Aria Operations Health Checks](../health-checks/)
-- [Aria Operations Common Issues](../troubleshooting/common-issues/)
+- [Aria Operations Common Issues](../../troubleshooting/common-issues/)
 - [Aria Operations — CLI Reference](../cli-reference/)
 
 ## Verify

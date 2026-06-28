@@ -376,4 +376,4 @@ symstat -sid <sid> -rdfg <group> -type rdf
 
 - [Srdf S — Health Checks](../health-checks/)
 - [Srdf S — CLI Reference](../cli-reference/)
-- [Srdf S — Common Issues](../troubleshooting/common-issues/)
+- [Srdf S — Common Issues](../../troubleshooting/common-issues/)

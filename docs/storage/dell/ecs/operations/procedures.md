@@ -443,4 +443,4 @@ aws s3api get-object-lock-configuration \
 
 - [Ecs — Health Checks](../health-checks/)
 - [Ecs — CLI Reference](../cli-reference/)
-- [Ecs — Common Issues](../troubleshooting/common-issues/)
+- [Ecs — Common Issues](../../troubleshooting/common-issues/)

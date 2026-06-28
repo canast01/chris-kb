@@ -1724,7 +1724,7 @@ vmkping -I vmk2 <witness_vsan_vmk_ip>
 ## See also
 
 - [vSAN — Health Checks](../health-checks/)
-- [vSAN — Common Issues](../troubleshooting/common-issues/)
+- [vSAN — Common Issues](../../troubleshooting/common-issues/)
 - [vSAN Operations — CLI Reference](../cli-reference/)
 
 ## Verify

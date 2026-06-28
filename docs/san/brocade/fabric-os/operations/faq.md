@@ -56,4 +56,4 @@ A: Yes — export the zone database with `configupload -all`, edit the zone file
 ## See Also
 
 - [Brocade Fabric OS Operations](index.md)
-- [Brocade Fabric OS Troubleshooting](../../../troubleshooting/index.md)
+- [Brocade Fabric OS Troubleshooting](../troubleshooting/index.md)

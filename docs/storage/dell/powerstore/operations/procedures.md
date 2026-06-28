@@ -522,4 +522,4 @@ GUI path: Storage → Storage Policies → Performance Policies → Create (set 
 
 - [Powerstore — Health Checks](../health-checks/)
 - [Powerstore — CLI Reference](../cli-reference/)
-- [Powerstore — Common Issues](../troubleshooting/common-issues/)
+- [Powerstore — Common Issues](../../troubleshooting/common-issues/)

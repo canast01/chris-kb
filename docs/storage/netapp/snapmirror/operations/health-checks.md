@@ -117,4 +117,4 @@ snapmirror show -fields lag-time
 
 - [Snapmirror — Procedures](../procedures/)
 - [Snapmirror — CLI Reference](../cli-reference/)
-- [Snapmirror — Common Issues](../troubleshooting/common-issues/)
+- [Snapmirror — Common Issues](../../troubleshooting/common-issues/)

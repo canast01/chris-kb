@@ -146,7 +146,7 @@ curl -sk -X POST https://<aria-automation-fqdn>/csp/gateway/am/api/login \
 ## See also
 
 - [Aria Automation — Architecture](../how-it-works/)
-- [Aria Automation — Deploy](../deploy/)
+- [Aria Automation — Deploy](../../deploy/)
 - [Aria Automation — Operations](../../operations/)
 - [Aria Suite Lifecycle — Ports](../../aria-suite-lifecycle/architecture/ports.md)
 - [vCenter — Ports](../../vcenter/architecture/ports.md)

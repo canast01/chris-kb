@@ -280,6 +280,14 @@ purevol recover <volume_name>
 
 ### Volume Tags
 
+```d2
+direction: right
+vol: "Volume" {shape: cylinder}
+tag: "Tag\nkey=value" {shape: rectangle}
+vol -> tag: settag
+tag -> vol: listtags
+```
+
 ```bash
 # Set a tag on a volume
 purevol settag <volume_name> --tag-name <key> --tag-value <value>
@@ -416,4 +424,4 @@ purepgroup eradicate <pg_name>
 
 - [FlashArray — Health Checks](../health-checks/)
 - [FlashArray — CLI Reference](../cli-reference/)
-- [FlashArray — Common Issues](../troubleshooting/common-issues/)
+- [FlashArray — Common Issues](../../troubleshooting/common-issues/)

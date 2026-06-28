@@ -342,7 +342,7 @@ ORDER BY wait_time_ms DESC;
 
 - [SQL Server — Common Issues](../common-issues/)
 - [SQL Server — Escalation](../escalation/)
-- [SQL Server — Health Checks](../operations/health-checks/)
+- [SQL Server — Health Checks](../../operations/health-checks/)
 
 ## Verify resolution
 

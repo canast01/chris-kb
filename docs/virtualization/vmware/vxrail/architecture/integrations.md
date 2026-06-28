@@ -85,4 +85,4 @@ VxRail nodes and the vSAN datastore should be registered in the CMDB:
 ## See also
 
 - [VxRail — How It Works (VMware Platform)](../how-it-works/)
-- [VxRail — Deploy](../deploy/)
+- [VxRail — Deploy](../../deploy/)

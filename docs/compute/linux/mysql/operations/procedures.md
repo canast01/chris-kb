@@ -169,4 +169,4 @@ SELECT session_id, blocking_session_id, wait_type, wait_time FROM sys.dm_exec_re
 
 - [Mysql — Health Checks](../health-checks/)
 - [Mysql — CLI Reference](../cli-reference/)
-- [Mysql — Common Issues](../troubleshooting/common-issues/)
+- [Mysql — Common Issues](../../troubleshooting/common-issues/)

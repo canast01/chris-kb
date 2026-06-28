@@ -215,7 +215,7 @@ ls -lth /var/symapi/log/ | head -10
 
 - [SRDF/A — Common Issues](../common-issues/)
 - [SRDF/A — Escalation](../escalation/)
-- [SRDF/A — Health Checks](../operations/health-checks/)
+- [SRDF/A — Health Checks](../../operations/health-checks/)
 
 ## Verify resolution
 

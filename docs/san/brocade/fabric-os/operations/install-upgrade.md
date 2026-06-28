@@ -123,4 +123,4 @@ haFailover      # Force CP failover
 
 - [Fabric Os — Procedures](../procedures/)
 - [Fabric Os — Health Checks](../health-checks/)
-- [Fabric Os — Deploy](../deploy/)
+- [Fabric Os — Deploy](../../deploy/)

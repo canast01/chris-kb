@@ -478,4 +478,4 @@ For SRDF/A (asynchronous), allow time after failback for the delta to resync bef
 
 - [Powermax — Health Checks](../health-checks/)
 - [Powermax — CLI Reference](../cli-reference/)
-- [Powermax — Common Issues](../troubleshooting/common-issues/)
+- [Powermax — Common Issues](../../troubleshooting/common-issues/)

@@ -132,4 +132,4 @@ Metro Volume provides zero-RPO synchronous replication:
 
 - [Powerstore — Design Standards](../design-standards/)
 - [Powerstore — Integrations](../integrations/)
-- [Powerstore — Deploy](../deploy/)
+- [Powerstore — Deploy](../../deploy/)

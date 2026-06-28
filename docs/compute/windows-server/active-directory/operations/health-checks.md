@@ -107,4 +107,4 @@ Run these commands each morning to verify Active Directory health before issues 
 
 - [Active Directory — Procedures](../procedures/)
 - [Active Directory — CLI Reference](../cli-reference/)
-- [Active Directory — Common Issues](../troubleshooting/common-issues/)
+- [Active Directory — Common Issues](../../troubleshooting/common-issues/)

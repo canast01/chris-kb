@@ -281,7 +281,7 @@ curl -sk -u 'admin:password' \
 
 ## See also
 
-- [NSX — Common Issues](../troubleshooting/common-issues/)
+- [NSX — Common Issues](../../troubleshooting/common-issues/)
 - [NSX — Standard Procedures](../procedures/)
 - [NSX — CLI Reference](../cli-reference/)
 

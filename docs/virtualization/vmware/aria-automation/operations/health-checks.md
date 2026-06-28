@@ -167,7 +167,7 @@ kubectl get events -n prelude --sort-by='.metadata.creationTimestamp' | tail -30
 
 ## See also
 
-- [Aria Automation — Common Issues](../troubleshooting/common-issues/)
+- [Aria Automation — Common Issues](../../troubleshooting/common-issues/)
 - [Aria Automation — Operational Procedures](../procedures/)
 - [Aria Automation — CLI Reference](../cli-reference/)
 

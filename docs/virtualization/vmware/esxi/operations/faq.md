@@ -56,4 +56,4 @@ A: Yes — restore from firmware backup: `Set-VMHostFirmware -VMHost <host> -Res
 ## See Also
 
 - [VMware ESXi Operations](index.md)
-- [VMware ESXi Troubleshooting](../../../troubleshooting/index.md)
+- [VMware ESXi Troubleshooting](../troubleshooting/index.md)

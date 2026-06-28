@@ -655,7 +655,7 @@ Global permissions set at the SSO domain level apply across all linked vCenters:
 ## See also
 
 - [vCenter — Health Checks](../health-checks/)
-- [vCenter Troubleshooting — Common Issues](../troubleshooting/common-issues/)
+- [vCenter Troubleshooting — Common Issues](../../troubleshooting/common-issues/)
 - [vCenter — CLI Reference (PowerCLI & DCLI)](../cli-reference/)
 
 ## Verify

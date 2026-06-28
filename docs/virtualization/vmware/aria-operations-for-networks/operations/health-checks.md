@@ -218,7 +218,7 @@ sudo jmap -heap $(pgrep -f vrni-platform) 2>/dev/null | grep -E 'Heap|used|capac
 
 ## See also
 
-- [vRNI Common Issues](../troubleshooting/common-issues/)
+- [vRNI Common Issues](../../troubleshooting/common-issues/)
 - [AON Operational Procedures](../procedures/)
 - [vRNI CLI Reference](../cli-reference/)
 

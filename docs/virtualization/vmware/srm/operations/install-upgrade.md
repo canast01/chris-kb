@@ -161,7 +161,7 @@ flowchart TD
 ## See also
 
 - [SRM — Health Checks](../health-checks/)
-- [VMware SRM — Common Issues](../troubleshooting/common-issues/)
+- [VMware SRM — Common Issues](../../troubleshooting/common-issues/)
 - [SRM — Procedures](../procedures/)
 
 ## Verify

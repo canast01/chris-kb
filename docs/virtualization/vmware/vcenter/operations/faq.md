@@ -56,4 +56,4 @@ A: Yes — restore VCSA to a new appliance. VMs continue running on ESXi hosts i
 ## See Also
 
 - [VMware vCenter Operations](index.md)
-- [VMware vCenter Troubleshooting](../../../troubleshooting/index.md)
+- [VMware vCenter Troubleshooting](../troubleshooting/index.md)

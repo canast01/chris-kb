@@ -124,4 +124,4 @@ Dell is responsible for APEX infrastructure maintenance. Customer responsibiliti
 
 - [Apex Storage As A Service — Health Checks](../health-checks/)
 - [Apex Storage As A Service — CLI Reference](../cli-reference/)
-- [Apex Storage As A Service — Common Issues](../troubleshooting/common-issues/)
+- [Apex Storage As A Service — Common Issues](../../troubleshooting/common-issues/)

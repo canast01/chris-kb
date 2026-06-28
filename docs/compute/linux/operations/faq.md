@@ -56,4 +56,4 @@ A: Yes — from Veeam Agent file-level recovery, or from your version-controlled
 ## See Also
 
 - [Linux Operations](index.md)
-- [Linux Troubleshooting](../../troubleshooting/index.md)
+- [Linux Troubleshooting](../troubleshooting/index.md)

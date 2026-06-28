@@ -270,4 +270,4 @@ pg_basebackup -h <primary-host> -U replication -D /var/lib/postgresql/data-new -
 
 - [Mysql — Procedures](../procedures/)
 - [Mysql — CLI Reference](../cli-reference/)
-- [Mysql — Common Issues](../troubleshooting/common-issues/)
+- [Mysql — Common Issues](../../troubleshooting/common-issues/)

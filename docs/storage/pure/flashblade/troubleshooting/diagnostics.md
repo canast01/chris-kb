@@ -273,7 +273,7 @@ purefb support diag
 
 - [FlashBlade — Common Issues](../common-issues/)
 - [FlashBlade — Escalation](../escalation/)
-- [FlashBlade — Health Checks](../operations/health-checks/)
+- [FlashBlade — Health Checks](../../operations/health-checks/)
 
 ## Verify resolution
 

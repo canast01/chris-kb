@@ -56,4 +56,4 @@ A: Not independently for all services. NDFC allows individual fabric backup/rest
 ## See Also
 
 - [Cisco Nexus Dashboard Operations](index.md)
-- [Cisco Nexus Dashboard Troubleshooting](../../../troubleshooting/index.md)
+- [Cisco Nexus Dashboard Troubleshooting](../troubleshooting/index.md)

@@ -48,9 +48,9 @@ curl -sk -u admin:<password> \
 
 ## See also
 
-- [VCF — Health Checks](health-checks/)
-- [VCF Troubleshooting — Common Issues](../troubleshooting/common-issues/)
-- [VCF — Procedures](procedures/)
+- [VCF — Health Checks](../health-checks/)
+- [VCF Troubleshooting — Common Issues](../../troubleshooting/common-issues/)
+- [VCF — Procedures](../procedures/)
 
 ## Verify NSX version compatibility
 curl -sk -u admin:<password> \

@@ -187,7 +187,7 @@ nc -vz uag.public.corp.com 443
 
 ## See also
 
-- [VMware Horizon — Common Issues](../troubleshooting/common-issues/)
+- [VMware Horizon — Common Issues](../../troubleshooting/common-issues/)
 - [Horizon — Procedures](../procedures/)
 - [Horizon — CLI Reference](../cli-reference/)
 

@@ -56,4 +56,4 @@ A: Not directly — Horizon configuration is stored in an ADAM (Active Directory
 ## See Also
 
 - [VMware Horizon Operations](index.md)
-- [VMware Horizon Troubleshooting](../../../troubleshooting/index.md)
+- [VMware Horizon Troubleshooting](../troubleshooting/index.md)

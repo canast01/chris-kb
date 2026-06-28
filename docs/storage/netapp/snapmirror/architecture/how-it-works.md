@@ -157,4 +157,4 @@ vserver start -vserver svm_dst
 
 - [Snapmirror — Design Standards](../design-standards/)
 - [Snapmirror — Integrations](../integrations/)
-- [Snapmirror — Deploy](../deploy/)
+- [Snapmirror — Deploy](../../deploy/)

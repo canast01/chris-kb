@@ -314,4 +314,4 @@ Monitor the establish operation until the new pairs reach **Consistent** state a
 
 - [Srdf A — Health Checks](../health-checks/)
 - [Srdf A — CLI Reference](../cli-reference/)
-- [Srdf A — Common Issues](../troubleshooting/common-issues/)
+- [Srdf A — Common Issues](../../troubleshooting/common-issues/)

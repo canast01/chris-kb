@@ -56,4 +56,4 @@ A: Not natively. DFW policies are part of the NSX configuration database. Export
 ## See Also
 
 - [VMware NSX Operations](index.md)
-- [VMware NSX Troubleshooting](../../../troubleshooting/index.md)
+- [VMware NSX Troubleshooting](../troubleshooting/index.md)

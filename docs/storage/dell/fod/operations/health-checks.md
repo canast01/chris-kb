@@ -100,4 +100,4 @@ curl -s -k \
 
 - [Fod — Procedures](../procedures/)
 - [Fod — CLI Reference](../cli-reference/)
-- [Fod — Common Issues](../troubleshooting/common-issues/)
+- [Fod — Common Issues](../../troubleshooting/common-issues/)

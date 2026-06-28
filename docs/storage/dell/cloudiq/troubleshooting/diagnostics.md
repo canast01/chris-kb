@@ -234,7 +234,7 @@ scp admin@<scg-ip>:/tmp/scg-bundle-*.tar.gz /tmp/
 
 - [CloudIQ — Common Issues](../common-issues/)
 - [CloudIQ — Escalation](../escalation/)
-- [CloudIQ — Health Checks](../operations/health-checks/)
+- [CloudIQ — Health Checks](../../operations/health-checks/)
 
 ## Verify resolution
 

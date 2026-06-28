@@ -429,5 +429,5 @@ spec:
 ## See also
 
 - [Tanzu — Design Standards](../design-standards/)
-- [Tanzu — Deploy](../deploy/)
+- [Tanzu — Deploy](../../deploy/)
 - [Tanzu — Integrations](../integrations/)

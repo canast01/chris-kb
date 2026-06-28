@@ -328,4 +328,4 @@ Key points illustrated:
 
 - [FlashArray — Design Standards](../design-standards/)
 - [FlashArray — Integrations](../integrations/)
-- [FlashArray — Deploy](../deploy/)
+- [FlashArray — Deploy](../../deploy/)

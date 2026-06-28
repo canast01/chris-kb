@@ -65,4 +65,4 @@ echo | openssl s_client -connect vrni.example.local:443 2>/dev/null \
 
 - [Aria Operations for Networks — Access Control](../access-control/)
 - [Aria Operations for Networks — Authentication](../authentication/)
-- [vRNI Health Checks](../operations/health-checks/)
+- [vRNI Health Checks](../../operations/health-checks/)

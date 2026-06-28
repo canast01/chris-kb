@@ -585,7 +585,7 @@ Instead of notifications, add a **Message** step with instructions for operators
 ## See also
 
 - [SRM — Health Checks](../health-checks/)
-- [VMware SRM — Common Issues](../troubleshooting/common-issues/)
+- [VMware SRM — Common Issues](../../troubleshooting/common-issues/)
 - [SRM — CLI Reference](../cli-reference/)
 
 ## Verify

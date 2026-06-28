@@ -117,4 +117,4 @@ ssh admin@<dr-rpa-cluster-ip> "groups status"
 
 - [Recoverpoint — Procedures](../procedures/)
 - [Recoverpoint — CLI Reference](../cli-reference/)
-- [Recoverpoint — Common Issues](../troubleshooting/common-issues/)
+- [Recoverpoint — Common Issues](../../troubleshooting/common-issues/)

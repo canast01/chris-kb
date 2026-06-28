@@ -205,4 +205,4 @@ fcipcircuit --show -perf
 
 - [Fabric Os — Design Standards](../design-standards/)
 - [Fabric Os — Integrations](../integrations/)
-- [Fabric Os — Deploy](../deploy/)
+- [Fabric Os — Deploy](../../deploy/)

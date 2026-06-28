@@ -169,4 +169,4 @@ SELECT session_id, blocking_session_id, wait_type, wait_time FROM sys.dm_exec_re
 
 - [Postgresql — Health Checks](../health-checks/)
 - [Postgresql — CLI Reference](../cli-reference/)
-- [Postgresql — Common Issues](../troubleshooting/common-issues/)
+- [Postgresql — Common Issues](../../troubleshooting/common-issues/)

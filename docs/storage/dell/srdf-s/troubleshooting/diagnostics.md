@@ -219,7 +219,7 @@ symstat -sid <SID> -type rdf -delta_t 60
 
 - [SRDF/S — Common Issues](../common-issues/)
 - [SRDF/S — Escalation](../escalation/)
-- [SRDF/S — Health Checks](../operations/health-checks/)
+- [SRDF/S — Health Checks](../../operations/health-checks/)
 
 ## Verify resolution
 

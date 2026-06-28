@@ -93,4 +93,4 @@ InnoDB defaults to `REPEATABLE READ`. MVCC provides non-blocking reads by keepin
 
 - [Mysql — Design Standards](../design-standards/)
 - [Mysql — Integrations](../integrations/)
-- [Mysql — Deploy](../deploy/)
+- [Mysql — Deploy](../../deploy/)

@@ -247,7 +247,7 @@ Get-SmSupportBundle -Path C:\Temp\snapcenter-support-$(Get-Date -Format yyyyMMdd
 
 - [SnapCenter — Common Issues](../common-issues/)
 - [SnapCenter — Escalation](../escalation/)
-- [SnapCenter — Health Checks](../operations/health-checks/)
+- [SnapCenter — Health Checks](../../operations/health-checks/)
 
 ## Verify resolution
 

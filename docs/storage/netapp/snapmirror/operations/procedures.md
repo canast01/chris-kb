@@ -404,4 +404,4 @@ snapmirror show -type sync -fields is-healthy
 
 - [Snapmirror — Health Checks](../health-checks/)
 - [Snapmirror — CLI Reference](../cli-reference/)
-- [Snapmirror — Common Issues](../troubleshooting/common-issues/)
+- [Snapmirror — Common Issues](../../troubleshooting/common-issues/)

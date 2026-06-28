@@ -318,7 +318,7 @@ esxcli hardware sensor list 2>&1 | grep -i "critical" || echo "No critical senso
 
 ## See also
 
-- [VxRail — Common Issues](../troubleshooting/common-issues/)
+- [VxRail — Common Issues](../../troubleshooting/common-issues/)
 - [VxRail — Procedures](../procedures/)
 - [VxRail — CLI Reference](../cli-reference/)
 

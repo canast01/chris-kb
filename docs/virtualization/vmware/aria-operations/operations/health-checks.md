@@ -140,9 +140,9 @@ chronyc makestep
 
 ## See also
 
-- [Aria Operations Common Issues](../troubleshooting/common-issues/)
-- [Aria Operations Procedures](procedures/)
-- [Aria Operations — CLI Reference](cli-reference/)
+- [Aria Operations Common Issues](../../troubleshooting/common-issues/)
+- [Aria Operations Procedures](../procedures/)
+- [Aria Operations — CLI Reference](../cli-reference/)
 
 ## Verify NTP sources
 

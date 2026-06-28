@@ -322,5 +322,5 @@ SRAs must be installed on both sites and must match the same major version.
 ## See also
 
 - [SRM — Design Standards](../design-standards/)
-- [SRM — Deploy](../deploy/)
+- [SRM — Deploy](../../deploy/)
 - [SRM — Integrations](../integrations/)

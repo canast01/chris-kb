@@ -220,6 +220,6 @@ ncli disk list | grep -v NORMAL
 
 ## See also
 
-- [Nutanix — Common Issues](../troubleshooting/common-issues/)
+- [Nutanix — Common Issues](../../troubleshooting/common-issues/)
 - [Nutanix — Procedures](../procedures/)
 - [Nutanix — CLI Reference](../cli-reference/)

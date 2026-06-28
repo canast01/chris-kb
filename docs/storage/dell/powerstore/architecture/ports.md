@@ -158,5 +158,5 @@ nvme discover -t tcp -a <powerstore-nvme-ip> -s 4420
 ## See also
 
 - [Dell PowerStore — Architecture](../how-it-works/)
-- [Dell PowerStore — Deploy](../deploy/)
+- [Dell PowerStore — Deploy](../../deploy/)
 - [Dell PowerStore — Operations](../../operations/)

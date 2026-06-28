@@ -56,4 +56,4 @@ A: At the recovery site, vCenter → Monitor → vSphere Replication → Incomin
 ## See Also
 
 - [VMware vSphere Replication Operations](index.md)
-- [VMware vSphere Replication Troubleshooting](../../../troubleshooting/index.md)
+- [VMware vSphere Replication Troubleshooting](../troubleshooting/index.md)

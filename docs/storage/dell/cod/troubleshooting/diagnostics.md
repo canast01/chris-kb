@@ -222,7 +222,7 @@ curl -sk -u <user>:<pass> \
 
 - [COD — Common Issues](../common-issues/)
 - [COD — Escalation](../escalation/)
-- [COD — Health Checks](../operations/health-checks/)
+- [COD — Health Checks](../../operations/health-checks/)
 
 ## Verify resolution
 

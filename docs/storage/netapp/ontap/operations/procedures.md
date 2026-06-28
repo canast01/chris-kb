@@ -491,4 +491,4 @@ iscsi create -vserver <svm_name>
 
 - [Ontap — Health Checks](../health-checks/)
 - [Ontap — CLI Reference](../cli-reference/)
-- [Ontap — Common Issues](../troubleshooting/common-issues/)
+- [Ontap — Common Issues](../../troubleshooting/common-issues/)

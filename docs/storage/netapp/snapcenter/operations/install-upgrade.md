@@ -88,4 +88,4 @@ SnapCenter supports in-place upgrades. Upgrade path:
 
 - [Snapcenter — Procedures](../procedures/)
 - [Snapcenter — Health Checks](../health-checks/)
-- [Snapcenter — Deploy](../deploy/)
+- [Snapcenter — Deploy](../../deploy/)

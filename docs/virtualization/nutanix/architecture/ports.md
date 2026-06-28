@@ -169,6 +169,6 @@ nc -zv <peer-ahv-ip> 16514
 ## See also
 
 - [Nutanix — Architecture](../how-it-works/)
-- [Nutanix — Deploy](../deploy/)
+- [Nutanix — Deploy](../../deploy/)
 - [Nutanix — Operations](../../operations/)
 - [Nutanix — Troubleshooting](../../troubleshooting/)

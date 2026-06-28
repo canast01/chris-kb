@@ -224,4 +224,4 @@ For air-gapped clusters, disable Pulse and LCM dark site mode:
 
 - [Nutanix — Access Control](../access-control/)
 - [Nutanix — Authentication](../authentication/)
-- [Nutanix — Health Checks](../operations/health-checks/)
+- [Nutanix — Health Checks](../../operations/health-checks/)

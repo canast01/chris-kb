@@ -276,4 +276,4 @@ Custom dashboards are per-user; each engineer can maintain their own view. Share
 
 - [Nexus Dashboard — Health Checks](../health-checks/)
 - [Nexus Dashboard — CLI Reference](../cli-reference/)
-- [Nexus Dashboard — Common Issues](../troubleshooting/common-issues/)
+- [Nexus Dashboard — Common Issues](../../troubleshooting/common-issues/)

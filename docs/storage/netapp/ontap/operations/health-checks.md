@@ -233,4 +233,4 @@ event log show -severity CRITICAL
 
 - [Ontap — Procedures](../procedures/)
 - [Ontap — CLI Reference](../cli-reference/)
-- [Ontap — Common Issues](../troubleshooting/common-issues/)
+- [Ontap — Common Issues](../../troubleshooting/common-issues/)

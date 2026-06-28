@@ -278,7 +278,7 @@ Upgrade bundles must be downloaded to SDDC Manager before an upgrade can be sche
 
 ## See also
 
-- [VCF Troubleshooting — Common Issues](../troubleshooting/common-issues/)
+- [VCF Troubleshooting — Common Issues](../../troubleshooting/common-issues/)
 - [VCF — Procedures](../procedures/)
 - [VCF Operations — CLI Reference](../cli-reference/)
 

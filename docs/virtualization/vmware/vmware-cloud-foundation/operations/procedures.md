@@ -694,7 +694,7 @@ In SDDC Manager: **Inventory → Workload Domains → cluster** — stretched cl
 ## See also
 
 - [VCF — Health Checks](../health-checks/)
-- [VCF Troubleshooting — Common Issues](../troubleshooting/common-issues/)
+- [VCF Troubleshooting — Common Issues](../../troubleshooting/common-issues/)
 - [VCF Operations — CLI Reference](../cli-reference/)
 
 ## Verify

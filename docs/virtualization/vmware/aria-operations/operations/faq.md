@@ -56,4 +56,4 @@ A: Yes — dashboards can be exported to JSON (Dashboard → Export) and re-impo
 ## See Also
 
 - [VMware Aria Operations Operations](index.md)
-- [VMware Aria Operations Troubleshooting](../../../troubleshooting/index.md)
+- [VMware Aria Operations Troubleshooting](../troubleshooting/index.md)

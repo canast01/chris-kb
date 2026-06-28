@@ -142,4 +142,4 @@ The output includes feature name, licence state (Active / Inactive / Expired), a
 
 - [Fod — Health Checks](../health-checks/)
 - [Fod — CLI Reference](../cli-reference/)
-- [Fod — Common Issues](../troubleshooting/common-issues/)
+- [Fod — Common Issues](../../troubleshooting/common-issues/)

@@ -103,4 +103,4 @@ for n in nodes:
 
 - [Nexus Dashboard — Procedures](../procedures/)
 - [Nexus Dashboard — CLI Reference](../cli-reference/)
-- [Nexus Dashboard — Common Issues](../troubleshooting/common-issues/)
+- [Nexus Dashboard — Common Issues](../../troubleshooting/common-issues/)

@@ -52,4 +52,4 @@ userconfig --delete sannav_svc
 
 - [Sannav — Procedures](../procedures/)
 - [Sannav — Health Checks](../health-checks/)
-- [Sannav — Deploy](../deploy/)
+- [Sannav — Deploy](../../deploy/)

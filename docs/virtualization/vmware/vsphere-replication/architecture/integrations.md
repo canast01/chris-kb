@@ -223,4 +223,4 @@ When replicating FROM vSAN (source), replication works normally — the hbr modu
 ## See also
 
 - [vSphere Replication — How It Works](../how-it-works/)
-- [vSphere Replication — Deploy](../deploy/)
+- [vSphere Replication — Deploy](../../deploy/)

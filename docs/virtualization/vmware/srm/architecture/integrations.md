@@ -332,4 +332,4 @@ Example use cases:
 ## See also
 
 - [SRM — How It Works (VMware Platform)](../how-it-works/)
-- [SRM — Deploy](../deploy/)
+- [SRM — Deploy](../../deploy/)

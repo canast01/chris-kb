@@ -56,4 +56,4 @@ A: No — historical logs cannot be recovered after a rebuild unless you have a 
 ## See Also
 
 - [VMware Aria Operations for Logs Operations](index.md)
-- [VMware Aria Operations for Logs Troubleshooting](../../../troubleshooting/index.md)
+- [VMware Aria Operations for Logs Troubleshooting](../troubleshooting/index.md)

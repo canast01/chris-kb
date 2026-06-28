@@ -175,7 +175,7 @@ curl -sk https://vra-london.example.local/api/rest/vr/health
 ## See also
 
 - [vSphere Replication — Health Checks](../health-checks/)
-- [vSphere Replication — Common Issues](../troubleshooting/common-issues/)
+- [vSphere Replication — Common Issues](../../troubleshooting/common-issues/)
 - [vSphere Replication — Procedures](../procedures/)
 
 ## Verify

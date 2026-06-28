@@ -185,7 +185,7 @@ If LCM rollback is not available:
 ## See also
 
 - [Aria Automation — Health Checks](../health-checks/)
-- [Aria Automation — Common Issues](../troubleshooting/common-issues/)
+- [Aria Automation — Common Issues](../../troubleshooting/common-issues/)
 - [Aria Automation — Operational Procedures](../procedures/)
 
 ## Verify

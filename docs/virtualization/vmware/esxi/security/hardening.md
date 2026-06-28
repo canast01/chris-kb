@@ -244,4 +244,4 @@ If TPM attestation fails, investigate recent firmware or BIOS changes. A failed 
 
 - [ESXi Access Control](../access-control/)
 - [ESXi — Authentication](../authentication/)
-- [ESXi — Health Checks](../operations/health-checks/)
+- [ESXi — Health Checks](../../operations/health-checks/)

@@ -31,4 +31,4 @@ Get-Cluster "ClusterName" | Get-VMHost | ForEach-Object {
 ## See also
 
 - [VMware Cloud Foundation — How It Works](../how-it-works/)
-- [VMware Cloud Foundation — Deploy](../deploy/)
+- [VMware Cloud Foundation — Deploy](../../deploy/)

@@ -1121,7 +1121,7 @@ esxcli network ip connection list | grep 6081   # GENEVE port
 ## See also
 
 - [NSX — Health Checks](../health-checks/)
-- [NSX — Common Issues](../troubleshooting/common-issues/)
+- [NSX — Common Issues](../../troubleshooting/common-issues/)
 - [NSX — CLI Reference](../cli-reference/)
 
 ## Verify

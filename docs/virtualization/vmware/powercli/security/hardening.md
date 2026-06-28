@@ -132,4 +132,4 @@ if (-not $global:DefaultVIServer.IsConnected) {
 
 - [PowerCLI — Access Control](../access-control/)
 - [PowerCLI — Authentication](../authentication/)
-- [PowerCLI — Health Checks](../operations/health-checks/)
+- [PowerCLI — Health Checks](../../operations/health-checks/)

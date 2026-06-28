@@ -72,5 +72,5 @@ graph TB
 ## See also
 
 - [Aria Suite Lifecycle — Standards](../design-standards/)
-- [Aria Suite Lifecycle — Deploy](../deploy/)
+- [Aria Suite Lifecycle — Deploy](../../deploy/)
 - [Aria Suite Lifecycle — Integrations](../integrations/)

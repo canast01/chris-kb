@@ -207,4 +207,4 @@ sequenceDiagram
 
 - [Active Directory — Design Standards](../design-standards/)
 - [Active Directory — Integrations](../integrations/)
-- [Active Directory — Deploy](../deploy/)
+- [Active Directory — Deploy](../../deploy/)

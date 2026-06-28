@@ -56,4 +56,4 @@ A: Yes — individual switch configs are stored in DCNM. Go to Configure → Bac
 ## See Also
 
 - [Cisco DCNM Operations](index.md)
-- [Cisco DCNM Troubleshooting](../../../troubleshooting/index.md)
+- [Cisco DCNM Troubleshooting](../troubleshooting/index.md)

@@ -143,4 +143,4 @@ isi job list                  # background jobs (Restripe, FlexProtect)
 
 - [Powerscale — Design Standards](../design-standards/)
 - [Powerscale — Integrations](../integrations/)
-- [Powerscale — Deploy](../deploy/)
+- [Powerscale — Deploy](../../deploy/)

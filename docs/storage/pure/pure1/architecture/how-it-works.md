@@ -72,4 +72,4 @@ Pure1 is managed entirely by Pure Storage as a SaaS platform. Availability SLA a
 
 - [Pure1 — Design Standards](../design-standards/)
 - [Pure1 — Integrations](../integrations/)
-- [Pure1 — Deploy](../deploy/)
+- [Pure1 — Deploy](../../deploy/)

@@ -56,4 +56,4 @@ A: Yes — export the registry key before changes: `reg export HKLM\SOFTWARE\MyA
 ## See Also
 
 - [Windows Server Operations](index.md)
-- [Windows Server Troubleshooting](../../troubleshooting/index.md)
+- [Windows Server Troubleshooting](../troubleshooting/index.md)

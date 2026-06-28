@@ -56,4 +56,4 @@ A: If the VM was removed from inventory (not deleted from disk), re-register: `N
 ## See Also
 
 - [VMware PowerCLI Operations](index.md)
-- [VMware PowerCLI Troubleshooting](../../../troubleshooting/index.md)
+- [VMware PowerCLI Troubleshooting](../troubleshooting/index.md)
