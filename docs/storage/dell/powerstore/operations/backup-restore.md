@@ -78,6 +78,44 @@ curl -k -X PATCH "https://<mgmt-ip>/api/rest/volume_group/<vg-id>" \
   -d '{"policy_id": "<policy-id>"}'
 ```
 
+
+```text title="Expected output"
+{
+  "id": "snapshot_rule_1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p",
+  "name": "hourly-7d",
+  "interval": "One_Hour",
+  "desired_retention": 168,
+  "access_type": "Creation",
+  "created_at": "2024-01-15T09:32:18Z"
+}
+{
+  "id": "snapshot_rule_9x8y7w6v-5u4t-3s2r-1q0p-9o8n7m6l5k4j",
+  "name": "daily-21h-30d",
+  "time_of_day": "21:00",
+  "days_of_week": ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
+  "desired_retention": 720,
+  "access_type": "Creation",
+  "created_at": "2024-01-15T09:32:45Z"
+}
+{
+  "id": "policy_2f4e6d8c-0a1b-2c3d-4e5f-6g7h8i9j0k1l",
+  "name": "tier2-1h",
+  "description": "Hourly snapshots 7d + daily 30d",
+  "snapshot_rules": ["snapshot_rule_1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p", "snapshot_rule_9x8y7w6v-5u4t-3s2r-1q0p-9o8n7m6l5k4j"],
+  "created_at": "2024-01-15T09:33:12Z"
+}
+{
+  "id": "vg_prod-tier2-001",
+  "name": "prod-tier2-001",
+  "policy_id": "policy_2f4e6d8c-0a1b-2c3d-4e5f-6g7h8i9j0k1l",
+  "policy_applied_at": "2024-01-15T09:33:58Z"
+}
+```
+
+!!! warning "Common errors"
+    **`{"error": "Unauthorized", "code": 401, "message": "Invalid or expired DELL-EMC-TOKEN"}`** — Regenerate the authentication token via the PowerStore management console or API login endpoint.
+    **`{"error": "Bad Request", "code": 400, "message": "Invalid snapshot_rule ID in policy snapshot_rules array"}`** — Verify the hourly and daily rule IDs match exactly the IDs returned from the first two curl commands.
+    **`{"error": "Not Found", "code": 404, "message": "Volume group <vg-id> does not exist"}`** — Confirm the volume group ID exists by running `curl -k -H "DELL-EMC-TOKEN: <token>" "https://<mgmt-ip>/api/rest/volume_group"` to list all groups.
 ### Recommended Snapshot Retention by Tier
 
 | Tier | Workload Type | Snapshot Frequency | Local Retention |
@@ -113,6 +151,37 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/volume_snapshot/<snap-id>/restore" \
 # PowerStore creates a backup snapshot of the current state before restoring
 ```
 
+
+```text title="Expected output"
+{
+  "id": "clone_5f8c9e2a-7d41-4c2e-b8f3-1a2b3c4d5e6f",
+  "name": "oradb-prod-data-001-snap-restore-validation",
+  "description": "Clone for restore validation",
+  "size": 1099511627776,
+  "state": "Ready",
+  "creation_timestamp": "2026-05-07T14:32:18Z",
+  "source_snapshot_id": "snap_8f7e6d5c-4b3a-2f1e-0d9c-8b7a6f5e4d3c",
+  "protection_policy": null,
+  "is_replication_destination": false
+}
+
+{
+  "id": "restore_job_a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6",
+  "state": "Completed",
+  "start_time": "2026-05-07T14:35:22Z",
+  "end_time": "2026-05-07T14:47:51Z",
+  "backup_snapshot_id": "snap_pre_restore_20260507_143522",
+  "backup_snapshot_name": "before-restore-20260507",
+  "restored_snapshot_id": "snap_8f7e6d5c-4b3a-2f1e-0d9c-8b7a6f5e4d3c",
+  "volume_id": "vol_prod_oradb_001",
+  "percent_complete": 100
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to the curl command to skip certificate verification (already present in the example, but ensure it is not removed).
+    **`{"error": "Invalid or expired token", "error_code": "UNAUTHENTICATED"}`** — Regenerate the DELL-EMC-TOKEN via the PowerStore management API authentication endpoint and verify it has not expired.
+    **`{"error": "Volume is mounted on 1 host(s)", "error_code": "VOLUME_IN_USE"}`** — Unmount the volume on all connected hosts before executing the restore operation.
 ### File System Snapshot Restore (NFS/SMB)
 
 ```bash
@@ -127,6 +196,41 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/filesystem_snapshot/<snap-id>/restor
   -d '{"backup_snap_name": "pre-restore-fs-20260507"}'
 ```
 
+
+```text title="Expected output"
+{
+  "entries": [
+    {
+      "id": "snapshot_123abc456def",
+      "name": "daily-backup-20260506",
+      "filesystem_id": "fs_789xyz012",
+      "creation_timestamp": "2026-05-06T02:15:00Z",
+      "size": 1099511627776,
+      "state": "Ready"
+    },
+    {
+      "id": "snapshot_456def789ghi",
+      "name": "weekly-backup-20260501",
+      "filesystem_id": "fs_789xyz012",
+      "creation_timestamp": "2026-05-01T01:00:00Z",
+      "size": 1099511627776,
+      "state": "Ready"
+    }
+  ]
+}
+{
+  "id": "restore_job_987uvw654",
+  "state": "Initializing",
+  "estimated_completion_time": "2026-05-07T03:45:00Z",
+  "backup_snap_name": "pre-restore-fs-20260507",
+  "progress_percentage": 0
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in the example, but ensure it's included if removed).
+    **`{"error_code": 401, "message": "Invalid or expired token"}`** — Regenerate the authentication token via the management console and update the DELL-EMC-TOKEN header value.
+    **`{"error_code": 404, "message": "Snapshot not found"}`** — Verify the snapshot ID exists by listing snapshots first and confirm the filesystem_id matches the target filesystem.
 **SMB Previous Versions (Shadow Copies):** PowerStore NAS supports Windows Shadow Copies via the NAS server. When snapshots are scheduled, Windows clients can access previous versions of files directly from the share via right-click → Properties → Previous Versions. Enable this in PowerStore Manager → NAS server → SMB configuration → Enable Shadow Access Copies.
 
 ## Backup Integration

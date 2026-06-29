@@ -159,6 +159,24 @@ PowerStore uses volumes (block) and file systems (NAS) as primary storage object
 pstcli --address <cluster_vip> --user admin --password <password> volume query --name vol_sql01_data
 ```
 
+
+```text title="Expected output"
+Volume ID: 8b4c2e1f-9a3d-47b2-8c5d-6f2a1e9d4c3b
+Name: vol_sql01_data
+Size: 1099511627776 (1 TB)
+Provisioning Type: Thin
+Replication State: Synchronized
+Protection Policy: sql_daily_backup
+Snapshots: 3
+Creation Time: 2024-01-15T09:23:47Z
+Modification Time: 2024-01-22T14:56:12Z
+Status: OK
+```
+
+!!! warning "Common errors"
+    **`Error: Connection refused to <cluster_vip>:443`** — Verify the cluster VIP is correct and reachable from the management host using `ping <cluster_vip>` or `nc -zv <cluster_vip> 443`.
+    **`Error: Authentication failed for user 'admin'`** — Confirm the password is correct and the admin account is not locked; reset credentials in the PowerStore GUI if needed.
+    **`Error: Volume 'vol_sql01_data' not found`** — Check the exact volume name with `pstcli --address <cluster_vip> --user admin --password <password> volume query` to list all volumes.
 ---
 
 ## Configure Host Connectivity
@@ -188,6 +206,37 @@ lsblk
 multipath -ll
 ```
 
+
+```text title="Expected output"
+Scanning for SCSI devices...
+Scanning host 0 for SCSI target IDs 0:0:0:0, 0:0:1:0, 0:0:2:0
+Scanning host 1 for SCSI target IDs 1:0:0:0, 1:0:1:0
+Scanning host 2 for SCSI target IDs 2:0:0:0
+3 new device(s) found.
+Rescan complete.
+
+NAME                          MAJ:MIN RM  SIZE RO TYPE  MOUNTPOINTS
+sda                             8:0    0  100G  0 disk
+├─sda1                          8:1    0    1G  0 part  /boot
+└─sda2                          8:2    0   99G  0 part  /
+sdb                             8:16   0  500G  0 disk
+sdc                             8:32   0  500G  0 disk
+sdd                             8:48   0  500G  0 disk
+
+mpatha (360060e8007042000086e042d4c5dd11) dm-0 DELL,PowerStore
+size=500G features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
+`-+- policy='service-time 0' prio=50 status=active
+  |- 2:0:0:0 sdb 8:16 active ready running
+  `- 3:0:0:0 sdc 8:32 active ready running
+mpathb (360060e8007042000086e042d4c5dd12) dm-1 DELL,PowerStore
+size=500G features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
+`-+- policy='service-time 0' prio=50 status=active
+  `- 4:0:0:0 sdd 8:48 active ready running
+```
+
+!!! warning "Common errors"
+    **`rescan-scsi-bus.sh: command not found`** — Install sg3_utils package with `apt-get install sg3-utils` or `yum install sg3_utils`.
+    **`multipathd is not running`** — Start the multipath daemon with `systemctl start multipathd` and enable it with `systemctl enable multipathd`.
 ---
 
 ## Set Up Data Protection
@@ -221,12 +270,44 @@ multipath -ll
 # Expect 2 or 4 paths depending on port and fabric count
 ```
 
+
+```text title="Expected output"
+mpatha (36006016054f03200525e9b4a2e5de11) dm-0 DELL,PowerStore
+size=2.0T features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
+|-+- policy='service-time 0' prio=50 status=active
+| `- 2:0:0:0 sda 8:0  active ready running
+`-+- policy='service-time 0' prio=10 status=enabled
+  `- 3:0:0:0 sdb 8:16 active ready running
+
+mpathb (36006016054f03200525e9b4a2e5de12) dm-1 DELL,PowerStore
+size=4.0T features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
+|-+- policy='service-time 0' prio=50 status=active
+| `- 4:0:0:0 sdc 8:32 active ready running
+`-+- policy='service-time 0' prio=10 status=enabled
+  `- 5:0:0:0 sdd 8:48 active ready running
+```
+
+!!! warning "Common errors"
+    **`multipath: command not found`** — Install device-mapper-multipath package with `yum install device-mapper-multipath` or `apt-get install multipath-tools`.
+    **`the following paths have not been initialized: sda sdb sdc sdd`** — Run `multipath -v3` to initialize paths, then verify FC fabric connectivity and zoning rules allow host-to-array communication.
+    **`mpatha: all paths are down`** — Check FC switch port status, verify array LUNs are exported to the host's WWN, and confirm ALUA is enabled on the PowerStore array.
 3. Run a quick I/O test to confirm no errors:
 
 ```bash
 dd if=/dev/zero of=/dev/mapper/<mpath_dev> bs=1M count=512 oflag=direct
 ```
 
+
+```text title="Expected output"
+512+0 records in
+512+0 records out
+536870912 bytes (537 MB, 512 MiB) copied, 2.847 s, 189 MB/s
+```
+
+!!! warning "Common errors"
+    **`dd: opening '/dev/mapper/<mpath_dev>': No such file or block device`** — Verify the multipath device exists with `multipath -ll` and substitute the actual device name (e.g., `mpatha`).
+    **`dd: writing to '/dev/mapper/<mpath_dev>': Read-only file system`** — Ensure the device is not write-protected; check with `blockdev --getro /dev/mapper/<mpath_dev>` and disable read-only mode if needed.
+    **`dd: opening '/dev/mapper/<mpath_dev>': Permission denied`** — Run the command with `sudo` or as root user.
 4. Check PowerStore Manager **Monitoring > Performance** — latency should be sub-millisecond for NVMe-based appliances at low queue depth.
 5. Confirm no active alerts under **Monitoring > Alerts**.
 

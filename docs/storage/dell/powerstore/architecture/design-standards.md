@@ -123,6 +123,38 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/host_group" \
   }'
 ```
 
+
+```text title="Expected output"
+{
+  "id": "host_5f8c2a1b9e4d7c3a",
+  "name": "lon01-esxi-001.corp.example.com",
+  "os_type": "ESXi",
+  "description": "ESXi host lon01-esxi-001",
+  "initiator_count": 0,
+  "host_group_id": null,
+  "mapped_volumes": 0
+}
+{
+  "id": "initiator_8b2f4e9c1a5d6k7m",
+  "host_id": "host_5f8c2a1b9e4d7c3a",
+  "port_name": "21:00:00:11:0d:ab:cd:ef",
+  "port_type": "FC",
+  "is_logged_in": false,
+  "chap_mutual_username": null
+}
+{
+  "id": "hg_3c7f9a2e1b4d8k5m",
+  "name": "lon01-vcl01-hg",
+  "description": "vSphere cluster lon01-vcl01 host group",
+  "host_count": 0,
+  "volume_count": 0
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the PowerStore management certificate into your system trust store.
+    **`{"error_code":"INVALID_HOST_ID","message":"Host ID not found"}`** — Replace `<host-id>` placeholder with the actual host ID returned from the first curl command (e.g., `host_5f8c2a1b9e4d7c3a`).
+    **`{"error_code":"INVALID_TOKEN","message":"Token expired or invalid"}`** — Regenerate the authentication token using PowerStore REST API login endpoint and update the `DELL-EMC-TOKEN` header value.
 ### ESXi Host Connectivity Standards
 
 | Parameter | Recommended Value | Rationale |
@@ -165,6 +197,14 @@ devices {
 }
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`iscsid: cannot open /etc/iscsi/iscsid.conf: Permission denied`** — Run the configuration edit with `sudo` or as root user.
+    **`multipathd: error parsing /etc/multipath.conf line 8: unknown keyword 'prio'`** — Verify the multipath daemon version supports ALUA with `multipathd -v3` and update syntax if using older versions.
 ## Software Version Matrix
 
 ### PowerStoreOS Release Cadence

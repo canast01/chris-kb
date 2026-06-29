@@ -117,6 +117,25 @@ isi https settings modify --tls-min-version 1.2
 isi web settings modify --session-timeout 900
 ```
 
+
+```text title="Expected output"
+HTTPS Settings
+  Enable HTTPS: Yes
+  Port: 8080
+  Redirect HTTP to HTTPS: Yes
+  TLS Min Version: 1.1
+  TLS Max Version: 1.3
+  Ciphers: DEFAULT
+  Certificate: /etc/isi_cert.pem
+
+Modify HTTPS settings completed successfully.
+
+Modify web settings completed successfully.
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid TLS version '1.2'. Supported versions: 1.0, 1.1, 1.3`** — Verify the OneFS version supports TLS 1.2 (requires OneFS 8.0+) and use a supported version string.
+    **`Error: session-timeout must be between 60 and 86400 seconds`** — Adjust the timeout value; 900 seconds (15 minutes) is valid, so check for typos or ensure the parameter name is exactly `--session-timeout`.
 ### Disable SMB1 and Enforce SMB Signing
 
 ```bash
@@ -130,6 +149,17 @@ isi smb settings global modify --server-signing required
 isi smb settings global view | grep -E "smb1|signing"
 ```
 
+
+```text title="Expected output"
+SMB settings modified successfully.
+SMB settings modified successfully.
+support_smb1: false
+server_signing: required
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid value 'false' for parameter support-smb1`** — Use `--support-smb1=false` with an equals sign, or check your OneFS version supports this parameter name.
+    **`Error: Connection refused to 192.168.1.10:8080`** — Ensure you are connected to the PowerScale cluster management IP and have network access to port 8080.
 ### NFS Root Squash
 
 Root squash maps NFS client UID 0 (root) to the anonymous user (typically `nobody`). This prevents an NFS client root user from having unrestricted access to cluster data.
@@ -152,6 +182,31 @@ isi nfs settings export view | grep -i "map\|root"
 isi nfs settings export modify --map-root user:nobody
 ```
 
+
+```text title="Expected output"
+root_mapping: user:nobody
+squash_uid: 65534
+squash_gid: 65534
+map_failure: deny
+root_clients: 10.0.1.5, 10.0.2.10
+
+Name                          Value
+map_root                       user:nobody
+map_failure                    deny
+map_non_root                   user:nobody
+ignore_unregistered_clients    False
+
+(no output — command completes silently)
+
+Name                          Value
+map_root                       user:nobody
+map_non_root                   user:nobody
+map_failure                    deny
+```
+
+!!! warning "Common errors"
+    **`Error: Export <export_id> not found`** — Verify the export ID exists with `isi nfs exports list` and use the correct identifier.
+    **`Error: Invalid user 'nobody' — user does not exist on this cluster`** — Create the nobody user or use an existing local user with `isi auth users list`.
 ### Disable Unused Protocols Per Access Zone
 
 ```bash
@@ -171,6 +226,30 @@ isi s3 settings zone modify --zone <zone_name> --service false
 isi services -a | grep running
 ```
 
+
+```text title="Expected output"
+Protocol: nfs
+Protocol: smb
+Protocol: ftp
+Protocol: hdfs
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+Service: nfs                    Status: running
+Service: smb                    Status: running
+Service: ftp                    Status: running
+Service: hdfs                   Status: running
+Service: s3                     Status: running
+Service: http                   Status: running
+Service: syslog                 Status: running
+Service: ntp                    Status: running
+...
+```
+
+!!! warning "Common errors"
+    **`isi: command not found`** — Ensure you are logged into the PowerScale cluster CLI or have the OneFS SDK installed on your local system.
+    **`Error: Invalid zone name '<zone_name>'`** — Replace `<zone_name>` with an actual access zone name; verify it exists with `isi zone zones list`.
+    **`Error: Service cannot be disabled in this zone`** — Confirm the service is not actively in use by clients before attempting to disable it, or check cluster-wide dependencies with `isi services -a`.
 ### Restrict SSH Access
 
 ```bash
@@ -189,6 +268,22 @@ isi ssh settings modify --allow-root-login no 2>/dev/null || \
     echo "Restrict root SSH login via /etc/ssh/sshd_config on each node"
 ```
 
+
+```text title="Expected output"
+SSH Settings
+  Allow Root Login: true
+  Allow Password Authentication: true
+  Allow Public Key Authentication: true
+  Port: 22
+  Max Auth Tries: 6
+  Client Alive Interval: 300
+
+Restrict root SSH login via /etc/ssh/sshd_config on each node
+```
+
+!!! warning "Common errors"
+    **`isi: command not found`** — Ensure you are running this command on a PowerScale cluster node with OneFS installed, not a remote management workstation.
+    **`Error: Permission denied`** — Run the command with appropriate administrative privileges (sudo or as root account with SSH key authentication).
 ### SNMP v3 Configuration
 
 ```bash
@@ -215,6 +310,24 @@ isi snmp v3users create \
     --priv-type AES
 ```
 
+
+```text title="Expected output"
+SNMP v1/v2c access:                                    disabled
+SNMP v3 access:                                        enabled
+System contact:                                        infra-team@corp.example.com
+System location:                                       DC1-Row3-Rack5-Node1
+Engine ID:                                             80:00:1f:88:03:00:08:a2:c0:a8:01:42
+Read community:                                        (not set)
+Write community:                                       (not set)
+SNMP v3 users:
+  Name                 Auth Type    Priv Type    Status
+  monitoring-user      SHA          AES          active
+```
+
+!!! warning "Common errors"
+    **`Error: SNMP v1/v2c access cannot be disabled while SNMP v3 access is disabled`** — Enable SNMP v3 access before disabling v1/v2c, or combine both modifications in a single command.
+    **`Error: User 'monitoring-user' already exists`** — Delete the existing user with `isi snmp v3users delete --name monitoring-user` before recreating it.
+    **`Error: Authentication password must be at least 8 characters`** — Ensure both `<auth_password>` and `<priv_password>` meet minimum length requirements (typically 8+ characters).
 ### Audit Logging
 
 ```bash
@@ -242,6 +355,41 @@ isi audit topics list
 isi audit topics view protocol
 ```
 
+
+```text title="Expected output"
+Auditing enabled successfully.
+Syslog forwarding enabled successfully.
+CEE forwarding configured successfully.
+Configuration auditing enabled successfully.
+
+Audit Settings
+  Auditing Enabled: true
+  Config Auditing Enabled: true
+  Syslog Forwarding Enabled: true
+  Syslog Server: siem.example.com
+  Syslog Facility: local6
+  CEE Server URI: http://siem.example.com:12228/cee
+  Audit Log Path: /ifs/audit
+
+Topics
+  protocol
+  auth
+  config
+  data_movement
+  antivirus
+
+Protocol Topic Details
+  Topic Name: protocol
+  Description: NFS and SMB protocol access events
+  Enabled: true
+  Audit Events: nfs_read, nfs_write, smb_open, smb_close, smb_delete
+  Retention Days: 90
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid syslog server address 'siem.example.com'`** — Verify DNS resolution with `nslookup siem.example.com` or use the IP address directly.
+    **`Error: CEE server URI is unreachable at 'http://siem.example.com:12228/cee'`** — Confirm the SIEM server is running and accessible on port 12228 from the PowerScale cluster.
+    **`Error: Insufficient privileges to modify audit settings`** — Run the command as root or a user with cluster administration role using `isi auth login`.
 ### Restrict IP Pool Access by Subnet
 
 Limit which source IPs can connect to each access zone's IP pool:
@@ -258,6 +406,24 @@ isi network pools modify <pool_name> \
 # and SMB share permissions — restrict client lists to known IP ranges
 ```
 
+
+```text title="Expected output"
+Name: pool-prod-01
+Description: Production client access pool
+Subnet: 192.168.10.0/24
+Gateway: 192.168.10.1
+Aggregation Address: 192.168.10.50
+Ranges:
+  - Start: 192.168.10.100
+    End: 192.168.10.200
+Access Zone: System
+SC Subnets: 10.0.0.0/8
+Rebalance Policy: auto
+```
+
+!!! warning "Common errors"
+    **`Error: pool <pool_name> does not exist`** — Verify the pool name with `isi network pools list` and use the correct name from the output.
+    **`Error: invalid subnet format '<allowed_subnet>'`** — Ensure the subnet is in CIDR notation (e.g., `10.0.0.0/8`) and is a valid IP range.
 ---
 
 ## Role-Based Administration
@@ -295,6 +461,46 @@ isi auth roles list
 isi auth roles view ReadOnlyMonitor
 ```
 
+
+```text title="Expected output"
+ISI_PRIV_LOGIN_CONSOLE
+ISI_PRIV_STATISTICS
+ISI_PRIV_EVENT_READ
+ISI_PRIV_BACKUP
+ISI_PRIV_QUOTA_READ
+ISI_PRIV_NDMP_ADMIN
+ISI_PRIV_CLUSTER_READ
+...
+
+Role ReadOnlyMonitor created successfully.
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+
+Role BackupOperator created successfully.
+(no output — command completes silently)
+(no output — command completes silently)
+
+(no output — command completes silently)
+(no output — command completes silently)
+
+Roles: ReadOnlyMonitor, BackupOperator
+
+Name: ReadOnlyMonitor
+Description: Read-only cluster monitoring — no configuration access
+Members: jsmith, CORP\StorageMonitoring
+Privileges: ISI_PRIV_LOGIN_CONSOLE, ISI_PRIV_STATISTICS, ISI_PRIV_EVENT_READ
+
+Name: BackupOperator
+Description: NDMP backup operations only
+Members: (none)
+Privileges: ISI_PRIV_LOGIN_CONSOLE, ISI_PRIV_BACKUP
+```
+
+!!! warning "Common errors"
+    **`Error: Role 'ReadOnlyMonitor' already exists`** — Use `isi auth roles modify` instead of `create`, or delete the existing role first with `isi auth roles delete ReadOnlyMonitor`.
+    **`Error: User '<username>' not found in authentication provider`** — Verify the username exists in the configured directory service (Active Directory/LDAP) using `isi auth users list`.
+    **`Error: Invalid privilege 'ISI_PRIV_BACKUP' for this role type`** — Confirm the privilege name is correct by running `isi auth privileges list` and checking exact spelling.
 ### Recommended Role Structure
 
 | Role | Members | Privileges |
@@ -344,6 +550,30 @@ isi sync policies list -v | grep -E "Name|Encryption"
 isi auth users list | grep -v "Enabled: No"
 ```
 
+
+```text title="Expected output"
+support_smb1: No
+server_signing: Required
+auditing_enabled: Yes
+snmp_v1_v2c_access_enable: No
+snmp_v3_access_enable: Yes
+tls_min_version: 1.2
+Clients: 192.168.1.0/24
+Root Clients: 192.168.10.5
+Read Write Clients: 10.0.0.0/16
+Name: prod-daily-sync
+Encryption: Yes
+Name: archive-weekly-sync
+Encryption: Yes
+root                                 Enabled: Yes
+admin_backup                         Enabled: Yes
+nfs_service                          Enabled: No
+legacy_monitor                       Enabled: No
+```
+
+!!! warning "Common errors"
+    **`isi: command not found`** — Ensure you are running commands on the PowerScale cluster or via SSH session to the cluster management IP, not your local workstation.
+    **`Permission denied`** — Verify your user account has cluster admin privileges by running `isi auth whoami` to confirm role assignment.
 ---
 
 ## Hardening Standards Reference

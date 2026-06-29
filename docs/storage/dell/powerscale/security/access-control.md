@@ -44,6 +44,18 @@ isi auth roles modify ReadOnlyMonitor --add-priv ISI_PRIV_STATISTICS
 isi auth roles modify ReadOnlyMonitor --add-user <username>
 ```
 
+
+```text title="Expected output"
+Created role 'ReadOnlyMonitor'
+Modified role 'ReadOnlyMonitor'
+Modified role 'ReadOnlyMonitor'
+Modified role 'ReadOnlyMonitor'
+```
+
+!!! warning "Common errors"
+    **`Error: Role 'ReadOnlyMonitor' already exists`** — Delete the existing role with `isi auth roles delete ReadOnlyMonitor` before recreating it, or use `isi auth roles modify` for all operations.
+    **`Error: Invalid privilege 'ISI_PRIV_STATISTICS'`** — Verify the correct privilege name with `isi auth privileges list` and use the exact case-sensitive name.
+    **`Error: User '<username>' does not exist`** — Create the user first with `isi auth users create --name <username>` or use an existing username from `isi auth users list`.
 ## Access Zones
 
 Access zones partition the cluster into separate namespaces — each with its own NFS exports, SMB shares, and authentication providers:
@@ -60,6 +72,34 @@ isi zone zones create <zone_name> --path /ifs/<path>
 isi zone zones modify <zone_name> --add-auth-providers <provider>
 ```
 
+
+```text title="Expected output"
+# List zones
+Name                    Path                    Auth Providers
+default                 /ifs                    local
+secure-data             /ifs/secure             local,ldap-corp
+archive-zone            /ifs/archive            local,ad-prod
+backup-tier             /ifs/backup             local
+
+# View zone details
+Zone: secure-data
+Path: /ifs/secure
+Auth Providers: local, ldap-corp
+Groupnet: groupnet0
+Access Zone ID: 2
+
+# Create a zone
+Created access zone 'prod-zone' with path '/ifs/prod-zone'
+
+# Assign auth providers
+Modified access zone 'prod-zone'
+Added auth providers: ad-prod
+```
+
+!!! warning "Common errors"
+    **`Error: Access zone '<zone_name>' does not exist`** — Verify the zone name with `isi zone zones list` and ensure it is spelled correctly.
+    **`Error: Path '/ifs/<path>' already exists and is in use by another zone`** — Choose a unique path that is not already assigned to another access zone.
+    **`Error: Auth provider '<provider>' is not configured`** — Configure the auth provider first using `isi auth providers` commands before assigning it to a zone.
 ## Audit Logging
 
 ```bash
@@ -77,6 +117,25 @@ isi audit settings global modify \
 isi audit log view
 ```
 
+
+```text title="Expected output"
+Auditing is now enabled.
+Auditing is now enabled.
+
+Auditing is now enabled.
+
+Audit Log Entries:
+ID          Timestamp                Protocol  User        Action      Resource            Status
+1847392     2024-01-15T14:32:18Z    NFS       root        READ        /ifs/data/file.txt  Success
+1847393     2024-01-15T14:32:22Z    SMB       domain\jsmith WRITE      \\share\docs\report.docx Success
+1847394     2024-01-15T14:32:45Z    NFS       nfsuser     MKDIR       /ifs/archive/2024   Success
+1847395     2024-01-15T14:33:01Z    SMB       domain\admin DELETE      \\share\temp\old.zip Success
+1847396     2024-01-15T14:33:18Z    NFS       root        SETATTR     /ifs/data           Success
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid URI format for cee-server-uri`** — Verify the SIEM server URI is reachable and uses the correct format (http/https with valid hostname and port).
+    **`Error: Auditing cannot be enabled: insufficient cluster quorum`** — Ensure all nodes in the cluster are online and healthy before enabling audit logging.
 - Audit events cover: file open, read, write, delete, rename, permission change, and authentication events.
 - Forward to a syslog receiver or a Dell Common Event Enabler (CEE) API endpoint for SIEM integration.
 - Retain audit logs for a minimum of 12 months; 24 months for regulated environments.

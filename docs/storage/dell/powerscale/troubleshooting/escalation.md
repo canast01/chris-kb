@@ -91,6 +91,31 @@ isi license list   # shows cluster serial
 isi status -n
 ```
 
+
+```text title="Expected output"
+admin@192.168.1.50's password: 
+Last login: Wed Jan 15 14:22:33 2025 from 10.0.0.45
+
+OneFS Version: OneFS 9.4.0.0 (Build 9.4.0.0-123456)
+
+Cluster Name: prod-isilon-01
+Cluster Serial: K123456789ABC
+
+Name                    Serial              Status
+node1                   K123456789ABC       Up
+node2                   K123456789ABD       Up
+node3                   K123456789ABE       Up
+node4                   K123456789ABF       Up
+node5                   K123456789ABG       Up
+
+License Status: Valid
+Expiration Date: 2026-03-15
+```
+
+!!! warning "Common errors"
+    **`ssh: connect to host <node-ip> port 22: Connection timed out`** — Verify the node IP is correct, the node is powered on, and network connectivity exists from your admin workstation to the management network.
+    **`Permission denied (publickey,password).`** — Confirm you are using the correct admin credentials and that SSH password authentication is enabled on the cluster (check SSH settings in WebUI under Cluster Management > Security).
+    **`isi: command not found`** — Ensure you are logged in as the admin user on a PowerScale node; this command is not available on non-OneFS systems or non-admin accounts.
 ### 2. Run isi_gather_info (full cluster diagnostic bundle)
 
 ```bash
@@ -104,6 +129,28 @@ ls -lh /ifs/data/Isilon_Support/
 scp admin@<node-ip>:/ifs/data/Isilon_Support/<bundle-filename>.tar.gz /tmp/
 ```
 
+
+```text title="Expected output"
+Gathering system information from all nodes...
+Node 1: Collecting hardware inventory
+Node 2: Collecting hardware inventory
+Node 3: Collecting hardware inventory
+Collecting cluster configuration
+Collecting event logs
+Collecting performance metrics
+Bundle creation complete: /ifs/data/Isilon_Support/isilon_support_info_10.1.2024_14-32-18.tar.gz
+
+total 2.3G
+-rw-r--r-- 1 root root 2.3G Oct  1 14:32 isilon_support_info_10.1.2024_14-32-18.tar.gz
+-rw-r--r-- 1 root root 1.8G Sep 28 09:15 isilon_support_info_09.28.2024_09-18-42.tar.gz
+
+admin@192.168.1.50's password: 
+isilon_support_info_10.1.2024_14-32-18.tar.gz          100% 2.3GB   45.2MB/s   00:51
+```
+
+!!! warning "Common errors"
+    **`ssh: connect to host <node-ip> port 22: Connection timed out`** — Replace `<node-ip>` with the actual cluster node IP address and verify network connectivity to that node.
+    **`scp: /ifs/data/Isilon_Support/<bundle-filename>.tar.gz: No such file or directory`** — Run `isi_gather_info` first to generate the bundle, or check the actual bundle filename with `ls /ifs/data/Isilon_Support/`.
 This bundle contains: OneFS logs, cluster config, hardware inventory, performance stats, alert history, and job state from every node.
 
 ### 3. Capture current cluster status
@@ -129,6 +176,50 @@ isi sync policies list
 isi sync reports list
 ```
 
+
+```text title="Expected output"
+Cluster Name: isilon-prod-01
+Cluster Health: BALANCED
+Nodes: 8 (all online)
+Total Capacity: 450.2 TB
+Used Capacity: 287.5 TB
+Available Capacity: 162.7 TB
+
+Name                    Tier    Nodes   Capacity        Usage           Health
+System                  SSD     8       89.3 TB         45.2 TB         BALANCED
+Capacity-1              HDD     8       360.9 TB        242.3 TB        BALANCED
+
+Drive Statistics:
+Node    Slot    Model           Status  Read_Errors  Write_Errors  SMARTFAIL
+1       0       ST8000NM0055    OK      0            0              No
+1       1       ST8000NM0055    OK      2            0              No
+2       3       ST8000NM0055    SMARTFAIL 847       156            Yes
+3       5       ST8000NM0055    OK      0            0              No
+4       7       ST8000NM0055    OK      1            0              No
+
+ID      Severity  Message                                    Time
+1847    CRITICAL  Drive 2:3 SMARTFAIL detected              2024-01-15 14:32:18
+1846    WARNING   Node 4 CPU utilization 89%                2024-01-15 14:28:45
+1845    WARNING   Replication lag on cluster-dr: 2.3 hours  2024-01-15 13:15:22
+
+ID      Job_Type              Status      Progress  Start_Time
+4521    Rebalance             RUNNING     67%       2024-01-15 10:22:00
+4520    Snapshot_Delete       COMPLETED   100%      2024-01-15 09:15:00
+4519    Collect_Diagnostics   QUEUED      0%        2024-01-15 14:45:00
+
+Policy_Name              Status    Target_Cluster    Last_Sync
+prod-to-dr              ENABLED   cluster-dr        2024-01-15 14:30:22
+archive-weekly          ENABLED   archive-vault     2024-01-15 08:00:00
+
+Report_ID  Policy_Name      Status      Duration  Bytes_Transferred
+2847       prod-to-dr       COMPLETED   1h 23m    156.7 GB
+2846       archive-weekly   COMPLETED   4h 12m    892.3 GB
+```
+
+!!! warning "Common errors"
+    **`isi: command not found`** — Ensure the OneFS CLI tools are installed and the PATH includes `/usr/local/bin` or run commands directly as `/usr/local/bin/isi`.
+    **`Error: Invalid credentials or insufficient permissions`** — Verify your user account has cluster admin privileges and authentication is configured (check `isi auth status`).
+    **`Connection refused on port 8080`** — Confirm the OneFS management service is running with `systemctl status isilon-mgmt` and the cluster is not in maintenance mode.
 ### 4. Collect SupportAssist phone-home status
 
 ```bash
@@ -142,6 +233,86 @@ isi phone_home send --type test
 isi events list | grep -i "support\|case\|esrs" | tail -20
 ```
 
+
+```text title="Expected output"
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled: true
+Enabled:ist_phone_home send --type test
+Test notification sent successfully to ESRS gateway (203.0.113.45)
+Delivery confirmed at 2024-01-15T14:32:18Z
+
+2024-01-15T14:28:42Z INFO: SupportAssist case auto-created: CASE-2847561 (Disk utilization warning)
+2024-01-15T13:15:09Z INFO: ESRS phone-home transmission successful (seq: 4521)
+2024-01-15T12:47:33Z WARNING: SupportAssist threshold breach detected on node-3
+2024-01-15T11:22:15Z INFO: Case CASE-2847501 closed by Dell support
+2024-01-15T10:05:44Z INFO: ESRS connectivity restored after maintenance window
+2024-01-15T09:18:27Z INFO: SupportAssist auto-case suppressed (duplicate condition)
+2024-01-15T08:33:51Z INFO: Phone-home transmission queued (offline mode)
+2024-01-15T07:12:19Z WARNING: ESRS gateway unreachable, retrying in 300s
+```
+
+!!! warning "Common errors"
+    **`isi: command not found`** — Ensure you are logged into the PowerScale cluster CLI or SSH session with appropriate admin credentials.
+    **`Error: ESRS gateway unreachable`** — Verify network connectivity to the ESRS gateway and check firewall rules allow outbound HTTPS (port 443) to Dell support servers.
+    **`Permission denied`** — Run the command with root or admin-level privileges using `sudo` or ensure your user account has SupportAssist configuration rights.
 ### 5. Write the timeline
 
 ```text
@@ -245,6 +416,41 @@ isi job list
 isi sync policies list
 ```
 
+
+```text title="Expected output"
+OneFS Version: OneFS 9.4.0.0 (Build 9.4.0.0_1234567)
+
+Cluster Health: HEALTHY
+Nodes: 6 online, 0 offline
+CPU Load: 12.3% average
+Memory: 87.2% utilized
+
+Name                    Status      Protection  Usable Capacity
+Tier_1_SSD              BALANCED    +2d:1n      45.2 TB
+Tier_2_NL_SAS           BALANCED    +2d:1n      892.5 TB
+Tier_3_Archive          BALANCED    +3d:1n      1.2 PB
+
+(no DEAD or SMARTFAIL drives detected)
+
+ID    Severity  Message                                    Raised
+1847  CRITICAL  Node 4: Disk /dev/sdq SMARTFAIL detected  2024-01-15 09:23:14
+1843  WARNING   Replication lag: Policy 'DR_Backup' 4.2GB  2024-01-15 08:47:02
+1839  INFO      Cluster capacity at 78% utilization       2024-01-15 06:15:33
+
+Job ID  Type              State      Progress  Elapsed
+4521    Rebalance         RUNNING    34%       2h 14m
+4519    Snapshot Cleanup  COMPLETED  100%      47m
+4518    Disk Verify       RUNNING    67%       5h 22m
+
+Policy Name         Source Path  Target Cluster  Last Sync       Status
+DR_Backup           /ifs/data    dr-cluster-01   2024-01-15 10:02  SYNCED
+Archive_Weekly      /ifs/archive archive-01      2024-01-14 23:30  SYNCED
+```
+
+!!! warning "Common errors"
+    **`isi: command not found`** — Verify SSH session is connected to a PowerScale node (not a generic Linux server) and the admin user has OneFS CLI access.
+    **`Permission denied`** — Ensure you are logged in as the admin user or a role with cluster monitoring privileges; use `isi auth list` to verify your current permissions.
+    **`Connection refused on port 22`** — Confirm the PowerScale node IP is reachable and SSH is enabled; check firewall rules and verify the node is not in maintenance mode with `isi_nodes -l`.
 ---
 
 ## Support SLA Reference

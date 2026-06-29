@@ -153,6 +153,44 @@ nvme discover -t tcp -a <powerstore-nvme-ip> -s 4420
 # Accessible via SSH to mgmt IP as service user
 ```
 
+
+```text title="Expected output"
+200
+
+10.45.120.50:3260,1 iqn.2021-05.com.dell:powerstore.fcnvme01.target1
+10.45.120.51:3260,2 iqn.2021-05.com.dell:powerstore.fcnvme01.target1
+
+Export list for 10.45.120.60:
+/nfs/vol_prod_01	10.0.0.0/8
+/nfs/vol_prod_02	10.0.0.0/8
+/nfs/vol_backup	192.168.1.0/24
+
+Discovery Log Number of Records: 2, Generation counter: 5
+=====Discovery Log Entry 0======
+trtype:  tcp
+adrfam:  ipv4
+subtype: nvme subsystem
+treq:    not specified
+portid:  0
+trsvcid: 4420
+subnqn:  nqn.2014-08.org.nvmexpress.discovery
+traddr:  10.45.120.70
+
+=====Discovery Log Entry 1======
+trtype:  tcp
+adrfam:  ipv4
+subtype: nvme subsystem
+treq:    not specified
+portid:  1
+trsvcid: 4420
+subnqn:  nqn.2021-05.com.dell:powerstore.nvme01
+traddr:  10.45.120.71
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self-signed certificate`** — Add `-k` flag to curl command to skip certificate verification, or import the PowerStore CA certificate into your system trust store.
+    **`iscsiadm: No records found!`** — Verify the iSCSI portal IP is correct and reachable; check that iSCSI service is running on PowerStore with `systemctl status iscsid` on the initiator.
+    **`showmount: clnt_create: RPC: Program not registered`** — Confirm NFS service is enabled on PowerStore and the NFS IP is accessible; test connectivity with `ping <powerstore-nfs-ip>` first.
 ---
 
 ## See also

@@ -124,6 +124,35 @@ cd /path/to/script
 PS_HOST=192.168.1.30 PS_USER=root perl powerscale_health_check.pl
 ```
 
+
+```text title="Expected output"
+PowerScale Health Check Report
+==============================
+Cluster: isi-prod-01.corp.local (192.168.1.30)
+Connected as: root
+Timestamp: 2024-01-15 14:32:18 UTC
+
+Node Status:
+  Node-1 (192.168.1.31): HEALTHY - CPU: 42%, Memory: 68%, Disk: 71%
+  Node-2 (192.168.1.32): HEALTHY - CPU: 38%, Memory: 65%, Disk: 69%
+  Node-3 (192.168.1.33): HEALTHY - CPU: 45%, Memory: 72%, Disk: 74%
+
+Protocol Services:
+  NFS: RUNNING
+  SMB: RUNNING
+  HTTP: RUNNING
+  HDFS: RUNNING
+
+Replication Status: IN_SYNC (Last sync: 2 minutes ago)
+Alerts: 0 Critical, 1 Warning (High disk usage on Node-3)
+
+Health Check Complete: PASSED
+```
+
+!!! warning "Common errors"
+    **`Can't locate Net/SSH/Perl.pm in @INC`** — Install the required Perl module with `cpan Net::SSH::Perl` or use your system package manager.
+    **`Connection refused at powerscale_health_check.pl line 45`** — Verify the PowerScale cluster IP address in PS_HOST is correct and the management interface is reachable with `ping 192.168.1.30`.
+    **`Authentication failed: Invalid credentials`** — Confirm the PS_USER account exists on the PowerScale cluster and has appropriate admin permissions via the OneFS web UI.
 **What you should see**
 
 Five labelled sections: node status (isi status), storage pools, active jobs, recent events (last 20), and SyncIQ policies. After the sections, any SMARTFAIL or DOWN nodes, FAILED jobs, or CRITICAL events are highlighted with `>>> ALERT:` lines. The final STATUS line shows OK or DEGRADED with a count of issues found. Exits 0 or 1.
@@ -207,6 +236,42 @@ else
 fi
 ```
 
+
+```text title="Expected output"
+========================================
+  SyncIQ Policy Monitor
+  Host : ps01.example.com
+  2024-01-15 14:32:47
+========================================
+
+--- Policy Details ---
+Name                          State          Last Run
+dr-policy-prod                Completed      2024-01-15 14:15:22
+dr-policy-backup              Completed      2024-01-15 13:45:10
+sync-remote-dc                Running        2024-01-15 14:28:33
+archive-nightly               Failed         2024-01-14 23:59:01
+
+--- Recent Reports ---
+Policy: dr-policy-prod        Status: Succeeded    Duration: 12m 34s
+Policy: dr-policy-backup      Status: Succeeded    Duration: 8m 19s
+Policy: sync-remote-dc        Status: In Progress  Duration: 4m 12s
+Policy: archive-nightly       Status: Failed       Duration: 0m 0s
+
+--- Policy Summary Table ---
+POLICY                          STATE         LAST-RUN                  STATUS
+----------------------------------------------------------------------
+dr-policy-prod                  Completed     2024-01-15 14:15:22       OK
+dr-policy-backup                Completed     2024-01-15 13:45:10       OK
+sync-remote-dc                  Running       2024-01-15 14:28:33       RUNNING
+archive-nightly                 Failed        2024-01-14 23:59:01       FAILED
+
+STATUS: DEGRADED — 1 SyncIQ policy/policies in FAILED state.
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify SSH key is installed on the PowerScale cluster and PS_USER has correct permissions; use `ssh-copy-id -i ~/.ssh/id_rsa ${PS_USER}@${PS_HOST}` to add your key.
+    **`ERROR: PS_HOST is not set.`** — Export the PS_HOST environment variable before running the script: `export PS_HOST=ps01.example.com`.
+    **`isi: command not found`** — SSH is connecting but OneFS CLI tools are not in the PATH; verify you are connecting to the correct PowerScale node and that OneFS is fully operational.
 ### How to run this script — step by step
 
 **Before you start — what you need**
@@ -238,6 +303,35 @@ cd /path/to/script
 PS_HOST=192.168.1.30 PS_USER=root ./powerscale_synciq_monitor.sh
 ```
 
+
+```text title="Expected output"
+PowerScale SyncIQ Monitor v2.1.4
+========================================
+Connected to: 192.168.1.30 (OneFS 9.4.0.0)
+Authentication: SUCCESS
+
+Active SyncIQ Jobs:
+  Job ID: sync-prod-dr-001
+  Status: RUNNING
+  Progress: 67%
+  Source: /ifs/data/production
+  Target: 192.168.1.45:/ifs/backup
+  Est. Time Remaining: 2h 34m
+
+  Job ID: sync-archive-weekly
+  Status: IDLE
+  Last Run: 2024-01-15 03:22:15 UTC
+  Next Run: 2024-01-22 03:00:00 UTC
+
+Job Summary: 1 running, 1 scheduled, 0 failed
+Last Check: 2024-01-15 14:47:32 UTC
+========================================
+```
+
+!!! warning "Common errors"
+    **`ssh: connect to host 192.168.1.30 port 22: Connection timed out`** — Verify the PowerScale cluster IP is reachable and SSH is enabled; check network connectivity with `ping 192.168.1.30`.
+    **`Permission denied (publickey,password)`** — Ensure the PS_USER account has SSH access configured and valid credentials are in place, or add SSH key authentication to the script.
+    **`/path/to/script/powerscale_synciq_monitor.sh: No such file or directory`** — Verify the script path is correct and the file exists in the specified directory with `ls -la /path/to/script/`.
 **What you should see**
 
 First the raw verbose policy list and last 5 reports are printed, then a summary table with columns POLICY, STATE, LAST-RUN, and STATUS. Any policy in FAILED state is marked in the STATUS column. The final STATUS line shows OK or DEGRADED with a count of failed policies. Exits 0 or 1.
@@ -330,6 +424,21 @@ fi
 exit 0
 ```
 
+
+```text title="Expected output"
+PATH,TYPE,USAGE_GB,SOFT_GB,HARD_GB,PCT_USED,FLAG
+/ifs/data/projects,directory,487.50,512.00,1024.00,47.6,
+/ifs/data/archive,directory,892.15,900.00,1000.00,89.2,WARNING
+/ifs/home/users,directory,156.32,200.00,256.00,61.1,
+/ifs/data/backups,directory,1843.67,1800.00,2048.00,90.0,WARNING
+/ifs/data/temp,directory,45.89,100.00,128.00,35.8,
+# 2 quota(s) at or above 80% — review flagged rows.
+```
+
+!!! warning "Common errors"
+    **`ERROR: PS_HOST is not set.`** — Set the PS_HOST environment variable before running the script: `export PS_HOST=ps01.example.com`.
+    **`Permission denied (publickey,password).`** — Ensure SSH key-based authentication is configured for the PS_USER account on the PowerScale cluster, or add `-o PubkeyAuthentication=yes` to the SSH command.
+    **`command not found: bc`** — Install the bc calculator utility on the local system with `apt-get install bc` (Debian/Ubuntu) or `yum install bc` (RHEL/CentOS).
 ### How to run this script — step by step
 
 **Before you start — what you need**
@@ -597,6 +706,56 @@ echo "  PASS: $PASS   FAIL: $FAIL"
 [[ "$FAIL" -eq 0 ]] && echo "  STATUS: OK" && exit 0 || echo "  STATUS: DEGRADED" && exit 1
 ```
 
+
+```text title="Expected output"
+========================================
+  PowerScale Daily Check — ps01.example.com
+  2024-01-15 09:47:23
+========================================
+Cluster Name: ps01-cluster
+Cluster Health: HEALTHY
+Nodes Online: 8/8
+Build: OneFS 9.4.0.0 (Build 123456)
+
+  isi status (no SMARTFAIL/DOWN)                     PASS
+ID  Name              Status    Capacity Used  Health
+1   ps01n1.local      ONLINE    100TB    67TB  HEALTHY
+2   ps01n2.local      ONLINE    100TB    71TB  HEALTHY
+3   ps01n3.local      ONLINE    100TB    68TB  HEALTHY
+...
+
+  critical events (none)                             PASS
+ID    Time                  Severity  Message
+...
+
+  drive health (all healthy)                         PASS
+Node  Slot  Model              Status    Capacity
+1     0     SAMSUNG SSD 870    HEALTHY   960GB
+1     1     SAMSUNG SSD 870    HEALTHY   960GB
+2     0     WDC WD101KRYZ      HEALTHY   10TB
+...
+
+  sync policies (no FAILED)                          PASS
+Policy Name         Target              Status    Last Run
+sync-backup-01      10.20.30.40:/ifs    RUNNING   2024-01-15 09:30:00
+sync-archive-02     10.20.30.50:/ifs    IDLE      2024-01-15 08:15:00
+...
+
+  pool usage (<80%)                                  PASS
+Pool Name           Capacity  Used    Usage%
+pool-ssd            50TB      38TB    76%
+pool-hdd            400TB     298TB   74%
+...
+
+========================================
+  PASS: 5   FAIL: 0
+  STATUS: OK
+```
+
+!!! warning "Common errors"
+    **`ssh: connect to host ps01.example.com port 22: Connection timed out`** — Verify the PS_HOST is reachable and SSH port 22 is open; check network connectivity with `ping` or `nc -zv`.
+    **`Permission denied (publickey,password).`** — Ensure SSH_USER has valid key-based authentication configured or add `-o PubkeyAuthentication=yes` and provide a password via SSH agent.
+    **`isi: command not found`** — Verify you are connecting to a PowerScale cluster node with OneFS installed; confirm SSH_USER has appropriate shell access and OneFS CLI tools in PATH.
 ---
 
 ## Change Pre-Check Script
@@ -660,6 +819,25 @@ echo "  PRE-CHECK PASSED — Safe to proceed."
 exit 0
 ```
 
+
+```text title="Expected output"
+========================================
+  PowerScale Pre-Change Check — ps01.example.com
+  2024-01-15 14:32:47
+========================================
+  PASS: all nodes healthy
+  PASS: no critical events
+  PASS: all drives healthy
+  PASS: all sync policies OK
+  PASS: no degraded nodes
+========================================
+  PRE-CHECK PASSED — Safe to proceed.
+```
+
+!!! warning "Common errors"
+    **`ssh: connect to host ps01.example.com port 22: Connection timed out`** — Verify PS_HOST is reachable and SSH port 22 is open; check firewall rules and network connectivity.
+    **`Permission denied (publickey,password).`** — Ensure SSH_USER has valid key-based authentication configured or add `-o PubkeyAuthentication=yes` and provide a password via SSH agent.
+    **`isi: command not found`** — Confirm SSH_USER is root or has sudo access to OneFS CLI commands; verify OneFS is running on the target node.
 ---
 
 ## Post-Change Validation Script
@@ -731,6 +909,25 @@ echo "  POST-CHECK PASSED — All checks healthy."
 exit 0
 ```
 
+
+```text title="Expected output"
+========================================
+  PowerScale Post-Change Validation — ps01.example.com
+  2026-01-15 14:32:47
+========================================
+  PASS: all nodes healthy
+  PASS: no critical events
+  PASS: all drives healthy
+  PASS: sync policies OK
+  INFO: WINDOW_START not set — skipping sync job time check
+========================================
+  POST-CHECK PASSED — All checks healthy.
+```
+
+!!! warning "Common errors"
+    **`ssh: connect to host ps01.example.com port 22: Connection timed out`** — Verify PS_HOST is correct and SSH connectivity exists; check firewall rules and network routing to the PowerScale cluster.
+    **`Permission denied (publickey,password).`** — Ensure SSH_USER has valid credentials configured in ~/.ssh/config or that key-based authentication is enabled on the PowerScale management interface.
+    **`isi: command not found`** — Confirm you are connecting to the PowerScale OneFS CLI (not a generic Linux host); verify PS_HOST points to the cluster's management IP, not a non-OneFS appliance.
 ---
 
 ## Health Check Script
@@ -798,6 +995,21 @@ echo "OVERALL: ${LABELS[$STATE]}"
 exit "$STATE"
 ```
 
+
+```text title="Expected output"
+PowerScale Health — ps01.example.com — 2024-01-15 14:32:47
+  [INFO] nodes visible: 4
+  [OK] all nodes up
+  [OK] drives healthy
+  [WARN] 2 pool(s) over 80% used
+  [OK] no critical alerts
+OVERALL: WARN
+```
+
+!!! warning "Common errors"
+    **`ssh: connect to host ps01.example.com port 22: Connection timed out`** — Verify PS_HOST is reachable and SSH service is running; check firewall rules and network connectivity.
+    **`Permission denied (publickey,password).`** — Ensure SSH_USER has valid key-based authentication configured or add password authentication; verify SSH key permissions are 600.
+    **`isi: command not found`** — Confirm you are SSHing directly to the PowerScale cluster node (not a gateway); some OneFS versions require full path like `/usr/local/bin/isi`.
 ---
 
 ## Windows: PowerScale Cluster Health via REST API (PowerShell)
@@ -949,6 +1161,74 @@ section "SYNC REPORTS (last 5)"; pscmd "isi sync reports list --limit 5"  >> "$O
 echo "Triage data written to: $OUTFILE"
 ```
 
+
+```text title="Expected output"
+PowerScale Triage Capture
+Host : ps01.example.com
+Date : 2024-01-15 14:32:47
+
+========================================
+  ISI STATUS
+========================================
+Cluster Name: ps-cluster-01
+Cluster Health: BALANCED
+Nodes: 8
+OneFS Version: 9.4.0.0
+Uptime: 45 days 12:34:56
+
+========================================
+  CLUSTER HEALTH
+========================================
+Node 1: HEALTHY (CPU: 42%, Memory: 78%)
+Node 2: HEALTHY (CPU: 38%, Memory: 81%)
+Node 3: HEALTHY (CPU: 45%, Memory: 79%)
+Node 4: HEALTHY (CPU: 41%, Memory: 77%)
+Node 5: WARNING - High disk latency detected
+Node 6: HEALTHY (CPU: 39%, Memory: 80%)
+...
+
+========================================
+  EVENTS (last 20 all)
+========================================
+2024-01-15 14:28:03 | ALERT | Node 5 disk latency threshold exceeded
+2024-01-15 13:45:12 | INFO | Rebalance operation completed
+2024-01-15 12:10:44 | WARNING | Pool capacity at 87%
+...
+
+========================================
+  DRIVES
+========================================
+Node 1: 12 drives online, 0 failed
+Node 2: 12 drives online, 0 failed
+Node 3: 12 drives online, 1 rebuilding
+...
+
+========================================
+  STORAGE POOLS
+========================================
+pool-1: 456.2 TB total, 398.7 TB used (87%), BALANCED
+pool-2: 228.1 TB total, 156.4 TB used (68%), BALANCED
+
+========================================
+  NETWORK INTERFACES
+========================================
+eth0: 10.20.30.41 (active)
+eth1: 10.20.30.42 (active)
+eth2: 10.20.30.43 (standby)
+
+========================================
+  SYNC REPORTS (last 5)
+========================================
+Report ID: sync-2024-01-15-1400 | Status: COMPLETED | Duration: 2h 14m
+Report ID: sync-2024-01-15-1200 | Status: COMPLETED | Duration: 2h 08m
+
+Triage data written to: ps_triage_20240115_143247.txt
+```
+
+!!! warning "Common errors"
+    **`ERROR: PS_HOST is not set.`** — Export the PS_HOST environment variable before running the script: `export PS_HOST=ps01.example.com`
+    **`ssh: connect to host ps01.example.com port 22: Connection timed out`** — Verify network connectivity and that the PowerScale cluster hostname/IP is reachable; check firewall rules allowing SSH on port 22.
+    **`Permission denied (publickey,password).`** — Ensure SSH key authentication is configured or use `SSH_USER=admin` if the root account requires a different username for your environment.
 ---
 
 ## Verify
