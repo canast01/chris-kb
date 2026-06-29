@@ -88,6 +88,28 @@ echo "==============================="
 exit $overall
 ```
 
+
+```text title="Expected output"
+===============================
+ Cisco MDS Fabric Health Check
+ Host : 192.168.1.20
+ 2024-01-15T14:32:47Z
+===============================
+[PASS    ] interface brief    — 0 FC interface(s) down
+[PASS    ] flogi database     — 47 logged-in device(s)
+[WARNING ] topology           — 1 isolated switch/ISL issue(s)
+[PASS    ] zoneset active     — 0 zoning error(s)
+[WARNING ] logging            — 3 critical/error log line(s)
+[CRITICAL] environment        — 2 environmental alert(s)
+===============================
+ Overall: CRITICAL
+===============================
+```
+
+!!! warning "Common errors"
+    **`ssh: connect to host 192.168.1.20 port 22: Connection timed out`** — Verify the MDS_HOST IP is correct and reachable, and that SSH port 22 is open on the switch.
+    **`Permission denied (publickey,password).`** — Ensure MDS_USER credentials are correct and the user has SSH access privileges on the MDS switch.
+    **`show: command not found`** — Confirm you are connecting to a Cisco MDS switch (not a Linux host) and that the SSH session properly enters the switch CLI.
 ```bash
 #!/bin/bash
 # mds_interface_errors.sh
@@ -164,6 +186,23 @@ done
 
 exit $rc
 ```
+
+```text title="Expected output"
+[2024-01-15T14:32:18Z] MDS Interface Error Monitor — 192.168.1.20
+OK — all counter deltas within threshold
+[2024-01-15T14:47:18Z] MDS Interface Error Monitor — 192.168.1.20
+WARN  fc1/1  input errors  delta=145
+WARN  fc1/2  output errors  delta=87
+[2024-01-15T15:02:18Z] MDS Interface Error Monitor — 192.168.1.20
+CRIT  fc2/3  link failures  delta=1250
+WARN  fc1/4  buffer credit recovery  delta=312
+WARN  fc2/1  discards  delta=156
+```
+
+!!! warning "Common errors"
+    **`[2024-01-15T14:32:18Z] ERROR: Could not connect to 192.168.1.20`** — Verify SSH connectivity with `ssh -o ConnectTimeout=10 admin@192.168.1.20` and confirm the MDS host is reachable and SSH is enabled.
+    **`Permission denied (publickey,password).`** — Add the script's SSH key to the MDS device's authorized_keys or configure password-based SSH authentication with `sshpass` if BatchMode=yes is causing auth failure.
+    **`/var/tmp/mds_err_baseline_192.168.1.20.dat: Permission denied`** — Ensure the script runs with write permissions to `/var/tmp/` or change `BASELINE_FILE` to a writable directory like `/tmp/` or a dedicated monitoring directory.
 ```bash
 chmod +x mds_interface_errors.sh
 MDS_HOST=192.168.1.20 MDS_USER=admin ./mds_interface_errors.sh
@@ -417,6 +456,25 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 cd C:\Users\YourName\Desktop
 .\mds-port-report.ps1 -MdsHost 192.168.1.20 -SshUser admin -PlinkPath "C:\Program Files\PuTTY\plink.exe"
 ```
+
+```text title="Expected output"
+Connecting to MDS switch 192.168.1.20...
+SSH connection established as admin
+Retrieving port statistics...
+Port    Status    Speed      WWN                    Alias
+fc1/1   online    16Gbps     50:00:09:73:48:2a:b1:01 ESXi-Host-01
+fc1/2   online    16Gbps     50:00:09:73:48:2a:b1:02 ESXi-Host-02
+fc1/3   online    16Gbps     50:00:09:73:48:2a:b1:03 Storage-Array-01
+fc1/4   offline   unknown    50:00:09:73:48:2a:b1:04 (not connected)
+fc1/5   online    8Gbps      50:00:09:73:48:2a:b1:05 Legacy-SAN-Device
+...
+Report generated: C:\Users\YourName\Desktop\mds-port-report-20240115-143022.csv
+```
+
+!!! warning "Common errors"
+    **`plink.exe: unable to open connection to '192.168.1.20' port 22: Network error: Connection refused`** — Verify the MDS switch is reachable and SSH is enabled on port 22 using `ping 192.168.1.20` and check the switch's SSH configuration.
+    **`Permission denied (publickey,password)`** — Confirm the SSH credentials are correct and the admin user has SSH access enabled on the MDS switch.
+    **`The file 'C:\Program Files\PuTTY\plink.exe' cannot be found`** — Install PuTTY or correct the `-PlinkPath` parameter to point to the actual plink.exe location.
 ```bash
 #!/bin/bash
 # mds_daily_check.sh
@@ -465,6 +523,23 @@ echo ""
 echo "Daily check: $FAIL failure(s)"
 [ "$FAIL" -gt 0 ] && exit 2 || exit 0
 ```
+
+```text title="Expected output"
+=== Cisco MDS Daily Check: 192.168.1.20 — Thu Mar 14 09:23:47 UTC 2024 ===
+[INFO] Cisco MDS 9148S Fibre Channel Switch
+system:   9148S
+[OK]   All FC interfaces up
+[INFO] 47 device(s) logged in via FLOGI
+[INFO] CPU utilisation: 12%
+[OK]   No critical/error entries in recent log
+
+Daily check: 0 failure(s)
+```
+
+!!! warning "Common errors"
+    **`ssh: connect to host 192.168.1.20 port 22 (tcp) timed out`** — Verify the MDS_HOST IP is correct and the switch is reachable with `ping 192.168.1.20`.
+    **`Permission denied (publickey,password)`** — Ensure SSH_USER is set to a valid admin account and key-based authentication is configured, or add `-o PubkeyAuthentication=no` to SSH_OPTS to allow password auth.
+    **`show version: command not found`** — Confirm you are connected to a Cisco MDS switch (not a different device) and that the SSH session is entering the correct CLI mode.
 ```bash
 #!/bin/bash
 # mds_triage.sh
@@ -504,6 +579,61 @@ ssh_cmd() { ssh $SSH_OPTS "$SSH_USER@$MDS_HOST" "$1" 2>/dev/null; }
 
 echo "Triage data saved to: $OUTFILE"
 ```
+
+```text title="Expected output"
+=== Cisco MDS Incident Triage: 192.168.1.20 — Wed Jan 15 14:32:47 UTC 2025 ===
+
+--- show version ---
+Cisco MDS SAN Operating System Software
+System uptime is 187 days 3 hours 22 minutes
+Kernel uptime is 187 days 3 hours 18 minutes
+System Load Average is 0.45, 0.38, 0.41
+Processes running are 187
+Memory used: 3847676K/8388608K available
+
+--- show interface brief ---
+Interface            Status    Network
+fc1/1                up        1
+fc1/2                up        1
+fc1/3                down      --
+fc1/4                up        1
+fc2/1                up        2
+...
+
+--- show flogi database ---
+FLOGI Database for VSAN 1:
+    FCID           Port Name               Node Name               Interface
+    0x010001       50:00:0a:0b:1c:2d:3e:4f 50:00:0a:0b:1c:2d:3e:50 fc1/1
+    0x010002       50:00:0a:0b:1c:2d:3e:51 50:00:0a:0b:1c:2d:3e:52 fc1/2
+
+--- show zoneset active vsan all ---
+zoneset name PROD_ZONES vsan 1
+  zone name ZONE_SRV_01 vsan 1
+    member pwwn 50:00:0a:0b:1c:2d:3e:4f
+    member pwwn 50:00:0a:0b:1c:2d:3e:51
+
+--- show system resources ---
+Load average:   0 min: 0.45  5 min: 0.38  15 min: 0.41
+Memory:         3847676 KB used / 4540880 KB free
+
+--- show logging last 100 ---
+2025 Jan 15 14:28:33 +00:00 mds-prod %ETHPORT-5-IF_DOWN: Interface Ethernet1/1 is down
+2025 Jan 15 14:15:22 +00:00 mds-prod %ZONE-2-ZONESET_ACTIVATE: Zoneset PROD_ZONES activated
+
+--- show environment ---
+Power Supply 1: OK
+Power Supply 2: OK
+Fan 1: OK
+Fan 2: OK
+Temperature: 38 C
+
+Triage data saved to: /tmp/mds_triage_192.168.1.20_20250115_143247.txt
+```
+
+!!! warning "Common errors"
+    **`ssh: connect to host 192.168.1.20 port 22 (tcp): Connection timed out`** — Verify the MDS_HOST IP is correct and reachable; check network connectivity and firewall rules allowing SSH to port 22.
+    **`Permission denied (publickey,password).`** — Ensure SSH_USER is correct and has valid credentials configured; verify the admin account exists and SSH key authentication is properly set up.
+    **`show: command not found`** — The SSH session is not entering the MDS CLI properly; remove `-o BatchMode=yes` or add `terminal length 0` to the ssh_
 ```bash
 #!/bin/bash
 # mds_precheck.sh
@@ -568,6 +698,22 @@ echo ""
 echo "Pre-check: $FAIL failure(s)"
 [ "$FAIL" -gt 0 ] && exit 2 || exit 0
 ```
+
+```text title="Expected output"
+=== Cisco MDS Pre-Change Check: 192.168.1.20 — Wed Nov 15 14:32:47 UTC 2024 ===
+[OK]   All FC interfaces up
+[OK]   Active zoneset: prod_zoneset
+[OK]   No recent log errors
+[OK]   CPU at 42%
+[OK]   FLOGI count: 50
+
+Pre-check: 0 failure(s)
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify SSH_USER and MDS_HOST are correct, and that the admin account exists with proper SSH key or password authentication enabled on the MDS switch.
+    **`Connection timed out`** — Check network connectivity to the MDS_HOST IP address and confirm the SSH service is running on the switch (verify with `show ssh server status`).
+    **`[FAIL] Active zoneset 'prod_zoneset' does not match expected 'prod_zoneset_v2'`** — Confirm the EXPECTED_ZONESET environment variable matches the actual active zoneset name on the MDS, or activate the correct zoneset with `zoneset activate name <zoneset_name> vsan <vsan_id>`.
 ```bash
 #!/bin/bash
 # mds_postcheck.sh
@@ -618,6 +764,21 @@ echo ""
 echo "Post-change validation: $FAIL failure(s)"
 [ "$FAIL" -gt 0 ] && exit 2 || exit 0
 ```
+
+```text title="Expected output"
+=== Cisco MDS Post-Change Validation: 192.168.1.20 — Wed Nov 15 14:32:47 UTC 2023 ===
+[OK]   All FC interfaces up
+[OK]   Active zoneset: prod_zoneset_v2
+[INFO] 47 device(s) in FLOGI database
+[OK]   No new logging errors
+
+Post-change validation: 0 failure(s)
+```
+
+!!! warning "Common errors"
+    **`ssh: connect to host 192.168.1.20 port 22 (tcp) timed out`** — Verify the MDS_HOST IP is correct and reachable, and that SSH is enabled on the switch with `ssh server enable`.
+    **`Permission denied (publickey,password).`** — Confirm SSH_USER has valid credentials and key-based auth is configured, or add `-o PubkeyAuthentication=no` to SSH_OPTS to force password auth.
+    **`[FAIL] 3 FC interface(s) still down`** — Check the interface status on the MDS with `show interface fc1/1-3` and verify the post-change configuration was applied correctly.
 ```bash
 #!/bin/bash
 # mds_health_check.sh
@@ -647,6 +808,15 @@ fi
 exit 0
 ```
 
+
+```text title="Expected output"
+switch=192.168.1.20 firmware=9.1(1) interfaces_up=48 interfaces_down=2 flogi_count=34 active_zoneset=production cpu_pct=18
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Ensure SSH key is installed in `~/.ssh/authorized_keys` on the MDS or add password authentication; verify `SSH_USER` matches a valid admin account.
+    **`ssh: connect to host 192.168.1.20 port 22: Connection timed out`** — Verify the MDS_HOST IP is reachable and SSH is enabled on the switch; check firewall rules and network connectivity with `ping $MDS_HOST`.
+    **`show: command not found`** — Confirm you are connecting to a Cisco MDS switch (not a Linux host); verify the SSH session is entering the MDS CLI correctly by testing `ssh_cmd "show version"` manually.
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

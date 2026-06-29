@@ -157,6 +157,28 @@ az rest --method GET \
   --output json
 ```
 
+
+```text title="Expected output"
+Name                          Health    RPO      ActiveLocation
+------------------------------  --------  -------  ----------------
+prod-web-vm-01                Normal    300      primaryLocation
+prod-db-vm-02                 Warning   1847     primaryLocation
+prod-app-vm-03                Normal    285      primaryLocation
+dr-cache-vm-04                Critical  5923     secondaryLocation
+prod-web-vm-05                Normal    312      primaryLocation
+
+{
+  "Health": "Normal",
+  "RPO": 298,
+  "TestFailoverState": "None",
+  "LastSync": "2024-01-15T14:32:47.123Z"
+}
+```
+
+!!! warning "Common errors"
+    **`The subscription '<sub-id>' could not be found.`** — Replace `<sub-id>` with your actual subscription ID from `az account show --query id`.
+    **`ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/<vault-name>' under resource group '<dr-rg>' was not found.`** — Verify the vault name and resource group exist in the correct subscription using `az recovery-services vault list -g <dr-rg>`.
+    **`Authorization failed for request. Caller is not authorized to perform action 'Microsoft.RecoveryServices/vaults/replicationProtectedItems/read' on resource.`** — Ensure your account has Reader or Site Recovery Operator role on the Recovery Services vault using `az role assignment list --scope /subscriptions/<sub-id>/resourceGroups/<dr-rg>`.
 ---
 
 ## RPO Warnings
@@ -171,6 +193,23 @@ az rest --method GET \
   --output table
 ```
 
+
+```text title="Expected output"
+Name                                    RPO    Health
+--------------------------------------  -----  ----------------
+vm-prod-db-01                           487    Warning
+vm-prod-app-tier-02                     612    Warning
+vm-staging-web-01                       305    Degraded
+vm-prod-cache-redis                     1203   Critical
+vm-dr-failover-test-03                  401    Warning
+```
+
+!!! warning "Common errors"
+    **`ERROR: The subscription '<sub-id>' could not be found.`** — Replace `<sub-id>` with your actual subscription ID from `az account show --query id -o tsv`.
+    
+    **`ERROR: The resource group '<dr-rg>' could not be found in the subscription.`** — Verify the resource group name with `az group list --query "[].name" -o tsv` and ensure it exists in the correct subscription.
+    
+    **`ERROR: The vault '<vault-name>' could not be found in the specified resource group.`** — Confirm the Recovery Services vault name using `az backup vault list --resource-group <dr-rg> --query "[].name" -o tsv`.
 Common RPO warning causes:
 
 | Cause | Symptom | Resolution |
@@ -200,6 +239,29 @@ az rest --method GET \
   --output table
 ```
 
+
+```text title="Expected output"
+{
+  "id": "/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/resourceGroups/dr-rg-prod/providers/Microsoft.RecoveryServices/vaults/vault-dr-01/replicationJobs/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+  "name": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+  "type": "Microsoft.RecoveryServices/vaults/replicationJobs",
+  "properties": {
+    "jobType": "Resync",
+    "state": "InProgress",
+    "stateDescription": "Resync in progress"
+  }
+}
+
+Name                                  State         Progress
+----                                  -----         --------
+a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d  InProgress    Resync in progress
+b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e  Succeeded     Resync completed
+```
+
+!!! warning "Common errors"
+    **`The URI is invalid.`** — Replace all placeholder values (`<sub-id>`, `<dr-rg>`, `<vault-name>`, `<fabric>`, `<container>`, `<item-name>`) with actual resource names from your Azure environment.
+    **`AuthorizationFailed: The client 'user@example.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/replicationJobs/read' over scope...`** — Ensure your Azure account has the "Site Recovery Contributor" or "Backup Operator" role assigned on the Recovery Services vault.
+    **`ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/<vault-name>/replicationProtectedItems/<item-name>' under resource group '<dr-rg>' was not found.`** — Verify the protected item name and container name are correct by running `az recovery-services-backup item list --vault-name <vault-name> --resource-group <dr-rg>`.
 ---
 
 ## Monitoring via Azure Monitor Alerts
@@ -222,6 +284,31 @@ az monitor metrics alert list \
   --output table
 ```
 
+
+```text title="Expected output"
+{
+  "actions": [],
+  "creationTime": "2024-01-15T09:32:47.123456+00:00",
+  "description": "ASR replication health degraded",
+  "enabled": true,
+  "evaluationFrequency": "PT1M",
+  "id": "/subscriptions/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d/resourceGroups/prod-rg/providers/Microsoft.Insights/metricAlerts/asr-replication-health-alert",
+  "location": "global",
+  "name": "asr-replication-health-alert",
+  "resourceGroup": "prod-rg",
+  "severity": 2,
+  "windowSize": "PT5M"
+}
+Name                                    ResourceGroup    Enabled    Severity
+--------------------------------------  ---------------  ---------  ----------
+asr-replication-health-alert            prod-rg          True       2
+vm-cpu-utilization-alert                prod-rg          True       1
+vault-backup-failure-alert               prod-rg          True       3
+```
+
+!!! warning "Common errors"
+    **`ResourceNotFound: The resource '/subscriptions/.../providers/Microsoft.RecoveryServices/vaults/<vault-resource-id>' could not be found.`** — Verify the vault resource ID is correct and exists in the specified resource group using `az recovery-services vault list --resource-group <rg>`.
+    **`InvalidMetricName: The metric 'ReplicationHealthErrors' is not valid for this resource type.`** — Replace with the correct metric name `ReplicationHealthStatus` or `ReplicationLatency` by checking available metrics with `az monitor metrics list-definitions --resource <vault-resource-id>`.
 ---
 
 ## Replication Jobs Monitoring
@@ -240,6 +327,25 @@ az rest --method GET \
   --output table
 ```
 
+
+```text title="Expected output"
+Name                                          Type                State      StartTime                 EndTime
+--------------------------------------------  ------------------  ---------  ------------------------  ------------------------
+dr-vm-sync-20250115-001                       Replication         Completed  2025-01-15T08:23:45.123Z  2025-01-15T08:45:12.456Z
+dr-vm-sync-20250115-002                       Replication         Completed  2025-01-15T09:10:33.789Z  2025-01-15T09:32:01.012Z
+dr-failover-test-20250114-001                 TestFailover        Completed  2025-01-14T22:15:22.345Z  2025-01-14T22:58:44.678Z
+dr-vm-sync-20250115-003                       Replication         InProgress 2025-01-15T10:05:17.234Z  None
+dr-resync-20250114-001                        Resynchronize       Failed     2025-01-14T19:42:11.567Z  2025-01-14T20:15:33.890Z
+
+Name                                          Type                Error
+--------------------------------------------  ------------------  -----------------------------------------------
+dr-resync-20250114-001                        Resynchronize       Target resource group not found in subscription
+```
+
+!!! warning "Common errors"
+    **`AuthorizationError: The client '<client-id>' does not have authorization to perform action 'Microsoft.RecoveryServices/vaults/read'`** — Ensure your Azure CLI account has the Reader or Contributor role on the Recovery Services vault resource.
+    **`ResourceNotFound: The Resource 'Microsoft.RecoveryServices/vaults/<vault-name>' under resource group '<dr-rg>' was not found`** — Verify the subscription ID, resource group name, and vault name are correct and exist in your Azure subscription.
+    **`InvalidApiVersion: The api-version '2022-10-01' is not supported for this resource type`** — Update the api-version parameter to a currently supported version by running `az provider show --namespace Microsoft.RecoveryServices --query "resourceTypes[?resourceType=='vaults/replicationJobs'].apiVersions"`.
 ---
 
 ## Replication Health Dashboard Metrics

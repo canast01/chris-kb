@@ -50,6 +50,18 @@ az vm boot-diagnostics get-boot-log-uris \
   --output json
 ```
 
+
+```text title="Expected output"
+{
+  "consoleLogBlobUri": "https://bootdiagstg12345.blob.core.windows.net/bootdiagnostics-myvm/myvm.serialconsole.log?sv=2021-06-08&sig=AbCdEfGhIjKlMnOpQrStUvWxYz1234567890%3D&se=2024-01-15T18%3A30%3A00Z&sr=b&sp=r",
+  "serialConsoleLogBlobUri": "https://bootdiagstg12345.blob.core.windows.net/bootdiagnostics-myvm/myvm.serialconsole.log?sv=2021-06-08&sig=XyZ9876543210AbCdEfGhIjKlMnOpQrStUvWx%3D&se=2024-01-15T18%3A30%3A00Z&sr=b&sp=r"
+}
+```
+
+!!! warning "Common errors"
+    **`ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.`** — Verify the VM name and resource group name are correct and the VM exists in that region.
+    **`AuthorizationFailed: The client '<client-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/read' over scope '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Compute/virtualMachines/<vm-name>'.`** — Ensure your Azure account has at least Reader role on the VM or resource group.
+    **`InvalidParameter: Boot diagnostics is not enabled on this VM.`** — Enable boot diagnostics on the VM by running `az vm boot-diagnostics enable --resource-group <rg> --name <vm-name>`.
 ---
 
 ## Linux Serial Console
@@ -77,6 +89,38 @@ cat /etc/netplan/*.yaml
 systemctl restart systemd-networkd
 ```
 
+
+```text title="Expected output"
+fsck from util-linux 2.37.2
+e2fsck 1.46.2 (28-Feb-2021)
+/dev/sda1: clean, 45821/524288 files, 892156/2097152 blocks
+
+(no output — command completes silently)
+
+New password: 
+Retype new password: 
+passwd: password updated successfully
+
+1: lo: <LOOPBACK,UP,RUNNING> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+2: eth0: <BROADCAST,MULTICAST,UP,RUNNING> mtu 1500 qdisc mq state UP group default qlen 1000
+    link/ether 60:45:bd:a2:c1:f8 brd ff:ff:ff:ff:ff:ff
+    inet 10.0.1.42/24 brd 10.0.1.255 scope global eth0
+
+network:
+  version: 2
+  ethernets:
+    eth0:
+      dhcp4: true
+
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`fsck: /dev/sda1 is mounted`** — Run fsck only in single-user mode or from a recovery environment; reboot into single-user mode with `systemctl rescue`.
+    **`E325: ATTENTION: Found a swap file by the name "/etc/fstab.swp"`** — Delete the swap file with `rm /etc/fstab.swp` before editing, or use `vi -r` to recover unsaved changes.
+    **`Job for systemd-networkd.service failed because the control process exited with error code`** — Check for syntax errors in `/etc/netplan/*.yaml` with `netplan validate` and correct the YAML formatting.
 To access GRUB on Linux via serial console, the VM must have `console=ttyS0` in its kernel command line. Most Azure marketplace images include this by default.
 
 ---
@@ -132,6 +176,28 @@ az vm run-command invoke \
   --scripts "bcdedit /ems {current} on; bcdedit /emssettings EMSPORT:1 EMSBAUDRATE:115200; bcdedit /bootems {current} on"
 ```
 
+
+```text title="Expected output"
+{
+  "value": [
+    {
+      "code": "ProvisioningState/succeeded",
+      "displayStatus": "Provision succeeded",
+      "message": "The operation completed successfully."
+    },
+    {
+      "code": "ComponentStatus/stdout/succeeded",
+      "displayStatus": "Stdout succeeded",
+      "message": "The operation completed successfully.\nThe boot configuration has been successfully modified.\nEMS settings configured for port 1 at 115200 baud.\nBoot EMS enabled for current boot entry."
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`The client 'user@contoso.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/runCommands/action'`** — Ensure your user account has the Contributor or Virtual Machine Contributor role on the resource group or VM.
+    **`The resource group '<rg>' could not be found.`** — Verify the resource group name is correct and exists in your current Azure subscription using `az group list`.
+    **`The virtual machine '<win-vm-name>' could not be found in resource group '<rg>'.`** — Confirm the VM name is spelled correctly and belongs to the specified resource group using `az vm list --resource-group <rg>`.
 ---
 
 ## Troubleshooting Common Scenarios
@@ -151,3 +217,14 @@ az vm restart \
   --resource-group <rg> \
   --name <vm-name>
 ```
+
+
+```text title="Expected output"
+Command group 'vm' is in preview and under development. Reference and support levels: https://aka.ms/CLI_refstatus
+(no output — command completes silently)
+VM restart initiated successfully.
+```
+
+!!! warning "Common errors"
+    **`ResourceNotFound : The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.`** — Verify the resource group name and VM name are correct using `az vm list --resource-group <rg>`.
+    **`AuthorizationFailed : The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/restart/action' over scope '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Compute/virtualMachines/<vm-name>'.`** — Ensure your Azure account has Contributor or Virtual Machine Contributor role on the resource group or VM.

@@ -124,6 +124,22 @@ switch(config-zone)# no member device-alias fa01_ct0_p1
 switch(config-zone)# exit
 ```
 
+
+```text title="Expected output"
+switch# zone name esxi01_hba0__fa01_ct0_p0 vsan 10
+switch(config-zone)# member device-alias esxi01_hba0
+switch(config-zone)# member device-alias fa01_ct0_p0
+switch(config-zone)# member device-alias fa01_ct0_p1
+switch(config-zone)# exit
+switch# zone name esxi01_hba0__fa01_ct0_p0 vsan 10
+switch(config-zone)# no member device-alias fa01_ct0_p1
+switch(config-zone)# exit
+switch#
+```
+
+!!! warning "Common errors"
+    **`% Invalid command`** — Verify the device-alias names exist in the switch configuration using `show device-alias database`.
+    **`% Zone member already exists`** — Remove the duplicate member first with `no member device-alias <name>` before re-adding it.
 ### Zone Set Management
 
 ![Zone Set Management](../../../../assets/cisco-mds-proc-zone-set-management.svg)
@@ -145,6 +161,27 @@ switch# zone commit vsan 10
 switch# copy running-config startup-config
 ```
 
+
+```text title="Expected output"
+switch# zoneset name dc1-fabA-prod vsan 10
+switch(config-zoneset)# member esxi01_hba0__fa01_ct0_p0
+switch(config-zoneset)# member esxi01_hba1__fa01_ct1_p0
+switch(config-zoneset)# exit
+switch# zoneset activate name dc1-fabA-prod vsan 10
+Zoneset activation initiated. Please wait...
+Zoneset "dc1-fabA-prod" activated successfully for VSAN 10.
+switch# zone commit vsan 10
+Zone commit in progress...
+Zone commit completed successfully for VSAN 10.
+switch# copy running-config startup-config
+[########################################] 100%
+Configuration saved successfully.
+```
+
+!!! warning "Common errors"
+    **`% Invalid VSAN ID`** — Verify the VSAN exists with `show vsan` and use a valid VSAN number between 1–4094.
+    **`% Zone member not found`** — Confirm the zone member name exists in the fabric using `show flogi database vsan 10` before adding it to the zoneset.
+    **`% Zoneset activation failed: conflicting zones detected`** — Review existing zone configurations with `show zoneset active vsan 10` and resolve overlapping member definitions before reactivating.
 ### Enhanced Zoning (recommended)
 
 ![Enhanced Zoning (recommended)](../../../../assets/cisco-mds-proc-enhanced-zoning-recommended.svg)
@@ -160,6 +197,25 @@ switch# show zone status vsan 10
 # Mode: Enhanced
 ```
 
+
+```text title="Expected output"
+switch# zone mode enhanced vsan 10
+switch# show zone status vsan 10
+
+VSAN: 10
+Admin Mode: enhanced
+Operation Mode: enhanced
+Default Zone Access: deny
+Session ID: 0x60a8c2d1
+Default Zone Reject Frames: 0
+Broadcast and Multicast Frames: 0
+Unicast Frames: 0
+```
+
+!!! warning "Common errors"
+    **`% Invalid command`** — Verify the VSAN exists with `show vsan` and confirm you have zone admin privileges.
+    **`% VSAN 10 does not exist`** — Create the VSAN first using `vsan database` and `vsan 10 activate` commands.
+    **`% Zone mode change will activate after session exit`** — Exit the current session or use `no system session timeout` to apply changes immediately.
 ### Example: Zone a New Host to FlashArray
 
 ![Example: Zone a New Host to FlashArray](../../../../assets/cisco-mds-proc-example-zone-a-new-host-to-flasharray.svg)
@@ -193,6 +249,30 @@ switch# copy running-config startup-config
 # Repeat on Fabric B switch / VSAN for HBA1
 ```
 
+
+```text title="Expected output"
+Device-alias database opened for edit session.
+Device-alias name web01_hba0 pwwn 10:00:00:90:fa:ab:cd:ef configured.
+Device-alias name web01_hba0 pwwn 10:00:00:90:fa:ab:cd:ef is in use.
+Device-alias name web01_hba1 pwwn 10:00:00:90:fa:ab:cd:f0 configured.
+Device-alias database closed.
+Device-alias committed successfully.
+Zone name web01_hba0__fa01_ct0_p0 created.
+Zone member device-alias web01_hba0 added.
+Zone member device-alias fa01_ct0_p0 added.
+Zoneset name dc1-fabA-prod created.
+Zoneset member web01_hba0__fa01_ct0_p0 added.
+Activating zoneset dc1-fabA-prod in VSAN 10...
+Zoneset dc1-fabA-prod activated successfully.
+Zone commit in VSAN 10 completed.
+[#] 100.0%
+Copy complete.
+```
+
+!!! warning "Common errors"
+    **`Device-alias name web01_hba0 pwwn 10:00:00:90:fa:ab:cd:ef is in use.`** — Run `device-alias delete name web01_hba0` before re-adding, or use a unique device-alias name.
+    **`Zone member device-alias fa01_ct0_p0 not found.`** — Create the device-alias `fa01_ct0_p0` in the device-alias database before adding it to the zone.
+    **`Zoneset activation failed: conflicting zone configuration.`** — Run `zoneset deactivate name <current-zoneset> vsan 10` to deactivate the active zoneset before activating a new one.
 ### VSAN Membership
 
 ![VSAN Membership](../../../../assets/cisco-mds-proc-vsan-membership.svg)
@@ -210,6 +290,31 @@ switch(config-vsan-db)# exit
 switch# copy running-config startup-config
 ```
 
+
+```text title="Expected output"
+VSAN 10 Membership Information
+===============================
+Interface          VSAN    Status      Speed
+fc1/1              10      trunking    8 Gbps
+fc1/2              10      trunking    8 Gbps
+fc1/5              10      trunking    8 Gbps
+fc2/3              10      online      4 Gbps
+fc2/8              10      online      4 Gbps
+---
+
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+
+[########################################] 100.0%
+
+Copy complete.
+```
+
+!!! warning "Common errors"
+    **`% Invalid command`** — Verify you are in the correct mode; use `vsan database` to enter VSAN configuration mode before assigning ports.
+    **`% VSAN 10 does not exist`** — Create the VSAN first with `vsan 10` in VSAN database mode before assigning interfaces to it.
 ### Zone Troubleshooting
 
 ![Zone Troubleshooting](../../../../assets/cisco-mds-proc-zone-troubleshooting.svg)
@@ -246,6 +351,55 @@ switch# show zone vsan 10
 switch# show zoneset active vsan 10
 ```
 
+
+```text title="Expected output"
+switch# show zone vsan 10
+zone name zone_prod_lun01 vsan 10
+  member pwwn 10:00:00:90:fa:12:34:56
+  member pwwn 10:00:00:90:fa:12:34:78
+zone name zone_prod_lun02 vsan 10
+  member pwwn 10:00:00:90:fa:12:34:9a
+  member pwwn 10:00:00:90:fa:12:34:bc
+zone name zone_dev_lun03 vsan 10
+  member pwwn 10:00:00:90:fa:12:34:de
+
+switch# show zone member pwwn 10:00:00:90:fa:12:34:56 vsan 10
+pwwn 10:00:00:90:fa:12:34:56 is in the following zones:
+  zone_prod_lun01
+
+switch# show fcns database vsan 10
+VSAN 10:
+  FC4-Types: FCP
+  Fabric Port Name: 10:00:00:90:fa:12:34:56
+    Port Index: 0x010001  Flags: 0x00
+    Device Alias: hba-esx01-fc0
+    Port Type: N_Port
+    Class: 3
+    IpAddress: 10.100.50.12
+  Fabric Port Name: 10:00:00:90:fa:12:34:78
+    Port Index: 0x010002  Flags: 0x00
+    Device Alias: storage-array-01-port-a
+    Port Type: N_Port
+    Class: 3
+...
+
+switch# show zone vsan 10
+zone name zone_prod_lun01 vsan 10
+  member pwwn 10:00:00:90:fa:12:34:56
+  member pwwn 10:00:00:90:fa:12:34:78
+
+switch# show zoneset active vsan 10
+zoneset name prod_zoneset vsan 10
+  zone name zone_prod_lun01 vsan 10
+    member pwwn 10:00:00:90:fa:12:34:56
+    member pwwn 10:00:00:90:fa:12:34:78
+  zone name zone_prod_lun02 vsan 10
+    member pwwn 10:00:00:90:fa:12:34:9a
+```
+
+!!! warning "Common errors"
+    **`% Invalid command`** — Verify VSAN 10 exists with `show vsan` and confirm the switch supports zoning on that VSAN.
+    **`% No matching zones found`** — Confirm the pwwn format is correct (16 hex digits with colons) and the device is actually zoned in VSAN 10.
 ## Add a New Switch to an Existing VSAN
 
 Connect ISL → on existing switch: `vsan database; vsan <id> interface fc1/1` → on new switch: set domain ID to auto → `no shutdown` → verify `show topology` includes new switch.
@@ -264,6 +418,33 @@ switch(config-if)# no shutdown
 switch# show topology
 ```
 
+
+```text title="Expected output"
+switch# vsan database
+switch(config-vsan-db)# vsan 1 interface fc1/1
+switch(config-vsan-db)# exit
+switch# interface fc1/1
+switch(config-if)# no shutdown
+switch# show topology
+FC Topology for VSAN 1:
+
+Switch ID   WWN                    Model      State
+--------    ---                    -----      -----
+[1]         50:00:09:73:a1:2b:4d:01  MDS 9148S  Principal
+[2]         50:00:09:73:a2:5e:8c:92  MDS 9148S  Principal
+[3]         50:00:09:73:a3:7f:1c:45  MDS 9148S  Principal
+
+ISL Links:
+Port        Remote Port    Remote Switch  State
+----        -----------    ---------------  -----
+fc1/1       fc1/1          [2]            Up
+fc2/1       fc2/2          [3]            Up
+```
+
+!!! warning "Common errors"
+    **`% Invalid command`** — Verify the VSAN ID exists with `show vsan` before adding the interface.
+    **`Interface fc1/1 is not online`** — Ensure the ISL port is physically connected and the remote switch port is also enabled with `no shutdown`.
+    **`VSAN <id> not found in database`** — Create the VSAN first using `vsan <id>` in vsan database mode before assigning interfaces to it.
 ## Create a Device Alias
 
 `device-alias database; device-alias name host01_hba0 pwwn 10:00:00:00:00:00:00:01; device-alias commit` — simplifies zone membership management.
@@ -275,6 +456,14 @@ switch(config-device-alias-db)# exit
 switch# device-alias commit
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`% Invalid PWWN format`** — Ensure the PWWN is in the correct format (10 hexadecimal pairs separated by colons, e.g., 10:00:00:00:00:00:00:01).
+    **`% Device alias 'host01_hba0' already exists`** — Delete the existing device alias with `device-alias delete host01_hba0` before creating a new one with the same name.
 ## Create an IVR Zone (Inter-VSAN Routing)
 
 Configure IVR topology → `ivr zoneset name ivr_prod` → `ivr zone name zone_ivr_host01_array01` → add members from different VSANs → `ivr zoneset activate name ivr_prod`.
@@ -296,6 +485,26 @@ switch(config-ivr-zoneset)# exit
 switch# ivr zoneset activate name ivr_prod
 ```
 
+
+```text title="Expected output"
+switch# ivr topology distribute
+Topology distribution in progress...
+switch# ivr zone name zone_ivr_host01_array01
+switch(config-ivr-zone)# member pwwn 10:00:00:00:00:00:00:01 vsan 10
+switch(config-ivr-zone)# member pwwn 50:00:00:00:00:00:00:02 vsan 20
+switch(config-ivr-zone)# exit
+switch# ivr zoneset name ivr_prod
+switch(config-ivr-zoneset)# member zone_ivr_host01_array01
+switch(config-ivr-zoneset)# exit
+switch# ivr zoneset activate name ivr_prod
+Zoneset activation in progress...
+IVR zoneset 'ivr_prod' activated successfully
+```
+
+!!! warning "Common errors"
+    **`% Invalid PWWN format`** — Verify the PWWN is in colon-separated hexadecimal format (16 characters total, e.g., 10:00:00:00:00:00:00:01).
+    **`% VSAN does not exist`** — Confirm both VSAN 10 and VSAN 20 are created and active on the switch before adding members.
+    **`% Zone does not exist`** — Ensure zone_ivr_host01_array01 is created before attempting to add it as a member to the zoneset.
 ## Check Fabric Login Table
 
 `show flogi database vsan <id>` — lists all logged-in devices with FCID and WWPN; confirm expected hosts and arrays present.
@@ -304,6 +513,21 @@ switch# ivr zoneset activate name ivr_prod
 switch# show flogi database vsan <id>
 ```
 
+
+```text title="Expected output"
+VSAN 1:
+FLOGI Database for VSAN 1:
+ FC_ID     Port Name               Node Name               Interface
+ 010001    50:00:09:4d:1a:2b:3c:4d 50:00:09:4d:1a:2b:3c:4e fc1/1
+ 010002    50:00:09:4d:1a:2b:3c:5e 50:00:09:4d:1a:2b:3c:5f fc1/2
+ 010003    50:00:09:4d:1a:2b:3c:6d 50:00:09:4d:1a:2b:3c:6e fc1/3
+ 010004    50:00:09:4d:1a:2b:3c:7d 50:00:09:4d:1a:2b:3c:7e fc1/4
+ 010005    50:00:09:4d:1a:2b:3c:8d 50:00:09:4d:1a:2b:3c:8e fc1/5
+```
+
+!!! warning "Common errors"
+    **`Invalid VSAN ID <id>`** — Verify the VSAN exists with `show vsan` and use a valid numeric ID between 1 and 4094.
+    **`% Invalid command`** — Ensure you are in the correct command mode (exec or config) and the MDS switch supports FLOGI database queries.
 ## Collect NX-OS Tech-Support for TAC
 
 `show tech-support` → save output to file; `copy running-config bootflash:switch-config-backup.cfg` for configuration backup.
@@ -316,6 +540,17 @@ switch# show tech-support > bootflash:tech-support-$(date +%Y%m%d).txt
 switch# copy running-config bootflash:switch-config-backup.cfg
 ```
 
+
+```text title="Expected output"
+Generating tech-support output, this may take a few minutes...
+Tech-support file generated successfully.
+Destination filename [switch-config-backup.cfg]? 
+1234 bytes copied in 1.203 secs (1026 bytes/sec)
+```
+
+!!! warning "Common errors"
+    **`%Error: Invalid command`** — Ensure you are in the correct mode (exec mode, not config mode); use `exit` to return to the switch prompt if needed.
+    **`%Error: bootflash: is full`** — Delete old tech-support or backup files using `delete bootflash:filename` to free space before retrying.
 ## Replace a Failed Module (Line Card)
 
 `out-of-service module <slot>` → physically swap module → `no out-of-service module <slot>` → verify `show module` shows Online.
@@ -333,6 +568,33 @@ switch# no out-of-service module <slot>
 switch# show module
 ```
 
+
+```text title="Expected output"
+switch# out-of-service module 2
+Module 2 is being brought out of service. This may take a few minutes.
+Module 2 is now out of service.
+
+switch# no out-of-service module 2
+Module 2 is being brought into service. This may take a few minutes.
+Module 2 is now online.
+
+switch# show module
+Mod Ports Module-Type                Model              Status
+--- ----- -------------------------  ----------------   ---------
+1   16    16Gb FC Module             DS-X97-SF16K9      ok
+2   16    16Gb FC Module             DS-X97-SF16K9      ok
+3   48    48-port 10Gb iSCSI Module  DS-X97-48ISL-GE    ok
+Mod  Sw              Fw              Hw    Status
+--- --------------- --------------- ----- ---------
+1   9.1(1)          12.2(1s1)       1.3   active *
+2   9.1(1)          12.2(1s1)       1.3   ok
+3   9.1(1)          12.2(1s1)       1.4   ok
+```
+
+!!! warning "Common errors"
+    **`% Invalid command`** — Verify the slot number exists and use the correct syntax `out-of-service module <slot>` without additional parameters.
+    **`Module <slot> is not in a valid state for this operation`** — Wait for the module to complete its current state transition (check with `show module`) before issuing the command again.
+    **`% Incomplete command`** — Provide the slot number; the command requires a module slot argument (e.g., `out-of-service module 2`).
 ---
 
 ## Verify

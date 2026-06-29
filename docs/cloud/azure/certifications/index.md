@@ -58,6 +58,33 @@ az network vnet list
 az storage account list
 ```
 
+
+```text title="Expected output"
+You have logged in. Welcome to Azure CLI 2.54.0!
+
+Name                ResourceGroup      PowerState    PublicIps      Fqdns
+------------------  -----------------  -----------   -----------    -----
+prod-web-vm-01      prod-rg            VM running    52.168.45.12   prod-web-01.eastus.cloudapp.azure.com
+prod-db-vm-02       prod-rg            VM running    52.168.45.13   prod-db-02.eastus.cloudapp.azure.com
+dev-test-vm-03      dev-rg             VM deallocated
+staging-app-vm-04   staging-rg         VM running    20.45.123.89   staging-app.eastus.cloudapp.azure.com
+
+Name                   ResourceGroup      Location    NumSubnets    ProvisioningState
+---------------------  -----------------  ----------  -----------   -----------------
+prod-vnet-eastus       prod-rg            eastus      3             Succeeded
+dev-vnet-eastus        dev-rg             eastus      2             Succeeded
+staging-vnet-eastus    staging-rg         eastus      1             Succeeded
+
+Name                      ResourceGroup      Location    SkuName      ProvisioningState
+-------------------------  -----------------  ----------  -----------  -----------------
+prodstg001               prod-rg            eastus      Standard_LRS  Succeeded
+devstg002                dev-rg             eastus      Standard_GRS  Succeeded
+stagingstg003            staging-rg         eastus      Premium_LRS   Succeeded
+```
+
+!!! warning "Common errors"
+    **`ERROR: Please run 'az login' first.`** — Run `az login` to authenticate before executing other Azure CLI commands.
+    **`ERROR: The subscription of <subscription-id> doesn't have authorization to perform action 'Microsoft.Compute/virtualMachines/read' on resource '<resource-id>'.`** — Ensure your Azure account has the required Reader or Contributor role assigned to the subscription via Azure Portal IAM settings.
 ## Renewal Notes
 
 Azure certifications typically require renewal annually through online assessment.

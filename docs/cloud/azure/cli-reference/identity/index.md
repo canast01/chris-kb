@@ -35,6 +35,35 @@ az ad app list --output table
 az ad app show --id <app_id>
 ```
 
+
+```text title="Expected output"
+DisplayName                          UserPrincipalName                    ObjectId
+-----------------------------------  ------------------------------------  ------------------------------------
+Alice Johnson                        alice.johnson@contoso.com            a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d
+Bob Smith                            bob.smith@contoso.com               b2c3d4e5-f6a7-4b5c-8d9e-1f2a3b4c5d6e
+Carol White                          carol.white@contoso.com             c3d4e5f6-a7b8-4c5d-8e9f-2a3b4c5d6e7f
+
+GroupId                              DisplayName
+-----------------------------------  ------------------------------------
+d4e5f6a7-b8c9-4d5e-8f9a-3b4c5d6e7f8a  Engineering
+e5f6a7b8-c9d0-4e5f-8f9a-4c5d6e7f8a9b  Finance
+f6a7b8c9-d0e1-4f5g-8g9a-5d6e7f8a9b0c  Marketing
+
+ObjectId                              DisplayName                          AppId
+-----------------------------------  ------------------------------------  ------------------------------------
+g7b8c9d0-e1f2-4g5h-8h9b-6e7f8a9b0c1d  my-app-service-principal            a1b2c3d4-e5f6-47a8-9b0c-1d2e3f4a5b6c
+h8c9d0e1-f2g3-4h5i-8i9c-7f8a9b0c1d2e  monitoring-sp                       b2c3d4e5-f6a7-47b9-9c0d-2e3f4a5b6c7d
+
+AppId                                DisplayName
+-----------------------------------  ------------------------------------
+i9d0e1f2-g3h4-4i5j-8j9d-8a9b0c1d2e3f  web-api-app
+j0e1f2g3-h4i5-4j5k-8k9e-9b0c1d2e3f4a  desktop-client-app
+```
+
+!!! warning "Common errors"
+    **`The following arguments are required: --id`** — Provide the user's UPN or object ID with the `--id` parameter (e.g., `az ad user show --id alice.johnson@contoso.com`).
+    **`Invalid password. Passwords must be at least 8 characters and contain uppercase, lowercase, numbers and special characters.`** — Use a strong password meeting complexity requirements or omit `--password` to have Azure generate one.
+    **`No subscriptions found in the current account.`** — Run `az account set --subscription <subscription_id>` to set the active subscription before creating service principals.
 ```bash
 # Role assignments
 az role assignment list --assignee <user_or_sp>

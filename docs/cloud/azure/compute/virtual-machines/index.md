@@ -97,6 +97,46 @@ az vm create \
   --tags env=prod role=webserver
 ```
 
+
+```text title="Expected output"
+{
+  "fqdns": "vm-prod-01.eastus.cloudapp.azure.com",
+  "id": "/subscriptions/12a34b5c-6789-0d1e-2f3g-4h5i6j7k8l9m/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachines/vm-prod-01",
+  "location": "eastus",
+  "macAddress": "00:0D:3A:2F:5C:8E",
+  "powerState": "VM running",
+  "privateIpAddress": "10.0.1.4",
+  "publicIpAddress": "20.45.123.67",
+  "resourceGroup": "prod-rg",
+  "zones": ""
+}
+{
+  "fqdns": "win-vm-prod-01.eastus.cloudapp.azure.com",
+  "id": "/subscriptions/12a34b5c-6789-0d1e-2f3g-4h5i6j7k8l9m/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachines/win-vm-prod-01",
+  "location": "eastus",
+  "powerState": "VM running",
+  "privateIpAddress": "10.0.1.5",
+  "publicIpAddress": "20.45.124.89",
+  "resourceGroup": "prod-rg"
+}
+{
+  "fqdns": "vm-zoned-01.eastus.cloudapp.azure.com",
+  "id": "/subscriptions/12a34b5c-6789-0d1e-2f3g-4h5i6j7k8l9m/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachines/vm-zoned-01",
+  "location": "eastus",
+  "powerState": "VM running",
+  "privateIpAddress": "10.0.1.10",
+  "publicIpAddress": "20.45.125.42",
+  "resourceGroup": "prod-rg",
+  "zones": [
+    "1"
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`ResourceGroupNotFound`** — Verify the resource group exists in your subscription with `az group list` and use the correct `--resource-group` name.
+    **`InvalidImageName`** — Use `az vm image list --output table` to find valid image names for your region, as image availability varies by location.
+    **`PrivateIPAddressNotAvailable`** — Ensure the static IP address 10.0.1.10 is within the subnet range and not already assigned to another resource.
 ---
 
 ## VM Sizing
@@ -120,6 +160,31 @@ az vm resize \
   --size Standard_D4s_v3
 ```
 
+
+```text title="Expected output"
+Name                   NumberOfCores    MemoryInMB    ResourceDiskSizeInMB
+---------------------  ---------------  -----------  ----------------------
+Standard_B1s           1                 1024         4096
+Standard_B2s           2                 4096         8192
+Standard_D2s_v3        2                 8192         16384
+Standard_D4s_v3        4                 16384        32768
+Standard_D8s_v3        8                 32768        65536
+...
+
+Name                   NumberOfCores    MemoryInMB    ResourceDiskSizeInMB
+---------------------  ---------------  -----------  ----------------------
+Standard_D2s_v3        2                 8192         16384
+Standard_D4s_v3        4                 16384        32768
+Standard_D8s_v3        8                 32768        65536
+Standard_E4s_v3        4                 32768        65536
+
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`The resource group '<rg>' could not be found.`** — Verify the resource group name with `az group list` and ensure you're using the correct subscription with `az account set --subscription <id>`.
+    **`The virtual machine '<vm-name>' does not exist in the resource group '<rg>'.`** — Confirm the VM name with `az vm list --resource-group <rg>` and check that the VM is in the correct resource group.
+    **`Operation failed with status: 'Conflict'. Details: The VM '<vm-name>' is currently in a running state. Please deallocate the VM before resizing.`** — Stop the VM first with `az vm deallocate --resource-group <rg> --name <vm-name>`, then retry the resize command.
 Common VM size families:
 
 | Family | Use Case | Example SKUs |
@@ -156,6 +221,46 @@ az vm list --resource-group <rg> --query "[].name" --output tsv | \
   xargs -I {} az vm start --resource-group <rg> --name {}
 ```
 
+
+```text title="Expected output"
+{
+  "id": "/subscriptions/12a34b56-c789-0d12-e345-f67890ab1cde/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachines/web-vm-01",
+  "name": "web-vm-01",
+  "powerState": "VM running",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "prod-rg"
+}
+{
+  "id": "/subscriptions/12a34b56-c789-0d12-e345-f67890ab1cde/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachines/web-vm-01",
+  "name": "web-vm-01",
+  "powerState": "VM stopped",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "prod-rg"
+}
+{
+  "id": "/subscriptions/12a34b56-c789-0d12-e345-f67890ab1cde/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachines/web-vm-01",
+  "name": "web-vm-01",
+  "powerState": "VM deallocated",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "prod-rg"
+}
+web-vm-01
+web-vm-02
+web-vm-03
+{
+  "powerState": "VM running",
+  "provisioningState": "Succeeded"
+}
+{
+  "powerState": "VM running",
+  "provisioningState": "Succeeded"
+}
+```
+
+!!! warning "Common errors"
+    **`ResourceGroupNotFound : Resource group '<rg>' could not be found.`** — Verify the resource group name with `az group list` and use the correct spelling and subscription context.
+    **`ResourceNotFound : The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.`** — Confirm the VM name exists in the resource group using `az vm list --resource-group <rg>`.
+    **`AuthorizationFailed : The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Compute/virtualMachines/start/action' over scope '<resource-id>'.`** — Ensure your Azure account has Contributor or Virtual Machine Contributor role on the resource group.
 ---
 
 ## Disk Operations
@@ -190,6 +295,30 @@ az vm show \
   --output table
 ```
 
+
+```text title="Expected output"
+{
+  "id": "/subscriptions/12a34b56-c789-0d12-e345-f67890ab1234/resourceGroups/prod-rg/providers/Microsoft.Compute/disks/datadisk-prod-256gb",
+  "location": "eastus",
+  "name": "datadisk-prod-256gb",
+  "resourceGroup": "prod-rg",
+  "sku": {
+    "name": "Premium_LRS"
+  },
+  "timeCreated": "2024-01-15T10:23:45.123456+00:00"
+}
+(no output — command completes silently)
+(no output — command completes silently)
+Name                  Lun    SizeGB    Sku
+--------------------  -----  --------  ---------------
+datadisk-prod-256gb   0      256       Premium_LRS
+datadisk-app-128gb    1      128       Standard_LRS
+datadisk-backup-512   2      512       Premium_LRS
+```
+
+!!! warning "Common errors"
+    **`ResourceNotFound: The Resource 'Microsoft.Compute/virtualMachines/<vm-name>' under resource group '<rg>' was not found.`** — Verify the resource group name and VM name are correct with `az vm list --resource-group <rg>`.
+    **`The disk '<disk-name>' cannot be attached because it is already managed by another virtual machine.`** — Detach the disk from its current VM first using `az vm disk detach` before attaching it to a different VM.
 ---
 
 ## Networking
