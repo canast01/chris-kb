@@ -76,12 +76,52 @@ ssl_prefer_server_ciphers on;
 sudo nginx -t && sudo systemctl reload nginx
 ```
 
+
+```text title="Expected output"
+ubuntu@vrni.example.local's password: 
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+```
+
+!!! warning "Common errors"
+    **`nginx: [error] open() "/var/run/nginx.pid" failed (2: No such file or directory)`** — Start nginx with `sudo systemctl start nginx` before attempting to reload.
+    **`[sudo] password for ubuntu: sudo: no password is required, but a password was given`** — Remove the password prompt by configuring passwordless sudo or use `ssh-keygen` for key-based authentication instead.
 Verify:
 ```bash
 nmap --script ssl-enum-ciphers -p 443 vrni.example.local
 # Confirm: no TLS 1.0/1.1, no RC4/DES/3DES
 ```
 
+
+```text title="Expected output"
+Starting Nmap 7.92 ( https://nmap.org ) at 2024-01-15 14:32:18 UTC
+Nmap scan report for vrni.example.local (192.168.1.45)
+Host is up (0.0042s latency).
+
+PORT    STATE SERVICE
+443/tcp open  https
+
+| ssl-enum-ciphers:
+|   TLSv1.2:
+|     ciphers:
+|       TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 (secp256r1) - A
+|       TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 (secp256r1) - A
+|       TLS_RSA_WITH_AES_256_GCM_SHA384 - A
+|     least strength: A
+|   TLSv1.3:
+|     ciphers:
+|       TLS_AES_256_GCM_SHA384 - A
+|       TLS_CHACHA20_POLY1305_SHA256 - A
+|     least strength: A
+|_  least strength: A
+
+Nmap done at 2024-01-15 14:32:22 UTC; 1 IP address (1 host up) scanned in 4.23 seconds
+```
+
+!!! warning "Common errors"
+    **`Nmap done at ... 0 hosts up scanned`** — Verify the hostname resolves correctly with `nslookup vrni.example.local` and confirm the appliance is reachable on port 443 with `telnet vrni.example.local 443`.
+    **`SCRIPT ENGINE ERROR: ... ssl-enum-ciphers.nse not found`** — Install the nmap-scripts package with `apt-get install nmap` or `yum install nmap` to ensure all NSE scripts are available.
+    **`SSL: CERTIFICATE_VERIFY_FAILED`** — This is informational; the script still enumerates ciphers even with self-signed certificates, but if you need to suppress warnings, add `--script-args ssl.version=all` to the command.
 ---
 
 ## Credential Storage

@@ -27,6 +27,18 @@ vim-cmd hostsvc/maintenance_mode_enter
 vim-cmd hostsvc/maintenance_mode_exit
 ```
 
+
+```text title="Expected output"
+false
+(no output — command completes silently)
+(no output — command completes silently)
+Entering maintenance mode. This may take a few moments...
+Exiting maintenance mode. This may take a few moments...
+```
+
+!!! warning "Common errors"
+    **`Error: The operation is not allowed in the current state.`** — Ensure all virtual machines are powered off or migrated to another host before entering maintenance mode.
+    **`vim-cmd: Unknown command "hostsvc/maintenance_mode_enter"`** — Verify you are running vim-cmd on the ESXi host directly (not from vCenter); use the full path `/usr/lib/vmware/bin/vim-cmd` if the command is not in PATH.
 ## Before you begin
 
 - **Access:** vCenter read-only minimum; Administrator role for remediation steps
@@ -88,6 +100,65 @@ esxcfg-route
 esxcfg-route -a <subnet> <gateway>
 ```
 
+
+```text title="Expected output"
+Name    PCI           Driver      Admin Status  Runtime Status  MTU  Enabled
+vmnic0  0000:02:00.0  bnx2        Up            Up               1500 True
+vmnic1  0000:02:00.1  bnx2        Up            Up               1500 True
+vmnic2  0000:04:00.0  ixgbe       Down          Down             1500 False
+vmnic3  0000:04:00.1  ixgbe       Up            Up               1500 True
+
+Name    : vmnic0
+Driver  : bnx2
+Admin Status : Up
+Runtime Status : Up
+Speed   : 10000 Mbps
+Duplex  : Full
+MTU     : 1500
+Packets Received : 2847362
+Packets Sent     : 1923847
+Bytes Received   : 3847362847
+Bytes Sent       : 2847362847
+
+vSwitch Name   Num Ports  Used Ports  Configured Ports  MTU  Uplinks
+vSwitch0       128        8           128                1500 vmnic0,vmnic1
+vSwitch1       128        2           128                1500 vmnic3
+
+Name           vSwitch  Active Clients  VLAN ID  MTU
+VM Network     vSwitch0 12              0        1500
+Management     vSwitch0 1               0        1500
+vMotion        vSwitch1 0               100      1500
+
+Name  IP Address      Netmask         Broadcast       Enabled  Type
+vmk0  192.168.1.10    255.255.255.0   192.168.1.255   true     STATIC
+vmk1  192.168.100.50  255.255.255.0   192.168.100.255 true     STATIC
+
+Destination     Netmask         Gateway         MTU  IRQ
+0.0.0.0         0.0.0.0         192.168.1.1     1500 65
+192.168.1.0     255.255.255.0   Local           1500 65
+192.168.100.0   255.255.255.0   Local           1500 65
+
+Server Address
+192.168.1.5
+8.8.8.8
+
+Search Domains
+corp.local
+internal.local
+
+vmk0 192.168.1.10 ESTABLISHED
+vmk0 192.168.1.254 TIME_WAIT
+vmk1 192.168.100.50 ESTABLISHED
+
+IPv4 Address      Netmask         Gateway
+192.168.1.10      255.255.255.0   192.168.1.1
+192.168.100.50    255.255.255.0   192.168.100.1
+```
+
+!!! warning "Common errors"
+    **`Error: The object or property on the specified object does not exist.`** — Verify the interface name (vmk0, vmk1) or vSwitch name exists with `esxcli network vswitch standard list` before attempting modifications.
+    **`Error: The specified parameter is not a valid IP address.`** — Ensure the IP address, netmask, and gateway parameters are in valid dotted-decimal notation (e.g., 192.168.1.10, not 192.168.1).
+    **`Error: The specified virtual switch
 ## Storage — Devices & Paths
 
 ```bash
@@ -125,6 +196,78 @@ esxcfg-scsidevs -l
 esxcfg-scsidevs -m
 ```
 
+
+```text title="Expected output"
+Device t10.ATA_____QEMU_HARDDISK_QM00001_________________1234abcd:
+   Display Name: Local ATA Disk (t10.ATA_____QEMU_HARDDISK_QM00001_________________1234abcd)
+   Has Settable Display Name: true
+   Size: 20480
+   Device Type: Direct-Access
+   Multipath Plugin: NMP
+   Devfs Path: /vmfs/devices/disks/t10.ATA_____QEMU_HARDDISK_QM00001_________________1234abcd
+   Vendor: QEMU
+   Model: HARDDISK
+   Revision: 2.5+
+   SCSI Level: 5
+   Is SSD: false
+   Is Local: true
+   Is Removable: false
+   Is RDM Capable: false
+   Is Shared Clusterwide: false
+   Is SAS: false
+   Is USB: false
+   Is Boot Device: true
+
+Adapter: vmhba0
+   Driver: ahci
+   Channel: 0
+   Path State: active
+   Target: 0
+   LUN: 0
+   Adapter Identifier: vmhba0
+   Target Identifier: vmhba0:C0:T0:L0
+   Adapter Display Name: AHCI Controller
+
+vmhba0 Rescan: Adapter scan completed successfully.
+
+NMP Device: t10.ATA_____QEMU_HARDDISK_QM00001_________________1234abcd
+   Storage Array Type: SATA
+   Device Max Queue Depth: 32
+   Paths: vmhba0:C0:T0:L0
+   Active Paths: 1
+
+SATP Rule: SATA
+   Vendor: ATA
+   Model: QEMU
+   PSP: VMW_PSP_RR
+   Options: iops=1
+
+VMFS-6 UUID: 5a3e8c2f-9b1d-4e7a-b2c1-8f3d6a9e2b4c
+   Blocksize: 1048576
+   Capacity: 10737418240
+   Free Space: 8589934592
+   Mounted: true
+   Mount Path: /vmfs/volumes/5a3e8c2f-9b1d-4e7a-b2c1-8f3d6a9e2b4c
+
+Filesystem rescan completed successfully.
+
+Device t10.ATA_____QEMU_HARDDISK_QM00001_________________1234abcd
+   Display Name: Local ATA Disk (t10.ATA_____QEMU_HARDDISK_QM00001_________________1234abcd)
+   Devfs Path: /vmfs/devices/disks/t10.ATA_____QEMU_HARDDISK_QM00001_________________1234abcd
+   Partition Table: msdos
+   Partition: 1
+   Partition Table: gpt
+   Partition: 1
+   Partition: 2
+   Partition: 3
+   Partition: 4
+   Partition: 5
+   Partition: 6
+   Partition: 7
+   Partition: 8
+   Partition: 9
+   Partition: 10
+```
 ## Datastores & VMDK
 
 ```bash
@@ -141,6 +284,51 @@ du -sh /vmfs/volumes/<datastore>/*
 du -sh /vmfs/volumes/<datastore>/<vm_folder>/
 ```
 
+
+```text title="Expected output"
+$ ls /vmfs/volumes/
+datastore1
+datastore2
+datastore-local
+VMFS-6-vol-abc123de
+
+$ esxcli storage filesystem list
+Mount Point                                        Volume Name              UUID                                 Capacity       Free Space
+-------------------------------------------------  -----------------------  ------------------------------------  -------------  ----------
+/vmfs/volumes/datastore1                          datastore1               5a8c2f1b-9e4d-4c2a-b1f3-2d8e9c1a5b7f  2.0T           1.2T
+/vmfs/volumes/datastore2                          datastore2               7f2d1c8a-3b5e-4a9d-c2e1-8f4b6a9d2c1e  5.0T           2.8T
+/vmfs/volumes/datastore-local                     datastore-local          1b4e9f2c-7a3d-5b8e-9c1f-4d2a6e8b3c5f  500.0G         120.0G
+/vmfs/volumes/VMFS-6-vol-abc123de                 VMFS-6-vol-abc123de      abc123de-f456-7890-abcd-ef1234567890  1.0T           650.0G
+
+$ ls /vmfs/volumes/datastore1/
+vm-prod-web01
+vm-prod-db01
+vm-dev-test
+ISO
+Templates
+
+$ ls -lah /vmfs/volumes/datastore1/vm-prod-web01/
+total 2.1G
+drwxr-xr-x    1 root     root          560 Nov 15 14:32 .
+drwxr-xr-x    1 root     root          512 Nov 10 09:18 ..
+-rw-------    1 root     root        50.0G Nov 15 14:32 vm-prod-web01.vmdk
+-rw-------    1 root     root        10.0G Nov 14 08:45 vm-prod-web01_1.vmdk
+-rw-r--r--    1 root     root         2.1K Nov 10 09:18 vm-prod-web01.vmx
+-rw-r--r--    1 root     root         1.2K Nov 10 09:18 vm-prod-web01.nvram
+
+$ du -sh /vmfs/volumes/datastore1/*
+60.0G   /vmfs/volumes/datastore1/vm-prod-web01
+45.0G   /vmfs/volumes/datastore1/vm-prod-db01
+12.0G   /vmfs/volumes/datastore1/vm-dev-test
+8.5G    /vmfs/volumes/datastore1/ISO
+2.3G    /vmfs/volumes/datastore1/Templates
+
+$ du -sh /vmfs/volumes/datastore1/vm-prod-web01/
+60.0G   /vmfs/volumes/datastore1/vm-prod-web01/
+```
+
+!!! warning "Common errors"
+    **`ls: cannot access '/vmfs/volumes/<datastore>/': No such file or directory`** — Replace `<datastore>` with an actual datastore name from the `ls /vmfs/
 ```bash
 # vmkfstools — VMDK operations
 vmkfstools -l /vmfs/volumes/<ds>/<vm>/<vm>.vmdk
@@ -167,6 +355,42 @@ esxcli storage vmfs snapshot resignature -l <label>
 esxcli storage filesystem unmount -l <datastore_label>
 ```
 
+
+```text title="Expected output"
+Virtual Machine Disk Format Descriptor File
+Extent 0: VMFS "datastore1" (UUID: 5a3c8e2f-1b4d-4e7a-9c2b-8d1f6a4e9b3c, blockSize: 1048576)
+RW 209715200 VMFS "datastore1" (UUID: 5a3c8e2f-1b4d-4e7a-9c2b-8d1f6a4e9b3c, blockSize: 1048576) "/web-prod/web-prod.vmdk"
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+
+Datastore Summary:
+  datastore1 (UUID: 5a3c8e2f-1b4d-4e7a-9c2b-8d1f6a4e9b3c)
+  datastore2 (UUID: 7f2e1a9d-4c6b-4f8e-a1d3-9c5b2e7f1a4d)
+  datastore3-nfs (UUID: 3b8c1f5a-2d9e-4a7c-b6e1-5f2a9d3c1b8e)
+
+Adapter rescan completed successfully.
+(no output — command completes silently)
+
+/vmfs/volumes/datastore1/web-prod/web-prod-000001-delta.vmdk
+/vmfs/volumes/datastore1/db-backup/db-backup-000002-delta.vmdk
+/vmfs/volumes/datastore2/archive/archive-000001-delta.vmdk
+
+Extent  PhysicalExtent  VolumeName  DeviceName  StartBlock  BlockCount
+0       0               datastore1  naa.6001405a1b2c3d4e5f6a7b8c9d0e1f2a  0  209715200
+1       1               datastore1  naa.6001405a1b2c3d4e5f6a7b8c9d0e1f2b  0  104857600
+
+No snapshots found.
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Could not find the file /vmfs/volumes/<ds>/<vm>/<vm>.vmdk`** — Replace `<ds>` and `<vm>` placeholders with actual datastore and VM folder names, or verify the VM exists with `vim-cmd vmsvc/getallvms`.
+    **`The specified datastore is not mounted or does not exist`** — Verify the datastore label with `esxcli storage vmfs extent list` before running unmount or resignature operations.
+    **`Cannot open the disk '/vmfs/volumes/<ds>/<vm>/<vm>.vmdk' : The file is in use`** — Power off the VM or ensure no snapshots are being created before attempting vmkfstools operations on the VMDK.
 ## SAN Connectivity (iSCSI / FC)
 
 ```bash
@@ -212,6 +436,70 @@ esxcli storage core adapter rescan --all
 esxcli storage core path list | grep -c "State: active"
 ```
 
+
+```text title="Expected output"
+HBA Name  Driver     State  Speed
+vmhba0    lpfc       link up  16Gb
+vmhba1    lpfc       link up  16Gb
+
+Adapter: vmhba0
+  Link failures: 0
+  Loss of signals: 0
+  Invalid transmission words: 0
+  Frames received: 1247856
+  Frames transmitted: 892341
+
+Device: naa.50001fe1500a1b2c  State: Active  PSP: VMW_PSP_RR
+Device: naa.50001fe1500a1b2d  State: Active  PSP: VMW_PSP_RR
+...
+
+Name                           Device  Transport
+vmhba64                        iscsi   iscsi
+
+iSCSI Adapter: vmhba64
+  Alias: iSCSI_HBA_1
+  Authentication: CHAP disabled
+  Enabled: true
+
+SendTarget Discovery Address: 192.168.10.50:3260
+  Target: iqn.2020-01.com.storage:target.lun1
+  Target: iqn.2020-01.com.storage:target.lun2
+
+SessionID: vmhba64:session1
+  Target: iqn.2020-01.com.storage:target.lun1
+  ISID: 400142370001
+  Portal: 192.168.10.50:3260,1
+
+Device: naa.50001fe1500a1b2c
+  State: active
+  PSP: VMW_PSP_RR
+  Paths: 4
+
+Device: naa.50001fe1500a1b2d
+  State: active
+  PSP: VMW_PSP_RR
+  Paths: 4
+
+Device: naa.50001fe1500a1b2c
+  Display Name: NETAPP LUN (naa.50001fe1500a1b2c)
+  Devfs Path: /vmfs/devices/disks/naa.50001fe1500a1b2c
+  Vendor: NETAPP
+  Model: LUN
+  Revision: 8300
+  VAAI Status: supported
+
+Queue Full Threshold: 32
+
+2024-01-15T08:23:14.567Z cpu0:2048)WARNING: ScsiDeviceIO: 2315: Cmd(0x43000003dba8d8c0) 0x28, CmdSN 0x1a from world 2048 to dev "naa.50001fe1500a1b2c" failed H:0x0 D:0x2 P:0x0 Valid sense data: 0x5 0x24 0x0.
+2024-01-15T08:24:02.891Z cpu1:1024)WARNING: NMP: nmp_PathFailureCount: Cmd 0x28 (Read(10)) to NMP device "naa.50001fe1500a1b2c", World 1024, failed. H:0x0 D:0x2 P:0x0 Valid sense data: 0x5 0x24 0x0.
+
+State: dead
+
+4
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown option --address`** — Use `--server` instead of `--address` for iS
 ## VM Management (vim-cmd)
 
 ```bash
@@ -247,6 +535,77 @@ vim-cmd hostsvc/hostsummary
 vim-cmd hostsvc/net/info
 ```
 
+
+```text title="Expected output"
+Vmid    Name                                 File                                                     Guest OS       Version   Annotation
+1       web-prod-01                          [datastore1] web-prod-01/web-prod-01.vmx                 ubuntu64Guest  vmx-13    Production web server
+2       db-backup-02                         [datastore2] db-backup-02/db-backup-02.vmx               rhel7_64Guest  vmx-11    Backup database
+3       app-staging-03                       [datastore1] app-staging-03/app-staging-03.vmx           windows9_64Guest vmx-14   Staging environment
+4       monitoring-04                        [datastore3] monitoring-04/monitoring-04.vmx             centos7_64Guest vmx-12    Prometheus stack
+5       legacy-app-05                        [datastore2] legacy-app-05/legacy-app-05.vmx             windows7_64Guest vmx-10   EOL - decommission Q2
+
+Power State: poweredOn
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+
+Summary:
+  Config:
+    vmPathName = "[datastore1] web-prod-01/web-prod-01.vmx"
+    memoryMB = 8192
+    cpus = 4
+  Runtime:
+    powerState = poweredOn
+    bootTime = 2024-01-15T09:23:47.123456Z
+    maxCpuUsage = 4000
+    maxMemoryMB = 8192
+
+Config:
+  name = "web-prod-01"
+  uuid = "564d1234-abcd-5678-ef01-234567890abc"
+  memoryMB = 8192
+  numCPU = 4
+  guestFullName = "Ubuntu Linux (64-bit)"
+
+Guest:
+  hostName = "web-prod-01.internal.local"
+  ipAddress = "192.168.10.45"
+  guestState = running
+  guestFamily = linuxGuest
+
+TaskList: (empty)
+
+Get Snapshot:
+  Current Snapshot: snapshot-20240115-093000
+    Description: Pre-maintenance backup
+    Created: 2024-01-15T09:30:00Z
+    Memory: yes
+
+(no output — command completes silently)
+(no output — command completes silently)
+
+(no output — command completes silently)
+(no output — command completes silently)
+
+Host Summary:
+  Product: VMware ESXi 7.0.3 build-19482429
+  Hostname: esx-host-01.internal.local
+  Vendor: Dell Inc.
+  Model: PowerEdge R750
+  UUID: 564d1234-abcd-5678-ef01-234567890abc
+  Memory: 786432 MB (768 GB)
+  NumCpus: 48
+
+Network Info:
+  vswitch0:
+    portgroups: Management Network, VM Network
+    pnics: vmnic0, vmnic1
+  vswitch1:
+    portgroups: vMotion
+```
 ## vSAN Commands
 
 ```bash
@@ -277,6 +636,63 @@ esxcli vsan datastore list
 esxcli vsan trace get
 ```
 
+
+```text title="Expected output"
+Cluster Information:
+UUID: 52994049-1234-5678-abcd-ef1234567890
+Enabled: true
+Current Local Time: 2024-01-15T14:32:18Z
+Node UUID: 52994049-9876-5432-dcba-1234567890ef
+
+Health Status: HEALTHY
+Cluster Status: RUNNING
+Member Count: 4
+
+Storage Summary:
+Total Capacity: 10.95 TB
+Used Capacity: 7.23 TB
+Free Capacity: 3.72 TB
+Disk Groups: 4
+Physical Disks: 16
+
+Disk Group 1:
+  UUID: 52994049-aaaa-bbbb-cccc-111111111111
+  Is SSD: true
+  Status: HEALTHY
+  Disk Count: 4
+
+Object Summary:
+Total Objects: 1247
+Healthy Objects: 1245
+Degraded Objects: 2
+Inaccessible Objects: 0
+
+Resync Status:
+Total Bytes: 524288000
+Remaining Bytes: 0
+Resync Rate: 0 B/s
+Estimated Time: 0 seconds
+
+Network Configuration:
+vmk0: 192.168.1.101/24
+vmk1: 192.168.1.102/24
+vmk2: 192.168.1.103/24
+vmk3: 192.168.1.104/24
+
+Network Test Results:
+Unicast: PASS
+Multicast: PASS
+Latency: 0.5 ms
+
+Datastore: vsanDatastore
+Capacity: 10.95 TB
+Free Space: 3.72 TB
+```
+
+!!! warning "Common errors"
+    **`Could not connect to the host. The VSAN service may not be running.`** — Restart the VSAN service with `esxcli system service restart vsanvpd` or verify VSAN is licensed and enabled on the cluster.
+    **`Unknown command or namespace vsan`** — Ensure you are running the command on an ESXi host with VSAN enabled; non-VSAN hosts do not have the vsan namespace available.
+    **`Permission denied`** — Run the command with root privileges or ensure your user account has the required VSAN administration role assigned in vCenter.
 | vSAN Indicator | Meaning |
 |---|---|
 | Health: GREEN | Check passing |
@@ -310,6 +726,35 @@ esxcli network nic stats get -n vmnic0 | grep -i drop
 esxcli sched group list
 ```
 
+
+```text title="Expected output"
+World ID   Name                                   Group                  # vCPU Mem MB    State
+    512   ubuntu-web-01                          /                         4   8192    running
+    768   windows-dc-prod                        /                         8  16384    running
+   1024   centos-app-02                          /                         2   4096    running
+
+Name                World ID   Group                  # vCPU Mem MB    State
+ubuntu-web-01       512        /                         4   8192    running
+
+Packets Received: 15847293
+Packets Transmitted: 14923847
+Dropped RX Packets: 0
+Dropped TX Packets: 0
+Collisions: 0
+
+Group Name                                   CPU Affinity
+/                                            0-15
+/system                                      0-15
+/system/host/console                         0-15
+/system/host/hostd                           0-15
+/system/host/iofilters                       0-15
+...
+```
+
+!!! warning "Common errors"
+    **`Error: Unable to connect to the host. Connection refused.`** — Ensure the ESXi host is reachable and SSH/management services are running; verify network connectivity and firewall rules.
+    **`Error: The object or item could not be found.`** — Confirm the world-id exists by running `esxcli vm process list` first and use the correct numeric ID from the output.
+    **`Error: Permission denied`** — Run commands with root privileges or ensure your user account has the required ESXi administrative role assigned.
 ## Logs
 
 ```bash
@@ -354,6 +799,42 @@ ls /scratch/log/
 cat /etc/vmware/locker.conf
 ```
 
+
+```text title="Expected output"
+2024-01-15T14:32:18.547Z cpu2:2097419)WARNING: NFS: NfsHeartbeat: Lost connection to NFS server 192.168.1.50
+2024-01-15T14:32:45.821Z cpu5:2104521)ERROR: Hostd: Failed to power on VM 'prod-web-01': Insufficient resources
+2024-01-15T14:33:12.334Z cpu1:2098765)FAULT: Storage: Path down to LUN 5 (naa.60000000000000001)
+2024-01-15T14:33:58.992Z cpu3:2101234)WARNING: Vmnic0: Link down detected on vmnic0
+2024-01-15T14:34:22.156Z cpu7:2105678)ERROR: vCenter Agent: Lost connectivity to vCenter 10.0.1.25:443
+
+Syslog Configuration:
+Default LogLevel: info
+Default LogDir: /var/log
+Default LogDirUnique: false
+QueueDropMark: 90
+Loghost: (not configured)
+DefaultRotate: 10
+DefaultSize: 1024
+
+Remote Syslog Set: (no output — command completes silently)
+Syslog Reloaded: (no output — command completes silently)
+
+Log Rotation Settings:
+DefaultRotate: 10
+DefaultSize: 1024
+
+/scratch/log/:
+hostd.log.1
+hostd.log.2
+vmkernel.log.1
+vpxa.log.1
+vobd.log.1
+```
+
+!!! warning "Common errors"
+    **`tail: cannot open '/var/log/vmkernel.log' for reading: No such file or directory`** — Verify the ESXi host is fully booted and the filesystem is mounted; check with `ls -la /var/log/` to confirm log directory exists.
+    **`Error: The object has already been deleted or has not been completely created.`** — Wait 30 seconds for the syslog service to stabilize after reload, then retry the configuration command.
+    **`vm-support: command not found`** — Ensure you are logged in as root via SSH or direct console; `vm-support` is not available in restricted shells or non-root sessions.
 ## Hardware & Health
 
 ```bash
@@ -383,6 +864,74 @@ esxcli hardware sensor list --type Fan
 esxcli hardware sensor list --type Power
 ```
 
+
+```text title="Expected output"
+Platform Info:
+      Hardware Version: Dell PowerEdge R750
+      System Serial Number: 1N23K4D
+      BIOS Version: 2.14.2
+      Vendor Name: Dell Inc.
+   Current Clock Time: 2024-01-15T14:32:47Z
+   Uptime: 45 days 3 hours
+
+CPU Package 0:
+   Vendor: GenuineIntel
+   Brand: Intel(R) Xeon(R) Platinum 8380 CPU @ 2.30GHz
+   Hz: 2300000000
+   Bus Hz: 100000000
+   CPU Count: 2
+   Core Count: 28
+   Thread Count: 56
+   TSC Frequency: 2299999000
+
+Memory:
+   Physical Memory: 1048576 MB
+   Usable Memory: 1046528 MB
+
+PCI Device List:
+   0000:00:00.0  Intel Corporation 82599ES 10-Gigabit SFI Contrroller
+   0000:00:01.0  Intel Corporation 82599ES 10-Gigabit SFI Contrroller
+   0000:03:00.0  Dell PERC H840 Adapter
+   0000:04:00.0  Broadcom NetXtreme BCM5720 Gigabit Ethernet
+   ...
+
+BMC Info:
+   Device ID: 0x20
+   Device Revision: 0x01
+   Firmware Revision: 1.86.45
+   IPMI Version: 2.0
+
+FRU List:
+   FRU Device Description : Builtin FRU Device (Internal Use)
+   Board Mfg. Date/Time : Fri Jan 15 14:32:47 2024
+   Board Serial : 1N23K4D
+
+SEL Records (last 5):
+   1 | 01/15/2024 | 14:30:22 | Power Supply #1 | Predictive Failure | Asserted
+   2 | 01/15/2024 | 13:45:10 | System Event | OEM Action | Asserted
+
+Temperature Sensors:
+   CPU0 Temp Sensor: 42.00 Celsius
+   CPU1 Temp Sensor: 44.00 Celsius
+   System Inlet Temp: 28.00 Celsius
+   System Exhaust Temp: 38.00 Celsius
+
+Fan Sensors:
+   Fan 1: 4200 RPM
+   Fan 2: 4150 RPM
+   Fan 3: 4180 RPM
+   Fan 4: 4220 RPM
+
+Power Sensors:
+   PS1 Input Power: 850 Watts
+   PS2 Input Power: 820 Watts
+   System Power: 1670 Watts
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown command or namespace hardware.`** — Verify you are running these commands on ESXi 6.0+; older versions may not support the hardware namespace.
+    **`Error: Unable to retrieve sensor data: Connection refused`** — Ensure IPMI/BMC is enabled in BIOS and the management network is properly configured.
+    **`Error: Permission denied`** — Run commands with root privileges or ensure your user account has the required ESXi host permissions.
 ## Firewall & NTP
 
 ```bash
@@ -410,6 +959,47 @@ cat /etc/ntp.conf
 /etc/init.d/ntpd restart
 ```
 
+
+```text title="Expected output"
+Enabled: true
+Loaded: true
+
+Ruleset ID                  Enabled
+----------                  -------
+sshServer                   true
+snmpServer                  false
+vpxHeartbeats               true
+webAccess                   true
+vSphereClient               true
+...
+
+Ruleset ID: sshServer
+Enabled: true
+
+Allowed IP Addresses
+-------------------
+192.168.1.0/24
+10.0.0.50
+
+NTP Enabled: true
+NTP Servers: ntp.corp.local
+Timezone: UTC
+
+     remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
+*ntp.corp.local  .GPS.            1 u   64 1024  377   12.345    2.123   1.456
++ntp2.corp.local .GPS.            1 u  128 1024  377   18.902   -1.234   2.789
+
+# NTP configuration file
+server ntp.corp.local prefer
+server ntp2.corp.local
+driftfile /var/lib/ntp/drift
+```
+
+!!! warning "Common errors"
+    **`Error: Unable to set ruleset sshServer: Ruleset not found`** — Verify the ruleset ID exists by running `esxcli network firewall ruleset list` first.
+    **`Error: Invalid IP address format '<ip>'`** — Replace `<ip>` with a valid CIDR notation (e.g., `192.168.1.0/24`) or single IP address.
+    **`Error: NTP daemon failed to start: Address already in use`** — Stop any existing NTP process with `killall ntpd` before restarting the service.
 ## Certificates & SSH
 
 ```bash
@@ -436,6 +1026,32 @@ vim-cmd hostsvc/disable_ssh
 esxcli network firewall ruleset set --enabled true --ruleset-id sshServer
 ```
 
+
+```text title="Expected output"
+notBefore=Jan 15 10:23:45 2023 GMT
+notAfter=Jan 15 10:23:45 2026 GMT
+subject=CN=esxi-host-01.lab.local,O=VMware,C=US
+SHA1 Fingerprint=A1:B2:C3:D4:E5:F6:07:18:29:3A:4B:5C:6D:7E:8F:90:A1:B2:C3:D4
+Generating a 2048 bit RSA private key
+.......+++
+.......+++
+writing new private key to '/etc/vmware/ssl/rui.key'
+-----
+total 48
+-rw-r--r-- 1 root root 1234 Jan 15 10:45:32 2025 rui.crt
+-rw-r--r-- 1 root root 1704 Jan 15 10:45:32 2025 rui.key
+-rw-r--r-- 1 root root 2048 Jan 15 10:45:32 2025 rui.pem
+SSH is enabled
+SSH is disabled
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`openssl: No such file or directory`** — Install openssl package or use the full path `/usr/bin/openssl` on your ESXi version.
+    **`vim-cmd: command not found`** — Ensure you are running commands directly on the ESXi host console, not via SSH session with restricted shell.
+    **`Error: The object or property does not exist on the object`** — Verify the SSH service is installed and available; some minimal ESXi builds may not include it.
 ---
 
 ## See also

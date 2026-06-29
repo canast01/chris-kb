@@ -144,6 +144,19 @@ snmpget -v2c -c <community> <device-ip> 1.3.6.1.2.1.1.1.0
 nc -zv <aria-ops-vip> 3331
 ```
 
+
+```text title="Expected output"
+200
+200
+200
+SNMPv2-MIB::sysDescr.0 = STRING: "Cisco IOS Software, C3750E Software, Version 15.2(4)E10"
+Connection to 192.168.10.45 3331 port [tcp/*] succeeded!
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self-signed certificate`** — Add the `-k` flag to skip certificate verification, or import the Aria Operations CA certificate into your system trust store.
+    **`snmpget: Unknown host "<device-ip>"`** — Verify the device IP is correct and reachable from the Aria Operations appliance using `ping <device-ip>`.
+    **`nc: getaddrinfo failed for <aria-ops-vip>: Name or service not known`** — Confirm the Aria Operations VIP hostname resolves correctly with `nslookup <aria-ops-vip>` and verify network connectivity from the Remote Collector.
 ---
 
 ## See also

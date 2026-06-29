@@ -48,6 +48,20 @@ curl -sk -o /dev/null -w "%{http_code}" https://vcenter-prod.example.local/rest/
 # Any other output (000, curl error) indicates network or DNS issue
 ```
 
+
+```text title="Expected output"
+root@vra-prod-01.example.local's password: 
+Welcome to VMware vRealize Automation 8.10.2
+Last login: Wed Jan 15 14:32:18 UTC 2025 from 192.168.1.45
+root@vra-prod-01:~# curl -sk -o /dev/null -w "%{http_code}" https://vcenter-prod.example.local/rest/com/vmware/cis/session
+401
+root@vra-prod-01:~#
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to vcenter-prod.example.local port 443: Connection refused`** — Verify vCenter is running and accessible; check firewall rules between vRA and vCenter networks.
+    **`curl: (6) Could not resolve host: vcenter-prod.example.local`** — Confirm DNS resolution is working on the vRA appliance with `nslookup vcenter-prod.example.local` or update `/etc/hosts` with the vCenter IP.
+    **`000`** — Check network connectivity with `ping vcenter-prod.example.local` and verify the vRA appliance has a route to the vCenter subnet.
 ---
 
 ## Update Cloud Account Credentials
@@ -77,6 +91,21 @@ Data collection polls the cloud account for current resource inventory. Trigger 
 kubectl logs -n prelude -l app=iaas-gateway --tail=100 | grep -i "error\|vcenter\|cloud"
 ```
 
+
+```text title="Expected output"
+2024-01-15T09:42:31.223Z INFO [iaas-gateway-5d7c9f2k1] vCenter connection established to vcenter.prod.local
+2024-01-15T09:42:35.891Z WARN [iaas-gateway-5d7c9f2k1] Cloud account sync delayed: 2.3s latency detected
+2024-01-15T09:42:42.156Z ERROR [iaas-gateway-7x9m2n4p] Failed to authenticate with vCenter: invalid credentials for user svc-aria@vsphere.local
+2024-01-15T09:43:01.445Z INFO [iaas-gateway-5d7c9f2k1] Cloud provider AWS initialized successfully
+2024-01-15T09:43:15.782Z ERROR [iaas-gateway-7x9m2n4p] vCenter SSL certificate validation failed: certificate expired on 2024-01-10
+2024-01-15T09:43:28.334Z WARN [iaas-gateway-5d7c9f2k1] Cloud account quota check: 87% CPU utilization on cluster-prod-01
+2024-01-15T09:43:45.667Z INFO [iaas-gateway-5d7c9f2k1] vCenter inventory refresh completed: 342 VMs catalogued
+2024-01-15T09:44:02.891Z ERROR [iaas-gateway-7x9m2n4p] Cloud sync timeout after 30s waiting for vCenter response
+```
+
+!!! warning "Common errors"
+    **`error: no matching resources found in prelude namespace`** — Verify the prelude namespace exists with `kubectl get ns prelude` and confirm iaas-gateway pods are deployed.
+    **`error: unable to forward port because pod does not exist`** — Ensure iaas-gateway pods are running with `kubectl get pods -n prelude -l app=iaas-gateway` before querying logs.
 ---
 
 ## Configure Image Mappings and Flavor Mappings
@@ -345,6 +374,33 @@ curl -sk -X DELETE -H "Authorization: Bearer $TOKEN" \
   "https://vra-prod-01.example.local/deployment/api/deployments/$DEPLOYMENT_ID"
 ```
 
+
+```text title="Expected output"
+{
+  "id": "dep-8f4c2a91-b3e2-4d7f-9c1a-5e6d7f8a9b0c",
+  "name": "wordpress-prod-01",
+  "owner": "admin@system-domain",
+  "status": "CREATE_FAILED"
+}
+{
+  "id": "dep-3c7e1f5a-9d2b-4a6c-8e3f-2b1a7c9d5e4f",
+  "name": "database-cluster-02",
+  "owner": "devops@system-domain",
+  "status": "CREATE_FAILED"
+}
+{
+  "id": "dep-6b9a2c4d-1e5f-47a8-b2c3-9f8e7d6c5a4b",
+  "name": "api-gateway-staging",
+  "owner": "platform-team@system-domain",
+  "status": "CREATE_FAILED"
+}
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl to skip SSL verification (already present in the example, so verify the certificate is actually trusted or use `-k`).
+    **`jq: error (at <stdin>:1): Cannot index null with string "access_token"`** — Verify the username, password, and domain are correct, and that the vRA authentication service is responding by testing the login endpoint separately.
+    **`curl: (7) Failed to connect to vra-prod-01.example.local port 443: Connection refused`** — Confirm the vRA appliance hostname is correct and the HTTPS service is running with `curl -sk https://vra-prod-01.example.local/`.
 After the API call returns, refresh the deployments view in the UI to confirm the record is removed. If the underlying VMs were not cleaned up by the destroy workflow, delete them directly from vCenter.
 
 ---
@@ -361,6 +417,38 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
   jq '.content[] | {id: .id, name: .name, status: .status, owner: .ownedBy}'
 ```
 
+
+```text title="Expected output"
+{
+  "id": "deployment-a4f2c891-7e3a-4d21-b8f9-2c1a5e9d3f47",
+  "name": "prod-k8s-cluster-01",
+  "status": "CREATE_SUCCESSFUL",
+  "owner": "svc-automation@example.local"
+}
+{
+  "id": "deployment-b6e8d124-9c2f-4a53-a1d3-7f2b8e4c6a92",
+  "name": "dev-database-mysql-03",
+  "status": "CREATE_SUCCESSFUL",
+  "owner": "devops-team@example.local"
+}
+{
+  "id": "deployment-c3a9e567-2b1f-4e78-9a2c-1d5f3b8e7c41",
+  "name": "staging-app-server-02",
+  "status": "UPDATE_IN_PROGRESS",
+  "owner": "platform-eng@example.local"
+}
+{
+  "id": "deployment-d7f1a234-5c8e-4b92-8d6f-4a2e9c1b5f73",
+  "name": "legacy-windows-farm",
+  "status": "CREATE_FAILED",
+  "owner": "infrastructure@example.local"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the vRA certificate into your system trust store.
+    **`jq: parse error: Invalid JSON at line 1`** — Verify the API token is valid and the vRA endpoint is responding with JSON; check `curl` output without piping to `jq` first.
+    **`curl: (401) Unauthorized`** — Regenerate or verify the Bearer token has not expired; confirm it was issued with appropriate API scope permissions.
 1. Export the deployment list from the API (above).
 2. Cross-reference against the vCenter VM inventory or AWS EC2 instance list.
 3. Identify deployment IDs with no corresponding resource.
@@ -392,6 +480,15 @@ echo | openssl s_client -connect vra-prod-01.example.local:443 -servername vra-p
   | openssl x509 -noout -dates
 ```
 
+
+```text title="Expected output"
+notBefore=Jan 15 10:22:33 2023 GMT
+notAfter=Jan 15 10:22:33 2025 GMT
+```
+
+!!! warning "Common errors"
+    **`unable to load certificate`** — Ensure the vRA appliance is running and port 443 is accessible; verify firewall rules and network connectivity to vra-prod-01.example.local.
+    **`error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed`** — Add `-showcerts` flag or use `openssl s_client -connect vra-prod-01.example.local:443 -servername vra-prod-01.example.local 2>&1 | grep -A 5 "subject="` to bypass verification and inspect the certificate chain.
 ---
 
 ## Rotate the Postgres Password
@@ -412,12 +509,51 @@ vracli pg password set --password '<new-password>'
 vracli rcs restart
 ```
 
+
+```text title="Expected output"
+root@vra-prod-01.example.local's password: 
+Welcome to vRealize Automation 8.10.2
+vra-prod-01:~ #
+Setting PostgreSQL password...
+Password updated successfully for user 'postgres'
+Configuration synchronized across cluster nodes.
+vra-prod-01:~ #
+Restarting vRA services...
+Stopping Identity Manager...
+Stopping vRealize Automation...
+Stopping PostgreSQL...
+Starting PostgreSQL...
+Starting vRealize Automation...
+Starting Identity Manager...
+All services restarted successfully. Startup time: 3m 42s
+vra-prod-01:~ #
+```
+
+!!! warning "Common errors"
+    **`vracli: command not found`** — Ensure you are logged in as root and the vRA appliance is fully initialized; if just deployed, wait 10-15 minutes for the management agent to start.
+    **`Error: Failed to update PostgreSQL password - Connection refused`** — Verify PostgreSQL is running with `systemctl status postgres` and check that the database is not in recovery mode.
+    **`Error: Service restart timed out after 10 minutes`** — Increase the timeout or check service logs with `vracli log view --service identity-manager` to identify which service is hung.
 After the restart, verify the vRA UI is accessible and that data collection runs complete without database connection errors. Check the Postgres-related logs if services fail to come up:
 
 ```bash
 kubectl logs -n prelude -l app=vra-nginx --tail=100 | grep -i "error\|5[0-9][0-9]"
 ```
 
+
+```text title="Expected output"
+2024-01-15T09:42:31.245Z [ERROR] Connection timeout to identity provider: request_id=a7f2c9e1-4b2d-11ee-b0d9
+2024-01-15T09:42:45.123Z [WARN] 502 Bad Gateway - upstream service unavailable
+2024-01-15T09:43:12.567Z [ERROR] Database connection pool exhausted: max_connections=50
+2024-01-15T09:43:28.891Z 503 Service Unavailable - vra-catalog pod restarting
+2024-01-15T09:44:01.234Z [ERROR] SSL certificate validation failed for iaas-proxy.prelude.svc.cluster.local
+2024-01-15T09:44:15.678Z 500 Internal Server Error - NullPointerException in workflow engine
+2024-01-15T09:44:32.445Z [WARN] 504 Gateway Timeout - backend response exceeded 30s threshold
+```
+
+!!! warning "Common errors"
+    **`error: resource name may not be empty`** — Verify the namespace exists with `kubectl get namespace prelude` and check pod label selector with `kubectl get pods -n prelude --show-labels`.
+    **`Unable to match a pod using the label selectors: app=vra-nginx`** — Confirm the correct label with `kubectl get pods -n prelude -o wide` and update the label selector if pods use different labels like `app.kubernetes.io/name=vra-nginx`.
+    **`The connection to the server was refused`** — Ensure kubectl is configured to the correct cluster context with `kubectl config current-context` and verify API server connectivity.
 ---
 
 ## Rotate the Admin Account Password
@@ -481,6 +617,21 @@ ssh root@<aria-automation-ip>
 tail -f /var/log/vmware/vra/deployment-service.log | grep ERROR
 ```
 
+
+```text title="Expected output"
+root@aria-automation-01:~# tail -f /var/log/vmware/vra/deployment-service.log | grep ERROR
+2024-01-15 14:23:47.892 ERROR [deployment-service] Failed to authenticate with vCenter: Connection timeout after 30000ms
+2024-01-15 14:25:12.445 ERROR [deployment-service] Blueprint 'web-tier-v2' deployment failed: Insufficient compute resources in cluster 'prod-dc1'
+2024-01-15 14:27:33.661 ERROR [deployment-service] AMQP connection lost to message broker at 192.168.1.45:5672
+2024-01-15 14:29:01.234 ERROR [deployment-service] Invalid cloud account credentials for AWS-prod: AccessDenied
+2024-01-15 14:31:44.556 ERROR [deployment-service] Deployment request 'req-8f4a2c9d' exceeded maximum retry attempts (5)
+2024-01-15 14:33:19.778 ERROR [deployment-service] Certificate validation failed for endpoint https://vcenter.corp.local:443
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey).`** — Verify SSH key is loaded with `ssh-add` and the root user's authorized_keys contains your public key.
+    **`No such file or directory`** — Confirm the Aria Automation service is running with `systemctl status vra-deployment-service` and the log path exists.
+    **`tail: cannot open '/var/log/vmware/vra/deployment-service.log' for reading: Permission denied`** — Run the command with `sudo` or switch to root user before executing tail.
 ### Step 4 — Fix and Retry
 
 ![Step 4 — Fix and Retry](../../../../assets/aria-automation-proc-step-4-fix-and-retry.svg)

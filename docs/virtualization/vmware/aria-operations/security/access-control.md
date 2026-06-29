@@ -74,6 +74,15 @@ TOKEN=$(curl -sk -X POST \
   jq -r '.token')
 ```
 
+
+```text title="Expected output"
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdmMtdnJvcHMtYXBpIiwiaWF0IjoxNzA5MzE2ODAwLCJleHAiOjE3MDkzMjA0MDB9.kR9mL2pQxZ8vN4jWqL5sT6uY3aB1cD2eF4gH5iJ6kL7
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in example, but ensure it's not removed in production variants).
+    **`jq: parse error: Cannot index null with string "token"`** — Verify credentials are correct and the API endpoint is accessible; check response with `curl -sk ... | jq '.'` to see the actual error message from vROps.
+    **`command not found: jq`** — Install jq package using `apt-get install jq` (Debian/Ubuntu) or `yum install jq` (RHEL/CentOS).
 ---
 
 ## Reviewing Current Role Assignments
@@ -91,6 +100,49 @@ curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
   jq '.[] | {group: .name, role: .role[].name, source: .authSourceName}'
 ```
 
+
+```text title="Expected output"
+{
+  "username": "admin",
+  "role": "Administrator",
+  "source": "Local"
+}
+{
+  "username": "svc-monitoring",
+  "role": "ReadOnly",
+  "source": "LDAP"
+}
+{
+  "username": "ops-team-lead",
+  "role": "Administrator",
+  "source": "LDAP"
+}
+{
+  "username": "audit-user",
+  "role": "ReadOnly",
+  "source": "Local"
+}
+{
+  "group": "cn=vrops-admins,ou=groups,dc=example,dc=local",
+  "role": "Administrator",
+  "source": "LDAP"
+}
+{
+  "group": "cn=vrops-readonly,ou=groups,dc=example,dc=local",
+  "role": "ReadOnly",
+  "source": "LDAP"
+}
+{
+  "group": "cn=vrops-operators,ou=groups,dc=example,dc=local",
+  "role": "Operator",
+  "source": "LDAP"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the vROps CA certificate into your system trust store.
+    **`jq: parse error: Cannot index string with string "username"`** — Verify the API response is valid JSON by running the curl command without jq piping first; check that the token is not expired.
+    **`curl: (401) Unauthorized`** — Ensure the TOKEN variable is set correctly and the token has not expired; regenerate a new API token from the vROps UI under Administration > API Access.
 ---
 
 ## Local Admin Account Hardening

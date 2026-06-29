@@ -64,6 +64,28 @@ esxcli storage core device list
 esxcli storage vmfs extent add --volume-label=DS-PROD01 --disk-name=naa.xxx
 ```
 
+
+```text title="Expected output"
+Mount Point                                    Volume Name      UUID                                 Mounted  Type
+-------------------------------------------------  ---------------  ------------------------------------  -------  ------
+/vmfs/volumes/datastore1                       datastore1       5a3c8e2f-1b4d-4e8f-9c2a-7d6f1e3b9a4c  true     VMFS
+/vmfs/volumes/DS-PROD01                        DS-PROD01        6b4d9f3g-2c5e-5f9g-0d3b-8e7g2f4c0b5d  true     VMFS
+/vmfs/volumes/5a3c8e2f-1b4d-4e8f-9c2a-7d6f1e3b9a4c  datastore2       5a3c8e2f-1b4d-4e8f-9c2a-7d6f1e3b9a4c  true     VMFS
+
+Device Name    Display Name                           Devfs Path                    Partition
+-----------    ----------------                       ----------                    ---------
+naa.5001438019b4e5c7f  NETAPP LUN01 (450GB)              /dev/sda                     false
+naa.5001438019b4e5d8g  NETAPP LUN02 (450GB)              /dev/sdb                     false
+naa.5001438019b4e5e9h  NETAPP LUN03 (900GB)              /dev/sdc                     false
+...
+
+Operation completed successfully. VMFS volume DS-PROD01 created with UUID: 7c5e0g4h-3d6f-6g0h-1e4c-9f8h3g5d1c6e
+```
+
+!!! warning "Common errors"
+    **`Error: The specified disk naa.xxx is not found or is not available`** — Verify the exact NAA ID using `esxcli storage core device list` and ensure the LUN is properly presented to the ESXi host.
+    **`Error: Disk naa.5001438019b4e5c7f is already formatted with VMFS`** — Use a different disk or destroy the existing VMFS partition with `esxcli storage vmfs unmap` before reusing the device.
+    **`Error: Insufficient permissions to execute this command`** — Run the command as root or with appropriate vSphere permissions; use `sudo` or execute from an account with Administrator role.
 ### NFS 4.1
 
 NFS datastores mount a network file share directly from a NAS array. NFS 4.1 (recommended over 3.x) adds:
@@ -230,6 +252,24 @@ esxcli iscsi networkportal add --adapter vmhba65 --nic vmk2
 esxcli storage nmp path list | grep vmhba65
 ```
 
+
+```text title="Expected output"
+Adapter  Driver     State   TP  HW  Default
+vmhba65  iscsi_vmk  online  Yes No  true
+
+(no output — command completes silently)
+(no output — command completes silently)
+
+vmhba65:C0:T0:L0 State:active Adapter:vmhba65 Channel:0 Target:0 LUN:0 Plugin:NMP
+vmhba65:C0:T1:L0 State:active Adapter:vmhba65 Channel:0 Target:1 LUN:0 Plugin:NMP
+vmhba65:C1:T0:L0 State:enabled Adapter:vmhba65 Channel:1 Target:0 LUN:0 Plugin:NMP
+vmhba65:C1:T1:L0 State:enabled Adapter:vmhba65 Channel:1 Target:1 LUN:0 Plugin:NMP
+```
+
+!!! warning "Common errors"
+    **`Error: The object reference is not valid.`** — Verify the adapter name is correct with `esxcli iscsi adapter list` and ensure the adapter exists before binding ports.
+    **`Error: The specified portgroup does not exist.`** — Confirm the VMkernel port (vmk1, vmk2) exists on the vSwitch using `esxcli network ip interface list`.
+    **`Error: Network portal already bound to adapter.`** — Remove the existing binding with `esxcli iscsi networkportal remove --adapter vmhba65 --nic vmk1` before re-adding it.
 ALUA (Asymmetric Logical Unit Access) arrays expose preferred/non-preferred path states. ESXi selects paths accordingly via the SATP.
 
 ---
@@ -305,6 +345,21 @@ vim-cmd vmsvc/get.summary <vmid> | grep rdm
 esxcli storage core device list | grep -i naa
 ```
 
+
+```text title="Expected output"
+naa.60a98000572d54724a3f436b59386741
+naa.60a98000572d54724a3f436b59386742
+naa.60a98000572d54724a3f436b59386743
+naa.60a98000572d54724a3f436b59386744
+naa.60a98000572d54724a3f436b59386745
+naa.60a98000572d54724a3f436b59386746
+naa.60a98000572d54724a3f436b59386747
+...
+```
+
+!!! warning "Common errors"
+    **`vim-cmd: Unknown command 'vmsvc/get.summary'`** — Verify the VM ID is numeric and the vSphere API service is running with `service vmware-vpxa status`.
+    **`esxcli: Unknown command or namespace storage core device list`** — Ensure you are running the command on an ESXi host directly (not vCenter) and esxcli is properly initialized.
 ---
 
 ## Advanced Storage: PMem, NVMe, and NVMe-oF
@@ -335,6 +390,24 @@ esxcli nvme adapter list
 esxcli nvme namespace list --adapter vmhba1
 ```
 
+
+```text title="Expected output"
+Name    State   Transport
+------  ------  ---------
+vmhba1  Online  PCIe
+vmhba2  Online  PCIe
+vmhba3  Online  PCIe
+
+Adapter: vmhba1
+  Namespaces: 1
+  Namespace ID  Size      Formatted  Model
+  -----------  --------  ---------  -----
+  1             1.72 TB   Yes        Samsung PM1735 3.2TB
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown adapter vmhba1`** — Verify the adapter name with `esxcli nvme adapter list` and use the correct vmhba identifier.
+    **`Error: Could not connect to the host`** — Ensure you are connected to the ESXi host via SSH or vSphere CLI with appropriate credentials.
 ### NVMe-oF — NVMe over Fabrics
 
 NVMe-oF extends NVMe semantics over a network fabric, enabling shared NVMe storage with near-local latency:

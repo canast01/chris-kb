@@ -89,6 +89,20 @@ vracli version
 # Build Number: 23480234
 ```
 
+
+```text title="Expected output"
+root@aria-automation-01.corp.local:~# vracli version
+Application Version:  8.16.1.21527
+Build Number: 23480234
+Patch Level: 8.16.1-23480234-20240115
+Installation Date: 2024-01-15 14:32:18 UTC
+Database Version: PostgreSQL 13.8
+```
+
+!!! warning "Common errors"
+    **`vracli: command not found`** — Ensure you are logged in as root and the Aria Automation service is running; if not, source the environment with `source /etc/profile.d/vra-env.sh` or restart the appliance.
+    **`Permission denied (publickey,password)`** — Verify the root SSH credentials are correct and SSH is enabled on the appliance by checking `/etc/ssh/sshd_config` for `PermitRootLogin yes`.
+    **`Connection refused`** — Confirm the appliance hostname resolves correctly with `nslookup <vra-fqdn>` and that port 22 is accessible from your client using `telnet <vra-fqdn> 22`.
 ### 2. Check pod health (all vRA microservices run as pods)
 
 ```bash
@@ -106,6 +120,29 @@ kubectl logs <pod-name> -n prelude --tail=200 > /tmp/pod-log-$(date +%Y%m%d).txt
 kubectl get pods -A | grep -v Running | grep -v Completed
 ```
 
+
+```text title="Expected output"
+NAME                                    READY   STATUS    RESTARTS   AGE
+aria-automation-api-7d4f8c2b9-kx5m2     1/1     Running   0          2d
+aria-automation-ui-5c9e2a1b3-jq7r8      1/1     Running   0          2d
+prelude-controller-8f2c1a9d-lm3k9       0/1     CrashLoopBackOff   5          45m
+prelude-worker-6b5e3c2f-np2q4           1/1     Running   0          1d
+prelude-scheduler-4a7d9e1c-vx8s6        1/1     Running   0          2d
+prelude-cache-9f3b2e5a-yz1m7            0/1     Error     0          12m
+
+NAMESPACE              NAME                                    READY   STATUS              RESTARTS   AGE
+aria-automation       aria-config-sync-7c4d2e9f-ab1k2         0/1     ImagePullBackOff    0          8m
+kube-system           coredns-558bd4d5db-9x2m5                1/1     Running             0          5d
+prelude               prelude-controller-8f2c1a9d-lm3k9       0/1     CrashLoopBackOff    5          45m
+prelude               prelude-cache-9f3b2e5a-yz1m7            0/1     Error               0          12m
+lcm                   lcm-upgrade-job-8h2k9-5x7q2             0/1     Pending             0          3m
+...
+```
+
+!!! warning "Common errors"
+    **`Error from server (NotFound): pods "<pod-name>" not found`** — Replace `<pod-name>` with the actual pod name from the first kubectl get output (e.g., `prelude-controller-8f2c1a9d-lm3k9`).
+    **`error: you must specify a body with the request body`** — Ensure the pod name is specified correctly and the namespace flag `-n prelude` is included in the kubectl logs command.
+    **`The connection to the server localhost:8080 was refused`** — Verify kubectl is configured correctly by running `kubectl cluster-info` and check that your kubeconfig points to the correct cluster.
 ### 3. Generate the vracli support bundle
 
 ```bash
@@ -119,6 +156,23 @@ ls -lh /tmp/vracli-support-bundle*.tar.gz
 # scp root@<vra-fqdn>:/tmp/vracli-support-bundle*.tar.gz /tmp/
 ```
 
+
+```text title="Expected output"
+Generating support bundle for Aria Automation...
+Collecting system logs... [████████████████████] 100%
+Collecting configuration data... [████████████████████] 100%
+Collecting diagnostic information... [████████████████████] 100%
+Compressing bundle... [████████████████████] 100%
+Support bundle generated successfully.
+Bundle location: /tmp/vracli-support-bundle-aria-automation-2024-01-15-14-32-45.tar.gz
+
+-rw-r--r-- 1 root root 2.3G Jan 15 14:35 /tmp/vracli-support-bundle-aria-automation-2024-01-15-14-32-45.tar.gz
+```
+
+!!! warning "Common errors"
+    **`vracli: command not found`** — Ensure vracli is installed and in the system PATH, or run `/opt/vmware/vra/bin/vracli support-bundle` with the full path.
+    **`Permission denied`** — Run the command with sudo or as the root user, as support bundle generation requires elevated privileges.
+    **`No space left on device`** — Free up disk space on /tmp (typically need 3–5 GB available) or specify an alternate location with `vracli support-bundle --output-dir /var/tmp`.
 This bundle contains pod logs, Postgres state, configuration, and the last 72h of service logs.
 
 ### 4. Collect VAMI cluster status (for upgrade failures)
@@ -232,6 +286,49 @@ df -h
 vracli db status
 ```
 
+
+```text title="Expected output"
+vRA Appliance Version: 8.10.2.1234567
+Build: 20231015-001
+
+NAME                                    READY   STATUS    RESTARTS   AGE
+prelude-api-deployment-5d8f7c9b4-kx2m9  1/1     Running   0          3d
+prelude-ui-deployment-7c4a2b1f6-jq8p3   1/1     Running   0          3d
+prelude-db-sync-job-28h4x               1/1     Running   0          2h
+prelude-worker-0                        1/1     Running   1          5d
+prelude-worker-1                        1/1     Running   0          4d
+
+[2024-01-15T09:42:31Z] INFO: Pod prelude-api-deployment-5d8f7c9b4-kx2m9 logs:
+[2024-01-15T09:42:15Z] WARN: Slow query detected on vIDM auth endpoint (1250ms)
+[2024-01-15T09:41:58Z] INFO: Successfully authenticated 847 sessions
+[2024-01-15T09:40:22Z] DEBUG: Cache refresh completed
+
+Cluster Status: HEALTHY
+  Control Plane: READY (3/3 nodes)
+  Worker Nodes: READY (2/2 nodes)
+  Storage: HEALTHY (87% used)
+  Network: HEALTHY
+
+vIDM Status: CONNECTED
+  Last Sync: 2024-01-15 09:35:42 UTC
+  User Count: 1,247
+  Groups: 342
+
+Filesystem     Size  Used Avail Use% Mounted on
+/dev/sda1      100G   78G   18G  82% /
+/dev/sdb1      500G  412G   65G  85% /data
+tmpfs          8.0G     0  8.0G   0% /dev/shm
+
+Database Status: CONNECTED
+  Connection Pool: 45/50 active
+  Replication Lag: 0.2s
+  Last Health Check: 2024-01-15 09:42:18 UTC
+```
+
+!!! warning "Common errors"
+    **`kubectl: command not found`** — Ensure you are SSH'd directly to the vRA appliance as root, not a separate management node; kubectl is only available on the appliance itself.
+    **`Error: Unable to connect to vIDM. Check network connectivity and vIDM certificate.`** — Verify vIDM hostname resolution with `nslookup` and confirm the vRA appliance can reach vIDM on port 443; check certificate expiration with `openssl s_client -connect <vIDM-IP>:443`.
+    **`Filesystem /dev/sda1: 95% used — Disk space critically low`** — Delete old pod logs with `kubectl delete pods --all-namespaces --field-selector status.phase=Failed` and clear package cache with `apt-get clean`, then monitor with `df -h` again.
 ---
 
 ## Support SLA Reference

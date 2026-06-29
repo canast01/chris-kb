@@ -93,6 +93,39 @@ vracli status
 vracli backup status
 ```
 
+
+```text title="Expected output"
+root@vra-prod-01:~# df -h / /var
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1        50G   32G   15G  68% /
+/dev/sda2       100G   45G   52G  46% /var
+
+root@vra-prod-01:~# kubectl get pods --all-namespaces | grep -v "Running\|Completed\|Succeeded"
+NAMESPACE              NAME                                          READY   STATUS
+vra                    vra-catalog-7d4f2c8b9-kx2m1                  1/1     Running
+vra                    vra-orchestrator-5c9e1a3d2-jq8p9              1/1     Running
+vra                    vra-iaas-proxy-8f2b4e6c1-lw3k5                1/1     Running
+vra                    vra-ng-custom-resource-7a1c9d5e-mp2l8         1/1     Running
+kube-system            coredns-558bd4d5db-9x7m2                      1/1     Running
+
+root@vra-prod-01:~# vracli status
+vra-catalog                    RUNNING
+vra-orchestrator               RUNNING
+vra-iaas-proxy                 RUNNING
+vra-ng-custom-resource         RUNNING
+vra-identity                   RUNNING
+
+root@vra-prod-01:~# vracli backup status
+Backup Status: COMPLETED
+Last Backup: 2024-01-15 03:45:22 UTC
+Backup Location: /mnt/backup/vra-prod-01-20240115-034522.tar.gz
+Backup Size: 18.7 GB
+```
+
+!!! warning "Common errors"
+    **`df: cannot access '/var': No such file or directory`** — Verify the mount point exists or adjust the command to check only mounted filesystems with `df -h /`.
+    **`error: unable to connect to the server: dial tcp: lookup kubernetes.default on 10.0.2.2:53: no such host`** — Ensure kubectl is configured with the correct kubeconfig context using `kubectl config use-context <context-name>`.
+    **`vracli: command not found`** — Add the vracli binary path to your shell environment with `export PATH=$PATH:/opt/vmware/vra/bin` or use the full path `/opt/vmware/vra/bin/vracli`.
 ---
 
 ## Post-Upgrade Validation
@@ -112,6 +145,32 @@ kubectl get pods --all-namespaces | grep -v "Running\|Completed\|Succeeded"
 vracli cluster health
 ```
 
+
+```text title="Expected output"
+vRA version 8.10.2 Build 20231015
+vRA Kubernetes version: 1.26.8
+vRA Database version: 12.1.0.192.0
+
+NAMESPACE              NAME                                          READY   STATUS    RESTARTS   AGE
+vra                    vra-server-0                                  1/1     Running   0          45d
+vra                    vra-server-1                                  1/1     Running   0          45d
+vra                    vra-iaas-proxy-0                              1/1     Running   2          45d
+vra                    vra-postgres-0                                1/1     Running   0          45d
+vra                    vra-rabbitmq-0                                1/1     Running   1          45d
+vra                    vra-config-server-0                           1/1     Running   0          45d
+
+Cluster Health Status: HEALTHY
+Node vra-prod-01.example.local: HEALTHY (Leader)
+Node vra-prod-02.example.local: HEALTHY (Follower)
+Node vra-prod-03.example.local: HEALTHY (Follower)
+Cluster Quorum: 3/3 nodes available
+Last health check: 2024-01-18 14:32:15 UTC
+```
+
+!!! warning "Common errors"
+    **`bash: vracli: command not found`** — Ensure you are logged into the vRA appliance via SSH and vracli is in the PATH; check that vRA is fully initialized with `systemctl status vra-server`.
+    **`error: You must be logged in to the server`** — Authenticate to the Kubernetes cluster with `kubectl config use-context vra-admin` or verify kubeconfig permissions.
+    **`Cluster Health Status: UNHEALTHY - Node vra-prod-03.example.local: UNREACHABLE`** — Check network connectivity to the unreachable node and verify the vRA cluster service is running with `systemctl status vra-cluster` on that node.
 Via UI validation:
 
 - [ ] Log into Aria Automation UI — authentication works (VIDM redirect succeeds)

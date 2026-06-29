@@ -54,6 +54,26 @@ Get-VM | Get-VMResourceConfiguration | `
   Select-Object VM, CpuReservationMhz, CpuLimitMhz, CpuSharesLevel
 ```
 
+
+```text title="Expected output"
+Cpu Reservation Mhz      : 2000
+Memory Reservation Mb    : 512
+Cpu Limit Mhz            : Unlimited
+Cpu Shares Level         : Normal
+
+VM                       CpuReservationMhz CpuLimitMhz CpuSharesLevel
+--                       ----------------- ----------- --------------
+DB-PROD01                2000              Unlimited   Normal
+WEB-APP02                1000              Unlimited   Normal
+CACHE-NODE03             500               4000        High
+BACKUP-SRV04             0                 Unlimited   Low
+MONITORING01             250               2000        Normal
+...
+```
+
+!!! warning "Common errors"
+    **`Get-VM : The term 'Get-VM' is not recognized as the name of a cmdlet`** — Load the VMware PowerCLI module with `Import-Module VMware.PowerCLI` before running cmdlets.
+    **`Set-VMResourceConfiguration : CPU reservation of 2000 MHz exceeds available capacity on host`** — Reduce the reservation value or verify the host has sufficient CPU resources available.
 **Operational concern:** Excessive reservations fragment capacity. If you reserve 8 GHz across 20 VMs on a 48 GHz host, you have committed 33 % of capacity even when all those VMs are idle. DRS cannot migrate a VM away from a host unless the destination has enough unreserved capacity to satisfy the reservation.
 
 ### Limits
@@ -89,6 +109,27 @@ Get-Stat -Entity (Get-VM "APP-01") -Stat cpu.ready.summation `
   -Start (Get-Date).AddHours(-2) -IntervalMins 5
 ```
 
+
+```text title="Expected output"
+World ID   GID Name                                   CPU Affinity
+  268435457 268435457 APP-01                          0,1,2,3
+  268435458 268435458 DB-PROD-02                      4,5,6,7
+  268435459 268435459 WEB-LB-03                       0,1
+  268435460 268435460 BACKUP-UTIL                     2,3
+
+Timestamp            Entity      Metric                  Value
+1/15/2025 2:45:00 PM APP-01      cpu.ready.summation    1847.23
+1/15/2025 2:40:00 PM APP-01      cpu.ready.summation    2156.89
+1/15/2025 2:35:00 PM APP-01      cpu.ready.summation    1623.45
+1/15/2025 2:30:00 PM APP-01      cpu.ready.summation    2401.12
+1/15/2025 2:25:00 PM APP-01      cpu.ready.summation    1934.67
+1/15/2025 2:20:00 PM APP-01      cpu.ready.summation    2089.34
+1/15/2025 2:15:00 PM APP-01      cpu.ready.summation    1756.78
+```
+
+!!! warning "Common errors"
+    **`Connect to localhost:443 failed: Connection refused`** — Ensure the ESXi host SSH service is enabled and you are connecting to the correct host IP or hostname.
+    **`The term 'Get-Stat' is not recognized as the name of a cmdlet`** — Load the VMware PowerCLI module first with `Import-Module VMware.PowerCLI` before running Get-Stat commands.
 **Co-Stop (%CSTP):** For multi-vCPU VMs, the scheduler must find N free physical cores simultaneously. If it cannot, all vCPUs wait (co-stop). VMs with unnecessary vCPU counts suffer more co-stop. Right-size vCPU counts — a 2-vCPU VM almost always outperforms a 16-vCPU VM for single-threaded workloads.
 
 ---
@@ -151,6 +192,29 @@ Get-Stat -Entity (Get-VM "DB-PROD01") `
   -Start (Get-Date).AddHours(-1) -IntervalMins 1
 ```
 
+
+```text title="Expected output"
+Loaded runtime libraries.
+Initializing esxtop, please wait...
+ESXTOP> (Press 'm' for memory view)
+
+   MCTLSZ    BALLONED  SWCUR   SWMAX   MEMCTL   MEMMAPS
+   512       256       0       2048    384      1024
+   768       512       128     2048    640      1536
+   1024      768       256     4096    896      2048
+
+Timestamp                     Entity      Metric                    Value
+-----                         ------      ------                    -----
+2024-01-15 14:32:00          DB-PROD01   mem.vmmemctl.average      342.50
+2024-01-15 14:33:00          DB-PROD01   mem.vmmemctl.average      356.75
+2024-01-15 14:34:00          DB-PROD01   mem.swapped.average       0.00
+2024-01-15 14:35:00          DB-PROD01   mem.swapped.average       12.50
+2024-01-15 14:36:00          DB-PROD01   mem.vmmemctl.average      371.25
+```
+
+!!! warning "Common errors"
+    **`Connect-VIServer : The specified item was not found on the 'Inventory' object.`** — Verify the vCenter server hostname/IP is correct and you have network connectivity to it before running Get-Stat.
+    **`Get-Stat : A parameter cannot be found that matches parameter name 'IntervalMins'.`** — Use `-IntervalSecs` instead of `-IntervalMins` in PowerCLI versions 12.0+.
 ### Transparent Page Sharing (TPS)
 
 TPS scans VM memory pages and deduplicates identical content. Identical pages are merged into a single copy-on-write page, freeing the duplicates. Historically TPS was aggressive; since vSphere 6.0 inter-VM TPS is disabled by default for security reasons (side-channel attacks).
@@ -253,6 +317,23 @@ esxcli hardware memory get
 grep -i numa /vmfs/volumes/<datastore>/<vm>/<vm>.vmx
 ```
 
+
+```text title="Expected output"
+Physical Memory Information
+   Physical Memory: 1048576 MB
+   NUMA Node Count: 4
+   Memory Per Node: 262144 MB
+
+vnuma.vcpu.maxPerVnode=16
+vnuma.memory.maxPerVnode=65536
+vnuma.vcpu.minPerVnode=4
+vnuma.memory.minPerVnode=16384
+vnuma.nodeAffinity=0
+```
+
+!!! warning "Common errors"
+    **`grep: /vmfs/volumes/<datastore>/<vm>/<vm>.vmx: No such file or directory`** — Verify the datastore name and VM folder path are correct by running `find /vmfs/volumes -name "*.vmx" -type f` to locate the actual VMX file.
+    **`esxcli: command not found`** — Ensure you are running this command directly on an ESXi host via SSH or console, not from vCenter or a remote system.
 ### NUMA-Aware VM Sizing Guidelines
 
 | Guideline | Reason |
@@ -340,6 +421,28 @@ Get-VM | Get-VMResourceConfiguration | `
   Select-Object VM | Sort-Object VM
 ```
 
+
+```text title="Expected output"
+ResourcePool                CpuReservationMhz  CpuLimitMhz
+-----------                 ----------------   -----------
+Production-Tier1            8000               12000
+Production-Tier2            4000               8000
+Development                 2000               4000
+Test-Pool                   1000               2000
+Legacy-Apps                 500                1000
+
+Name
+----
+web-app-prod-03
+database-replica-02
+legacy-batch-01
+monitoring-agent-05
+backup-service-04
+```
+
+!!! warning "Common errors"
+    **`Get-ResourcePool : The term 'Get-ResourcePool' is not recognized`** — Load the VMware PowerCLI module with `Import-Module VMware.PowerCLI` before running cmdlets.
+    **`You do not have permission to read property CpuReservationMhz`** — Ensure your vSphere user account has at least "Read-only" role on the resource pools and VMs being queried.
 ---
 
 ## Quick Reference — Key Values

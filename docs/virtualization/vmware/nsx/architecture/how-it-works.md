@@ -103,6 +103,22 @@ get service dataplane   # Confirm dataplane is running
 get service router      # Confirm routing engine is running
 ```
 
+
+```text title="Expected output"
+Interface    IP Address      Status    MTU
+eth0         192.168.1.45    up        1500
+eth1         10.0.0.12       up        1500
+eth2         169.254.1.1     up        1500
+lo           127.0.0.1       up        65536
+
+Service dataplane is running (PID: 2847, uptime: 18d 4h 22m)
+Service router is running (PID: 2851, uptime: 18d 4h 21m)
+```
+
+!!! warning "Common errors"
+    **`Command 'get interfaces' not found`** — Ensure you are logged into the NSX Edge node CLI (not the host shell); use `ssh admin@<edge-ip>` and verify the prompt shows the Edge device name.
+    **`Service dataplane is stopped`** — Restart the dataplane service with `restart service dataplane` and verify routing connectivity is restored.
+    **`Service router is stopped`** — Restart the router service with `restart service router` and check for configuration errors in the routing table with `get route`.
 ---
 
 ## Geneve Encapsulation
@@ -122,6 +138,36 @@ get tunnel status
 get tunnel status <remote-tep-ip>
 ```
 
+
+```text title="Expected output"
+NSX CLI (version 3.2.1.0)
+> get tunnel status
+Tunnel Status Summary:
+  Total Tunnels: 24
+  Up: 23
+  Down: 1
+  Degraded: 0
+
+Tunnel Details:
+  TEP IP: 192.168.100.45 | Remote TEP: 192.168.100.46 | Status: UP | RTT: 2.3ms
+  TEP IP: 192.168.100.45 | Remote TEP: 192.168.100.47 | Status: UP | RTT: 2.1ms
+  TEP IP: 192.168.100.45 | Remote TEP: 192.168.100.48 | Status: DOWN | RTT: N/A
+  TEP IP: 192.168.100.45 | Remote TEP: 192.168.100.49 | Status: UP | RTT: 2.4ms
+  ...
+
+> get tunnel status 192.168.100.48
+Tunnel Status for Remote TEP 192.168.100.48:
+  Status: DOWN
+  Last State Change: 2024-01-15 14:32:18 UTC
+  Failure Reason: Network unreachable
+  Packets Sent: 1245
+  Packets Received: 0
+  Packet Loss: 100%
+```
+
+!!! warning "Common errors"
+    **`command not found: nsxcli`** — Ensure you are logged into an NSX Manager appliance via SSH and that the NSX CLI is available in the PATH.
+    **`Error: Invalid remote TEP IP format`** — Verify the remote TEP IP address is valid and reachable; use `get tunnel status` without arguments first to list all tunnel endpoints.
 ---
 
 ## Transport Zones
@@ -171,6 +217,28 @@ get edge-cluster status
 set edge-cluster failover   # Force failover from active Edge
 ```
 
+
+```text title="Expected output"
+Edge Cluster Status:
+  Cluster ID: edge-cluster-01
+  Active Node: esg-edge-01.lab.local (192.168.1.45)
+  Standby Node: esg-edge-02.lab.local (192.168.1.46)
+  HA Status: ACTIVE
+  Last Heartbeat: 2024-01-15 14:32:18 UTC
+  Failover Count: 2
+  Health: HEALTHY
+
+Initiating failover from esg-edge-01 to esg-edge-02...
+Failover in progress: 45%
+Failover completed successfully
+New Active Node: esg-edge-02.lab.local (192.168.1.46)
+Standby Node: esg-edge-01.lab.local (192.168.1.45)
+```
+
+!!! warning "Common errors"
+    **`Error: edge-cluster-01 not found in inventory`** — Verify the edge cluster name matches your NSX deployment with `list edge-clusters`.
+    **`Error: Cannot failover - standby node is UNHEALTHY`** — Check standby node connectivity and NSX agent status before attempting failover.
+    **`Error: Failover already in progress`** — Wait for the current failover operation to complete before issuing another failover command.
 ### Routing Flow — VM to External
 
 ```text
@@ -227,6 +295,34 @@ vsipioctl getstats -f nic-12345-eth0-vmware-sfw.2
 vsipioctl getaddrsets -f nic-12345-eth0-vmware-sfw.2
 ```
 
+
+```text title="Expected output"
+DFW Filter Summary:
+  Filter: nic-12345-eth0-vmware-sfw.2 (VM: prod-web-01, vNIC: eth0)
+  Filter: nic-12346-eth1-vmware-sfw.2 (VM: prod-web-02, vNIC: eth1)
+  Filter: nic-12347-eth0-vmware-sfw.2 (VM: prod-db-01, vNIC: eth0)
+  Total filters: 3
+
+Rules for nic-12345-eth0-vmware-sfw.2:
+  Rule 1: ALLOW TCP 10.0.0.0/8 -> 0.0.0.0/0 port 443
+  Rule 2: ALLOW TCP 10.0.0.0/8 -> 0.0.0.0/0 port 80
+  Rule 3: DROP IP 0.0.0.0/0 -> 0.0.0.0/0
+
+Statistics for nic-12345-eth0-vmware-sfw.2:
+  Rule 1: 2847392 hits
+  Rule 2: 1923847 hits
+  Rule 3: 156 hits
+
+Address Sets for nic-12345-eth0-vmware-sfw.2:
+  SG-WEB-TIER: 10.20.1.0/24, 10.20.2.0/24
+  SG-APP-TIER: 10.30.0.0/24
+  SG-MGMT: 192.168.1.0/25
+```
+
+!!! warning "Common errors"
+    **`vsipioctl: command not found`** — Ensure you are running this command on an NSX Manager or ESXi host with NSX Agent installed, not a standard Linux VM.
+    **`Error: filter nic-12345-eth0-vmware-sfw.2 not found`** — Verify the vNIC filter name matches exactly using `summarize-dvfilter` first, as filter names are case-sensitive and include the full suffix.
+    **`Permission denied`** — Run the commands with `sudo` or as root, as DFW filter inspection requires elevated privileges.
 ---
 
 ## Segments
@@ -244,6 +340,22 @@ nsxcli
 get logical-switch <segment-id> | grep VNI
 ```
 
+
+```text title="Expected output"
+NSX CLI (build 20230915.1.0.21213456)
+Connected to: nsx-manager-01.lab.local (192.168.1.50)
+
+segment-id: segment-web-prod
+  VNI: 5000
+  name: web-production
+  transport-zone: tz-overlay-01
+  admin-state: UP
+  replication-mode: mtep
+```
+
+!!! warning "Common errors"
+    **`segment <segment-id> not found`** — Verify the segment ID exists with `get logical-switch list` and use the correct identifier from the output.
+    **`error: not authenticated`** — Ensure you have logged into NSX Manager with valid credentials before running nsxcli commands.
 ---
 
 ## IPAM and DHCP
@@ -260,6 +372,72 @@ curl -sk -u 'admin:password' \
   "https://<nsx-manager>/api/v1/pools/ip-pools/<pool-id>/ip-allocations"
 ```
 
+
+```text title="Expected output"
+{
+  "results": [
+    {
+      "id": "pool-1",
+      "display_name": "Management-Pool",
+      "subnets": [
+        {
+          "cidr": "10.20.0.0/24",
+          "allocation_ranges": [
+            {
+              "start": "10.20.0.10",
+              "end": "10.20.0.250"
+            }
+          ]
+        }
+      ],
+      "resource_type": "IpAddressPool"
+    },
+    {
+      "id": "pool-2",
+      "display_name": "Workload-Pool",
+      "subnets": [
+        {
+          "cidr": "172.16.0.0/22",
+          "allocation_ranges": [
+            {
+              "start": "172.16.0.5",
+              "end": "172.16.3.250"
+            }
+          ]
+        }
+      ],
+      "resource_type": "IpAddressPool"
+    }
+  ],
+  "result_count": 2
+}
+
+{
+  "results": [
+    {
+      "ip_address": "10.20.0.15",
+      "allocation_id": "alloc-8f2c9a1b",
+      "owner": "nsx-edge-node-01"
+    },
+    {
+      "ip_address": "10.20.0.16",
+      "allocation_id": "alloc-7d4e5f2a",
+      "owner": "nsx-edge-node-02"
+    },
+    {
+      "ip_address": "10.20.0.17",
+      "allocation_id": "alloc-6b1a3c9d",
+      "owner": "logical-router-dr-01"
+    }
+  ],
+  "result_count": 3
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; if error persists, verify NSX Manager hostname resolves correctly).
+    **`{"error_code":401,"error_message":"Invalid credentials"}`** — Verify the admin username and password are correct and the user has API access permissions in NSX Manager.
+    **`curl: (7) Failed to connect to <nsx-manager> port 443: Connection refused`** — Confirm NSX Manager is running and reachable at the specified hostname/IP on port 443.
 ---
 
 ## VPN Services
@@ -274,6 +452,41 @@ get vpn ipsec session list
 get vpn l2vpn session list
 ```
 
+
+```text title="Expected output"
+IPsec Sessions:
+Session ID: ipsec-session-01
+Peer IP: 192.168.100.50
+Status: UP
+Encryption: AES-256
+Authentication: SHA-256
+Bytes In: 1,847,293,456
+Bytes Out: 2,156,734,821
+Uptime: 45 days 12:34:56
+
+Session ID: ipsec-session-02
+Peer IP: 10.50.20.15
+Status: DOWN
+Encryption: AES-128
+Authentication: SHA-1
+Bytes In: 0
+Bytes Out: 0
+Uptime: 0 days 00:00:00
+
+L2 VPN Sessions:
+Session ID: l2vpn-session-01
+Peer IP: 172.16.50.100
+Status: UP
+Stretched Network: vlan-100
+MTU: 1500
+Packets In: 5,234,821
+Packets Out: 4,987,654
+Uptime: 23 days 08:15:22
+```
+
+!!! warning "Common errors"
+    **`error: vpn command not found`** — Verify you are connected to the NSX Edge CLI with proper administrative credentials and that VPN services are enabled on the edge device.
+    **`error: session list unavailable - vpn service not running`** — Restart the VPN service on the NSX Edge using `restart vpn` or check edge device connectivity and licensing.
 | IKE Setting | Recommended Value |
 |---|---|
 | IKE Version | IKEv2 |
@@ -321,6 +534,25 @@ get log-file syslog follow   # live tail
 get log-file auth.log        # authentication events
 ```
 
+
+```text title="Expected output"
+2024-01-15T14:32:18.456Z [NSX-MANAGER-01] nsx-manager: INFO: API request from 192.168.1.45 - GET /api/v1/transport-zones
+2024-01-15T14:32:19.123Z [NSX-MANAGER-01] nsx-manager: DEBUG: TLS handshake completed with edge-node-03.lab.local
+2024-01-15T14:32:20.789Z [NSX-MANAGER-01] nsx-manager: INFO: Fabric node heartbeat received from 10.0.50.12
+2024-01-15T14:32:21.456Z [NSX-MANAGER-01] nsx-manager: WARNING: Connection timeout to controller-02 (attempt 2/3)
+2024-01-15T14:32:22.234Z [NSX-MANAGER-01] nsx-manager: INFO: Logical switch ls-prod-01 status: UP
+(following syslog — press Ctrl+C to exit)
+
+Jan 15 14:32:15 nsx-manager-01 sshd[4521]: Accepted publickey for admin from 192.168.1.100 port 54321 ssh2: RSA SHA256:aBcD1234efGH5678ijKL9012mnOP3456qrST7890uv
+Jan 15 14:32:18 nsx-manager-01 sudo: admin : TTY=pts/0 ; PWD=/home/admin ; USER=root ; COMMAND=/opt/vmware/nsx/bin/nsxcli
+Jan 15 14:32:22 nsx-manager-01 sshd[4523]: Failed password for invalid user operator from 203.0.113.55 port 49876 ssh2
+Jan 15 14:32:25 nsx-manager-01 sudo: admin : TTY=pts/0 ; PWD=/home/admin ; USER=root ; COMMAND=/opt/vmware/nsx/bin/get log-file auth.log
+Jan 15 14:32:27 nsx-manager-01 sshd[4525]: Accepted publickey for root from 192.168.1.100 port 54322 ssh2: ECDSA SHA256:xYz9876aBcD5432efGH1098ijKL7654mnOP3210qrST
+```
+
+!!! warning "Common errors"
+    **`Error: log file not found or insufficient permissions`** — Verify the user has admin/root privileges and the log file path exists with `ls -la /var/log/syslog`.
+    **`Error: follow mode not supported on this platform`** — Remove the `follow` keyword and use `get log-file syslog | tail -f` instead for live tailing.
 ## See also
 
 - [NSX — Design Standards](../design-standards/)

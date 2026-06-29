@@ -155,6 +155,47 @@ nc -zv <iscsi-target-ip> 3260
 vmkping -I vmk1 <destination-esxi-vmk1-ip>
 ```
 
+
+```text title="Expected output"
+Connection to esxi01.corp.local 443 port [tcp/https] succeeded!
+Connection to esxi01.corp.local 902 port [tcp/*] succeeded!
+vmk0 192.168.1.45 255.255.255.0 STATIC
+     remote host name resolution timed out.
+     remote host name resolution timed out.
+     remote host name resolution timed out.
+     remote host name resolution timed out.
+     remote host name resolution timed out.
+
+     remote host name resolution timed out.
+
+Enabled
+Enabled
+Enabled
+
+Name                                    Enabled  Implicit
+CMMDS                                   true     false
+NFC                                     true     false
+DHCPv6                                  true     false
+iSCSI                                   true     false
+Syslog                                  true     false
+...
+
+Adapter  PortalGroup  Name                Portal
+vmhba64  iSCSIPort    iSCSI_Portal_1      192.168.50.12:3260
+vmhba64  iSCSIPort    iSCSI_Portal_2      192.168.50.13:3260
+
+Connection to 192.168.50.12 port [tcp/iscsi-target] succeeded!
+
+PING 192.168.100.67 (192.168.100.67): 56 data bytes
+64 bytes from 192.168.100.67: icmp_seq=0 time=1.234 ms
+64 bytes from 192.168.100.67: icmp_seq=1 time=1.156 ms
+64 bytes from 192.168.100.67: icmp_seq=2 time=1.289 ms
+```
+
+!!! warning "Common errors"
+    **`nc: getaddrinfo: Name or service not known`** — Verify the ESXi hostname resolves in DNS or use the IP address directly.
+    **`Connection refused`** — Confirm the ESXi management port (443/902) is open and the ESXi host is powered on and reachable.
+    **`vmkping: Unknown virtual network adapter`** — Verify vmk1 exists on the ESXi host with `esxcli network ip interface list` and use the correct VMkernel interface name.
 ---
 
 ## See also

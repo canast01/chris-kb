@@ -17,6 +17,19 @@ sar -u -f /var/log/sa/sa$(date +%d) | awk '/Average/ {print $3}'
 free -h | awk '/Mem/ {print "Available:", $7}'
 ```
 
+
+```text title="Expected output"
+root 45.2% 12.8% /usr/lib/vmware-vsan/bin/vsanmgmtd
+vmware 38.7% 8.3% /usr/lib/vmware-vix-disklib/bin/vmtoolsd
+root 28.1% 5.2% /opt/vmware/aria/bin/java
+postgres 15.3% 22.1% /usr/lib/postgresql/bin/postgres
+root 8.9% 3.4% /usr/sbin/sshd
+Available: 124G
+```
+
+!!! warning "Common errors"
+    **`sar: Cannot open /var/log/sa/sa31: No such file or directory`** — Ensure sar data collection is enabled via `systemctl enable sysstat && systemctl start sysstat`, or use an existing sa file date.
+    **`awk: syntax error in pattern near line 1`** — Verify the awk field separators match your ps/sar output format; add `-F' '` if whitespace parsing fails.
 ```bash
 # Unattached managed disks
 az disk list \
@@ -27,6 +40,25 @@ az advisor recommendation list \
   --category Cost \
   --query '[*].{Impact:impact,Resource:resourceMetadata.resourceId,Recommendation:shortDescription.solution}' -o table
 ```
+
+```text title="Expected output"
+Name                                    RG              Size    SKU
+--------------------------------------  --------------  ------  ----------------
+disk-backup-20240115-prod               prod-rg         256     Premium_LRS
+disk-old-database-archive               legacy-rg       512     Standard_LRS
+disk-temp-migration-test                dev-rg          128     Premium_LRS
+disk-unused-snapshot-cache              monitoring-rg   1024    StandardSSD_LRS
+
+Impact    Resource                                                                    Recommendation
+--------  -------------------------------------------------------------------------  -----------------------------------------------
+High      /subscriptions/a1b2c3d4-e5f6-7890-abcd-ef1234567890/resourceGroups/...    Delete unattached managed disks to reduce costs
+Medium    /subscriptions/a1b2c3d4-e5f6-7890-abcd-ef1234567890/resourceGroups/...    Right-size underutilized virtual machines
+High      /subscriptions/a1b2c3d4-e5f6-7890-abcd-ef1234567890/resourceGroups/...    Remove unused ExpressRoute circuits
+```
+
+!!! warning "Common errors"
+    **`ERROR: The following arguments are required: --subscription`** — Add `--subscription <subscription-id>` or set the default subscription with `az account set --subscription <id>`.
+    **`ERROR: No registered resource provider found for location 'eastus'`** — Ensure the subscription has the required resource providers registered using `az provider register --namespace Microsoft.Compute`.
 ```bash
 # ONTAP — volumes with > 50% free space
 volume show -percent-used <50 -fields volume,size,used,percent-used

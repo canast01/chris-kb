@@ -113,6 +113,24 @@ curl -sk -o /dev/null -w "%{http_code}" https://packages.broadcom.com
 ntpq -p
 ```
 
+
+```text title="Expected output"
+200
+200
+200
+200
+     remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
+*ntp.ubuntu.com  132.163.96.1     2 u   64  128  377   45.231   -2.145   3.821
++time.google.com 216.239.35.0     1 u  120  128  377   38.942    1.203   2.556
+-ntp.apple.com   17.253.34.125    2 u   56  128  377   92.145   15.632   8.341
++pool.ntp.org    203.107.6.88     2 u   63  128  377   68.521   -0.891   4.203
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to <aria-lc-ip> port 443: Connection refused`** — Verify Aria LC is running with `systemctl status aria-lc` and confirm the IP/hostname is correct.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — The `-k` flag should suppress this; if it persists, ensure curl is updated and the certificate chain is valid.
+    **`ntpq: read: Connection refused`** — Restart the NTP service with `systemctl restart ntp` or `systemctl restart chrony` depending on your distribution.
 ---
 
 ## See also

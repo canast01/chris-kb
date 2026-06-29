@@ -53,6 +53,30 @@ tail -50 /var/log/loginsight/query.log | grep -i "slow\|timeout\|error\|duration
 # Reduce query load by narrowing time ranges and adding field filters
 # Use: last 1 hour instead of last 7 days when investigating active incidents
 ```
+
+```text title="Expected output"
+admin@vrli-prod-01.example.local's password: 
+Compaction Manager
+Current compaction tasks:
+task type : Compaction
+keyspace : loginsight
+table : events
+completed : 847392645120 bytes, 2156 MB/s, 39% done
+remaining : 1342087564288 bytes
+total : 2189480209408 bytes
+
+Heap Memory (MB): 28672 / 32768
+
+2024-01-15 14:23:47,891 [pool-12-thread-4] WARN  QueryExecutor - Slow query detected duration=4521ms query_id=a7f3e2c1-9d4b-11ee-b9d7-0050569e1234
+2024-01-15 14:24:12,445 [pool-12-thread-8] ERROR QueryExecutor - Query timeout after 5000ms for tenant_id=prod-cluster-1
+2024-01-15 14:25:33,221 [pool-12-thread-2] WARN  QueryExecutor - Slow query detected duration=3847ms query_id=b8e4f3d2-9d4b-11ee-c2e8-0050569e5678
+2024-01-15 14:26:01,556 [pool-12-thread-6] ERROR QueryExecutor - Query timeout after 5000ms for tenant_id=prod-cluster-2
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify SSH credentials and that the admin user exists on the target node with `ssh-keyscan vrli-prod-01.example.local` to confirm connectivity.
+    **`nodetool: command not found`** — Ensure you are in the Cassandra installation directory or add `$CASSANDRA_HOME/bin` to your PATH with `export PATH=$PATH:/opt/cassandra/bin`.
+    **`tail: cannot open '/var/log/loginsight/query.log' for reading: Permission denied`** — Run the tail command with `sudo` or ensure the admin user has read permissions on the loginsight log directory.
 ```bash
 # Check the cluster nodes via API from the master
 curl -sk -u 'admin:<password>' \
@@ -68,6 +92,37 @@ tail -100 /var/log/loginsight/runtime.log | grep -i "join\|cluster\|error\|maste
 nc -zv vrli-prod-01.example.local 443
 nc -zv vrli-prod-01.example.local 16520  # cluster internal communication port
 ```
+
+```text title="Expected output"
+{
+  "host": "vrli-prod-01.example.local",
+  "state": "MASTER"
+}
+{
+  "host": "vrli-prod-02.example.local",
+  "state": "WORKER"
+}
+{
+  "host": "vrli-prod-03.example.local",
+  "state": "WORKER"
+}
+● loginsight.service - VMware vRealize Log Insight
+   Loaded: loaded (/etc/systemd/system/loginsight.service; enabled; vendor preset: enabled)
+   Active: active (running) since Mon 2024-01-15 14:32:18 UTC; 2 days ago
+   Main PID: 4521 (java)
+     CGroup: /system.slice/loginsight.service
+             └─4521 /usr/lib/jvm/java-11-openjdk-11.0.18.0.10-1.el7_9.x86_64/bin/java
+2024-01-15 14:32:45 vrli-prod-02 loginsight[4521]: [INFO] Cluster join initiated for node vrli-prod-02
+2024-01-15 14:33:12 vrli-prod-02 loginsight[4521]: [INFO] Successfully joined cluster with master vrli-prod-01.example.local
+2024-01-15 14:33:15 vrli-prod-02 loginsight[4521]: [INFO] Cluster state synchronized
+Connection to vrli-prod-01.example.local 443 [tcp/https] succeeded!
+Connection to vrli-prod-01.example.local 16520 [tcp/*] succeeded!
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the master's CA certificate into your system trust store.
+    **`Connection refused`** — Verify the loginsight service is running on the master node with `systemctl status loginsight` and check firewall rules allow traffic on ports 443 and 16520.
+    **`ssh: Could not resolve hostname vrli-prod-02.example.local: Name or service not known`** — Ensure DNS resolution is working or add the worker node IP to `/etc/hosts` on the master node.
 ```bash
 # Verify alert is enabled
 curl -sk -u 'admin:<password>' \
@@ -81,6 +136,28 @@ curl -sk -X POST -u 'admin:<password>' \
 # Check the runtime log for notification delivery errors
 grep -i "notification\|email\|webhook\|smtp\|fail" /var/log/loginsight/runtime.log | tail -50
 ```
+
+```text title="Expected output"
+{
+  "name": "Critical Memory Threshold Alert",
+  "enabled": true,
+  "numHits": 847
+}
+
+Test notification sent successfully to channel: email-prod-alerts (ID: ch-8f2a9c1d)
+
+2024-01-15 14:32:18,421 INFO  [NotificationService] Notification delivery successful for alert ID: alert-7b4e2f9a to recipient: ops-team@example.local
+2024-01-15 14:31:45,892 WARN  [SMTPClient] SMTP connection timeout after 30s, retrying...
+2024-01-15 14:31:16,334 INFO  [WebhookNotifier] Webhook POST to https://slack.example.local/hooks/alerts returned 200 OK
+2024-01-15 14:30:52,167 ERROR [EmailNotifier] Failed to deliver email: javax.mail.AuthenticationFailedException: 535 5.7.8 Authentication credentials invalid
+2024-01-15 14:29:33,445 INFO  [NotificationService] Channel test completed with status: SUCCESS
+2024-01-15 14:28:19,771 WARN  [SMTPClient] Certificate validation disabled for SMTP host mail.example.local
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the vRLI certificate into your system CA bundle.
+    **`jq: parse error: Cannot index number with string "name"`** — Verify the alert ID exists and is valid by listing alerts with `curl -sk -u 'admin:<password>' "https://vrli-prod-01.example.local/api/v2/alerts" | jq '.alerts[] | {id, name}'`.
+    **`grep: /var/log/loginsight/runtime.log: No such file or directory`** — SSH into the vRLI appliance and check the correct log path with `find /var/log -name "*runtime*" -o -name "*notification*"`.
 ```bash
 # Check NTP on the Aria Ops for Logs appliance
 chronyc tracking
@@ -96,6 +173,35 @@ for node in vrli-prod-01 vrli-prod-02 vrli-prod-03; do
   ssh admin@$node.example.local "chronyc tracking 2>/dev/null | grep 'System time'"
 done
 ```
+
+```text title="Expected output"
+Reference ID    : 91F0B524 (ntp.ubuntu.com)
+Stratum         : 2
+Ref time (UTC)  : Wed Dec 13 14:32:18 2024
+System time     : 0.000234567 seconds fast of NTP time
+Frequency       : -12.456 ppm fast
+Residual freq   : +0.123 ppm
+Skew            : 0.087 ppm
+Root delay      : 0.045678 seconds
+Root dispersion : 0.156234 seconds
+Update interval : 1024.2 seconds
+Leap status     : Normal
+
+MS Name/IP address         Stratum Poll Reach LastRx Last sample
+===============================================================
+^* 91.189.89.198              1  10   377    45   -234us[ -198us] +/-   21ms
+^- 185.125.190.39             2  10   377   102   +456us[ +512us] +/-   45ms
+^+ 139.162.238.205            2  10   377    67   +123us[ +145us] +/-   38ms
+
+vrli-prod-01.example.local: System time : 0.000156789 seconds fast of NTP time
+vrli-prod-02.example.local: System time : 0.000198765 seconds fast of NTP time
+vrli-prod-03.example.local: System time : 0.000167234 seconds fast of NTP time
+```
+
+!!! warning "Common errors"
+    **`Temporary failure in name resolution`** — Verify DNS resolution is working with `nslookup vrli-prod-01.example.local` and ensure all cluster nodes are reachable via SSH.
+    **`Permission denied (publickey,password)`** — Ensure the admin SSH key is configured on all cluster nodes or use `ssh-copy-id admin@$node.example.local` to deploy your public key.
+    **`Stratum : 16` or `Leap status : Not synchronised`** — Restart chronyd with `systemctl restart chronyd` and verify NTP server connectivity with `chronyc sources`.
 ```bash
 # Confirm disk usage
 df -h /var/log/loginsight

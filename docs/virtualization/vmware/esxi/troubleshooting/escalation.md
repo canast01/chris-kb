@@ -92,6 +92,20 @@ esxcli hardware cpu get | grep -E "CPU Packages|CPU Cores|Hyperthreading"
 esxcli hardware memory get
 ```
 
+
+```text title="Expected output"
+Product: VMware ESXi
+Version: 8.0.2
+Build: Releasebuild-23305546
+   CPU Packages: 2
+   CPU Cores: 16
+   Hyperthreading: Enabled
+Physical Memory: 256 GB
+```
+
+!!! warning "Common errors"
+    **`Error: Could not connect to the host`** — Verify SSH is enabled on the ESXi host and your network connectivity is correct.
+    **`Unknown command or namespace`** — Ensure you are running this command directly on the ESXi host console or via SSH; esxcli is not available remotely without proper configuration.
 ### 2. Run the vm-support diagnostic bundle (takes 5–15 minutes)
 
 ```bash
@@ -107,6 +121,24 @@ ls -lh /var/core/
 vm-support -w /vmfs/volumes/<datastore>/support-bundle/
 ```
 
+
+```text title="Expected output"
+Generating support bundle, this may take a few minutes...
+Collecting system logs...
+Collecting hardware information...
+Collecting network configuration...
+Bundle generation complete.
+Bundle saved to: /var/core/vm-support-esx-prod-01-2026-06-14--15.45.tar.gz
+
+total 2847652
+-rw-r--r--  1 root root 2.8G Jun 14 15:45 vm-support-esx-prod-01-2026-06-14--15.45.tar.gz
+-rw-r--r--  1 root root 1.9G Jun 13 08:22 vm-support-esx-prod-01-2026-06-13--08.22.tar.gz
+-rw-r--r--  1 root root 2.1G Jun 12 14:10 vm-support-esx-prod-01-2026-06-12--14.10.tar.gz
+```
+
+!!! warning "Common errors"
+    **`vm-support: /var/core/ filesystem is full`** — Specify an alternate writable datastore path using the `-w` flag with sufficient free space.
+    **`vm-support: cannot access /vmfs/volumes/<datastore>/support-bundle/: No such file or directory`** — Create the target directory first with `mkdir -p /vmfs/volumes/<datastore>/support-bundle/` before running vm-support.
 Upload this tar.gz file to the Broadcom case. It contains all ESXi logs, configuration, and hardware info.
 
 ### 3. Capture PSOD information (if host has crashed)
@@ -125,6 +157,28 @@ grep -i "PSOD\|BUG\|panic\|backtrace" /var/log/vmkernel.log | tail -50
 grep "$(date -d 'yesterday' '+%Y-%m-%d')" /var/log/vmkernel.log | grep -i "error\|fail\|panic" | head -50
 ```
 
+
+```text title="Expected output"
+total 2.8G
+-rw-------  1 root root 2.8G Nov 14 10:23 vmkdump-2024-11-14-10-15-42.zdumpfile
+-rw-------  1 root root 1.2M Nov 14 10:23 vmkdump-2024-11-14-10-15-42.metadata
+
+2024-11-14T10:15:42.847Z cpu2:65536)PANIC: Unrecoverable exception 14.
+2024-11-14T10:15:42.891Z cpu2:65536)BACKTRACE for world 65536:
+2024-11-14T10:15:42.923Z cpu2:65536) 0x418f2e40:[0x418f2e40]log_panic@vmkernel#0+0x1 stack 0x418f2e00
+2024-11-14T10:15:43.012Z cpu2:65536) 0x418f2e60:[0x418f2e60]Panic_Panic@vmkernel#0+0x45 stack 0x418f2e20
+2024-11-14T10:15:43.156Z cpu2:65536)BUG: CPU2 halted.
+2024-11-14T10:15:43.201Z cpu2:65536)PSOD: Dumping core to partition 6 (vmkdump)...
+
+2024-11-13T14:32:15.445Z cpu0:2097472)WARNING: Failed to allocate memory for vMotion buffer
+2024-11-13T14:32:16.123Z cpu1:2097473)ERROR: NIC vmnic2 link down detected
+2024-11-13T14:32:17.891Z cpu3:2097474)PANIC: Out of memory condition detected
+2024-11-13T14:32:18.234Z cpu0:2097475)ERROR: Storage adapter timeout on device naa.6006048b1e10c3a00a8e3f4e5c6d7e8f
+```
+
+!!! warning "Common errors"
+    **`grep: /var/log/vmkernel.log: No such file or directory`** — SSH into the ESXi host directly (not vCenter); the vmkernel log is local to each host at that path.
+    **`date: invalid date 'yesterday'`** — Use `date -d '1 day ago' '+%Y-%m-%d'` or replace with a specific date like `2024-11-13` for better compatibility.
 Include the dump file path in your SR description. Broadcom will provide SFTP transfer instructions to upload it.
 
 ### 4. Capture esxtop performance data (for performance or APD issues)
@@ -141,6 +195,20 @@ esxtop -b -n 5 -s > /tmp/esxtop-storage-$(date +%Y%m%d-%H%M).txt
 # scp root@<esxi-host>:/tmp/esxtop-*.txt ./
 ```
 
+
+```text title="Expected output"
+CPU MEMORY DISK NETWORK POWER
+0 0 0 0 0
+0 0 0 0 0
+0 0 0 0 0
+0 0 0 0 0
+0 0 0 0 0
+```
+
+!!! warning "Common errors"
+    **`esxtop: command not found`** — Verify esxtop is available in PATH or use the full path `/usr/lib/vmware/esxtop/esxtop`; it may require the ESXi host shell to be enabled.
+    **`Permission denied`** — Run the command as root or with appropriate sudo privileges; esxtop requires elevated permissions to access performance metrics.
+    **`No space left on device`** — Check available disk space on /tmp with `df -h` and either clean up old logs or redirect output to a partition with more free space.
 ### 5. Collect storage path state (for APD or PDL issues)
 
 ```bash
@@ -158,6 +226,49 @@ esxcli storage san iscsi list     # iSCSI
 esxcli storage filesystem list | grep -v "^[[:space:]]*$"
 ```
 
+
+```text title="Expected output"
+Name: vmhba0:C0:T0:L0
+State: active
+PathState: active
+PluginName: NMP
+TransportState: active
+
+Name: vmhba1:C0:T1:L0
+State: active
+PathState: active
+PluginName: NMP
+TransportState: active
+
+Name: vmhba2:C0:T2:L0
+State: dead
+PathState: PDL
+PluginName: NMP
+TransportState: error
+
+Adapter: vmhba1
+Wwn: 50:00:14:40:5a:2b:c3:e1
+Status: link up
+Speed: 8Gbps
+Driver: lpfc
+
+Adapter: vmhba2
+Wwn: 50:00:14:40:5a:2b:c3:e2
+Status: link down
+Speed: unknown
+Driver: lpfc
+
+VolumeID: 4f5a6b7c-8d9e-0f1a-2b3c-4d5e6f7a8b9c
+MountPoint: /vmfs/volumes/datastore1
+Mounted: true
+Capacity: 2199023255552
+Free: 549755813888
+```
+
+!!! warning "Common errors"
+    **`State: dead`** — Run `esxcli storage nmp path set --state=active --path=vmhba2:C0:T2:L0` to reactivate the path, or verify SAN connectivity and zoning.
+    **`error: Unknown command or namespace`** — Ensure you are running these commands directly on the ESXi host via SSH or local console, not through vCenter.
+    **`TransportState: error`** — Check HBA driver logs with `esxcli system syslog config get` and verify Fibre Channel switch port status and SFP transceiver health.
 ### 6. Write the timeline
 
 Create a plain text file with this structure and paste it into the SR description:
@@ -285,6 +396,40 @@ esxcli vsan health cluster list
 esxcli vm process list
 ```
 
+
+```text title="Expected output"
+hostd is running.
+vpxa is running.
+2024-01-15T09:23:45.123Z [hostd] [info] [Main] hostd started
+2024-01-15T09:23:52.456Z [hostd] [info] [Vimsvc.Licensing] License check passed
+2024-01-15T09:24:10.789Z [hostd] [warning] [Hostsvc.StorageSystem] Storage rescan initiated
+2024-01-15T09:25:33.012Z [hostd] [info] [Hostsvc.VmFolder] VM inventory loaded: 12 VMs
+2024-01-15T10:45:22.345Z [vmkernel] [info] NIC vmnic0 link up at 10000Mbps
+2024-01-15T10:46:01.678Z [vmkernel] [warning] Memory pressure: 87% consumed
+2024-01-15T10:47:15.901Z [vmkernel] [info] vMotion migration completed for vm-prod-db-01
+Runtime Name: vmhba0:C0:T0:L0
+State: active
+Runtime Name: vmhba0:C0:T1:L0
+State: active
+Runtime Name: vmhba1:C0:T0:L0
+State: active
+Runtime Name: vmhba1:C0:T0:L1
+State: standby
+Cluster UUID: 52d4f2c1-a8b3-4e7f-9c2a-1b5d8e9f3a4c
+Cluster Health Status: Healthy
+Node UUID: esx-prod-01.lab.local
+Node Health Status: Healthy
+fdm is running.
+World ID    Name                                   File                                 CPU Mem   
+  2048      vm-prod-web-01                         /vmfs/volumes/datastore1/vm-prod-web-01/vm-prod-web-01.vmx 2   4096
+  4096      vm-prod-db-01                          /vmfs/volumes/datastore1/vm-prod-db-01/vm-prod-db-01.vmx 4   8192
+  6144      vm-dev-test-02                         /vmfs/volumes/datastore2/vm-dev-test-02/vm-dev-test-02.vmx 2   2048
+```
+
+!!! warning "Common errors"
+    **`hostd is stopped.`** — Run `services.sh restart` or reboot the ESXi host to restart the hostd service.
+    **`Error: Unknown command or namespace vsan`** — The vSAN module is not installed or enabled; skip this check if vSAN is not deployed on this cluster.
+    **`tail: cannot open '/var/log/hostd.log' for reading: No such file or directory`** — Restart hostd service with `/etc/init.d/hostd restart` to regenerate the log file.
 ---
 
 ## Support Portal and SLA Reference

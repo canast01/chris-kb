@@ -114,6 +114,28 @@ ntpq -p
 curl -sk -o /dev/null -w "%{http_code}" https://<aria-ops-fqdn>/suite-api/api/resources
 ```
 
+
+```text title="Expected output"
+200
+Remote Host: 192.168.1.50
+Remote Port: 514
+Remote Protocol: udp
+
+(no output — command completes silently)
+TCP 514 open
+     remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
+ ntp.ubuntu.com   .GPS.            1 u   64   64  377   18.234    2.105   1.847
+ time.google.com  .GOOG.           1 u   52   64  377   22.891   -1.234   0.956
+ 169.254.169.254  .POOL.           16 u    -   64    0    0.000    0.000   0.000
+
+200
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the Aria Logs CA certificate into your system trust store.
+    **`logger: unknown host <aria-logs-vip>`** — Verify the Aria Logs VIP is resolvable and reachable from the application server; check DNS or use the IP address directly.
+    **`Connection refused`** — Confirm TCP port 514 is open on the Aria Logs appliance and the syslog listener service is running; check firewall rules and `systemctl status loginsight-syslog`.
 ---
 
 ## See also

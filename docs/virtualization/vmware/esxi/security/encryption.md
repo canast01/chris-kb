@@ -39,6 +39,29 @@ esxcli vm process list | grep -A10 <vm-name>
 vim-cmd vmsvc/get.config <vmid> | grep -i encrypt
 ```
 
+
+```text title="Expected output"
+esxcli vm process list | grep -A10 web-server-01
+   web-server-01
+   UUID: 564d5e42-f3a2-8f1c-a4b2-9c7e2d1f5a3b
+   Display Name: web-server-01
+   Config File: /vmfs/volumes/datastore1/web-server-01/web-server-01.vmx
+   UUID: 564d5e42-f3a2-8f1c-a4b2-9c7e2d1f5a3b
+   World ID: 2847
+   Process ID: 0
+   VMX Cartel ID: 2847
+   API Version: vim.version.version13
+
+vim-cmd vmsvc/get.config 42 | grep -i encrypt
+config.hardware.memoryHotAddEnabled = true
+config.encryption.enabled = true
+config.encryption.keyId = "vault-key-2024-prod-01"
+config.encryption.keyProviderId = "com.vmware.vcenter.km.provider.vault"
+```
+
+!!! warning "Common errors"
+    **`Unknown command or namespace esxcli vm process list`** — Ensure you are running this command directly on an ESXi host (not vCenter) with root or equivalent privileges.
+    **`vim-cmd: command not found`** — Load the VMware command environment with `source /etc/profile` or use the full path `/usr/lib/vmware-vix/bin/vim-cmd`.
 ---
 
 ## Before you begin
@@ -149,6 +172,18 @@ openssl x509 -in /etc/vmware/ssl/rui.crt -noout -dates -subject -issuer -fingerp
 # issuer=/O=VMware/CN=CA
 ```
 
+
+```text title="Expected output"
+notBefore=May  1 00:00:00 2025 GMT
+notAfter=May  1 00:00:00 2027 GMT
+subject=/CN=esxi-01.example.local
+issuer=/O=VMware/CN=CA
+SHA1 Fingerprint=A3:B2:C1:D4:E5:F6:07:18:29:3A:4B:5C:6D:7E:8F:90:A1:B2:C3:D4
+```
+
+!!! warning "Common errors"
+    **`unable to load certificate`** — Verify the certificate file exists at `/etc/vmware/ssl/rui.crt` and you have read permissions on the ESXi host.
+    **`No such file or directory`** — Ensure you are running the command directly on the ESXi host via SSH, not from a remote system, as the certificate path is local to the ESXi filesystem.
 ### Certificate Modes (vCenter Managed)
 
 vCenter Certificate Authority (VMCA) manages ESXi host certificates automatically. When a host is added to vCenter, VMCA signs its certificate. Certificates are renewed automatically before expiry.
@@ -174,6 +209,21 @@ openssl s_client -connect esxi-01.example.local:443 2>/dev/null | \
   openssl x509 -noout -dates -subject -issuer
 ```
 
+
+```text title="Expected output"
+depth=0 CN = esxi-01.example.local, O = VMware, C = US
+verify error:num=18:self signed certificate
+verify return:1
+notBefore=Jan 15 10:22:33 2024 GMT
+notAfter=Jan 15 10:22:33 2025 GMT
+subject=CN = esxi-01.example.local, O = VMware, C = US
+issuer=CN = esxi-01.example.local, O = VMware, C = US
+```
+
+!!! warning "Common errors"
+    **`connect: Connection refused`** — Verify the ESXi host is reachable and SSH/HTTPS is enabled; check firewall rules allowing port 443 inbound.
+    **`verify error:num=20:unable to get local issuer certificate`** — This is expected for self-signed certificates; if using a CA-signed cert, ensure the full certificate chain is imported into the ESXi certificate store.
+    **`openssl: command not found`** — Install openssl on your management workstation or run the verification command from a Linux host that has openssl available.
 ### Certificate Expiry Monitoring
 
 ```powershell

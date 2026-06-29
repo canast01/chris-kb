@@ -31,6 +31,23 @@ esxcli system syslog reload
 esxcli system syslog config get
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+(no output — command completes silently)
+   Hostname: vrli-prod-01.example.local
+   Port: 514
+   Protocol: udp
+   LogLevel: info
+   LogToFile: true
+   DefaultRotate: 10
+   DefaultSize: 1024
+```
+
+!!! warning "Common errors"
+    **`Error: Unable to resolve hostname vrli-prod-01.example.local`** — Verify the FQDN is correct and that DNS resolution is working on the ESXi host with `nslookup vrli-prod-01.example.local`.
+    **`Error: Connection refused to 192.168.1.50:514`** — Ensure the vRealize Log Insight server is running and listening on UDP port 514 with `netstat -tuln | grep 514` on the VRLI host.
+    **`Error: This command requires root privileges`** — Run the esxcli commands as root or with appropriate sudo permissions on the ESXi host.
 ---
 
 ## NSX-T Syslog Integration
@@ -52,6 +69,30 @@ curl -sk -u 'admin:<password>' -X POST \
   }'
 ```
 
+
+```text title="Expected output"
+{
+  "exporter_id": "exporter-1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p",
+  "server": "vrli-prod-01.example.local",
+  "port": 514,
+  "protocol": "UDP",
+  "exporter_name": "aria-ops-for-logs",
+  "level": "INFO",
+  "facility": "USER",
+  "status": "ACTIVE",
+  "created_time": 1704067200000,
+  "_links": {
+    "self": {
+      "href": "/api/v1/node/services/syslog/exporters/exporter-1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p"
+    }
+  }
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example, but verify NSX Manager certificate is trusted if removing `-k`).
+    **`{"httpStatus":401,"error_code":"UNAUTHENTICATED","module_name":"common-services","error_message":"The credentials were invalid"}`** — Verify the NSX Manager admin password is correct and URL-encode special characters in the password.
+    **`{"httpStatus":400,"error_code":"INVALID_REQUEST","error_message":"Invalid facility value"}`** — Use valid syslog facility values (USER, LOCAL0–LOCAL7, DAEMON, etc.) and verify JSON syntax is valid.
 For NSX Edge nodes, apply the syslog configuration via a transport node profile or per-edge configuration in NSX-T Manager UI:
 ```text
 NSX-T UI → Fabric → Nodes → Edge Transport Nodes → select node → Syslog → Add
@@ -87,6 +128,29 @@ sudo systemctl enable liagentd
 sudo /usr/lib/loginsight-agent/bin/liagent-binary verify
 ```
 
+
+```text title="Expected output"
+Installing VMware Log Insight Agent 8.14.0 (build 21567890)...
+Extracting files to /var/lib/loginsight-agent/
+Creating system user 'liagent'...
+Installation completed successfully.
+Configuration file updated: /var/lib/loginsight-agent/liagent.ini
+Restarting liagentd service...
+liagentd.service restarted successfully.
+liagentd.service enabled for auto-start.
+Verifying agent connectivity...
+Agent version: 8.14.0-21567890
+Connected to: vrli-prod-01.example.local:9543 (cfapi/ssl)
+Status: CONNECTED
+Last heartbeat: 2024-01-15T14:32:18Z
+Disk usage: 45 MB / 200 MB max
+Verification completed successfully.
+```
+
+!!! warning "Common errors"
+    **`./VMware-Log-Insight-Agent-*.bin: Permission denied`** — Run `chmod +x VMware-Log-Insight-Agent-*.bin` before executing the installer.
+    **`[server] hostname=vrli-prod-01.example.local: Name or service not known`** — Verify the VRLI hostname is resolvable by running `nslookup vrli-prod-01.example.local` and update `/var/lib/loginsight-agent/liagent.ini` with the correct IP or FQDN.
+    **`liagentd.service: Unit not found.`** — Ensure the agent installation completed without errors and check `/var/log/loginsight-agent/liagent.log` for installation failures.
 ---
 
 ## Windows Log Forwarding Agent
@@ -158,6 +222,39 @@ curl -sk -u 'admin:<password>' \
   jq '.alerts[] | {name: .name, status: .status, timestamp: .timestamp}'
 ```
 
+
+```text title="Expected output"
+{
+  "name": "vSAN Disk Group Degraded",
+  "status": "active",
+  "timestamp": "2024-01-15T14:32:18.000Z"
+}
+{
+  "name": "ESXi Host Memory Pressure",
+  "status": "active",
+  "timestamp": "2024-01-15T13:47:52.000Z"
+}
+{
+  "name": "Log Storage Capacity Warning",
+  "status": "acknowledged",
+  "timestamp": "2024-01-15T12:15:33.000Z"
+}
+{
+  "name": "Cluster Network Latency Spike",
+  "status": "active",
+  "timestamp": "2024-01-15T11:28:09.000Z"
+}
+{
+  "name": "Database Connection Pool Exhausted",
+  "status": "resolved",
+  "timestamp": "2024-01-15T10:05:41.000Z"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already present) or import the CA certificate into your system's trust store with `update-ca-certificates`.
+    **`jq: parse error: Cannot index string with string "name"`** — Verify the API response structure matches your jq filter by running `curl -sk -u 'admin:<password>' "https://vrli-prod-01.example.local/api/v2/alerts?severity=critical&limit=1" | jq '.'` to inspect the raw JSON.
+    **`curl: (401) Unauthorized`** — Confirm the admin credentials are correct and the user has API access permissions in Aria Operations for Logs.
 ## See also
 
 - [Aria Operations for Logs — How It Works](../how-it-works/)

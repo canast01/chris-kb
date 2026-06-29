@@ -63,6 +63,31 @@ curl -sk -u 'admin:password' \
   "https://<nsx-manager>/policy/api/v1/infra/tier-0s/<t0-id>/locale-services/default/bgp/neighbors/tor-switch-01"
 ```
 
+
+```text title="Expected output"
+{
+  "resource_type": "BgpNeighborConfig",
+  "id": "tor-switch-01",
+  "display_name": "ToR-Switch-01",
+  "neighbor_address": "10.0.0.1",
+  "remote_as_num": "65000",
+  "source_addresses": [
+    "10.0.0.254"
+  ],
+  "bfd_config": {
+    "enabled": false
+  },
+  "_create_time": 1699564823456,
+  "_last_modified_time": 1699564823456,
+  "_system_owned": false,
+  "path": "/infra/tier-0s/T0-PROD-01/locale-services/default/bgp/neighbors/tor-switch-01"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example; ensure NSX manager certificate is trusted or use `-k`).
+    **`{"error_code":401,"error_message":"Unauthorized"}`** — Verify NSX manager credentials and ensure the admin user has API access permissions.
+    **`{"error_code":404,"error_message":"The Tier-0 gateway <t0-id> was not found"}`** — Confirm the Tier-0 gateway ID exists by running `curl -sk -u 'admin:password' https://<nsx-manager>/policy/api/v1/infra/tier-0s` to list available gateways.
 Verify BGP state from Edge CLI:
 
 ```bash
@@ -75,6 +100,32 @@ get bgp neighbor 10.0.0.1 routes
 get bgp neighbor 10.0.0.1 advertised-routes
 ```
 
+
+```text title="Expected output"
+edge-node-01> vrf 0
+edge-node-01(vrf-0)> get bgp neighbor summary
+Peer            V    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down State|PfxRcd
+10.0.0.1        4 65001    1247    1253        0    0    0 00:18:32 Established
+10.0.0.2        4 65002     892     901        0    0    0 00:12:15 Established
+10.0.0.3        4 65003    2104    2108        0    0    0 01:34:22 Established
+10.0.0.4        4 65001    1156    1162        0    0    0 00:09:47 Established
+
+edge-node-01(vrf-0)> get bgp neighbor 10.0.0.1 routes
+Status  Network            NextHop      Metric LocPrf Weight Path
+*>      172.16.0.0/16      10.0.0.1          0    100      0 65001
+*>      172.17.0.0/16      10.0.0.1          0    100      0 65001
+*>      192.168.1.0/24     10.0.0.1          0    100      0 65001
+
+edge-node-01(vrf-0)> get bgp neighbor 10.0.0.1 advertised-routes
+Status  Network            NextHop      Metric LocPrf Weight Path
+*>      10.10.0.0/16       0.0.0.0            0    100  32768
+*>      10.20.0.0/16       0.0.0.0            0    100  32768
+*>      10.30.0.0/24       0.0.0.0            0    100  32768
+```
+
+!!! warning "Common errors"
+    **`% Unknown command`** — Verify the correct vrf ID with `get vrf` and ensure you are using the exact command syntax for your NSX-T version.
+    **`Peer 10.0.0.1 not found`** — Confirm the BGP neighbor IP is configured and the peer relationship is established by checking `get bgp neighbor summary` first.
 ---
 
 ## Active Directory / LDAP Integration
@@ -111,6 +162,45 @@ curl -sk -u 'admin:password' \
   "https://<nsx-manager>/api/v1/aaa/ldap/search"
 ```
 
+
+```text title="Expected output"
+{
+  "vidm_servers": [
+    {
+      "server_address": "vidm.corp.local",
+      "port": 443,
+      "status": "UP",
+      "thumbprint": "a1:b2:c3:d4:e5:f6:7g:8h:9i:0j:1k:2l:3m:4n:5o:6p",
+      "last_heartbeat": "2024-01-15T14:32:18.456Z"
+    }
+  ],
+  "ldap_servers": [
+    {
+      "server_address": "ldap.corp.local",
+      "port": 389,
+      "status": "UP",
+      "bind_dn": "cn=nsx-bind,ou=service-accounts,dc=corp,dc=local"
+    }
+  ]
+}
+{
+  "results": [
+    {
+      "username": "nsxadmin",
+      "full_name": "NSX Administrator",
+      "email": "nsxadmin@corp.local",
+      "distinguished_name": "cn=nsxadmin,ou=users,dc=corp,dc=local"
+    }
+  ],
+  "cursor": "1",
+  "result_count": 1
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the NSX Manager's CA certificate into your system trust store.
+    **`{"error_code": 401, "error_message": "Invalid credentials"}`** — Verify the admin username and password are correct and the user has API access permissions in NSX Manager.
+    **`{"error_code": 400, "error_message": "LDAP search failed: Invalid search query"}`** — Ensure the search_query parameter matches your LDAP directory schema (e.g., use `sAMAccountName=nsxadmin` for Active Directory or `uid=nsxadmin` for OpenLDAP).
 ### Assign Roles to AD Groups
 
 **System → Users and Roles → Role Assignments → Add**
@@ -158,6 +248,34 @@ esxcli network ip interface list | grep vmk
 esxcli network ip interface ipv4 get
 ```
 
+
+```text title="Expected output"
+Name                           Num Ports  Used Ports  Configured Ports  MTU     CDP Status
+vds-prod-01                    256        48          256               1500    Listen
+vds-mgmt-01                    128        12          128               1500    Listen
+
+Name                           Num Ports  Used Ports  Configured Ports  MTU     CDP Status
+vds-prod-01                    256        48          256               1500    Listen
+Uplinks: vmnic0, vmnic1, vmnic2, vmnic3
+vds-mgmt-01                    128        12          128               1500    Listen
+Uplinks: vmnic4, vmnic5
+
+vmk0                           true       true        true              1500    DHCP
+vmk1                           true       true        true              1500    DHCP
+vmk2                           true       true        true              1500    DHCP
+vmk3                           true       true        true              1500    DHCP
+
+Interface  IPv4 Address      Netmask         Broadcast       Address Type
+vmk0       192.168.1.45      255.255.255.0   192.168.1.255   DHCP
+vmk1       10.100.50.12      255.255.255.0   10.100.50.255   DHCP
+vmk2       172.16.10.88      255.255.255.0   172.16.10.255   DHCP
+vmk3       10.200.1.5        255.255.255.0   10.200.1.255    DHCP
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown command or namespace vswitch.dvs.vmware`** — Verify the ESXi version supports DVS commands; older versions may require `esxcli network vswitch standard list` instead.
+    **`Error: Unable to find a matching vmkernel adapter`** — Ensure the TEP vmkernel interface is created and bound to the correct vDS before running the grep filter.
+    **`Error: No IPv4 configuration found for interface vmkX`** — Confirm the vmkernel adapter is properly configured with a static IP or DHCP is enabled on the management network.
 ---
 
 ## Log Forwarding to SIEM
@@ -176,6 +294,25 @@ get service syslog exporters
 set service syslog exporter siem-01 level info protocol UDP server 10.0.0.100 port 514
 ```
 
+
+```text title="Expected output"
+NSX CLI (build 21624528)
+(no output — command completes silently)
+
+Syslog Exporters:
+  Exporter ID: siem-01
+  Level: info
+  Protocol: TLS
+  Server: 10.0.0.100
+  Port: 6514
+  Status: connected
+
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: Exporter siem-01 already exists`** — Use `delete service syslog exporter siem-01` before re-adding, or modify with `set service syslog exporter siem-01` to update existing configuration.
+    **`Error: Connection refused to 10.0.0.100:6514`** — Verify the syslog server is running and listening on the specified port, and that network connectivity exists from NSX Manager/Edge to the syslog server.
 Key log sources to forward:
 
 | Source | Path / Method | Content |

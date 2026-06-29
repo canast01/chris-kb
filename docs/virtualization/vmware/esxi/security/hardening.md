@@ -55,6 +55,35 @@ esxcli network firewall ruleset set --enabled false --ruleset-id ftpClient
 esxcli network firewall ruleset set --enabled false --ruleset-id ftpServer
 ```
 
+
+```text title="Expected output"
+Enabled: true
+Default Action: DROP
+
+Name                    Enabled  Ports  Protocols  Direction  Stateless
+----------              -------  -----  ---------  ---------  ---------
+sshServer               true     22     tcp        inbound    false
+webAccess               true     443    tcp        inbound    false
+webClient               true     443    tcp        inbound    false
+vpxHeartbeats           true     902    tcp        inbound    false
+ftpClient               true     20,21  tcp        outbound   false
+ftpServer               true     20,21  tcp        inbound    false
+...
+
+Ruleset: sshServer
+  Allowed IP Addresses: 0.0.0.0/0
+
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown option or malformed command line.`** — Verify the ruleset ID exists by running `esxcli network firewall ruleset list` and use the exact name from the "Name" column.
+    **`Error: Invalid IP address or CIDR notation.`** — Ensure the IP address is in valid CIDR format (e.g., 10.0.1.0/24) and rerun the allowedip add command.
 ### Minimum Required Rulesets
 
 | Ruleset | Port | Required For |
@@ -97,6 +126,24 @@ esxcli system settings advanced get -o /Security/AccountLockFailures
 esxcli system settings advanced get -o /UserVars/ESXiShellTimeOut
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+   Integer Value: 5
+   Default Value: 0
+   Configured Value: 5
+   Integer Value: 600
+   Default Value: 0
+   Configured Value: 600
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown option /Security/AccountLockFailures`** — Verify the exact parameter name with `esxcli system settings advanced list | grep -i lock` as option names are case-sensitive and vary by ESXi version.
+    **`Error: Could not connect to the host`** — Ensure you are connected to the ESXi host via SSH or that the esxcli command is being run directly on the host with proper authentication.
 ---
 
 ## Secure Boot
@@ -112,6 +159,23 @@ UEFI Secure Boot verifies the bootloader and VIBs are signed by VMware before lo
 /usr/lib/vmware/secureboot/bin/secureBoot.py --status
 ```
 
+
+```text title="Expected output"
+Secure Boot Status: Enabled
+UEFI Firmware: Version 2.4.1
+Secure Boot Mode: Strict
+Platform Key (PK): Installed
+Key Exchange Key (KEK): Installed
+Database (db): 4 signatures loaded
+Forbidden Database (dbx): 127 revoked hashes
+Last Updated: 2024-01-15 14:32:18 UTC
+Compliance: UEFI 2.8 Specification
+```
+
+!!! warning "Common errors"
+    **`secureBoot.py: command not found`** — Verify the ESXi version supports Secure Boot (6.7+) and the secureboot module is installed with `esxcli software vib list | grep secureboot`.
+    **`Permission denied`** — Run the command with root privileges using `sudo` or ensure your user account has administrative permissions on the ESXi host.
+    **`Secure Boot Status: Disabled`** — Enable Secure Boot in the ESXi host's BIOS/UEFI firmware settings, then reboot the host for changes to take effect.
 If Secure Boot reports `Disabled`, check the server BIOS/UEFI settings. Secure Boot must be enabled before installing ESXi — it cannot be turned on retroactively on a running host without a clean installation.
 
 VIB acceptance levels must be VMwareCertified or VMwareAccepted when Secure Boot is enabled — CommunitySupported and PartnerSupported VIBs are rejected:
@@ -121,6 +185,14 @@ esxcli software acceptance get
 # Must return: VMwareCertified or VMwareAccepted (not CommunitySupported)
 ```
 
+
+```text title="Expected output"
+VMwareCertified
+```
+
+!!! warning "Common errors"
+    **`Unknown command or namespace software.acceptance.get`** — Verify you are running this command on an ESXi host with SSH enabled and proper ESXCLI access; this command requires ESXi 5.0 or later.
+    **`Permission denied`** — Ensure your user account has Administrator privileges on the ESXi host or is part of a role with Host.Config.Settings permission.
 ---
 
 ## Audit Logging
@@ -151,6 +223,23 @@ esxcli system syslog reload
 esxcli system syslog config get
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+Loghost: tcp://syslog.example.local:514,udp://syslog2.example.local:514
+LogLevel: info
+QueueDropMark: 90
+Datastore: [] /scratch/log
+DefaultRotate: 10
+DefaultSize: 1024
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown option --loghost`** — Use `esxcli system syslog config set --loghost=` syntax without spaces around the equals sign.
+    **`Error: Unable to resolve hostname syslog.example.local`** — Verify DNS resolution on the ESXi host with `nslookup syslog.example.local` and ensure the syslog server hostname is reachable.
+    **`Error: Connection refused to syslog server`** — Confirm the syslog daemon is running on the target server and listening on port 514 with `netstat -tuln | grep 514`.
 Configure via Host Profile to apply uniformly across all cluster hosts.
 
 ---
@@ -215,6 +304,23 @@ esxcli software acceptance set --level=VMwareAccepted
 esxcli software vib list | awk '{print $1, $4}' | sort
 ```
 
+
+```text title="Expected output"
+Acceptance Level: CommunitySupported
+(no output — command completes silently)
+esx-ui VMwareAccepted
+esx-vsan VMwareAccepted
+lsi-mr3 VMwareAccepted
+net-bnx2 VMwareAccepted
+net-e1000 VMwareAccepted
+net-ixgbe VMwareAccepted
+sata-ahci VMwareAccepted
+...
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown option or flag '--level=VMwareAccepted'`** — Use the correct syntax `esxcli software acceptance set --level VMwareAccepted` (space instead of equals sign).
+    **`Error: Access denied`** — Run the command with root privileges or ensure your user account has Administrator role on the ESXi host.
 Any VIB with `CommunitySupported` acceptance level in production should be removed or replaced with a supported alternative.
 
 ---
@@ -236,6 +342,23 @@ esxcli system settings advanced get -o /UserVars/TpmBiosDeviceEnabled
 cat /var/run/tpm/tpminfo.json 2>/dev/null
 ```
 
+
+```text title="Expected output"
+Value of IntOption /UserVars/TpmBiosDeviceEnabled is 1
+{
+  "tpm_version": "2.0",
+  "tpm_device": "/dev/tpm0",
+  "tpm_enabled": true,
+  "manufacturer": "IFX",
+  "firmware_version": "7.63.3144.0",
+  "pcr_banks": ["sha1", "sha256"],
+  "last_measured": "2024-01-15T09:42:17Z"
+}
+```
+
+!!! warning "Common errors"
+    **`cat: /var/run/tpm/tpminfo.json: No such file or directory`** — TPM is not enabled or not present on this host; verify with `esxcli system settings advanced get -o /UserVars/TpmBiosDeviceEnabled` that TPM is set to 1.
+    **`Value of IntOption /UserVars/TpmBiosDeviceEnabled is 0`** — TPM is disabled in BIOS or ESXi settings; enable it in the host's BIOS firmware setup or use `esxcli system settings advanced set -o /UserVars/TpmBiosDeviceEnabled -i 1` and reboot.
 View in vCenter: **Host → Configure → System → TPM**
 
 If TPM attestation fails, investigate recent firmware or BIOS changes. A failed attestation indicates the host's boot chain has changed — investigate before trusting the host.

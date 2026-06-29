@@ -106,6 +106,25 @@ df -h /storage /dev/sdb
 # Expected: < 80% on storage partition; > 80% = ingestion pauses
 ```
 
+
+```text title="Expected output"
+admin@vRLI-01's password: 
+Last login: Wed Jan 15 14:32:18 2025 from 10.50.12.44
+
+2025-01-15T14:35:22.441Z [main] ERROR com.vmware.loginsight.core.IndexWriter - Failed to write segment to disk: IOException on /storage/index/segment_2025_01_15_14_35
+2025-01-15T14:35:45.892Z [ingestion] WARN  com.vmware.loginsight.ingestion.Parser - Dropped 1247 events due to queue overflow
+2025-01-15T14:36:01.334Z [query] ERROR com.vmware.loginsight.query.Aggregator - Query timeout after 30000ms on datasource prod-cluster
+2025-01-15T14:36:15.221Z [main] ERROR com.vmware.loginsight.core.EventProcessor - Connection refused to syslog relay at 10.50.8.99:514
+
+Filesystem     Size  Used Avail Use% Mounted on
+/storage       500G  425G   75G  85% /storage
+/dev/sdb       200G  180G   20G  90% /dev/sdb
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify SSH key is loaded with `ssh-add` or use password authentication; confirm admin user exists on vRLI appliance.
+    **`tail: cannot open '/var/log/loginsight/runtime.log' for reading: No such file or directory`** — SSH session may have disconnected or log directory path differs; verify correct vRLI IP and check `/var/log/loginsight/` directory exists with `ls -la`.
+    **`Filesystem /storage is 90% full — ingestion paused`** — Clear old log data with vRLI UI (Administration > Retention) or expand storage partition; ingestion resumes automatically once usage drops below 80%.
 ---
 
 ## Step 2 — Check cluster node health
@@ -127,6 +146,43 @@ curl -sk -u 'admin:<password>' \
 # Each node shows: Status, Role (master/worker), Disk, CPU, Memory
 ```
 
+
+```text title="Expected output"
+{
+  "nodes": [
+    {
+      "nodeId": "node-1",
+      "hostname": "vRLI-master-01.corp.local",
+      "ipAddress": "192.168.1.45",
+      "state": "ACTIVE",
+      "role": "MASTER",
+      "version": "8.14.0.21234567"
+    },
+    {
+      "nodeId": "node-2",
+      "hostname": "vRLI-worker-01.corp.local",
+      "ipAddress": "192.168.1.46",
+      "state": "ACTIVE",
+      "role": "WORKER",
+      "version": "8.14.0.21234567"
+    },
+    {
+      "nodeId": "node-3",
+      "hostname": "vRLI-worker-02.corp.local",
+      "ipAddress": "192.168.1.47",
+      "state": "ACTIVE",
+      "role": "WORKER",
+      "version": "8.14.0.21234567"
+    }
+  ]
+}
+EPS: 487293 Disk%: 68.4
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the vRLI CA certificate into your system trust store.
+    **`curl: (7) Failed to connect to <vRLI-IP> port 443: Connection refused`** — Verify the vRLI appliance is running and accessible on port 443 from your host using `telnet <vRLI-IP> 443`.
+    **`{"error":"Unauthorized","statusCode":401}`** — Confirm the admin password is correct and URL-encoded if it contains special characters; test with `curl -sk -u 'admin:password' https://<vRLI-IP>/api/v1/cluster/nodes`.
 ---
 
 ## Step 3 — Check syslog and ingestion
@@ -145,6 +201,22 @@ grep -i "drop\|parse error\|overflow\|reject" /var/log/loginsight/ingestion.log 
 # Problem: "Dropping event" or "parse error" lines with high count
 ```
 
+
+```text title="Expected output"
+tcp        0      0 0.0.0.0:9543           0.0.0.0:*               LISTEN      12847/liagent
+udp        0      0 0.0.0.0:514            0.0.0.0:*               12891/rsyslogd
+tcp        0      0 0.0.0.0:1514           0.0.0.0:*               LISTEN      12847/liagent
+2024-01-15T09:42:33.847Z [ingestion-worker-3] INFO: Processed 1247 events in 2.3s
+2024-01-15T09:42:45.102Z [ingestion-worker-1] Dropping event from 192.168.1.45: buffer overflow on queue-syslog-udp
+2024-01-15T09:42:51.334Z [ingestion-worker-2] Parse error: unrecognized syslog format from 10.20.30.40 — skipping malformed header
+2024-01-15T09:43:02.556Z [ingestion-worker-4] INFO: Processed 892 events in 1.8s
+2024-01-15T09:43:15.778Z [ingestion-worker-1] Dropping event from 192.168.1.50: buffer overflow on queue-syslog-udp
+2024-01-15T09:43:22.441Z [ingestion-worker-3] Parse error: timestamp mismatch on syslog from 172.16.5.12
+```
+
+!!! warning "Common errors"
+    **`Dropping event from <IP>: buffer overflow on queue-syslog-udp`** — Increase the UDP buffer size by running `sysctl -w net.core.rmem_max=134217728` and `sysctl -w net.core.rmem_default=134217728`, then restart rsyslogd.
+    **`Parse error: unrecognized syslog format`** — Verify the source host is sending RFC3164 or RFC5424 compliant syslog format and check the syslog configuration on the source with `cat /etc/rsyslog.conf | grep -A5 "^*.* @"`.
 ---
 
 ## Step 4 — Check Cassandra performance
@@ -169,6 +241,30 @@ nodetool info | grep -i "heap"
 grep -i "error\|warn\|exception" /var/log/loginsight/cassandra/system.log | tail -50
 ```
 
+
+```text title="Expected output"
+admin@vRLI-IP's password: 
+CompactionStats:
+pending tasks: 0
+Active compactions:
+compaction type keyspace table completed total unit progress
+Compaction of each table shows ~0 MB of 0 MB complete
+
+Heap Memory (Used/Max) : 4.27 GB / 8 GB
+Heap Memory (Used/Max) : 4.27 GB / 8 GB
+
+2024-01-15 09:23:14,521 WARN  [ScheduledTasks:1] cassandra.db.ColumnFamilyStore - Compacting large partition for system_auth/roles (1.2 GB)
+2024-01-15 09:18:47,103 WARN  [GossipTasks:1] cassandra.gms.Gossiper - Not marking nodes as down due to local pause detection
+2024-01-15 09:12:33,891 INFO  [main] cassandra.service.CassandraDaemon - Cassandra version: 3.11.10
+2024-01-15 08:56:22,445 WARN  [ReadStage:42] cassandra.db.ReadCommand - Read timeout: 10000ms, received 1 of 3 responses
+2024-01-15 08:45:11,203 WARN  [CompactionExecutor:0] cassandra.db.compaction.CompactionTask - Compaction of /var/lib/cassandra/data/loginsight/events-ka/na-1-big-Data.db produced no output
+2024-01-15 08:32:05,667 ERROR [GossipTasks:2] cassandra.gms.Gossiper - Exception in thread Thread-123
+```
+
+!!! warning "Common errors"
+    **`bash: nodetool: command not found`** — SSH directly to the vRLI appliance and run commands as root or use the full path `/usr/lib/cassandra/bin/nodetool`.
+    **`Connection refused`** — Verify Cassandra is running with `systemctl status cassandra` and that port 7199 is not blocked by firewall rules.
+    **`Permission denied`** — Run the nodetool commands with `sudo` or switch to the cassandra user with `sudo su - cassandra` before executing.
 ---
 
 ## Step 5 — Check agent (liagent) on source hosts
@@ -200,6 +296,42 @@ systemctl restart liagentd
 systemctl status liagentd
 ```
 
+
+```text title="Expected output"
+● liagentd.service - VMware Log Insight Agent
+     Loaded: loaded (/usr/lib/systemd/system/liagentd.service; enabled; vendor preset: enabled)
+     Active: active (running) since Thu 2024-01-18 14:32:15 UTC; 2 days ago
+       PID: 4521
+    Tasks: 8 (limit: 4915)
+   Memory: 127.3M
+   CGroup: /system.slice/liagentd.service
+           └─4521 /usr/lib/vmware/loginsight-agent/liagentd -c /var/lib/loginsight-agent/liagent.ini
+
+2024-01-18 14:32:18 liagentd[4521]: INFO: Agent started successfully
+2024-01-18 14:35:42 liagentd[4521]: INFO: Connected to vRLI server at 192.168.1.105:9543
+2024-01-18 15:12:03 liagentd[4521]: INFO: Heartbeat sent successfully
+
+Connection to 192.168.1.105 9543 port [tcp/*] succeeded!
+
+hostname=192.168.1.105
+port=9543
+proto=cfapi
+ssl=yes
+agentkey=a7f2c9e1-4b8d-11ee-be56-0242ac120002
+loglevel=INFO
+
+● liagentd.service - VMware Log Insight Agent
+     Loaded: loaded (/usr/lib/systemd/system/liagentd.service; enabled; vendor preset: enabled)
+     Active: active (running) since Thu 2024-01-18 14:45:22 UTC; 1s ago
+       PID: 5103
+    Tasks: 8 (limit: 4915)
+   Memory: 98.7M
+```
+
+!!! warning "Common errors"
+    **`nc: connect to 192.168.1.105 port 9543 (tcp) failed: Connection refused`** — Verify vRLI service is running on the target host and port 9543 is not blocked by firewall rules.
+    **`ERROR: SSL handshake failed: certificate verify failed`** — Ensure the vRLI server certificate is valid and trusted, or disable SSL verification in liagent.ini if using self-signed certificates.
+    **`ERROR: Authentication failed: agent key invalid or revoked`** — Regenerate the agent key in vRLI UI and update the agentkey parameter in /var/lib/loginsight-agent/liagent.ini.
 ---
 
 ## Step 6 — Check NTP
@@ -223,6 +355,41 @@ systemctl restart chronyd
 chronyc sources
 ```
 
+
+```text title="Expected output"
+admin@vrli-01.lab.local's password: 
+Last login: Wed Jan 15 14:32:18 2025 from 10.20.50.100
+
+Reference ID    : 91002F (ntp.ubuntu.com)
+Stratum         : 2
+Ref time (UTC)  : Wed Jan 15 14:32:15 2025
+System time     : 0.000087234 seconds fast of NTP time
+Frequency       : 2.341 ppm slow
+Residual freq   : +0.002 ppm
+Skew            : 0.012 ppm
+Root delay      : 0.031250 seconds
+Root dispersion : 0.015625 seconds
+Update interval : 1024.0 seconds
+Leap status     : Normal
+
+MS Name/IP address         Stratum Poll Reach LastRx Last sample
+===============================================================
+^* 10.20.1.50              1      6   377   12    -0.234ms[  -0.234ms] +/-   2.341ms
+^- 10.20.1.51              1      7   377   45    +1.123ms[  +1.123ms] +/-   3.012ms
+^- 91.189.89.198           2      8   377   52    +5.432ms[  +5.432ms] +/-  15.234ms
+^? 169.254.169.123         0      0     0     -      +0.000ms[  +0.000ms] +/-    0.000ms
+
+(no output — command completes silently)
+MS Name/IP address         Stratum Poll Reach LastRx Last sample
+===============================================================
+^* 10.20.1.50              1      6   377    8    -0.156ms[  -0.156ms] +/-   2.341ms
+^- 10.20.1.51              1      7   377   41    +1.087ms[  +1.087ms] +/-   3.012ms
+^- 91.189.89.198           2      8   377   48    +5.398ms[  +5.398ms] +/-  15.234ms
+```
+
+!!! warning "Common errors"
+    **`chronyc: Could not talk to daemon`** — Ensure chronyd service is running with `systemctl status chronyd` and check firewall rules allowing NTP (UDP 123).
+    **`System time : 2.345678 seconds fast of NTP time`** — Restart chronyd with `systemctl restart chronyd` and verify NTP sources are reachable; if drift persists, manually sync with `chronyc makestep`.
 ---
 
 ## Step 7 — Collect VAMI support bundle for VMware SR
@@ -246,6 +413,22 @@ scp admin@<vRLI-IP>:/tmp/support-bundle-*.tar.gz ./
 # - vRLI version: Admin → About
 ```
 
+
+```text title="Expected output"
+admin@vRLI-01's password: 
+Generating support bundle...
+Collecting system logs (this may take several minutes)...
+Collecting application logs...
+Collecting configuration files...
+Compressing bundle...
+Support bundle generated successfully: /tmp/support-bundle-20240115-143022.tar.gz
+Bundle size: 487 MB
+support-bundle-20240115-143022.tar.gz          100%  487MB   8.2MB/s   00:59
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify SSH credentials and that the admin user has SSH access enabled in VAMI (Admin → Access).
+    **`scp: /tmp/support-bundle-*.tar.gz: No such file or directory`** — Confirm the bundle generation completed successfully by checking `/tmp/` directly with `ssh admin@<vRLI-IP> ls -lh /tmp/support-bundle-*.tar.gz`.
 ---
 
 ## Log locations

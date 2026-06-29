@@ -87,6 +87,52 @@ curl -sk https://localhost/api/v2/version
 curl -sk https://localhost/api/v2/cluster/nodes | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+root@vrli-master:~# curl -sk https://localhost/api/v2/version
+{
+  "releaseName": "VMware Aria Operations for Logs",
+  "version": "8.14.0",
+  "buildNumber": "22837513",
+  "buildDate": "2024-01-15T18:42:30Z"
+}
+root@vrli-master:~# curl -sk https://localhost/api/v2/cluster/nodes | python3 -m json.tool
+{
+  "nodes": [
+    {
+      "nodeId": "node-1",
+      "hostname": "vrli-master.corp.local",
+      "ipAddress": "192.168.1.45",
+      "role": "master",
+      "status": "ONLINE",
+      "diskUsage": 67,
+      "memoryUsage": 54
+    },
+    {
+      "nodeId": "node-2",
+      "hostname": "vrli-worker-01.corp.local",
+      "ipAddress": "192.168.1.46",
+      "role": "worker",
+      "status": "ONLINE",
+      "diskUsage": 72,
+      "memoryUsage": 61
+    },
+    {
+      "nodeId": "node-3",
+      "hostname": "vrli-worker-02.corp.local",
+      "ipAddress": "192.168.1.47",
+      "role": "worker",
+      "status": "ONLINE",
+      "diskUsage": 68,
+      "memoryUsage": 58
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to localhost port 443: Connection refused`** — Verify the Aria Logs services are running with `systemctl status` and check that port 443 is listening with `netstat -tlnp | grep 443`.
+    **`command not found: python3`** — Install Python 3 with `apt-get install python3` or use `jq` instead: `curl -sk https://localhost/api/v2/cluster/nodes | jq .`.
 Note the version string and the state of each cluster node.
 
 ### 2. Generate the VAMI support bundle
@@ -112,6 +158,23 @@ ls -lh /var/tmp/loginsight-support-bundle*.zip
 # scp root@<vrli-fqdn>:/var/tmp/loginsight-support-bundle*.zip /tmp/
 ```
 
+
+```text title="Expected output"
+root@vrli-master-01:~# /usr/lib/loginsight/application/bin/loginsight-ls.sh --support-bundle
+Generating support bundle...
+Collecting system logs...
+Collecting application logs...
+Collecting configuration files...
+Compressing bundle...
+Support bundle generated successfully: loginsight-support-bundle-2024-01-15-143022.zip
+root@vrli-master-01:~# ls -lh /var/tmp/loginsight-support-bundle*.zip
+-rw-r--r-- 1 root root 487M Jan 15 14:30 /var/tmp/loginsight-support-bundle-2024-01-15-143022.zip
+```
+
+!!! warning "Common errors"
+    **`/usr/lib/loginsight/application/bin/loginsight-ls.sh: Permission denied`** — Ensure you are logged in as root or use `sudo` to execute the script.
+    **`No such file or directory`** — Verify the vRLI application is installed and the path `/usr/lib/loginsight/application/bin/` exists; reinstall or check installation status if missing.
+    **`/var/tmp/: No space left on device`** — Free up disk space on the node (bundles are typically 400MB–1GB) before regenerating the bundle.
 ### 3. Collect issue-specific logs
 
 | Issue Type | Additional Collection |
@@ -227,6 +290,63 @@ ss -tulnp | grep 514
 tail -100 /var/log/loginsight/runtime.log
 ```
 
+
+```text title="Expected output"
+{
+  "version": "8.14.1",
+  "build": "22053496",
+  "releaseDate": "2024-01-15"
+}
+{
+  "nodes": [
+    {
+      "nodeId": "node-1",
+      "hostname": "aria-master-01.corp.local",
+      "state": "ACTIVE",
+      "role": "MASTER",
+      "ipAddress": "192.168.1.45"
+    },
+    {
+      "nodeId": "node-2",
+      "hostname": "aria-worker-01.corp.local",
+      "state": "ACTIVE",
+      "role": "WORKER",
+      "ipAddress": "192.168.1.46"
+    },
+    {
+      "nodeId": "node-3",
+      "hostname": "aria-worker-02.corp.local",
+      "state": "ACTIVE",
+      "role": "WORKER",
+      "ipAddress": "192.168.1.47"
+    }
+  ]
+}
+2024-01-22 14:32:18 ERROR [Parser] Failed to parse syslog from 10.50.12.8: malformed timestamp
+2024-01-22 14:31:45 WARN [Kafka] Consumer lag detected: 2847 messages behind
+2024-01-22 14:30:12 ERROR [Elasticsearch] Bulk indexing failed: circuit breaker exceeded
+2024-01-22 14:29:33 INFO [Ingestion] Processed 1,245,632 events in last 5 minutes
+
+Datacenter: dc1
+===============
+Status=Up/Down
+|/ State=Normal/Leaving/Joining/Moving
+--  Address          Load       Tokens  Owns (effective)  Host ID
+UN  192.168.1.45     156.82 GB  256     33.3%             a7c2f1e9-4d8b-11ee-b56e-0242ac110002
+UN  192.168.1.46     148.91 GB  256     33.3%             b8d3e2f0-5e9c-12ff-c67f-1353bd221113
+UN  192.168.1.47     151.24 GB  256     33.4%             c9e4f3g1-6f0d-13gg-d78g-2464ce332224
+
+Filesystem     Size  Used Avail Use% Mounted on
+/dev/sda1       50G   12G   38G  24% /
+/dev/sdb1      500G  487G   13G  97% /storage
+/dev/sdc1      100G   45G   55G  45% /var
+
+LISTEN     0      128                    0.0.0.0:514            0.0.0.0:*    users:(("java",pid=4521,fd=89))
+
+2024-01-22 14:33:02 INFO [ClusterCoordinator] Heartbeat received from node-2
+2024-01-22 14:32:58 INFO [ClusterCoordinator] Heartbeat received from node-3
+2024-01-22 14:31:15 WARN [ClusterCoordinator] Node node-2 missed 3 consecutive heartbe
+```
 ---
 
 ## Support SLA Reference

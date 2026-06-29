@@ -69,6 +69,15 @@ curl -sk -H "Authorization: NetworkInsight $TOKEN" \
   "https://vrni.example.local/api/ni/data-sources/vcenters"
 ```
 
+
+```text title="Expected output"
+{"data":[{"id":"datasource-1","name":"vcenter-prod-01.corp.local","ip_address":"10.42.15.88","version":"7.0.3","status":"ACTIVE","last_collection":"2024-01-15T14:32:18Z"},{"id":"datasource-2","name":"vcenter-dr-02.corp.local","ip_address":"10.42.15.89","version":"7.0.3","status":"ACTIVE","last_collection":"2024-01-15T14:31:45Z"},{"id":"datasource-3","name":"vcenter-test-03.corp.local","ip_address":"10.42.15.90","version":"6.7.0","status":"INACTIVE","last_collection":"2024-01-10T09:22:10Z"}],"count":3}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl to skip certificate verification (already present in example, but ensure both curl commands include it).
+    **`{"error":"Invalid credentials","status":401}`** — Verify the username, password, and domain type match the configured authentication backend in Aria Operations for Networks.
+    **`{"error":"Token expired","status":401}`** — Regenerate the token as it has exceeded its TTL; for production use, implement token refresh logic or use API keys instead of session tokens.
 ---
 
 ## Session Management
@@ -99,6 +108,29 @@ sudo update-ca-certificates
 sudo systemctl restart hms
 ```
 
+
+```text title="Expected output"
+ubuntu@vrni.example.local's password: 
+Welcome to Ubuntu 20.04.3 LTS (GNU/Linux 5.4.0-42-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+
+Last login: Mon Jan 15 14:32:18 2024 from 192.168.1.50
+ubuntu@vrni:~$ sudo cp /tmp/corp-root-ca.crt /usr/local/share/ca-certificates/corp-root-ca.crt
+ubuntu@vrni:~$ sudo update-ca-certificates
+Updating certificates in /etc/ssl/certs...
+1 added, 0 removed; 5 kept from previous state.
+Processing triggers for ca-certificates (20230311ubuntu0.20.04.1) ...
+ubuntu@vrni:~$ sudo systemctl restart hms
+ubuntu@vrni:~$
+```
+
+!!! warning "Common errors"
+    **`cp: cannot stat '/tmp/corp-root-ca.crt': No such file or directory`** — Verify the CA certificate file exists on the Platform VM or upload it first using `scp ubuntu@vrni.example.local:/path/to/cert`.
+    **`update-ca-certificates: command not found`** — Install the ca-certificates package with `sudo apt-get install ca-certificates`.
+    **`Failed to restart hms: Unit hms.service not found.`** — Verify the correct service name with `sudo systemctl list-units --type=service | grep -i hms` and use the actual service name.
 ---
 
 ## Token Rotation Policy

@@ -212,6 +212,22 @@ curl -sk -u 'admin:password' \
   "https://<nsx-manager>/api/v1/node/backups/create"
 ```
 
+
+```text title="Expected output"
+{
+  "backup_id": "backup-20240115-143022",
+  "status": "RUNNING",
+  "timestamp": "2024-01-15T14:30:22.456Z",
+  "node": "nsx-manager-01.lab.local",
+  "progress_percentage": 0,
+  "estimated_time_remaining": 180
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example, but verify it's not being stripped by shell escaping).
+    **`{"error_code":401,"error_message":"Invalid credentials"}`** — Verify the NSX Manager admin credentials are correct and the user has API access permissions.
+    **`curl: (7) Failed to connect to <nsx-manager> port 443: Connection refused`** — Confirm the NSX Manager hostname/IP is correct and reachable on port 443, and that the management service is running.
 ## See also
 
 - [NSX — How It Works](../how-it-works/)

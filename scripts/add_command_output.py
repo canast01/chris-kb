@@ -39,7 +39,17 @@ import re
 import sys
 import time
 
-import anthropic
+# Load .env from project root if ANTHROPIC_API_KEY not already set
+if not os.environ.get('ANTHROPIC_API_KEY'):
+    _env = os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env')
+    if os.path.exists(_env):
+        for _line in open(_env):
+            _line = _line.strip()
+            if _line and not _line.startswith('#') and '=' in _line:
+                _k, _v = _line.split('=', 1)
+                os.environ.setdefault(_k.strip(), _v.strip())
+
+import anthropic  # noqa: E402 — must come after env is loaded
 
 MANIFEST_PATH = 'scripts/command_output_manifest.json'
 
@@ -110,10 +120,14 @@ def call_claude(block: str, file_path: str, model: str) -> tuple[str, str]:
     client = anthropic.Anthropic()
     response = client.messages.create(
         model=model,
-        system=SYSTEM_PROMPT,
+        system=[{
+            'type': 'text',
+            'text': SYSTEM_PROMPT,
+            'cache_control': {'type': 'ephemeral'},
+        }],
         messages=[{'role': 'user', 'content': build_user_prompt(block, file_path)}],
         temperature=0.3,
-        max_tokens=600,
+        max_tokens=800,
     )
     raw = response.content[0].text.strip()
     out_m = re.search(r'---OUTPUT---\s*(.*?)(?=---ERRORS---|$)', raw, re.DOTALL)
@@ -234,8 +248,9 @@ def main():
     limit_counter   = [0]
     files_skipped   = 0
 
+    limit = args.limit
     for path in files:
-        if limit > 0 and limit_counter[0] >= (limit := args.limit):
+        if limit > 0 and limit_counter[0] >= limit:
             break
         if args.resume and is_file_done(manifest, path):
             files_skipped += 1

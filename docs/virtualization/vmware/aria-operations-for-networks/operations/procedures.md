@@ -64,6 +64,27 @@ curl -sk -X POST "${PLATFORM}/api/ni/datasources/vcenter" \
   }' | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "id": "datasource-vcenter-prod-001",
+  "nickname": "vCenter-ProdDC",
+  "type": "vcenter",
+  "ip": "vcenter.example.local",
+  "username": "svc-aon@vsphere.local",
+  "collector_id": "collector-001",
+  "enabled": true,
+  "status": "PENDING_VALIDATION",
+  "last_updated": "2024-01-15T09:42:33.847Z",
+  "connection_status": "UNKNOWN",
+  "certificate_valid": false
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the platform's CA certificate into your system trust store.
+    **`{"error": "Invalid token", "code": 401}`** — Verify the TOKEN variable is set correctly and has not expired; regenerate it from the Aria Operations for Networks UI if needed.
+    **`{"error": "Collector not found", "code": 404}`** — Confirm the collector_id "collector-001" exists and is registered in the platform by running a datasource list query first.
 ---
 
 ## Add an NSX-T Data Source
@@ -99,6 +120,28 @@ curl -sk -X POST "${PLATFORM}/api/ni/datasources/nsxt" \
   }' | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "id": "datasource-8f4c2a91-7e3d-4b2c-9a1f-6d8e5c3b2a1f",
+  "nickname": "NSX-T-ProdMgr",
+  "type": "nsxt",
+  "credentials": {
+    "ip": "nsxt-mgr.example.local",
+    "username": "svc-aon-nsxt"
+  },
+  "collector_id": "collector-001",
+  "enabled": true,
+  "status": "PENDING",
+  "last_updated": "2024-01-15T14:32:18Z",
+  "connection_status": "UNKNOWN"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; if still failing, verify PLATFORM variable points to correct HTTPS endpoint).
+    **`{"error": "Invalid token", "code": 401}`** — Ensure TOKEN environment variable contains a valid NetworkInsight API token with datasource creation permissions.
+    **`{"error": "Collector not found", "code": 404}`** — Verify the collector_id "collector-001" exists and is registered in Aria Operations for Networks before creating the datasource.
 ---
 
 ## Add a Physical Switch (NetFlow/IPFIX)
@@ -125,12 +168,42 @@ interface GigabitEthernet0/1
   ip flow egress
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`% Invalid input detected at '^' marker.`** — Verify the collector IP address is in valid dotted-decimal format (e.g., 192.168.1.100) and replace `<collector-ip>` with an actual IP.
+    **`% Interface GigabitEthernet0/1 does not exist`** — Confirm the interface name matches your device's actual interfaces by running `show ip interface brief` and use the correct interface identifier.
 7. Verify flow reception on the Collector:
 
 ```bash
 sudo tcpdump -i eth0 -n udp port 2055 -c 20
 ```
 
+
+```text title="Expected output"
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+14:32:15.847392 IP 192.168.1.105.54821 > 192.168.1.10.2055: UDP, length 1472
+14:32:15.892104 IP 192.168.1.106.54822 > 192.168.1.10.2055: UDP, length 1472
+14:32:16.103847 IP 192.168.1.107.54823 > 192.168.1.10.2055: UDP, length 1456
+14:32:16.245621 IP 192.168.1.105.54824 > 192.168.1.10.2055: UDP, length 1472
+14:32:16.389156 IP 192.168.1.108.54825 > 192.168.1.10.2055: UDP, length 1472
+14:32:16.521843 IP 192.168.1.106.54826 > 192.168.1.10.2055: UDP, length 1464
+14:32:16.634512 IP 192.168.1.109.54827 > 192.168.1.10.2055: UDP, length 1472
+14:32:16.778234 IP 192.168.1.107.54828 > 192.168.1.10.2055: UDP, length 1472
+...
+20 packets captured
+20 packets received by filter
+0 packets dropped by kernel
+```
+
+!!! warning "Common errors"
+    **`tcpdump: eth0: No such device`** — Verify the correct interface name with `ip link show` and replace eth0 with the actual interface (e.g., ens0, enp0s3).
+    **`tcpdump: Permission denied`** — Run the command with `sudo` or add your user to the tcpdump group with `sudo usermod -aG tcpdump $USER`.
+    **`tcpdump: can't parse filter expression: syntax error`** — Check the filter syntax; use quotes around the entire filter expression if it contains special characters.
 **Verify in AON:** Search `flows where source = physical and time_range = "last 15 minutes"` — physical flows should appear within one collection cycle.
 
 ---
@@ -191,6 +264,25 @@ curl -sk -X POST "${PLATFORM}/api/ni/datasources/${DS_ID}/sync" \
   | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "id": "sync-job-8f4a2c91-7e3d-4b1a-9f2e-5d8c3a1b6e4f",
+  "datasourceId": "datasource-vcenter-001",
+  "status": "RUNNING",
+  "startTime": "2024-01-15T14:32:18.456Z",
+  "estimatedCompletionTime": "2024-01-15T14:47:18.456Z",
+  "progress": 0,
+  "syncType": "FULL",
+  "lastSyncTime": "2024-01-15T13:15:42.123Z",
+  "message": "Synchronization initiated for vCenter datasource"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification (already present in example; if error persists, verify `${PLATFORM}` URL is correct).
+    **`curl: (7) Failed to connect to <host>: Connection refused`** — Confirm the Aria Operations for Networks API endpoint is running and accessible at `${PLATFORM}` (default: `https://localhost`).
+    **`jq: parse error: Invalid JSON text at line 1`** — Verify the API returned valid JSON by removing the `python3 -m json.tool` pipe temporarily to inspect raw response; check that `${TOKEN}` is valid and not expired.
 Expected response: `{"status": "sync_triggered"}`.
 
 ---
@@ -228,6 +320,17 @@ for d in json.load(sys.stdin).get('results',[]):
 "
 ```
 
+
+```text title="Expected output"
+WARNING: vSphere-Cluster-01 still assigned to this collector
+WARNING: NSX-Manager-Primary still assigned to this collector
+WARNING: vRealize-Automation still assigned to this collector
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification (already present in the example, but ensure `${PLATFORM}` uses `https://`).
+    **`jq: command not found`** — Install `python3-json` or use the provided Python JSON parser instead of piping to `jq`.
+    **`bash: ${PLATFORM}: unbound variable`** — Export the `PLATFORM` variable before running the script (e.g., `export PLATFORM="https://aria-ops.example.com"`).
 Reassign or remove all listed sources before decommissioning the Collector.
 
 ---
@@ -290,6 +393,36 @@ curl -sk -X PUT "${PLATFORM}/api/ni/groups/applications/${APP_ID}/tiers/${TIER_I
   }' | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "id": "tier-web-001",
+  "name": "web-tier",
+  "application_id": "application-12345",
+  "members": [
+    {
+      "entity_type": "VirtualMachine",
+      "ip": "10.10.1.55",
+      "entity_id": "vm-4521",
+      "hostname": "web-server-01.prod.local"
+    },
+    {
+      "entity_type": "VirtualMachine",
+      "ip": "10.10.1.56",
+      "entity_id": "vm-4522",
+      "hostname": "web-server-02.prod.local"
+    }
+  ],
+  "created_at": "2024-01-15T09:32:18Z",
+  "updated_at": "2024-01-15T14:47:52Z",
+  "member_count": 2
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the platform's CA certificate into your system trust store.
+    **`{"error": "Unauthorized", "message": "Invalid or expired token"}`** — Verify the `${TOKEN}` variable is set correctly and has not expired by checking your authentication credentials.
+    **`{"error": "Not Found", "message": "Application application-12345 not found"}`** — Confirm the `APP_ID` exists in Aria Operations for Networks by listing applications with a GET request to `/api/ni/groups/applications`.
 ---
 
 ## Export Application Map to CSV
@@ -373,6 +506,24 @@ curl -sk -X POST "${PLATFORM}/api/ni/applications/${APP_ID}/security-groups/expo
   | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+NSX DS ID: datasource-nsx-t-prod-01
+{
+  "task_id": "task-export-sg-78a9f2c1",
+  "status": "ACCEPTED",
+  "application_id": "application-12345",
+  "nsx_manager_id": "datasource-nsx-t-prod-01",
+  "created_at": "2024-01-15T14:32:18Z",
+  "estimated_completion": "2024-01-15T14:35:18Z",
+  "message": "Security group export job queued successfully"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command (already present) or import the CA certificate into your system trust store.
+    **`jq: command not found`** — Install python3-json or use `python3 -m json.tool` instead of piping to jq.
+    **`Authorization header missing or invalid`** — Verify `${TOKEN}` variable is set with a valid NetworkInsight API token via `echo $TOKEN`.
 **Post-push validation:** In NSX-T Manager, navigate to Security → Distributed Firewall → locate the new policy section and confirm rules are present and in the correct order.
 
 ---
@@ -536,6 +687,41 @@ curl -sk -X POST "${PLATFORM}/api/ni/compliance/check" \
   }' | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "compliance_id": "compliance-78a9f2e1-4c2b-11ed-bda1-0050569b3d4d",
+  "template": "PCI_DSS",
+  "scope": {
+    "application_id": "application-12345"
+  },
+  "status": "IN_PROGRESS",
+  "created_at": "2024-01-15T09:47:23Z",
+  "results": {
+    "total_checks": 42,
+    "passed": 38,
+    "failed": 4,
+    "warnings": 0
+  },
+  "failed_checks": [
+    {
+      "check_id": "pci_dss_6_2",
+      "description": "Ensure security patches are applied",
+      "severity": "HIGH"
+    },
+    {
+      "check_id": "pci_dss_8_1",
+      "description": "Restrict access to system components",
+      "severity": "MEDIUM"
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification (already present in the example, but ensure it's not removed in production without proper CA setup).
+    **`error: Authorization header missing or invalid`** — Verify the `${TOKEN}` variable is set correctly with `echo $TOKEN` and regenerate the API token if expired.
+    **`jq: command not found`** — Install `python3-json` or use `python3 -m json.tool` as shown; alternatively install `jq` with your package manager if preferred.
 Expected response includes a `job_id`. Poll the job until `status = completed`, then retrieve the report:
 
 ```bash
@@ -546,6 +732,46 @@ curl -sk "${PLATFORM}/api/ni/compliance/check/${JOB_ID}" \
   | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "jobId": "compliance-job-abc123",
+  "status": "COMPLETED",
+  "startTime": "2024-01-15T09:32:14Z",
+  "endTime": "2024-01-15T09:47:22Z",
+  "totalChecks": 247,
+  "passedChecks": 231,
+  "failedChecks": 16,
+  "results": [
+    {
+      "checkId": "SEC-001",
+      "checkName": "VLAN Segmentation",
+      "status": "PASSED",
+      "severity": "HIGH"
+    },
+    {
+      "checkId": "SEC-012",
+      "checkName": "Unused Ports",
+      "status": "FAILED",
+      "severity": "MEDIUM",
+      "affectedDevices": 3
+    },
+    {
+      "checkId": "SEC-018",
+      "checkName": "BGP Authentication",
+      "status": "FAILED",
+      "severity": "HIGH",
+      "affectedDevices": 1
+    }
+  ],
+  "complianceScore": 93.5
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification, or import the platform's CA certificate into your system trust store.
+    **`curl: (7) Failed to connect to <PLATFORM>: Name or service not known`** — Verify the `${PLATFORM}` variable is set correctly (e.g., `export PLATFORM="https://aria-ops.example.com"`) and the host is reachable.
+    **`jq: parse error: Invalid JSON at line 1`** — Ensure the `${TOKEN}` is valid and the API endpoint exists; check the response with `curl -sk "${PLATFORM}/api/ni/compliance/check/${JOB_ID}" -H "Authorization: NetworkInsight ${TOKEN}"` without piping to see the actual error message.
 ---
 
 ## Schedule a Recurring Report
@@ -604,6 +830,15 @@ curl -sk -u 'admin@local:password' \
 # vRNI UI: Settings → Infrastructure → Collectors → verify all show Connected and matching version
 ```
 
+
+```text title="Expected output"
+"6.10.0.1234567"
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the platform's certificate into your CA bundle.
+    **`jq: command not found`** — Install jq with `apt-get install jq` (Debian/Ubuntu) or `yum install jq` (RHEL/CentOS), or pipe to `grep` instead.
+    **`curl: (401) Unauthorized`** — Verify the admin credentials are correct and the user has API access permissions in vRNI.
 - [ ] Platform shows new version in admin UI
 - [ ] All Collector VMs show Connected and same version
 - [ ] Data sources show **Active** status (may take 1 collection cycle, ~10 minutes)
@@ -640,6 +875,25 @@ sudo python /home/ubuntu/registration.py --platform-ip <platform-ip> \
   --platform-username admin@local --platform-password <password>
 ```
 
+
+```text title="Expected output"
+Registering Collector with Aria Operations for Networks...
+Platform IP: 192.168.1.45
+Username: admin@local
+Connecting to platform at https://192.168.1.45:443...
+Authentication successful.
+Retrieving collector configuration...
+Collector UUID: a7f3c2e1-9b4d-47e8-b2f1-6d8c4a9e5f12
+Registering collector node-collector-01...
+Registration completed successfully.
+Collector is now active and ready to collect data.
+Sync interval set to 300 seconds.
+```
+
+!!! warning "Common errors"
+    **`ERROR: Connection refused (111) — Verify the platform IP is correct and the Aria Operations for Networks platform is running and accessible on port 443.`** — Verify the platform IP is correct and the Aria Operations for Networks platform is running and accessible on port 443.
+    **`ERROR: Authentication failed: Invalid credentials`** — Confirm the platform-username and platform-password are correct and the admin@local user exists on the platform.
+    **`ERROR: /home/ubuntu/registration.py: No such file or directory`** — Ensure the registration.py script exists at the specified path on the Collector VM, or provide the correct path to the script.
 4. In the vRNI Platform UI: **Settings → Infrastructure → Collectors** — the new Collector should appear as **Pending Registration**; click **Approve**
 
 ### Step 3 — Assign Data Sources to the Remote Collector

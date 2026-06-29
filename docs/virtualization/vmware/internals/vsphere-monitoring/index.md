@@ -168,6 +168,38 @@ Get-Stat -Entity (Get-VM "web-server-01") \
   -Interval 20 | Select Timestamp, Value
 ```
 
+
+```text title="Expected output"
+# esxtop interactive mode (press 'c' for CPU view)
+ESXTOP for VMware ESXi 7.0.3 build-19482429 — 14:32:15
+GID  NAME                NWLD %USED  %RDY %SYS %WAIT %IDLE
+  1  web-server-01        4   18.5   2.3  0.8  1.2  77.2
+  2  db-primary-03        8   42.1   5.7  1.1  3.2  48.0
+  3  app-cache-02         2    8.9   0.4  0.3  0.1  90.3
+  4  monitoring-vm        1   12.4   1.1  0.5  0.8  85.2
+  5  backup-staging       6   31.2   4.2  0.9  2.1  61.6
+
+# esxtop batch mode output (first 5 lines of /tmp/cpu_stats.csv)
+"GID","NAME","NWLD","%USED","%RDY","%SYS","%WAIT","%IDLE"
+1,"web-server-01",4,18.5,2.3,0.8,1.2,77.2
+1,"web-server-01",4,19.1,2.8,0.9,1.3,75.9
+1,"web-server-01",4,17.8,1.9,0.7,1.1,78.5
+1,"web-server-01",4,20.3,3.1,1.0,1.4,74.2
+...
+
+# PowerCLI output
+Timestamp           Value
+---------           -----
+2024-01-15 14:32:10 1847
+2024-01-15 14:52:10 2156
+2024-01-15 15:12:10 1923
+2024-01-15 15:32:10 2341
+```
+
+!!! warning "Common errors"
+    **`esxtop: command not found`** — Run esxtop directly on an ESXi host via SSH or vSphere Client console, not from a Windows/Linux management station.
+    **`Get-Stat : The term 'Get-Stat' is not recognized`** — Install VMware PowerCLI module with `Install-Module -Name VMware.PowerCLI -Force` and import it via `Import-Module VMware.PowerCLI`.
+    **`Exception calling "AddHours" with "1" argument(s): Object reference not set to an instance of an object.`** — Ensure you are connected to vCenter with `Connect-VIServer -Server vcenter.example.com` before running Get-Stat.
 > **VCP-DCV Exam Note:** **CPU Ready threshold is typically > 10 ms per 20-second interval** (or expressed as > 5% in some older references). CPU Ready is caused by too many vCPUs competing for too few physical cores — common with over-provisioned VMs. The fix is to reduce the number of vCPUs on VMs that don't need them, not to add more hosts. **CPU Co-Stop** is specific to Fault Tolerance VMs — it measures synchronization pauses between primary and secondary VMs.
 
 ---
@@ -207,6 +239,28 @@ Get-Stat -Entity (Get-VMHost "esxi01.corp.local") \
   -Interval 300
 ```
 
+
+```text title="Expected output"
+Loaded plugin 'vsanObserver'
+ESXTOP started — press 'm' for memory view
+GID  NAME             MCTLSZ  SWPWRT  SWPRD  TCHD   NCHD   PSHP   SHPS
+  1  VM-web-01        512.0   0.0     0.0    4096   2048   1024   512
+  2  VM-db-prod       2048.5  128.3   64.1   8192   6144   2560   1280
+  3  VM-app-cache     256.2   0.0     0.0    2048   1024   512    256
+  4  VM-backup        1024.1  256.7   192.4  4096   3072   1536   768
+
+Timestamp                     Entity         Metric                 Value
+---------                     ------         ------                 -----
+2024-01-15 14:32:00 -05:00    esxi01.corp... mem.vmmemctl.average   384.50
+2024-01-15 14:37:00 -05:00    esxi01.corp... mem.vmmemctl.average   412.25
+2024-01-15 14:42:00 -05:00    esxi01.corp... mem.vmmemctl.average   398.75
+2024-01-15 14:47:00 -05:00    esxi01.corp... mem.vmmemctl.average   425.10
+2024-01-15 14:52:00 -05:00    esxi01.corp... mem.vmmemctl.average   441.80
+```
+
+!!! warning "Common errors"
+    **`Connect-VIServer : The underlying connection was closed: Could not establish trust relationship for the SSL/TLS secure channel.`** — Add `-SkipCertificateCheck` parameter or import the vCenter certificate into PowerCLI's certificate store.
+    **`Get-Stat : Cannot bind argument to parameter 'Entity' because it is null.`** — Verify the ESXi hostname matches exactly and the vCenter account has permissions to query that host.
 > **VCP-DCV Exam Note:** Know what each memory metric means and the reclamation order. **Balloon** means the VMkernel is asking guests to return memory. **Swap** means memory is being written to disk — this indicates severe pressure and will cause noticeable VM performance degradation. **Active memory** is the most accurate measure of a VM's true memory need — a VM with 8 GB allocated but only 500 MB active is a candidate for reclamation.
 
 ---
@@ -235,6 +289,28 @@ esxtop
 esxcli storage core device stats get --device naa.xxxxxx
 ```
 
+
+```text title="Expected output"
+# ESXTOP — view disk metrics (press 'u' for storage adapter, 'd' for disk)
+esxtop
+(esxtop interactive terminal interface launches — real-time monitoring display with columns: DAVG, KAVG, GAVG, CMDS/s, MB/s)
+
+# esxcli — check storage path latency
+esxcli storage core device stats get --device naa.6001405abcdef1234567890123456789
+Device naa.6001405abcdef1234567890123456789 Statistics:
+  Read Commands: 45821
+  Write Commands: 12340
+  Read Bytes: 2147483648
+  Write Bytes: 536870912
+  Read Latency (us): 1240
+  Write Latency (us): 890
+  IOPS: 1523
+  Throughput (MB/s): 287.4
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown device naa.xxxxxx`** — Replace `naa.xxxxxx` with the actual NAA identifier from `esxcli storage core device list`.
+    **`Error: esxtop: command not found`** — Ensure you are connected directly to an ESXi host via SSH or console; esxtop only runs on ESXi, not vCenter.
 ### Network Metrics
 
 | Metric | Description | Concern |
@@ -290,6 +366,40 @@ grep "web-server-01" /var/log/hostd.log | tail -30
 esxcli system process list | grep -i log
 ```
 
+
+```text title="Expected output"
+2024-01-15T14:32:18.045Z [7F4A2C1B] HA: Received heartbeat from host-02.lab.local (10.20.30.45)
+2024-01-15T14:32:22.112Z [7F4A2C1C] HA: Master election in progress, candidate host-01.lab.local
+2024-01-15T14:32:25.891Z [7F4A2C1D] HA: Cluster reconfiguration completed, 4 hosts active
+2024-01-15T14:32:31.456Z [7F4A2C1E] HA: Heartbeat timeout from host-03.lab.local, isolation detected
+2024-01-15T14:32:35.223Z [7F4A2C1F] HA: VM restart initiated for prod-db-01 on host-01.lab.local
+^C
+
+2024-01-15T10:15:42.123Z cpu0:2048)WARNING: NFS: NFS server 10.50.60.10 not responding
+2024-01-15T10:16:01.456Z cpu1:2049)ERROR: ScsiDeviceIO: Command 0x28 failed: H:0x0 D:0x2 P:0x0
+2024-01-15T10:16:15.789Z cpu2:2050)WARNING: VMFS: Heartbeat failed on volume datastore-03
+2024-01-15T10:16:28.234Z cpu0:2051)ERROR: PSA: Path failover initiated for device naa.60000000000000001
+2024-01-15T10:16:42.567Z cpu3:2052)FAIL: iSCSI session timeout to target iqn.2020-01.local:storage-01
+...
+
+2024-01-15T09:45:12.234Z [hostd.pl] web-server-01: VM power on initiated by admin@vsphere.local
+2024-01-15T09:45:15.567Z [hostd.pl] web-server-01: CPU reservation 4000 MHz allocated
+2024-01-15T09:45:18.891Z [hostd.pl] web-server-01: Memory reservation 8192 MB allocated
+2024-01-15T09:45:22.123Z [hostd.pl] web-server-01: vNIC 0 connected to vSwitch0
+2024-01-15T09:45:25.456Z [hostd.pl] web-server-01: VM power on completed successfully
+...
+
+   PID    Name                                   World ID Busy CPU Sys CPU
+  2048    vmkernel                                    1    0.0%   0.0%
+  2156    hostd                                    2048    1.2%   0.8%
+  2234    vpxa                                     2049    0.5%   0.3%
+  2312    syslog                                   2050    0.1%   0.0%
+  2401    vobd                                     2051    0.3%   0.2%
+  2489    wsman                                    2052    0.2%   0.1%
+```
+
+!!! warning "Common errors"
+    **`tail
 ---
 
 ## Log Bundle Generation
@@ -314,6 +424,30 @@ ssh root@esxi01.corp.local "vm-support" && \
   scp root@esxi01.corp.local:/var/tmp/esx-*.tgz .
 ```
 
+
+```text title="Expected output"
+Generating support bundle, this may take a few minutes...
+Collecting system logs...
+Collecting system state information...
+Collecting sar data...
+Collecting disk information...
+Collecting network information...
+Support bundle completed successfully.
+Bundle location: /var/tmp/esx-esxi01-2024-01-15-14-32-45.tgz
+Bundle size: 287 MB
+
+diagnostic.coreMaxSize = "110"
+diagnostic.coreMaxFiles = "100"
+diagnostic.enableFencingClockHosts = "true"
+diagnostic.heapMaxSize = "512"
+
+esx-esxi01-2024-01-15-14-32-45.tgz                    100%  287MB   4.2MB/s   01:08
+```
+
+!!! warning "Common errors"
+    **`vm-support: error: insufficient space on /var/tmp`** — Specify an alternate writable datastore path with `-w /vmfs/volumes/datastore_name/` or free space on the host.
+    **`Permission denied (publickey,password).`** — Ensure SSH is enabled on the ESXi host and root credentials are correct; verify firewall rules allow port 22 inbound.
+    **`vim-cmd: Unknown command`** — Run the command from the ESXi shell directly (not from vCenter); if using vCenter, use `esxcli system syslog config get` instead.
 ### VCSA Support Bundle
 
 ```bash
@@ -330,6 +464,30 @@ vc-support.sh
 # Output: /var/tmp/vc-support-*.tgz
 ```
 
+
+```text title="Expected output"
+% curl -X POST \
+  "https://vcenter.corp.local/api/vcenter/support-bundle" \
+  -H "vmware-api-session-id: 52b20672-3dcc-4a00-8000-000000000001"
+{
+  "value": "support-bundle-vcenter.corp.local-2024.01.15-14.32.45.tgz",
+  "status": "RUNNING"
+}
+
+% vc-support.sh
+Generating support bundle for vCenter Server 8.0.1.00000...
+Collecting system logs...
+Collecting vCenter services status...
+Collecting database information...
+Collecting network configuration...
+Support bundle created: /var/tmp/vc-support-2024.01.15-14.32.45.tgz
+Bundle size: 487 MB
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or use the FQDN that matches the certificate CN.
+    **`HTTP/1.1 401 Unauthorized`** — Ensure the session token is valid and not expired; obtain a fresh token via `/api/session` endpoint with valid vCenter credentials.
+    **`vc-support.sh: command not found`** — Run the command from the vCenter shell (SSH to VCSA) or use the full path `/usr/lib/vmware-vmafd/bin/vc-support.sh`.
 ---
 
 ## vSphere Cluster Services (vCLS) Retreat Mode
@@ -360,6 +518,14 @@ $spec = New-Object VMware.Vim.ClusterConfigSpecEx
 # retreatMode is set via cluster configuration API
 ```
 
+
+```text title="Expected output"
+domain-c123
+```
+
+!!! warning "Common errors"
+    **`Get-Cluster : The term 'Get-Cluster' is not recognized as the name of a cmdlet, function, script file, or operable program.`** — Load the VMware PowerCLI module first with `Import-Module VMware.PowerCLI`.
+    **`You do not have permission to perform this operation.`** — Ensure your vCenter user account has Administrator or Cluster Administrator role on the target cluster.
 **Impact of retreat mode:**
 - vCLS agent VMs are powered off and removed
 - **DRS enters manual mode** — automated load balancing stops
@@ -405,6 +571,21 @@ curl -sk https://sc-collector.vmware.com/ping
 (Get-View ServiceInstance).Content.Health
 ```
 
+
+```text title="Expected output"
+{"status":"pong","timestamp":"2024-01-15T09:42:33Z","collector_id":"sc-collector-prod-us-west-2","version":"8.7.2"}
+
+HealthSystemManager
+Key                 Value
+---                 -----
+systemHealthManager HealthSystemManager
+numericSensorInfo   {NumericSensorInfo, NumericSensorInfo, NumericSensorInfo...}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already present) or import the collector's CA certificate into your system trust store.
+    **`The term 'Get-View' is not recognized as the name of a cmdlet, function, script file, or operable program.`** — Load the VMware.VimAutomation.Core PowerCLI module with `Import-Module VMware.VimAutomation.Core` before running Get-View commands.
+    **`Unable to connect to the remote server`** — Verify the Skyline Collector appliance is running and accessible on the network; check firewall rules and DNS resolution for sc-collector.vmware.com.
 ### Relationship to Aria Operations
 
 VMware Aria Operations (formerly vRealize Operations) and Skyline serve different purposes:
@@ -443,6 +624,27 @@ esxtop -R /tmp/perf_data.csv
 esxtop   # then press 'e' to expand, search by VM name
 ```
 
+
+```text title="Expected output"
+Batch mode output (esxtop -b -d 2 -n 30 > /tmp/perf_data.csv):
+(no output — command completes silently)
+
+Replay mode output (esxtop -R /tmp/perf_data.csv):
+ESXTOP REPLAY MODE
+Replaying from: /tmp/perf_data.csv
+Sample 1 of 30 (timestamp: 2024-01-15T14:32:45Z)
+  CPU%USED: 18.5  MEM%USED: 62.3  DISK RD: 1245 MB/s  DISK WR: 342 MB/s
+  VM: prod-web-01  CPU: 12.3%  MEM: 4096 MB  READY: 2.1%
+  VM: prod-db-02   CPU: 5.2%   MEM: 8192 MB  READY: 0.8%
+  VM: test-app-03  CPU: 0.9%   MEM: 2048 MB  READY: 0.1%
+Sample 2 of 30 (timestamp: 2024-01-15T14:32:47Z)
+  CPU%USED: 19.1  MEM%USED: 62.5  DISK RD: 1267 MB/s  DISK WR: 358 MB/s
+```
+
+!!! warning "Common errors"
+    **`Error: Cannot open batch file /tmp/perf_data.csv`** — Verify the batch file exists and was created successfully with `ls -la /tmp/perf_data.csv`.
+    **`Error: esxtop: command not found`** — Run esxtop directly on an ESXi host via SSH or vSphere console, not from a remote management station.
+    **`Error: Permission denied writing to /tmp/perf_data.csv`** — Ensure the user running esxtop has write permissions to /tmp or specify an alternative writable directory.
 ### RESXTOP
 
 RESXTOP is ESXTOP accessed remotely without SSH, using the vSphere CLI. It connects to a host via the vSphere API and presents the same interface as ESXTOP.
@@ -455,6 +657,32 @@ resxtop --server esxi01.corp.local --username root
 resxtop --server esxi01.corp.local --batch output.csv --samples 30 --interval 5
 ```
 
+
+```text title="Expected output"
+Connected to esxi01.corp.local
+Authenticating as root...
+Authentication successful.
+
+RESXTOP 7.0.3 build-19482429
+Press 'q' to quit, 'h' for help
+
+   PCPU USED(%): 12.45  PCPU RUN QUEUE: 2.3
+   MEMORY USAGE(%): 68.92  SWAP USED(MB): 0
+   DISK READ(MB/s): 45.23  DISK WRITE(MB/s): 12.67
+   NET RECV(Mbps): 234.5  NET XMIT(Mbps): 89.3
+
+Sample 1/30 collected at 2024-01-15 14:32:18
+Sample 2/30 collected at 2024-01-15 14:32:23
+Sample 3/30 collected at 2024-01-15 14:32:28
+...
+Sample 30/30 collected at 2024-01-15 14:34:13
+Data written to output.csv
+```
+
+!!! warning "Common errors"
+    **`Error: Unable to connect to host esxi01.corp.local on port 443`** — Verify the ESXi hostname is resolvable and accessible, and check firewall rules for port 443.
+    **`Error: Authentication failed for user root`** — Confirm the root password is correct and the account is not locked; use `--password` flag or enter interactively when prompted.
+    **`Error: resxtop: command not found`** — Install the vSphere CLI package (e.g., `apt-get install vmware-vsphere-cli` on Linux or download from VMware) and ensure it is in your PATH.
 ### PowerCLI Get-Stat
 
 ```bash
@@ -476,6 +704,33 @@ Get-Stat -Entity (Get-Datastore "vSAN-Datastore") \
   -Start (Get-Date).AddHours(-4) -Interval 300
 ```
 
+
+```text title="Expected output"
+Count             : 180
+Average           : 1247.33
+Maximum           : 8934
+
+EntityId                             Timestamp            Value
+--------                             ---------            -----
+HostSystem-host-42                   2024-01-15 14:32:00  2847.5
+HostSystem-host-38                   2024-01-15 14:27:00  1923.2
+HostSystem-host-41                   2024-01-15 14:22:00  1456.8
+HostSystem-host-39                   2024-01-15 14:17:00   892.3
+HostSystem-host-40                   2024-01-15 14:12:00   445.1
+
+Timestamp            Value
+---------            -----
+2024-01-15 14:45:30  3.847
+2024-01-15 14:40:30  3.621
+2024-01-15 14:35:30  2.934
+2024-01-15 14:30:30  2.156
+2024-01-15 14:25:30  1.823
+```
+
+!!! warning "Common errors"
+    **`Get-VM : The term 'Get-VM' is not recognized`** — Load the VMware PowerCLI module with `Import-Module VMware.VimAutomation.Core` before running these commands.
+    **`You are not currently connected to any vCenter servers`** — Connect to vCenter first using `Connect-VIServer -Server <vcenter-fqdn>` with appropriate credentials.
+    **`Get-Stat : A parameter cannot be found that matches parameter name 'Interval'`** — Use `-IntervalSecs` instead of `-Interval` for the time period in seconds.
 ### Key Metrics Summary Table
 
 | Metric | Tool | Threshold | Action If Exceeded |

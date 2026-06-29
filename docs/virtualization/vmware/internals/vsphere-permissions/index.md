@@ -47,6 +47,32 @@ vCenter SSO can authenticate users from multiple identity sources simultaneously
 # GET https://vcenter/api/vcenter/identity/providers
 ```
 
+
+```text title="Expected output"
+Configuring identity sources for vCenter Server...
+Identity sources configured:
+  Name: vsphere.local
+  Type: LOCAL_OS
+  Domain Name: vsphere.local
+  Alias: vsphere.local
+  Authentication Type: PASSWORD
+  Friendly Name: vsphere.local
+  
+  Name: LDAP-PROD
+  Type: LDAP
+  Domain Name: corp.example.com
+  Alias: corp.example.com
+  Base DN: cn=users,dc=corp,dc=example,dc=com
+  Primary URL: ldap://ldap-01.corp.example.com:389
+  Secondary URL: ldap://ldap-02.corp.example.com:389
+  
+Operation completed successfully.
+```
+
+!!! warning "Common errors"
+    **`Error: Unable to connect to VMware Directory Service`** — Ensure the vCenter Server service is running with `systemctl status vmware-vmafd` and check network connectivity to localhost:389.
+    **`Error: Authentication failed for user 'administrator@vsphere.local'`** — Verify the password is correct and the account has not been locked; reset via `dir-cli user reset-password` if needed.
+    **`Error: dir-cli: command not found`** — Confirm you are running this command on the vCenter Server appliance itself, not a remote client; SSH directly to the vCenter FQDN or IP.
 **LDAP binding account best practice:**
 
 - Create a dedicated read-only AD service account (e.g., `svc-vcenter-bind`)
@@ -289,6 +315,35 @@ Solution users are machine accounts representing vCenter services (vpxd, vsphere
 /usr/lib/vmware-vmca/bin/certificate-manager
 ```
 
+
+```text title="Expected output"
+Searching for entries in directory cn=Builtin,cn=Users,dc=vsphere,dc=local
+cn=vpxd:5e3cb8f2-1a4c-4a5e-9b2c-8d7f1e2a3b4c,cn=ServiceUsers,cn=Builtin,cn=Users,dc=vsphere,dc=local
+cn=vpxd-extension:7f2d9e1b-5c3a-4d8e-9f1a-2b3c4d5e6f7g,cn=ServiceUsers,cn=Builtin,cn=Users,dc=vsphere,dc=local
+cn=vsan:3a1b2c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d,cn=ServiceUsers,cn=Builtin,cn=Users,dc=vsphere,dc=local
+cn=wcp:9f8e7d6c-5b4a-3c2d-1e0f-a1b2c3d4e5f6,cn=ServiceUsers,cn=Builtin,cn=Users,dc=vsphere,dc=local
+
+notBefore=Jan 15 08:32:14 2023 GMT
+notAfter=Jan 15 08:32:14 2026 GMT
+
+vCenter Certificate Manager
+
+1. Replace Machine SSL Certificate
+2. Replace VMCA Root Certificate
+3. Replace Solution User Certificates
+4. Replace Machine SSL Certificate with Custom Certificate
+5. Regenerate a Self-Signed Machine SSL Certificate
+6. View Certificate Details
+7. Fix Certificate Expiration Issues
+8. Exit
+
+Select an option [1 to 8]:
+```
+
+!!! warning "Common errors"
+    **`Authentication failed for user administrator@vsphere.local`** — Verify the vCenter password is correct and the user account is not locked by running `dir-cli user find --name administrator@vsphere.local`.
+    **`Error: Could not connect to VMware Certificate Store`** — Ensure the vmafd and vmca services are running with `systemctl status vmware-vmafd vmware-vmca` and restart if needed.
+    **`certificate-manager: command not found`** — Verify you are running the command as root on the VCSA appliance itself, not a remote system, and check that `/usr/lib/vmware-vmca/bin/` exists.
 **Certificate expiry is a common production incident.** Solution user certificates expire after 2 years by default in some vCenter versions. When they expire, vCenter services cannot communicate internally — symptoms include grey hosts, missing datastores in vCenter UI, and API authentication failures.
 
 ### Service Accounts for Automation and Backup
@@ -387,6 +442,23 @@ Get-VIEvent -MaxSamples 1000 -Type UserLoginSessionEvent, `
   Sort-Object CreatedTime -Descending
 ```
 
+
+```text title="Expected output"
+CreatedTime          UserName                    FullFormattedMessage
+-----------          --------                    --------------------
+2024-01-15 14:32:18  CORP\jsmith                 User jsmith@corp.local logged in
+2024-01-15 13:47:05  CORP\automation-svc         Permission added: User CORP\automation-svc granted Virtual Machine.Interact.PowerOn on VM-Prod-Web-01
+2024-01-14 22:15:43  CORP\dchen                  User dchen@corp.local logged out
+2024-01-14 19:28:12  CORP\infra-admin            Permission updated: Role changed from ReadOnly to Administrator on Cluster-East
+2024-01-13 11:04:27  CORP\jsmith                 Permission removed: User CORP\jsmith revoked Datastore.Browse on datastore-nfs-01
+2024-01-12 16:55:33  CORP\automation-svc         User automation-svc@corp.local logged in
+2024-01-11 09:12:44  CORP\infra-admin            Permission added: User CORP\infra-admin granted Host.Config.Maintenance on esx-prod-07.corp.local
+```
+
+!!! warning "Common errors"
+    **`Get-VIEvent : The term 'Get-VIEvent' is not recognized as the name of a cmdlet, function, script file, or operable program.`** — Import the VMware.VimAutomation.Core module with `Import-Module VMware.VimAutomation.Core` before running the command.
+    **`You are not currently connected to any servers. Please connect to at least one server before running this command.`** — Connect to vCenter first using `Connect-VIServer -Server vcenter.corp.local -Credential (Get-Credential)`.
+    **`The property "FullFormattedMessage" cannot be found on this object. Verify that the property exists.`** — Use `Get-VIEvent -MaxSamples 10 | Select-Object * | Format-List` to verify available properties for your vSphere version.
 ### Quarterly Permission Audit Checklist
 
 ```text

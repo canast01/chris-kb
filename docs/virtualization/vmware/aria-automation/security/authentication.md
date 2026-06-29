@@ -36,6 +36,15 @@ TOKEN=$(curl -sk -X POST \
   jq -r '.token')
 ```
 
+
+```text title="Expected output"
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdmMudnJhQGNvcnAubG9jYWwiLCJpc3MiOiJjc3AtZ2F0ZXdheSIsImV4cCI6MTcwOTMxNjgwMCwiaWF0IjoxNzA5MzAwNDAwLCJqdGkiOiI0ZjU2YTdjMi1lZTM5LTQyYzAtOWY3ZC1hYzU4ZjM5ZDJlNDMifQ.kX9mZ2pL5qR8vN3wY7jK4hB6cD9eF2gT1sU5xW8yZ0a
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl (already present) or import the CA certificate into your system trust store with `update-ca-certificates`.
+    **`jq: error (at <stdin>:1): Cannot index null with string "token"`** — Verify credentials are correct and the CSP gateway is responding; check the actual response with `curl -sk ... | jq '.'` to see the error message.
+    **`command not found: jq`** — Install jq with `apt-get install jq` (Debian/Ubuntu) or `yum install jq` (RHEL/CentOS).
 **Token validity:** 8 hours by default. For long-running scripts, implement token refresh logic:
 
 ```bash
@@ -47,6 +56,15 @@ TOKEN=$(curl -sk -X POST \
   jq -r '.token')
 ```
 
+
+```text title="Expected output"
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzdmMtdnJhLWFwaSIsImlhdCI6MTcwOTMxMjAwMCwiZXhwIjoxNzA5MzMzNjAwLCJpc3MiOiJodHRwczovL3ZyYS1wcm9kLTAxLmV4YW1wbGUubG9jYWwifQ.kR9mN2pQxL8vZ5jW3tY6aB4cD7eF9gH0iJ1kL2mN3oP
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl (already present) or import the vRA certificate into your system CA bundle with `curl-config --ca-bundle`.
+    **`jq: parse error: Cannot index string with string "token"`** — Verify the API response is valid JSON and the login credentials are correct; check vRA gateway logs with `tail -f /var/log/vra/gateway.log`.
+    **`command not found: jq`** — Install jq with `apt-get install jq` (Debian/Ubuntu) or `yum install jq` (RHEL/CentOS).
 ---
 
 ## API Service Account
@@ -88,6 +106,21 @@ requests.get("https://vra-prod-01.example.local/iaas/api/zones",
              headers={"Authorization": f"Bearer {token}"},
              verify="/etc/ssl/certs/ca-certificates.crt")
 ```
+
+```text title="Expected output"
+cp: cannot stat 'internal-ca.pem': No such file or directory
+(Assuming file exists, cp completes silently)
+Updating certificates in /etc/ssl/certs...
+rehash: warning: skipping ca-certificates.crt, it is not a certificate or crl
+Processing triggers for ca-certificates (20230311) ...
+update-ca-certificates: 1 added, 0 removed; 0 removed unlisted.
+(Python script runs silently if successful; returns HTTP 200 response with zone data)
+```
+
+!!! warning "Common errors"
+    **`cp: cannot stat 'internal-ca.pem': No such file or directory`** — Verify the CA certificate file path is correct and exists in the current working directory, or provide the full absolute path.
+    **`requests.exceptions.SSLError: [SSL: CERTIFICATE_VERIFY_FAILED]`** — Run `update-ca-certificates` with sudo and ensure the certificate was copied to `/usr/local/share/ca-certificates/` with a `.crt` extension before updating.
+    **`requests.exceptions.ConnectionError: HTTPSConnectionPool(host='vra-prod-01.example.local')`** — Verify the Aria Automation hostname resolves correctly and is reachable from the client, and confirm the token has not expired.
 ---
 
 ## Related Reference

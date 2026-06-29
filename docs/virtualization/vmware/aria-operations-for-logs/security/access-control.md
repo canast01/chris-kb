@@ -79,6 +79,21 @@ curl -sk -u 'svc-vrli-api:<password>' \
 # Expected: {"version": "8.x.y.zzz", ...}
 ```
 
+
+```text title="Expected output"
+{
+  "version": "8.14.2.23456789",
+  "buildNumber": "23456789",
+  "productName": "VMware Aria Operations for Logs",
+  "releaseDate": "2024-01-15T00:00:00Z",
+  "buildTimestamp": 1705276800000
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already present in example) or import the CA certificate into your system trust store.
+    **`curl: (7) Failed to connect to vrli-prod-01.example.local port 443: Connection refused`** — Verify the VRLI hostname/IP is correct, the service is running (`systemctl status vrli` on the appliance), and network connectivity exists.
+    **`{"error":"Unauthorized","statusCode":401}`** — Confirm the password is correct and the service account `svc-vrli-api` exists; reset credentials in VRLI Administration > Users if needed.
 For service accounts: assign the minimum required role — use the `User` role for scripts that only query logs; use the `Admin` role for scripts that create or modify alert definitions.
 
 ---
@@ -96,6 +111,23 @@ grep -i "admin\|user\|alert\|content" /var/log/loginsight/runtime.log | \
   grep -i "create\|update\|delete" | tail -100
 ```
 
+
+```text title="Expected output"
+2024-01-15 09:23:47.123 [INFO] User 'admin' authenticated successfully from 192.168.1.45
+2024-01-15 09:24:12.456 [INFO] User 'svc_monitor' login attempt failed - invalid credentials
+2024-01-15 09:25:33.789 [INFO] User 'analyst01' authenticated successfully from 10.50.22.18
+2024-01-15 09:26:01.234 [INFO] User 'admin' logout event recorded
+2024-01-15 09:27:15.567 [INFO] Alert 'CPU_THRESHOLD' created by user 'admin'
+2024-01-15 09:28:42.890 [INFO] User 'readonly_user' authentication failed - account locked
+2024-01-15 09:29:55.123 [INFO] Content pack 'VMware-Default' updated by 'admin'
+2024-01-15 09:31:08.456 [INFO] User 'analyst02' authenticated successfully from 172.16.5.33
+2024-01-15 09:32:19.789 [INFO] Alert 'MEMORY_SPIKE' deleted by user 'admin'
+2024-01-15 09:33:44.012 [INFO] User 'svc_monitor' authenticated successfully from 10.50.22.19
+```
+
+!!! warning "Common errors"
+    **`grep: /var/log/loginsight/runtime.log: No such file or directory`** — Verify the Aria Operations for Logs service is running with `systemctl status loginsight` and confirm the correct log path for your deployment version.
+    **`grep: /var/log/loginsight/runtime.log: Permission denied`** — Run the command with `sudo` or ensure your user is in the `loginsight` group with `groups $USER`.
 Forward these logs to a SIEM or dedicated audit log store by configuring the appliance's syslog output:
 
 ```bash
@@ -104,6 +136,14 @@ echo '*.* @@siem.example.local:514' > /etc/rsyslog.d/vrli-audit.conf
 systemctl restart rsyslog
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Permission denied`** — Run the commands with `sudo` or as the root user.
+    **`Unit rsyslog.service not found.`** — Verify rsyslog is installed with `apt install rsyslog` (Debian/Ubuntu) or `yum install rsyslog` (RHEL/CentOS), then retry the restart.
 ## See also
 
 - [Aria Ops for Logs — Authentication](../authentication/)

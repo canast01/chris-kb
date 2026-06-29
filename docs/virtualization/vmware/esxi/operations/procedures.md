@@ -294,6 +294,14 @@ After a rescan the volume usually auto-mounts. If it does not:
 esxcli storage filesystem mount --uuid <datastore-uuid>
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: The object has already been deleted or has not been completely created.`** — Verify the datastore UUID exists and is not in a corrupted state by running `esxcli storage filesystem list`.
+    **`Error: Unable to mount filesystem. Permission denied.`** — Ensure you are running the command as root or with appropriate vSphere privileges on the ESXi host.
 ---
 
 ## Enable Lockdown Mode
@@ -386,6 +394,17 @@ Rotate the root password after any personnel change, as part of a quarterly cred
 passwd root
 ```
 
+
+```text title="Expected output"
+Changing password for user root.
+New password: 
+Retype new password: 
+passwd: password updated successfully
+```
+
+!!! warning "Common errors"
+    **`passwd: Authentication token manipulation error`** — Ensure the ESXi host filesystem is not in read-only mode; reboot if necessary.
+    **`passwd: Permission denied`** — Run the command with appropriate privileges or directly on the ESXi console (SSH as root or via DCUI).
 Enter the new password twice when prompted. ESXi enforces password complexity — minimum 7 characters with a mix of character classes.
 
 **Via PowerCLI (requires existing vCenter session):**
@@ -590,6 +609,25 @@ esxcli system ntp get
 ntpq -p    # run from ESXi shell; shows stratum and offset
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+(no output — command completes silently)
+NTP Service: Running
+Sync: Yes
+Servers: ntp1.example.local, ntp2.example.local
+Poll Interval: 1024 seconds
+     remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
+*ntp1.example.lo 10.0.1.50        2 u   64 1024  377   12.345   -2.134   1.892
++ntp2.example.lo 10.0.1.51        2 u  128 1024  377   14.221    1.456   2.103
+-time.google.com 216.239.35.0     1 u  512 1024  377   45.678   18.902   5.234
+```
+
+!!! warning "Common errors"
+    **`Could not set NTP servers: Unable to resolve hostname ntp1.example.local`** — Verify DNS resolution on the ESXi host with `nslookup ntp1.example.local` and ensure the NTP server hostname is reachable.
+    **`NTP Service: Stopped`** — Run `esxcli system ntp set --enabled true` to start the NTP service, then verify with `esxcli system ntp get`.
+    **`ntpq: command not found`** — The `ntpq` command may not be available in your ESXi version; use `esxcli system ntp get` instead or access the vSphere Client to monitor NTP status.
 Verify from vCenter: **Host → Configure → Time Configuration** — confirm NTP service running and servers listed.
 
 ---
@@ -617,6 +655,35 @@ nslookup esxi-01.example.local
 nslookup 10.0.1.20   # host management IP
 ```
 
+
+```text title="Expected output"
+Hostname set to esxi-01.example.local
+DNS server 10.0.0.10 added successfully.
+DNS server 10.0.0.11 added successfully.
+DNS search domain example.local added successfully.
+   Hostname: esxi-01.example.local
+   Domain Name: example.local
+   Fully Qualified Domain Name(FQDN): esxi-01.example.local
+10.0.0.10
+10.0.0.11
+example.local
+
+Server:		10.0.0.10
+Address:	10.0.0.10#53
+
+Name:	esxi-01.example.local
+Address: 10.0.1.20
+
+Server:		10.0.0.10
+Address:	10.0.0.10#53
+
+20.1.0.10.in-addr.arpa	name = esxi-01.example.local.
+```
+
+!!! warning "Common errors"
+    **`Error: Unable to set hostname. Hostname is already set.`** — Use `esxcli system hostname set --fqdn` with the `--force` flag if the hostname must be changed after initial configuration.
+    **`Error: DNS server 10.0.0.10 is not reachable or not responding.`** — Verify network connectivity to the DNS server and ensure the management vmkernel port is properly configured with a route to the DNS server subnet.
+    **`nslookup: can't resolve 'esxi-01.example.local': No address associated with hostname`** — Confirm the DNS server has an A record for esxi-01.example.local and that the search domain is correctly added with `esxcli network ip dns search list`.
 ---
 
 ## Join ESXi Host to Active Directory
@@ -633,6 +700,20 @@ esxcli system secpolicy domain list
 # Expect: Domain: EXAMPLE.LOCAL, Joined: true
 ```
 
+
+```text title="Expected output"
+Domain join operation initiated...
+Domain join completed successfully.
+Domain: EXAMPLE.LOCAL
+Joined: true
+Trusted domains: EXAMPLE.LOCAL
+Domain controllers: dc01.example.local, dc02.example.local
+```
+
+!!! warning "Common errors"
+    **`Error: Unable to resolve domain controller for EXAMPLE.LOCAL`** — Verify DNS is configured on the ESXi host and can resolve domain controller hostnames with `esxcli network ip dns server list`.
+    **`Error: Authentication failed for user 'administrator'`** — Confirm the username and password are correct for a domain account with domain join privileges, not the local ESXi root account.
+    **`Error: Domain join failed: Host already joined to domain`** — Run `esxcli system secpolicy domain leave` first if the host is already domain-joined and you need to rejoin.
 Assign AD group to ESXi Administrator role after joining:
 - vCenter → **Host → Configure → Authentication Services** → confirm domain status
 - vCenter → **Host → Configure → Host Users/Groups** → add the AD group
@@ -658,6 +739,25 @@ esxcli system snmp get
 esxcli system snmp test
 ```
 
+
+```text title="Expected output"
+SNMP agent enabled successfully.
+Community string set to: public
+Trap target configured: 192.168.100.50@161/public
+   Enable: true
+   Logging level: info
+   Port: 161
+   Communities: public
+   Trap targets: 192.168.100.50@161/public
+   Engine ID: 8000070903a1b2c3d4e5f6g7
+Sending SNMP test trap to 192.168.100.50...
+Test trap sent successfully.
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid community string format. Community string cannot be empty or contain spaces.`** — Wrap the community string in quotes if it contains special characters, or use a simple alphanumeric string like `public` or `monitoring`.
+    **`Error: Unable to reach trap target 192.168.100.50:161. Connection refused.`** — Verify the NMS IP address is correct, the SNMP service is running on the target host, and firewall rules allow UDP 161 outbound from the ESXi host.
+    **`Error: SNMP service failed to start. Check /var/log/snmpd.log for details.`** — Restart the SNMP daemon with `esxcli system snmp restart` or check for port conflicts with `netstat -an | grep 161`.
 ---
 
 ## Configure a Coredump Target
@@ -681,6 +781,32 @@ esxcli system coredump partition get
 esxcli system coredump network get
 ```
 
+
+```text title="Expected output"
+Partition                                    Active  Configured
+naa.5001438123456789abcdef01:1                  true       true
+naa.5001438123456789abcdef02:9                  false      false
+naa.6006048b1e2345678901234567890abc:3          false      false
+
+Coredump partition set to naa.5001438123456789abcdef01:1
+
+Enabled coredump to network on vmk0
+Network coredump server: 192.168.100.45:6500
+
+Partition: naa.5001438123456789abcdef01:1
+Active: true
+Configured: true
+
+Enabled: true
+Host VNic: vmk0
+Server IP: 192.168.100.45
+Server Port: 6500
+```
+
+!!! warning "Common errors"
+    **`Error: Could not find partition naa.xxx:9`** — Verify the exact partition identifier using `esxcli system coredump partition list` and use the full NAA identifier with correct partition number.
+    **`Error: Network coredump server is unreachable at 192.168.100.45:6500`** — Confirm the coredump collector IP is correct, the service is running on port 6500, and ESXi host has network connectivity to that server.
+    **`Error: vmk0 is not available or not configured`** — Use `esxcli network ip interface list` to identify an active management vmkernel interface and replace vmk0 with the correct interface name.
 ---
 
 ## Decommission and Remove an ESXi Host
@@ -725,6 +851,28 @@ Wait for resync = 0 before proceeding:
 esxcli vsan debug resync list
 ```
 
+
+```text title="Expected output"
+Cluster UUID: 52d4a8c1-7f2e-4a1b-9c3d-e8f5a2b6c9d1
+Resync Operations:
+  Object UUID: 7a3f9e2c-1b4d-8f6a-5c2e-9d1a4b7f3e6c
+    Component UUID: 4e2a1f9c-6d3b-7a5e-2f8c-1d9a3b6e4f7c
+    Reason: Transient Component Absent
+    Progress: 45%
+    ETA: 2 minutes
+    
+  Object UUID: 9b2e5f1a-3c7d-4e6a-8f2c-1a5d9b3e7c4f
+    Component UUID: 6f1d8a2c-4b9e-7a3f-5c1e-2d8a9b4f6e3c
+    Reason: Degraded Component
+    Progress: 78%
+    ETA: 45 seconds
+
+Total Resync Operations: 2
+```
+
+!!! warning "Common errors"
+    **`Error: Could not connect to the vSAN cluster`** — Verify vSAN is enabled on the cluster and the host is a vSAN member using `esxcli vsan cluster get`.
+    **`Error: Permission denied`** — Run the command with appropriate vSAN administrator privileges or use `esxcli system permission list` to verify your role.
 ### Step 3 — Enter Maintenance Mode (Non-vSAN)
 
 ![Step 3 — Enter Maintenance Mode (Non-vSAN)](../../../../assets/esxi-proc-step-3-enter-maintenance-mode-non-vsan.svg)
@@ -772,6 +920,17 @@ esxcli storage filesystem unmount -l /vmfs/volumes/datastore-name
 esxcli storage core device setconfig -d naa.<id> --perennially-reserved false
 ```
 
+
+```text title="Expected output"
+Unmounting VMFS volume '/vmfs/volumes/datastore-name'...
+(no output — command completes silently)
+Setting perennially reserved flag to false for device naa.6001405a1b2c3d4e5f6a7b8c9d0e1f2a...
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: The object has already been deleted or has not been completely created.`** — Verify the datastore name is correct with `esxcli storage filesystem list` and ensure no VMs are actively accessing it.
+    **`Error: Could not find device naa.<id>`** — Run `esxcli storage core device list` to obtain the correct NAA identifier before executing the setconfig command.
 ---
 
 ## Configure Software iSCSI Initiator
@@ -841,6 +1000,23 @@ esxcli iscsi session list
 esxcli storage core path list | grep -i iscsi
 ```
 
+
+```text title="Expected output"
+Adapter vmhba65 rescanned successfully.
+Session ID                              Portal Group Tag  iSCSI Adapter  Target
+vmhba64:session1                        1                 vmhba64        iqn.1991-05.com.example:storage.lun1
+vmhba64:session2                        1                 vmhba64        iqn.1991-05.com.example:storage.lun2
+vmhba65:session3                        1                 vmhba65        iqn.1991-05.com.example:storage.lun3
+
+Name                                    Device  Transport  Adapter  Target                                State
+vmhba64:C0:T0:L0                        naa.6001405abcdef1234567890abcdef12  iscsi     vmhba64   iqn.1991-05.com.example:storage.lun1  active
+vmhba64:C0:T1:L0                        naa.6001405abcdef1234567890abcdef13  iscsi     vmhba64   iqn.1991-05.com.example:storage.lun2  active
+vmhba65:C0:T0:L0                        naa.6001405abcdef1234567890abcdef14  iscsi     vmhba65   iqn.1991-05.com.example:storage.lun3  active
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown adapter vmhba65`** — Verify the adapter name with `esxcli storage core adapter list` and use the correct vmhba identifier.
+    **`Error: Unknown command or namespace`** — Ensure you are running this command on an ESXi host with SSH enabled; these commands are not available on vCenter Server.
 In vCenter: **Configure → Storage → Storage Adapters → iSCSI adapter → Paths** — should show active paths for each mapped LUN. ALUA or Round Robin multipathing should activate automatically.
 
 ---

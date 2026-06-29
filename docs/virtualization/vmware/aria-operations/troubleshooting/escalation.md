@@ -109,6 +109,24 @@ ls -lh /tmp/support-bundle-*.zip
 # scp root@<vra-ops-fqdn>:/tmp/support-bundle-*.zip /tmp/
 ```
 
+
+```text title="Expected output"
+root@aria-ops-master.corp.local:~# /usr/lib/vmware-casa/casa-support-bundle.sh
+Generating Aria Operations support bundle...
+Collecting system logs...
+Collecting database diagnostics...
+Collecting application logs...
+Collecting configuration files...
+Bundle generation completed successfully.
+Support bundle saved to: /tmp/support-bundle-20240215-143022.zip
+
+root@aria-ops-master.corp.local:~# ls -lh /tmp/support-bundle-*.zip
+-rw-r--r-- 1 root root 487M Feb 15 14:30 /tmp/support-bundle-20240215-143022.zip
+```
+
+!!! warning "Common errors"
+    **`casa-support-bundle.sh: command not found`** — Verify the CaSA package is installed with `rpm -qa | grep casa` and check the correct installation path.
+    **`Permission denied`** — Ensure you are logged in as root or have sudo privileges; the script requires elevated permissions to access system and application logs.
 ### 3. Check cluster node and service status
 
 ```bash
@@ -131,6 +149,49 @@ df -h
 free -h
 ```
 
+
+```text title="Expected output"
+root@aria-ops-master.corp.local:~# service-control --status
+Service Status:
+  vpostgres                                    RUNNING
+  vmon                                         RUNNING
+  vmware-vcopssuite                            RUNNING
+  vmware-vcops-collector                       RUNNING
+  vmware-vcops-ui                              RUNNING
+  vmware-vcops-analytics                       RUNNING
+
+root@aria-ops-master.corp.local:~# /usr/lib/vmware-vcopssuite/python/bin/vcops-admin status
+Cluster Status: HEALTHY
+Master Node: aria-ops-master.corp.local (192.168.1.45)
+Replica Nodes: 2 active
+Database Status: OPERATIONAL
+Last Sync: 2024-01-15 14:32:18 UTC
+
+root@aria-ops-master.corp.local:~# /usr/lib/vmware-vcopssuite/python/bin/vcops-admin --platform-service list
+Platform Services on aria-ops-master.corp.local:
+  vmware-vcopssuite (RUNNING, PID: 8342)
+  vmware-vcops-collector (RUNNING, PID: 8156)
+  vmware-vcops-ui (RUNNING, PID: 8289)
+  vmware-vcops-analytics (RUNNING, PID: 8401)
+  vpostgres (RUNNING, PID: 7834)
+
+root@aria-ops-master.corp.local:~# df -h
+Filesystem                Size  Used Avail Use% Mounted on
+/dev/mapper/vg0-root     100G   67G   28G  71% /
+/dev/mapper/vg0-var      200G  156G   38G  79% /var
+/dev/mapper/vg0-storage  500G  412G   78G  83% /storage
+tmpfs                     32G     0   32G   0% /dev/shm
+
+root@aria-ops-master.corp.local:~# free -h
+              total        used        free      shared  buff/cache   available
+Mem:           64Gi        48Gi        8Gi       512Mi        8Gi        14Gi
+Swap:          16Gi       2.5Gi       13.5Gi
+```
+
+!!! warning "Common errors"
+    **`service-control: command not found`** — Ensure you are running the command on the master node and that /usr/lib/vmware-vcopssuite is in your PATH, or use the full path `/usr/lib/vmware-vcopssuite/python/bin/vcops-admin` instead.
+    **`Cluster Status: UNHEALTHY - Replica node aria-ops-replica-2 is DOWN`** — SSH to the affected replica node and run `service-control --start` to restart services, then verify connectivity and disk space on that node.
+    **`/var filesystem is 95% full - Collection may fail`** — Increase the /var partition size or delete old collection data using `/usr/lib/vmware-vcopssuite/python/bin/vcops-admin --cleanup-old-data --days 30`.
 ### 4. Collect adapter error details
 
 In Aria Ops UI: navigate to **Administration → Integrations → Adapter Instances**.
@@ -244,6 +305,52 @@ ls /data/vcops/log/solutions/<adapter-name>/
 tail -100 /data/vcops/log/solutions/<adapter-name>/<adapter>.log
 ```
 
+
+```text title="Expected output"
+VMware Aria Operations Suite Version: 8.14.1.23456789
+Build: 23456789
+
+Service Status:
+  vcopssuite (pid 4521) is running...
+  analytics (pid 4523) is running...
+  collector (pid 4525) is running...
+  ui (pid 4527) is running...
+  postgres (pid 4529) is running...
+
+Node Status:
+  Master Node: aria-ops-master-01.lab.local (192.168.1.50)
+  Replica Node 1: aria-ops-replica-01.lab.local (192.168.1.51) - ONLINE
+  Replica Node 2: aria-ops-replica-02.lab.local (192.168.1.52) - ONLINE
+  Cluster Status: HEALTHY
+
+Filesystem     Size  Used Avail Use% Mounted on
+/dev/sda1      500G  385G  115G  77% /
+/dev/sdb1      2.0T  1.8T  200G  90% /data
+/dev/sdc1      500G  450G   50G  90% /var/log
+tmpfs           32G  8.2G   24G  26% /dev/shm
+
+              total        used        free      shared  buff/cache   available
+Mem:            64Gi        48Gi        8.2Gi       2.1Gi        7.8Gi        14Gi
+
+2024-01-15 14:32:15 [INFO] Analytics engine started successfully
+2024-01-15 14:32:18 [INFO] Cluster node sync completed
+2024-01-15 14:32:22 [INFO] Data ingestion pipeline initialized
+2024-01-15 14:35:45 [WARN] High memory utilization detected: 75%
+2024-01-15 14:36:01 [INFO] Garbage collection cycle completed
+
+vSphere/
+NSX/
+vRealize-Automation/
+
+2024-01-15 14:38:22 [INFO] vSphere adapter collection cycle started
+2024-01-15 14:38:45 [INFO] Collected 1247 objects from vCenter
+2024-01-15 14:39:12 [INFO] Data processing completed successfully
+```
+
+!!! warning "Common errors"
+    **`service-control: command not found`** — Use the full path `/usr/lib/vmware-vcopssuite/python/bin/vcops-admin` or verify the service-control utility is installed in the current PATH.
+    **`tail: cannot open '/data/vcops/log/solutions/<adapter-name>/<adapter>.log' for reading: No such file or directory`** — Replace `<adapter-name>` and `<adapter>` with the actual adapter name (e.g., `vSphere` or `NSX`) by first listing the directory with `ls /data/vcops/log/solutions/`.
+    **`Filesystem ... Use% ... 100% /data`** — Free up disk space immediately as the /data partition is full and will cause collection failures; consider archiving old logs or expanding the volume.
 ---
 
 ## Support SLA Reference

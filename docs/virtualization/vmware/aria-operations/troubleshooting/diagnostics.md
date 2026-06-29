@@ -125,6 +125,52 @@ chronyc tracking | grep "System time"
 timedatectl status
 ```
 
+
+```text title="Expected output"
+admin@vrops-master:~$ cluster-mgmt-cli status
+MASTER_NODE: vrops-node-01.corp.local (192.168.1.45) - ONLINE
+REPLICA_NODE: vrops-node-02.corp.local (192.168.1.46) - ONLINE (synchronized)
+DATA_NODE_1: vrops-node-03.corp.local (192.168.1.47) - ONLINE
+DATA_NODE_2: vrops-node-04.corp.local (192.168.1.48) - ONLINE
+Cluster Status: HEALTHY
+
+admin@vrops-master:~$ systemctl status vmware-vcops
+● vmware-vcops.service - VMware vRealize Operations
+     Loaded: loaded (/etc/systemd/system/vmware-vcops.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2024-01-17 14:32:18 UTC; 3 days ago
+   Main PID: 4521 (java)
+      Tasks: 287 (limit: 4096)
+     Memory: 8.2G
+        CPU: 2h 14m 23s
+
+admin@vrops-master:~$ journalctl -u vmware-vcops -n 100 --no-pager
+Jan 17 14:32:18 vrops-node-01 vmware-vcops[4521]: INFO: vROps service started successfully
+Jan 17 14:32:45 vrops-node-01 vmware-vcops[4521]: INFO: Cluster node synchronization complete
+Jan 17 15:12:03 vrops-node-01 vmware-vcops[4521]: WARN: High memory usage detected (78%)
+Jan 17 16:45:22 vrops-node-01 vmware-vcops[4521]: INFO: Scheduled backup completed
+
+admin@vrops-master:~$ df -h
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1       100G   45G   55G  45% /
+/dev/sdb1       500G  385G  115G  77% /storage/db
+/dev/sdc1       200G   52G  148G  26% /var/log
+tmpfs           16G  2.1G   14G  13% /dev/shm
+
+admin@vrops-master:~$ chronyc tracking | grep "System time"
+System time   : 0.000000234 seconds fast of NTP time
+
+admin@vrops-master:~$ timedatectl status
+               Local time: Wed 2024-01-17 14:47:33 UTC
+           Universal time: Wed 2024-01-17 14:47:33 UTC
+                 RTC time: Wed 2024-01-17 14:47:33
+                Time zone: UTC (UTC, +0000)
+System clock synchronized: yes
+              NTP service: active
+```
+
+!!! warning "Common errors"
+    **`cluster-mgmt-cli: command not found`** — Verify you are logged into the vROps master node and the cluster management tools are installed in the PATH, or use the full path `/opt/vmware/vcops/bin/cluster-mgmt-cli`.
+    **`systemctl status vmware-vcops` returns `inactive (dead
 ---
 
 ## Step 2 — Query REST API health
@@ -166,6 +212,47 @@ for ai in json.load(sys.stdin).get('adapterInstancesInfoDto', []):
 # Problem: collectorStatus = Data Receiving/No Data = adapter collecting or not
 ```
 
+
+```text title="Expected output"
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwODk5MjM0NX0.dGVzdHRva2VuMTIzNDU2Nzg5MA==
+{
+  "adapterCount": 12,
+  "collectorCount": 3,
+  "nodeStatus": [
+    {
+      "nodeId": "vrops-master-01.lab.local",
+      "status": "ONLINE",
+      "cpuUsage": 62.4,
+      "memoryUsage": 78.2
+    },
+    {
+      "nodeId": "vrops-replica-01.lab.local",
+      "status": "ONLINE",
+      "cpuUsage": 51.8,
+      "memoryUsage": 65.1
+    },
+    {
+      "nodeId": "vrops-replica-02.lab.local",
+      "status": "ONLINE",
+      "cpuUsage": 48.3,
+      "memoryUsage": 71.9
+    }
+  ],
+  "overallHealth": "HEALTHY"
+}
+Total resources: 4287
+Active alerts: 247
+4a8c2e91-b3d4-4f2a-9e1c-7d5f3a2b1c9d | vCenter-Prod-DC1 | Data Receiving
+6f2d1e4a-8c3b-5a9f-2e7d-1b4c8a3f5e2d | vSphere-Cluster-East | Data Receiving
+9e1c7d5f-3a2b-1c9d-4a8c-2e91b3d4f2a | NSX-Manager-01 | Data Receiving
+2b1c9d4a-8c2e-91b3-d4f2-a9e1c7d5f3a | vRealize-Automation | No Data
+7d5f3a2b-1c9d-4a8c-2e91-b3d4f2a9e1c | Storage-Adapter-Pure | Data Receiving
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the vROps certificate into your system trust store.
+    **`{"error":"Invalid token","status":401}`** — Verify the admin password is correct and the LOCAL authentication source is configured; re-run the token acquisition command.
+    **`jq: command not found`** — Install `python3-json` or use the provided `python3 -m json.tool` alternative instead of piping to `jq`.
 ---
 
 ## Step 3 — Inspect log files
@@ -190,6 +277,26 @@ grep "OutOfMemoryError" /var/log/vmware/vcops/analytics.log | tail -20
 # If present: check heap allocation in VAMI → Administration → JVM Memory
 ```
 
+
+```text title="Expected output"
+2024-01-15 14:32:18.456 ERROR [Analytics-Worker-12] com.vmware.vcops.analytics.engine - OutOfMemoryError: Java heap space
+2024-01-15 14:32:19.123 FATAL [Main] com.vmware.vcops.core.AnalyticsEngine - Failed to process metric batch for adapter 'vCenter-prod': Connection timeout after 30000ms
+2024-01-15 14:32:21.789 ERROR [Collector-5] com.vmware.vcops.adapter.vcenter - Authentication failed for vCenter instance vc-01.corp.local: Invalid credentials
+2024-01-15 14:32:25.445 Exception in thread "Analytics-Processor-8" java.lang.NullPointerException at com.vmware.vcops.analytics.MetricAggregator.process(MetricAggregator.java:247)
+2024-01-15 14:32:28.912 ERROR [TLS-Handler-3] com.vmware.vcops.adapter.ssl - Certificate validation failed for adapter 'NSX-Manager': PKIX path building failed
+2024-01-15 14:32:31.567 WARN [Collector-2] com.vmware.vcops.adapter.base - Adapter 'vSAN-Cluster' collection cycle exceeded SLA: 45000ms > 30000ms threshold
+2024-01-15 14:33:02.234 ERROR [Analytics-Worker-1] com.vmware.vcops.analytics.engine - Processing failure: Insufficient memory for aggregation job
+...
+VMware vCenter Adapter [vCenter-prod] - Collection Status: FAILED
+VMware vCenter Adapter [vCenter-prod] - Last successful collection: 2024-01-15 13:45:22
+VMware vCenter Adapter [vCenter-prod] - Error: Connection refused on port 443
+VMware vCenter Adapter [vCenter-prod] - Retry attempt 3 of 5 scheduled for 2024-01-15 14:35:00
+```
+
+!!! warning "Common errors"
+    **`OutOfMemoryError: Java heap space`** — Increase JVM heap allocation in VAMI → Administration → System Configuration → JVM Memory Settings (typically 16GB minimum for production vROps nodes).
+    **`Connection timeout after 30000ms`** — Verify network connectivity to the target adapter endpoint, check firewall rules, and confirm the adapter credential account has not been locked or expired.
+    **`Certificate validation failed for adapter: PKIX path building failed`** — Import the missing or self-signed certificate into the vROps truststore using `keytool` or disable certificate verification in the adapter configuration if using internal CAs.
 ---
 
 ## Step 4 — Check adapter collection status
@@ -216,6 +323,29 @@ grep "Start collection" /var/log/vmware/vcops/collector.log | \
 # Expected: entries every 5 minutes per adapter instance
 ```
 
+
+```text title="Expected output"
+2024-01-15 14:32:15,847 [INFO] vCenter Adapter: Start collection for instance vCenter-Prod
+2024-01-15 14:32:45,123 [INFO] vCenter Adapter: End collection - collected 1247 metrics
+2024-01-15 14:37:22,456 [INFO] vCenter Adapter: Start collection for instance vCenter-Prod
+2024-01-15 14:37:58,789 [INFO] vCenter Adapter: End collection - collected 1251 metrics
+2024-01-15 14:42:10,234 [ERROR] vCenter Adapter: Connection timeout to 10.50.20.15:443
+2024-01-15 14:42:10,567 [ERROR] vCenter Adapter: End collection - FAILED (0 metrics)
+2024-01-15 14:47:33,901 [INFO] vCenter Adapter: Start collection for instance vCenter-Prod
+2024-01-15 14:47:59,445 [INFO] vCenter Adapter: End collection - collected 1249 metrics
+
+14:32:15
+14:37:22
+14:42:10
+14:47:33
+14:52:55
+14:58:12
+```
+
+!!! warning "Common errors"
+    **`Connection timeout to <IP>:443`** — Verify network connectivity and firewall rules between the vROps collector and vCenter, then click "Test Connection" in the UI to retry.
+    **`End collection - FAILED (0 metrics)`** — Check adapter credentials in Administration → Solutions → Adapter Instances and re-enter the vCenter password if it was recently changed.
+    **`grep: /var/log/vmware/vcops/collector.log: No such file or directory`** — Verify the vROps collector service is running with `systemctl status vmware-vcops-collector` and check the correct log path for your vROps version.
 ---
 
 ## Step 5 — Check vROps cluster node health
@@ -246,6 +376,26 @@ systemctl restart vmware-vcops
 journalctl -u vmware-vcops -f
 ```
 
+
+```text title="Expected output"
+=== 192.168.1.100 ===
+System time : 0.000012345 seconds fast of NTP time
+=== 192.168.1.101 ===
+System time : 0.000008901 seconds fast of NTP time
+=== 192.168.1.102 ===
+System time : 0.000019234 seconds fast of NTP time
+-- Logs begin at Wed 2024-01-10 14:22:33 UTC, end at Wed 2024-01-10 14:28:47 UTC. --
+Jan 10 14:25:12 vrops-node-01 systemd[1]: Started VMware vRealize Operations Analytics Engine.
+Jan 10 14:25:18 vrops-node-01 vmware-vcops[2847]: [INFO] Analytics engine initialization started
+Jan 10 14:25:34 vrops-node-01 vmware-vcops[2847]: [INFO] Loading metric definitions from database
+Jan 10 14:26:02 vrops-node-01 vmware-vcops[2847]: [INFO] Replica synchronization complete
+Jan 10 14:26:45 vrops-node-01 vmware-vcops[2847]: [INFO] Service ready to accept connections on port 6081
+```
+
+!!! warning "Common errors"
+    **`ssh: connect to host 192.168.1.102 port 22 refused`** — Verify the data node IP is correct and SSH is enabled; check firewall rules allowing admin access on port 22.
+    **`chronyc: command not found`** — Replace `chronyc` with `ntpq -p` or `timedatectl` depending on the NTP daemon installed on that node.
+    **`systemctl: command not found`** — Use `service vmware-vcops restart` instead if systemd is not available on this vROps deployment.
 ---
 
 ## Step 6 — Check disk space and performance
@@ -273,6 +423,28 @@ du -sh /storage/db/casa/  # CASA analytics store
 find / -name "core.*" -size +100M 2>/dev/null
 ```
 
+
+```text title="Expected output"
+Filesystem      Size  Used Avail Use% Mounted on
+/storage/db     500G  387G  113G  77% /storage/db
+Filesystem      Size  Used Avail Use% Mounted on
+/var/log        100G   68G   32G  68% /var/log
+Filesystem      Size  Used Avail Use% Mounted on
+/data           200G  156G   44G  78% /data
+/var/log/vmware/vcops/analytics.log.2024-01-15
+/var/log/vmware/vcops/collector.log.2024-01-14
+/var/log/vmware/vcops/engine.log.2024-01-13
+/var/log/vmware/vcops/ui.log.2024-01-12
+/var/log/vmware/vcops/api.log.2024-01-11
+387G	/storage/db/
+156G	/storage/db/casa/
+/var/log/core.12847
+/var/log/core.9521
+```
+
+!!! warning "Common errors"
+    **`find: '/proc': Permission denied`** — Run the core dump search with `sudo` or redirect stderr with `2>/dev/null` (already included in the command).
+    **`du: cannot access '/storage/db/casa/': No such file or directory`** — Verify the CASA analytics store path exists with `ls -la /storage/db/` and adjust the path if using a different vROps version.
 ---
 
 ## Step 7 — Collect support bundle for VMware SR
@@ -300,6 +472,24 @@ scp admin@<vrops-master-ip>:/tmp/vcops-support-*.zip ./
 # - Time window when data stopped appearing
 ```
 
+
+```text title="Expected output"
+admin@192.168.1.45's password: 
+Generating support bundle...
+Bundle generation started at 2024-01-15 14:32:18 UTC
+Collecting cluster logs... [████████████████████] 100%
+Collecting analytics database snapshot... [████████████████████] 100%
+Collecting configuration files... [████████████████████] 100%
+Collecting node states... [████████████████████] 100%
+Support bundle created successfully: /tmp/vcops-support-20240115-143218.zip
+Bundle size: 847 MB
+admin@192.168.1.45's password: 
+vcops-support-20240115-143218.zip                    100%  847MB   2.3MB/s   06:12
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify SSH credentials and ensure the admin user has SSH access enabled on the vROps master node.
+    **`scp: /tmp/vcops-support-*.zip: No such file or directory`** — Confirm the bundle generation completed successfully by checking `/tmp/` directly with `ssh admin@<vrops-master-ip> ls -lh /tmp/vcops-support-*.zip`.
 ---
 
 ## Log locations

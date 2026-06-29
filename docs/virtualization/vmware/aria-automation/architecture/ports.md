@@ -141,6 +141,25 @@ curl -sk -X POST https://<aria-automation-fqdn>/csp/gateway/am/api/login \
   -d '{"username":"<user>","password":"<pass>","domain":"<domain>"}' | python3 -m json.tool | grep '"token"'
 ```
 
+
+```text title="Expected output"
+200
+200
+200
+Connection to 192.168.1.50 port 636 [tcp/ldapssl] succeeded!
+     remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
+ ntp.ubuntu.com      .POOL.          16 p    -   64    0    0.000    0.000   0.000
+*time.google.com     131.188.3.221    2 u   52   64  377   18.432   -2.104   1.847
++ntp.ubuntu.com      129.6.15.28      2 u   48   64  377   22.156    1.203   2.341
+-tick.ucla.edu       132.163.96.1     2 u   51   64  377   85.643   -8.921   3.104
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTcwOTMxNDU2MH0.K2x9mK8pL1q3r5s7t9u1v3w5x7y9z1a3b5c7d9e1f"
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to <aria-automation-fqdn> port 443: Connection refused`** — Verify the Aria Automation appliance is running and the FQDN resolves correctly with `nslookup` or `dig`.
+    **`nc: getaddrinfo: Name or service not known`** — Confirm the DC IP address is correct and reachable from the Aria Automation appliance network.
+    **`jq: command not found`** — Install `jq` with `apt-get install jq` or use `python3 -m json.tool` as shown in the example for JSON parsing.
 ---
 
 ## See also

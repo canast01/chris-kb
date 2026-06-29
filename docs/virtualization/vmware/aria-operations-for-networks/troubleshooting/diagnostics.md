@@ -123,6 +123,17 @@ echo $TOKEN
 # Expected: JWT string; empty = auth failed (check credentials)
 ```
 
+
+```text title="Expected output"
+{"status":"OK","services":{"platform":"UP","collector":"UP","api":"UP","ui":"UP"}}
+{"apiVersion":"1.0","buildNumber":"21345678","platformVersion":"6.10.1","timestamp":"2024-01-15T09:42:33Z"}
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbkBsb2NhbCIsImV4cCI6MTcwNTMzODk1MywiaWF0IjoxNzA1MzM1MzUzfQ.kR9mN2pL8vQ5xW1jZ3aB6cD4eF7gH0iJ2kL5mN8oP1q
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification (already present in the example, but ensure it's not removed).
+    **`jq: command not found` or `python3: command not found`** — Install the required JSON parser (`apt-get install python3` or `brew install jq`) and use the appropriate tool for your environment.
+    **`{"error":"Invalid credentials"}` or empty `$TOKEN` output** — Verify the username, password, and domain are correct; check that the LOCAL domain exists and the admin user is configured in vRNI.
 ---
 
 ## Step 2 — Check data source connectivity and sync status
@@ -163,6 +174,28 @@ nc -zv <nsx-manager-ip> 443
 nc -zv <vrni-platform-ip> 443
 ```
 
+
+```text title="Expected output"
+10.20.1.50 | prod-vcenter-01 | CONNECTED
+10.20.1.51 | prod-vcenter-02 | CONNECTED
+10.20.1.52 | dr-vcenter-01 | DISCONNECTED
+10.20.2.100 | CONNECTED
+10.20.2.101 | CONNECTED
+{"id":"52b2d4a8-1234-5678-abcd-ef1234567890","user":"svc-vrni-vc@vsphere.local"}
+{
+  "cluster_status": "STABLE",
+  "node_count": 3,
+  "control_cluster_status": "STABLE"
+}
+Connection to 10.20.1.50 443 port [tcp/https] succeeded!
+Connection to 10.20.2.100 443 port [tcp/https] succeeded!
+Connection to 10.20.3.10 443 port [tcp/https] failed: Connection refused
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the VRNI platform certificate into the collector's CA bundle.
+    **`jq: command not found`** — Install `python3-json.tool` or use the provided Python one-liner instead of piping to `jq`.
+    **`Connection to <ip> 443 port [tcp/https] failed: Connection refused`** — Verify the target service is running and listening on port 443, and check firewall rules between collector and data source.
 ---
 
 ## Step 3 — Verify NetFlow receipt
@@ -188,6 +221,36 @@ sudo systemctl restart sannav-event-engine 2>/dev/null || \
   sudo systemctl restart collector
 ```
 
+
+```text title="Expected output"
+admin@collector-01:~$ ssh admin@192.168.1.45
+admin@192.168.1.45's password: 
+Last login: Wed Jan 15 14:32:18 2025 from 192.168.1.100
+admin@collector-01:~$ sudo tcpdump -i eth0 -n udp port 2055 -c 20
+tcpdump: verbose output suppressed, use -v or -vv for full packet decode
+listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+14:35:22.451923 IP 10.50.12.5.54821 > 192.168.1.45.2055: UDP, length 1472
+14:35:22.452156 IP 10.50.12.5.54822 > 192.168.1.45.2055: UDP, length 1472
+14:35:23.104521 IP 10.50.12.6.55103 > 192.168.1.45.2055: UDP, length 1456
+14:35:23.105847 IP 10.50.12.6.55104 > 192.168.1.45.2055: UDP, length 1472
+14:35:24.667234 IP 10.50.12.5.54823 > 192.168.1.45.2055: UDP, length 1472
+...
+20 packets captured
+admin@collector-01:~$ tail -100 /var/log/proxy.log | grep -i "received\|processed\|drop\|error"
+2025-01-15 14:34:58 [INFO] Received 4521 flows from 10.50.12.5 in 2.3s
+2025-01-15 14:35:12 [INFO] Processed 4521 flows, 0 dropped
+2025-01-15 14:35:28 [INFO] Received 4389 flows from 10.50.12.6 in 2.1s
+2025-01-15 14:35:42 [INFO] Processed 4389 flows, 0 dropped
+2025-01-15 14:35:58 [INFO] Received 4456 flows from 10.50.12.5 in 2.2s
+admin@collector-01:~$ sudo systemctl restart sannav-event-engine 2>/dev/null || \
+>   sudo systemctl restart collector
+admin@collector-01:~$
+```
+
+!!! warning "Common errors"
+    **`tcpdump: eth0: No such device`** — Verify the correct interface name with `ip link show` and replace eth0 with the actual interface (e.g., ens0, ens160).
+    **`tail: cannot open '/var/log/proxy.log' for reading: Permission denied`** — Run the command with `sudo` prefix: `sudo tail -100 /var/log/proxy.log | grep -i "received\|processed\|drop\|error"`.
+    **`Failed to restart sannav-event-engine: Unit sannav-event-engine.service not found`** — Confirm the correct service name with `sudo systemctl list-units --type=service | grep -i event` and use the actual service name in the restart command.
 If tcpdump shows no packets:
 1. Log in to the switch that should be exporting NetFlow
 2. Verify NetFlow export is configured to the collector IP on UDP 2055
@@ -215,6 +278,48 @@ nc -zv <vrni-platform-ip> 443
 # Expected: Connection to platform port 443 succeeded
 ```
 
+
+```text title="Expected output"
+=== Platform VM Application Log (Last 100 lines) ===
+2024-01-15 14:32:18.456 [INFO] Application started successfully
+2024-01-15 14:33:02.123 [WARN] Memory usage at 78%
+2024-01-15 14:35:41.789 [INFO] Database connection pool initialized: 50 connections
+2024-01-15 14:38:15.234 [INFO] Flow data ingestion rate: 12,450 flows/sec
+2024-01-15 14:40:22.567 [INFO] Backup completed: 2.3 GB archived
+
+=== Filtered Errors/Exceptions (Last 50 matches) ===
+(no matches)
+
+=== Collector VM Proxy Log (Last 100 lines) ===
+2024-01-15 14:31:45.123 [INFO] Proxy service initialized on 0.0.0.0:6081
+2024-01-15 14:32:10.456 [INFO] Connected to platform 192.168.1.50:443
+2024-01-15 14:33:55.789 [INFO] Flow batch 4521 transmitted: 8,932 records
+2024-01-15 14:35:20.234 [INFO] Heartbeat sent to platform
+2024-01-15 14:37:08.567 [INFO] Flow batch 4522 transmitted: 9,145 records
+
+=== Filtered Errors/Drops (Last 50 matches) ===
+(no matches)
+
+=== Collector Service Status ===
+● collector.service - vRealize Network Insight Collector
+     Loaded: loaded (/etc/systemd/system/collector.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2024-01-15 14:31:22 UTC; 2h 15min ago
+   Main PID: 2847 (java)
+      Tasks: 42 (limit: 4096)
+     Memory: 1.2G
+        CPU: 18min 32.456s
+     CGroup: /systemd/system.slice/collector.service
+             └─2847 /usr/lib/jvm/java-11-openjdk/bin/java -Xmx2g -Xms1g...
+
+=== Recent Journal Entries (Last 100 lines, past 1 hour) ===
+Jan 15 14:31:22 collector-01 systemd[1]: Started vRealize Network Insight Collector.
+Jan 15 14:32:05 collector-01 collector[2847]: [INFO] Collector initialized with UUID: a7f3c2e1-9d4b-4a8f-b6c2-1e5d9f3a2b4c
+Jan 15 14:33:18 collector-01 collector[2847]: [INFO] Connected to platform at 192.168.1.50
+Jan 15 14:35:42 collector-01 collector[2847]: [INFO] Flow capture started on interfaces: eth0, eth1, eth2
+Jan 15 14:40:15 collector-01 collector[2847]: [INFO] Processed 45,231 flows in last 5 minutes
+
+=== Connectivity Test
+```
 ---
 
 ## Step 5 — Check disk space
@@ -235,6 +340,29 @@ sudo find /data/backup/ -maxdepth 1 -type d -mtime +30 -exec rm -rf {} \;
 df -h   # Check overall disk usage
 ```
 
+
+```text title="Expected output"
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda3       500G  387G  113G  78% /data
+
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda2       100G   67G   33G  67% /var/log
+
+total 2.3G
+drwxr-xr-x 3 root root 4.0K Jan 15 14:22 backup_2024_01_15_143022
+drwxr-xr-x 3 root root 4.0K Dec 28 09:18 backup_2024_12_28_091805
+drwxr-xr-x 3 root root 4.0K Dec 01 16:45 backup_2024_12_01_164512
+drwxr-xr-x 3 root root 4.0K Nov 18 22:33 backup_2024_11_18_223301
+
+Filesystem     Size   Used  Avail Use% Mounted on
+/dev/sda1      1.8T  1.2T  600G  67% /
+/dev/sdb1      2.0T  1.8T  200G  90% /mnt/capture
+tmpfs          32G   1.2G   31G   4% /dev/shm
+```
+
+!!! warning "Common errors"
+    **`find: '/data/backup/': Permission denied`** — Run the find command with `sudo` or ensure your user has read/execute permissions on the /data/backup directory.
+    **`rm: remove write-protected regular file 'backup_2024_01_15_143022'?`** — Add the `-f` flag to the rm command within the find exec (`-exec rm -rf {} \;` already includes this, but check file permissions with `ls -l` if the prompt appears).
 ---
 
 ## Step 6 — Check platform certificate
@@ -255,6 +383,24 @@ echo | openssl s_client -connect <vrni-platform-ip>:443 2>/dev/null \
 # Settings → Infrastructure → SSL Certificates → Upload Certificate
 ```
 
+
+```text title="Expected output"
+depth=0 CN = vrni-platform.corp.local
+verify error:num=18:self signed certificate
+verify return:1
+depth=0 CN = vrni-platform.corp.local
+verify return:1
+subject=CN = vrni-platform.corp.local
+issuer=CN = vrni-platform.corp.local, O = VMware, C = US
+notBefore=Jan 15 10:23:45 2023 GMT
+notAfter=Jan 15 10:23:45 2026 GMT
+
+issuer=CN = vrni-platform.corp.local, O = VMware, C = US
+```
+
+!!! warning "Common errors"
+    **`unable to load certificate`** — Verify the vRNI platform IP and port are correct and the service is running on port 443.
+    **`error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed`** — This is expected for self-signed certificates; the certificate details are still extracted and the expiry date is valid.
 ---
 
 ## Step 7 — Collect support bundle for VMware SR
@@ -278,6 +424,24 @@ support-bundle generate
 # - Any recent changes to data sources, network, or certificates
 ```
 
+
+```text title="Expected output"
+admin@vrni-platform-01's password: 
+Generating support bundle...
+Collecting system logs...
+Collecting database diagnostics...
+Collecting network configuration...
+Collecting application logs...
+Bundle generation completed successfully.
+bundle saved to /tmp/support-bundle-2024-01-15-143022.tar.gz
+File size: 487 MB
+Checksum (SHA256): a7f3e8c2d9b1e4f6a8c3d5e7f9a1b2c4d6e8f0a1b2c3d4e5f6a7b8c9d0e1f2
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify the admin account credentials and ensure SSH key-based authentication is configured, or use the VAMI web interface as an alternative.
+    **`support-bundle: command not found`** — Confirm you are logged into the vRNI platform VM (not a proxy or collector node) and that your user has support bundle generation privileges.
+    **`/tmp/support-bundle-*.tar.gz: No such file or directory`** — Wait for the bundle generation to complete fully before attempting to download, as large bundles may take 5–10 minutes.
 ---
 
 ## Log locations

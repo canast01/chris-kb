@@ -28,6 +28,15 @@ curl -sk https://vidm.example.local/SAAS/API/1.0/REST/system/health
 # Expected: {"status": "UP"}
 ```
 
+
+```text title="Expected output"
+admin@lcm-prod-01.example.local's password: 
+{"status":"UP","timestamp":"2024-01-15T09:42:33.847Z","components":{"database":"UP","cache":"UP","messaging":"UP"},"version":"8.10.2"}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the CA certificate into your system trust store.
+    **`curl: (7) Failed to connect to vidm.example.local port 443: Connection refused`** — Verify the vIDM hostname/IP is correct, the service is running (`systemctl status vidm`), and network connectivity exists from lcm-prod-01 to the vIDM appliance.
 After registration, the LCM login page shows a "Log In with Workspace ONE" button that redirects to VIDM for authentication.
 
 ---
@@ -87,6 +96,27 @@ curl -sk -H "x-xenon-auth-token: $TOKEN" \
   "https://lcm-prod-01.example.local/lcm/lcmservice/api/v2/environments"
 ```
 
+
+```text title="Expected output"
+{
+  "documentSelfLink": "/lcm/lcmservice/api/v2/environments",
+  "queryTimeMicros": 1234567,
+  "pageSize": 100,
+  "documentLinks": [
+    "/lcm/lcmservice/api/v2/environments/environment-prod-01",
+    "/lcm/lcmservice/api/v2/environments/environment-prod-02",
+    "/lcm/lcmservice/api/v2/environments/environment-staging-01"
+  ],
+  "documentCount": 3,
+  "currentPageLink": "/lcm/lcmservice/api/v2/environments?pageSize=100",
+  "nextPageLink": null
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl (already present in example, but verify SSL verification is intentionally disabled for self-signed certs).
+    **`jq: parse error: Cannot index null with string "token"`** — Verify credentials are correct and the login endpoint is accessible; check response with `curl -sk ... | jq '.'` to see actual error message.
+    **`curl: (7) Failed to connect to lcm-prod-01.example.local port 443: Connection refused`** — Confirm the LCM hostname/IP is correct and the service is running with `curl -sk https://lcm-prod-01.example.local/lcm/health`.
 For automation pipelines, store the service account password in a secrets manager (HashiCorp Vault, CyberArk) and retrieve it at runtime rather than hardcoding in scripts.
 
 ---
@@ -114,6 +144,15 @@ curl -sk -X PATCH -H "x-xenon-auth-token: $TOKEN" \
   -d '{"oldPassword":"<old>","newPassword":"<new>"}'
 ```
 
+
+```text title="Expected output"
+{"documentSelfLink":"/core/authz/user/admin","documentKind":"com:vmware:lcm:authz:user:UserState","documentVersion":0,"documentUpdateTimeMicros":1702847392156000,"documentExpirationTimeMicros":0,"name":"admin","email":"admin@example.local","passwordLastChangedTime":1702847392156,"passwordExpirationTime":1735425792156,"locked":false}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification (already present in example, but ensure it's included if removed).
+    **`{"errorCode":401,"message":"Invalid or expired authentication token"}`** — Verify the `$TOKEN` variable is set correctly with `echo $TOKEN` and re-authenticate if expired.
+    **`{"errorCode":400,"message":"oldPassword does not match current password"}`** — Confirm the old password value in the JSON payload matches the current admin password exactly.
 ---
 
 ## Certificate Trust for API Clients
@@ -131,6 +170,15 @@ update-ca-certificates   # Debian/Ubuntu
 trust anchor lcm-ca.crt  # RHEL/Fedora
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`cp: cannot create regular file '/usr/local/share/ca-certificates/lcm-ca.crt': Permission denied`** — Run the command with `sudo` or as root user.
+    **`update-ca-certificates: command not found`** — Use `trust anchor lcm-ca.crt` instead if on RHEL/Fedora, or install `ca-certificates` package on Debian/Ubuntu.
+    **`trust: command not found`** — Install the `p11-kit` package which provides the `trust` utility, or use `update-ca-certificates` on Debian/Ubuntu systems.
 ---
 
 ## Session and Token Policies

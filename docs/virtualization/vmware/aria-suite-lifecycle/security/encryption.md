@@ -62,6 +62,27 @@ curl -sk -X POST -H "x-xenon-auth-token: $TOKEN" \
   }"
 ```
 
+
+```text title="Expected output"
+{
+  "documentSelfLink": "/lcm/locker/api/v2/certificates/8f4a2c91-7e3d-4b9a-8c1f-2d5e9a3b7c6f",
+  "alias": "vrops-prod-2027",
+  "certificateChain": "-----BEGIN CERTIFICATE-----\nMIIDXTCCAkWgAwIBAgIJAKp...",
+  "privateKey": "-----BEGIN RSA PRIVATE KEY-----\nMIIEpAIBAAKCAQEA2x8q...",
+  "caChain": "-----BEGIN CERTIFICATE-----\nMIIEWDCCA0CgAwIBAgIQRA...",
+  "issuer": "CN=example-ca.local,O=Example Corp,C=US",
+  "subject": "CN=vrops-prod-2027.example.local,O=Example Corp,C=US",
+  "validFrom": "2024-01-15T00:00:00Z",
+  "validTo": "2027-01-14T23:59:59Z",
+  "thumbprint": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0",
+  "status": "IMPORTED"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification for self-signed certificates (already present; verify TOKEN is set and endpoint is reachable).
+    **`jq: parse error: Invalid JSON at line 1`** — Ensure newlines in PEM files are properly escaped; use `sed 's/$/\\n/g'` instead of awk, or pipe output through `jq -R -s` to validate JSON structure before sending.
+    **`{"errorCode":"INVALID_CERTIFICATE","message":"Certificate chain validation failed"}`** — Verify the order of certificates in chain.pem (leaf first, then intermediates, then root) and that all three files are in valid PEM format without extra whitespace.
 ---
 
 ## See also
@@ -98,6 +119,23 @@ openssl x509 -noout -dates -in leaf.pem
 openssl x509 -noout -text -in leaf.pem | grep "Public-Key"
 ```
 
+
+```text title="Expected output"
+leaf.pem: OK
+5d41402abc4b2a76b9719d911017c592
+5d41402abc4b2a76b9719d911017c592
+RSA key ok
+Subject Alternative Name: 
+    DNS:aria-lcm.corp.local, DNS:*.aria-lcm.corp.local, IP Address:10.42.8.15
+notBefore=Jan 15 10:22:33 2024 GMT
+notAfter=Jan 14 10:22:33 2026 GMT
+        Public-Key: (4096 bit, RSA)
+```
+
+!!! warning "Common errors"
+    **`leaf.pem: error 20 at 0 depth lookup: unable to get local issuer certificate`** — Add the intermediate CA certificate to chain.pem between the leaf and root, or use `-partial_chain` if the chain is incomplete.
+    **`5d41402abc4b2a76b9719d911017c592` (first hash) does not match second hash** — Regenerate the private key or certificate so they correspond to the same key pair.
+    **`Enter pass phrase for private.key:`** — Decrypt the private key with `openssl rsa -in private.key -out private-unencrypted.key` and use the unencrypted version for LCM.
 ---
 
 ## Applying a Certificate to a Product
@@ -122,6 +160,17 @@ openssl s_client -connect vrops-prod-01.example.local:443 -servername vrops-prod
 # Confirm: subject matches the new certificate, issuer is your internal CA
 ```
 
+
+```text title="Expected output"
+subject=CN=vrops-prod-01.example.local,O=Example Corp,C=US
+notBefore=Jan 15 10:23:45 2024 GMT
+notAfter=Jan 15 10:23:45 2025 GMT
+issuer=CN=Example Corp Internal CA,O=Example Corp,C=US
+```
+
+!!! warning "Common errors"
+    **`unable to get local issuer certificate`** — The internal CA certificate is not in the system's trusted store; add it to `/etc/ssl/certs/` and run `update-ca-certificates` on Linux or import it to the certificate store on the vRealize Ops appliance.
+    **`connect: Connection refused`** — The vRealize Ops service is not listening on port 443; verify the service is running with `systemctl status vrops` and check firewall rules with `iptables -L -n | grep 443`.
 ---
 
 ## Password Encryption in Locker
@@ -141,6 +190,38 @@ curl -sk -X PUT -H "x-xenon-auth-token: $TOKEN" \
   -d '{"alias": "<alias>", "userName": "<username>", "password": "<new-password>"}'
 ```
 
+
+```text title="Expected output"
+{
+  "alias": "vcenter-admin",
+  "username": "administrator@vsphere.local",
+  "description": "vCenter 7.0 root credentials"
+}
+{
+  "alias": "nsxt-api",
+  "username": "admin",
+  "description": "NSX-T Manager API user"
+}
+{
+  "alias": "vsan-witness",
+  "username": "root",
+  "description": "vSAN Witness Appliance SSH"
+}
+{
+  "alias": "sddc-backup",
+  "username": "backup_svc",
+  "description": "SDDC backup service account"
+}
+{
+  "alias": "aria-ops-db",
+  "username": "postgres",
+  "description": "Aria Operations PostgreSQL"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag (already present) or import the LCM root CA into your system trust store with `update-ca-certificates`.
+    **`jq: error (at <stdin>:1): Cannot index null with string "passwords"`** — Verify `$TOKEN` is set and valid by running `echo $TOKEN` and confirm the LCM API endpoint is reachable with `curl -sk https://lcm-prod-01.example.local/lcm/locker/api/v2/passwords -H "x-xenon-auth-token: $TOKEN"`.
 After updating a Locker password, re-validate any product integrations that use the credential (vCenter cloud accounts in Aria Automation, adapter credentials in Aria Operations, etc.).
 
 ---
@@ -163,6 +244,17 @@ openssl s_client -connect lcm-prod-01.example.local:443 2>/dev/null | \
   grep "Cipher is"
 ```
 
+
+```text title="Expected output"
+Protocol  : TLSv1.2
+alert handshake failure
+Cipher is ECDHE-RSA-AES256-GCM-SHA384
+```
+
+!!! warning "Common errors"
+    **`connect: Connection refused`** — Verify the LCM host is running and accessible on port 443 with `ping lcm-prod-01.example.local` and `nc -zv lcm-prod-01.example.local 443`.
+    **`alert handshake failure` (appears for TLS 1.2 test instead of 1.0)** — Confirm the server's minimum TLS version is actually 1.2 by checking `/opt/vmware/vcac/server/conf/catalina.properties` or the LCM security policy.
+    **`grep: (standard input) is empty`** — The openssl connection succeeded but grep found no matching line; try removing `2>/dev/null` to see the full output and verify the expected string format.
 LCM 8.x defaults to TLS 1.2 minimum. If TLS 1.0 or 1.1 must be disabled explicitly, configure this via the NGINX configuration on the LCM appliance — consult the Broadcom hardening guide for the specific configuration path for each LCM version.
 
 ---

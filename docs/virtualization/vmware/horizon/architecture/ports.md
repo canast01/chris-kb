@@ -161,6 +161,21 @@ nc -zv <dc-ip> 636
 curl -sk -o /dev/null -w "%{http_code}" https://<connection-server-ip>/broker/xml
 ```
 
+
+```text title="Expected output"
+200
+Connection to 192.168.1.50 22443 [UDP] succeeded!
+Connection to 192.168.1.51 4172 [UDP] succeeded!
+Connection to 10.20.30.40 443 (https) open
+Connection to 10.20.30.15 389 (ldap) open
+Connection to 10.20.30.15 636 (ldaps) open
+200
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the Connection Server's CA certificate into your system trust store.
+    **`nc: connect to 192.168.1.50 port 22443 (udp) failed: Connection refused`** — Verify the Horizon Agent is running on the VM, the firewall allows UDP 22443 inbound, and the correct agent IP address is specified.
+    **`nc: getaddrinfo for name/port failed: Name or service not known`** — Confirm the hostname or IP address is correct and resolvable from the client workstation (test with `nslookup` or `ping` first).
 ---
 
 ## See also

@@ -45,6 +45,24 @@ mount | grep /data
 du -sh /data/*
 ```
 
+
+```text title="Expected output"
+Filesystem      Size  Used Avail Use% Mounted on
+nfs-prod-01:/lcm-repo  500G  320G  180G  64% /data
+
+nfs-prod-01:/lcm-repo on /data type nfs4 (rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,namlen=255,hard,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=10.50.12.45,local_lock=none,addr=10.50.12.10)
+
+4.2G	/data/aria-automation-8.12.0
+6.8G	/data/aria-operations-8.14.1
+5.1G	/data/aria-suite-lifecycle-2.3.0
+3.9G	/data/aria-orchestrator-8.11.2
+2.4G	/data/patches
+```
+
+!!! warning "Common errors"
+    **`mount: /data: special device nfs-prod-01:/lcm-repo does not contain a colon`** — Verify the NFS server hostname and path are correctly formatted as `server:/path` in your mount configuration.
+    **`df: /data: No such file or directory`** — Create the mount point with `mkdir -p /data` and ensure the NFS mount is active before running diagnostics.
+    **`No space left on device`** — Free up space on the NFS server or add additional storage; LCM requires at least 50 GB free per product version.
 If NFS becomes unavailable: LCM upgrades will fail. Ensure NFS server HA (or VMware datastore-backed NFS).
 
 ## Proxy / Offline Depot

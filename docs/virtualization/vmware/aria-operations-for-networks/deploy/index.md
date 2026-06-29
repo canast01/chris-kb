@@ -69,6 +69,24 @@ nslookup aon-platform.example.local
 nslookup 10.10.10.50
 ```
 
+
+```text title="Expected output"
+Server:		10.10.10.1
+Address:	10.10.10.1#53
+
+Name:	aon-platform.example.local
+Address: 10.10.10.50
+Address: 10.10.10.51
+
+Server:		10.10.10.1
+Address:	10.10.10.1#53
+50.10.10.10.in-addr.arpa	name = aon-platform.example.local.
+50.10.10.10.in-addr.arpa	name = aon-platform-secondary.example.local.
+```
+
+!!! warning "Common errors"
+    **`** server can't find aon-platform.example.local: NXDOMAIN`** — Verify the DNS A record exists in your DNS server and the FQDN matches your deployment configuration exactly.
+    **`** connection timed out; try again later`** — Confirm the DNS server (10.10.10.1) is reachable and responsive from the management network; check firewall rules for UDP port 53.
 ### Service Accounts
 
 | System | Required Permission |
@@ -124,6 +142,34 @@ ssh ubuntu@aon-platform.example.local
 sudo systemctl status vrni-platform nginx cassandra kafka elasticsearch postgres
 ```
 
+
+```text title="Expected output"
+HTTP 200
+Connected to aon-platform.example.local (192.168.1.45)
+● vrni-platform.service - VMware Aria Operations for Networks Platform
+     Loaded: loaded (/etc/systemd/system/vrni-platform.service; enabled; vendor preset: enabled)
+     Active: active (running) since Thu 2024-01-18 14:32:15 UTC; 2h 15min ago
+● nginx.service - A high performance web server and a reverse proxy server
+     Loaded: loaded (/usr/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
+     Active: active (running) since Thu 2024-01-18 14:31:42 UTC; 2h 15min ago
+● cassandra.service - Apache Cassandra
+     Loaded: loaded (/etc/systemd/system/cassandra.service; enabled; vendor preset: enabled)
+     Active: active (running) since Thu 2024-01-18 14:30:08 UTC; 2h 17min ago
+● kafka.service - Apache Kafka Message Broker
+     Loaded: loaded (/etc/systemd/system/kafka.service; enabled; vendor preset: enabled)
+     Active: active (running) since Thu 2024-01-18 14:29:55 UTC; 2h 17min ago
+● elasticsearch.service - Elasticsearch
+     Loaded: loaded (/etc/systemd/system/elasticsearch.service; enabled; vendor preset: enabled)
+     Active: active (running) since Thu 2024-01-18 14:28:30 UTC; 2h 18min ago
+● postgres.service - PostgreSQL Database Server
+     Loaded: loaded (/etc/systemd/system/postgres.service; enabled; vendor preset: enabled)
+     Active: active (running) since Thu 2024-01-18 14:27:45 UTC; 2h 19min ago
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification (already present in the example, but ensure it's included if removed).
+    **`Connection refused`** — Verify the platform VM is running and HTTPS port 443 is accessible; check firewall rules with `sudo ufw status` or equivalent.
+    **`Unit postgres.service not found`** — Confirm the correct service name with `sudo systemctl list-units --type=service | grep -i postgres` as it may be named `postgresql` instead.
 ### Initial Setup Wizard
 
 1. Browse to `https://aon-platform.example.local`.
@@ -175,6 +221,26 @@ curl -sk "https://aon-platform.example.local/api/ni/collectors" \
   | python3 -c "import sys,json; [print(c.get('nickname'), c.get('status')) for c in json.load(sys.stdin).get('results',[])]"
 ```
 
+
+```text title="Expected output"
+● vrni-collector.service - vRealize Network Insight Collector
+     Loaded: loaded (/etc/systemd/system/vrni-collector.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2024-01-17 14:32:18 UTC; 2h 45min ago
+       Docs: https://docs.vmware.com/en/vRealize-Network-Insight/
+    Process: 2847 ExecStart=/opt/vrni/collector/bin/collector.sh start (code=exited, status=0/SUCCESS)
+   Main PID: 2891 (java)
+      Tasks: 42 (limit: 4915)
+     Memory: 1.2G
+        CPU: 2m 34s
+     CGroup: /system.slice/vrni-collector.service
+aon-collector-dc1 REGISTERED
+aon-collector-dc2 ACTIVE
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the platform's CA certificate into your system trust store.
+    **`jq: command not found`** — Install `jq` package (`apt-get install jq` on Ubuntu) or use the provided `python3 -c` JSON parsing instead of piping to jq.
+    **`{"error":"Invalid credentials","code":401}`** — Verify the admin@local username and PASSWORD are correct, and that the platform API is accessible at https://aon-platform.example.local.
 ---
 
 ## Phase 4 — Data Source Configuration
@@ -238,6 +304,19 @@ curl -sk "https://aon-platform.example.local/api/ni/data-sources" \
 # All sources should report: ENABLED
 ```
 
+
+```text title="Expected output"
+vCenter-DC1 ENABLED
+NSX-Manager-Prod ENABLED
+vRealize-Ops ENABLED
+Kubernetes-Cluster-01 ENABLED
+Arista-Switch-Core ENABLED
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the platform's CA certificate into your system trust store.
+    **`curl: (7) Failed to connect to aon-platform.example.local port 443: Connection refused`** — Verify the AON platform hostname/IP is correct, the service is running (`systemctl status aria-operations-networks`), and network connectivity exists to port 443.
+    **`KeyError: 'results'`** — Confirm the API token in `${TOKEN}` is valid and has data-source read permissions by testing with `curl -sk "https://aon-platform.example.local/api/ni/data-sources" -H "Authorization: NetworkInsight ${TOKEN}"` directly.
 ---
 
 ## Phase 5 — IPFIX Flow Collection
@@ -286,6 +365,14 @@ interface GigabitEthernet1/0/1
  ip flow egress
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`% Invalid input detected at '^' marker.`** — Verify the interface name matches your device model (e.g., `GigabitEthernet0/0/1` on some platforms) and check syntax with `show ip flow export`.
+    **`% Incomplete command.`** — Ensure you are in the correct configuration mode (`config t`) before entering interface commands, and that the interface exists on the device.
 On Arista EOS (example):
 
 ```bash
@@ -298,6 +385,14 @@ flow tracking hardware
          template interval 300
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`% Invalid command`** — Verify you are in the correct configuration mode (use `configure terminal` first on network devices).
+    **`% Incomplete command`** — Ensure all required parameters are present; check that the exporter destination IP is reachable and that Management1 interface exists on the device.
 ### Verify Flows Arriving
 
 In the AON UI: Network Map → select a VM entity → Flows tab — recent flow records should appear within 5 minutes of enabling export.
@@ -309,6 +404,34 @@ sudo tcpdump -i eth0 udp port 2055 -c 20
 # Should see packets from ESXi hosts and switches
 ```
 
+
+```text title="Expected output"
+ubuntu@aon-collector-dc1.example.local's password: 
+tcpdump: verbose output suppressed, use -v or -vv for full packet decode
+listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes
+14:32:15.847291 IP 192.168.100.45.54821 > 192.168.100.200.2055: UDP, length 1472
+14:32:16.102547 IP 192.168.100.46.54822 > 192.168.100.200.2055: UDP, length 1468
+14:32:16.445893 IP 10.50.12.78.55234 > 192.168.100.200.2055: UDP, length 1456
+14:32:17.231654 IP 192.168.100.45.54821 > 192.168.100.200.2055: UDP, length 1472
+14:32:17.889012 IP 10.50.12.79.55235 > 192.168.100.200.2055: UDP, length 1464
+14:32:18.556234 IP 192.168.100.46.54822 > 192.168.100.200.2055: UDP, length 1468
+14:32:19.223445 IP 192.168.100.47.54823 > 192.168.100.200.2055: UDP, length 1480
+14:32:19.891123 IP 10.50.12.80.55236 > 192.168.100.200.2055: UDP, length 1472
+14:32:20.558902 IP 192.168.100.45.54821 > 192.168.100.200.2055: UDP, length 1468
+14:32:21.226734 IP 10.50.12.78.55234 > 192.168.100.200.2055: UDP, length 1456
+14:32:21.894567 IP 192.168.100.46.54822 > 192.168.100.200.2055: UDP, length 1472
+14:32:22.562345 IP 192.168.100.47.54823 > 192.168.100.200.2055: UDP, length 1464
+14:32:23.230123 IP 10.50.12.79.55235 > 192.168.100.200.2055: UDP, length 1480
+14:32:23.897891 IP 192.168.100.45.54821 > 192.168.100.200.2055: UDP, length 1468
+14:32:24.565678 IP 10.50.12.80.55236 > 192.168.100.200.2055: UDP, length 1472
+20 packets captured
+20 packets received by filter
+0 packets dropped by kernel
+```
+
+!!! warning "Common errors"
+    **`tcpdump: command not found`** — Install tcpdump with `sudo apt-get install tcpdump` on the collector VM.
+    **`tcpdump: eth0: No such device`** — Verify the correct interface name with `ip link show` and replace eth0 with the actual interface (e.g., ens0, ens
 ---
 
 ## Phase 6 — Post-Deployment Validation
@@ -326,6 +449,35 @@ sudo systemctl status vrni-platform nginx cassandra kafka elasticsearch postgres
 sudo tail -50 /var/log/vrni-platform/platform.log | grep -i error
 ```
 
+
+```text title="Expected output"
+ubuntu@aon-platform.example.local's password: 
+● vrni-platform.service - Aria Operations for Networks Platform
+     Loaded: loaded (/etc/systemd/system/vrni-platform.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2024-01-15 09:23:47 UTC; 2h 14min ago
+● nginx.service - NGINX HTTP Server
+     Loaded: loaded (/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2024-01-15 09:23:52 UTC; 2h 14min ago
+● cassandra.service - Apache Cassandra
+     Loaded: loaded (/etc/systemd/system/cassandra.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2024-01-15 09:24:15 UTC; 2h 13min ago
+● kafka.service - Apache Kafka
+     Loaded: loaded (/etc/systemd/system/kafka.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2024-01-15 09:24:31 UTC; 2h 13min ago
+● elasticsearch.service - Elasticsearch
+     Loaded: loaded (/etc/systemd/system/elasticsearch.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2024-01-15 09:24:48 UTC; 2h 12min ago
+● postgres.service - PostgreSQL Database Server
+     Loaded: loaded (/etc/systemd/system/postgres.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2024-01-15 09:25:03 UTC; 2h 12min ago
+2024-01-15 10:18:22 aon-platform INFO: Platform initialization complete
+2024-01-15 10:19:05 aon-platform INFO: All collectors registered successfully
+```
+
+!!! warning "Common errors"
+    **`sudo: no password was provided`** — Use `ssh -i /path/to/key ubuntu@aon-platform.example.local` for key-based auth or ensure passwordless sudo is configured.
+    **`Connection refused`** — Verify the hostname resolves correctly with `nslookup aon-platform.example.local` and confirm SSH port 22 is accessible.
+    **`tail: cannot open '/var/log/vrni-platform/platform.log' for reading: No such file or directory`** — Check the actual log location with `sudo find /var/log -name "*.log" -path "*vrni*"` or verify the service is logging to a different directory.
 ### Topology and Flow Map
 
 - Network Map → browse to any VM → confirm VMs, segments, and physical switches are visible.

@@ -90,6 +90,32 @@ vracli restore start --backup-id <id>       # start restore from a specific back
 vracli restore status                       # monitor progress
 ```
 
+
+```text title="Expected output"
+root@vra-prod-01:~# vracli restore list
+Backup ID                             Created                Size      Status
+b4f8c2a1-7e3f-4d92-a1b5-9c6e2f1d8a3b  2024-01-15 02:30:00   4.2 GB    Available
+a9d2e5f1-3c7b-4a89-b6e1-2f8c9d4e7a1c  2024-01-14 02:30:00   4.1 GB    Available
+7f1e4d9c-2b5a-4c8f-9e3d-1a6b8c2f5e9d  2024-01-13 02:30:00   4.3 GB    Available
+
+root@vra-prod-01:~# vracli restore start --backup-id b4f8c2a1-7e3f-4d92-a1b5-9c6e2f1d8a3b
+Restore operation initiated successfully.
+Restore ID: restore-20240115-084532
+Estimated time: 45 minutes
+
+root@vra-prod-01:~# vracli restore status
+Restore ID: restore-20240115-084532
+Status: IN_PROGRESS
+Progress: 62%
+Elapsed Time: 28 minutes
+Estimated Remaining: 17 minutes
+Current Phase: Restoring database schemas
+```
+
+!!! warning "Common errors"
+    **`Error: Backup ID not found`** — Verify the backup ID exists by running `vracli restore list` and use the exact ID from the Backup ID column.
+    **`Error: Restore operation already in progress`** — Wait for the current restore to complete by monitoring `vracli restore status`, or contact support to cancel the existing operation.
+    **`Error: Insufficient disk space for restore operation`** — Check available disk space with `df -h` and ensure at least 5 GB free space is available on the VRA appliance.
 ---
 
 ## Post-Restore Validation

@@ -94,6 +94,46 @@ free -h
 top -bn1 | head -20
 ```
 
+
+```text title="Expected output"
+ubuntu@vrni-platform:~$ sudo systemctl status vrni
+● vrni.service - vRealize Network Insight Platform
+     Loaded: loaded (/etc/systemd/system/vrni.service; enabled; vendor preset: enabled)
+     Active: active (running) since Thu 2024-01-18 14:32:15 UTC; 2 days ago
+   Main PID: 4521 (java)
+      Tasks: 47 (limit: 4915)
+     Memory: 3.2G
+        CPU: 2h 14m 32s
+     CGroup: /system.slice/vrni.service
+             └─4521 /usr/lib/jvm/java-11-openjdk-amd64/bin/java -Xmx6g...
+
+ubuntu@vrni-platform:~$ df -h
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1        50G   38G   9.2G  82% /
+/dev/sda2       200G  187G   6.8G  97% /data
+/dev/sda3        20G   18G   1.2G  94% /var/log
+tmpfs           7.8G     0  7.8G   0% /dev/shm
+
+ubuntu@vrni-platform:~$ free -h
+              total        used        free      shared  buff/cache   available
+Mem:           15Gi       9.8Gi       2.1Gi       256Mi       3.2Gi       4.9Gi
+Swap:          4.0Gi       1.2Gi       2.8Gi
+
+ubuntu@vrni-platform:~$ top -bn1 | head -20
+top - 14:47:33 up 2 days,  3:15,  1 user,  load average: 2.34, 2.18, 1.89
+Tasks: 187 total,   3 running, 184 sleeping,   0 stopped,   0 zombie
+%Cpu(s): 18.4 us,  3.2 sy,  0.0 ni, 77.8 id,  0.4 wa,  0.2 hi,  0.0 si,  0.0 st
+MiB Mem :  15360.0 total,   2156.3 free,  10038.4 used,   3165.3 buff/cache
+MiB Swap:   4096.0 total,   2867.2 free,   1228.8 used.   5017.6 avail Mem
+
+    PID USER      PR  NI    VIRT    RES  SHR S  %CPU %MEM     TIME+ COMMAND
+   4521 root      20   0 8456m 3.2g 1.8g S  24.5 21.4 214:32 java
+   5847 ubuntu    20   0  12m  4.2m 3.6m S   0.8  0.0   0:02 sshd
+   1203 root      20   0  892m 412m 156m S   1.2  2.7  18:45 cassandra
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey).`** — Verify the SSH key
 ### 2. Generate the support bundle
 
 **Method 1 — Via SSH (recommended for any severity):**
@@ -112,6 +152,30 @@ ls -lh /data/support-bundles/
 scp ubuntu@<vrni-fqdn>:/data/support-bundles/<bundle-filename>.tar.gz /tmp/
 ```
 
+
+```text title="Expected output"
+ubuntu@vrni-platform-01.corp.local's password: 
+Welcome to Ubuntu 20.04.3 LTS (GNU/Linux 5.4.0-42-generic x86_64)
+Last login: Wed Mar 15 10:22:14 2024 from 192.168.1.50
+
+Generating support bundle...
+Collecting system logs...
+Collecting network diagnostics...
+Collecting application data...
+Support bundle generation completed successfully.
+Bundle saved to: /data/support-bundles/vrni-support-bundle-20240315-102847.tar.gz
+
+total 2.4G
+-rw-r--r-- 1 ubuntu ubuntu 2.4G Mar 15 10:28 vrni-support-bundle-20240315-102847.tar.gz
+-rw-r--r-- 1 ubuntu ubuntu 1.8G Mar 14 14:15 vrni-support-bundle-20240314-141532.tar.gz
+
+vrni-support-bundle-20240315-102847.tar.gz          100% 2.4GB  18.5MB/s   02:09
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify the ubuntu user account is enabled on the Platform VM and SSH key/password credentials are correct.
+    **`/etc/init.d/support-bundle.sh: command not found`** — Confirm the Aria Operations for Networks version is installed and the support bundle script exists; check `/opt/vrni/bin/` if the path differs.
+    **`scp: /data/support-bundles/<bundle-filename>.tar.gz: No such file or directory`** — Replace `<bundle-filename>` with the actual bundle filename shown in the `ls` output, or verify the bundle generation completed without errors.
 **Method 2 — Via VAMI UI:**
 
 1. Browse to `https://<vrni-fqdn>:5480` and log in.
@@ -133,6 +197,24 @@ ping -c 4 <vcenter-ip>
 nc -zv <vcenter-ip> 443
 ```
 
+
+```text title="Expected output"
+PING 192.168.1.45 (192.168.1.45) 56(84) bytes of data.
+64 bytes from 192.168.1.45: icmp_seq=1 ttl=64 time=2.34 ms
+64 bytes from 192.168.1.45: icmp_seq=2 ttl=64 time=2.18 ms
+64 bytes from 192.168.1.45: icmp_seq=3 ttl=64 time=2.41 ms
+64 bytes from 192.168.1.45: icmp_seq=4 ttl=64 time=2.29 ms
+
+--- 192.168.1.45 statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3005ms
+rtt min/avg/max/stddev = 2.18/2.30/2.41/0.09 ms
+Connection to 192.168.1.45 443 port [tcp/https] succeeded!
+```
+
+!!! warning "Common errors"
+    **`ping: unknown host <vcenter-ip>`** — Replace the literal `<vcenter-ip>` placeholder with the actual IP address or FQDN of your vCenter or data source.
+    **`nc: connect to 192.168.1.45 port 443 (tcp) failed: Connection refused`** — Verify the vCenter service is running and listening on port 443, or check firewall rules between the Platform VM and data source.
+    **`ping: sendto: No route to host`** — Confirm network routing and VLAN configuration between the Platform VM and data source network segment.
 ### 4. Write the timeline
 
 ```text
@@ -256,6 +338,45 @@ nc -zv <vcenter-ip> 443
 sudo tail -100 /var/log/vrni/platform.log | grep -i "error\|fail\|exception"
 ```
 
+
+```text title="Expected output"
+● vrni.service - VMware Aria Operations for Networks Platform
+     Loaded: loaded (/etc/systemd/system/vrni.service; enabled; vendor preset: enabled)
+     Active: active (running) since Thu 2024-01-18 14:32:15 UTC; 2 days ago
+   Main PID: 2847 (java)
+      Tasks: 87 (limit: 4915)
+     Memory: 4.2G
+        CPU: 18h 34m 12s
+     CGroup: /system.slice/vrni.service
+             └─2847 /usr/lib/jvm/java-11-openjdk-amd64/bin/java -Xmx8g...
+
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1        50G   38G   9.2G  81% /
+/dev/sdb1       500G  487G   8.1G  98% /data
+tmpfs           7.8G  1.2G  6.6G  16% /dev/shm
+
+              total        used        free      shared  buff/cache   available
+Mem:          15Gi       8.4Gi       2.1Gi       512Mi       4.5Gi       5.8Gi
+Swap:         4.0Gi       1.8Gi       2.2Gi
+
+ubuntu    2847  8.4 28.5 8847264 4398512 ?  Sl   Jan18 234:12 /usr/lib/jvm/java-11-openjdk-amd64/bin/java
+ubuntu    3124  2.1  12.3 2156780 1897456 ?  Sl   Jan18  98:45 /usr/bin/cassandra
+ubuntu    4521  0.3   0.8  89234 124567 ?   S    Jan18   4:23 nginx: master process
+
+PING 192.168.1.45 (192.168.1.45) 56(84) bytes of data.
+64 bytes from 192.168.1.45: icmp_seq=1 time=2.34 ms
+64 bytes from 192.168.1.45: icmp_seq=2 time=2.41 ms
+64 bytes from 192.168.1.45: icmp_seq=3 time=2.38 ms
+64 bytes from 192.168.1.45: icmp_seq=4 time=2.39 ms
+--- 192.168.1.45 statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3004ms
+rtt min/avg/max/stddev = 2.34/2.38/2.41/0.03 ms
+Connection to 192.168.1.45 443 port [tcp/https] succeeded!
+
+2024-01-18T14:45:23.812Z ERROR [vrni-collector] Failed to authenticate with vCenter: javax.net.ssl.SSLHandshakeException: PKIX path building failed
+2024-01-18T14:52:10.445Z WARN [cassandra-sync] Replication factor mismatch detected for keyspace vrni_flow
+2024-01-18T15:03:47.921
+```
 ---
 
 ## Support SLA Reference

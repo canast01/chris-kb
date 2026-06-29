@@ -41,6 +41,14 @@ logger -n <vrli-ip> -P 514 -d "Test message from $(hostname)"
 # text contains "Test message" AND hostname = <source-hostname>
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`logger: unknown host <vrli-ip>`** — Verify the vRLI IP address is correct and reachable from the source device using `ping <vrli-ip>`.
+    **`logger: socket: Permission denied`** — Run the command with `sudo` or ensure the user has permission to send UDP packets to port 514.
 ---
 
 ## Install a Content Pack
@@ -86,6 +94,18 @@ df -h /storage
 # /storage should be below 80% — vRLI starts dropping logs when full
 ```
 
+
+```text title="Expected output"
+root@vrli-prod-01.datacenter.local's password: 
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda3       500G  385G  115G  77%  /storage
+root@vrli-prod-01.datacenter.local:~#
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify SSH credentials and that root login is enabled in `/etc/ssh/sshd_config`, or use the vRLI admin account instead.
+    **`No route to host`** — Confirm the vRLI FQDN resolves correctly with `nslookup <vrli-fqdn>` and that the appliance is reachable on port 22.
+    **`Filesystem /storage not found in df output`** — Check that the appliance storage is mounted by running `mount | grep storage` or verify the correct mount point in vRLI's configuration.
 ---
 
 ## Archive Log Data to NFS
@@ -160,6 +180,31 @@ curl -sk -X POST -u admin:<password> \
   "https://<vrli-fqdn>/api/v1/notification/channels/<channel-id>/test"
 ```
 
+
+```text title="Expected output"
+{
+  "id": "channel-webhook-8f4a2c1b",
+  "type": "WEBHOOK",
+  "name": "teams-alerts",
+  "webhookUrl": "https://example.webhook.office.com/webhookb2/...",
+  "contentType": "application/json",
+  "body": "{\"text\": \"Alert: ${alertName} - ${hitCount} events\"}",
+  "enabled": true,
+  "createdTime": 1704067200000,
+  "modifiedTime": 1704067200000
+}
+{
+  "success": true,
+  "message": "Test notification sent successfully to webhook endpoint",
+  "statusCode": 200,
+  "responseTime": "245ms"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the vRLI certificate into your system's CA bundle.
+    **`{"error":"Invalid credentials","statusCode":401}`** — Verify the admin password is correct and URL-encoded if it contains special characters; use `-u admin:$(echo -n 'password' | jq -sRr @uri)` for special chars.
+    **`{"error":"Channel not found","statusCode":404}`** — Replace `<channel-id>` with the actual channel ID returned from the creation response (e.g., `channel-webhook-8f4a2c1b`).
 Payload variables: `${alertName}`, `${hitCount}`, `${url}`, `${fields}`, `${timestamp}`.
 
 ---
@@ -208,6 +253,26 @@ curl -sk -X POST -u admin:<password> \
   }'
 ```
 
+
+```text title="Expected output"
+{
+  "id": "ops-config-12847",
+  "serverHost": "vrops-prod.corp.local",
+  "serverPort": 443,
+  "username": "admin",
+  "enabled": true,
+  "certificateValidation": true,
+  "lastModified": "2024-01-15T14:32:18.447Z",
+  "lastModifiedBy": "admin",
+  "connectionStatus": "CONNECTED",
+  "testConnectionResult": "SUCCESS"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate validation, or import the vRLI certificate into your system trust store.
+    **`{"error":"Invalid credentials","statusCode":401}`** — Verify the admin username and password are correct and the account has API permissions enabled.
+    **`curl: (7) Failed to connect to <vrli-fqdn> port 443: Connection refused`** — Confirm the vRLI hostname/IP is correct, the service is running, and firewall rules allow port 443 access from your client.
 After configuration, alerts in vRLI that match the integration criteria create corresponding events in Aria Operations, visible in the **Workbench** and alert timeline.
 
 ---
@@ -234,6 +299,23 @@ grep -i "nsx\|tnc\|edge" /var/log/loginsight/ingestion.log | tail -20
 # hostname contains "nsx" AND _source = syslog
 ```
 
+
+```text title="Expected output"
+2024-01-15T09:42:33.521Z [INFO] NSX-Manager-01.lab.local [192.168.1.45] connected - TLS handshake successful
+2024-01-15T09:42:34.102Z [INFO] NSX-Edge-Cluster-01 ingestion rate: 2847 EPS from syslog parser
+2024-01-15T09:42:35.667Z [WARN] NSX-Manager-02.lab.local connection timeout after 30s, retrying...
+2024-01-15T09:42:36.891Z [INFO] TNC protocol negotiation completed for edge-node-04.corp.local
+2024-01-15T09:42:38.445Z [INFO] NSX logical switch traffic: 15234 events/sec ingested
+2024-01-15T09:42:39.123Z [WARN] Edge gateway 192.168.100.50 - packet loss detected (2.3%)
+2024-01-15T09:42:40.556Z [INFO] NSX-Manager-01.lab.local heartbeat received - latency 12ms
+2024-01-15T09:42:41.234Z [INFO] TNC buffer utilization: 67% on ingestion-worker-3
+2024-01-15T09:42:42.789Z [INFO] NSX-Edge-Cluster-01 syslog stream active, 8 collectors reporting
+2024-01-15T09:42:43.901Z [INFO] Edge node 192.168.1.89 - certificate valid until 2025-03-22
+```
+
+!!! warning "Common errors"
+    **`grep: /var/log/loginsight/ingestion.log: No such file or directory`** — Verify vRLI is running with `systemctl status loginsight` and check the correct log path with `find /var/log -name "*ingestion*"`.
+    **`tail: cannot open '/var/log/loginsight/ingestion.log' for reading: Permission denied`** — Run the command with `sudo` or switch to the loginsight user with `sudo su - loginsight`.
 ---
 
 ## Configure Event Forwarding to SIEM
@@ -257,6 +339,23 @@ nc -zv <siem-host> <siem-port>
 grep -i "forward\|destination\|connect" /var/log/loginsight/runtime.log | tail -30
 ```
 
+
+```text title="Expected output"
+Connection to siem-prod-01.corp.local 514 port [tcp/syslog] succeeded!
+2024-01-15T09:42:33.421Z [INFO] Forwarding to destination siem-prod-01.corp.local:514 - 1247 events queued
+2024-01-15T09:42:45.892Z [WARN] Connection timeout to destination siem-prod-01.corp.local:514 - retrying in 30s
+2024-01-15T09:43:15.123Z [INFO] Successfully reconnected to destination siem-prod-01.corp.local:514
+2024-01-15T09:43:28.456Z [INFO] Forwarding to destination siem-prod-01.corp.local:514 - 892 events queued
+2024-01-15T09:44:02.789Z [DEBUG] Forward buffer utilization: 45%
+2024-01-15T09:44:33.012Z [INFO] Forwarding to destination siem-prod-01.corp.local:514 - 1156 events queued
+2024-01-15T09:45:01.345Z [WARN] Destination siem-prod-01.corp.local:514 slow response - 2.3s latency
+2024-01-15T09:45:30.678Z [INFO] Forwarding to destination siem-prod-01.corp.local:514 - 934 events queued
+```
+
+!!! warning "Common errors"
+    **`nc: getaddrinfo failed for <siem-host>: Name or service not known`** — Verify the SIEM hostname is resolvable by running `nslookup <siem-host>` or update `/etc/hosts` with the correct IP address.
+    **`Connection refused`** — Confirm the SIEM service is listening on the specified port with `netstat -tlnp | grep <siem-port>` on the SIEM host and verify firewall rules allow vRLI to that destination.
+    **`No such file or directory`** — Check that the vRLI appliance has the correct log file path by running `ls -la /var/log/loginsight/` to confirm runtime.log exists.
 ---
 
 ## Create a Custom Extracted Field
@@ -330,6 +429,17 @@ curl -sk https://<vrli-vip>:9000/api/v1/version | jq .version
 ip addr show | grep <vrli-vip>
 ```
 
+
+```text title="Expected output"
+Connection to 192.168.1.50 514 port [tcp/syslog] succeeded!
+"8.10.2.1"
+inet 192.168.1.50/32 scope global secondary eth0
+```
+
+!!! warning "Common errors"
+    **`nc: connect to 192.168.1.50 port 514 (tcp) failed: Connection refused`** — Verify the syslog forwarder service is running on the vRLI cluster with `systemctl status loginsight` and check firewall rules allow port 514 inbound.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate validation, or import the vRLI self-signed cert into your management host's CA bundle.
+    **`inet 192.168.1.50/32 scope global secondary eth0` not found in output`** — SSH to the vRLI master node and confirm keepalived is running with `systemctl status keepalived`; if stopped, restart it with `systemctl start keepalived`.
 6. Test HA failover: power off the master VM → confirm VIP moves to a worker (now promoted master) within ~30 seconds
 
 ---
@@ -363,6 +473,35 @@ curl -sk -u 'admin:<password>' \
   https://<vrli-fqdn>/api/v2/cluster/nodes | \
   jq '.nodes[] | {host: .hostname, state: .state, version: .version}'
 ```
+
+```text title="Expected output"
+"8.10.2"
+{
+  "host": "vrli-master-01.corp.local",
+  "state": "ACTIVE",
+  "version": "8.10.2"
+}
+{
+  "host": "vrli-worker-01.corp.local",
+  "state": "ACTIVE",
+  "version": "8.10.2"
+}
+{
+  "host": "vrli-worker-02.corp.local",
+  "state": "ACTIVE",
+  "version": "8.10.2"
+}
+{
+  "host": "vrli-worker-03.corp.local",
+  "state": "ACTIVE",
+  "version": "8.10.2"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in the example, so verify the flag is not being removed).
+    **`jq: parse error: Cannot index string with string "nodes"`** — Ensure the API endpoint is correct and the cluster is fully initialized; check that you're using `/api/v2/cluster/nodes` not `/api/v1/cluster/nodes`.
+    **`401 Unauthorized`** — Verify the admin password is correct and URL-encoded if it contains special characters; test with `curl -sk -u 'admin:password' https://<vrli-fqdn>/api/v1/version` first.
 - vRLI UI → **Administration** → **Content Packs** → confirm all installed packs still active
 - vRLI UI → **Administration** → **Cluster** → confirm all nodes **ACTIVE**
 - Delete node snapshots after a 48-hour burn-in period
@@ -415,6 +554,17 @@ curl -sk -u 'admin:<password>' \
   -o "vrli-backup-$(date +%Y%m%d).json"
 ```
 
+
+```text title="Expected output"
+% Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 2847k  100 2847k    0     0   1.2M      0  0:00:02 0:00:02 --:--:--  0:00:02
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the vRLI certificate into your system's CA bundle.
+    **`curl: (7) Failed to connect to <vrli-fqdn> port 443: Connection refused`** — Verify the vRLI hostname/IP is correct, the appliance is running, and port 443 is accessible from your management host.
+    **`HTTP/1.1 401 Unauthorized`** — Confirm the admin credentials are correct and the user has API access permissions in vRLI.
 ---
 
 ## Common Search Queries
@@ -439,6 +589,35 @@ text contains "DENY" AND appname = "nsx" AND text contains "DROP"
 text contains "Failed password" AND hostname contains "prod-"
 ```
 
+
+```text title="Expected output"
+Query 1: Host disconnect events
+  hostd-5a2c1e9f [2024-01-15 14:32:18.445Z] Host 'esx-prod-04.dc1.local' disconnected from vCenter
+  hostd-7b3d4f2a [2024-01-15 14:33:02.112Z] Network timeout: disconnected from management network
+  hostd-9c8e5b1d [2024-01-15 14:35:41.667Z] Host 'esx-prod-07.dc1.local' disconnected - agent restart required
+
+Query 2: vMotion failures
+  vpxd-2f6a8c3e [2024-01-15 15:12:47.334Z] vMotion failed for VM 'web-app-12': insufficient resources on target host
+  vpxd-4d1b9f7c [2024-01-15 15:14:19.891Z] vMotion failed: network connectivity loss during migration
+  vpxd-6e2a3h5k [2024-01-15 15:16:05.556Z] vMotion failed for 'db-prod-03': CPU incompatibility detected
+
+Query 3: HA events
+  vmkernel-8f4c2a9d [2024-01-15 16:01:22.445Z] HA failover initiated for cluster 'prod-cluster-1'
+  vmkernel-3a7e1b6f [2024-01-15 16:02:15.778Z] HA heartbeat lost from host esx-prod-02 (3/5 heartbeats missing)
+
+Query 4: vSAN component errors
+  lsom-5c9d2e4a [2024-01-15 16:45:33.221Z] ERROR: LSOM disk group 'dg-001' health degraded
+  lsom-7f3a1c8b [2024-01-15 16:47:09.554Z] ERROR: LSOM component witness unavailable on host esx-prod-06
+
+Query 5: NSX DFW drops
+  nsx-fw-9a2b4f1e [2024-01-15 17:23:44.667Z] DENY: 192.168.1.45:54321 -> 10.0.5.12:443 DROP (policy: restrict-prod)
+  nsx-fw-1d6e3c7f [2024-01-15 17:24:12.334Z] DENY: 172.16.8.90:22 -> 10.20.1.5:22 DROP (policy: ssh-lockdown)
+
+Query 6: Failed logins (SSH brute force detection)
+  sshd-4b8f2a3c [2024-01-15 18:01:55.112Z] Failed password for invalid user admin from 203.0.113.42 port 52847 ssh2
+  sshd-6c1d5e9a [2024-01-15 18:02:03.445Z] Failed password for root from 203.0.113.42 port 52851 ssh2
+  sshd-8e4a7f2b [2024-01-15
+```
 Time-range tips: always set a time range — start with last 1 hour for active incidents; expand to 7 days for intermittent issues. Use the timeline histogram to identify event spikes before filtering further.
 
 ---
@@ -474,6 +653,17 @@ curl -sk "https://<aria-logs-ip>:9543/api/v2/events" -d '{"events":[]}' \
 # Should return 200 or 400 (not a connection refused)
 ```
 
+
+```text title="Expected output"
+Connection to 192.168.45.120 514 [tcp] succeeded!
+Connection to 192.168.45.120 6514 [tcp] succeeded!
+{"status":"success","message":"Events processed","count":0,"timestamp":"2024-01-15T14:32:18Z"}
+```
+
+!!! warning "Common errors"
+    **`nc: connect to 192.168.45.120 port 514 (tcp) failed: Connection refused`** — Verify the Aria Operations for Logs service is running with `systemctl status aria-logs` and confirm the syslog listener is enabled in the configuration.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the Aria Operations for Logs CA certificate into your system's trusted store.
+    **`curl: (7) Failed to connect to 192.168.45.120 port 9543: Connection timed out`** — Check network connectivity and firewall rules; ensure port 9543 is open and the Aria Operations for Logs API service is listening with `netstat -tlnp | grep 9543`.
 If the connection is refused, check:
 - Firewall rules between the source and Aria Logs (see architecture/ports page for required ports)
 - Aria Logs worker/master health: `ssh root@<aria-logs-ip>` → `service cfapi status`
@@ -493,6 +683,19 @@ systemctl restart rsyslog
 journalctl -u rsyslog -n 50 | grep -i error
 ```
 
+
+```text title="Expected output"
+/etc/rsyslog.d/aria-logs.conf:*.* @@192.168.45.120:514
+/etc/rsyslog.d/aria-logs.conf:$ActionQueueFileName queue
+/etc/rsyslog.d/aria-logs.conf:$ActionQueueMaxDiskSpace 1g
+/etc/rsyslog.conf:# Log all kernel messages to the console.
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`grep: /etc/rsyslog.d/: No such file or directory`** — Create the rsyslog.d directory with `mkdir -p /etc/rsyslog.d/` and add your Aria Logs forwarding rule there.
+    **`Job for rsyslog.service failed because the control process exited with error code.`** — Validate rsyslog configuration syntax with `rsyslog -N1` to identify malformed rules before restarting.
+    **`connect(2) failed in doAction() to 192.168.45.120:514 [name=192.168.45.120 errno=111 Connection refused]`** — Verify the Aria Logs collector is running and listening on port 514 with `nc -zv 192.168.45.120 514`.
 **For ESXi hosts:**
 
 ```bash
@@ -501,6 +704,23 @@ esxcli system syslog config get
 # Confirm host is in Aria Logs: Administration → Log Sources → vSphere Integration
 ```
 
+
+```text title="Expected output"
+Syslog.global.defaultRotate: 100
+Syslog.global.defaultSize: 1024
+Syslog.global.logDir: /var/log
+Syslog.global.logDirUnique: false
+Syslog.global.defaultFormat: %hostName %procName[%procID]: %syslogTag%msg
+Syslog.global.logToUplinkVlanId: -1
+Syslog.global.syslogServerDefaultTimeout: 180
+Syslog.global.syslogServerDefaultTransport: udp
+Syslog.queues.drop: true
+Syslog.queues.discardThreshold: 90
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown command or namespace syslog`** — Verify the ESXi host version supports esxcli syslog commands (6.5+) and run the command directly on the ESXi host, not a vCenter server.
+    **`Connection refused to syslog target <IP>:514`** — Confirm the remote syslog server is listening on the specified port and firewall rules allow outbound UDP/TCP 514 from the ESXi host.
 ### Step 4 — Verify the Content Pack / Field Extraction
 
 ![Step 4 — Verify the Content Pack / Field Extraction](../../../../assets/aria-operations-for-logs-proc-step-4-verify-the-content-pack-field-extractio.svg)
@@ -589,6 +809,15 @@ sed -i '/aria-logs\|vrealize/s/^/#/' /etc/rsyslog.conf
 systemctl restart rsyslog
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`sed: can't read /etc/rsyslog.conf: No such file or directory`** — Verify the rsyslog package is installed with `rpm -q rsyslog` or `dpkg -l | grep rsyslog` and install if missing.
+    **`Failed to restart rsyslog.service: Unit rsyslog.service not found.`** — Confirm rsyslog is installed and enabled with `systemctl list-unit-files | grep rsyslog`, or use the correct service name for your syslog daemon.
+    **`sed: -i may not be used on stdin`** — Ensure `/etc/rsyslog.conf` is a regular file and not a pipe; check file permissions with `ls -l /etc/rsyslog.conf` and verify you have write access.
 **ESXi:**
 
 ```bash
@@ -597,6 +826,15 @@ esxcli system syslog config set --loghost=""
 esxcli system syslog reload
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown option or flag '--loghost'`** — Use the correct flag syntax `--loghost=` with an equals sign instead of a space.
+    **`Error: Permission denied`** — Run the command with root privileges or as a user with ESXi administrative permissions using `sudo` or direct root login.
 **Windows (Aria Logs agent):**
 
 ```powershell

@@ -165,6 +165,35 @@ vmkping -d -s 1572 -I <tep-vmk> <remote-tep-ip>
 curl -sk -u admin:<pass> https://<nsx-mgr>/api/v1/transport-nodes | python3 -m json.tool | grep -A3 '"state"'
 ```
 
+
+```text title="Expected output"
+200
+
+Connection to 192.168.1.50 port 443 [tcp/https] succeeded!
+Connection to 192.168.1.50 port 5671 [tcp/amqp] succeeded!
+
+Name          PortsetKey           DvsName    MTU    Enabled  Configured
+vmk10         key-vim.host.PortSet vds-nsx    1600   true     true
+
+Address       Netmask         Broadcast   
+10.100.1.42   255.255.255.0   10.100.1.255
+
+PING 10.100.1.43 (10.100.1.43): 56 data bytes
+64 bytes from 10.100.1.43: icmp_seq=0 time=2.341 ms
+64 bytes from 10.100.1.43: icmp_seq=1 time=2.156 ms
+64 bytes from 10.100.1.43: icmp_seq=2 time=2.289 ms
+
+        "state": "SUCCESS",
+        "state_message": "Transport node successfully registered"
+    },
+    {
+        "state": "FAILED",
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification for self-signed NSX Manager certificates.
+    **`Connection refused` or `nc: connect to <nsx-manager-ip> port 443 (tcp) failed`** — Verify NSX Manager VIP is reachable and firewall rules allow port 443/5671 from ESXi hosts to NSX Manager.
+    **`PING 10.100.1.43 (10.100.1.43): 100% packet loss`** — Confirm TEP VMkernel adapter MTU is set to 1600+ and remote ESXi host TEP is on same VLAN/network segment.
 ---
 
 ## See also

@@ -55,6 +55,29 @@ echo "=== Disk Usage on LCM Appliance ==="
 df -h / /data /var/log 2>/dev/null | column -t
 ```
 
+
+```text title="Expected output"
+=== LCM Environment Health ===
+Environment: prod-vcenter-01  Health: HEALTHY
+Environment: prod-vcenter-02  Health: HEALTHY
+Environment: staging-env  Health: DEGRADED
+Environment: dr-site  Health: UNKNOWN
+
+=== Running Requests ===
+[UPGRADE] ID:req-2024-08-15-001  Started:2024-08-15T09:32:14.521Z
+[PATCH] ID:req-2024-08-15-002  Started:2024-08-15T10:18:47.893Z
+
+=== Disk Usage on LCM Appliance ===
+Filesystem     Size  Used  Avail  Use%  Mounted on
+/dev/sda1      50G   38G   9.2G   82%  /
+/dev/sdb1      500G  412G  65G    87%  /data
+/dev/sdc1      100G  94G   3.2G   97%  /var/log
+```
+
+!!! warning "Common errors"
+    **`jq: parse error: Invalid JSON text at line 1`** — Verify the LCM token is valid by checking credentials and confirming the LCM service is responding with valid JSON.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl (already present) or import the LCM's CA certificate into your system trust store.
+    **`curl: (7) Failed to connect to <lcm-fqdn> port 443: Connection refused`** — Confirm the LCM FQDN is correct, resolvable, and the LCM appliance is running and accessible on port 443.
 ---
 
 ## Bulk Locker Password Export (Alias List)
@@ -75,6 +98,20 @@ curl -sk -H "x-xenon-auth-token: $TOKEN" \
   jq -r '.passwords[] | [.alias, .userName, .description] | @csv'
 ```
 
+
+```text title="Expected output"
+alias,username,description
+"vcenter-admin","administrator@vsphere.local","vCenter root password"
+"esxi-root","root","ESXi host root credential"
+"nsxt-admin","admin","NSX-T manager admin account"
+"vsan-witness","root","vSAN witness node access"
+"backup-svc","backup_user","Automated backup service account"
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl (already present) or import the LCM's CA certificate into your system trust store.
+    **`jq: parse error: Cannot index string with string "token"`** — Verify the LCM hostname is correct and the login endpoint is reachable; the response is likely an error message, not JSON.
+    **`curl: (7) Failed to connect to <LCM>: Name or service not known`** — Ensure the LCM hostname or IP address is resolvable and the LCM appliance is running and network-accessible.
 ---
 
 ## NTP Validation Across All Product Nodes
@@ -101,6 +138,20 @@ for node in "${NODES[@]}"; do
 done
 ```
 
+
+```text title="Expected output"
+lcm-prod-01.example.local: System time   : 0.000000234 seconds fast of NTP time
+vidm-prod-01.example.local: System time   : -0.000000891 seconds slow of NTP time
+vrops-prod-01.example.local: System time   : 0.000000156 seconds fast of NTP time
+vrops-prod-02.example.local: SSH failed
+vra-prod-01.example.local: System time   : 0.000001023 seconds slow of NTP time
+vrli-prod-01.example.local: System time   : 0.000000445 seconds fast of NTP time
+```
+
+!!! warning "Common errors"
+    **`SSH failed`** — Verify SSH key-based authentication is configured for root on the target node, or add the node's IP to `/etc/hosts` if DNS resolution is failing.
+    **`Permission denied (publickey,password)`** — Ensure the root user's SSH public key is in `/root/.ssh/authorized_keys` on each target node with correct permissions (600).
+    **`connect timed out`** — Increase the `ConnectTimeout` value or verify network connectivity and firewall rules allow SSH (port 22) from the LCM appliance to all nodes.
 ---
 
 ## Trigger Upgrade via API (Non-Interactive)
@@ -135,6 +186,20 @@ while true; do
 done
 ```
 
+
+```text title="Expected output"
+Upgrade triggered — Request ID: req-8f4c2a91-7e3d-4b12-9c5a-1d6e2f8a3b4c
+Monitor: https://lcm.corp.local/lcm/lcmservice/api/v2/requests/req-8f4c2a91-7e3d-4b12-9c5a-1d6e2f8a3b4c
+14:23:45 — Request state: INPROGRESS
+15:24:12 — Request state: INPROGRESS
+16:25:33 — Request state: INPROGRESS
+17:26:47 — Request state: COMPLETED
+```
+
+!!! warning "Common errors"
+    **`jq: error (at <stdin>:1): Cannot index null with string "token"`** — Verify LCM hostname is correct and credentials are valid; check that the login endpoint is accessible.
+    **`jq: error (at <stdin>:1): Cannot index null with string "requestId"`** — Confirm the environment ID and product ID exist and the target version is available in the LCM catalog.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — The `-k` flag is already present; if the error persists, verify the LCM server's SSL certificate is trusted or use `curl -sk` with an explicit CA bundle via `--cacert`.
 ---
 
 ## See also

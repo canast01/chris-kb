@@ -21,12 +21,42 @@ AllowUsers ubuntu
 sudo systemctl restart sshd
 ```
 
+
+```text title="Expected output"
+ubuntu@vrni.example.local's password: 
+Welcome to Ubuntu 20.04.3 LTS (GNU/Linux 5.4.0-42-generic x86_64)
+
+ System load: 0.45             Processes:           127
+ Usage of /: 18.2% of 19.29GB   Users logged in:     1
+ Last login: Mon Jan 16 14:22:33 2025 from 192.168.1.50
+
+ubuntu@vrni:~$ sudo vim /etc/ssh/sshd_config
+(no output — command opens editor)
+ubuntu@vrni:~$ sudo systemctl restart sshd
+(no output — command completes silently)
+ubuntu@vrni:~$
+```
+
+!!! warning "Common errors"
+    **`sshd: no hostkeys available -- exiting.`** — Run `sudo ssh-keygen -A` to generate missing host keys before restarting sshd.
+    **`Permission denied (publickey).`** — Ensure your public key is added to `~/.ssh/authorized_keys` on the target system before disabling password authentication.
+    **`sudo: vim: command not found`** — Install vim with `sudo apt-get install vim` or use `sudo nano /etc/ssh/sshd_config` instead.
 ```bash
 # On Platform VM, if no external firewall:
 sudo iptables -A INPUT -p tcp --dport 443 -s 10.10.10.0/24 -j ACCEPT
 sudo iptables -A INPUT -p tcp --dport 443 -j DROP
 sudo iptables-save > /etc/iptables/rules.v4
 ```
+
+```text title="Expected output"
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`iptables v1.8.7 (nf_tables): Could not fetch rule set generation id: Permission denied`** — Run commands with `sudo` or as root user.
+    **`iptables-save: command not found`** — Install iptables-persistent package with `sudo apt-get install iptables-persistent` on Debian/Ubuntu systems.
 ```bash
 sudo vim /etc/nginx/nginx.conf
 # Set:
@@ -52,6 +82,14 @@ echo | openssl s_client -connect vrni.example.local:443 2>/dev/null \
 # Renew 30 days before expiry via Settings → SSL Certificate → Upload
 ```
 
+
+```text title="Expected output"
+notAfter=Jan 15 12:34:56 2025 GMT
+```
+
+!!! warning "Common errors"
+    **`unable to load certificate`** — Ensure the certificate file path is correct and the file contains valid PEM-encoded certificate data.
+    **`SSL: CERTIFICATE_VERIFY_FAILED`** — This is expected for self-signed certificates; the command still extracts the expiry date successfully despite the verification warning.
 ## Before you begin
 
 - **Access:** vCenter Administrator role

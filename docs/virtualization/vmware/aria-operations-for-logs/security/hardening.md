@@ -54,6 +54,19 @@ PasswordAuthentication no   # Only after SSH keys are configured
 systemctl restart sshd
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`sshd: command not found`** — The sshd service may not be installed; install openssh-server with `apt-get install openssh-server` or `yum install openssh-server`.
+    **`Job for sshd.service failed because the control process exited with error code`** — Verify `/etc/ssh/sshd_config` syntax with `sshd -t` before restarting to catch configuration errors.
+    **`Permission denied`** — Run the entire script with `sudo` or as root, since modifying `/etc/hosts.allow`, `/etc/hosts.deny`, and `/etc/ssh/sshd_config` requires elevated privileges.
 ---
 
 ## Firewall Rules
@@ -89,6 +102,14 @@ EOF
 systemctl restart rsyslog
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Job for rsyslog.service failed because the control process exited with error code.`** — Verify the rsyslog configuration syntax with `rsyslog -N1` before restarting, and check `/var/log/syslog` for parsing errors in the new config file.
+    **`Failed to resolve hostname siem.example.local`** — Replace `siem.example.local` with a valid, resolvable hostname or IP address that your Aria Operations for Logs host can reach on port 514.
 ---
 
 ## Hardening Checklist

@@ -101,6 +101,24 @@ vmkping -I vmk0 -d -s 8972 <tor-switch-ip>
 # Any loss = fix switch port MTU before proceeding
 ```
 
+
+```text title="Expected output"
+PING 10.20.30.1 (10.20.30.1): 8972 data bytes
+8980 bytes from 10.20.30.1: icmp_seq=0 time=2.341 ms
+8980 bytes from 10.20.30.1: icmp_seq=1 time=2.156 ms
+8980 bytes from 10.20.30.1: icmp_seq=2 time=2.289 ms
+8980 bytes from 10.20.30.1: icmp_seq=3 time=2.401 ms
+8980 bytes from 10.20.30.1: icmp_seq=4 time=2.178 ms
+
+--- 10.20.30.1 statistics ---
+5 packets transmitted, 5 packets received, 0% packet loss
+round-trip min/avg/max = 2.156/2.273/2.401 ms
+```
+
+!!! warning "Common errors"
+    **`PING 10.20.30.1 (10.20.30.1): 8972 data bytes — Packet size 9000 is too large for interface`** — Verify the ESXi vmk0 interface MTU is set to 9000 with `esxcli network ip interface list`.
+    **`100% packet loss`** — Confirm the ToR switch port connected to this ESXi host has MTU 9000 enabled and is not in an error-disabled state.
+    **`Unknown host 10.20.30.1`** — Replace `<tor-switch-ip>` with the actual IP address of your ToR switch management interface.
 ---
 
 ## Phase 2 — NSX Manager Cluster
@@ -150,6 +168,39 @@ get cluster status
 # Expected: "STABLE" with 3 members
 ```
 
+
+```text title="Expected output"
+NSX CLI (Build 21.0.1.0.0.17483745)
+Type "help" for command reference.
+
+nsx> get certificate api thumbprint
+-----BEGIN CERTIFICATE-----
+MIIDXTCCAkWgAwIBAgIJAKp8Z7x9mK2jMA0GCSqGSIb3DQEBCwUAMEUxCzAJBgNV
+BAYTAkFVMRMwEQYDVQQIDApTb21lLVN0YXRlMSEwHwYDVQQKDBhJbnRlcm5ldCBX
+-----END CERTIFICATE-----
+Thumbprint: 8F:A4:2E:D1:9C:7B:E5:3A:F2:C1:B8:6D:9E:4A:7F:C3:2B:E8:D5:91
+
+nsx> join management-plane 10.10.0.11 username admin thumbprint 8F:A4:2E:D1:9C:7B:E5:3A:F2:C1:B8:6D:9E:4A:7F:C3:2B:E8:D5:91
+Joining management cluster... 
+Node joined successfully. Cluster formation in progress.
+
+nsx> join management-plane 10.10.0.11 username admin thumbprint 8F:A4:2E:D1:9C:7B:E5:3A:F2:C1:B8:6D:9E:4A:7F:C3:2B:E8:D5:91
+Joining management cluster...
+Node joined successfully. Cluster formation in progress.
+
+nsx> get cluster status
+Cluster Status: STABLE
+Node Count: 3
+Node 1 (10.10.0.10): UP - Role: PRIMARY
+Node 2 (10.10.0.11): UP - Role: SECONDARY
+Node 3 (10.10.0.12): UP - Role: SECONDARY
+Last Heartbeat: 2 seconds ago
+```
+
+!!! warning "Common errors"
+    **`join management-plane: Certificate thumbprint mismatch`** — Verify the thumbprint was copied correctly from node 1 and matches exactly, including colons and case.
+    **`join management-plane: Connection refused to 10.10.0.11:443`** — Ensure node 1 is reachable and the NSX management service is running with `get service nsxd status`.
+    **`get cluster status: Cluster not yet formed`** — Wait 30-60 seconds for cluster consensus to establish after the final node joins, then retry the command.
 ### Configure the Cluster VIP
 
 ```bash
@@ -163,6 +214,26 @@ ping 10.10.0.10
 # UI accessible at https://nsx-manager.example.local
 ```
 
+
+```text title="Expected output"
+% Total    % Received % Xferd  Average Speed   Time    Current
+                                 Dload  Upload   Speed
+100   156  100   156    0     0    892      0 --:--:-- --:-- --:--:--   0
+{"resource_type":"ClusterVirtualIp","ip_address":"10.10.0.10","status":"success"}
+
+PING 10.10.0.10 (10.10.0.10) 56(84) bytes of data.
+64 bytes from 10.10.0.10: icmp_seq=1 ttl=64 time=2.14 ms
+64 bytes from 10.10.0.10: icmp_seq=2 ttl=64 time=1.89 ms
+64 bytes from 10.10.0.10: icmp_seq=3 ttl=64 time=2.03 ms
+--- 10.10.0.10 statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2004ms
+rtt min/avg/max/mdev = 1.89/2.02/2.14/0.10 ms
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example, but ensure it's included if removed).
+    **`{"error_code":400,"error_message":"Invalid IP address format or IP already in use"}`** — Verify the IP address is valid, not already assigned to another node, and within the correct subnet for your NSX cluster.
+    **`No route to host`** — Ensure the VIP subnet is routable from your management network and that network connectivity exists between the NSX Manager nodes and the VIP address.
 ### Register vCenter as Compute Manager
 
 **System → Fabric → Compute Managers → Add**
@@ -281,6 +352,35 @@ get transport-node-status
 get logical-switch port
 ```
 
+
+```text title="Expected output"
+NSX CLI (build 17.0.1.0.0.17964471)
+Connected to NSX Manager 192.168.1.10
+
+nsxcli> get transport-nodes
+Transport Node ID                          Host Name              IP Address       State
+tn-esx01-uuid-a1b2c3d4                     esx01.lab.local        10.0.1.51        UP
+tn-esx02-uuid-e5f6g7h8                     esx02.lab.local        10.0.1.52        UP
+tn-esx03-uuid-i9j0k1l2                     esx03.lab.local        10.0.1.53        UP
+
+nsxcli> get transport-node-status
+Transport Node ID                          State    TEP IP           Tunnel Status
+tn-esx01-uuid-a1b2c3d4                     UP       172.16.10.101    UP
+tn-esx02-uuid-e5f6g7h8                     UP       172.16.10.102    UP
+tn-esx03-uuid-i9j0k1l2                     UP       172.16.10.103    UP
+
+nsxcli> get logical-switch port
+Logical Switch                             Port ID              MAC Address          TEP IP
+ls-prod-web                                lsp-uuid-001         00:50:56:a1:2b:3c    172.16.10.101
+ls-prod-web                                lsp-uuid-002         00:50:56:a1:4d:5e    172.16.10.102
+ls-prod-db                                 lsp-uuid-003         00:50:56:a1:6f:7g    172.16.10.103
+ls-mgmt                                    lsp-uuid-004         00:50:56:a1:8h:9i    172.16.10.101
+```
+
+!!! warning "Common errors"
+    **`Error: Unable to connect to NSX Manager`** — Verify NSX Manager IP/hostname is reachable and nsxcli is configured with correct credentials via `set api-server` command.
+    **`Transport Node State: DOWN`** — Check host connectivity to NSX Manager, verify vxlan kernel module is loaded with `vmkload_mod -l | grep vxlan`, and confirm TEP network is routable.
+    **`No logical-switch port entries returned`** — Ensure logical switches have been created in NSX Manager UI and at least one VM is connected to the logical switch.
 ### TEP-to-TEP Connectivity Test
 
 ```bash
@@ -293,6 +393,42 @@ vmkping -I vmk10 -d -s 1500 192.168.100.13
 # If loss: check TEP VLAN tagging on uplink profile and switch trunk config
 ```
 
+
+```text title="Expected output"
+PING 192.168.100.11 (192.168.100.11): 56 data bytes
+64 bytes from 192.168.100.11: icmp_seq=0. time=2.341 ms
+64 bytes from 192.168.100.11: icmp_seq=1. time=2.156 ms
+64 bytes from 192.168.100.11: icmp_seq=2. time=2.289 ms
+64 bytes from 192.168.100.11: icmp_seq=3. time=2.401 ms
+64 bytes from 192.168.100.11: icmp_seq=4. time=2.178 ms
+--- 192.168.100.11 statistics ---
+5 packets transmitted, 5 packets received, 0% packet loss
+round-trip min/avg/max/stddev = 2.156/2.273/2.401/0.099 ms
+
+PING 192.168.100.12 (192.168.100.12): 56 data bytes
+64 bytes from 192.168.100.12: icmp_seq=0. time=1.987 ms
+64 bytes from 192.168.100.12: icmp_seq=1. time=2.045 ms
+64 bytes from 192.168.100.12: icmp_seq=2. time=2.134 ms
+64 bytes from 192.168.100.12: icmp_seq=3. time=2.089 ms
+64 bytes from 192.168.100.12: icmp_seq=4. time=2.156 ms
+--- 192.168.100.12 statistics ---
+5 packets transmitted, 5 packets received, 0% packet loss
+round-trip min/avg/max/stddev = 1.987/2.082/2.156/0.061 ms
+
+PING 192.168.100.13 (192.168.100.13): 56 data bytes
+64 bytes from 192.168.100.13: icmp_seq=0. time=2.412 ms
+64 bytes from 192.168.100.13: icmp_seq=1. time=2.267 ms
+64 bytes from 192.168.100.13: icmp_seq=2. time=2.501 ms
+64 bytes from 192.168.100.13: icmp_seq=3. time=2.334 ms
+64 bytes from 192.168.100.13: icmp_seq=4. time=2.289 ms
+--- 192.168.100.13 statistics ---
+5 packets transmitted, 5 packets received, 0% packet loss
+round-trip min/avg/max/stddev = 2.267/2.361/2.501/0.089 ms
+```
+
+!!! warning "Common errors"
+    **`PING 192.168.100.11 (192.168.100.11): 56 data bytes — No response from host`** — Verify the TEP VLAN is tagged on the physical switch uplink port and that the vmk10 interface is assigned to the correct VLAN ID in the NSX uplink profile.
+    **`Unable to locate vmkernel interface vmk10`** — Confirm NSX Host Preparation has completed successfully on the ESXi host by
 ---
 
 ## Phase 5 — Edge Cluster and T0 Gateway
@@ -329,6 +465,28 @@ get transport-nodes | grep edge
 # Both Edge nodes: state = UP
 ```
 
+
+```text title="Expected output"
+NSX CLI (Build 20.0.3.1)
+Connected to: nsx-manager-01.lab.local (192.168.1.50)
+
+transport-node-0 (edge-01.lab.local):
+  state: UP
+  status: READY
+  host-switch-mode: VDS
+  
+transport-node-1 (edge-02.lab.local):
+  state: UP
+  status: READY
+  host-switch-mode: VDS
+
+2 edge transport nodes found, all UP
+```
+
+!!! warning "Common errors"
+    **`nsxcli: command not found`** — Ensure NSX CLI is installed and the PATH includes the NSX installation directory, or run with the full path `/opt/vmware/nsx-cli/bin/nsxcli`.
+    **`Connection refused: Unable to connect to nsx-manager-01.lab.local:443`** — Verify the NSX Manager is reachable and running, and check network connectivity with `ping` and `curl -k https://<nsx-manager-ip>`.
+    **`transport-node-0: state = DOWN`** — Check the Edge VM's vNIC connectivity, verify host-switch configuration, and review NSX Manager logs for transport node registration failures.
 ### Create Edge Cluster
 
 **System → Fabric → Edge Clusters → Add**
@@ -388,6 +546,31 @@ get route
 # Physical fabric prefixes should appear in routing table
 ```
 
+
+```text title="Expected output"
+NSX-Edge> get bgp neighbor summary
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down State/PfxRcd
+10.100.1.1      4 65000    1247    1251        0    0    0 5d12h23m Established
+10.100.1.2      4 65000    1248    1252        0    0    0 5d12h22m Established
+
+NSX-Edge> get route
+Codes: K - kernel, C - connected, S - static, R - RIP, B - BGP
+       O - OSPF, IA - OSPF inter area, E1 - OSPF external type 1
+       E2 - OSPF external type 2, i - IS-IS, L1 - IS-IS level-1
+       L2 - IS-IS level-2, * - candidate default, U - per-user static route
+       o - ODR, P - periodic downloaded static route, H - NHRP, l - LISP
+       + - replicated route, % - next hop override
+
+B   10.50.0.0/16 [200/0] via 10.100.1.1, 0d02h14m
+B   10.51.0.0/16 [200/0] via 10.100.1.2, 0d02h14m
+B   172.16.0.0/12 [200/0] via 10.100.1.1, 0d02h14m
+C   192.168.1.0/24 is directly connected, eth0
+S   0.0.0.0/0 [1/0] via 10.100.1.1, 0d05h22m
+```
+
+!!! warning "Common errors"
+    **`% Unknown command`** — Verify the exact command syntax for your NSX version; use `?` to list available commands.
+    **`BGP neighbor 10.100.1.1 not established (State = Idle)`** — Check physical network connectivity between Edge and BGP peer, verify AS numbers match, and confirm firewall allows BGP port 179.
 ---
 
 ## Phase 6 — Logical Networking and Validation
@@ -430,6 +613,25 @@ nsxcli
 get logical-switch seg-web-tier | grep VNI
 ```
 
+
+```text title="Expected output"
+PING 192.168.50.1 (192.168.50.1) 56(84) bytes of data.
+64 bytes from 192.168.50.1: icmp_seq=1 ttl=64 time=2.34 ms
+64 bytes from 192.168.50.1: icmp_seq=2 ttl=64 time=1.89 ms
+64 bytes from 192.168.50.1: icmp_seq=3 ttl=64 time=2.12 ms
+^C
+--- 192.168.50.1 statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2004ms
+rtt min/avg/max/stddev = 1.89/2.11/2.34/0.19 ms
+
+nsxcli> get logical-switch seg-web-tier | grep VNI
+VNI: 5001
+```
+
+!!! warning "Common errors"
+    **`PING: sendto: No route to host`** — Verify the NSX edge node has a route to the gateway IP and that the logical router is properly configured on the segment.
+    **`nsxcli: command not found`** — SSH directly to the NSX Manager appliance (not a managed host) and ensure you have admin credentials to access the CLI.
+    **`No logical switch named 'seg-web-tier' found`** — Confirm the segment name matches exactly in NSX Manager; use `get logical-switches` to list all available segments.
 ### DFW Baseline Policy
 
 **Security → Distributed Firewall → Add Policy**
@@ -455,6 +657,33 @@ vsipioctl getrules -f <filter-name>
 # Infrastructure allow rules should appear
 ```
 
+
+```text title="Expected output"
+Filter Summary
+==============
+VM Name                    vNIC  Filter Name                    Status
+web-prod-01                eth0  dvfilter-generic-fw-0          ACTIVE
+web-prod-01                eth1  dvfilter-generic-fw-1          ACTIVE
+db-backup-02               eth0  dvfilter-generic-fw-0          ACTIVE
+app-cache-03               eth0  dvfilter-generic-fw-0          ACTIVE
+app-cache-03               eth1  dvfilter-generic-fw-1          ACTIVE
+...
+Total VMs with filters: 47
+
+Rules for dvfilter-generic-fw-0:
+==================================
+Rule ID  Direction  Protocol  Source         Destination    Port   Action
+1001     INBOUND    TCP       10.20.0.0/16   10.30.0.0/16   443    ALLOW
+1002     INBOUND    TCP       10.20.0.0/16   10.30.0.0/16   8443   ALLOW
+1003     INBOUND    TCP       ANY            10.30.50.0/24  22     DENY
+1004     OUTBOUND   TCP       10.30.0.0/16   8.8.8.8        53     ALLOW
+1005     OUTBOUND   TCP       10.30.0.0/16   ANY            443    ALLOW
+```
+
+!!! warning "Common errors"
+    **`summarize-dvfilter: command not found`** — Run the command from the ESXi host shell (SSH directly to the host, not vCenter), or verify the NSX agent is installed with `esxcli software vib list | grep nsx`.
+    **`vsipioctl: command not found`** — Ensure you are running this command on an ESXi host where NSX is installed; this tool is not available on vCenter or management workstations.
+    **`Error: Filter '<filter-name>' not found in kernel`** — Verify the filter name is correct by running `summarize-dvfilter` first to list active filters, then use the exact filter name from the output.
 ### End-to-End Validation
 
 ```bash
@@ -474,6 +703,45 @@ get bgp neighbor summary
 # All peers: Established, Prefixes Received > 0
 ```
 
+
+```text title="Expected output"
+PING 192.168.20.15 (192.168.20.15) 56(84) bytes of data.
+64 bytes from 192.168.20.15: icmp_seq=1 ttl=64 time=2.341 ms
+64 bytes from 192.168.20.15: icmp_seq=2 ttl=64 time=1.987 ms
+64 bytes from 192.168.20.15: icmp_seq=3 ttl=64 time=2.156 ms
+--- 192.168.20.15 statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+rtt min/avg/max/stddev = 1.987/2.161/2.341/0.149 ms
+
+PING 8.8.8.8 (8.8.8.8) 56(84) bytes of data.
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=118 time=18.742 ms
+64 bytes from 8.8.8.8: icmp_seq=2 ttl=118 time=19.156 ms
+64 bytes from 8.8.8.8: icmp_seq=3 ttl=118 time=18.923 ms
+--- 8.8.8.8 statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 3004ms
+rtt min/avg/max/stddev = 18.742/18.940/19.156/0.187 ms
+
+NSX Manager CLI
+nsx> get route
+Flags: [U]p, [G]ateway, [R]ejected, [B]lackhole, [D]ynamic, [A]cive
+Destination        Gateway          Flags  Metric  Interface
+0.0.0.0/0          10.100.1.1       UG     0       eth0
+10.0.0.0/8         0.0.0.0          U      0       eth1
+192.168.0.0/16     0.0.0.0          U      0       eth2
+169.254.0.0/16     0.0.0.0          U      256     eth0
+
+nsx> get bgp neighbor summary
+BGP router identifier 10.50.0.1, local AS number 65001
+Neighbor        V    AS MsgRcvd MsgSent   TblVer  InQ OutQ  Up/Down State/PfxRcd
+10.100.1.1      4 65000    1247    1251        0    0    0 2d14h23m Established/847
+10.100.1.2      4 65000    1248    1250        0    0    0 2d14h22m Established/851
+---OUTPUT---
+```
+
+!!! warning "Common errors"
+    **`ping: sendmsg: Operation not permitted`** — Verify the VM has network connectivity to the segment and check NSX firewall rules are not blocking ICMP traffic.
+    **`get bgp neighbor summary: command not found`** — Ensure you are in the NSX Edge CLI context (not NSX Manager); SSH directly to the Edge node IP and retry.
+    **`0.0.0.0/0 route missing
 ### Post-Deployment Checklist
 
 | Check | Command / Location | Pass Criterion |

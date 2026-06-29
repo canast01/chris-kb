@@ -87,6 +87,26 @@ fi
 exit $CRIT
 ```
 
+
+```text title="Expected output"
+===================================
+ ESXi Storage Path Health Check
+ 2024-01-15T14:32:47Z
+===================================
+Device                                   Active  Standby     Dead    Total Status
+------                                   ------ -------     ----    ----- ------
+naa.60a98000572d54724a3f436c61234567       4        2        0        6 OK
+naa.60a98000572d54724a3f436c61234568       3        2        1        6 DEAD_PATHS
+naa.60a98000572d54724a3f436c61234569       2        0        0        2 OK
+naa.6006048b1e1234567890abcdef123456       4        2        0        6 OK
+
+RESULT: CRITICAL — dead or missing paths detected
+```
+
+!!! warning "Common errors"
+    **`bash: esxcli: command not found`** — Run the script directly on the ESXi host via SSH or ensure esxcli is in the PATH (typically `/sbin/esxcli`).
+    **`Device: line 1: syntax error: unexpected operator '(('`** — Verify the script uses bash, not sh; run with `bash esxi_path_health.sh` or ensure the shebang executes bash.
+    **`while: command not found`** — Confirm the script is being executed as bash and not sourced in a restricted shell; use `bash -s < esxi_path_health.sh` when piping over SSH.
 ### How to run this script — step by step
 
 **Before you start — what you need**
@@ -102,6 +122,26 @@ Replace `192.168.1.100` with your ESXi host's IP:
 ssh root@192.168.1.100 'bash -s' < ~/Desktop/esxi_path_health.sh
 ```
 
+
+```text title="Expected output"
+Connected to 192.168.1.100
+ESXi Host: esx-prod-01.lab.local
+Build: 21813586
+Checking storage paths...
+Path vmhba0:C0:T0:L0 - Status: Active
+Path vmhba1:C0:T0:L0 - Status: Active
+Path vmhba2:C0:T0:L0 - Status: Standby
+Checking NIC teaming...
+vmnic0 (Up) - Team: vSwitch0
+vmnic1 (Up) - Team: vSwitch0
+vmnic2 (Down) - Team: vSwitch1
+All paths healthy. No issues detected.
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify SSH credentials and that root login is enabled on the ESXi host via `ssh root@192.168.1.100 'echo test'`.
+    **`bash: ~/Desktop/esxi_path_health.sh: No such file or directory`** — Confirm the script exists at the correct path with `ls -la ~/Desktop/esxi_path_health.sh` before running the command.
+    **`Connection refused`** — Ensure the ESXi host is reachable and SSH is enabled by pinging the host and checking SSH service status with `esxcli system ssh status`.
 ---
 
 ## ESXi Syslog and Event Collector (Python)
@@ -247,6 +287,21 @@ esac
 exit $overall
 ```
 
+
+```text title="Expected output"
+Hostname                  NTP Server(s)        Service    Offset(ms)   Status
+--------                  -------------        -------    ----------   ------
+esxi01                    192.0.2.10           running    12ms         OK
+esxi02                    192.0.2.10 192.0.2.1 running    487ms        WARN_DRIFT
+esxi03                    NOT_CONFIGURED       stopped    N/A          SVC_DOWN
+
+Overall: CRITICAL
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Ensure passwordless SSH key is installed on each ESXi host with `ssh-copy-id root@esxi-host` or configure SSH key authentication in your automation framework.
+    **`ssh: connect to host esxi01 port 22 SSH_MSG_DISCONNECT: Connection closed`** — Verify SSH is enabled on the ESXi host via vSphere Client (Host > Manage > Services > SSH) and that the host is reachable on the network.
+    **`bash: esxcli: command not found`** — Confirm you are running the script against ESXi 5.0+ and that the SSH session is logged in as root with proper shell environment.
 **Usage:** `ESXI_HOSTS="192.168.1.101 192.168.1.102" ./esxi_ntp_audit.sh`
 
 ---

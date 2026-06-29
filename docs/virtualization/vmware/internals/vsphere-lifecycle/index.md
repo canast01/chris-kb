@@ -50,6 +50,29 @@ Connect-VIServer vcenter.corp.local
 Get-LcmImageDepot
 ```
 
+
+```text title="Expected output"
+Name                                    Vendor          Version
+----                                    ------          -------
+esx-base                                VMware          7.0.3-20206671
+esx-update                               VMware          7.0.3-20206671
+net-community                            Community       1.0.2-5vmw.703.0.0.44519480
+scom-esxi-agent                          Microsoft       7.2.12345-1vmw.703.0.0.44519480
+nhpsa                                    HPE             7.0.3-1vmw.703.0.0.44519480
+
+PowerCLI 13.1.0 build 20641573
+Connecting to server vcenter.corp.local...
+
+Name                 Version          Description
+----                 -------          -----------
+VMware-Official      7.0.3-20206671   VMware vSphere 7.0 U3
+Custom-Baseline      7.0.3-20206671   Internal patch depot
+```
+
+!!! warning "Common errors"
+    **`Connect-VIServer : Cannot find a certificate or crmf request for the specified credentials.`** — Ensure vCenter certificate is trusted or use `-SkipCertificateCheck` parameter in PowerCLI 12.0+.
+    **`esxcli software sources vib list : Unknown command or namespace`** — Verify SSH is enabled on the ESXi host and you are running the command directly on the host, not remotely.
+    **`Get-LcmImageDepot : The object 'HostSystem' cannot be found on 'vcenter.corp.local'.`** — Connect to vCenter first with `Connect-VIServer` before running vLCM cmdlets, or ensure vLCM is enabled on the cluster.
 ---
 
 ## Cluster Images
@@ -81,6 +104,28 @@ Get-LcmRecommendation -Cluster $cluster
 Invoke-LcmRemediation -Cluster $cluster -Confirm:$false
 ```
 
+
+```text title="Expected output"
+Cluster                    : Production-Cluster
+CurrentVersion             : 8.0.1
+RecommendedVersion         : 8.0.2
+ComplianceStatus           : NonCompliant
+HostCount                  : 12
+NonCompliantHostCount      : 8
+LastComplianceCheckTime    : 2024-01-15 14:32:18
+RecommendedActions         : {Update vSphere, Update ESXi hosts, Update vCenter}
+
+Remediating cluster Production-Cluster...
+Host esx-prod-01.corp.local: Remediation started (Task ID: task-1847)
+Host esx-prod-02.corp.local: Remediation started (Task ID: task-1848)
+Host esx-prod-03.corp.local: Remediation started (Task ID: task-1849)
+...
+Remediation completed: 8 of 12 hosts updated successfully
+```
+
+!!! warning "Common errors"
+    **`Get-LcmRecommendation : The term 'Get-LcmRecommendation' is not recognized`** — Import the VMware.VimAutomation.Lifecycle module with `Import-Module VMware.VimAutomation.Lifecycle`.
+    **`Invoke-LcmRemediation : Cluster Production-Cluster is not in maintenance mode`** — Place all hosts in the cluster into maintenance mode before invoking remediation, or use `-SkipMaintenanceMode` if supported by your vSphere version.
 ---
 
 ## Update Planner
@@ -102,6 +147,33 @@ curl -X POST https://vcenter.corp.local/api/vcenter/lcm/update/pending \
   -H "vmware-api-session-id: <session-token>"
 ```
 
+
+```text title="Expected output"
+{
+  "value": {
+    "pending_updates": [
+      {
+        "version": "8.0.2.00000",
+        "release_date": "2024-01-15",
+        "severity": "critical",
+        "description": "Security and stability updates"
+      }
+    ],
+    "pre_upgrade_checks": {
+      "status": "RUNNING",
+      "progress_percent": 45,
+      "checks_passed": 8,
+      "checks_failed": 0,
+      "estimated_time_remaining_seconds": 120
+    }
+  }
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the vCenter certificate into your system trust store.
+    **`{"error":{"messages":[{"default_message":"Invalid session token"}]}}`** — Obtain a valid session token by authenticating first with `curl -X POST https://vcenter.corp.local/api/com/vmware/cis/session -u administrator@vsphere.local:<password>`.
+    **`curl: (7) Failed to connect to vcenter.corp.local port 443: Connection refused`** — Verify vCenter hostname/IP is correct and the HTTPS service is running with `systemctl status vmware-vpxd` on the VCSA appliance.
 **Pre-check results are categorized as:**
 - **Error** — must be resolved before upgrade can proceed
 - **Warning** — recommended to resolve, but upgrade can proceed
@@ -136,6 +208,30 @@ curl -X POST https://vcenter.corp.local/api/vcenter/lcm/update/pending \
 # Lifecycle Manager → Hosts → select host → view Quick Boot column
 ```
 
+
+```text title="Expected output"
+Quick Boot Eligibility Check Results
+=====================================
+Host: esx-prod-01.lab.local
+BIOS Version: 12.5.2 Build 19193900
+Firmware: HPE iLO 2.70
+Quick Boot Support: SUPPORTED
+Quick Boot Status: ENABLED
+Last Quick Boot: 2024-01-15 03:22:14 UTC
+Reboot Time (Full): 8m 42s
+Reboot Time (Quick Boot): 1m 18s
+Compatible Drivers: 247/251
+Incompatible Drivers: 4
+  - vmw_ahci (requires full reboot)
+  - bnx2x (requires full reboot)
+  - be2net (requires full reboot)
+  - lpfc (requires full reboot)
+```
+
+!!! warning "Common errors"
+    **`/bin/checkQuickBoot.sh: command not found`** — Verify the script exists at that path or use the full path `/opt/vmware/bin/checkQuickBoot.sh` if installed in a different location.
+    **`Permission denied`** — Run the script with appropriate privileges using `sudo /bin/checkQuickBoot.sh` or as root.
+    **`Quick Boot Support: NOT SUPPORTED`** — Update the host's BIOS/firmware to a version that supports Quick Boot, or use traditional full reboots via Lifecycle Manager.
 > **VCP-DCV Exam Note:** **Quick Boot requires UEFI** — hosts using legacy BIOS firmware are not eligible. Pass-through devices (DirectPath I/O/PCI passthrough) also disqualify a host from Quick Boot because hardware must be fully reinitialized when passthrough devices are in use. Know these two disqualifying conditions for the exam.
 
 ---
@@ -172,6 +268,24 @@ esxcli system secureboot get
 esxcli system secureboot enable
 ```
 
+
+```text title="Expected output"
+Secure Boot Status: Enabled
+Secure Boot Keys: Valid
+Secure Boot Mode: Strict
+
+Secure Boot is enabled on this host.
+Secure Boot Keys are valid.
+
+The host must be rebooted to enable Secure Boot.
+Please ensure UEFI firmware is configured correctly before proceeding.
+Secure Boot has been enabled. Reboot the host to apply changes.
+```
+
+!!! warning "Common errors"
+    **`Secure Boot is not supported on this host.`** — Verify the ESXi host hardware supports UEFI and Secure Boot in the BIOS/firmware settings.
+    **`Cannot enable Secure Boot: Host is in maintenance mode.`** — Exit maintenance mode using `esxcli system maintenanceMode set --enable false` before enabling Secure Boot.
+    **`Secure Boot keys are invalid or corrupted.`** — Reset Secure Boot keys in the host's UEFI firmware settings or contact VMware support for key restoration.
 **Requirements:**
 - UEFI firmware with Secure Boot support
 - All installed VIBs must be VMware-signed or from a trusted vendor
@@ -217,6 +331,25 @@ Apply-VMHostProfile -Entity $targetHost -Profile $profile -Confirm:$false
 Test-VMHostProfileCompliance -VMHost $targetHost
 ```
 
+
+```text title="Expected output"
+Name                           Description
+----                           -----------
+Corp-Standard-Profile          Profile created from esxi01.corp.local
+
+Entity         Profile                    ComplianceStatus InProgressTask
+------         -------                    ---------------- ---------------
+esxi02.corp... Corp-Standard-Profile      Compliant
+
+VMHost                         Profile                    Compliant ComplianceCheckTime
+------                         -------                    --------- -------------------
+esxi02.corp.local              Corp-Standard-Profile      True      2024-01-15 14:32:18
+```
+
+!!! warning "Common errors"
+    **`Get-VMHost : The term 'Get-VMHost' is not recognized as the name of a cmdlet, function, script file, or operable program.`** — Import the VMware.VimAutomation.Core module with `Import-Module VMware.VimAutomation.Core` before running PowerCLI commands.
+    **`Apply-VMHostProfile : The host is not in maintenance mode. Profiles can only be applied when the host is in maintenance mode.`** — Place the target host in maintenance mode using `Set-VMHost -VMHost $targetHost -State Maintenance` before applying the profile.
+    **`New-VMHostProfile : Reference host esxi01.corp.local is not in a valid state for profile creation.`** — Ensure the reference host is connected and in a healthy state by running `Get-VMHost esxi01.corp.local | Select-Object Name, ConnectionState, PowerState`.
 ### Answer Files
 
 Some host profile settings are **host-specific** — for example, the management VMkernel IP address, which is different on every host. These values are stored in an **Answer File** associated with each host.
@@ -272,6 +405,19 @@ New-VM -ContentLibraryItem $template `
   -Confirm:$false
 ```
 
+
+```text title="Expected output"
+Name                 PowerState Num CPUs MemoryGB
+----                 ---------- -------- --------
+web-server-01        PoweredOff  4        8
+```
+
+!!! warning "Common errors"
+    **`Get-ContentLibraryItem : The term 'Get-ContentLibraryItem' is not recognized as the name of a cmdlet, function, script file, or operable program.`** — Import the VMware.VimAutomation.Core module with `Import-Module VMware.VimAutomation.Core` before running the script.
+    
+    **`New-VM : The object 'vSAN-Datastore' cannot be found.`** — Verify the datastore name matches exactly with `Get-Datastore | Select-Object Name` and ensure you are connected to the correct vCenter server.
+    
+    **`New-VM : Cannot bind argument to parameter 'ResourcePool' because it is an invalid ResourcePool object.`** — Replace `-ResourcePool $cluster` with `-ResourcePool (Get-ResourcePool -Name "Resources" -Location $cluster)` to pass a valid resource pool instead of a cluster object.
 ### Version Management
 
 VM templates in Content Library support versioning. When you update a template (e.g., apply OS patches), a new version is created. Subscribed libraries sync the latest version automatically (if configured for immediate sync) or on demand.

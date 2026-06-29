@@ -214,6 +214,34 @@ curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
   }' | jq '.resourceList[] | {name: .resourceKey.name, cpuAvg: .properties["cpu|usage_average"]}'
 ```
 
+
+```text title="Expected output"
+{
+  "name": "web-app-dev-02",
+  "cpuAvg": "2.34"
+}
+{
+  "name": "test-db-replica-01",
+  "cpuAvg": "1.87"
+}
+{
+  "name": "legacy-app-vm-04",
+  "cpuAvg": "3.92"
+}
+{
+  "name": "backup-staging-03",
+  "cpuAvg": "0.56"
+}
+{
+  "name": "monitoring-agent-05",
+  "cpuAvg": "4.11"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl (already present) or import the vROps certificate into your system CA bundle.
+    **`jq: error (at <stdin>:1): Cannot index null with string "resourceList"`** — Verify the token is valid and not expired; re-run the token acquisition step and check for authentication errors in the response.
+    **`"Authorization: vRealizeOpsToken $TOKEN" returned 401 Unauthorized`** — Ensure the password in the token request is correct and the admin user account is not locked; check vROps authentication logs.
 ---
 
 ## Export Metrics Data via API
@@ -236,6 +264,29 @@ curl -sk -H "Authorization: vRealizeOpsToken $TOKEN" \
   | jq '.values[].stat-list.stat[]'
 ```
 
+
+```text title="Expected output"
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwOTMxNjU0MiwiZXhwIjoxNzA5NDAyOTQyfQ.7x8kL9mN2pQ5rS3tV1wX4yZ6aB9cD2eF5gH8jK1lM4n
+vc-1847:vm-2156
+vc-1847:vm-2156
+{
+  "timestamp": 1709316000000,
+  "statKey": "cpu|usage_average",
+  "data": 45.32,
+  "rollUpType": "AVG"
+}
+{
+  "timestamp": 1709402400000,
+  "statKey": "cpu|usage_average",
+  "data": 52.18,
+  "rollUpType": "AVG"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl to skip SSL verification (already present in the example, but ensure it's not removed).
+    **`jq: error (at <stdin>:1): Cannot index null with string "resourceList"`** — Verify the VM name matches exactly and the resource exists in Aria Operations; check the API response with `| jq '.'` to debug.
+    **`{"error":"Invalid token","errorCode":"INVALID_TOKEN"}`** — Re-acquire the token as it may have expired; tokens typically last 24 hours, so run the first curl command again to refresh.
 Token lifetime is 60 minutes; re-acquire for long-running scripts.
 
 ---
@@ -249,6 +300,34 @@ curl -sk -X POST -H "Authorization: vRealizeOpsToken $TOKEN" \
   -d '{"notificationRuleId":"<rule-id>"}'
 ```
 
+
+```text title="Expected output"
+{
+  "id": "notification-test-5f8a2c1b-9e3d-4a7f-b2c6-1d8e9f3a4b5c",
+  "ruleId": "rule-prod-2847",
+  "status": "SUCCESS",
+  "timestamp": "2024-01-15T14:32:18.456Z",
+  "message": "Test notification sent successfully",
+  "recipientCount": 3,
+  "deliveryStatus": [
+    {
+      "recipient": "ops-team@example.com",
+      "channel": "EMAIL",
+      "status": "DELIVERED"
+    },
+    {
+      "recipient": "slack-webhook-prod",
+      "channel": "WEBHOOK",
+      "status": "DELIVERED"
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; if error persists, verify the vROps server certificate is valid).
+    **`{"error":"Invalid or expired token","statusCode":401}`** — Regenerate the authentication token using `vRealizeOpsToken` and ensure it's exported as `$TOKEN` before running the command.
+    **`{"error":"Notification rule not found","statusCode":404}`** — Verify the `<rule-id>` placeholder is replaced with an actual rule ID from `GET /suite-api/api/notifications/rules`.
 ---
 
 ## Generate a Support Bundle
@@ -267,6 +346,27 @@ ls -lh /storage/log/support-bundle/
 scp admin@vrops-prod-01.example.local:/storage/log/support-bundle/*.zip .
 ```
 
+
+```text title="Expected output"
+admin@vrops-prod-01.example.local's password: 
+Welcome to vRealize Operations Manager
+vrops-prod-01> vracli support bundle generate
+Generating support bundle...
+Bundle generation started. Bundle ID: sb-20240115-143827-a7f2
+This may take several minutes. Please wait...
+Bundle generation completed successfully.
+Bundle saved to: /storage/log/support-bundle/vrops-support-bundle-20240115-143827.zip
+
+total 2.8G
+-rw-r--r-- 1 root root 2.8G Jan 15 14:39 vrops-support-bundle-20240115-143827.zip
+
+vrops-prod-01-20240115-143827.zip                          100% 2847MB   45.2MB/s   01:03
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify SSH credentials and ensure the admin user has SSH access enabled on the vRealize Operations appliance.
+    **`vracli: command not found`** — Confirm you are logged into the vRealize Operations Manager appliance (not a standard Linux shell) and that vracli is in the PATH.
+    **`No such file or directory`** — Wait for the bundle generation to complete fully before attempting to download, as the file may still be writing to disk.
 ---
 
 ## Upgrade Aria Operations (via Aria Suite Lifecycle)
@@ -437,6 +537,26 @@ curl -sk -u 'admin:password' \
   "https://<aria-ops-fqdn>/suite-api/api/resources/<object-id>/maintained"
 ```
 
+
+```text title="Expected output"
+{
+  "resourceId": "6a5d8c2f-4e91-11ed-bbd1-005056a36c74",
+  "maintenanceSchedule": {
+    "startTime": 0,
+    "endTime": 1704067200000
+  },
+  "maintenanceWindowId": "maint-window-2024-01-01-prod-cluster-01",
+  "status": "SCHEDULED",
+  "createdBy": "admin",
+  "createdDate": 1703980800000,
+  "resourceName": "prod-cluster-01.datacenter.local"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the Aria Operations CA certificate into your system trust store.
+    **`{"error":"Invalid resourceId format","statusCode":400}`** — Verify the object-id is a valid UUID by checking the resource in Aria Operations UI or via GET /suite-api/api/resources endpoint.
+    **`{"error":"Unauthorized","statusCode":401}`** — Confirm credentials are correct and the admin user has API access permissions in Aria Operations role-based access control settings.
 ### Option B — Suspend Alert Notifications (For Rolling Maintenance)
 
 ![Option B — Suspend Alert Notifications (For Rolling Maintenance)](../../../../assets/aria-operations-proc-option-b-suspend-alert-notifications-for-rolling-mainte.svg)

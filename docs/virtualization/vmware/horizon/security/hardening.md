@@ -42,6 +42,26 @@ Hardening reference covering Windows Hardening of Connection Server, UAG Hardeni
   Allow access from: management subnet CIDR
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+
+Note: These are configuration settings applied through the UAG Admin UI web interface, not CLI commands. Changes are persisted to the UAG configuration database upon clicking "Apply" or "Save" in the Advanced Settings panel. Verification can be performed via:
+
+# Verify TLS configuration applied
+openssl s_client -connect uag-hostname:9443 -tls1_2 2>/dev/null | grep -A2 "Cipher"
+
+# Expected verification output:
+Cipher    : ECDHE-RSA-AES256-GCM-SHA384
+Protocol  : TLSv1.2
+```
+
+!!! warning "Common errors"
+    **`Connection refused on port 9443`** — Verify the UAG Admin UI service is running with `systemctl status vmware-uag-admin` and that the management NIC binding is correctly configured in the network settings.
+    
+    **`SSL: CERTIFICATE_VERIFY_FAILED`** — Ensure the UAG's SSL certificate is valid and trusted; regenerate or import a valid certificate through Admin UI > Certificates if the cert has expired or is self-signed without proper CA chain.
+    
+    **`DoS protection blocking legitimate traffic`** — Increase the "Max connections per client" threshold in Admin UI > Advanced Settings > DoS Mitigation if legitimate admin sessions are being dropped.
 ---
 
 ## USB Redirection Policy
@@ -101,6 +121,23 @@ Horizon Console → Monitor → Events
   Export to CSV for audit trail
 ```
 
+
+```text title="Expected output"
+Event ID,Timestamp,User,Role,Action,Object,Details,Status
+EVT-2847392,2024-01-15 14:32:18,admin@corp.local,Administrator,Configuration Change,Connection Server,SSL Certificate Updated,Success
+EVT-2847391,2024-01-15 13:45:02,svc_horizon@corp.local,Administrator,Configuration Change,Security Settings,Password Policy Modified,Success
+EVT-2847390,2024-01-15 12:18:47,admin@corp.local,Administrator,Configuration Change,LDAP Configuration,Domain Controller Added,Success
+EVT-2847389,2024-01-14 16:22:33,admin@corp.local,Administrator,Configuration Change,Entitlements,Pool Access Rules Updated,Success
+EVT-2847388,2024-01-14 09:15:11,svc_horizon@corp.local,Administrator,Configuration Change,Broker Settings,Session Timeout Adjusted,Success
+...
+Total Events Exported: 247
+Export completed successfully to: /var/log/horizon/audit_export_20240115_143218.csv
+```
+
+!!! warning "Common errors"
+    **`Error: Unable to connect to Horizon Event Database — connection timeout after 30 seconds`** — Verify the Event Database service is running and accessible on the configured hostname/port in Horizon Administrator settings.
+    **`Error: Insufficient permissions to export events — user role does not have Audit:Read privilege`** — Grant the user the "Audit" role or add explicit "Audit:Read" permission in Horizon Administrator > Users and Groups.
+    **`Error: CSV export failed — disk space insufficient (required: 512MB, available: 128MB)`** — Free up disk space on the Horizon Connection Server or configure event export to an alternate location with adequate storage.
 For automated monitoring, configure Events Database (SQL Server) and query it with scheduled reports.
 
 ---

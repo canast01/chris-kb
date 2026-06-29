@@ -110,6 +110,16 @@ curl -sk https://nsxmgr.corp.local/api/v1/cluster \
 # Expected: HTTP 200
 ```
 
+
+```text title="Expected output"
+HTTP 200
+HTTP 200
+```
+
+!!! warning "Common errors"
+    **`HTTP 401`** — Verify the service account credentials are correct and the password hasn't expired in vCenter or NSX-T.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the data source's CA certificate into the collector VM's trust store.
+    **`curl: (7) Failed to connect to vcenter.corp.local port 443: Connection timed out`** — Confirm network connectivity and firewall rules allow the collector VM to reach the data source on port 443.
 **Common causes and fixes:**
 
 | Cause | Indicator | Fix |
@@ -129,6 +139,23 @@ curl -sk -X POST "${AON_URL}/api/ni/datasources/${DS_ID}/sync" \
   -H "Authorization: NetworkInsight ${AON_TOKEN}"
 ```
 
+
+```text title="Expected output"
+{
+  "id": "ds-12847-prod-vcenter",
+  "name": "vCenter-Cluster-01",
+  "type": "vCenter",
+  "lastSyncTime": "2024-01-15T14:32:18Z",
+  "syncStatus": "COMPLETED",
+  "recordsProcessed": 2847,
+  "duration": "45s"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the AON certificate into your system trust store.
+    **`{"error": "Unauthorized", "code": 401}`** — Verify the `AON_TOKEN` is valid and not expired by checking Settings → Administration → API Tokens in the AON UI.
+    **`curl: (7) Failed to connect to aon-prod.example.com port 443: Connection refused`** — Confirm `AON_URL` is correct and the AON appliance is running and network-accessible from your client.
 ---
 
 ## No Flows in Flow Map
@@ -148,6 +175,30 @@ sudo tcpdump -i eth0 -n udp port 2055 -c 50
 sudo tail -100 /var/log/proxy.log | grep -E "received|forward|error"
 ```
 
+
+```text title="Expected output"
+tcpdump: verbose output suppressed, use -v or -vv for full packet decode
+listening on eth0, link-type EN10MB (Ethernet), snapshot length 262144 bytes
+22:14:33.445821 IP 10.45.12.88.54321 > 192.168.1.50.2055: UDP, length 1472
+22:14:33.512047 IP 10.45.12.89.54322 > 192.168.1.50.2055: UDP, length 1472
+22:14:34.103456 IP 10.45.13.201.54323 > 192.168.1.50.2055: UDP, length 1456
+22:14:34.667892 IP 10.45.12.88.54324 > 192.168.1.50.2055: UDP, length 1472
+22:14:35.234561 IP 10.45.13.202.54325 > 192.168.1.50.2055: UDP, length 1464
+22:14:35.891234 IP 10.45.12.89.54326 > 192.168.1.50.2055: UDP, length 1472
+50 packets captured
+50 packets received by filter
+0 packets dropped by kernel
+
+2024-01-15 22:14:33 [INFO] Flow record received from 10.45.12.88 (vDS-prod-01): 2847 flows
+2024-01-15 22:14:34 [INFO] Flow record received from 10.45.13.201 (sw-core-01): 1923 flows
+2024-01-15 22:14:34 [INFO] Forward to analytics engine: batch_id=ae7f2c91-4d22-11ee-b56e-0242ac110002
+2024-01-15 22:14:35 [INFO] Flow record received from 10.45.12.89 (vDS-prod-02): 3156 flows
+2024-01-15 22:14:35 [INFO] Forward to analytics engine: batch_id=ae7f2d12-4d22-11ee-b56e-0242ac110002
+```
+
+!!! warning "Common errors"
+    **`tcpdump: Permission denied`** — Run the command with `sudo` or add your user to the `tcpdump` group with `sudo usermod -aG tcpdump $USER`.
+    **`grep: /var/log/proxy.log: No such file or directory`** — Verify the collector service is running with `sudo systemctl status aria-collector` and check the actual log path in `/var/log/aria/` or `/opt/aria/logs/`.
 **IPFIX not configured on vDS:**
 ```text
 vSphere Client → Distributed Switch → Configure → NetFlow
@@ -187,6 +238,29 @@ nc -zv aon-platform.corp.local 443
 sudo journalctl -u ni-collector -n 100 --no-pager | grep -i "error\|fail\|warn"
 ```
 
+
+```text title="Expected output"
+ubuntu@aon-collector:~$ sudo systemctl status ni-collector
+● ni-collector.service - Aria Operations for Networks Collector
+     Loaded: loaded (/etc/systemd/system/ni-collector.service; enabled; vendor preset: enabled)
+     Active: inactive (dead) since Thu 2024-01-18 14:32:15 UTC; 2min 43s ago
+ubuntu@aon-collector:~$ sudo systemctl restart ni-collector
+ubuntu@aon-collector:~$ sudo systemctl status ni-collector
+● ni-collector.service - Aria Operations for Networks Collector
+     Loaded: loaded (/etc/systemd/system/ni-collector.service; enabled; vendor preset: enabled)
+     Active: active (running) since Thu 2024-01-18 14:34:52 UTC; 1s ago
+     Process: 8742 ExecStart=/opt/ni/collector/bin/collector.sh start (code=exited, status=0/SUCCESS)
+ubuntu@aon-collector:~$ nc -zv aon-platform.corp.local 443
+Connection to aon-platform.corp.local 443 port [tcp/https] succeeded!
+ubuntu@aon-collector:~$ sudo journalctl -u ni-collector -n 100 --no-pager | grep -i "error\|fail\|warn"
+Jan 18 14:34:53 aon-collector ni-collector[8751]: WARN: Retrying connection to platform at 10.42.8.15:443 (attempt 2/5)
+Jan 18 14:35:01 aon-collector ni-collector[8762]: ERROR: Failed to load SSL certificate from /etc/ni/certs/collector.pem
+```
+
+!!! warning "Common errors"
+    **`sudo: command not found`** — Verify the user has sudo privileges or log in as root; check `/etc/sudoers` includes the ubuntu user.
+    **`Connection refused`** — Ensure the ni-collector service is actually running with `systemctl status ni-collector` and check firewall rules allow outbound 443 to the platform VM.
+    **`ERROR: Failed to load SSL certificate from /etc/ni/certs/collector.pem`** — Regenerate or restore the collector certificate bundle using the platform's certificate management tool or re-register the collector.
 **If service restart doesn't fix it — re-register in UI:**
 ```text
 AON UI → Settings → Infrastructure and Support → Collectors
@@ -200,12 +274,46 @@ sudo /home/ubuntu/support/pairing.sh
 # Enter platform FQDN and paste the pairing key
 ```
 
+
+```text title="Expected output"
+Aria Operations for Networks - Collector Re-pairing Script
+===========================================================
+
+Checking collector status... OK
+Current platform: platform.example.com
+Collector UUID: 550e8400-e29b-41d4-a716-446655440000
+
+Enter platform FQDN [platform.example.com]: 
+Enter pairing key: 
+Validating pairing key... OK
+Connecting to platform at platform.example.com:443... Connected
+Registering collector... OK
+Collector re-paired successfully
+Restarting services... Done
+
+Pairing complete. Collector is now active.
+```
+
+!!! warning "Common errors"
+    **`sudo: /home/ubuntu/support/pairing.sh: command not found`** — Verify the script exists at that path and run `ls -la /home/ubuntu/support/pairing.sh` to confirm permissions and location.
+    **`Validating pairing key... FAILED - Invalid or expired key`** — Obtain a fresh pairing key from the Aria Operations platform UI under Administration > Collectors and re-run the script.
+    **`Connecting to platform at platform.example.com:443... Connection refused`** — Verify network connectivity to the platform FQDN with `ping platform.example.com` and confirm the platform is running and accessible on port 443.
 **Collector disk full (stops forwarding flows at >85% disk usage):**
 ```bash
 df -h /   # check root partition
 sudo journalctl --vacuum-size=1G   # free journal space
 ```
 
+
+```text title="Expected output"
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1        50G   42G  5.2G  85% /
+Vacuumed journals from /var/log/journal/abc123def456 to 1.0G.
+```
+
+!!! warning "Common errors"
+    **`df: '/': Permission denied`** — Run the command without `sudo` as `df` doesn't require elevated privileges, or check that the mount point exists and is accessible.
+    **`sudo: journalctl: command not found`** — Install systemd-journal or verify the system uses systemd; on some minimal distributions, journalctl may not be available.
 ---
 
 ## Path Analysis Showing No Path or Incomplete Path
@@ -227,6 +335,20 @@ for d in json.load(sys.stdin).get('results', []):
     print(f\"{d.get('datasource_type','?'):<25} {d.get('nickname','?'):<30} {d.get('enabled','')}\")"
 ```
 
+
+```text title="Expected output"
+vCenter                      prod-vcenter-01                  True
+vCenter                      dr-vcenter-02                    True
+NSX-T                        nsx-t-cluster-primary            True
+vRealize Operations         vrops-instance-01                False
+Kubernetes                   k8s-prod-cluster                 True
+Intersight                   intersight-connector             True
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification, or import the AON server's certificate into your system trust store.
+    **`jq: command not found`** — Install `python3-json` or use the provided Python one-liner instead of piping to `jq`.
+    **`Authorization header missing or invalid`** — Verify `${AON_TOKEN}` is set with a valid API token by running `echo $AON_TOKEN` and regenerate it in the AON UI if expired.
 **Fix:** In AON UI → Settings → Data Sources → Add Source:
 - Ensure all NSX-T Managers are added
 - Add physical switch SNMP credentials for switches in the path
@@ -250,6 +372,49 @@ ldapsearch -x -H ldaps://dc.corp.local:636 \
   -b "DC=corp,DC=local" "(sAMAccountName=testuser)" cn
 ```
 
+
+```text title="Expected output"
+# extended LDIF
+#
+# LDAPv3
+# base <DC=corp,DC=local> with scope subtree
+# filter: (sAMAccountName=testuser)
+# requesting: cn
+#
+
+# testuser, Users, corp.local
+dn: CN=testuser,CN=Users,DC=corp,DC=local
+cn: Test User
+
+# search result
+search: 2
+result: 0 Success
+matchedDN:
+text:
+
+# extended LDIF
+#
+# LDAPv3
+# base <DC=corp,DC=local> with scope subtree
+# filter: (sAMAccountName=testuser)
+# requesting: cn
+#
+
+# testuser, Users, corp.local
+dn: CN=testuser,CN=Users,DC=corp,DC=local
+cn: Test User
+
+# search result
+search: 2
+result: 0 Success
+matchedDN:
+text:
+```
+
+!!! warning "Common errors"
+    **`ldap_bind: Invalid credentials (49)`** — Verify the service account password is correct and the account is not locked in Active Directory.
+    **`Can't contact LDAP server (-1)`** — Confirm the DC hostname resolves and port 389/636 is reachable from the platform VM (use `nc -zv dc.corp.local 389`).
+    **`ldap_bind: Inappropriate authentication (48)`** — Remove the `-x` flag if using SASL authentication, or ensure the bind DN format matches your AD schema (try `svc-aon@corp.local` or `corp\svc-aon`).
 **Common causes:**
 
 | Cause | Fix |
@@ -280,6 +445,22 @@ sudo journalctl --vacuum-size=1G
 sudo journalctl --vacuum-time=7d
 ```
 
+
+```text title="Expected output"
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda3       500G  412G   88G  83% /var/lib/cassandra
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda4       300G  261G   39G  87% /var/lib/elasticsearch
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda2       100G   78G   22G  78% /var/log
+Vacuumed journals space from 2.3G to 1.0G.
+Vacuumed journals space from 1.0G to 892M.
+```
+
+!!! warning "Common errors"
+    **`df: /var/lib/cassandra: No such file or directory`** — Verify the Aria Operations for Networks collector node is running and the Cassandra service has initialized its data directory.
+    **`sudo: journalctl: command not found`** — Remove `sudo` prefix as journalctl requires root privileges via `sudo journalctl` without redundant elevation, or run the command directly as root.
+    **`Permission denied`** — Run the entire script with `sudo bash` or prefix each command with `sudo` to ensure proper permissions for system directories.
 **Adjust retention in UI:**
 ```text
 AON UI → Settings → Infrastructure and Support → Platform Settings

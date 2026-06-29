@@ -87,6 +87,34 @@ systemctl status vrlcm
 curl -sk https://localhost/lcm/apis/status | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+root@lcm-prod-01.corp.local:~# systemctl status vrlcm
+● vrlcm.service - VMware Aria Suite Lifecycle Manager
+     Loaded: loaded (/etc/systemd/system/vrlcm.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2024-01-17 14:32:18 UTC; 2 days ago
+   Main PID: 2847 (java)
+      Tasks: 87 (limit: 4915)
+     Memory: 2.1G
+        CPU: 18min 42.340s
+     CGroup: /system.slice/vrlcm.service
+             └─2847 /usr/lib/jvm/java-11-openjdk-11.0.18.0.10-1.el8_7.x86_64/bin/java...
+
+{
+  "version": "8.10.2.0",
+  "buildNumber": "21567891",
+  "releaseDate": "2024-01-10",
+  "status": "RUNNING",
+  "uptime": "172800",
+  "databaseStatus": "CONNECTED",
+  "licenseStatus": "VALID"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self-signed certificate`** — Add the `-k` flag to curl to skip certificate verification, or import the LCM certificate into your system's trusted store.
+    **`Connection refused`** — Verify the LCM service is running with `systemctl status vrlcm` and check that port 443 is listening with `netstat -tlnp | grep 443`.
+    **`curl: (7) Failed to connect to localhost port 443: Connection refused`** — Ensure you are SSH'd directly into the LCM appliance and that the vrlcm service has fully started (check logs with `journalctl -u vrlcm -n 50`).
 In the LCM UI:
 1. Click **Settings** → **About** — note the LCM version and build.
 2. Click **Lifecycle Operations** → **Environments** → open the affected environment.
@@ -128,6 +156,29 @@ ls -lh /tmp/lcm-support-bundle*.tar.gz
 scp root@<lcm-fqdn>:/tmp/lcm-support-bundle*.tar.gz /tmp/
 ```
 
+
+```text title="Expected output"
+root@lcm-prod-01.corp.local:~# /usr/lib/vmware-vrlcm/bin/lcm-support.sh
+Generating LCM support bundle...
+Collecting system logs...
+Collecting LCM configuration...
+Collecting database diagnostics...
+Bundle generation completed successfully.
+Support bundle saved to: /tmp/lcm-support-bundle-20240115-143022.tar.gz
+
+root@lcm-prod-01.corp.local:~# ls -lh /tmp/lcm-support-bundle*.tar.gz
+-rw-r--r-- 1 root root 487M Jan 15 14:30 /tmp/lcm-support-bundle-20240115-143022.tar.gz
+
+root@lcm-prod-01.corp.local:~# exit
+Connection to lcm-prod-01.corp.local closed.
+
+$ scp root@lcm-prod-01.corp.local:/tmp/lcm-support-bundle-20240115-143022.tar.gz /tmp/
+lcm-support-bundle-20240115-143022.tar.gz     100%  487MB   8.2MB/s   00:59
+```
+
+!!! warning "Common errors"
+    **`/usr/lib/vmware-vrlcm/bin/lcm-support.sh: No such file or directory`** — Verify the LCM appliance version and confirm the script path with `find / -name lcm-support.sh 2>/dev/null`.
+    **`scp: ambiguous target`** — Use the full bundle filename instead of the wildcard, or escape it properly: `scp root@<lcm-fqdn>:/tmp/lcm-support-bundle-*.tar.gz /tmp/` with quotes around the remote path.
 The bundle includes: LCM application logs, service logs, deployment history, Locker metadata (no passwords), system diagnostics, and recent request audit trail.
 
 ### 4. Collect issue-specific additional data
@@ -266,6 +317,51 @@ free -h
 curl -sk https://<vidm-fqdn>/SAAS/API/1.0/REST/system/health/heartbeat
 ```
 
+
+```text title="Expected output"
+● vrlcm.service - VMware vRealize Lifecycle Manager
+     Loaded: loaded (/etc/systemd/system/vrlcm.service; enabled; vendor preset: enabled)
+     Active: active (running) since Thu 2024-01-18 14:32:15 UTC; 2 days ago
+   Main PID: 4521 (java)
+      Tasks: 87 (limit: 4915)
+     Memory: 2.8G
+        CPU: 18m
+     CGroup: /system.slice/vrlcm.service
+             └─4521 /usr/lib/jvm/java-11-openjdk-11.0.18.0.10-1.el7_9.x86_64/bin/java -Xmx6g...
+
+{
+  "version": "8.13.1.0-23068078",
+  "buildNumber": "23068078",
+  "releaseDate": "2024-01-10",
+  "status": "RUNNING"
+}
+
+2024-01-18T14:45:22.891Z ERROR [lcm-task-executor-12] com.vmware.lcm.core.service.UpgradeService - Failed to validate product bundle: Invalid checksum detected
+2024-01-18T14:46:01.234Z EXCEPTION [lcm-api-handler-5] java.io.IOException: Connection timeout to vIDM endpoint
+
+Filesystem     Size  Used Avail Use% Mounted on
+/dev/sda1       50G   38G   9.2G  82% /
+/dev/sda2      100G   45G   52G  46% /storage
+tmpfs          7.8G     0  7.8G   0% /dev/shm
+
+              total        used        free      shared  buff/cache   available
+Mem:           15Gi       8.2Gi       2.1Gi       512Mi       4.7Gi       6.1Gi
+Swap:          4.0Gi       1.2Gi       2.8Gi
+
+{
+  "status": "UP",
+  "timestamp": "2024-01-18T14:47:33Z",
+  "services": {
+    "authentication": "OPERATIONAL",
+    "directory": "OPERATIONAL"
+  }
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification (already present in the provided commands).
+    **`Failed to validate product bundle: Invalid checksum detected`** — Re-download the product bundle from the VMware repository and verify the SHA checksum matches the release notes.
+    **`Connection timeout to vIDM endpoint`** — Verify network connectivity to the vIDM FQDN, confirm the vIDM appliance is running, and check firewall rules allow HTTPS (port 443) from the LCM appliance.
 ---
 
 ## Support SLA Reference

@@ -388,6 +388,26 @@ esxcli system settings encryption get
 esxcli software vib list --rebooting-image | awk '{print $1, $5}'
 ```
 
+
+```text title="Expected output"
+Secure Boot Status: disabled
+Secure Boot Key Provisioning: not-provisioned
+Secure Boot Signing Key: not-set
+Secure Boot Enforcement: disabled
+
+Name                                          AcceptanceLevel
+esx-base                                      VMwareCertified
+esx-update                                    VMwareCertified
+net-driver-bnx2                               VMwareCertified
+net-driver-ixgbe                              VMwareCertified
+misc-drivers                                  CommunitySupported
+lsi-mr3                                       VMwareCertified
+...
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown command or namespace esxcli system settings encryption`** — Verify you are running ESXi 6.7 or later; this command is not available on older versions.
+    **`Error: The DCUI or direct console login is required to enable Secure Boot`** — Connect via DCUI or use SSH with root credentials; remote vSphere Client connections cannot modify Secure Boot settings.
 ---
 
 ## Security Architecture Summary

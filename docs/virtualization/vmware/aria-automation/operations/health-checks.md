@@ -63,6 +63,39 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
   jq '.content[] | {name: .name, status: .status, reason: .reason}'
 ```
 
+
+```text title="Expected output"
+{
+  "name": "web-app-prod-deploy-2024-01-15",
+  "status": "FAILED",
+  "reason": "Insufficient vSphere cluster resources"
+}
+{
+  "name": "db-migration-v3.2.1",
+  "status": "FAILED",
+  "reason": "Blueprint validation error: missing required input 'environment'"
+}
+{
+  "name": "kubernetes-upgrade-jan",
+  "status": "FAILED",
+  "reason": "vRealize Orchestrator workflow timeout after 1800 seconds"
+}
+{
+  "name": "storage-expansion-dc2",
+  "status": "FAILED",
+  "reason": "Network connectivity lost to vSAN cluster"
+}
+{
+  "name": "app-tier-scale-out",
+  "status": "FAILED",
+  "reason": "Cloud account credentials expired"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; if still failing, verify the hostname matches the certificate CN).
+    **`jq: parse error: Cannot index string with string "content"`** — Ensure the API response is valid JSON and the token has read permissions; test with `curl -sk ... | jq '.'` to inspect raw output.
+    **`curl: (401) Unauthorized`** — Regenerate the bearer token (`$TOKEN`) in vRealize Automation under Administration > API Tokens and ensure it has not expired.
 ---
 
 ## Weekly Checks
@@ -123,6 +156,18 @@ echo | openssl s_client -connect vra-prod-01.example.local:5480 2>/dev/null | \
   openssl x509 -noout -dates
 ```
 
+
+```text title="Expected output"
+notBefore=Jan 15 10:23:45 2023 GMT
+notAfter=Jan 15 10:23:45 2024 GMT
+notBefore=Jan 15 10:23:45 2023 GMT
+notAfter=Jan 15 10:23:45 2024 GMT
+```
+
+!!! warning "Common errors"
+    **`unable to load certificate`** — Ensure the hostname resolves correctly and the appliance is reachable on both ports 443 and 5480 using `ping` and `telnet vra-prod-01.example.local 443`.
+    **`error in x509 parsing`** — The SSL connection succeeded but the certificate format is invalid; regenerate the certificate on the Aria Automation appliance via VAMI or re-issue it through your certificate authority.
+    **`Connection refused`** — Verify the Aria Automation services are running with `systemctl status vra-service` on the appliance and check firewall rules allow inbound traffic to ports 443 and 5480.
 ---
 
 ## Pre-Maintenance Checks
@@ -163,6 +208,45 @@ kubectl rollout restart deployment/<deployment-name> -n prelude
 kubectl get events -n prelude --sort-by='.metadata.creationTimestamp' | tail -30
 ```
 
+
+```text title="Expected output"
+root@vra-prod-01:~# vracli status
+Service Status Report
+=====================
+vra-service:           RUNNING
+postgres-service:      RUNNING
+rabbitmq-service:      RUNNING
+kubernetes-service:    RUNNING
+Overall Status:        HEALTHY
+
+root@vra-prod-01:~# vracli cluster health
+Cluster Status: HEALTHY
+Node: vra-prod-01.example.local (10.20.15.42) - READY
+Node: vra-prod-02.example.local (10.20.15.43) - READY
+Node: vra-prod-03.example.local (10.20.15.44) - READY
+Quorum: ESTABLISHED
+
+root@vra-prod-01:~# vracli version
+Aria Automation Version: 8.14.2
+Build: 22891234
+Release Date: 2024-01-15
+
+root@vra-prod-01:~# kubectl rollout restart deployment/vra-api -n prelude
+deployment.apps/vra-api restarted
+
+root@vra-prod-01:~# kubectl get events -n prelude --sort-by='.metadata.creationTimestamp' | tail -30
+NAMESPACE   LAST SEEN   TYPE      REASON             OBJECT                    MESSAGE
+prelude     2m42s       Normal    Scheduled          pod/vra-api-7d8c9f2k1    Successfully assigned prelude/vra-api-7d8c9f2k1 to vra-prod-02
+prelude     2m38s       Normal    Pulling            pod/vra-api-7d8c9f2k1    Pulling image "vra-api:8.14.2"
+prelude     2m15s       Normal    Pulled             pod/vra-api-7d8c9f2k1    Successfully pulled image
+prelude     2m12s       Normal    Created            pod/vra-api-7d8c9f2k1    Created container vra-api
+prelude     2m11s       Normal    Started            pod/vra-api-7d8c9f2k1    Started container vra-api
+```
+
+!!! warning "Common errors"
+    **`error: unable to connect to the server: dial tcp: lookup vra-prod-01.example.local on 10.20.15.1:53: no such host`** — Verify DNS resolution or use the IP address directly (e.g., `ssh root@10.20.15.42`).
+    **`command not found: vracli`** — Ensure you are logged into the Aria Automation appliance root shell and the vracli utility is in the PATH; try `/opt/vmware/vra/bin/vracli` if needed.
+    **`error: the server doesn't have a resource type "deployment"`** — Confirm you are using the correct kubectl context for the Aria Automation cluster; run `kubectl config current-context` to verify.
 ---
 
 ## See also

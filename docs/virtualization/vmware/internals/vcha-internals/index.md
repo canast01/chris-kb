@@ -138,6 +138,15 @@ curl -X POST \
   "https://<VCENTER_FQDN>/api/vcenter/vcha/cluster?action=failover_vcha"
 ```
 
+
+```text title="Expected output"
+{"value":null}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the vCenter certificate into your system trust store.
+    **`{"type":"com.vmware.vapi.std.errors.unauthenticated","value":{"messages":[]}}`** — Ensure the SESSION_TOKEN is valid and not expired; obtain a fresh token by authenticating with `/api/session` endpoint first.
+    **`curl: (7) Failed to connect to <VCENTER_FQDN> port 443: Connection refused`** — Verify the vCenter FQDN is correct and resolvable, and that the vCenter API service is running and accessible on port 443.
 The `vcha.failover` operation is idempotent if passive is already active; returns HTTP 204 on success.
 
 **Post-failover validation:**

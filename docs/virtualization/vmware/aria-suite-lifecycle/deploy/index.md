@@ -68,6 +68,25 @@ nslookup 10.10.10.40
 # Both must resolve correctly before proceeding
 ```
 
+
+```text title="Expected output"
+Server:		10.10.10.1
+Address:	10.10.10.1#53
+
+Name:	lcm.example.local
+Address: 10.10.10.40
+Address: 10.10.10.41
+
+Server:		10.10.10.1
+Address:	10.10.10.1#53
+
+40.10.10.10.in-addr.arpa	name = lcm.example.local.
+40.10.10.10.in-addr.arpa	name = lcm-secondary.example.local.
+```
+
+!!! warning "Common errors"
+    **`** server can't find lcm.example.local: NXDOMAIN`** — Verify the DNS A record exists in your DNS server and check that your resolver is configured to query the correct nameserver.
+    **`** server can't find 10.10.10.40.in-addr.arpa: NXDOMAIN`** — Ensure reverse DNS (PTR record) is configured for 10.10.10.40 on your DNS server.
 ### vCenter Service Account
 
 The LCM infrastructure account requires the following vCenter privileges:
@@ -126,6 +145,27 @@ systemctl status lcm-vmon
 # Should show: Active (running)
 ```
 
+
+```text title="Expected output"
+HTTP 302
+root@lcm.example.local's password: 
+● lcm-vmon.service - VMware Lifecycle Manager vMon Service
+     Loaded: loaded (/etc/systemd/system/lcm-vmon.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2024-01-17 14:23:45 UTC; 2h 14min ago
+       Docs: man:systemd.unit(5)
+    Process: 2847 ExecStart=/opt/vmware/lcm/bin/vmon-service.sh start (code=exited, status=0/SUCCESS)
+   Main PID: 2891 (java)
+      Tasks: 47 (limit: 4915)
+     Memory: 1.2G
+        CPU: 18min 34.231s
+     CGroup: /system.slice/lcm-vmon.service
+             └─2891 /usr/lib/jvm/java-11-openjdk-11.0.18.0.10-1.el7_9.x86_64/bin/java -Xmx2g...
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl to skip certificate verification, or import the LCM certificate into your system CA bundle.
+    **`ssh: connect to host lcm.example.local port 22 (Connection refused)`** — Verify the LCM appliance is powered on and SSH is enabled; check network connectivity with `ping lcm.example.local`.
+    **`Unit lcm-vmon.service could not be found.`** — SSH into the appliance and verify the LCM service name with `systemctl list-units --all | grep lcm`, then use the correct service name.
 ### Accept EULA and Enter Licence
 
 1. Browse to `https://lcm.example.local`.
@@ -180,6 +220,18 @@ openssl s_client -connect lcm.example.local:443 -showcerts 2>/dev/null \
 # CN must match lcm.example.local; Issuer must be your internal CA
 ```
 
+
+```text title="Expected output"
+subject=CN = lcm.example.local, O = Example Corp, C = US
+issuer=CN = Example Corp Internal CA, O = Example Corp, C = US
+notBefore=Jan 15 10:22:33 2024 GMT
+notAfter=Jan 15 10:22:33 2025 GMT
+```
+
+!!! warning "Common errors"
+    **`unable to get local issuer certificate`** — The internal CA certificate is not in the system trust store; add it to `/etc/pki/ca-trust/source/anchors/` and run `update-ca-trust`.
+    **`Verify return code: 21 (unable to verify the first certificate)`** — The certificate chain is incomplete; ensure the intermediate CA certificate is installed on the LCM appliance in the certificate chain file.
+    **`subject=CN = lcm.example.local` does not match expected hostname** — Update the certificate with the correct FQDN or add a Subject Alternative Name (SAN) entry for the actual hostname and redeploy.
 ### Configure Locker Passwords
 
 LCM → Locker → Passwords → Add Password
@@ -240,6 +292,24 @@ ls -lh /data/lcm/binary-store/
 # PAK files should be present with correct sizes
 ```
 
+
+```text title="Expected output"
+root@lcm.example.local's password: 
+total 18G
+drwxr-xr-x  4 root root 4.0K Nov 15 10:23 .
+drwxr-xr-x  3 root root 4.0K Nov 10 08:45 ..
+-rw-r--r--  1 root root 4.2G Nov 15 09:12 vRealize-Automation-8.10.0-20231101.pak
+-rw-r--r--  1 root root 3.8G Nov 15 09:18 vRealize-Operations-8.13.0-20231105.pak
+-rw-r--r--  1 root root 2.1G Nov 15 09:25 vRealize-Log-Insight-8.14.0-20231108.pak
+-rw-r--r--  1 root root 2.9G Nov 15 09:31 vRealize-Business-7.6.0-20231112.pak
+-rw-r--r--  1 root root 4.7G Nov 15 09:42 vSAN-8.0.1-20231115.pak
+drwxr-xr-x  2 root root 4.0K Nov 15 10:15 checksums
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify SSH credentials and that root login is enabled in /etc/ssh/sshd_config on the LCM appliance.
+    **`ls: cannot access '/data/lcm/binary-store/': No such file or directory`** — Confirm the LCM appliance is fully deployed and the binary-store directory exists; check mount points with `df -h`.
+    **`Connection refused`** — Ensure the LCM appliance is powered on and SSH service is running; verify network connectivity with `ping lcm.example.local`.
 ### Add vCenter Infrastructure Account
 
 LCM → Lifecycle Operations → Settings → My VMware vCenter Servers → Add vCenter
@@ -309,6 +379,26 @@ ssh root@lcm.example.local
 tail -f /var/log/vmware/lcm/lcm-install.log
 ```
 
+
+```text title="Expected output"
+Connected to lcm.example.local.
+Last login: Wed Mar 15 14:32:18 2024 from 10.45.120.88
+[root@lcm-prod-01 ~]# tail -f /var/log/vmware/lcm/lcm-install.log
+2024-03-15T14:35:22.441Z [INFO] LCM Request ID: req-8f4c2a9b-7e1d-4f92-b8c3-2d5e9a1c3f7b
+2024-03-15T14:35:23.156Z [INFO] Starting deployment of Aria Suite components
+2024-03-15T14:35:45.892Z [INFO] Validating infrastructure prerequisites
+2024-03-15T14:36:12.334Z [INFO] Configuring vCenter integration: vcenter.example.local
+2024-03-15T14:36:58.721Z [INFO] Deploying Aria Automation appliance (aria-auto-01.example.local)
+2024-03-15T14:37:15.443Z [INFO] Appliance network configuration: 10.45.120.45/24, GW: 10.45.120.1
+2024-03-15T14:38:02.667Z [INFO] Deploying Aria Operations appliance (aria-ops-01.example.local)
+2024-03-15T14:39:44.891Z [WARN] High memory utilization detected on ESXi host esx-04.example.local (87%)
+2024-03-15T14:40:21.556Z [INFO] Configuring Aria Operations analytics cluster
+2024-03-15T14:41:33.778Z [INFO] Deployment 45% complete - estimated 18 minutes remaining
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify SSH key is loaded with `ssh-add` or use password authentication; confirm root account is enabled on LCM appliance.
+    **`tail: cannot open '/var/log/vmware/lcm/lcm-install.log' for reading: No such file or directory`** — Confirm LCM deployment has started and the log directory exists; check actual log path with `find /var/log -name "*lcm*" -type f`.
 ---
 
 ## Phase 6 — Post-Deployment Validation
@@ -334,6 +424,17 @@ curl -sk https://vrli.example.local -o /dev/null -w "HTTP %{http_code}\n"
 curl -sk https://vidm.example.local/SAAS/auth/login -o /dev/null -w "HTTP %{http_code}\n"
 ```
 
+
+```text title="Expected output"
+HTTP 200
+HTTP 200
+HTTP 200
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to vrops.example.local port 443: Connection refused`** — Verify the Aria Operations appliance is powered on and network connectivity exists using `ping vrops.example.local`.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — The `-k` flag should suppress this, but if it appears, ensure you're using curl version 7.10 or later with `curl --version`.
+    **`HTTP 000`** — The appliance is reachable but the service hasn't fully initialized; wait 2-3 minutes after deployment and retry the health check.
 All should return HTTP 200 or 302.
 
 ### Verify Locker Certificate Expiry
@@ -347,6 +448,19 @@ openssl s_client -connect lcm.example.local:443 2>/dev/null \
   | openssl x509 -noout -enddate
 ```
 
+
+```text title="Expected output"
+depth=0 CN = lcm.example.local
+verify error:num=18:self signed certificate
+verify return:1
+depth=0 CN = lcm.example.local
+verify return:1
+notAfter=Dec 15 09:23:47 2025 GMT
+```
+
+!!! warning "Common errors"
+    **`connect: Connection refused`** — Verify LCM is running and listening on port 443 with `netstat -tlnp | grep 443` or check firewall rules blocking the connection.
+    **`unable to load certificate`** — The SSL handshake failed or the certificate chain is incomplete; try adding `-showcerts` to `openssl s_client` to diagnose the full chain.
 ### Post-Deployment Checklist
 
 | Check | Expected Result |

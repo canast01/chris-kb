@@ -144,6 +144,55 @@ hzedge gettunnel
 hzedge getsessioninfo
 ```
 
+
+```text title="Expected output"
+admin@uag-prod-01.corp.example.com's password: 
+Connected to UAG instance uag-prod-01.corp.example.com
+
+Health Status: HEALTHY
+Overall CPU: 12%
+Overall Memory: 68%
+Disk Usage: 45%
+Network Status: UP
+
+Edge Configuration Summary:
+  Version: 2309.1
+  Build: 21.09.0.12345
+  Deployment Mode: HA Primary
+  Last Health Check: 2024-01-15 14:32:18 UTC
+
+Services Status:
+  Horizon Gateway Service: RUNNING
+  Reverse Proxy Service: RUNNING
+  Tunnel Service: RUNNING
+  Security Gateway: RUNNING
+  Load Balancer: RUNNING
+
+Blast Extreme Gateway Status: ACTIVE
+  Connections: 247
+  Peak Throughput: 850 Mbps
+  Latency: 12ms
+
+PCoIP Gateway Status: ACTIVE
+  Connections: 156
+  Peak Throughput: 620 Mbps
+  Latency: 8ms
+
+Tunnel Status: CONNECTED
+  Primary Tunnel: ESTABLISHED (uptime: 45d 3h 22m)
+  Secondary Tunnel: ESTABLISHED (uptime: 45d 3h 18m)
+  Tunnel Bandwidth: 95 Mbps
+
+Authenticated Sessions: 403
+  Blast Sessions: 247
+  PCoIP Sessions: 156
+  Session Timeout: 3600s
+```
+
+!!! warning "Common errors"
+    **`Connection refused — Verify UAG hostname/IP is correct and SSH service is running on port 22.`** — Verify UAG hostname/IP is correct and SSH service is running on port 22.
+    **`hzedge: command not found — SSH into the UAG appliance directly; these commands only work from the UAG console, not from a remote client.`** — SSH into the UAG appliance directly; these commands only work from the UAG console, not from a remote client.
+    **`Health Status: DEGRADED — Check individual service status with hzedge getservices and review /var/log/horizon/edge.log for specific failures.`** — Check individual service status with hzedge getservices and review /var/log/horizon/edge.log for specific failures.
 ### UAG REST API (health check endpoint)
 
 ```bash
@@ -155,6 +204,16 @@ curl -sk https://uag-prod-01.corp.example.com/favicon.ico -o /dev/null -w "%{htt
 curl -sk -u admin:<password> https://uag-prod-01.corp.example.com:9443/rest/v1/monitor/stats
 ```
 
+
+```text title="Expected output"
+200
+{"monitorData":{"cpuUsage":42.3,"memoryUsage":58.7,"diskUsage":35.2,"activeConnections":1247,"tunnelConnections":89,"secureTunnelConnections":87,"uptime":2419200,"version":"8.10.0.1234","buildNumber":"20231015-001","lastHealthCheck":"2024-01-15T14:32:18Z","status":"HEALTHY","gatewayHealth":{"primary":"UP","secondary":"UP"},"loadBalancerStatus":"ACTIVE","certificateExpiry":"2025-03-22T00:00:00Z"}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or install the UAG's CA certificate in your system trust store.
+    **`curl: (7) Failed to connect to uag-prod-01.corp.example.com port 9443: Connection refused`** — Verify the UAG service is running with `systemctl status vmware-uag` and confirm the hostname/port are correct.
+    **`{"error":"Unauthorized","code":401}`** — Ensure the admin credentials are correct and use the format `-u admin:password` without extra spaces or special characters that need escaping.
 ---
 
 ## PowerShell — VMware.Hv.Helper

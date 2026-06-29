@@ -76,6 +76,22 @@ esxcli system settings advanced list -o /VSAN/ClomRepairDelay
 esxcli system settings advanced set -o /VSAN/ClomRepairDelay -i 30
 ```
 
+
+```text title="Expected output"
+Path: /VSAN/ClomRepairDelay
+   Type: integer
+   Int Value: 60
+   Default Int Value: 60
+   Min Value: 1
+   Max Value: 1440
+   Description: Delay in minutes before VSAN initiates component repair after detection
+
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown option or setting '/VSAN/ClomRepairDelay'`** — Verify the option path is correct and the host is running vSAN; check with `esxcli system settings advanced list | grep -i clom` to confirm availability.
+    **`Error: Integer value 30 is out of range [1, 1440]`** — Use a value between 1 and 1440 minutes; for example, use `1440` for 24 hours instead of exceeding the maximum.
 | Parameter | Default | Range | Notes |
 |-----------|---------|-------|-------|
 | `ClomRepairDelay` | 60 min | 0–1440 min | 0 = immediate rebuild; 1440 = 24 h delay |
@@ -97,6 +113,16 @@ esxcli vsan cluster set --resync-iops-limit 1000
 esxcli system settings advanced set -o /VSAN/ResyncIopsLimit -i 1000
 ```
 
+
+```text title="Expected output"
+Resync IOPS Limit: 0
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown option --resync-iops-limit`** — Use the per-host advanced config method instead, as `esxcli vsan cluster set` may not support this parameter in your vSAN version.
+    **`Error: Unknown advanced option '/VSAN/ResyncIopsLimit'`** — Verify the correct option path with `esxcli system settings advanced list | grep -i resync` and use the exact path returned.
 | Setting | Default | Recommended during production peak |
 |---------|---------|-------------------------------------|
 | ResyncIopsLimit | 0 (unlimited) | 500–2000 IOPS depending on workload sensitivity |
@@ -107,6 +133,17 @@ Monitor resync progress in **vSAN → Monitor → Resyncing Objects** or:
 esxcli vsan debug object list | grep -i resync
 ```
 
+
+```text title="Expected output"
+Object UUID                          Congestion  ResyncObjects  NumMembers
+52a4c8f1-1234-5678-90ab-cdef12345678       0              1           3
+7f8e9d0c-abcd-ef01-2345-6789abcdef01       0              2           3
+a1b2c3d4-5678-90ab-cdef-1234567890ab       0              0           3
+```
+
+!!! warning "Common errors"
+    **`Unknown command or namespace vsan`** — Ensure VSAN is licensed and enabled on the ESXi host, and verify the host is part of an active vSAN cluster.
+    **`Permission denied`** — Run the command with root privileges or ensure your user account has the required vSAN diagnostic permissions on the ESXi host.
 ## Object Health Inspection
 
 Inspect per-object component placement and health:
@@ -155,6 +192,26 @@ esxcli vsan storage rebalance status
 esxcli vsan storage rebalance stop
 ```
 
+
+```text title="Expected output"
+Rebalance operation started successfully.
+Rebalance UUID: 550e8400-e29b-41d4-a716-446655440000
+
+Rebalance Status:
+  UUID: 550e8400-e29b-41d4-a716-446655440000
+  State: In Progress
+  Start Time: 2024-01-15 14:32:18 UTC
+  Estimated Completion: 2024-01-15 16:45:00 UTC
+  Objects Processed: 2847 / 5234
+  Data Moved (GB): 1248.5
+  Current Throughput (MB/s): 42.3
+
+Rebalance operation stopped successfully.
+```
+
+!!! warning "Common errors"
+    **`Error: Rebalance operation already in progress`** — Wait for the current rebalance to complete or stop it first with `esxcli vsan storage rebalance stop`.
+    **`Error: VSAN cluster is not in a healthy state`** — Resolve cluster health issues (failed disks, network partitions) before initiating rebalance using `esxcli vsan cluster get`.
 Rebalance triggers automatically if any disk group exceeds **80% full** while the cluster average is significantly lower. Threshold configurable in advanced settings.
 
 ## vSAN Health Check Procedure
@@ -188,6 +245,34 @@ esxcli vsan storage list
 esxcli vsan cluster get
 ```
 
+
+```text title="Expected output"
+Cluster UUID: 52d4a8f1-7c3e-4d92-b1a2-9f8e2c1d5a3b
+Cluster Health: Healthy
+Component Health:
+  Memory: Healthy
+  Network: Healthy
+  Physical Disks: Healthy
+  Data: Healthy
+  Congestion: Healthy
+
+Disk Group 1:
+  UUID: 7a2f1e8c-9d4b-4c6a-8f3e-1b5d2a9c4e7f
+  State: Healthy
+  Capacity: 1.8 TB
+  Used: 847 GB
+  Physical Disks: 3 (all healthy)
+
+Cluster Information:
+  Enabled: true
+  Node Count: 4
+  Network Partition: No
+  Quorum: Achieved
+```
+
+!!! warning "Common errors"
+    **`esxcli: Unknown command or namespace vsan`** — Ensure VSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` to verify VSAN is initialized.
+    **`Error: Unable to connect to vSAN cluster`** — Verify the ESXi host is part of an active VSAN cluster and network connectivity exists between cluster nodes.
 ## Common Health Check Failures
 
 | Health Check | Failure Cause | Remediation |

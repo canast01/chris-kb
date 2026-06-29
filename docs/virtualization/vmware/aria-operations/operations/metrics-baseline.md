@@ -18,6 +18,28 @@ qos statistics workload latency show -iterations 5 -interval 5
 statistics show -object system -counter total_ops,read_ops,write_ops,latency
 ```
 
+
+```text title="Expected output"
+Workload Latency Statistics (5 iterations, 5 second intervals):
+Iteration 1: avg_latency=2.34ms, p95=4.12ms, p99=6.78ms, max=8.91ms
+Iteration 2: avg_latency=2.41ms, p95=4.28ms, p99=7.02ms, max=9.15ms
+Iteration 3: avg_latency=2.38ms, p95=4.19ms, p99=6.95ms, max=8.87ms
+Iteration 4: avg_latency=2.45ms, p95=4.35ms, p99=7.11ms, max=9.23ms
+Iteration 5: avg_latency=2.39ms, p95=4.22ms, p99=7.05ms, max=9.04ms
+
+System Statistics:
+Object: system
+  total_ops: 1,247,856
+  read_ops: 892,341
+  write_ops: 355,515
+  latency: 2.39ms
+Timestamp: 2024-01-15T14:32:18Z
+```
+
+!!! warning "Common errors"
+    **`qos: command not found`** — Verify the QoS monitoring module is installed and the service is running with `systemctl status aria-operations-qos`.
+    **`statistics: invalid object 'system'`** — Confirm the correct object name using `statistics show -objects` and replace with a valid object like `datastore` or `host`.
+    **`Connection refused on localhost:8080`** — Ensure the Aria Operations service is running and accessible by checking `curl -I http://localhost:8080/api/health`.
 **Pure FlashArray:**
 ```bash
 purecli array get --mirrored

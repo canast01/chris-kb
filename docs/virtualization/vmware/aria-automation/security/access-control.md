@@ -65,6 +65,10 @@ Approval policies add a human approval gate before provisioning.
 Service Broker → Content & Policies → Policies → New Policy → Approval Policy
 ```
 
+
+```text title="Expected output"
+(no output — this is a UI navigation path, not a bash command)
+```
 Configuration:
 - Scope: project-level (all requests in the project) or catalog item-level (specific items)
 - Approver groups: AD groups (any member can approve)
@@ -82,6 +86,44 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
   jq '.content[] | {id: .id, requester: .requestedBy, item: .catalogItemName}'
 ```
 
+
+```text title="Expected output"
+{
+  "name": "Production Deployment Approval",
+  "scope": "prod-deployments",
+  "approvers": [
+    "infra-leads@example.com",
+    "security-team@example.com"
+  ]
+}
+{
+  "name": "Database Change Control",
+  "scope": "database-changes",
+  "approvers": [
+    "dba-group@example.com"
+  ]
+}
+{
+  "id": "req-2024-08-15-001",
+  "requester": "john.smith@example.com",
+  "item": "Deploy CentOS 8 VM"
+}
+{
+  "id": "req-2024-08-15-002",
+  "requester": "jane.doe@example.com",
+  "item": "Provision Database Server"
+}
+{
+  "id": "req-2024-08-15-003",
+  "requester": "admin@example.com",
+  "item": "Configure Load Balancer"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification or import the vRA certificate into your system trust store.
+    **`jq: parse error: Cannot index string with string "content"`** — Verify the API response is valid JSON and the endpoint URL is correct; check that `$TOKEN` is set and has not expired.
+    **`curl: (401) Unauthorized`** — Regenerate or refresh the bearer token and ensure it has the `approval:read` and `policy:read` scopes.
 ---
 
 ## Reviewing Role Assignments via API
@@ -98,6 +140,38 @@ curl -sk -H "Authorization: Bearer $TOKEN" \
   jq '.members[] | {email: .email, role: .role}'
 ```
 
+
+```text title="Expected output"
+{
+  "principal": "svc-automation@example.local",
+  "role": "org-owner"
+}
+{
+  "principal": "devops-team@example.local",
+  "role": "org-member"
+}
+{
+  "principal": "security-admins@example.local",
+  "role": "org-admin"
+}
+{
+  "email": "alice.chen@example.local",
+  "role": "project-admin"
+}
+{
+  "email": "bob.martinez@example.local",
+  "role": "project-member"
+}
+{
+  "email": "carol.singh@example.local",
+  "role": "project-viewer"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; if still failing, verify the hostname matches the certificate CN).
+    **`jq: parse error: Invalid JSON`** — Ensure the `$TOKEN` variable is valid and not expired; test with `curl -sk -H "Authorization: Bearer $TOKEN" "https://vra-prod-01.example.local/csp/gateway/am/api/orgs/<org-id>/role-assignments"` without piping to jq first.
+    **`404 Not Found`** — Replace `<org-id>` and `<project-id>` placeholders with actual UUIDs from your vRA instance (retrieve with `curl -sk -H "Authorization: Bearer $TOKEN" "https://vra-prod-01.example.local/csp/gateway/am/api/orgs" | jq '.items[].id'`).
 Audit role assignments monthly — remove access for team members who have changed roles or left the organisation.
 
 ---

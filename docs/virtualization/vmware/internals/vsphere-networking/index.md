@@ -72,6 +72,56 @@ esxcli network ip interface list
 esxcli network ip interface list | grep -E "Name|Portset"
 ```
 
+
+```text title="Expected output"
+Name: vSwitch0
+Num Ports: 128
+Used Ports: 6
+Configured Ports: 128
+MTU: 1500
+CDP Status: listen
+Beacon Enabled: false
+
+Name: vSwitch1
+Num Ports: 256
+Used Ports: 12
+Configured Ports: 256
+MTU: 1500
+CDP Status: unlisten
+Beacon Enabled: false
+
+DVS Name: VDS-Prod-01
+DVS UUID: 50 2e 5f 5b 8c 4a 9f 2e-d1 3e 7c 9a 4b 6f 2d 8e
+Num Hosts: 4
+Num Ports: 512
+Used Ports: 287
+
+Name: vmk0
+MAC Address: 00:50:56:a1:2f:4c
+IPv4 Address: 192.168.1.50/24
+IPv6 Address: fe80::250:56ff:fea1:2f4c/64
+Enabled: true
+Portset: vSwitch0
+
+Name: vmk1
+MAC Address: 00:50:56:a1:2f:4d
+IPv4 Address: 10.20.30.100/24
+IPv6 Address: fe80::250:56ff:fea1:2f4d/64
+Enabled: true
+Portset: vSwitch1
+
+Name: vmk0
+Portset: DPG-Management
+Name: vmk1
+Portset: DPG-vMotion
+Name: vmk2
+Portset: DPG-Storage
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown command or namespace network vswitch dvs vmware list`** — Use `esxcli network vswitch dvs list` instead (the `vmware` subcommand does not exist in standard esxcli).
+    **`Error: Unable to connect to the ESX Server`** — Ensure SSH is enabled on the ESXi host and you have network connectivity; verify with `ping <esxi-hostname>` first.
+    **`Error: The object has already been deleted or has not been completely created`** — Wait 30–60 seconds after VDS creation before running these commands, as the distributed switch may still be initializing.
 Key consideration: always migrate the management VMkernel port (vmk0) last and ensure physical uplinks are available to the VDS before detaching them from the VSS.
 
 > **VCP-DCV Exam Note:** VDS requires **vSphere Enterprise Plus** licensing. VSS is included with all vSphere editions. A VDS can be used even if vCenter becomes unavailable — hosts retain their last-known configuration, but you cannot make configuration changes until vCenter is restored.
@@ -116,6 +166,21 @@ esxcli vmotion network ip set --interface-name vmk1
 esxcli network ip interface list
 ```
 
+
+```text title="Expected output"
+VMkernel interface vmk1 added successfully.
+(no output — command completes silently)
+(no output — command completes silently)
+Name    Enabled  Connected  Netstack        IPV4 Address      IPV4 Netmask      IPV6 Address  MTU  MAC Address
+------  -------  ---------  ---------------  ----------------  ----------------  -----------  ----  ------------------
+vmk0    true     true       defaultTcpipStack 192.168.1.100     255.255.255.0              1500  00:50:56:c0:00:01
+vmk1    true     true       defaultTcpipStack 192.168.10.11     255.255.255.0              1500  00:50:56:c0:00:02
+vmk2    true     true       vmotion          192.168.20.50      255.255.255.0              1500  00:50:56:c0:00:03
+```
+
+!!! warning "Common errors"
+    **`Error: The object or name is not valid.`** — Verify the portgroup "vMotion-PG" exists on the vSwitch using `esxcli network vswitch standard portgroup list`.
+    **`Error: Could not set ipv4 config for vmk1`** — Ensure the VMkernel interface was successfully created and the IP address is not already in use on the network.
 From the vCenter UI: **Host → Configure → Networking → VMkernel adapters → Add networking**.
 
 > **VCP-DCV Exam Note:** A single VMkernel adapter can serve multiple services (e.g., management + vSphere Replication), but this is not recommended for production. vSAN and vMotion should always have dedicated vmk adapters on dedicated VLANs. FT Logging requires very low latency — it must be on its own vmk and ideally a dedicated NIC.
@@ -190,6 +255,23 @@ Get-VDSwitch "VDS-Production" | Get-VDTrafficShapingPolicy -Direction Ingress
 Get-VDSwitch "VDS-Production" | Select Name, Version, NumUplinkPorts
 ```
 
+
+```text title="Expected output"
+Name              Direction AverageBandwidth PeakBandwidth BurstSize Enabled
+----              --------- ---------------- ------------- --------- -------
+System Traffic    Ingress   Unlimited        Unlimited     Unlimited    True
+vMotion           Ingress   Unlimited        Unlimited     Unlimited    True
+Fault Tolerance   Ingress   Unlimited        Unlimited     Unlimited    True
+Management        Ingress   Unlimited        Unlimited     Unlimited    True
+
+Name                Version NumUplinkPorts
+----                ------- --------------
+VDS-Production      7.0.0   4
+```
+
+!!! warning "Common errors"
+    **`Get-VDSwitch : The object 'VDS-Production' could not be found on the specified Folder, Datacenter or ResourcePool.`** — Verify the VDS name matches exactly and you are connected to the correct vCenter server with `Connect-VIServer`.
+    **`You do not have permission to perform this operation.`** — Ensure your vCenter account has Administrator role or equivalent Network Administrator privileges on the VDS object.
 ---
 
 ## Port Groups and VLANs
@@ -246,6 +328,21 @@ esxcli network ip route ipv4 add \
   --gateway 192.168.20.1
 ```
 
+
+```text title="Expected output"
+Name            State    Default Route
+defaultTcpipStack  active  true
+vmotion         active  false
+vxlan           active  false
+
+(no output — command completes silently)
+
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: The object or item referenced could not be found.`** — Verify the portgroup name exists with `esxcli network vswitch standard portgroup list` and use the exact name.
+    **`Error: The specified virtual NIC is already bound to a netstack.`** — Remove the interface from its current stack first using `esxcli network ip interface remove --interface-name vmk2`.
 **Why they exist:** Without separate stacks, vMotion and the management interface share the same routing table. If management is on 192.168.1.0/24 and vMotion is on 10.10.10.0/24, you need a route for both — but only one default gateway. Separate stacks eliminate this routing conflict by giving vMotion its own gateway.
 
 ---
@@ -277,6 +374,40 @@ esxcli network vswitch standard uplink list
 esxcli network vswitch dvs vmware uplink list
 ```
 
+
+```text title="Expected output"
+Name  IPv4 Address      IPv6 Address  MTU   Enabled
+----  ---------------  -----------   ----  -------
+vmk0  192.168.1.100     ::1           1500  true
+vmk1  172.16.50.10      ::1           9000  true
+vmk2  172.16.51.10      ::1           9000  true
+vmk3  172.16.52.10      ::1           1500  true
+
+Cluster Member  Preferred Fault Domain  MTU    Latency  Packet Loss
+---------------  ----------------------  -----  -------  -----------
+esx-01.lab.local  esx-01.lab.local       9000   0.45ms   0%
+esx-02.lab.local  esx-02.lab.local       9000   0.52ms   0%
+esx-03.lab.local  esx-03.lab.local       9000   0.48ms   0%
+
+Health Status: Healthy
+Last Check: 2024-01-15 14:32:18
+
+vSwitch  Uplink  Status  Speed  Duplex
+-------  ------  ------  -----  ------
+vSwitch0  vmnic0  Up      10Gbps  Full
+vSwitch0  vmnic1  Up      10Gbps  Full
+vSwitch1  vmnic2  Up      10Gbps  Full
+
+DVS Name              Uplink  Status  Speed  Duplex
+-------------------  ------  ------  -----  ------
+DSwitch-Prod-01      vmnic3  Up      10Gbps  Full
+DSwitch-Prod-01      vmnic4  Up      10Gbps  Full
+DSwitch-Prod-02      vmnic5  Up      10Gbps  Full
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown command or namespace vsan`** — Verify vSAN is licensed and enabled on the cluster; if not, skip vSAN-specific commands.
+    **`Error: Could not get property for object of type HostVirtualNic`** — Ensure the ESXi host is in a healthy state and the vSphere API is responding; try reconnecting the host to vCenter.
 ---
 
 ## Related Pages

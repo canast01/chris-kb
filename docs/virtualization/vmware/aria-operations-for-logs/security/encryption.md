@@ -92,12 +92,65 @@ openssl s_client -connect vrli-prod-01.example.local:443 -tls1_2 2>/dev/null | \
 # Expected: Protocol : TLSv1.2
 ```
 
+
+```text title="Expected output"
+alert handshake failure
+Protocol  : TLSv1.2
+```
+
+!!! warning "Common errors"
+    **`unable to load client cert (no certs available)`** — Ensure the system's CA certificates are installed via `update-ca-certificates` or equivalent, or add `-CAfile /path/to/ca-bundle.crt` to the openssl command.
+    **`connect: Connection refused`** — Verify the vrli-prod-01.example.local hostname resolves and port 443 is accessible; check DNS resolution with `nslookup vrli-prod-01.example.local` and firewall rules.
+    **`Protocol  : TLSv1.0` (when TLS 1.0 should be rejected)`** — Disable TLS 1.0 on the Aria Operations for Logs appliance via the security settings in the web UI or by editing `/etc/ssl/openssl.cnf` to remove TLSv1 from the MinProtocol directive.
 Use `testssl.sh` for a comprehensive scan before exposing the UI to any external network:
 
 ```bash
 testssl.sh --severity HIGH vrli-prod-01.example.local:443
 ```
 
+
+```text title="Expected output"
+###########################################################
+testssl.sh 3.2dev from https://github.com/drwetter/testssl.sh
+(ec2c1f8 2024-01-15 22:47:42 UTC)
+
+   This program is CAPTCHA-free, but please respect a certain amount of load,
+   workflow is way too fast to be real. Doing up to 50 requests per second.
+
+Testing vrli-prod-01.example.local:443 [10.42.18.55]
+
+ Start 2024-01-22 14:32:10        -->> 10.42.18.55:443 (vrli-prod-01.example.local) <<--
+
+ rDNS (10.42.18.55):     vrli-prod-01.example.local
+ Service detected:       HTTPS
+
+Certificate information:
+ Subject:               CN=vrli-prod-01.example.local
+ Issuer:                CN=VMware-Aria-CA,O=VMware Inc,C=US
+ Public key type:       RSA
+ Public key bits:       2048
+ Signature algorithm:    sha256WithRSAEncryption
+ Not valid before:      2023-11-10 08:15:00 UTC
+ Not valid after:       2025-11-10 08:15:00 UTC
+
+ HIGH SEVERITY FINDINGS:
+ TLSv1.0                VULNERABLE (deprecated)
+ TLSv1.1                VULNERABLE (deprecated)
+ RC4                    VULNERABLE (weak cipher)
+
+ Testing ciphers with "HIGH" and word "128" bits
+ TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256   PASS
+ TLS_RSA_WITH_AES_128_CBC_SHA             PASS
+
+ End 2024-01-22 14:32:18        -->> 10.42.18.55:443 (vrli-prod-01.example.local) <<--
+
+ Rating: C (WEAK)
+```
+
+!!! warning "Common errors"
+    **`testssl.sh: command not found`** — Install testssl.sh from https://github.com/drwetter/testssl.sh or add it to your PATH.
+    **`Unable to open a socket to vrli-prod-01.example.local:443`** — Verify the hostname resolves, the host is reachable, and port 443 is open (use `nc -zv vrli-prod-01.example.local 443`).
+    **`SSL: CERTIFICATE_VERIFY_FAILED`** — This is expected for self-signed certificates in lab environments; testssl.sh will continue testing despite the verification failure.
 ## See also
 
 - [Aria Ops for Logs — Hardening](../hardening/)

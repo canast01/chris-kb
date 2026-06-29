@@ -91,6 +91,21 @@ esxtop
 # Key columns: MCTLSZ (balloon), SWCUR (host swap), GRANT (memory given to VMs)
 ```
 
+
+```text title="Expected output"
+ESXTOP - VMware ESXi Top Utility (Press 'h' for help)
+GID  NAME                                   NWCFG  MEMSZ  GRANT  MCTLSZ  SWCUR  MEMMCTL
+  1  vmkernel                               4096   8192   8192      0      0      0
+  2  vm-prod-web-01                         2048   4096   3840    256      0      0
+  3  vm-prod-db-01                          4096   8192   7680    512      0      0
+  4  vm-dev-test-01                         1024   2048   1536    512      0      0
+  5  vm-backup-01                           2048   4096   2048   2048    512      0
+```
+
+!!! warning "Common errors"
+    **`ESXTOP: command not found`** — Ensure you are logged into the ESXi host directly via SSH or console; esxtop is not available on vCenter or Windows management stations.
+    **`Cannot open /proc/vmware/sched/cpu: Permission denied`** — Run esxtop with root privileges or as a user with administrative rights on the ESXi host.
+    **`ESXTOP: Unable to connect to the host`** — Verify network connectivity to the ESXi host and confirm SSH/direct console access is enabled in the host's management interface.
 ---
 
 ## HA and DRS
@@ -156,6 +171,37 @@ esxcli storage san fc list
 esxcli iscsi adapter get -A vmhba64
 ```
 
+
+```text title="Expected output"
+Boot Device: /vmfs/devices/disks/naa.6001405a1b2c3d4e5f6g7h8i9j0k1l2m
+Boot Partition: 1
+Boot Driver: lpfc
+Boot Adapter: vmhba0
+
+Adapter: vmhba1
+HBA Link State: link up
+Speed: 8Gbps
+Node WWN: 50:00:14:40:5a:1b:2c:3d
+Port WWN: 50:00:14:40:5a:1b:2c:3e
+Status: online
+
+Adapter: vmhba2
+HBA Link State: link down
+Speed: 16Gbps
+Node WWN: 50:00:14:40:5a:1b:2c:4d
+Port WWN: 50:00:14:40:5a:1b:2c:4e
+Status: offline
+
+iSCSI Adapter: vmhba64
+Adapter State: Enabled
+Authentication Method: CHAP
+Current Speed: 1Gbps
+Link State: up
+```
+
+!!! warning "Common errors"
+    **`Error: Could not find adapter vmhba64`** — Verify the iSCSI adapter exists with `esxcli iscsi adapter list` and use the correct adapter name.
+    **`Error: Could not retrieve boot device information`** — Ensure you have root privileges and the system is fully booted; try again after waiting for storage initialization.
 ---
 
 ## Host Profiles

@@ -29,6 +29,31 @@ curl -sk -u "$USER:$PASS" "https://$VRLI/api/v2/alerts?severity=critical&status=
   jq -r '.alerts[] | "\(.name)\t\(.timestamp)"' | column -t
 ```
 
+
+```text title="Expected output"
+=== Cluster Nodes ===
+vrli-node-01.corp.local  ALIVE  MASTER  8.14.0.21045
+vrli-node-02.corp.local  ALIVE  REPLICA  8.14.0.21045
+vrli-node-03.corp.local  ALIVE  REPLICA  8.14.0.21045
+
+=== Ingestion Stats ===
+{
+  "eventsPerSecond": 487293,
+  "diskUsedPct": 73.4,
+  "totalDiskGB": 2048,
+  "usedDiskGB": 1502.7
+}
+
+=== Active Alerts (Critical) ===
+Disk Space Critical Threshold Exceeded  2024-01-15T09:42:18Z
+High Memory Pressure on Master Node     2024-01-15T08:31:05Z
+Replication Lag Detected                2024-01-15T07:19:42Z
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in script, but ensure your VRLI instance certificate is trusted or use `-k`).
+    **`jq: parse error: Cannot index number with string "hostname"`** — Verify the API endpoint returns the expected JSON structure by running `curl -sk -u "$USER:$PASS" "https://$VRLI/api/v2/cluster/nodes" | jq '.'` to inspect raw output.
+    **`curl: (7) Failed to connect to <vrli-fqdn> port 443: Connection refused`** — Confirm VRLI service is running and accessible at the provided FQDN with `curl -sk https://$VRLI/api/health` before running the full script.
 ```bash
 #!/usr/bin/env bash
 VRLI=$1; USER=$2; PASS=$3
@@ -37,6 +62,15 @@ OUTPUT="vrli-alerts-$(date +%Y%m%d).json"
 curl -sk -u "$USER:$PASS" "https://$VRLI/api/v2/alerts" | jq '.' > "$OUTPUT"
 echo "Exported $(jq '.alerts | length' "$OUTPUT") alert definitions to $OUTPUT"
 ```
+
+```text title="Expected output"
+Exported 247 alert definitions to vrli-alerts-20240115.json
+```
+
+!!! warning "Common errors"
+    **`curl: (6) Could not resolve host`** — Verify the VRLI hostname is correct and resolvable (e.g., `nslookup $VRLI`).
+    **`jq: parse error: Invalid JSON text at line 1`** — Ensure the API credentials are correct; a 401/403 response returns HTML instead of JSON.
+    **`command not found: jq`** — Install jq on the system with `apt-get install jq` or `yum install jq`.
 ```bash
 #!/usr/bin/env bash
 VRLI=$1; USER=$2; PASS=$3; WARN_PCT=${4:-75}
@@ -52,6 +86,16 @@ else
   echo "OK: Disk usage within threshold"
 fi
 ```
+
+```text title="Expected output"
+Cluster disk used: 68%
+OK: Disk usage within threshold
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification (already present in the script, so verify the VRLI hostname/IP is correct and reachable).
+    **`jq: command not found`** — Install jq on the system with `apt-get install jq` (Debian/Ubuntu) or `yum install jq` (RHEL/CentOS).
+    **`bc: command not found`** — Install bc with `apt-get install bc` or `yum install bc` to enable floating-point arithmetic comparison.
 ```bash
 #!/usr/bin/env bash
 VRLI=$1; USER=$2; PASS=$3
