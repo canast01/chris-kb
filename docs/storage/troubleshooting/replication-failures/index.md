@@ -104,6 +104,30 @@ snapmirror show -source-path svm1:vol_app -destination-path svm2:vol_app_dp -ins
 # Transfer Snapshot:  name of snapshot being transferred (progress indicator)
 ```
 
+
+```text title="Expected output"
+Source Path    Dest Path           MirrorState   LagTime   Healthy
+------------   --------            -----------   -------   -------
+svm1:vol_db    svm2:vol_db_dp      Snapmirrored  0:05:32   true
+svm1:vol_app   svm2:vol_app_dp     Snapmirrored  2:34:11   false
+svm1:vol_logs  svm2:vol_logs_dp    Snapmirrored  0:12:47   true
+
+                       Source Path: svm1:vol_app
+                  Destination Path: svm2:vol_app_dp
+                     Relationship ID: 12a3b4c5-6789-0def-1234-567890abcdef
+                    Relationship Type: XDP
+                        Mirror State: Snapmirrored
+                         Lag Time: 2:34:11
+                    Last Transfer Type: update
+                   Last Transfer Error: Transfer aborted: destination volume is full
+                   Transfer Snapshot: snapshot.2024-01-15_1430.0
+                    Unhealthy Reason: Transfer failed
+```
+
+!!! warning "Common errors"
+    **`Error: No SnapMirror relationships found`** — Verify the SVMs exist and have SnapMirror licenses enabled with `system license show`.
+    **`Error: command not found: snapmirror`** — Ensure you are connected to a NetApp ONTAP cluster with admin privileges; use `cluster show` to verify cluster access.
+    **`Error: Invalid source-path or destination-path specified`** — Confirm the exact SVM and volume names with `volume show` and use the format `svm_name:volume_name` for both paths.
 ### Diagnose and Resync
 
 ```bash
@@ -132,6 +156,47 @@ ping -lif intercluster_lif_svm1 -destination 192.168.10.20
 network route show -vserver svm1
 ```
 
+
+```text title="Expected output"
+Source                      Destination                 Last Transfer Error
+----------------------------  ----------------------------  ----------------------------------------
+svm1:vol_app                svm2:vol_app_dp             Transfer aborted: failed to get snapshot lock
+svm1:vol_backup             svm2:vol_backup_dp          Destination volume is full
+svm1:vol_data               svm2:vol_data_dp            (none)
+
+Operation succeeded: SnapMirror relationship for "svm1:vol_app" aborted.
+
+Operation succeeded: SnapMirror relationship for "svm1:vol_app" resynchronized.
+
+Source                      Destination                 Transfer Progress  Lag Time
+----------------------------  ----------------------------  ----------------  ----------
+svm1:vol_app                svm2:vol_app_dp             87%                 45 minutes
+svm1:vol_backup             svm2:vol_backup_dp          12%                 2 hours
+svm1:vol_data               svm2:vol_data_dp            -                   0 seconds
+
+Vserver     Interface       Address            Netmask        Status
+----------  --------------  -----------------  --------------  ------
+svm1        intercluster_1  192.168.10.10      255.255.255.0   up
+svm1        intercluster_2  192.168.10.11      255.255.255.0   up
+svm2        intercluster_1  192.168.10.30      255.255.255.0   up
+
+PING 192.168.10.20 from 192.168.10.10: 56 data bytes
+64 bytes from 192.168.10.20: icmp_seq=0 ttl=64 time=2.14 ms
+64 bytes from 192.168.10.20: icmp_seq=1 ttl=64 time=1.89 ms
+64 bytes from 192.168.10.20: icmp_seq=2 ttl=64 time=2.03 ms
+--- 192.168.10.20 statistics ---
+3 packets transmitted, 3 packets received, 0% packet loss
+
+Vserver  Destination     Gateway         Metric  Ifgrp
+-------  ---------------  ---------------  ------  ------
+svm1     0.0.0.0/0        192.168.10.1     20      -
+svm1     192.168.10.0/24  0.0.0.0          10      -
+```
+
+!!! warning "Common errors"
+    **`Error: entry doesn't have a value for this field`** — Ensure the SnapMirror relationship exists and has completed at least one transfer; use `snapmirror show` without field filters to verify the relationship status.
+    **`Error: "svm1:vol_app" is not a valid SnapMirror relationship`** — Verify the source and destination paths are correct and the relationship has been initialized with `snapmirror initialize`.
+    **`PING: sendto: No route to host`** — Confirm the intercluster LIF is up, the destination IP is reachable, and firewall rules allow ICMP traffic between clusters on port 10666 for SnapMirror.
 ### SnapMirror Lag Threshold Table
 
 | Volume Tier | Schedule | Warning Lag | Critical (RPO Breach) |
@@ -170,6 +235,37 @@ get_group_statistics -g PROD-CG-02
 # 3. If acceptable, reduce retention period on the consistency group
 ```
 
+
+```text title="Expected output"
+RecoverPoint CLI v8.2.1
+Connected to RPA cluster: rpa01.corp.example.com
+admin@rpa01> get_group_status
+
+Group Name       State          Link Status    Journal    Lag
+PROD-CG-01       Active         Active         12% Full   2s
+PROD-CG-02       Paused         Active         87% Full   N/A
+PROD-CG-03       Active         Disconnected   45% Full   N/A
+
+admin@rpa01> get_system_status
+System Status: HEALTHY
+RPA Cluster: rpa01, rpa02, rpa03
+Journal Volumes: 3/3 Online
+Replication Links: 8/10 Active (2 Disconnected)
+Last Sync: 2024-01-15 14:32:18 UTC
+
+admin@rpa01> get_group_statistics -g PROD-CG-02
+Consistency Group: PROD-CG-02
+Journal Capacity: 500 GB
+Journal Used: 435 GB (87%)
+Retention Period: 72 hours
+Incoming Rate: 125 MB/s
+Outgoing Rate: 45 MB/s
+```
+
+!!! warning "Common errors"
+    **`Connection refused (111)`** — Verify RPA hostname/IP is correct and SSH service is running on port 22; check firewall rules allowing admin access.
+    **`get_group_status: command not found`** — Ensure you are in the RecoverPoint CLI shell (type `rpacli` if needed) and not in standard bash.
+    **`Permission denied: user 'admin' does not have access to consistency group PROD-CG-02`** — Confirm the admin account has appropriate RBAC permissions for the target consistency group in RecoverPoint.
 ---
 
 ## Replication Lag Threshold and RPO Breach Criteria
@@ -211,6 +307,44 @@ snapmirror show -fields throttle
 snapmirror modify -source-path svm1:vol_app -destination-path svm2:vol_app_dp -throttle 51200
 ```
 
+
+```text title="Expected output"
+---iperf3 Server Output (destination)---
+Server listening on 5201
+Accepted connection from 10.45.120.88, port 52847
+[  5] local 10.45.120.99 port 5201 connected to 10.45.120.88 port 52847
+[ ID] Interval           Transfer     Bitrate
+[  5]   0.00-60.00  sec  6.82 GBytes   976 Mbps
+
+---iperf3 Client Output (source)---
+Connecting to 10.45.120.99, port 5201
+[  4] local 10.45.120.88 port 52847 connected to 10.45.120.99 port 5201
+[ ID] Interval           Transfer     Bitrate         Retr
+[  4]   0.00-60.00  sec  6.82 GBytes   976 Mbps        12
+
+---Cisco WAN Interface Check---
+5 minute input rate 850000000 bits/sec, 125000 packets/sec
+5 minute output rate 920000000 bits/sec, 118000 packets/sec
+
+---SRDF/A Bandwidth Check---
+Transmit Queue Depth: 2847 MB
+Transmit Rate: 45.2 MB/sec
+Bandwidth Throttle: Disabled
+RDF Link Delay: 1.8 ms
+
+---SnapMirror Throttle Status---
+Source Path          Destination Path          Throttle
+svm1:vol_app         svm2:vol_app_dp           unlimited
+svm1:vol_backup      svm2:vol_backup_dp        25600
+
+---SnapMirror Throttle Applied---
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`iperf3: command not found`** — Install iperf3 on both servers using `apt-get install iperf3` (Ubuntu/Debian) or `yum install iperf3` (RHEL/CentOS).
+    **`symrdf: command not found`** — Ensure the EMC Solutions Enabler package is installed and the `symcli` environment is properly configured in your PATH.
+    **`Error: command not found at vserver "svm1"`** — Verify the source SVM name is correct and the cluster peer relationship is established with `cluster peer show`.
 ---
 
 ## vSphere Replication Troubleshooting

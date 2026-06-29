@@ -101,6 +101,33 @@ purevol connect --hgroup hg-esxi-cluster vol_vmdata02
 purevol list --connection
 ```
 
+
+```text title="Expected output"
+Connected to flasharray01.corp.local
+Pure Storage FlashArray CLI v6.2.1
+
+Volume vol_vmdata01 created successfully (2.0T)
+Volume vol_vmdata02 created successfully (2.0T)
+Volume vol_veeam_proxy created successfully (500.0G)
+
+Host esxi01 created (IQN: iqn.1998-01.com.vmware:esxi01)
+Host esxi02 created (IQN: iqn.1998-01.com.vmware:esxi02)
+
+Host group hg-esxi-cluster created with 2 members
+
+vol_vmdata01 connected to hg-esxi-cluster
+vol_vmdata02 connected to hg-esxi-cluster
+
+Name              Size    Connected  Host Group         LUN
+vol_vmdata01      2.0T    Yes        hg-esxi-cluster    1
+vol_vmdata02      2.0T    Yes        hg-esxi-cluster    2
+vol_veeam_proxy   500G    No         —                   —
+```
+
+!!! warning "Common errors"
+    **`Error: Host iqn.1998-01.com.vmware:esxi01 already exists`** — Verify the IQN is unique or use `purehost list` to check existing hosts before creation.
+    **`Error: Volume vol_vmdata01 is already connected to hg-esxi-cluster`** — Check current connections with `purevol list --connection` before attempting to reconnect.
+    **`Error: Host group hg-esxi-cluster does not exist`** — Create the host group with `purehgroup create` before connecting volumes to it.
 ### 1.2 Create Pure Protection Group
 
 ```bash
@@ -128,6 +155,25 @@ pureprotection enable pg_prod
 pureprotection list --schedule pg_prod
 ```
 
+
+```text title="Expected output"
+Protection group pg_prod created successfully
+Volumes added: vol_vmdata01, vol_vmdata02
+Protection group pg_prod updated
+  Snapshot frequency: 3600 seconds (hourly)
+  Snapshot retention: 86400 seconds (24 hours)
+Protection group pg_prod updated
+  Replication frequency: 86400 seconds (daily)
+  Replication retention: 2592000 seconds (30 days)
+Protection group pg_prod enabled
+Name            Frequency    Retention    Status      Last Run
+pg_prod         86400        2592000      enabled     2024-01-15T00:00:12Z
+```
+
+!!! warning "Common errors"
+    **`Error: Protection group 'pg_prod' already exists`** — Drop the existing protection group with `pureprotection delete pg_prod` before recreating it.
+    **`Error: Volume 'vol_vmdata01' not found or offline`** — Verify the volume exists and is online using `pureprotection list --volumes` before adding it to the protection group.
+    **`Error: Invalid retention value. Must be greater than frequency`** — Ensure snapshot retention (86400) is greater than or equal to snapshot frequency (3600) in seconds.
 ### 1.3 Enable SafeMode on Protection Group
 
 ```bash
@@ -148,6 +194,28 @@ pureprotection snap --suffix manual-test pg_prod
 pureprotection list --snap pg_prod
 ```
 
+
+```text title="Expected output"
+SafeMode enabled on protection group pg_prod with eradication delay of 1440 minutes (24 hours).
+
+Name                          Safemode  Eradication Delay
+pg_prod                       enabled   1440
+
+Snapshot pg_prod.manual-test created successfully.
+
+Name                          Created                Size      Source
+pg_prod.manual-test           2024-01-15 14:32:18   847.3GB   pg_prod
+pg_prod.daily-2024-01-15      2024-01-15 00:00:00   843.1GB   pg_prod
+pg_prod.daily-2024-01-14      2024-01-14 00:00:00   841.9GB   pg_prod
+pg_prod.daily-2024-01-13      2024-01-13 00:00:00   839.7GB   pg_prod
+pg_prod.daily-2024-01-12      2024-01-12 00:00:00   838.2GB   pg_prod
+...
+```
+
+!!! warning "Common errors"
+    **`Error: SafeMode not activated on array. Contact Pure Support to enable.`** — Request Pure Support to activate SafeMode on the array before running this command.
+    **`Error: eradication-delay must be at least 1440 minutes (24 hours).`** — Increase the eradication-delay value to a minimum of 1440 minutes.
+    **`Error: Protection group 'pg_prod' not found.`** — Verify the protection group name matches exactly and exists on the array using `pureprotection list`.
 ### 1.4 Verify Initial Snapshot
 
 ```bash
@@ -159,6 +227,22 @@ pureprotection eradicate --name "pg_prod.manual-test"
 # Expected: Error — SafeMode prevents eradication before delay expires
 ```
 
+
+```text title="Expected output"
+Name                          Created                    Size      Locked Until
+pg_prod.hourly.2024-01-15     2024-01-15T14:32:18Z      2.3 TiB   2024-01-16T14:32:18Z
+pg_prod.hourly.2024-01-15     2024-01-15T13:32:05Z      2.3 TiB   2024-01-16T13:32:05Z
+pg_prod.daily.2024-01-14      2024-01-14T00:15:42Z      2.4 TiB   2024-01-21T00:15:42Z
+pg_prod.manual-test           2024-01-15T10:22:33Z      2.2 TiB   2024-01-17T10:22:33Z
+pg_prod.weekly.2024-01-08     2024-01-08T02:00:11Z      2.5 TiB   2024-01-29T02:00:11Z
+
+Error: Cannot eradicate snapshot 'pg_prod.manual-test' — SafeMode retention lock active until 2024-01-17T10:22:33Z
+```
+
+!!! warning "Common errors"
+    **`Error: Cannot eradicate snapshot 'pg_prod.manual-test' — SafeMode retention lock active until 2024-01-17T10:22:33Z`** — Wait until the lock expiration timestamp or contact your Pure Storage administrator to disable SafeMode if retention policy allows.
+    **`Error: Protection group 'pg_prod' not found`** — Verify the protection group name with `pureprotection list --group` and ensure you have read permissions on the array.
+    **`Error: Authentication failed — Invalid API token`** — Re-authenticate with `pureprotection login` or verify your PUREPROTECTION_API_TOKEN environment variable is set correctly.
 ---
 
 ## Phase 2: Veeam Integration
@@ -251,6 +335,29 @@ pureprotection delete --name "pg_prod.3600"
 # Remaining lock time: 23h 45m
 ```
 
+
+```text title="Expected output"
+Connected to flasharray01.corp.local
+pureuser@flasharray01.corp.local's password: 
+
+Name                          Created                SafeMode Lock  Eradicate After
+pg_prod.3600                  2024-01-15 14:32:18   Active          2024-01-16 14:17:23
+pg_prod.3599                  2024-01-15 13:32:05   Active          2024-01-16 13:17:10
+pg_prod.3598                  2024-01-15 12:32:42   Active          2024-01-16 12:17:45
+pg_prod.3597                  2024-01-15 11:31:19   Active          2024-01-16 11:16:22
+pg_prod.3596                  2024-01-15 10:30:51   Active          2024-01-16 10:15:58
+pg_prod.3595                  2024-01-15 09:29:33   Active          2024-01-16 09:14:40
+pg_prod.3594                  2024-01-15 08:28:47   Active          2024-01-16 08:13:52
+...
+
+Error: Snapshot pg_prod.3600 cannot be eradicated — SafeMode lock active
+Remaining lock time: 23h 45m
+```
+
+!!! warning "Common errors"
+    **`Error: Snapshot pg_prod.3600 cannot be eradicated — SafeMode lock active`** — Wait until the SafeMode retention period expires or contact your Veeam administrator to reduce the retention policy.
+    **`Connection refused`** — Verify the FlashArray hostname is correct and SSH access is enabled; check firewall rules between your host and flasharray01.corp.local.
+    **`Permission denied (publickey,password)`** — Confirm the pureuser credentials are correct and the account has snapshot management permissions on the FlashArray.
 ### 3.2 Verify SafeMode Status in Pure1
 
 1. Log into **Pure1:** `https://pure1.purestorage.com`
@@ -274,6 +381,25 @@ pureprotection eradicate --name "pg_prod.safemode-test"
 echo "SafeMode verification: PASS — deletion denied as expected"
 ```
 
+
+```text title="Expected output"
+Creating snapshot: pg_prod.safemode-test
+Snapshot created successfully
+  ID: 8c5e3f2a-91d4-4b7e-8f1c-2b9e7d4a6c3f
+  Size: 2.3 TB
+  Created: 2024-01-15T14:32:18Z
+
+Attempting eradication of pg_prod.safemode-test...
+Error: Eradication denied
+Reason: SafeMode retention period active (23h 47m remaining)
+Snapshot will be eligible for eradication at: 2024-01-16T14:30:00Z
+
+SafeMode verification: PASS — deletion denied as expected
+```
+
+!!! warning "Common errors"
+    **`Error: Snapshot 'pg_prod.safemode-test' not found`** — Verify the protection group name matches exactly and the snapshot was created successfully with `pureprotection snap --list pg_prod`.
+    **`Error: Eradication denied - insufficient permissions`** — Ensure your user account has the `eradicate` role assigned in Pure1 or contact your storage administrator.
 ---
 
 ## Phase 4: Restore Testing
@@ -328,6 +454,29 @@ purevol connect --host esxi-test vol_vmdata01_restore
 esxcli storage core adapter rescan --all
 ```
 
+
+```text title="Expected output"
+pureuser@flasharray01.corp.local's password: 
+Connected to FlashArray 10.1.2 (FA-405R2)
+
+Name                           Created              Size      Source
+pg_prod.86400.vol_vmdata01     2024-01-15 02:00:15 500.0G    pg_prod
+pg_prod.172800.vol_vmdata01    2024-01-14 02:00:12 500.0G    pg_prod
+pg_prod.259200.vol_vmdata01    2024-01-13 02:00:08 500.0G    pg_prod
+
+Volume pg_prod.86400.vol_vmdata01 copied to vol_vmdata01_restore (500.0G)
+
+Volume vol_vmdata01_restore connected to host esxi-test (LUN 42)
+
+HBA 0 rescanned (vmhba0: 256 devices)
+HBA 1 rescanned (vmhba1: 256 devices)
+HBA 2 rescanned (vmhba2: 256 devices)
+```
+
+!!! warning "Common errors"
+    **`Authentication failed for pureuser@flasharray01.corp.local`** — Verify SSH credentials and that the FlashArray management IP is reachable with `ping flasharray01.corp.local`.
+    **`Snapshot pg_prod.86400.vol_vmdata01 not found`** — Confirm the snapshot exists and the protection group name is correct by running `pureprotection list --snap pg_prod` without filters.
+    **`Volume vol_vmdata01_restore already exists`** — Either delete the existing restore volume with `purevol destroy vol_vmdata01_restore` or use a different target volume name.
 ### 4.4 RPO/RTO Summary
 
 | Scenario | RPO | RTO | Method |
@@ -373,6 +522,16 @@ pureprotection set --snap-frequency 7200 pg_prod
 pureprotection enable pg_prod
 ```
 
+
+```text title="Expected output"
+Protection group 'pg_prod' disabled successfully.
+Protection group 'pg_prod' snapshot frequency set to 7200 seconds.
+Protection group 'pg_prod' enabled successfully.
+```
+
+!!! warning "Common errors"
+    **`pureprotection: command not found`** — Install the Pure Storage CLI tools or ensure the PATH includes the Pure management SDK bin directory.
+    **`Error: Protection group 'pg_prod' not found`** — Verify the protection group name exists on the array using `pureprotection list` and correct any typos.
 ---
 
 ## See Also

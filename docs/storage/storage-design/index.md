@@ -110,6 +110,13 @@ Snapshot + meta:   46.08 TB × (1 - 0.15)        = 39.17 TB after 15% overhead
 Free space reserve: 39.17 TB × (1 - 0.20)       = 31.34 TB available for VMs
 ```
 
+
+```text title="Expected output"
+Raw capacity:      6 hosts × 4 drives × 3.84 TB  = 92.16 TB raw
+RAID-1 efficiency: 92.16 TB × 50%                = 46.08 TB usable (before overhead)
+Snapshot + meta:   46.08 TB × (1 - 0.15)        = 39.17 TB after 15% overhead
+Free space reserve: 39.17 TB × (1 - 0.20)       = 31.34 TB available for VMs
+```
 Effective usable capacity: approximately **31 TB** from a 92 TB raw cluster.
 
 **Rule of thumb:** For vSAN RAID-1 clusters, expect ~32–35% of raw capacity to be usable for VM data. For RAID-5 (FTT=1, Erasure Coding), expect ~55–60%.
@@ -337,6 +344,30 @@ multipath -v3 2>&1 | grep -i "wsql01"
 lsblk | grep dm-
 ```
 
+
+```text title="Expected output"
+mpatha (360060e8005600000001600065d82e11) dm-0 NETAPP,LUN
+size=500G features='3 queue_if_no_path pg_init_retries 50' hwhandler='1 alua' wp=rw
+|-+- policy='service-time 0' prio=50 status=active
+| |- 2:0:0:0 sda 8:0  active ready running
+| `- 3:0:0:0 sdb 8:16 active ready running
+`-+- policy='service-time 0' prio=10 status=enabled
+  |- 4:0:0:0 sdc 8:32 active ready running
+  `- 5:0:0:0 sdd 8:48 active ready running
+
+mpathb (360060e8005600000001600065d82e12) dm-1 NETAPP,LUN
+size=1T features='3 queue_if_no_path pg_init_retries 50' hwhandler='1 alua' wp=rw
+|-+- policy='service-time 0' prio=50 status=active
+| |- 2:0:1:0 sde 8:64  active ready running
+| `- 3:0:1:0 sdf 8:80  active ready running
+
+dm-0  253:0    0  500G  0 lvm
+dm-1  253:1    0    1T  0 lvm
+```
+
+!!! warning "Common errors"
+    **`multipath: command not found`** — Install device-mapper-multipath package with `apt-get install device-mapper-multipath` or `yum install device-mapper-multipath`.
+    **`device-mapper: ioctl: 4.45.1-1.1 (2021-03-22) initialisation failed: Device or resource busy`** — Ensure no processes are actively using the multipath devices and reload the device-mapper module with `systemctl restart multipathd`.
 Expected output: all paths `active ready`, queue depth per path as configured, DM device visible under `/dev/mapper/`.
 
 ## Filesystem Layout and Mount Points
@@ -372,6 +403,22 @@ echo "LABEL=mssql_data_01  /mssql/data  xfs  defaults,nodev,nosuid  0 0" >> /etc
 mount -a && df -hT /mssql/data
 ```
 
+
+```text title="Expected output"
+meta-data=/dev/mapper/wsql01_mssql_data_01 inode-size=512   sectsz=4096   ascii ci=0 ftype=1
+data     =                       bsize=4096   blocks=2621440, imsize=16384, "logbsize=32k"
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=1
+log      =internal log           bsize=4096   blocks=2560, version=2
+         =                       sectsz=4096  sunit=0 blks
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+Filesystem     Type     Size  Used Avail Use% Mounted on
+/dev/mapper/wsql01_mssql_data_01 xfs   10G  33M  9.9G   1% /mssql/data
+```
+
+!!! warning "Common errors"
+    **`mkfs.xfs: /dev/mapper/wsql01_mssql_data_01 appears to contain an existing filesystem`** — Add the `-f` flag to force overwrite: `mkfs.xfs -f -L mssql_data_01 /dev/mapper/wsql01_mssql_data_01`
+    **`mount: /mssql/data does not exist`** — Create the mount point directory before mounting: `mkdir -p /mssql/data`
+    **`mount: can't find LABEL=mssql_data_01 in /etc/fstab`** — Verify the label matches exactly between mkfs and fstab; use `blkid` to confirm the actual label assigned.
 For multipath devices, use the DM persistent name (`/dev/mapper/{alias}`) in fstab, not the dm-N path.
 
 ## Snapshot and Backup Standards
