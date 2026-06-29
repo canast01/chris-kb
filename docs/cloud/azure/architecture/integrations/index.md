@@ -69,6 +69,45 @@ az eventhubs eventhub create --name azure-logs --namespace-name <ns> -g <rg>
 # Configure Splunk Add-on for Microsoft Cloud Services to pull from Event Hub
 ```
 
+
+```text title="Expected output"
+{
+  "id": "/subscriptions/12345678-1234-1234-1234-123456789012/resourcegroups/prod-rg/providers/microsoft.insights/diagnosticsettings/to-log-analytics",
+  "name": "to-log-analytics",
+  "properties": {
+    "workspaceId": "/subscriptions/12345678-1234-1234-1234-123456789012/resourcegroups/prod-rg/providers/microsoft.operationalinsights/workspaces/prod-law",
+    "logs": [
+      {
+        "category": "NetworkSecurityGroupEvent",
+        "enabled": true,
+        "retentionPolicy": {
+          "enabled": false,
+          "days": 0
+        }
+      }
+    ],
+    "metrics": []
+  },
+  "type": "Microsoft.Insights/diagnosticSettings"
+}
+{
+  "id": "/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/prod-rg/providers/Microsoft.EventHub/namespaces/prod-ns/eventhubs/azure-logs",
+  "name": "azure-logs",
+  "type": "Microsoft.EventHub/eventhubs",
+  "location": "eastus",
+  "properties": {
+    "messageRetentionInDays": 1,
+    "partitionCount": 4,
+    "status": "Active",
+    "createdAt": "2024-01-15T10:32:45.123Z"
+  }
+}
+```
+
+!!! warning "Common errors"
+    **`ResourceNotFound: The resource '<nsg-resource-id>' could not be found.`** — Verify the NSG resource ID is correct and exists in the specified subscription using `az network nsg show -g <rg> -n <nsg-name>`.
+    **`InvalidOperation: The workspace '<log-analytics-workspace-id>' does not exist or the user does not have access.`** — Confirm the Log Analytics workspace ID is valid and your account has Contributor role on that workspace using `az monitor log-analytics workspace show --resource-group <rg> -n <workspace-name>`.
+    **`BadRequest: The namespace '<ns>' already exists in the resource group.`** — Use a unique Event Hub namespace name or retrieve the existing one with `az eventhubs namespace list -g <rg>`.
 ## GitHub Actions + OIDC Federation
 
 No client secrets — use OIDC:
@@ -125,6 +164,27 @@ az backup protection backup-now --vault-name <vault> -g <rg> \
     --backup-management-type AzureIaasVM --retain-until 2026-12-31
 ```
 
+
+```text title="Expected output"
+Name                          ResourceGroup        Location    Type
+-----------------------------  -------------------  ----------  ----------------
+prod-recovery-vault-eastus    infrastructure-prod  eastus      Microsoft.RecoveryServices/vaults
+dr-recovery-vault-westus2     infrastructure-dr    westus2     Microsoft.RecoveryServices/vaults
+backup-vault-central          infrastructure-test  centralus   Microsoft.RecoveryServices/vaults
+
+VaultName                     ResourceGroup        BackupManagementType    ProtectionStatus
+-----------------------------  -------------------  ----------------------  ----------------
+prod-recovery-vault-eastus    infrastructure-prod  AzureIaasVM             Healthy
+prod-recovery-vault-eastus    infrastructure-prod  AzureIaasVM             Protected
+dr-recovery-vault-westus2     infrastructure-dr    AzureIaasVM             Healthy
+
+Backup triggered for item 'web-server-01' in vault 'prod-recovery-vault-eastus'. Job ID: 123e4567-e89b-12d3-a456-426614174000
+```
+
+!!! warning "Common errors"
+    **`ResourceNotFound : The specified vault 'invalid-vault' could not be found in resource group 'infrastructure-prod'.`** — Verify the vault name and resource group name match exactly using `az backup vault list`.
+    **`MissingRequiredArgument: the following arguments are required: --container-name`** — Retrieve the correct container name with `az backup container list --vault-name <vault> -g <rg>` before running backup-now.
+    **`InvalidArgument: The retain-until date '2026-12-31' must be in the future and within 99 years from today.`** — Use a valid future date in YYYY-MM-DD format that is less than 99 years away.
 ## Key Vault Integration
 
 ```bash
@@ -140,6 +200,30 @@ az keyvault set-policy --name <kv-name> \
 az keyvault secret show --vault-name <kv-name> --name <secret-name>
 ```
 
+
+```text title="Expected output"
+"Succeeded"
+(no output — command completes silently)
+{
+  "attributes": {
+    "created": 1704067200,
+    "enabled": true,
+    "expires": null,
+    "notBefore": null,
+    "recoveryLevel": "Recoverable+Purgeable",
+    "updated": 1704067200
+  },
+  "id": "https://prod-kv-eastus.vault.azure.net/secrets/db-password/a7f2c9e1b4d6f8h2j5k8l1m4n7p0q3r6",
+  "name": "db-password",
+  "tags": null,
+  "value": "P@ssw0rd123!SecureValue"
+}
+```
+
+!!! warning "Common errors"
+    **`(KeyVaultAccessDenied) The user, group or application 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have secrets get permission on key vault 'prod-kv-eastus'.`** — Run the `az keyvault set-policy` command to grant the managed identity `get` and `list` permissions on the vault.
+    **`(ResourceNotFound) The Resource 'Microsoft.KeyVault/vaults/<kv-name>' under resource group '<rg-name>' was not found.`** — Verify the Key Vault name and resource group are correct, and that the vault exists in your current Azure subscription.
+    **`(InvalidSecretName) The secret name '<secret-name>' is invalid.`** — Confirm the secret name exists in the vault by running `az keyvault secret list --vault-name <kv-name>` to list all available secrets.
 ---
 
 ## See also

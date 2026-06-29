@@ -80,6 +80,20 @@ export AWS_REGION=<your-region>
 export ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
 ```
 
+
+```text title="Expected output"
+{
+    "UserId": "AIDAI45Q7D5EXAMPLE",
+    "Account": "123456789012",
+    "Arn": "arn:aws:iam::123456789012:user/admin-user"
+}
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Unable to locate credentials`** — Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables.
+    **`An error occurred (UnauthorizedOperation) when calling the GetCallerIdentity operation: User: arn:aws:iam::123456789012:user/restricted-user is not authorized to perform: sts:GetCallerIdentity`** — Add the `sts:GetCallerIdentity` permission to the IAM user's policy.
 ### 2. Collect CloudTrail events for the failing action
 
 ```bash
@@ -97,6 +111,43 @@ aws cloudtrail lookup-events \
   --output json > /tmp/cloudtrail-resource.json
 ```
 
+
+```text title="Expected output"
+{
+  "Events": [
+    {
+      "Time": "2024-01-15T14:32:18Z",
+      "User": "arn:aws:iam::123456789012:user/jenkins-deploy",
+      "Action": "RunInstances",
+      "Error": "InsufficientInstanceCapacity",
+      "Message": "{\"eventVersion\":\"1.08\",\"eventSource\":\"ec2.amazonaws.com\",\"eventName\":\"RunInstances\",\"errorCode\":\"InsufficientInstanceCapacity\"}"
+    },
+    {
+      "Time": "2024-01-15T13:47:52Z",
+      "User": "arn:aws:iam::123456789012:user/ops-team",
+      "Action": "AuthorizeSecurityGroupIngress",
+      "Error": "InvalidGroup.NotFound",
+      "Message": "{\"eventVersion\":\"1.08\",\"eventSource\":\"ec2.amazonaws.com\",\"eventName\":\"AuthorizeSecurityGroupIngress\",\"errorCode\":\"InvalidGroup.NotFound\"}"
+    },
+    {
+      "Time": "2024-01-15T12:15:33Z",
+      "User": "arn:aws:iam::123456789012:role/lambda-execution-role",
+      "Action": "TerminateInstances",
+      "Error": "UnauthorizedOperation",
+      "Message": "{\"eventVersion\":\"1.08\",\"eventSource\":\"ec2.amazonaws.com\",\"eventName\":\"TerminateInstances\",\"errorCode\":\"UnauthorizedOperation\"}"
+    }
+  ],
+  "ResponseMetadata": {
+    "RequestId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "HTTPStatusCode": 200
+  }
+}
+```
+
+!!! warning "Common errors"
+    **`An error occurred (InvalidStartTime) when calling the LookupEvents operation: The start time is invalid.`** — Ensure the date command produces valid ISO 8601 format; test with `date -u -d '4 hours ago' +%FT%TZ` to verify output.
+    **`An error occurred (AccessDenied) when calling the LookupEvents operation: User is not authorized to perform: cloudtrail:LookupEvents`** — Add `cloudtrail:LookupEvents` permission to the IAM user/role executing the command.
+    **`jq: error (at <stdin>:1): Cannot index string with string "Time"`** — The CloudTrailEvent field contains a JSON string, not an object; parse it with `| fromjson` in jq or use `--output text` instead of json.
 ### 3. Collect resource-specific diagnostics
 
 ```bash
@@ -124,6 +175,85 @@ aws iam simulate-principal-policy \
   --output json
 ```
 
+
+```text title="Expected output"
+{
+    "InstanceStatuses": [
+        {
+            "InstanceId": "i-0a7f3c9e2b1d4f5a6",
+            "InstanceState": {
+                "Code": 16,
+                "Name": "running"
+            },
+            "SystemStatus": {
+                "Status": "ok",
+                "Details": []
+            },
+            "InstanceStatus": {
+                "Status": "ok",
+                "Details": []
+            }
+        }
+    ]
+}
+Saving console output to /tmp/console-output.txt
+|-----------------------|-----------------|---------|------------------|----------|----------|---------------------------------------------|
+| InstanceId            | InstanceType    | State   | PrivateIpAddress | SubnetId | VpcId    | IamInstanceProfile.Arn                      |
+|-----------------------|-----------------|---------|------------------|----------|----------|---------------------------------------------|
+| i-0a7f3c9e2b1d4f5a6   | t3.medium       | running | 10.42.15.87      | subnet-8 | vpc-4a2b | arn:aws:iam::123456789012:instance-profile |
+|-----------------------|-----------------|---------|------------------|----------|----------|---------------------------------------------|
+{
+    "Events": [
+        {
+            "SourceIdentifier": "prod-db-01",
+            "SourceType": "db-instance",
+            "Message": "DB instance created",
+            "EventCategories": ["creation"],
+            "Date": "2024-01-15T09:32:14.000Z"
+        },
+        {
+            "SourceIdentifier": "prod-db-01",
+            "SourceType": "db-instance",
+            "Message": "DB instance restarted",
+            "EventCategories": ["availability"],
+            "Date": "2024-01-14T14:22:08.000Z"
+        }
+    ]
+}
+No bucket policy
+{
+    "Owner": {
+        "DisplayName": "account-owner",
+        "ID": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6"
+    },
+    "Grants": [
+        {
+            "Grantee": {
+                "Type": "CanonicalUser",
+                "ID": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6"
+            },
+            "Permission": "FULL_CONTROL"
+        }
+    ]
+}
+{
+    "Status": "BUCKET_NOT_VERSIONED"
+}
+{
+    "EvaluationResults": [
+        {
+            "EvalActionName": "s3:GetObject",
+            "EvalResourceName": "arn:aws:s3:::my-bucket/*",
+            "EvalDecision": "allowed",
+            "EvalDecisionDetails": {}
+        }
+    ],
+    "IsTruncated": false
+}
+```
+
+!!! warning "Common errors"
+    **`An error occurred (InvalidInstanceID.NotFound) when calling the DescribeInstanceStatus operation: The instance ID '<instance-id>' does not exist`** — Verify the instance ID is correct and exists in the current AWS region; check `aws
 ### 4. Collect CloudWatch metrics and logs
 
 ```bash
@@ -146,6 +276,46 @@ aws logs filter-log-events \
   --output json > /tmp/cloudwatch-errors.json
 ```
 
+
+```text title="Expected output"
+-----------------------------------------
+|         GetMetricStatistics            |
++----------+----------+----------+--------+
+| Timestamp  | Average  | Unit   |
++----------+----------+----------+--------+
+| 2024-01-15T14:00:00Z | 45.2   | Percent |
+| 2024-01-15T14:05:00Z | 48.7   | Percent |
+| 2024-01-15T14:10:00Z | 52.1   | Percent |
+| 2024-01-15T14:15:00Z | 41.9   | Percent |
+| 2024-01-15T14:20:00Z | 39.4   | Percent |
++----------+----------+----------+--------+
+
+{
+  "events": [
+    {
+      "logStreamName": "app-server-1",
+      "timestamp": 1705329456000,
+      "message": "ERROR: Database connection timeout after 30s"
+    },
+    {
+      "logStreamName": "app-server-2",
+      "timestamp": 1705329512000,
+      "message": "ERROR: Failed to authenticate with IAM role"
+    },
+    {
+      "logStreamName": "app-server-1",
+      "timestamp": 1705329678000,
+      "message": "ERROR: Memory allocation failed, heap size exceeded"
+    }
+  ],
+  "searchedLogStreams": 3
+}
+```
+
+!!! warning "Common errors"
+    **`An error occurred (InvalidParameterValue) when calling the GetMetricStatistics operation: The parameter StartTime is invalid.`** — Ensure the instance ID is valid and replace `<instance-id>` with an actual EC2 instance ID (e.g., `i-0a1b2c3d4e5f6g7h8`).
+    **`ResourceNotFoundException: The specified log group does not exist.`** — Verify the log group name exists by running `aws logs describe-log-groups | grep /var/log/app` and use the correct group name.
+    **`An error occurred (AccessDenied) when calling the GetMetricStatistics operation: User is not authorized to perform: cloudwatch:GetMetricStatistics`** — Add `cloudwatch:GetMetricStatistics` and `logs:FilterLogEvents` permissions to the IAM role or user policy.
 ### 5. Write the timeline
 
 ```text
@@ -256,6 +426,52 @@ aws cloudwatch get-metric-statistics \
   --period 60 --statistics Sum --output table
 ```
 
+
+```text title="Expected output"
+Service    Type                 Status    Start
+---------  -------------------  --------  --------------------------
+EC2        AWS_EC2_INSTANCE_RETIREMENT  open      2024-01-15T09:32:00Z
+RDS        AWS_RDS_MAINTENANCE  upcoming  2024-01-20T02:00:00Z
+
+Name                                          Value
+----------------------------------------------  -------
+Running On-Demand Standard instances           42/20
+VPC Elastic IPs                                8/5
+EC2-Classic Security Groups                    0/500
+
+i-0a7f2c9e1b4d5f3a2 (output truncated)
+[    0.000000] Linux version 5.10.184-175.749.amzn2.x86_64
+[    0.000000] Command line: root=/dev/xvda ro console=ttyS0
+[    0.156234] systemd[1]: Started User Manager for UID 0.
+[    0.234567] cloud-init[892]: Cloud-init v. 21.4.7 finished at Mon, 15 Jan 2024 10:15:32 +0000. Up 45.23 seconds
+
+{
+    "PendingMaintenanceActions": []
+}
+{
+    "Events": [
+        {
+            "SourceIdentifier": "mydb-prod",
+            "SourceType": "db-instance",
+            "Message": "Automatic backup completed",
+            "EventCategories": ["backup"],
+            "Date": "2024-01-15T08:45:00.000Z"
+        }
+    ]
+}
+
+Timestamp            Sum
+-------------------  -----
+2024-01-15 09:00:00  1247
+2024-01-15 09:01:00  1156
+2024-01-15 09:02:00  1389
+2024-01-15 09:03:00  1521
+```
+
+!!! warning "Common errors"
+    **`An error occurred (UnauthorizedOperation) when calling the DescribeEvents operation: You are not authorized to perform: health:DescribeEvents`** — Add `health:DescribeEvents` permission to the IAM role or user policy.
+    **`An error occurred (InvalidParameterValue) when calling the GetConsoleOutput operation: The instance ID '<instance-id>' does not exist`** — Verify the instance ID is correct and exists in the specified region using `aws ec2 describe-instances`.
+    **`An error occurred (InvalidParameterCombination) when calling the GetMetricStatistics operation: The parameter StartTime must be before EndTime`** — Ensure the start-time is earlier than end-time; check system clock synchronization with `date -u`.
 ---
 
 ## See also

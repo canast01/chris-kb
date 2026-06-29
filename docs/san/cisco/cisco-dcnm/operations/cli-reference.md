@@ -148,6 +148,17 @@ export DCNM="https://dcnm-dc1.corp.example.com"
 # Logout
 curl -sk -b dcnm-cookie.txt -X POST "${DCNM}/rest/logout"
 ```
+
+```text title="Expected output"
+{"StatusCode":200,"StatusMessage":"OK"}
+(no output — command completes silently)
+{"StatusCode":200,"StatusMessage":"OK"}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in the example, but ensure it's not removed).
+    **`{"StatusCode":401,"StatusMessage":"Unauthorized"}`** — Verify the service account credentials and that the password is correctly URL-encoded if it contains special characters; use `curl -u "svc-automation:$(printf '%s' "$PASSWORD" | jq -sRr @uri)"` if needed.
+    **`curl: (7) Failed to connect to dcnm-dc1.corp.example.com port 443: Connection refused`** — Confirm the DCNM hostname/IP is reachable and the REST API service is running with `curl -sk https://dcnm-dc1.corp.example.com/rest/logon --connect-timeout 5`.
 ```bash
 # List all switches
 curl -sk -b dcnm-cookie.txt "${DCNM}/rest/inventory/switches" \
@@ -165,6 +176,82 @@ curl -sk -b dcnm-cookie.txt "${DCNM}/rest/san/fabric" \
 curl -sk -b dcnm-cookie.txt "${DCNM}/rest/san/vsan" \
   | python3 -m json.tool
 ```
+
+```text title="Expected output"
+[
+  {
+    "switches": [
+      {
+        "serialNumber": "FOX2521ABCD",
+        "switchName": "switch-01",
+        "switchRole": "core",
+        "ipAddress": "192.168.1.10",
+        "fabricName": "fabric-prod",
+        "status": "ok"
+      },
+      {
+        "serialNumber": "FOX2521WXYZ",
+        "switchName": "switch-02",
+        "switchRole": "leaf",
+        "ipAddress": "192.168.1.11",
+        "fabricName": "fabric-prod",
+        "status": "ok"
+      }
+    ]
+  }
+]
+
+{
+  "serialNumber": "FOX2521ABCD",
+  "switchName": "switch-01",
+  "model": "Nexus 5696Q",
+  "firmware": "8.4(2.55)",
+  "ipAddress": "192.168.1.10",
+  "fabricName": "fabric-prod",
+  "switchRole": "core",
+  "status": "ok",
+  "lastUpdated": "2024-01-15T14:32:18Z"
+}
+
+[
+  {
+    "fabricName": "fabric-prod",
+    "fabricId": 1,
+    "fabricType": "SAN",
+    "status": "healthy",
+    "switchCount": 4
+  },
+  {
+    "fabricName": "fabric-dr",
+    "fabricId": 2,
+    "fabricType": "SAN",
+    "status": "healthy",
+    "switchCount": 2
+  }
+]
+
+[
+  {
+    "vsanId": 10,
+    "vsanName": "prod-vsan",
+    "fabricName": "fabric-prod",
+    "status": "active",
+    "memberCount": 4
+  },
+  {
+    "vsanId": 20,
+    "vsanName": "dr-vsan",
+    "fabricName": "fabric-dr",
+    "status": "active",
+    "memberCount": 2
+  }
+]
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification or import the DCNM certificate into your system trust store.
+    **`curl: (7) Failed to connect to <host>: Connection refused`** — Verify the DCNM server is running and the `${DCNM}` variable is set correctly with `echo $DCNM`.
+    **`jq: parse error: Invalid JSON at line 1`** — Ensure the authentication cookie in `dcnm-cookie.txt` is valid; re-authenticate with DCNM login endpoint and regenerate the cookie file.
 ```bash
 # Get zone database for a fabric
 curl -sk -b dcnm-cookie.txt \
@@ -181,6 +268,53 @@ curl -sk -b dcnm-cookie.txt \
   "${DCNM}/rest/san/devicealias?fabricName=DC1-FABRIC-A" \
   | python3 -m json.tool
 ```
+
+```text title="Expected output"
+{
+  "DATA": [
+    {
+      "zoneDbName": "vsan100_zonedb",
+      "vsanId": 100,
+      "fabricName": "DC1-FABRIC-A",
+      "zoneCount": 12,
+      "memberCount": 48,
+      "status": "Active"
+    }
+  ]
+}
+{
+  "DATA": [
+    {
+      "vsanId": 100,
+      "activeZoneSetName": "prod_zoneset_v2",
+      "fabricName": "DC1-FABRIC-A",
+      "activationTime": "2024-01-15T09:42:33Z",
+      "zoneCount": 12
+    }
+  ]
+}
+{
+  "DATA": [
+    {
+      "deviceAliasName": "storage_array_01",
+      "wwn": "50:00:14:40:5a:2b:c1:e0",
+      "fabricName": "DC1-FABRIC-A",
+      "vsanId": 100
+    },
+    {
+      "deviceAliasName": "host_server_04",
+      "wwn": "50:00:09:73:1a:8f:d2:c5",
+      "fabricName": "DC1-FABRIC-A",
+      "vsanId": 100
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag (already present) or import the DCNM certificate into your system CA bundle; verify `${DCNM}` variable is set correctly.
+    **`curl: (7) Failed to connect to <IP>: Connection refused`** — Verify DCNM server is running and accessible at the `${DCNM}` endpoint, and check firewall rules allow port 443 access.
+    **`jq: parse error: Invalid JSON`** — Ensure the authentication cookie in `dcnm-cookie.txt` is valid; re-authenticate with DCNM login endpoint and regenerate the cookie file.
 ```bash
 # Get all active alarms
 curl -sk -b dcnm-cookie.txt \
@@ -192,6 +326,66 @@ curl -sk -b dcnm-cookie.txt \
   "${DCNM}/rest/events/allevents?size=100&sortby=eventtime&orderby=desc" \
   | python3 -m json.tool
 ```
+
+```text title="Expected output"
+{
+  "DATA": [
+    {
+      "alarmId": "ALARM-2024-001847",
+      "severity": "critical",
+      "alarmType": "LinkDown",
+      "description": "Interface Ethernet1/1 on switch leaf-02.dc1.local is down",
+      "affectedObject": "leaf-02.dc1.local",
+      "timestamp": "2024-01-15T14:32:18Z",
+      "status": "active"
+    },
+    {
+      "alarmId": "ALARM-2024-001846",
+      "severity": "warning",
+      "alarmType": "HighCPU",
+      "description": "CPU utilization on spine-01 exceeded 85%",
+      "affectedObject": "spine-01.dc1.local",
+      "timestamp": "2024-01-15T13:47:52Z",
+      "status": "active"
+    }
+  ],
+  "TOTAL_RECORDS": 2
+}
+{
+  "DATA": [
+    {
+      "eventId": "EVT-2024-009234",
+      "eventType": "ConfigChange",
+      "source": "admin-user",
+      "description": "VLAN 2050 created on fabric DC1-PROD",
+      "timestamp": "2024-01-15T14:58:33Z",
+      "severity": "info"
+    },
+    {
+      "eventId": "EVT-2024-009233",
+      "eventType": "DeviceDiscovery",
+      "source": "system",
+      "description": "New device spine-03.dc1.local discovered",
+      "timestamp": "2024-01-15T14:45:12Z",
+      "severity": "info"
+    },
+    {
+      "eventId": "EVT-2024-009232",
+      "eventType": "PolicyViolation",
+      "source": "policy-engine",
+      "description": "QoS policy mismatch detected on leaf-04",
+      "timestamp": "2024-01-15T14:12:47Z",
+      "severity": "warning"
+    }
+  ],
+  "TOTAL_RECORDS": 87
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the DCNM CA certificate into your system trust store.
+    **`curl: (7) Failed to connect to <DCNM_IP>: Connection refused`** — Verify the DCNM server is running and the `${DCNM}` variable is set correctly with `echo $DCNM`.
+    **`jq: parse error: Invalid JSON at line 1`** — Ensure you are authenticated by running the login curl command first and that `dcnm-cookie.txt` contains a valid session cookie.
 ```bash
 # List firmware images in DCNM repository
 curl -sk -b dcnm-cookie.txt "${DCNM}/rest/fm/image" \
@@ -206,6 +400,48 @@ curl -sk -b dcnm-cookie.txt -X POST "${DCNM}/rest/fm/upgrade" \
     "installMode": "non-disruptive"
   }' | python3 -m json.tool
 ```
+
+```text title="Expected output"
+{
+  "imageList": [
+    {
+      "imageName": "m9200-s2ek9-mz.8.4.2a.bin",
+      "imageSize": 536870912,
+      "uploadedDate": "2024-01-15T09:23:45Z",
+      "checksum": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6",
+      "version": "8.4.2a"
+    },
+    {
+      "imageName": "m9200-s2ek9-mz.8.3.1.bin",
+      "imageSize": 512000000,
+      "uploadedDate": "2023-11-22T14:15:30Z",
+      "checksum": "f6g7h8i9j0k1l2m3n4o5p6a1b2c3d4e5",
+      "version": "8.3.1"
+    }
+  ]
+}
+{
+  "upgradeId": "upgrade-2024-01-15-001",
+  "status": "INITIATED",
+  "switchList": [
+    {
+      "serialNumber": "FOX2425A1B2C",
+      "hostname": "switch-prod-01",
+      "currentVersion": "8.3.1",
+      "targetVersion": "8.4.2a",
+      "upgradeStatus": "IN_PROGRESS",
+      "percentComplete": 0
+    }
+  ],
+  "installMode": "non-disruptive",
+  "estimatedDuration": 1800
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification, or import the DCNM certificate into your system trust store.
+    **`{"error": "Invalid image name", "code": 400}`** — Verify the exact image filename exists in the repository by running the first curl command to list available images.
+    **`curl: (7) Failed to connect to <DCNM_IP> port 443: Connection refused`** — Confirm the DCNM server is running and accessible; check that `${DCNM}` variable is set correctly with `echo $DCNM`.
 ```bash
 # Count switches by management state
 curl -sk -b dcnm-cookie.txt "${DCNM}/rest/inventory/switches" \
@@ -239,6 +475,26 @@ for s in data: w.writerow(s)
 " > switches-$(date +%Y%m%d).csv
 ```
 
+
+```text title="Expected output"
+{'MANAGED': 47, 'UNMANAGED': 3, 'OUT_OF_SERVICE': 1}
+switch-core-01 fc1/1 CRC: 127 LOS: 0
+switch-core-02 fc2/3 CRC: 0 LOS: 5
+switch-edge-04 fc1/48 CRC: 312 LOS: 2
+switchName,ipAddress,model,release,managementState,fabricName
+switch-core-01,192.168.1.10,MDS 9710,9.2(1),MANAGED,prod-fabric
+switch-core-02,192.168.1.11,MDS 9710,9.2(1),MANAGED,prod-fabric
+switch-edge-01,192.168.1.20,MDS 9148S,9.2(1),MANAGED,prod-fabric
+switch-edge-02,192.168.1.21,MDS 9148S,9.2(1),MANAGED,prod-fabric
+switch-edge-03,192.168.1.22,MDS 9148S,9.2(1),UNMANAGED,prod-fabric
+switch-edge-04,192.168.1.23,MDS 9148S,9.1(2),OUT_OF_SERVICE,legacy-fabric
+...
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl or import the DCNM certificate into your system CA bundle.
+    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Verify the DCNM cookie is valid by checking `dcnm-cookie.txt` exists and re-authenticate if expired.
+    **`curl: (7) Failed to connect to <DCNM_IP> port 443: Connection refused`** — Confirm the DCNM server is running and the `${DCNM}` variable is set correctly with `echo $DCNM`.
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

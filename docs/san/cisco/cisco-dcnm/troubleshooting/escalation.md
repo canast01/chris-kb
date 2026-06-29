@@ -88,6 +88,25 @@ appmgr ha-status
 appmgr show-deployment-mode
 ```
 
+
+```text title="Expected output"
+DCNM Version: 12.1.2.0 (Build 12.1.2.0.20231015)
+
+Primary Node: dcnm-node-01.example.com (192.168.1.100)
+Secondary Node: dcnm-node-02.example.com (192.168.1.101)
+HA Status: HEALTHY
+Sync Status: IN_SYNC
+Last Sync Time: 2024-01-15 14:32:18 UTC
+
+Deployment Mode: Native HA
+Active Controller: dcnm-node-01
+Standby Controller: dcnm-node-02
+```
+
+!!! warning "Common errors"
+    **`cat: /var/dcnm/version: No such file or directory`** — Verify DCNM is installed by checking `/opt/dcnm/version` or running `dcnm --version` instead.
+    **`appmgr: command not found`** — SSH directly to the DCNM VM and ensure you are logged in as root; appmgr is only available on the DCNM appliance itself, not remotely.
+    **`HA Status: UNHEALTHY - Node dcnm-node-02 unreachable`** — Check network connectivity between nodes and verify both DCNM services are running with `systemctl status dcnm-*`.
 ### 2. Collect the DCNM support bundle
 
 ```bash
@@ -104,6 +123,25 @@ ls -lh /tmp/dcnm-support-*.tar.gz
 scp root@<dcnm-vm>:/tmp/dcnm-support-$(date +%Y%m%d%H%M).tar.gz ./
 ```
 
+
+```text title="Expected output"
+Collecting DCNM support bundle...
+Gathering system logs... [████████████████████] 100%
+Gathering database diagnostics... [████████████████████] 100%
+Gathering fabric inventory... [████████████████████] 100%
+Gathering configuration snapshots... [████████████████████] 100%
+Bundle creation completed successfully.
+Support bundle saved to: /tmp/dcnm-support-202501151430.tar.gz
+
+-rw-r--r-- 1 root root 847M Jan 15 14:30 /tmp/dcnm-support-202501151430.tar.gz
+
+root@dcnm-vm:/tmp/dcnm-support-202501151430.tar.gz                100% 847MB   12.4MB/s   01:08
+```
+
+!!! warning "Common errors"
+    **`/usr/local/cisco/dcm/dcnm/bin/collect-support-bundle.sh: Permission denied`** — Run the command with `sudo` or as the root user directly.
+    **`tar: Error is not recoverable: exiting now`** — Ensure `/tmp` has at least 2GB of free space using `df -h /tmp` and clear old bundles if needed.
+    **`scp: command not found`** — Install OpenSSH client on your workstation with `apt-get install openssh-client` (Ubuntu/Debian) or `brew install openssh` (macOS).
 ### 3. Capture DCNM service state and resource snapshot
 
 ```bash
@@ -129,6 +167,43 @@ tail -500 /var/log/dcnm/dcnm.log > /tmp/dcnm-log-tail-$(date +%Y%m%d).txt 2>/dev
   journalctl -u dcnm --since "4 hours ago" > /tmp/dcnm-log-tail-$(date +%Y%m%d).txt
 ```
 
+
+```text title="Expected output"
+S.No  Service Name                    Admin State    Oper State
+1     dcnm-server                     UP             UP
+2     dcnm-scheduler                  UP             UP
+3     dcnm-maapi                      UP             UP
+4     dcnm-ha-peer                    UP             DOWN
+5     postgres                        UP             UP
+
+Database Status: HEALTHY
+Replication Lag: 0 ms
+Last Backup: 2024-01-15 03:45:22 UTC
+
+Filesystem     Size  Used Avail Use% Mounted on
+/dev/sda1      500G  287G  213G  58% /
+/dev/sdb1      2.0T  1.8T  200G  90% /var/log
+
+              total        used        free      shared  buff/cache   available
+Mem:           64Gi        48Gi        8.2Gi      512Mi        7.8Gi        15Gi
+Swap:          16Gi       2.1Gi        13Gi
+
+ 10:42:23 up 127 days, 14:33,  2 users,  load average: 2.14, 1.87, 1.92
+
+ S0     S1     E     O      M1     M2   CCS    CCSU    EU     TT   PTGU   GCT
+ 0.00  15.23  42.18  8.92  58.34  22.11  0.00   0.00  12.45  145.2  0.0   2.341
+ 0.00  16.01  41.95  9.15  59.12  21.88  0.00   0.00  12.67  148.9  0.0   2.356
+ 0.00  15.87  42.34  8.78  58.67  22.33  0.00   0.00  12.51  146.5  0.0   2.348
+
+2024-01-15T10:38:45.123Z INFO  [dcnm-server] Fabric sync completed for fabric-prod-01
+2024-01-15T10:39:12.456Z WARN  [dcnm-scheduler] Task queue depth: 234 pending jobs
+2024-01-15T10:40:01.789Z INFO  [dcnm-maapi] Device 10.48.1.5 reachability confirmed
+```
+
+!!! warning "Common errors"
+    **`jstat: command not found`** — Install the Java Development Kit (JDK) on the DCNM appliance or verify the JAVA_HOME environment variable is set correctly.
+    **`/var/log/dcnm/dcnm.log: No such file or directory`** — Confirm the DCNM service is running and the log directory exists; if using systemd-journald exclusively, the fallback to journalctl will capture logs automatically.
+    **`Permission denied`** — Run the script with sudo or ensure the user has read access to /var/log/dcnm/ and /proc/[pid]/stat for the DCNM process.
 ### 4. Capture database diagnostics
 
 ```bash
@@ -146,6 +221,33 @@ FROM pg_database
 ORDER BY pg_database_size(datname) DESC;" >> /tmp/dcnm-db-$(date +%Y%m%d).txt
 ```
 
+
+```text title="Expected output"
+relname                     |    size
+-------------------------------------------------+----------
+ fabric_device_inventory                        | 2847 MB
+ switch_config_history                          | 1923 MB
+ interface_statistics                           | 1456 MB
+ policy_deployment_log                          | 892 MB
+ device_event_log                               | 756 MB
+ fabric_topology_cache                          | 634 MB
+ vlan_mapping_table                             | 512 MB
+ route_table_snapshot                           | 389 MB
+ ...
+(20 rows)
+
+ datname  |  pg_database_size
+----------+-------------------
+ sane     | 14 GB
+ postgres | 45 MB
+ template1| 8 MB
+(3 rows)
+```
+
+!!! warning "Common errors"
+    **`psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed: FATAL: role "postgres" does not exist`** — Verify the PostgreSQL superuser exists or use the correct role name with `-U dcnm_user` instead.
+    **`psql: error: database "sane" does not exist`** — Confirm the DCNM database name is correct; check with `psql -U postgres -l` to list available databases.
+    **`Permission denied`** — Ensure the user running the script has write permissions to `/tmp` or redirect output to a writable directory like `/var/log/dcnm/`.
 ### 5. Collect show tech-support from affected MDS switches
 
 ```bash
@@ -160,6 +262,22 @@ exit
 scp admin@<mds-switch-ip>:/tmp/mds-tech-*.txt ./
 ```
 
+
+```text title="Expected output"
+The authenticity of host '192.168.100.45' can't be established.
+ECDSA key fingerprint is SHA256:aBcD1234EfGhIjKlMnOpQrStUvWxYz5678+9/0=.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '192.168.100.45' (ECDSA) to /etc/ssh/known_hosts.
+Password: 
+mds-switch-01# show tech-support > /tmp/mds-tech-mds-switch-01-20240115.txt
+mds-switch-01# exit
+Connection to 192.168.100.45 closed.
+mds-tech-mds-switch-01-20240115.txt                    100% |*****| 45678 KB  00:12
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify the admin account credentials and ensure SSH is enabled on the MDS switch with `show ssh server status`.
+    **`No such file or directory`** — Confirm the tech-support file was successfully created on the switch by SSH'ing back and running `ls -la /tmp/mds-tech-*.txt` before attempting the scp transfer.
 ### 6. Export the DCNM audit log
 
 In the DCNM UI:
@@ -270,6 +388,41 @@ tail -100 /var/log/dcnm/dcnm.log 2>/dev/null || journalctl -u dcnm --since "30 m
 appmgr database-status
 ```
 
+
+```text title="Expected output"
+[dcnm@dcnm-prod-01 ~]$ appmgr status
+dcnm-web: running
+dcnm-backend: running
+dcnm-database: running
+dcnm-scheduler: running
+dcnm-messaging: running
+
+[dcnm@dcnm-prod-01 ~]$ df -h
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1        50G   32G   15G  68% /
+/dev/sda2       100G   87G   10G  89% /var/lib/pgsql
+/dev/sda3       200G  145G   48G  74% /opt/dcnm
+tmpfs            16G     0   16G   0% /dev/shm
+
+[dcnm@dcnm-prod-01 ~]$ tail -100 /var/log/dcnm/dcnm.log 2>/dev/null || journalctl -u dcnm --since "30 min ago"
+2024-01-15 14:32:18 [INFO] DCNM backend initialized successfully
+2024-01-15 14:32:45 [INFO] Database connection pool established: 25 connections
+2024-01-15 14:33:02 [INFO] Scheduler started: 12 jobs queued
+2024-01-15 14:35:17 [WARN] Fabric sync delayed for fabric-prod-dc1 (retry 2/5)
+2024-01-15 14:36:01 [INFO] Fabric sync completed for fabric-prod-dc1 in 2847ms
+
+[dcnm@dcnm-prod-01 ~]$ appmgr database-status
+Database Status: HEALTHY
+PostgreSQL Version: 12.8
+Active Connections: 18/25
+Replication Status: STREAMING
+Last Backup: 2024-01-15 02:00:15 UTC
+```
+
+!!! warning "Common errors"
+    **`appmgr: command not found`** — Ensure you are logged into the DCNM VM directly (not a remote host) and that /opt/dcnm/bin is in your PATH.
+    **`/var/log/dcnm/dcnm.log: No such file or directory`** — The log file may not exist yet; use `journalctl -u dcnm --since "30 min ago"` instead, or verify the DCNM service started with `systemctl status dcnm`.
+    **`Database Status: UNHEALTHY`** — Check PostgreSQL process with `systemctl status postgresql` and verify /var/lib/pgsql has at least 5GB free space using `df -h`.
 ---
 
 ## Support SLA Reference

@@ -82,6 +82,27 @@ ssh admin@<switch-ip>
 show running-config | section <changed-feature>
 ```
 
+
+```text title="Expected output"
+admin@switch-ip's password: 
+switch# show running-config | section interface
+interface Ethernet1/1
+  description uplink-to-core
+  no shutdown
+  speed 40000
+  mtu 9216
+interface Ethernet1/2
+  description reserved
+  shutdown
+interface port-channel1
+  description lag-to-fabric
+  speed 40000
+switch#
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify the admin account credentials and ensure SSH is enabled on the switch with `feature ssh`.
+    **`Connection timed out`** — Check network connectivity to the switch IP, confirm the IP address is correct, and verify firewall rules allow SSH port 22 to the switch.
 ---
 
 ## Configure VRF and L3 Gateway
@@ -102,6 +123,30 @@ show ip route vrf PROD-VRF
 show bgp l2vpn evpn summary
 ```
 
+
+```text title="Expected output"
+VRF Name                             Vlan    IP Addr         Flags
+PROD-VRF                             100     10.50.0.1/24    Up
+PROD-VRF                             101     10.51.0.1/24    Up
+
+Routing Table for VRF PROD-VRF
+IP Route Source                    AD/Metric    Next Hop         Interface
+10.50.0.0/24   connected          0/0          direct           Vlan100
+10.51.0.0/24   connected          0/0          direct           Vlan101
+172.16.0.0/16  bgp                200/2048     10.200.1.5       Eth1/1
+192.168.0.0/16 static             1/0          10.200.1.1       Eth1/2
+10.100.0.0/8   ospf               110/512      10.50.0.254      Vlan100
+
+BGP summary for l2vpn evpn
+BGP router identifier 10.200.1.1, local AS number 65001
+Neighbor        V    AS MsgRcvd MsgSent   TblVer InQ OutQ Up/Down State
+10.200.1.5      4 65002   45821   45803   128456   0    0 5w2d    Established
+10.200.1.6      4 65002   41203   41198   128456   0    0 3w4d    Established
+```
+
+!!! warning "Common errors"
+    **`% Invalid command`** — Verify the exact command syntax matches your Cisco DCNM/NX-OS version; use `?` to view available options.
+    **`% VRF PROD-VRF not found`** — Confirm the VRF exists with `show vrf` and verify the name spelling and case sensitivity.
 ---
 
 ## Run Fabric Compliance Check
@@ -133,6 +178,21 @@ show tech-support >> /bootflash/<switch-name>-techsupport.log
 copy bootflash:<switch-name>-techsupport.log scp://<admin>@<server-ip>/<path>/
 ```
 
+
+```text title="Expected output"
+admin@switch-ip's password: 
+Generating tech-support output... (this may take 2-3 minutes)
+Tech-support data collection completed successfully.
+Preparing SCP transfer...
+Sending file <switch-name>-techsupport.log
+File transferred successfully to scp://admin@server-ip/path/
+Transfer complete. 1234567 bytes copied in 45.32 secs (27234 bytes/sec)
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify the switch IP is reachable and admin credentials are correct; check if SSH is enabled on the switch.
+    **`Error opening bootflash:<switch-name>-techsupport.log (No such file or directory)`** — Ensure the tech-support command completed successfully and the filename matches exactly; check bootflash space with `dir bootflash:`.
+    **`SCP transfer failed: Authentication failed for scp://<admin>@<server-ip>`** — Verify the SCP server credentials and IP address are correct, and that the target directory path exists and is writable.
 4. Collect the relevant logs from DCNM server (Linux):
 
 ```bash
@@ -142,6 +202,15 @@ copy bootflash:<switch-name>-techsupport.log scp://<admin>@<server-ip>/<path>/
 tar czf /tmp/dcnm-logs-<date>.tar.gz /usr/local/cisco/dcm/fm/logs/
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`tar: /usr/local/cisco/dcm/fm/logs/: Cannot open: No such file or directory`** — Verify the DCNM installation path with `ls -la /usr/local/cisco/dcm/fm/logs/` and adjust the path if DCNM is installed elsewhere.
+    **`tar: Error is not recoverable: exiting now`** — Ensure you have read permissions on the logs directory by running `sudo tar czf` or checking permissions with `ls -ld /usr/local/cisco/dcm/fm/logs/`.
+    **`/tmp/dcnm-logs-<date>.tar.gz: Permission denied`** — Verify write permissions to `/tmp` or specify an alternate writable directory like `/home/admin/` in the tar output path.
 5. Open the TAC case at `https://mycase.cloudapps.cisco.com/` with product **Data Center Network Manager** and upload the collected bundles.
 6. Include the following in the case notes: DCNM version, NX-OS versions of affected switches, issue description, and first occurrence timestamp.
 
@@ -161,6 +230,34 @@ ssh admin@<switch-ip>
 show ptp clock
 ```
 
+
+```text title="Expected output"
+admin@switch-ip's password: 
+PTP Clock Information
+=====================
+Clock ID:                 00:11:22:33:44:55:66:77
+Clock Class:              248
+Clock Accuracy:           0xFE
+Offsetting Scaled Log Variance: 0x4E5D
+Priority1:                128
+Priority2:                255
+Domain Number:            0
+Slave Only:               False
+Two Step Flag:            True
+Grandmaster Clock ID:     00:11:22:33:44:55:66:77
+Grandmaster Class:        248
+Grandmaster Accuracy:      0xFE
+Time Source:              GPS
+UTC Offset Valid:         True
+Leap59:                   False
+Leap61:                   False
+Current UTC Offset:       37
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify the admin account credentials and ensure SSH is enabled on the switch with `show feature | grep ssh`.
+    **`Connection timed out`** — Check network connectivity to the switch IP address and confirm the management interface is reachable with `ping <switch-ip>`.
+    **`% Invalid command`** — Confirm PTP is licensed and enabled on the switch; use `show license` and `show feature | grep ptp` to verify.
 Confirm the **Clock Identity** field matches the grandmaster and the **Offset from master** is within the acceptable range (typically < 1 µs for media networks). Investigate any switch showing **Free-run** state or high offset values.
 
 ---
@@ -203,6 +300,28 @@ DCNM upgrades follow Cisco's supported upgrade path. Never skip major versions w
 dcnm_mgmt_server status
 ```
 
+
+```text title="Expected output"
+DCNM Management Server Status Report
+=====================================
+Service Name: dcnm-mgmt-server
+Status: RUNNING
+PID: 4827
+Uptime: 2 days, 14 hours, 33 minutes
+Memory Usage: 2.8 GB / 8.0 GB
+CPU Usage: 3.2%
+Last Health Check: 2024-01-15 09:47:22 UTC
+Database Connection: CONNECTED
+Cluster Status: HEALTHY (3/3 nodes online)
+API Server: LISTENING on 0.0.0.0:8443
+Fabric Count: 12
+Managed Switches: 847
+```
+
+!!! warning "Common errors"
+    **`dcnm_mgmt_server: command not found`** — Ensure DCNM is installed in the system PATH or source the DCNM environment setup script before running the command.
+    **`Error: Unable to connect to management server on localhost:8443`** — Verify DCNM services have fully started by checking `systemctl status dcnm-*` and wait 30-60 seconds for all components to initialize.
+    **`Permission denied`** — Run the command with appropriate privileges using `sudo dcnm_mgmt_server status` or ensure your user is in the dcnm admin group.
 8. Log back in to the DCNM web UI and confirm the version under **Administration > About DCNM**; verify all fabrics show **Connected** and fabric discovery is functional.
 
 ---
@@ -224,6 +343,38 @@ curl -sk -b dcnm-cookie.txt -X POST \
   }' | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "status": "success",
+  "statusCode": 200,
+  "message": "Device aliases imported successfully",
+  "data": {
+    "fabricName": "DC1-FABRIC-A",
+    "aliasesCreated": 2,
+    "aliasesUpdated": 0,
+    "aliasFailed": 0,
+    "details": [
+      {
+        "aliasName": "esxi01-hba0",
+        "pwwn": "50:00:10:00:00:ab:cd:ef",
+        "status": "created"
+      },
+      {
+        "aliasName": "purestor01-ct0-fc0",
+        "pwwn": "52:4a:93:70:ab:cd:ef:00",
+        "status": "created"
+      }
+    ]
+  },
+  "requestId": "req-8f3c-4a92-b1e2-7d9c5e1f2a3b"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag (already present) or import the DCNM CA certificate into your system trust store.
+    **`error: 401 Unauthorized`** — Ensure the dcnm-cookie.txt file is valid and not expired; re-authenticate with `curl -sk -c dcnm-cookie.txt -u admin:password https://${DCNM}/rest/login`.
+    **`error: 400 Bad Request - Invalid PWWN format`** — Verify PWWN values use colon-separated format (50:00:10:00:00:ab:cd:ef) and are exactly 16 hex characters.
 ---
 
 ## Verify

@@ -61,6 +61,22 @@ show zoneset active vsan <vsan-id>
 # Compare against expected zone set exported from DCNM
 ```
 
+
+```text title="Expected output"
+zoneset name: production_zones vsan: 100
+  zone name: zone_db_servers vsan: 100
+    fcid 0x123456 [pwwn 50:00:14:40:5a:1b:2c:3d]
+    fcid 0x234567 [pwwn 50:00:14:40:5a:1b:2c:4e]
+  zone name: zone_app_servers vsan: 100
+    fcid 0x345678 [pwwn 50:00:14:40:5a:1b:2c:5f]
+    fcid 0x456789 [pwwn 50:00:14:40:5a:1b:2c:6g]
+  zone name: zone_backup_targets vsan: 100
+    fcid 0x567890 [pwwn 50:00:14:40:5a:1b:2c:7h]
+```
+
+!!! warning "Common errors"
+    **`% Invalid command`** — Verify the VSAN ID exists on the switch with `show vsan` and confirm you are on an MDS or supported Cisco switch model.
+    **`zoneset name: (null) vsan: <vsan-id>`** — The active zoneset has not been committed; activate a zoneset using `zoneset activate name <zoneset-name> vsan <vsan-id>` before verification.
 ---
 
 ## Verify

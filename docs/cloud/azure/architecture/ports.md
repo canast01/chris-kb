@@ -120,6 +120,42 @@ az network nsg list --resource-group <rg-name> --output table
 az network nic show-effective-nsg --name <nic-name> --resource-group <rg-name>
 ```
 
+
+```text title="Expected output"
+200
+{
+  "cloudName": "AzureCloud",
+  "homeTenantId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "id": "/subscriptions/12345678-1234-1234-1234-123456789012",
+  "isDefault": true,
+  "name": "Production-Sub",
+  "state": "Enabled",
+  "tenantId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "user": {
+    "name": "admin@contoso.onmicrosoft.com",
+    "type": "user"
+  }
+}
+200
+200
+Name                    ResourceGroup       Location
+---                     ---------------     --------
+nsg-prod-eastus-01      prod-rg             eastus
+nsg-prod-eastus-02      prod-rg             eastus
+nsg-dmz-eastus          prod-rg             eastus
+
+NetworkSecurityGroupName: nsg-prod-eastus-01
+Name                     Protocol    Direction    Priority    SourceAddress    DestinationPort
+-----------------------  ----------  -----------  ----------  ---------------  -----------------
+AllowHTTPS               Tcp         Inbound      100         10.0.0.0/8       443
+AllowSSH                 Tcp         Inbound      110         203.0.113.0/24   22
+DenyAllInbound           *           Inbound      65500       *                *
+```
+
+!!! warning "Common errors"
+    **`ERROR: The command failed with an unexpected status code: 401 Unauthorized`** — Ensure you are authenticated with `az login` and have permissions to the subscription.
+    **`ResourceNotFound: The Resource 'Microsoft.Network/networkSecurityGroups/<nsg-name>' under resource group '<rg-name>' was not found`** — Verify the NSG name and resource group name are correct and exist in your subscription.
+    **`The NIC '<nic-name>' does not exist in the resource group '<rg-name>'`** — Confirm the NIC name matches exactly and the VM is in the specified resource group.
 ## See also
 
 - [Azure — Architecture](../how-it-works/)

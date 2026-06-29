@@ -119,6 +119,40 @@ snmpget -v2c -c <community> <mds-mgmt-ip> 1.3.6.1.2.1.1.1.0
 ssh admin@<mds-mgmt-ip> show topology
 ```
 
+
+```text title="Expected output"
+Cisco MDS9148S Multilayer Fabric Switch
+Software version: 8.4(2b)
+System uptime is 127 days 14 hours 23 minutes
+Kernel uptime is 127 days 14 hours 18 minutes
+Last reset at 2024-01-15 09:42:15 +00:00
+
+200
+
+NTP enabled: Yes
+NTP synchronized: Yes
+NTP stratum: 2
+Reference clock: 10.50.12.8 (ntp.corp.local)
+Last update: 1247 seconds ago
+
+Trap Host IP Address          Community    Port   Version
+10.60.45.22                    public       162    v2c
+10.60.45.23                    public       162    v2c
+
+SNMPv2-MIB::sysDescr.0 = STRING: "Cisco MDS 9148S Multilayer Fabric Switch, NX-OS Software Release 8.4(2b)"
+
+Topology Information for MDS9148S (Serial: FOX2412A1B2C)
+  Connected Switches: 4
+  ISL Ports Active: 8
+  E_Port Channels: 2
+  F_Port Count: 48
+  Expansion Module: Not present
+```
+
+!!! warning "Common errors"
+    **`ssh: connect to host <mds-mgmt-ip> port 22: Connection refused`** — Verify SSH is enabled on the MDS with `config t` → `ssh server enable` and confirm the management IP is reachable via ping.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Remove the `-k` flag if your environment has a trusted CA certificate installed, or ensure the management IP matches the certificate CN.
+    **`SNMP request timed out`** — Confirm the SNMP community string matches the MDS configuration with `show snmp community` and verify the monitoring server has network connectivity to the management IP.
 ---
 
 ## See also

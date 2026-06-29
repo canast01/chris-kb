@@ -75,6 +75,53 @@ fi
 echo -e "${GREEN}Health check PASSED.${RESET}"
 ```
 
+
+```text title="Expected output"
+=== AWS Account Health Check ===
+Profile : default
+Region  : us-east-1
+Time    : 2024-01-15T14:32:47Z
+
+--- Caller Identity ---
+{
+    "UserId": "AIDACKCEVSQ6C2EXAMPLE",
+    "Account": "123456789012",
+    "Arn": "arn:aws:iam::123456789012:user/devops-admin"
+}
+
+--- EC2 Instances ---
+|---------------------|----------|-----------|-----------|
+| InstanceId          | State     | Type      | Name      |
+|---------------------|----------|-----------|-----------|
+| i-0a7f8c2d9e1b4f5a  | running   | t3.medium | web-prod  |
+| i-1b8g9d3e0f2c5g6b  | running   | t3.small  | api-prod  |
+| i-2c9h0e4f1g3d6h7c  | stopped   | t2.micro  | db-backup |
+|---------------------|----------|-----------|-----------|
+WARNING: 1 stopped instance(s) found.
+
+--- RDS Instances ---
+|--------------------------|----------|--------|------------|
+| DBInstanceIdentifier     | Status    | Engine | Class      |
+|--------------------------|----------|--------|------------|
+| prod-postgres-primary    | available | postgres | db.t3.large |
+| prod-mysql-replica       | available | mysql  | db.t3.medium |
+|--------------------------|----------|--------|------------|
+
+--- Load Balancers (ELBv2) ---
+|----------------------|---------|---------|--------------------------------|
+| LoadBalancerName     | State   | Type    | DNSName                        |
+|----------------------|---------|---------|--------------------------------|
+| prod-alb-web         | active  | application | prod-alb-web-1234567890.us-east-1.elb.amazonaws.com |
+| prod-nlb-api         | active  | network | prod-nlb-api-9876543210.us-east-1.elb.amazonaws.com |
+|----------------------|---------|---------|--------------------------------|
+
+Health check FAILED: stopped instances detected.
+```
+
+!!! warning "Common errors"
+    **`Unable to locate credentials`** — Ensure AWS credentials are configured via `aws configure` or `AWS_PROFILE` environment variable points to a valid profile in `~/.aws/credentials`.
+    **`An error occurred (UnauthorizedOperation) when calling the DescribeInstances operation: You are not authorized to perform: ec2:DescribeInstances`** — Add the required IAM permissions (ec2:DescribeInstances, rds:DescribeDBInstances, elasticloadbalancing:DescribeLoadBalancers) to the IAM user or role being used.
+    **`Invalid value 'us-west-2' for region. Reason: INVALID_REGION.`** — Set `AWS_REGION` to a valid AWS region such as `us-east-1`, `eu-west-1`, or `ap-southeast-1`.
 ```bash
 #!/bin/bash
 set -euo pipefail
@@ -143,6 +190,31 @@ for svc, mc in top10:
     print(f"{svc:<50} ${prev:>11.2f} ${curr:>11.2f} {pct:>+7.1f}%{flag}")
 PYEOF
 ```
+
+```text title="Expected output"
+=== AWS Cost and Usage Report ===
+Profile     : default
+Period      : 2024-09-01 → 2024-12-19
+Months back : 3
+
+Service                                            2024-11      2024-12      Change
+--------------------------------------------------------------------------------------
+Amazon Elastic Compute Cloud - Compute         $1,247.83    $1,456.29      +16.7%
+Amazon Simple Storage Service                    $342.15      $389.42      +13.8%
+AWS Lambda                                       $156.72      $178.91      +14.1%
+Amazon DynamoDB                                  $89.34       $112.67      +26.2%  *** >20% INCREASE ***
+Amazon Relational Database Service               $523.41      $687.19      +31.3%  *** >20% INCREASE ***
+Amazon CloudFront                                $201.56      $198.34       -1.6%
+AWS Glue                                         $45.22       $67.89       +50.1%  *** >20% INCREASE ***
+Amazon Simple Notification Service               $12.45       $14.22      +14.2%
+Amazon CloudWatch                                $28.91       $31.47       +8.8%
+AWS Key Management Service                       $15.67       $18.34      +17.0%
+```
+
+!!! warning "Common errors"
+    **`Unable to locate credentials in any of the locations`** — Set AWS credentials via `aws configure` or export `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables.
+    **`An error occurred (AccessDenied) when calling the GetCostAndUsage operation`** — Ensure the IAM user/role has the `ce:GetCostAndUsage` permission attached.
+    **`command not found: python3`** — Install Python 3 on the system using your package manager (e.g., `apt install python3` or `brew install python3`).
 ```bash
 cd ~/Desktop
 bash aws-cost-report.sh
@@ -364,9 +436,70 @@ cd C:\Users\YourName\Desktop
 pip install boto3
 python iam_key_audit.py
 ```
+
+```text title="Expected output"
+Collecting boto3
+  Downloading boto3-1.28.85-py3-none-any.whl (135.8 kB)
+     |████████████████████████████████| 135.8 kB 2.3 MB/s
+Collecting botocore<1.32.0,>=1.31.85
+  Downloading botocore-1.31.85-py3-none-any.whl (11.8 MB)
+     |████████████████████████████████| 11.8 MB 5.1 MB/s
+Installing collected packages: botocore, boto3
+Successfully installed botocore-1.31.85 boto3-1.28.85
+
+IAM Key Audit Report
+=====================
+Scanning AWS account: 123456789012
+Region: us-east-1
+
+User: alice.johnson
+  Access Key: AKIA7Q2X9M8N5K3P
+  Created: 2023-11-15
+  Last Used: 2024-01-08
+  Status: Active
+  Age (days): 55
+
+User: bob.smith
+  Access Key: AKIA4R1T6V2W9J8L
+  Created: 2023-08-22
+  Last Used: Never
+  Status: Active
+  Age (days): 140
+
+Audit Complete. Total keys scanned: 12
+```
+
+!!! warning "Common errors"
+    **`cd: command not found`** — Use `cd /Users/YourName/Desktop` (forward slashes) or run from PowerShell instead of bash on Windows.
+    **`ModuleNotFoundError: No module named 'boto3'`** — Ensure pip is using the correct Python interpreter with `python -m pip install boto3` or verify the virtual environment is activated.
+    **`botocore.exceptions.NoCredentialsError: Unable to locate credentials`** — Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables.
 ```bash
 python iam_key_audit.py --deactivate
 ```
+
+```text title="Expected output"
+IAM Key Audit Tool v2.1.0
+Starting audit scan across all AWS accounts...
+
+Scanning account: prod-main (123456789012)
+  Found 5 active access keys
+  - AKIA2J7K9M2L4P9Q (user: jenkins-deploy) — Last used: 2024-01-15
+  - AKIA5N3B8X1C6Y2Z (user: lambda-processor) — Last used: 2024-01-18
+  - AKIA7P2Q4R8S9T1U (user: backup-service) — Last used: 2023-12-20 [STALE]
+  - AKIA9V3W5X7Y8Z2A (user: monitoring-bot) — Last used: 2024-01-19
+  - AKIAB1C2D3E4F5G6 (user: ci-runner) — Last used: 2023-11-30 [STALE]
+
+Deactivating stale keys (>45 days unused)...
+  ✓ Deactivated AKIA7P2Q4R8S9T1U (backup-service)
+  ✓ Deactivated AKIAB1C2D3E4F5G6 (ci-runner)
+
+Audit complete. 2 keys deactivated, 3 keys remain active.
+Report saved to: audit_report_2024-01-19.json
+```
+
+!!! warning "Common errors"
+    **`botocore.exceptions.NoCredentialsError: Unable to locate credentials`** — Configure AWS credentials via `aws configure` or set `AWS_PROFILE` environment variable.
+    **`AccessDenied: User: arn:aws:iam::123456789012:user/audit-bot is not authorized to perform: iam:UpdateAccessKey`** — Ensure the IAM user running the script has `iam:UpdateAccessKey` and `iam:ListAccessKeys` permissions in their policy.
 ```bash
 #!/bin/bash
 set -euo pipefail
@@ -423,6 +556,29 @@ for a in firing:
 sys.exit(1)
 PYEOF
 ```
+
+```text title="Expected output"
+=== CloudWatch Alarm Status ===
+Profile : default
+Region  : us-east-1
+
+State                Count
+----------------------------
+OK                       42
+ALARM                      3
+INSUFFICIENT_DATA          1
+
+AlarmName                                      Namespace                 Metric                         Threshold      Reason
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+prod-api-cpu-utilization-high                  AWS/EC2                   CPUUtilization                    80.0  Threshold Crossed: 1 out of 1 datapoints was greater than or equal to 80.0 (Maximum: 85.2) Fri Jan 19 14:32:00 UTC 2024
+rds-database-connections-critical              AWS/RDS                   DatabaseConnections             450.0  Threshold Crossed: 1 out of 1 datapoints was greater than or equal to 450.0 (Maximum: 487.0) Fri Jan 19 14:28:15 UTC 2024
+elb-target-unhealthy-hosts                     AWS/ApplicationELB        UnHealthyHostCount                 1.0  Threshold Crossed: 1 out of 1 datapoints was greater than or equal to 1.0 (Maximum: 2.0) Fri Jan 19 14:15:42 UTC 2024
+```
+
+!!! warning "Common errors"
+    **`An error occurred (UnauthorizedOperation) when calling the DescribeAlarms operation: User: arn:aws:iam::123456789012:user/ops-user is not authorized to perform: cloudwatch:DescribeAlarms`** — Add `cloudwatch:DescribeAlarms` permission to the IAM user/role policy.
+    **`Unable to locate credentials. You can configure credentials by running "aws configure".`** — Set AWS credentials via `aws configure` or export `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables.
+    **`ModuleNotFoundError: No module named 'json'`** — Ensure Python 3 is installed and the json module is available (it is built-in; verify Python installation with `python3 --version`).
 ```bash
 cd ~/Desktop
 bash cloudwatch-check.sh

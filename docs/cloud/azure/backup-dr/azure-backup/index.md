@@ -63,6 +63,43 @@ az backup vault backup-properties set \
   --backup-storage-redundancy GeoRedundant
 ```
 
+
+```text title="Expected output"
+{
+  "id": "/subscriptions/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d/resourceGroups/prod-backup-rg/providers/Microsoft.RecoveryServices/vaults/prod-vault-01",
+  "location": "eastus",
+  "name": "prod-vault-01",
+  "properties": {
+    "provisioningState": "Succeeded"
+  },
+  "resourceGroup": "prod-backup-rg",
+  "type": "Microsoft.RecoveryServices/vaults"
+}
+
+Name              ResourceGroup      Location    Type
+----------------  -----------------  ----------  ----------------------------------
+prod-vault-01     prod-backup-rg     eastus      Microsoft.RecoveryServices/vaults
+dr-vault-02       prod-backup-rg     westus2     Microsoft.RecoveryServices/vaults
+legacy-vault-03   legacy-rg          northeurope Microsoft.RecoveryServices/vaults
+
+{
+  "id": "/subscriptions/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d/resourceGroups/prod-backup-rg/providers/Microsoft.RecoveryServices/vaults/prod-vault-01",
+  "location": "eastus",
+  "name": "prod-vault-01",
+  "properties": {
+    "provisioningState": "Succeeded",
+    "publicNetworkAccess": "Enabled"
+  },
+  "resourceGroup": "prod-backup-rg"
+}
+
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`ResourceGroupNotFound`** — Verify the resource group exists in the target subscription with `az group list`.
+    **`VaultAlreadyExists`** — Use a unique vault name or delete the existing vault before recreating it.
+    **`InvalidBackupStorageRedundancy`** — Ensure no backup items are registered to the vault before changing redundancy; use `az backup container list` to verify.
 | Redundancy Option | Description |
 |---|---|
 | LocallyRedundant (LRS) | 3 copies in same datacenter — lowest cost |
@@ -101,6 +138,48 @@ az backup policy set \
   --name <policy-name>
 ```
 
+
+```text title="Expected output"
+Name                          BackupManagementType    WorkloadType
+------------------------------  ----------------------  ---------------
+DefaultPolicy                  AzureIaasVM             VM
+DailyBackup-7day-retention     AzureIaasVM             VM
+WeeklyBackup-30day-retention   AzureIaasVM             VM
+MonthlyBackup-1year-retention  AzureIaasVM             VM
+
+{
+  "id": "/subscriptions/a1b2c3d4-e5f6-7890-abcd-ef1234567890/resourceGroups/prod-rg/providers/Microsoft.RecoveryServices/vaults/prod-vault/backupPolicies/DailyBackup-7day-retention",
+  "name": "DailyBackup-7day-retention",
+  "type": "Microsoft.RecoveryServices/vaults/backupPolicies",
+  "properties": {
+    "backupManagementType": "AzureIaasVM",
+    "workloadType": "VM",
+    "schedulePolicy": {
+      "schedulePolicyType": "SimpleSchedulePolicy",
+      "scheduleRunFrequency": "Daily",
+      "scheduleRunTimes": ["2024-01-15T03:00:00Z"]
+    },
+    "retentionPolicy": {
+      "retentionPolicyType": "LongTermRetentionPolicy",
+      "dailySchedule": {
+        "retentionTimes": ["2024-01-15T03:00:00Z"],
+        "retentionDuration": {
+          "count": 7,
+          "durationType": "Days"
+        }
+      }
+    }
+  }
+}
+
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`ResourceNotFound: The resource 'Microsoft.RecoveryServices/vaults/<vault-name>' does not exist`** — Verify the vault name and resource group name are correct using `az backup vault list --resource-group <rg>`.
+    **`InvalidPolicyDefinition: Policy file is invalid or malformed`** — Ensure the policy.json file is valid JSON and contains required fields like `schedulePolicy` and `retentionPolicy` by validating against Azure backup policy schema.
+    **`PolicyAlreadyExists: A policy with name '<policy-name>' already exists in this vault`** — Use a unique policy name or delete the existing policy first with `az backup policy delete --resource-group <rg> --vault-name <vault-name> --name <policy-name>`.
 ---
 
 ## Enabling Protection on VMs
@@ -136,6 +215,36 @@ az backup item show \
   --workload-type VM
 ```
 
+
+```text title="Expected output"
+Command group 'backup protection' is in preview and under development. Reference and support levels: https://aka.ms/CLI_refstatus
+Protection enabled for VM 'prod-web-01' in vault 'RecoveryVault-East'.
+
+Command group 'backup protection' is in preview and under development. Reference and support levels: https://aka.ms/CLI_refstatus
+Protection enabled for VM 'prod-web-01' in vault 'RecoveryVault-East'.
+
+Name                 ResourceGroup        VaultName           ProtectionState    HealthStatus
+-------------------  -------------------  ------------------  -----------------  ---------------
+prod-web-01          corp-backup-rg       RecoveryVault-East  Protected          Healthy
+prod-db-02           corp-backup-rg       RecoveryVault-East  Protected          Healthy
+prod-app-03          corp-backup-rg       RecoveryVault-East  Protected          Healthy
+dev-test-vm          corp-backup-rg       RecoveryVault-East  ProtectionStopped  Healthy
+
+{
+  "id": "/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/resourceGroups/corp-backup-rg/providers/Microsoft.RecoveryServices/vaults/RecoveryVault-East/backupFabrics/Azure/protectionContainers/IaasVMContainer;iaasvmcontainerv2;corp-backup-rg;prod-web-01/protectedItems/VM;iaasvmcontainerv2;corp-backup-rg;prod-web-01",
+  "name": "prod-web-01",
+  "protectionStatus": "Protected",
+  "protectionState": "IRPending",
+  "healthStatus": "Healthy",
+  "lastBackupStatus": "Success",
+  "lastBackupTime": "2024-01-15T02:30:45.123456+00:00"
+}
+```
+
+!!! warning "Common errors"
+    **`ResourceNotFound : The specified vault 'RecoveryVault-East' could not be found in resource group 'corp-backup-rg'.`** — Verify the vault name and resource group name match exactly, and that the vault exists in the correct subscription.
+    **`InvalidPolicyName : Policy 'CustomPolicy-Daily' does not exist in vault 'RecoveryVault-East'.`** — List available policies with `az backup policy list --resource-group <rg> --vault-name <vault-name>` and use an existing policy name.
+    **`VMNotFound : Virtual machine 'prod-web-01' not found in resource group 'corp-backup-rg'.`** — Confirm the VM name is correct and exists in the specified resource group using `az vm list --resource-group <rg>`.
 ---
 
 ## On-Demand Backup
@@ -158,6 +267,28 @@ az backup job show \
   --name <job-id>
 ```
 
+
+```text title="Expected output"
+BackupJob-prod-vm-01-20250115-143022
+{
+  "activityId": "12a4b5c6-7d8e-9f0a-1b2c-3d4e5f6a7b8c",
+  "backupManagementType": "AzureIaasVM",
+  "containerName": "iaasvmcontainer;rg-prod;prod-vm-01",
+  "duration": "00:45:32",
+  "endTime": "2025-01-15T14:45:54.123456+00:00",
+  "entityFriendlyName": "prod-vm-01",
+  "jobId": "12a4b5c6-7d8e-9f0a-1b2c-3d4e5f6a7b8c",
+  "operation": "Backup",
+  "startTime": "2025-01-15T14:00:22.654321+00:00",
+  "status": "Completed",
+  "workloadType": "VM"
+}
+```
+
+!!! warning "Common errors"
+    **`ResourceNotFound: The specified vault was not found in the subscription.`** — Verify the vault name and resource group are correct, and the vault exists in the current subscription context.
+    **`InvalidParameterValue: The container name does not exist or is not registered with the vault.`** — Ensure the VM is registered with the Recovery Services vault by running `az backup container list` to confirm the container name format.
+    **`BadRequest: The retain-until date must be at least 7 days from today.`** — Set the `--retain-until` date to a minimum of 7 days in the future from the current date.
 ---
 
 ## Recovery Points
