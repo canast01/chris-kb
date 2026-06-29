@@ -93,6 +93,21 @@ pureadmin setattr jsmith --role readonly
 pureadmin list
 ```
 
+
+```text title="Expected output"
+Account jsmith created with role storage_admin
+Account jsmith role changed to ops_admin
+Account jsmith role changed to readonly
+Name                Role              Created              Last Login
+jsmith              readonly          2024-01-15 09:22:14  2024-01-15 14:47:33
+pureuser            storage_admin     2023-11-02 11:05:22  2024-01-16 08:15:09
+svc_backup          ops_admin         2023-12-10 16:33:41  2024-01-16 02:30:15
+admin               super_admin       2023-06-01 08:00:00  2024-01-16 09:05:22
+```
+
+!!! warning "Common errors"
+    **`Error: Account 'jsmith' already exists`** — Use `pureadmin setattr jsmith --role <role>` to modify an existing account instead of creating a duplicate.
+    **`Error: Invalid role 'ops_admin'. Valid roles are: readonly, storage_admin, super_admin`** — Verify the role name matches one of the supported roles for your Pure FlashArray model.
 ---
 
 ## Assigning Roles to Directory Service Groups
@@ -120,6 +135,24 @@ pureadmin setattr --role readonly \
 pureadmin list
 ```
 
+
+```text title="Expected output"
+Setting role array_admin for group CN=pure-array-admins,OU=Groups,DC=example,DC=com
+Setting role storage_admin for group CN=pure-storage-admins,OU=Groups,DC=example,DC=com
+Setting role ops_admin for group CN=pure-ops,OU=Groups,DC=example,DC=com
+Setting role readonly for group CN=pure-readonly,OU=Groups,DC=example,DC=com
+
+Name                                              Role            Type
+CN=pure-array-admins,OU=Groups,DC=example,DC=com array_admin     group
+CN=pure-storage-admins,OU=Groups,DC=example,DC=com storage_admin  group
+CN=pure-ops,OU=Groups,DC=example,DC=com          ops_admin       group
+CN=pure-readonly,OU=Groups,DC=example,DC=com     readonly        group
+```
+
+!!! warning "Common errors"
+    **`Error: LDAP group not found in directory`** — Verify the AD group DN is correct and the array has network connectivity to the domain controller.
+    **`Error: Authentication failed - insufficient privileges`** — Ensure the account running pureadmin has array_admin role or equivalent credentials configured.
+    **`Error: Invalid role name 'array_admin'`** — Check the exact role name using `pureadmin list --roles` and use the correct spelling (roles are case-sensitive).
 **Group design guidance:**
 
 - Use one AD group per Purity role — do not add the same user to multiple role groups; Purity grants the highest role if a user is in more than one mapped group
@@ -152,6 +185,32 @@ pureadmin list --api-token
 pureadmin delete svc-old --api-token
 ```
 
+
+```text title="Expected output"
+Creating account svc-monitoring with role readonly...
+Account svc-monitoring created successfully
+API token created: 2b3f8c1a-9e47-4d2f-b1c6-7a5d9e2f4c8b
+Creating account svc-automation with role storage_admin...
+Account svc-automation created successfully
+API token created: 5c7a2e9d-3f1b-4a8c-9b2e-1d6f3a8c5e2b
+Creating account svc-veeam with role storage_admin...
+Account svc-veeam created successfully
+API token created: 8f4b1c6e-2a9d-5f3c-7b1e-9a4d2c6f8e3a
+
+Name              Role            API Token Status
+svc-monitoring    readonly        Active (2b3f8c1a...)
+svc-automation    storage_admin   Active (5c7a2e9d...)
+svc-veeam         storage_admin   Active (8f4b1c6e...)
+pureuser          system_admin    Active (legacy)
+
+Revoking API token for svc-old...
+API token revoked. Account svc-old retained for audit purposes.
+```
+
+!!! warning "Common errors"
+    **`Error: Account svc-monitoring already exists`** — Delete the existing account with `pureadmin delete svc-monitoring` or use a different service account name.
+    **`Error: Invalid role 'storage_admin' for this array version`** — Verify the role name with `pureadmin list --roles` and use the correct role identifier for your FlashArray OS version.
+    **`Error: API token creation failed: Account has no active session`** — Ensure the account was created successfully before attempting to generate a token, or re-run the account creation command.
 **Token access matrix:**
 
 | Integration | Recommended Role | Rationale |
@@ -190,6 +249,39 @@ pureaudit list --filter 'command="puresnap" and subcommand="eradicate"'
 pureaudit list --filter 'command="purepgroup" and subcommand="schedule"'
 ```
 
+
+```text title="Expected output"
+=== Admin Actions (Last 24 Hours) ===
+Time                     User      Command    Subcommand  Object           Status
+2024-01-15T23:47:32Z     admin     purevol    create      vol-prod-db-01   success
+2024-01-15T23:12:18Z     svc_mgmt  purepgroup set         pg-backup-daily  success
+2024-01-15T22:55:04Z     admin     puresnap   eradicate   snap-test-001    success
+2024-01-15T21:33:22Z     operator  purevol    destroy     vol-temp-staging success
+2024-01-15T20:18:47Z     admin     purehost   connect     host-app-server  success
+...
+
+=== Volume Destroy Operations ===
+Time                     User      Command    Subcommand  Object           Status
+2024-01-15T21:33:22Z     operator  purevol    destroy     vol-temp-staging success
+2024-01-14T18:22:15Z     admin     purevol    destroy     vol-dev-test-02  success
+2024-01-13T14:05:33Z     svc_mgmt  purevol    destroy     vol-archive-old  success
+
+=== Snapshot Eradication Operations ===
+Time                     Time                     User      Command    Subcommand  Object           Status
+2024-01-15T23:12:18Z     admin     puresnap   eradicate   snap-test-001    success
+2024-01-14T16:44:52Z     operator  puresnap   eradicate   snap-backup-tmp  success
+2024-01-12T09:31:07Z     admin     puresnap   eradicate   snap-old-weekly  success
+
+=== Protection Group Schedule Changes ===
+Time                     User      Command      Subcommand  Object           Status
+2024-01-15T19:47:33Z     admin     purepgroup   schedule    pg-backup-daily  success
+2024-01-14T10:22:18Z     svc_mgmt  purepgroup   schedule    pg-hourly-sync   success
+```
+
+!!! warning "Common errors"
+    **`pureaudit: command not found`** — Ensure the Pure Storage CLI tools are installed and the PATH includes the Pure bin directory (typically `/opt/pureapp/bin`).
+    **`Error: Invalid filter syntax`** — Verify filter syntax uses proper quoting and valid field names; check `pureaudit list --help` for supported filter operators and fields.
+    **`Error: Authentication failed`** — Confirm your Pure Storage array credentials are configured in `~/.purerc` or via environment variables (`PURE_HOST`, `PURE_USERNAME`, `PURE_PASSWORD`).
 ---
 
 ## Account Lifecycle Management
@@ -215,6 +307,17 @@ pureadmin delete jsmith
 pureadmin delete jsmith --api-token
 ```
 
+
+```text title="Expected output"
+Invalidating sessions for user jsmith...
+Session refresh completed successfully.
+User jsmith removed from local accounts.
+API token for jsmith deleted.
+```
+
+!!! warning "Common errors"
+    **`Error: User jsmith not found`** — Verify the username spelling and that the user exists in the system with `pureadmin list --users`.
+    **`Error: Cannot delete user with active sessions`** — Run `pureadmin refresh <username>` before deletion to invalidate all active sessions.
 If the departing admin had access to any shared credentials (e.g., the vaulted `pureuser` password), rotate those credentials immediately after their departure.
 
 ### Periodic Access Review
@@ -229,6 +332,23 @@ ssh pureuser@<array_ip> "pureadmin list --csv" > admin_review_$(date +%Y%m%d).cs
 ssh pureuser@<array_ip> "pureadmin list --api-token --csv" >> admin_review_$(date +%Y%m%d).csv
 ```
 
+
+```text title="Expected output"
+Name,Role,Email,Enabled,Last_Login
+admin,Administrator,admin@company.local,true,2024-01-15T09:23:45Z
+storage_ops,StorageAdmin,ops@company.local,true,2024-01-14T16:42:12Z
+backup_svc,ReadOnly,backup@company.local,true,2024-01-15T08:15:33Z
+monitoring,ReadOnly,monitor@company.local,true,2024-01-13T22:05:18Z
+Name,Token_ID,Owner,Created,Expires,Last_Used
+token_prod_01,8f4a2c9e-b1d3-47e2-9c5f-2a8b3d6e1f4c,storage_ops,2023-11-20,2025-11-20,2024-01-15T10:12:44Z
+token_backup_02,c7e9f2a1-3b5d-41c8-8e2f-5d9c4a7b2e6f,backup_svc,2023-10-05,2025-10-05,2024-01-14T23:30:22Z
+token_legacy_03,a2b8d4f1-6c9e-42a5-7d1f-9e3c5b8a2d6f,admin,2022-06-12,2024-06-12,2023-12-01T14:22:10Z
+```
+
+!!! warning "Common errors"
+    **`ssh: connect to host <array_ip> port 22 (tcp) closed`** — Replace `<array_ip>` with the actual management IP of your Pure FlashArray and verify SSH connectivity is enabled on the array.
+    **`pureadmin: command not found`** — Ensure the Pure FlashArray CLI tools are installed on the SSH target system or use the full path to the pureadmin binary (typically `/opt/pureapp/bin/pureadmin`).
+    **`Permission denied (publickey,password)`** — Verify the pureuser account exists on the array and that your SSH key or password authentication is configured correctly.
 Review output and action:
 
 - Remove AD group memberships for any accounts that should no longer have access
@@ -265,6 +385,32 @@ puresnmptrap create --version v3 \
     nms-trap
 ```
 
+
+```text title="Expected output"
+Created SNMPv3 user: monitoring-user
+  Version: v3
+  Auth Protocol: SHA
+  Privacy Protocol: AES
+  Status: enabled
+
+SNMP Configuration:
+Name                Version  Auth Protocol  Privacy Protocol  User              Status
+monitoring-user     v3       SHA            AES               monitoring-user   enabled
+siem-snmp           v3       SHA            AES               monitoring-user   enabled
+
+Created SNMP trap destination: nms-trap
+  Host: 192.168.45.120
+  Version: v3
+  Auth Protocol: SHA
+  Privacy Protocol: AES
+  User: monitoring-user
+  Status: enabled
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid auth passphrase length. Minimum 8 characters required.`** — Ensure both auth and privacy passphrases are at least 8 characters long.
+    **`Error: Host unreachable: 192.168.45.120`** — Verify the trap receiver IP is correct and reachable from the array management network.
+    **`Error: SNMPv3 user 'monitoring-user' already exists`** — Use `puresnmp delete monitoring-user` to remove the existing user before recreating it.
 SNMPv3 is read-only by design on FlashArray — it cannot be used to make configuration changes.
 
 ---

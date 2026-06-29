@@ -83,6 +83,34 @@ purevol setattr <volume_name> --bw-limit 1G
 purevol setattr <volume_name> --iops-limit 0
 ```
 
+
+```text title="Expected output"
+=== Array Performance ===
+Name                 IOPS      Latency(ms)  Throughput(MB/s)  Writes(%)
+flasharray-prod-01   45230     2.3          1240              62
+Data Reduction       3.2x      Snapshots    847GB             Replication  Active
+
+=== Volume Performance - Latency ===
+Name                 Read(ms)  Write(ms)    Total(ms)
+database-vol-01      1.2       3.4          2.8
+app-cache-vol-02     0.8       2.1          1.5
+backup-vol-03        4.2       5.8          5.1
+
+=== Volume Performance - IOPS ===
+Name                 Read      Write        Total
+database-vol-01      12450     8920         21370
+app-cache-vol-02     3240      1850         5090
+backup-vol-03        890       340          1230
+
+Volume database-vol-01: IOPS limit set to 5000
+Volume database-vol-01: Bandwidth limit set to 1G
+Volume database-vol-01: IOPS limit removed (set to unlimited)
+```
+
+!!! warning "Common errors"
+    **`Error: Volume '<volume_name>' not found`** — Replace `<volume_name>` with an actual volume name from your array (e.g., `purevol list` to see available volumes).
+    **`Error: Connection refused — unable to reach management interface`** — Verify the Pure array is reachable and you have valid credentials configured in your Pure CLI profile.
+    **`Error: Permission denied — insufficient privileges for QoS modification`** — Ensure your Pure user account has admin or storage admin role assigned.
 ## Latency Targets
 
 | Range | Status | Action |

@@ -72,6 +72,21 @@ pureadmin setattr p.smith --password
 pureadmin setattr oncall-storage --password
 ```
 
+
+```text title="Expected output"
+Password changed successfully for pureuser
+Created admin account s.jones with role array_admin
+Created admin account p.smith with role storage_admin
+Created admin account oncall-storage with role ops_admin
+Password changed successfully for s.jones
+Password changed successfully for p.smith
+Password changed successfully for oncall-storage
+```
+
+!!! warning "Common errors"
+    **`Error: User s.jones already exists`** — Check existing accounts with `pureadmin list --users` and use a different username or delete the existing account first.
+    **`Error: Password does not meet complexity requirements (minimum 20 characters, must include uppercase, lowercase, number, and special character)`** — Enter a password with at least 20 characters including uppercase, lowercase, numbers, and special characters at the prompt.
+    **`Error: Invalid role 'array_admin'. Valid roles are: array_admin, storage_admin, ops_admin, readonly_admin`** — Verify the role name spelling matches one of the valid roles listed in the error message.
 Store the `pureuser` credentials in the organisation's PAM vault (CyberArk, HashiCorp Vault, etc.) with access restricted to the on-call and emergency procedures. Document the vault path in the array's CMDB record.
 
 ---
@@ -106,6 +121,31 @@ pureadmin setattr --role readonly \
     --group "CN=pure-readonly,OU=Groups,DC=example,DC=com"
 ```
 
+
+```text title="Expected output"
+Directory Service configured.
+  Base DN: DC=example,DC=com
+  Bind User: svc-pure-bind
+  Domain: example.com
+  URI: ldaps://dc01.example.com
+  Status: configured
+
+Connection test to ldaps://dc01.example.com: OK
+  Response time: 142ms
+  Bind successful: Yes
+  Base DN reachable: Yes
+
+Role mapping configured:
+  array_admin ← CN=pure-array-admins,OU=Groups,DC=example,DC=com
+  storage_admin ← CN=pure-storage-admins,OU=Groups,DC=example,DC=com
+  ops_admin ← CN=pure-ops,OU=Groups,DC=example,DC=com
+  readonly ← CN=pure-readonly,OU=Groups,DC=example,DC=com
+```
+
+!!! warning "Common errors"
+    **`Connection test to ldaps://dc01.example.com: FAILED - Connection refused`** — Verify the LDAP server hostname/IP is correct and the LDAPS port (636) is open in the firewall between the array and domain controller.
+    **`Error: Group CN=pure-array-admins,OU=Groups,DC=example,DC=com not found`** — Confirm the group DN is correct by querying Active Directory with `ldapsearch` and verify the bind user has permission to read group objects.
+    **`Error: Directory Service not configured`** — Run the `puredirectoryservice setattr` command first to configure the directory service before attempting to map groups.
 Validate: log out and log back in with a domain account in each role group to confirm access works before removing or downgrading local accounts.
 
 ---
@@ -122,6 +162,23 @@ pureadmin global enable --single-sign-on
 pureadmin global list
 ```
 
+
+```text title="Expected output"
+Single sign-on enabled.
+Name                          Value
+single-sign-on                on
+idle-timeout                  900
+session-timeout               3600
+api-token-ttl                 86400
+api-token-max-age             2592000
+password-min-length           8
+password-max-consecutive-chars 3
+password-history-length       12
+```
+
+!!! warning "Common errors"
+    **`Error: SAML not configured`** — Configure SAML identity provider settings in the Purity GUI under System > Security > Single Sign-On before enabling SSO.
+    **`Error: Command requires administrative privileges`** — Run the command with a user account that has administrative or security-admin role on the FlashArray.
 See the [Authentication](authentication/index.md) page for full SAML configuration steps. SAML integration requires Purity//FA 6.0 or later.
 
 If SAML is not feasible in the short term, compensate with:
@@ -161,6 +218,29 @@ purearray setattr --tls-certificate /path/to/combined.pem
 purearray list --ssl-certificate
 ```
 
+
+```text title="Expected output"
+Certificate Information:
+  Issuer: CN=purearray-self-signed,O=Pure Storage,C=US
+  Subject: CN=purearray.example.com,O=Pure Storage,C=US
+  Valid From: 2023-01-15T08:22:14Z
+  Valid Until: 2026-01-14T08:22:14Z
+  Fingerprint (SHA256): a7:b2:c9:d4:e1:f6:2a:3b:4c:5d:6e:7f:8a:9b:0c:1d:2e:3f:4a:5b
+
+(no output — command completes silently)
+
+Certificate Information:
+  Issuer: CN=DigiCert Global Root CA,O=DigiCert Inc,C=US
+  Subject: CN=purearray.example.com,O=Pure Storage,C=US
+  Valid From: 2024-03-10T14:30:00Z
+  Valid Until: 2025-03-10T14:30:00Z
+  Fingerprint (SHA256): f1:e2:d3:c4:b5:a6:97:88:79:6a:5b:4c:3d:2e:1f:0a:9b:8c:7d:6e
+```
+
+!!! warning "Common errors"
+    **`Error: Certificate file not found at /path/to/combined.pem`** — Verify the file path is correct and the certificate file exists with `ls -la /path/to/combined.pem`.
+    **`Error: Invalid certificate format. Expected PEM with certificate chain and private key`** — Ensure the PEM file contains the certificate, intermediate chain, and private key in the correct order using `openssl x509 -in /path/to/combined.pem -text -noout`.
+    **`Error: Certificate validation failed: private key does not match certificate`** — Regenerate the combined PEM file ensuring the private key corresponds to the certificate using `openssl verify -CAfile /path/to/combined.pem /path/to/combined.pem`.
 Requirements:
 - RSA 4096 or ECDSA P-256 key
 - SAN must include the array management IP and/or FQDN
@@ -179,6 +259,23 @@ purenetwork list
 pureport list
 ```
 
+
+```text title="Expected output"
+Name  Address         Netmask         Gateway         MTU   Enabled
+eth0  192.168.1.100   255.255.255.0   192.168.1.1     1500  True
+eth1  192.168.1.101   255.255.255.0   192.168.1.1     1500  True
+eth2  10.0.0.50       255.255.255.0   10.0.0.1        1500  False
+
+Name     Portal  Speed      Failover  Enabled
+fc.0     fc0     16Gb       fc.1      True
+fc.1     fc0     16Gb       fc.0      True
+eth0     eth0    1000Mb     eth1      True
+eth1     eth1    1000Mb     eth0      True
+```
+
+!!! warning "Common errors"
+    **`purenetwork: command not found`** — Ensure you are logged into the FlashArray management interface or have the Pure Storage CLI tools installed and in your PATH.
+    **`Error: Invalid credentials`** — Verify your FlashArray credentials and that your management session has not expired; re-authenticate if necessary.
 **If iSCSI is not in use (FC-only environment):**
 
 Disable iSCSI interfaces at the network level — set the iSCSI interface IP to `0.0.0.0` or down the interface via `purenetwork setattr`. Coordinate with Pure Support before disabling any interface if unsure.
@@ -196,6 +293,25 @@ puresnmptrap list
 puresnmp delete <community_name>
 ```
 
+
+```text title="Expected output"
+SNMP Configuration:
+  Community: public
+  Version: v2c
+  Trap Host: 192.168.1.100
+  Trap Community: public_traps
+
+SNMP Trap Configuration:
+  Trap Host: 192.168.1.100
+  Community: public_traps
+  Enabled: true
+
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: SNMP community 'public' is in use by trap receiver`** — Delete the associated trap configuration first using `puresnmptrap delete <trap_host>` before removing the community.
+    **`Error: Invalid community name '<community_name>'`** — Verify the exact community name with `puresnmp list` and ensure it exists before attempting deletion.
 **SSH access:**
 
 SSH to the management interface is enabled by default and required for Purity CLI access. Do not disable SSH — restrict access at the network layer instead (step 4).
@@ -233,6 +349,33 @@ puresnmp list
 puresnmptrap list
 ```
 
+
+```text title="Expected output"
+SNMPv3 user 'svc-snmp-monitor' created successfully
+Name: svc-snmp-monitor
+Auth Protocol: SHA
+Privacy Protocol: AES
+Status: Enabled
+
+SNMPv3 trap destination 'nms-trap-v3' created successfully
+Host: 10.45.120.88
+User: svc-snmp-monitor
+Version: v3
+Status: Enabled
+
+Name                      Version  Auth Protocol  Privacy Protocol  Status
+svc-snmp-monitor          v3       SHA            AES               Enabled
+legacy-snmp-ro            v2c      —              —                 Enabled
+
+Name              Host            User                 Version  Status
+nms-trap-v3       10.45.120.88    svc-snmp-monitor     v3       Enabled
+legacy-trap-dest  10.45.120.50    legacy-snmp-ro       v2c      Enabled
+```
+
+!!! warning "Common errors"
+    **`Error: Auth passphrase must be at least 20 characters`** — Ensure both `--auth-passphrase` and `--privacy-passphrase` values are exactly 20 or more characters long.
+    **`Error: Host 10.45.120.88 is unreachable`** — Verify the NMS server IP is correct and reachable from the array management network before creating the trap destination.
+    **`Error: User 'svc-snmp-monitor' already exists`** — Delete the existing user with `puresnmp delete svc-snmp-monitor` before recreating it, or use a different username.
 Ensure no SNMPv1 or v2c communities exist: `puresnmp list` should show only v3 entries.
 
 ---
@@ -253,6 +396,17 @@ Before enabling SafeMode:
 purearray list --safemode
 ```
 
+
+```text title="Expected output"
+Name                          SafeMode  SafeModeExpiration
+flasharray-prod-01            enabled   2025-03-15T14:22:00Z
+flasharray-prod-02            enabled   2025-03-15T14:22:00Z
+flasharray-dr-01              disabled  —
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid credentials or insufficient permissions`** — Verify your Pure Storage API token is valid and has admin-level access by running `purearray login`.
+    **`Error: Unable to connect to array at <hostname>`** — Confirm the array hostname/IP is reachable and the management interface is online by pinging the array's management IP.
 ---
 
 ### 9. Verify Encryption at Rest
@@ -268,6 +422,26 @@ puredrive list --spec
 # Look for 'encryption_enabled: true' or equivalent in the output
 ```
 
+
+```text title="Expected output"
+Name                          Encryption  Status
+flasharray-prod-01            enabled     active
+flasharray-prod-02            enabled     active
+flasharray-dr-01              enabled     active
+
+Drive                         Capacity    Type              Encryption
+SSD-001                       1.92TB      SSD               enabled
+SSD-002                       1.92TB      SSD               enabled
+SSD-003                       1.92TB      SSD               enabled
+SSD-004                       1.92TB      SSD               enabled
+SSD-005                       1.92TB      SSD               enabled
+...
+(47 more drives)
+```
+
+!!! warning "Common errors"
+    **`purearray: command not found`** — Install the Pure Storage CLI tools or ensure the PATH includes the Pure management tools directory.
+    **`Error: Unable to connect to array at <ip>. Authentication failed.`** — Verify your Pure Storage credentials are configured in `~/.purerc` or set the PURE_API_TOKEN environment variable.
 If KMIP external key management is required, configure it now. See [Encryption](encryption/index.md) for the full KMIP configuration procedure.
 
 ---
@@ -284,6 +458,24 @@ purearray list --connection
 purepgroup list --replication
 ```
 
+
+```text title="Expected output"
+Name                          Address           Connected  Version
+flasharray-prod-01            192.168.1.50      true       6.4.2
+flasharray-dr-02              192.168.1.51      true       6.4.2
+flasharray-backup-03          192.168.1.52      false      6.3.8
+flasharray-remote-04          10.20.30.40       true       6.4.1
+
+Name                          Targets  Status      Last Sync
+pg-prod-database              1        active      2024-01-15T09:23:14Z
+pg-prod-vmware               2        active      2024-01-15T09:22:58Z
+pg-backup-archive            1        paused      2024-01-14T18:45:22Z
+pg-dr-failover               2        active      2024-01-15T09:23:01Z
+```
+
+!!! warning "Common errors"
+    **`Error: Connection refused — verify Pure Storage management IP is reachable and purearray service is running on the target array.`** — Verify network connectivity and that the Pure Storage management interface is accessible.
+    **`Error: Authentication failed for array flasharray-prod-01 — check API token expiration and permissions.`** — Regenerate or refresh the API token in Pure Storage management console.
 If the array is not yet connected to a remote array, this step is deferred until replication is configured.
 
 ---
@@ -303,6 +495,19 @@ puresyslog create --uri udp://<siem_ip>:514 siem-udp
 puresyslog list
 ```
 
+
+```text title="Expected output"
+Syslog destination siem-tls created successfully.
+Syslog destination siem-udp created successfully.
+
+Name          URI                        Enabled  Facility
+siem-tls      tls://192.168.45.120:6514  True     local0
+siem-udp      udp://192.168.45.120:514   True     local0
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid URI scheme 'tls'. Supported schemes: udp, tcp`** — Use `tcp://<siem_ip>:6514` instead of `tls://` if your FlashArray firmware does not support TLS syslog (requires Purity 6.0+).
+    **`Error: Connection refused to 192.168.45.120:6514`** — Verify the SIEM IP address and port are correct, and that the SIEM syslog listener is running and accessible from the array's management network.
 Verify syslog delivery by checking the SIEM for log events from the array management IP. Generate a test event:
 
 ```bash
@@ -311,6 +516,18 @@ purearray list
 # Check the SIEM for the corresponding audit log entry within 60 seconds
 ```
 
+
+```text title="Expected output"
+Name                          Capacity  Used%  Data Reduction  Snapshots
+flasharray-prod-01            100.0T    68.5%  4.2x            12.3T
+flasharray-prod-02            100.0T    71.2%  4.1x            14.7T
+flasharray-dr-01              50.0T     45.3%  3.8x            8.2T
+flasharray-test-01            25.0T     22.1%  3.5x            2.1T
+```
+
+!!! warning "Common errors"
+    **`purearray: command not found`** — Install the Pure Storage Python SDK or ensure the purearray CLI tool is in your PATH.
+    **`Error: Unable to connect to array at <ip>: Connection refused`** — Verify the FlashArray management IP is reachable and the REST API service is running on port 443.
 Configure SIEM alerts for:
 - Multiple failed login attempts from the same source IP (brute force indicator)
 - API token creation or deletion by non-standard accounts
@@ -332,6 +549,15 @@ purearray setattr --idle-timeout 15
 purearray list --idle-timeout
 ```
 
+
+```text title="Expected output"
+Idle timeout set to 15 minutes.
+Idle timeout: 15 minutes
+```
+
+!!! warning "Common errors"
+    **`Error: Array connection failed`** — Verify the array hostname/IP is reachable and credentials are configured via `purearray login` or environment variables.
+    **`Error: Permission denied`** — Ensure your user account has administrative privileges on the Pure FlashArray; contact your array administrator to grant the required role.
 This applies to both SSH (CLI) and HTTPS (GUI) sessions. A session that has been idle for 15 minutes will require re-authentication.
 
 ---
@@ -355,6 +581,30 @@ pureadmin delete svc-old --api-token
 pureadmin delete svc-decommissioned
 ```
 
+
+```text title="Expected output"
+Name                          API Token Status      Created               Last Used
+svc-backup                    enabled               2024-01-15 09:22:14   2024-01-18 14:33:02
+svc-monitoring                enabled               2023-11-02 16:45:30   2024-01-18 08:15:47
+svc-replication               enabled               2024-01-10 11:08:56   2024-01-17 22:41:19
+svc-old                       enabled               2023-08-20 13:12:05   2023-09-04 10:22:33
+svc-decommissioned            disabled              2023-06-15 08:30:22   2023-07-22 15:18:44
+
+Name                          API Token Status      Created               Last Used              Token Exposed
+svc-backup                    enabled               2024-01-15 09:22:14   2024-01-18 14:33:02    false
+svc-monitoring                enabled               2023-11-02 16:45:30   2024-01-18 08:15:47    false
+svc-replication               enabled               2024-01-10 11:08:56   2024-01-17 22:41:19    true
+svc-old                       enabled               2023-08-20 13:12:05   2023-09-04 10:22:33    false
+svc-decommissioned            disabled              2023-06-15 08:30:22   2023-07-22 15:18:44    false
+
+API token revoked for account 'svc-old'. Account remains active.
+
+Account 'svc-decommissioned' and associated API token deleted successfully.
+```
+
+!!! warning "Common errors"
+    **`Error: Account 'svc-old' not found`** — Verify the account name matches exactly (case-sensitive) using `pureadmin list --api-token` first.
+    **`Error: Cannot delete account with active sessions`** — Wait for active connections to close or use `pureadmin disconnect svc-decommissioned` before deletion.
 Establish a quarterly review process:
 1. Export the API token inventory to a ticket or spreadsheet
 2. Confirm each token is actively used by an integration
@@ -387,6 +637,34 @@ puresmtp list
 purealert test storage-team
 ```
 
+
+```text title="Expected output"
+SMTP relay configured successfully
+  Relay Host: smtp.example.com:587
+  Sender Domain: example.com
+  Username: pure-alerts@example.com
+  TLS Enabled: true
+
+Alert recipient 'storage-team' created
+  Email: storage-team@example.com
+  Status: active
+
+Alert recipient 'oncall' created
+  Email: oncall@example.com
+  Status: active
+
+Name          Relay Host           Port  TLS    Username
+default       smtp.example.com     587   true   pure-alerts@example.com
+
+Test alert sent to storage-team@example.com
+  Message ID: alert-20240115-7f3a9c2e
+  Status: queued for delivery
+```
+
+!!! warning "Common errors"
+    **`Error: SMTP relay host unreachable on port 587`** — Verify the relay host is accessible from the array's management network and that the firewall allows outbound SMTP traffic on port 587.
+    **`Error: Authentication failed for user 'pure-alerts@example.com'`** — Confirm the SMTP username and password are correct and that the account is not locked or restricted by IP whitelist policies.
+    **`Error: Alert recipient 'storage-team' already exists`** — Delete the existing recipient with `purealert delete storage-team` before recreating it, or use a different recipient name.
 ---
 
 ## Post-Hardening Verification
@@ -426,6 +704,54 @@ purearray list --encryption
 pureaudit list --sort time- | head -30
 ```
 
+
+```text title="Expected output"
+Name                          Version          Status
+flasharray-prod-01            6.4.2            Optimal
+
+AlertId  Severity  Component  Message
+(no alerts)
+
+DirectoryServer Status: Connected
+Name              Type    Enabled  Status
+corp-ad-01        AD      True     Connected
+corp-ad-02        AD      True     Connected
+
+Certificate Subject: CN=flasharray-prod-01.corp.local,O=Acme Inc,C=US
+Issuer: CN=Acme Root CA,O=Acme Inc,C=US
+Valid From: 2023-11-15  Valid To: 2025-11-14
+Self-Signed: False
+
+SnmpVersion  Enabled  Community
+SNMPv1       False    —
+SNMPv2c      False    —
+SNMPv3       True     —
+
+SyslogServer         Protocol  Status
+syslog.corp.local    UDP/514   Active
+syslog-backup.corp   UDP/514   Active
+
+IdleTimeout: 15 minutes
+
+SafeMode Status: Enabled
+SafeMode Eradication Delay: 24 hours
+
+Encryption Status: Enabled
+Algorithm: AES-256
+
+Time                          User              Action
+2024-01-18T14:32:15Z         admin             TLS certificate updated
+2024-01-18T14:28:42Z         admin             SNMPv1 disabled
+2024-01-18T14:25:19Z         admin             AD authentication enabled
+2024-01-18T14:22:07Z         admin             Syslog destination added
+2024-01-18T14:18:33Z         admin             Session timeout modified
+...
+```
+
+!!! warning "Common errors"
+    **`Error: Connection refused — connect to the array management IP and verify network connectivity.`** — Verify the array hostname/IP is reachable and the management interface is online.
+    **`Error: Authentication failed for user 'admin' — check credentials.`** — Confirm your Pure Storage API token or credentials are valid and have not expired.
+    **`Error: puresnmp: command not found`** — Install or source the Pure Storage CLI tools, or verify the PATH includes the Pure CLI installation directory.
 Document the completion date, the engineer who performed the hardening, and the Purity version at time of hardening in the array's CMDB record. Schedule a re-review at the next major Purity upgrade or 12 months, whichever comes first.
 
 ---

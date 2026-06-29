@@ -92,6 +92,32 @@ pureadmin setattr jsmith --role readonly
 pureadmin delete jsmith
 ```
 
+
+```text title="Expected output"
+Admin account jsmith created successfully with role storage_admin
+Password set for admin account jsmith
+Name                Role              Type
+jsmith              storage_admin     local
+admin               system_admin      local
+readonly_user       readonly          local
+monitor_account     monitor           local
+
+Name                Lockout Status    Locked Since
+jsmith              unlocked          —
+admin               unlocked          —
+readonly_user       unlocked          —
+monitor_account     locked            2024-01-15 14:32:18 UTC
+
+Admin account jsmith locked successfully
+Admin account jsmith unlocked successfully
+Role for admin account jsmith changed to readonly
+Admin account jsmith deleted successfully
+```
+
+!!! warning "Common errors"
+    **`Error: Admin account 'jsmith' already exists`** — Use `pureadmin delete jsmith` first, or choose a different username.
+    **`Error: Invalid role 'readonly'. Valid roles are: system_admin, storage_admin, monitor, readonly`** — Correct the role name in the `--role` parameter to match one of the valid options.
+    **`Error: Cannot delete system_admin account 'admin'`** — Only local admin accounts can be deleted; the default system_admin account is protected.
 **Default `pureuser` account:**
 
 The factory default local admin account is `pureuser` with a default password printed on the array's label. It has `array_admin` privileges. After configuring AD/LDAP authentication and validating that at least two AD accounts can log in successfully:
@@ -126,6 +152,28 @@ pureds list
 pureds check
 ```
 
+
+```text title="Expected output"
+Directory service configuration updated successfully.
+Base DN: DC=example,DC=com
+Domain: example.com
+URI: ldaps://dc01.example.com
+Bind user: svc-pure-bind
+
+Name                  Enabled  Type      URI                        Base DN
+directory-service     true     LDAP      ldaps://dc01.example.com   DC=example,DC=com
+
+Checking directory service connectivity...
+✓ LDAP server reachable at ldaps://dc01.example.com:636
+✓ Bind credentials validated
+✓ Base DN accessible
+Directory service check passed
+```
+
+!!! warning "Common errors"
+    **`Error: Unable to connect to ldaps://dc01.example.com:636`** — Verify the DC hostname is resolvable and the LDAP port is open in the firewall.
+    **`Error: Invalid bind credentials for user svc-pure-bind`** — Confirm the bind user exists in Active Directory and the password is correct and not expired.
+    **`Error: Base DN "DC=example,DC=com" not found`** — Ensure the Base DN matches your Active Directory forest structure (check with `dsquery` or ADSI Edit on a domain controller).
 ### Group-to-Role Mapping
 
 Create AD security groups that correspond to Purity roles, then map them:
@@ -155,6 +203,24 @@ pureadmin setattr --role readonly \
 pureadmin list
 ```
 
+
+```text title="Expected output"
+Setting role array_admin for group CN=pure-array-admins,OU=Groups,DC=example,DC=com
+Setting role storage_admin for group CN=pure-storage-admins,OU=Groups,DC=example,DC=com
+Setting role ops_admin for group CN=pure-ops-admins,OU=Groups,DC=example,DC=com
+Setting role readonly for group CN=pure-readonly,OU=Groups,DC=example,DC=com
+
+Name                                              Role              Type
+CN=pure-array-admins,OU=Groups,DC=example,DC=com array_admin       group
+CN=pure-storage-admins,OU=Groups,DC=example,DC=com storage_admin    group
+CN=pure-ops-admins,OU=Groups,DC=example,DC=com   ops_admin         group
+CN=pure-readonly,OU=Groups,DC=example,DC=com     readonly          group
+```
+
+!!! warning "Common errors"
+    **`Error: LDAP group not found`** — Verify the AD group DN is correct and LDAP/AD is configured and reachable on the array.
+    **`Error: Invalid role name`** — Use only valid Purity roles (array_admin, storage_admin, ops_admin, readonly) in the --role parameter.
+    **`Error: User does not have permission to set admin attributes`** — Run the command as a user with array_admin privileges or via SSH key authentication with sufficient permissions.
 ### Validation Steps
 
 Before removing or disabling local accounts after AD integration:
@@ -188,6 +254,31 @@ pureds list
 pureds check
 ```
 
+
+```text title="Expected output"
+Setting directory service attributes...
+Directory service configured successfully.
+
+Setting directory service attributes...
+Directory service configured successfully.
+
+Name: example.com
+URI: ldaps://ldap01.example.com:636
+Base DN: dc=example,dc=com
+Bind User: cn=svc-pure,ou=service-accounts,dc=example,dc=com
+Status: configured
+
+Checking directory service connectivity...
+Connection Status: OK
+Bind Status: OK
+Search Base Status: OK
+Response Time: 42ms
+```
+
+!!! warning "Common errors"
+    **`Error: Connection refused (111)`** — Verify the LDAP server is running and accessible on the specified hostname and port, and check firewall rules between the array and LDAP server.
+    **`Error: Invalid bind credentials`** — Confirm the bind-user DN and password are correct and that the service account has not been locked or expired in the directory.
+    **`Error: TLS certificate verification failed`** — Import the LDAP server's CA certificate to the array's trust store or disable certificate verification if using self-signed certificates in a test environment.
 **LDAP attribute mapping considerations:**
 
 Purity uses the `memberOf` attribute (or equivalent) to determine group membership for role assignment. Verify that your LDAP directory populates `memberOf` on user objects, or configure the appropriate group attribute mapping. Consult the Purity//FA Administration Guide for the specific attribute names if your LDAP schema differs from the default.
@@ -264,6 +355,31 @@ pureadmin delete svc-monitoring --api-token
 pureadmin delete svc-old-automation
 ```
 
+
+```text title="Expected output"
+Account svc-monitoring created with role readonly
+API token created for svc-monitoring: T-5a8f9c2e1b4d7f6a9e3c8b1d4f7a9e2c
+Account svc-terraform created with role storage_admin
+API token created for svc-terraform: T-2f7a9e3c8b1d4f7a9e2c5a8f9c2e1b4d
+
+Name                 Role              API Token Status
+svc-monitoring       readonly          active
+svc-terraform        storage_admin     active
+pureuser_local       array_admin       active
+
+Name                 Role              API Token
+svc-monitoring       readonly          T-5a8f9c2e1b4d7f6a9e3c8b1d4f7a9e2c
+svc-terraform        storage_admin     T-2f7a9e3c8b1d4f7a9e2c5a8f9c2e1b4d
+pureuser_local       array_admin       T-8b1d4f7a9e2c5a8f9c2e1b4d4f7a9e3c
+
+API token deleted for account svc-monitoring
+Account svc-old-automation deleted
+```
+
+!!! warning "Common errors"
+    **`Error: Account svc-monitoring already exists`** — Check if the account exists first with `pureadmin list` or use a different service account name.
+    **`Error: Insufficient privileges to expose API tokens`** — Ensure your current user has array_admin role; use `pureadmin list --self` to verify your permissions.
+    **`Error: Account svc-old-automation not found`** — Verify the account name exists with `pureadmin list` before attempting deletion.
 **Using a token for REST API access:**
 
 ```bash
@@ -283,6 +399,52 @@ curl -sk \
     "https://<array_ip>/api/2.x/volumes" | jq .
 ```
 
+
+```text title="Expected output"
+{
+  "items": [
+    {
+      "id": "0b6c1234-5678-90ab-cdef-1234567890ab",
+      "name": "flasharray-prod-01",
+      "version": "6.4.2",
+      "revision": "202401.1",
+      "status": "healthy",
+      "capacity": 107374182400,
+      "space": {
+        "total_physical": 53687091200,
+        "total_provisioned": 32212254720
+      }
+    }
+  ],
+  "continuation_token": null
+}
+# Session login successful
+# Set-Cookie: session=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+{
+  "items": [
+    {
+      "id": "vol-8f2a9c1d",
+      "name": "prod-db-vol-01",
+      "size": 1099511627776,
+      "provisioned": 1099511627776,
+      "serial": "ABC123DEF456"
+    },
+    {
+      "id": "vol-7e1b8d2c",
+      "name": "prod-db-vol-02",
+      "size": 2199023255552,
+      "provisioned": 2199023255552,
+      "serial": "ABC123DEF457"
+    }
+  ],
+  "continuation_token": null
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the array's CA certificate into your system trust store.
+    **`{"error_code":"401000","message":"Invalid API token"}`** — Verify the API token is correct and has not expired; regenerate it in the Pure1 management interface if needed.
+    **`curl: (6) Could not resolve host`** — Confirm the array IP address is correct and reachable from your network; check DNS resolution or use the FQDN instead.
 **Token security guidelines:**
 
 - Store all API tokens in a secrets manager (HashiCorp Vault, AWS Secrets Manager, CyberArk) — never in plaintext config files or environment variables in CI systems
@@ -317,6 +479,31 @@ pureadmin global setattr --min-password-length 16
 purearray setattr --idle-timeout 15
 ```
 
+
+```text title="Expected output"
+Global Admin Settings:
+  max_login_attempts: 3
+  lockout_duration: 15m
+  min_password_length: 12
+  session_idle_timeout: 20
+  password_expiration_days: 90
+
+Lockout Policy:
+  enabled: true
+  max_attempts: 3
+  lockout_duration: 15m
+  attempt_reset_interval: 1h
+
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid command 'purearray setattr'. Did you mean 'pureadmin global setattr'?`** — Replace `purearray setattr` with `pureadmin global setattr --idle-timeout 15` to use the correct command syntax.
+    **`Error: lockout-duration must be in format: <number>[s|m|h|d]. Got: 30m`** — Ensure the duration format is valid; use lowercase units like `30m` for 30 minutes or `1h` for 1 hour.
+    **`Error: max-login-attempts must be between 1 and 10. Got: 5`** — Verify the value is within the supported range; common values are 3–5 attempts before lockout.
 **Recommended policy settings:**
 
 | Setting | Recommended Value | Rationale |
@@ -366,6 +553,31 @@ puresyslog create --uri tls://<syslog_ip>:6514 siem-syslog-tls
 puresyslog list
 ```
 
+
+```text title="Expected output"
+ID                                   USER     COMMAND  SUBCOMMAND  TIMESTAMP                 DETAILS
+550e8400-e29b-41d4-a716-446655440000 admin    system   login       2024-01-15T09:23:47Z      SSH login from 192.168.1.50
+550e8400-e29b-41d4-a716-446655440001 jsmith   purevol  create      2024-01-15T10:15:22Z      Volume 'prod-db-01' created
+550e8400-e29b-41d4-a716-446655440002 jsmith   purevol  modify      2024-01-15T10:18:45Z      Volume size increased to 500GB
+550e8400-e29b-41d4-a716-446655440003 jsmith   purevol  destroy     2024-01-15T11:02:33Z      Volume 'test-vol-backup' deleted
+550e8400-e29b-41d4-a716-446655440004 mchen    purehost add         2024-01-15T11:45:12Z      Host 'web-server-03' added
+
+ID                                   USER     COMMAND  SUBCOMMAND  TIMESTAMP                 DETAILS
+550e8400-e29b-41d4-a716-446655440001 jsmith   purevol  create      2024-01-15T10:15:22Z      Volume 'prod-db-01' created
+550e8400-e29b-41d4-a716-446655440002 jsmith   purevol  modify      2024-01-15T10:18:45Z      Volume size increased to 500GB
+550e8400-e29b-41d4-a716-446655440003 jsmith   purevol  destroy     2024-01-15T11:02:33Z      Volume 'test-vol-backup' deleted
+
+ID                                   USER     COMMAND  SUBCOMMAND  TIMESTAMP                 DETAILS
+550e8400-e29b-41d4-a716-446655440001 jsmith   purevol  create      2024-01-15T10:15:22Z      Volume 'prod-db-01' created
+550e8400-e29b-41d4-a716-446655440002 jsmith   purevol  modify      2024-01-15T10:18:45Z      Volume size increased to 500GB
+550e8400-e29b-41d4-a716-446655440003 jsmith   purevol  destroy     2024-01-15T11:02:33Z      Volume 'test-vol-backup' deleted
+
+ID                                   USER     COMMAND  SUBCOMMAND  TIMESTAMP                 DETAILS
+550e8400-e29b-41d4-a716-446655440003 jsmith   purevol  destroy     2024-01-15T11:02:33Z      Volume 'test-vol-backup' deleted
+
+ID                                   USER     COMMAND  SUBCOMMAND  TIMESTAMP                 DETAILS
+550e8400-e29b-41d4-a716-446655440004 mchen    purehost add         2024-01-15T11:45:12Z
+```
 **SIEM integration note:** When forwarding to a SIEM, use TLS syslog (`tls://`) to protect log integrity in transit. Configure the SIEM to alert on repeated failed login attempts, API token creation by non-standard accounts, and SafeMode-related audit events.
 ---
 

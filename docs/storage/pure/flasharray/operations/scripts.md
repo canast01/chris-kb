@@ -194,6 +194,31 @@ export FA_API_TOKEN=your-token-here
 python fa_health.py
 ```
 
+
+```text title="Expected output"
+Collecting py-pure-client
+  Downloading py-pure-client-1.28.0-py3-none-any.whl (156 kB)
+     |████████████████████████████████| 156 kB 2.3 MB/s
+Installing collected packages: py-pure-client
+Successfully installed py-pure-client-1.28.0
+FlashArray Health Check Report
+==============================
+Array Name: FA-m70-prod-01
+Model: FlashArray//m70
+OS Version: 6.4.2.1
+Capacity: 147.2 TB
+Used: 89.5 TB (60.8%)
+Available: 57.7 TB (39.2%)
+Health Status: Optimal
+Connected Hosts: 12
+Active Volumes: 847
+Last Snapshot: 2024-01-15 14:32:18 UTC
+```
+
+!!! warning "Common errors"
+    **`ModuleNotFoundError: No module named 'py_pure_client'`** — Ensure pip installed the package correctly and your Python environment matches the one in your PATH.
+    **`ConnectionError: Failed to connect to 192.168.1.10:443`** — Verify the FA_HOST IP is reachable and the FlashArray management interface is accessible on port 443.
+    **`AuthenticationError: Invalid API token`** — Confirm the FA_API_TOKEN environment variable contains a valid, non-expired API token from the FlashArray management console.
 ---
 
 ## ActiveCluster Pod Status Monitor (Python)
@@ -310,6 +335,24 @@ export FA2_API_TOKEN=token-for-array2
 python fa_activecluster.py
 ```
 
+
+```text title="Expected output"
+Pure FlashArray Active Cluster Manager v2.3.1
+Loading configuration from environment variables...
+FA1_HOST: 192.168.1.10
+FA2_HOST: 192.168.1.11
+Connecting to array 1 (192.168.1.10)... OK
+Connecting to array 2 (192.168.1.11)... OK
+Verifying cluster quorum... OK
+Active cluster status: HEALTHY
+Replication lag: 2.3ms
+Last sync: 2024-01-15 14:32:18 UTC
+```
+
+!!! warning "Common errors"
+    **`Error: Connection refused to 192.168.1.10:443`** — Verify the FA1_HOST IP address is correct and the array is reachable with `ping 192.168.1.10`.
+    **`Error: Invalid API token for array 1`** — Confirm FA1_API_TOKEN is current by regenerating it in the Pure FlashArray management console.
+    **`Error: Cluster quorum lost - only 1 array responding`** — Ensure both arrays are powered on and network connectivity exists between them using `ssh` or management interface checks.
 ---
 
 ## Volume and Snapshot Report (Bash)
@@ -380,6 +423,35 @@ echo
 echo "Note: Snapshots older than ${SNAP_AGE_WARN_DAYS} days flagged for capacity review."
 ```
 
+
+```text title="Expected output"
+=== FlashArray Volume Report: flasharray01 ===
+Time: Thu Mar 14 09:42:17 UTC 2024
+
+--- Volumes ---
+VOLUME                              SIZE       USED      REDUC  CONNECTIONS
+------------------------------------------------------------------------------------------
+prod-db-01                          2.0T       1.8T       2.1x  host-db-01,host-db-02
+prod-db-02                          2.0T       1.6T       2.3x  host-db-03
+prod-app-cache                      500G       420G       1.8x  app-srv-01,app-srv-02,app-srv-03
+backup-vault-weekly                 5.0T       3.2T       1.5x  backup-host-01
+dev-test-vol                        1.0T       240G       1.2x  -
+
+--- Snapshots (flagging age > 30 days) ---
+SNAPSHOT                                           CREATED                   SIZE  FLAG
+----------------------------------------------------------------------------------------------------
+prod-db-01.2024-02-10-0200                         2024-02-10 02:00:00     180G  OLD (33d)
+prod-db-01.2024-03-10-0200                         2024-03-10 02:00:00     185G  OK
+prod-app-cache.2024-01-15-1800                     2024-01-15 18:00:00      95G  OLD (58d)
+backup-vault-weekly.2024-03-14-0100                2024-03-14 01:00:00     520G  OK
+
+Note: Snapshots older than 30 days flagged for capacity review.
+```
+
+!!! warning "Common errors"
+    **`FA_HOST: unset variable`** — Set the FA_HOST environment variable before running the script: `export FA_HOST=flasharray01`.
+    **`command not found: purevol`** — Install or add the Pure Storage CLI tools to PATH: verify `which purevol` returns a valid path.
+    **`date: invalid date 'YYYY-MM-DD HH:MM:SS'`** — Ensure snapshot timestamps match the system's date format; use `date --version` to verify GNU vs BSD date compatibility.
 ---
 
 ## Drive Failure Alert (Bash)
@@ -442,6 +514,28 @@ else
 fi
 ```
 
+
+```text title="Expected output"
+DRIVE               TYPE         STATUS         CAPACITY   BLADE/SHELF
+--------------------------------------------------------------------------------
+SSD.1               SSD          healthy        1.92TB     CH1.LUN0
+SSD.2               SSD          healthy        1.92TB     CH1.LUN1
+SSD.3               SSD          healthy        1.92TB     CH1.LUN2
+SSD.4               SSD          healthy        1.92TB     CH2.LUN0
+SSD.5               SSD          failed         1.92TB     CH2.LUN1
+SSD.6               SSD          healthy        1.92TB     CH2.LUN2
+SSD.7               SSD          healthy        1.92TB     CH3.LUN0
+SSD.8               SSD          predictive_fail 1.92TB     CH3.LUN1
+
+Total drives: 8  |  Non-healthy: 2
+ALERT: 2 drive(s) in non-healthy state on flasharray01
+Open a Pure Storage support case immediately.
+```
+
+!!! warning "Common errors"
+    **`FA_HOST: unbound variable`** — Export FA_HOST and FA_API_TOKEN as environment variables before running the script: `export FA_HOST=flasharray01 FA_API_TOKEN=token_value`.
+    **`puredrive: command not found`** — Install the Pure Storage Python SDK and CLI tools, or ensure the `puredrive` command is in your PATH by sourcing the Pure environment setup script.
+    **`error: invalid hostname`** — Verify the FlashArray hostname or IP is resolvable and reachable from your network: `ping $FA_HOST` and check DNS or /etc/hosts.
 ---
 
 ## Ansible FlashArray Health Playbook
@@ -751,6 +845,51 @@ echo "=== Daily check complete: $PASS passed, $FAIL failed ==="
 [[ $FAIL -gt 0 ]] && exit 2 || exit 0
 ```
 
+
+```text title="Expected output"
+=== FlashArray Daily Check: flasharray01 — Wed Jan 15 09:42:17 UTC 2025 ===
+
+--- Array Status ---
+Name            Status          Revision
+flasharray01    healthy         20231204.001
+[PASS] Array reachable
+
+--- Controller Status ---
+Controller      Status          Mode
+CT0.flasharray01 healthy        Active
+CT1.flasharray01 healthy        Standby
+[PASS] Both controllers healthy
+
+--- Active Alerts ---
+Severity        Code            Message                         Created
+warning         HARDWARE_ALERT  Fan speed degraded on CT0       2025-01-15T08:30:22Z
+[PASS] No critical alerts
+
+--- Drive Health ---
+Index           Status          Capacity
+0               healthy         1.92TB
+1               healthy         1.92TB
+2               healthy         1.92TB
+3               healthy         1.92TB
+[PASS] All drives healthy
+
+--- Array Space ---
+Name            Capacity        Used            Available
+flasharray01    7.68TB          4.21TB          3.47TB
+[PASS] Space data collected
+
+--- Pod Status ---
+Name            Status          Arrays
+pod-dr-01       online          flasharray01,flasharray02
+[PASS] Pods OK (or none configured)
+
+=== Daily check complete: 6 passed, 0 failed ===
+```
+
+!!! warning "Common errors"
+    **`FA_HOST: unbound variable`** — Set the FA_HOST environment variable before running the script: `export FA_HOST=flasharray01`.
+    **`purearray: command not found`** — Install the Pure Storage Python SDK and CLI tools, or ensure they are in your PATH: `pip install purestorage && export PATH=$PATH:/opt/purearray/bin`.
+    **`SSL: CERTIFICATE_VERIFY_FAILED`** — Disable SSL verification for self-signed certificates by setting `export PURENETWORK_VERIFY_SSL=false` before running the script.
 ---
 
 ## Pre-Change Validation Script (Bash)
@@ -815,6 +954,23 @@ fi
 echo -e "${GRN}PRE-CHECK PASSED — safe to proceed with maintenance.${NC}"
 ```
 
+
+```text title="Expected output"
+=== FlashArray Pre-Change Check: flasharray01 — Wed Jan 15 14:32:47 UTC 2025 ===
+
+[OK]   Array reachable
+[OK]   Both controllers healthy
+[OK]   No critical alerts
+[OK]   All drives healthy
+[OK]   All pods online (or none configured)
+
+PRE-CHECK PASSED — safe to proceed with maintenance.
+```
+
+!!! warning "Common errors"
+    **`FA_HOST: parameter null or not set`** — Export FA_HOST and FA_API_TOKEN environment variables before running the script: `export FA_HOST=flasharray01 FA_API_TOKEN=<token>`.
+    **`purearray: command not found`** — Install the Pure Storage Python SDK and CLI tools on the system: `pip install purestorage && apt-get install pure-storage-cli` (or equivalent for your OS).
+    **`[FAIL] Array unreachable`** — Verify network connectivity to the FlashArray management IP and confirm FA_HOST resolves correctly: `ping $FA_HOST && nslookup $FA_HOST`.
 ---
 
 ## Post-Change Validation Script (Bash)
@@ -885,6 +1041,23 @@ fi
 echo -e "${GRN}POST-CHECK PASSED — change completed successfully.${NC}"
 ```
 
+
+```text title="Expected output"
+=== FlashArray Post-Change Check: flasharray01 — Wed Jan 15 14:32:18 UTC 2025 ===
+
+[OK]   Array reachable
+[OK]   Both controllers healthy
+[OK]   No critical alerts
+[OK]   All drives healthy
+[OK]   All pods online — replication active
+
+POST-CHECK PASSED — change completed successfully.
+```
+
+!!! warning "Common errors"
+    **`FA_HOST: parameter null or not set`** — Export FA_HOST and FA_API_TOKEN environment variables before running the script: `export FA_HOST=flasharray01 FA_API_TOKEN=<token>`.
+    **`purearray: command not found`** — Install the Pure Storage Python SDK and CLI tools on the host running this script.
+    **`Connection refused` or `Unable to reach array`** — Verify network connectivity to the FlashArray management interface and confirm FA_HOST resolves correctly with `ping $FA_HOST`.
 ---
 
 ## Incident Triage Script (Bash)
@@ -942,6 +1115,75 @@ echo "========================================================"
 echo "Triage collection complete. Output saved to: $OUTFILE"
 ```
 
+
+```text title="Expected output"
+FlashArray Incident Triage — Array: flasharray01 — Wed Jan 15 14:32:18 UTC 2025
+========================================================
+
+### Array Info ###
+Timestamp: 2025-01-15 14:32:18
+
+Name                          Revision   Serial                OS Version
+flasharray01                  PureOS 6.4.2  5f7e3c9b-2a1d-4e6f-9c2b  6.4.2.1234
+
+### Controller Status ###
+Timestamp: 2025-01-15 14:32:18
+
+Controller  Status   Mode      Temperature  Model
+CT0         OK       Active    32°C         FA-405R3
+CT1         OK       Standby   31°C         FA-405R3
+
+### Active Alerts ###
+Timestamp: 2025-01-15 14:32:18
+
+Severity  Code      Message                                    Opened
+warning   CTRL_TEMP Controller 0 temperature elevated          2025-01-15T13:45:22Z
+info      DISK_PRED Drive SSD-0.1 predictive failure detected 2025-01-15T12:10:05Z
+
+### Drive Status ###
+Timestamp: 2025-01-15 14:32:18
+
+Name       Status  Capacity  Used    Type
+SSD-0.0    OK      3.84TB    2.1TB   SSD
+SSD-0.1    FAILED  3.84TB    2.1TB   SSD
+SSD-1.0    OK      3.84TB    1.9TB   SSD
+...
+
+### Volume List with Space ###
+Timestamp: 2025-01-15 14:32:18
+
+Name              Size      Used      Snapshots  Thin Provisioned
+prod-db-01        500GB     387GB     12         Yes
+backup-tier-02    2TB       1.8TB     5          No
+...
+
+### Host Connections ###
+Timestamp: 2025-01-15 14:32:18
+
+Name          IQN/WWN                              Connected Volumes
+esx-host-04   iqn.1998-01.com.vmware:esx-host-04  prod-db-01, prod-db-02
+app-server-12 iqn.1998-01.com.company:app-12      backup-tier-02
+
+### Pod Status (ActiveCluster) ###
+Timestamp: 2025-01-15 14:32:18
+
+Name              Status  Arrays
+cluster-us-east  OK      flasharray01, flasharray02
+
+### Snapshot List (most recent 50) ###
+Timestamp: 2025-01-15 14:32:18
+
+Source              Snapshot Name                 Created              Size
+prod-db-01          prod-db-01.hourly.2025011514  2025-01-15T14:00:00Z 387GB
+prod-db-01          prod-db-01.hourly.2025011513  2025-01-15T13:00:00Z 386GB
+...
+
+### Array Performance (1 sample) ###
+Timestamp: 2025-01-15 14:32:18
+
+Time                 Read_IOPS  Write_IOPS  Latency_ms  Throughput_MB_s
+2025-01-15T14:32
+```
 ---
 
 ## Verify

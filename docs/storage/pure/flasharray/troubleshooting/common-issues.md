@@ -150,6 +150,41 @@ purehw list
 purealert list --filter "severity='error'"
 ```
 
+
+```text title="Expected output"
+Name                    Status      Capacity  Serial
+drive.0                 healthy     1.92TB    PD-ABC123XYZ001
+drive.1                 healthy     1.92TB    PD-ABC123XYZ002
+drive.2                 failed      1.92TB    PD-ABC123XYZ003
+drive.3                 healthy     1.92TB    PD-ABC123XYZ004
+drive.4                 recovering  1.92TB    PD-ABC123XYZ005
+drive.5                 healthy     1.92TB    PD-ABC123XYZ006
+
+Name                    Status      Capacity  Progress  Time_Remaining
+drive.4                 recovering  1.92TB    67%       2h 14m
+
+Name                    Status      Capacity  Serial
+drive.2                 failed      1.92TB    PD-ABC123XYZ003
+drive.4                 recovering  1.92TB    PD-ABC123XYZ005
+
+Component_ID            Status      Details
+psu.0                   ok          Power Supply 0
+psu.1                   ok          Power Supply 1
+fan.0                   warning     Fan speed degraded
+fan.1                   ok          Fan 1
+controller.0            ok          Controller A
+controller.1            ok          Controller B
+
+Timestamp                Severity  Component      Message
+2024-01-15T09:42:18Z     error     drive.2        Drive failure detected in bay 2
+2024-01-15T09:43:05Z     error     array.rebuild  Rebuild started for drive.2
+2024-01-15T10:12:33Z     warning   fan.0          Fan speed below threshold
+```
+
+!!! warning "Common errors"
+    **`puredrive: command not found`** — Ensure the Pure Storage CLI tools are installed and the PATH includes the Pure bin directory, or use the full path `/opt/purearray/bin/puredrive`.
+    **`Error: Array unreachable or authentication failed`** — Verify network connectivity to the array management IP and confirm your credentials are valid with `pureadmin list --credentials`.
+    **`purealert: invalid filter syntax`** — Use proper filter syntax with quotes: `purealert list --filter "severity=error"` (remove single quotes around the value).
 ### Resolution
 
 | Scenario | Action |
@@ -170,6 +205,21 @@ puredrive list
 # Confirm new drive transitions from 'recovering' to 'healthy'
 ```
 
+
+```text title="Expected output"
+Name                    Status      Capacity  Serial
+SSD.DAE.1.0             healthy     1.6TB     1234567890ABCDEF
+SSD.DAE.1.1             healthy     1.6TB     1234567890ABCDEG
+SSD.DAE.1.2             recovering  1.6TB     1234567890ABCDEH
+SSD.DAE.1.3             healthy     1.6TB     1234567890ABCDEI
+SSD.DAE.2.0             healthy     1.6TB     1234567890ABCDEJ
+SSD.DAE.2.1             healthy     1.6TB     1234567890ABCDEK
+...
+```
+
+!!! warning "Common errors"
+    **`puredrive: command not found`** — Ensure you are logged into the FlashArray management interface or have the Pure Storage CLI tools installed and in your PATH.
+    **`Error: Invalid credentials or insufficient permissions`** — Verify your user account has administrative privileges on the FlashArray and re-authenticate if necessary.
 ---
 
 ## Host Loses All Paths to Volumes
@@ -200,6 +250,42 @@ purealert list
 purearray list --controller
 ```
 
+
+```text title="Expected output"
+Name     Address          Connected  
+host-prod-01  192.168.1.45     true       
+host-prod-02  192.168.1.46     true       
+host-dev-01   192.168.1.50     false      
+...
+
+Name     Speed  Status  
+fc.0     16Gbps online  
+fc.1     16Gbps online  
+fc.2     16Gbps offline 
+fc.3     16Gbps online  
+
+Initiator                          Host           
+50:00:14:40:5a:2b:c1:d0           host-prod-01   
+50:00:14:40:5a:2b:c1:d1           host-prod-02   
+50:00:14:40:5a:2b:c1:e2           host-dev-01    
+
+WWN                    Host Name        
+50:00:14:40:5a:2b:c1:d0  host-prod-01   
+50:00:14:40:5a:2b:c1:d1  host-prod-02   
+
+Severity  Code    Message                              Created              
+warning   PFC001  FC port fc.2 link down              2024-01-15T09:23:44Z 
+info      HCN002  Host host-dev-01 offline            2024-01-15T08:15:12Z 
+
+Controller  Status   Model          Version        
+CT0         healthy  FA-m70         8.2.4.1234     
+CT1         healthy  FA-m70         8.2.4.1234
+```
+
+!!! warning "Common errors"
+    **`Error: connection failed to array at 192.168.1.100`** — Verify the array management IP is reachable and the Pure1 REST API service is running with `ssh <array-mgmt-ip> purealert list`.
+    **`Error: invalid option '--connection'`** — Use `purehost list` without the `--connection` flag; connection status is shown in the output by default.
+    **`Error: unauthorized: insufficient privileges`** — Ensure your Pure1 API token has read permissions for host and port objects; regenerate the token in Pure1 if needed.
 **Host-side diagnostics (Linux):**
 
 ```bash
@@ -216,6 +302,38 @@ systool -c fc_host -v | grep -E "(host_name|port_name|port_state)"
 iscsiadm -m session
 ```
 
+
+```text title="Expected output"
+mpatha (360a98000534d41386b324e6c41786945) dm-0 PURE,FlashArray
+size=10T features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
+|-+- policy='service-time 0' prio=50 status=active
+| |- 2:0:0:1 sdb 8:16 active ready running
+| `- 3:0:0:1 sdc 8:32 active ready running
+`-+- policy='service-time 0' prio=10 status=enabled
+  |- 4:0:0:1 sdd 8:48 active ready running
+  `- 5:0:0:1 sde 8:64 active ready running
+
+hcil dev dev_name host_state
+2:0:0:1  sdb 360a98000534d41386b324e6c41786945 active ready
+3:0:0:1  sdc 360a98000534d41386b324e6c41786945 active ready
+4:0:0:1  sdd 360a98000534d41386b324e6c41786945 active ready
+5:0:0:1  sde 360a98000534d41386b324e6c41786945 active ready
+
+  Attribute: host_name
+    Value: host2
+  Attribute: port_name
+    Value: 50:00:14:40:5b:2d:a0:01
+  Attribute: port_state
+    Value: Online
+
+tcp: [192.168.1.45]:3260,[1] 192.168.1.100:3260 iqn.1991-05.com.purestorage:flasharray.1234567890abcdef
+tcp: [192.168.1.46]:3260,[2] 192.168.1.101:3260 iqn.1991-05.com.purestorage:flasharray.1234567890abcdef
+```
+
+!!! warning "Common errors"
+    **`multipath: command not found`** — Install device-mapper-multipath package with `yum install device-mapper-multipath` or `apt-get install multipath-tools`.
+    **`multipathd: unrecognized command 'show paths'`** — Use `multipathd show topology` or `multipathd show maps` instead; older versions may not support 'show paths'.
+    **`iscsiadm: No active sessions`** — Verify iSCSI target discovery with `iscsiadm -m discovery -t st -p <target_ip>` and log in with `iscsiadm -m node -T <iqn> -p <target_ip> -l`.
 **Host-side diagnostics (Windows):**
 
 ```powershell
@@ -256,6 +374,28 @@ purehost list --connection
 pureport list --initiator
 ```
 
+
+```text title="Expected output"
+Name             Address          Wwn                           Connection
+host-prod-01    192.168.1.45     50:00:09:73:12:ab:cd:ef       eth0
+host-prod-02    192.168.1.46     50:00:09:73:12:ab:cd:f0       eth1
+host-prod-03    192.168.1.47     50:00:09:73:12:ab:cd:f1       eth0
+host-prod-04    192.168.1.48     50:00:09:73:12:ab:cd:f2       eth1
+
+Initiator                         PortName                      Status
+host-prod-01:iqn.1991-05.com     pureport-fc.1a               active
+host-prod-01:iqn.1991-05.com     pureport-fc.1b               active
+host-prod-02:iqn.1991-05.com     pureport-fc.2a               active
+host-prod-02:iqn.1991-05.com     pureport-fc.2b               standby
+host-prod-03:iqn.1991-05.com     pureport-fc.3a               active
+host-prod-04:iqn.1991-05.com     pureport-fc.4a               active
+host-prod-04:iqn.1991-05.com     pureport-fc.4b               standby
+```
+
+!!! warning "Common errors"
+    **`Error: Connection refused — verify the Pure Storage management IP is reachable and the CLI credentials are configured correctly.`** — Test connectivity with `ping` to the array management IP and confirm credentials in `~/.purerc`.
+    **`Error: No such host — ensure the hostname exists in the Pure Storage array inventory.`** — Run `purehost list` to confirm the host is registered on the array before querying its paths.
+    **`Error: Authentication failed — check that your Pure Storage API token or username/password has not expired.`** — Regenerate the API token in the Pure Storage GUI or re-authenticate using `pureadmin login`.
 ### Resolution
 
 1. Identify which HBA or port is missing paths — compare expected ports (CT0.FC0 and CT1.FC0 for a two-path design) against `pureport list --initiator`

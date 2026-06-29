@@ -64,6 +64,33 @@ purearray upgrade --stage <image_path>
 purearray upgrade --exec
 ```
 
+
+```text title="Expected output"
+Name             Version          Status
+flasharray-01    6.2.5            Optimal
+flasharray-02    6.2.5            Optimal
+
+Readiness Check Results:
+✓ All controllers healthy
+✓ Sufficient free space (847 GB available)
+✓ No active snapshots blocking upgrade
+✓ Replication links stable
+✓ All hosts connected
+
+Staging upgrade image: /var/uploads/purity-6.3.1-build.1234.tar
+Progress: ████████████████████ 100%
+Image staged successfully on both controllers
+
+Executing non-disruptive upgrade...
+Controller-A upgrade: ████████████████████ 100% (5m 23s)
+Controller-B upgrade: ████████████████████ 100% (5m 18s)
+Upgrade completed successfully. Current version: 6.3.1
+```
+
+!!! warning "Common errors"
+    **`purearray: command not found`** — Install the Pure Storage CLI tools or ensure the purearray binary is in your PATH.
+    **`Error: Insufficient free space. Required: 2.5 GB, Available: 1.2 GB`** — Delete old snapshots or logs to free up space before staging the upgrade image.
+    **`Error: Replication link down on target array flasharray-03`** — Verify network connectivity and replication configuration between arrays before proceeding with the upgrade.
 **Key rules:**
 
 - Never upgrade both controllers in an ActiveCluster pod simultaneously — upgrade one array at a time
