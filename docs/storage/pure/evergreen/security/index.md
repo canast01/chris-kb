@@ -73,6 +73,25 @@ pureuser list
 pureuser apitoken list
 ```
 
+
+```text title="Expected output"
+Name                          Role
+admin                         Administrator
+pureuser_backup               Storage Administrator
+monitoring_svc                Operator
+readonly_audit                Read-Only
+service_account_01            Storage Administrator
+
+Name                          User                          Created
+token_prod_backup_001         pureuser_backup               2024-01-15T09:23:47Z
+token_monitoring_02           monitoring_svc                2024-01-10T14:56:12Z
+token_audit_readonly_001      readonly_audit                2024-01-08T11:32:45Z
+token_api_integration_03      service_account_01            2024-01-12T16:18:33Z
+```
+
+!!! warning "Common errors"
+    **`Error: You do not have permission to run this command`** — Verify your user account has Administrator or Operator role by checking `pureuser list` output.
+    **`Error: Connection refused to management interface`** — Ensure the Pure Storage array management IP is reachable and the CLI session is properly authenticated with `pureadmin login`.
 ## Encryption
 
 **Data at Rest**
@@ -113,6 +132,19 @@ purearray syslog add --uri tls://siem:6514
 purearray syslog list
 ```
 
+
+```text title="Expected output"
+Syslog destination added: udp://siem:514
+Syslog destination added: tls://siem:6514
+Name                    URI                     Status      Last Event
+udp-siem-514            udp://siem:514          Connected   2024-01-15T09:42:31Z
+tls-siem-6514           tls://siem:6514         Connected   2024-01-15T09:42:28Z
+```
+
+!!! warning "Common errors"
+    **`Error: Syslog destination already exists`** — Remove the duplicate destination with `purearray syslog remove --name udp-siem-514` before re-adding it.
+    **`Error: Connection failed to siem:514 - Name or service not known`** — Verify the SIEM hostname resolves and is reachable from the array with `nslookup siem` and `ping siem`.
+    **`Error: TLS certificate validation failed for tls://siem:6514`** — Import the SIEM's CA certificate to the array using `purearray certificate import --file ca.pem --type syslog-ca`.
 Ensure logs are forwarded off-array. An attacker with array admin access could not modify forwarded syslog entries, but could clear the local audit log. Off-array log retention is essential for forensic integrity.
 
 ## Subscription Security

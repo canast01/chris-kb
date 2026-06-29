@@ -160,6 +160,37 @@ purereplication list
 purearray list --connection
 ```
 
+
+```text title="Expected output"
+200
+pureuser@10.20.30.40's password: 
+Connected to purity-fa-m70-01.lab.local
+purity> 
+
+Discovery address: 10.20.30.50:3260
+Discovery address: 10.20.30.51:3260
+  Target: iqn.2010-06.com.purestorage:flasharray.12345678.fa0.1
+  Target: iqn.2010-06.com.purestorage:flasharray.12345678.fa0.2
+
+Discovery controller(s):
+Address: 10.20.30.60:4420
+subnqn: nqn.2014-08.org.nvmexpress.discovery:UUIDa1b2c3d4-e5f6-7890-abcd-ef1234567890
+
+Name          Mediator Status  Replication Status
+pod-primary   10.20.30.100     connected
+pod-secondary 10.20.30.101     connected
+
+Source Array  Target Array  Direction  Status
+purity-fa-m70 purity-fa-x90 bidirectional  connected
+
+Array Name              Pure1 Status
+purity-fa-m70-01        connected
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self-signed certificate`** — Add `-k` flag to skip certificate verification, or import the array's CA certificate into your system trust store.
+    **`ssh: connect to host 10.20.30.40 port 22: Connection refused`** — Verify the management IP is correct and that SSH is enabled on the array (check `purearray list --connection` from Purity CLI).
+    **`iscsiadm: No records found`** — Confirm the iSCSI portal IP and port are correct, and that iSCSI is enabled on the array with `puretarget list` in Purity CLI.
 ---
 
 ## See also

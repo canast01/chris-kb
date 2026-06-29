@@ -83,6 +83,46 @@ curl -s -H "Authorization: Bearer <token>" \
   https://<array>/api/2.x/volumes | jq .
 ```
 
+
+```text title="Expected output"
+# Get an API token via CLI
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwOTMxNjgwMCwiZXhwIjoxNzQwODUyODAwfQ.kX9mZ2pQrL5vN8wY3jK6hA4bC7dE9fG2iO1sT5uV6wX
+
+# List existing API tokens
+Name                           Created                  Expires                  Status
+admin-token-prod               2024-03-01T14:30:00Z     2025-03-01T14:30:00Z     active
+backup-service-token          2024-02-15T09:12:00Z     2025-02-15T09:12:00Z     active
+monitoring-token              2024-01-20T16:45:00Z     2025-01-20T16:45:00Z     active
+
+# Example: list volumes via REST API (curl)
+{
+  "items": [
+    {
+      "name": "prod-db-vol-01",
+      "size": 1099511627776,
+      "provisioned": 1099511627776,
+      "serial": "A1B2C3D4E5F6G7H8"
+    },
+    {
+      "name": "backup-vol-02",
+      "size": 2199023255552,
+      "provisioned": 2199023255552,
+      "serial": "I9J8K7L6M5N4O3P2"
+    },
+    {
+      "name": "archive-vol-03",
+      "size": 5497558138880,
+      "provisioned": 5497558138880,
+      "serial": "Q1R2S3T4U5V6W7X8"
+    }
+  ],
+  "continuation_token": null
+}
+```
+
+!!! warning "Common errors"
+    **`error: invalid credentials for user '<username>'`** — Verify the username exists and you have sufficient permissions to create API tokens.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip certificate verification, or configure proper CA certificates for your array's HTTPS endpoint.
 The REST API supports all array operations available in the GUI and CLI. Use API version 2.x for new integrations — version 1.x is deprecated. Pure1 also provides a fleet-level REST API for subscription and capacity data.
 
 ---

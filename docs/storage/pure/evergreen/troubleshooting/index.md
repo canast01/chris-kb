@@ -95,6 +95,53 @@ purepgroup list --schedule
 purearray list --hardware
 ```
 
+
+```text title="Expected output"
+Name                          Capacity(GB)  Used(GB)    Available(GB)  Reduction
+pure-array-01                 102400        45230.5     57169.5        2.3x
+pure-array-02                 204800        89456.2     115343.8       2.1x
+
+Name          Generation  Model              Status    Version
+controller-0  //2         FA-405            online    6.4.2.1234567
+controller-1  //2         FA-405            online    6.4.2.1234567
+
+Name                          Severity  Code        Message                           Timestamp
+array_unhealthy               warning   PHYS_HW_ERR Hardware error on SSD slot 14    2024-01-15T09:23:45Z
+replication_lag_high          critical  REP_LAG     Replication lag >60s to pod-dr    2024-01-15T09:18:12Z
+controller_temp_warning       warning   THERM_WARN  Controller-1 temp 78°C           2024-01-15T09:15:33Z
+
+Name              Status      Mediator          Arrays
+prod-pod          healthy     mediator-01       array-prod-01, array-prod-02
+dr-pod            degraded    mediator-02       array-dr-01
+
+Name                          Size(GB)  Created                 Expires
+prod-vol.snap.20240115.0100   512.3     2024-01-15T01:00:12Z   2024-02-15T01:00:12Z
+prod-vol.snap.20240114.2300   512.1     2024-01-14T23:00:08Z   2024-02-14T23:00:08Z
+prod-vol.snap.20240114.2000   511.9     2024-01-14T20:00:15Z   2024-02-14T20:00:15Z
+...
+
+Name                          Snapshots  Space(GB)  Reduction
+prod-vol                      48         2048.7     1.8x
+backup-vol                    32         1024.2     1.9x
+
+Name                          Host              Volume            Status    Paths
+prod-vol-conn-01              prod-host-01      prod-vol          online    4/4
+backup-vol-conn-02            backup-host-02    backup-vol        online    2/4
+
+Name                          Provisioned(GB)  Used(GB)  Snapshots  Status
+prod-vol                      1024             856.4     48         online
+backup-vol                    2048             1456.2    32         online
+archive-vol                   4096             2234.1    16         online
+
+Name                          Enabled  Schedule              Replication_Target
+prod-pgroup                   yes      daily@02:00,weekly   pod-dr
+backup-pgroup                 yes      hourly@:00           pod-dr
+
+Name                    Type              Status    Capacity(GB)  Serial
+SSD-Slot-01             SSD-3.2TB         healthy   3200          PURE-SSD-001234
+SSD-Slot-02             SSD-3.2TB         healthy   3200          PURE-SSD-001235
+Controller-0-PSU        PSU-2400W         healthy   2400          PSU-C0-
+```
 ## Log Locations
 
 | Log Source | Location / Access |

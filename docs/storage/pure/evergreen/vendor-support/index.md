@@ -45,6 +45,25 @@ Ensure phonehome is active at all times. To verify:
 purearray phonehome --status
 ```
 
+
+```text title="Expected output"
+Phone Home Status Report
+========================
+Status: ENABLED
+Last Phone Home: 2024-01-15 14:32:18 UTC
+Next Scheduled Phone Home: 2024-01-22 14:32:18 UTC
+Phone Home Proxy: proxy.internal.company.com:8080
+Connectivity: ONLINE
+Last Successful Transmission: 2024-01-15 14:32:45 UTC
+Data Collected: 2.3 MB
+Transmission Success Rate: 99.8%
+Last Error: None
+```
+
+!!! warning "Common errors"
+    **`purearray: command not found`** — Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory (typically `/opt/purearray/bin`).
+    **`Error: Unable to connect to array management interface`** — Verify network connectivity to the array's management IP and that SSH credentials are properly configured.
+    **`Phone Home service is DISABLED`** — Run `purearray phonehome --enable` to activate phone home functionality for vendor support.
 ## Opening a Case
 
 When opening a case manually through the support portal or by phone, provide:
@@ -89,6 +108,43 @@ purehostconnection list
 purepod list
 ```
 
+
+```text title="Expected output"
+Name                          Version           Revision
+purearray-prod-01             6.4.2.0           20240115_165432
+
+Name      Status    Capacity      Used          Available     Snapshots
+purearray Healthy   102.4 TB      67.8 TB       34.6 TB       18.2 TB
+
+AlertId    Severity    Component         Message                              Timestamp
+alert-442  warning     controller-1      Temperature threshold approaching    2024-01-15 14:32:18
+alert-441  info        drive-slot-12     Predictive failure detected          2024-01-15 13:45:22
+
+Slot    Status      Capacity      Model              Serial
+0       Healthy     3.84 TB       PURE-SSD-NVMe-4   PFE2K4B001A2
+1       Healthy     3.84 TB       PURE-SSD-NVMe-4   PFE2K4B001A3
+2       Degraded    3.84 TB       PURE-SSD-NVMe-4   PFE2K4B001A4
+...
+
+Controller    Status      Model              Temp(C)    FanSpeed
+controller-0  Healthy     FA-m70-2U          38         45%
+controller-1  Healthy     FA-m70-2U          42         52%
+
+Host                    Connection    Status      Paths
+esx-host-01.prod        FC            Connected   4
+esx-host-02.prod        FC            Connected   4
+esx-host-03.prod        iSCSI         Connected   2
+...
+
+PodName              Status      Replication    ActiveCluster
+pod-us-east-01       Synced      Healthy        primary
+pod-us-west-01       Synced      Healthy        secondary
+```
+
+!!! warning "Common errors"
+    **`purearray: command not found`** — Install the Pure Storage CLI tools or ensure the PATH includes the Pure management tools directory.
+    **`Error: Array unreachable at 192.168.1.100`** — Verify network connectivity to the array management IP and confirm credentials are set via `pureauthenticate`.
+    **`Error: Insufficient privileges for this operation`** — Ensure your user account has the required Pure Storage role permissions (typically "Administrator" or "Operator").
 Attach `purediag` output to the case if phonehome is offline. If phonehome is active, inform the support engineer that the diagnostic bundle is available for remote pull.
 
 ## SLA Tiers

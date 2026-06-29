@@ -77,4 +77,38 @@ curl -s -H "Authorization: Bearer <token>" \
   https://<array>/api/2.x/volumes | jq .
 ```
 
+
+```text title="Expected output"
+# Get an API token via CLI
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTcwOTMxMjAwMH0.abc123def456
+
+# List existing API tokens
+Name                          Created                  Expires                  
+admin-token-prod              2024-02-15T10:22:33Z     2025-02-15T10:22:33Z     
+backup-service-token         2024-01-20T14:55:12Z     2025-01-20T14:55:12Z     
+monitoring-api-token         2024-02-01T09:18:45Z     2025-02-01T09:18:45Z     
+
+# Example: list volumes via REST API (curl)
+{
+  "items": [
+    {
+      "name": "prod-db-vol-01",
+      "size": 1099511627776,
+      "provisioned": 1099511627776,
+      "serial": "ABC123DEF456GHI789"
+    },
+    {
+      "name": "backup-vol-02",
+      "size": 2199023255552,
+      "provisioned": 2199023255552,
+      "serial": "XYZ789ABC123DEF456"
+    }
+  ],
+  "continuation_token": null
+}
+```
+
+!!! warning "Common errors"
+    **`error: invalid credentials for user '<username>'`** — Verify the username exists and you have sufficient permissions to create API tokens.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command or configure proper certificate validation for your array's HTTPS endpoint.
 The REST API supports all array operations available in the GUI and CLI. Use API version 2.x for new integrations — version 1.x is deprecated. Pure1 also provides a fleet-level REST API for subscription and capacity data.

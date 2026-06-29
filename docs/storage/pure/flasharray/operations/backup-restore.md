@@ -66,6 +66,27 @@ purepgroup schedule prod-oracle-pg \
 purepgroup list prod-oracle-pg --schedule
 ```
 
+
+```text title="Expected output"
+prod-oracle-pg
+prod-oracle-data-01
+prod-oracle-data-02
+prod-oracle-redo-01
+prod-oracle-redo-02
+prod-oracle-arch-01
+Name                          Volumes  Snapshots  Source  Schedule
+prod-oracle-pg                5        0          self    enabled
+Snap Frequency                3600s (1h)
+Snapshots Per Day             24
+Snapshot Retention (days)     7
+Snap Enabled                  true
+Last Snapshot                 2024-01-15T09:47:22Z
+```
+
+!!! warning "Common errors"
+    **`Error: Protection group 'prod-oracle-pg' already exists`** — Use `purepgroup list` to verify existing groups, or delete the group first with `purepgroup destroy prod-oracle-pg`.
+    **`Error: Volume 'prod-oracle-data-02' not found or not available`** — Verify volume names with `purevol list` and ensure all volumes are provisioned before adding to the protection group.
+    **`Error: Cannot set schedule on protection group without replication target`** — Configure a replication target with `purepgroup setreplication prod-oracle-pg --target <target-array>` before enabling snapshot schedules.
 **Schedule parameter guidance:**
 
 | Parameter | Value | Meaning |
@@ -104,6 +125,37 @@ purepgroup list prod-oracle-pg --schedule
 purepgroup list prod-oracle-pg --replication
 ```
 
+
+```text title="Expected output"
+Connected to remote array remote-dr-fa-01 (10.20.50.15)
+Replication address: 10.20.50.16
+Connection type: replication
+Connection status: connected
+
+Name                  Management IP    Replication IP   Type         Status
+remote-dr-fa-01       10.20.50.15      10.20.50.16      replication  connected
+
+Protection group prod-oracle-pg connected to target remote-dr-fa-01
+
+Schedule updated for prod-oracle-pg
+Replication enabled: true
+Replication frequency: 14400 seconds (4 hours)
+
+Name             Schedule Status    Replicate Enabled   Frequency
+prod-oracle-pg   active             true                14400s
+
+Protection Group: prod-oracle-pg
+Replication Target: remote-dr-fa-01
+Last Replication: 2024-01-15 09:32:14 UTC
+Next Replication: 2024-01-15 13:32:14 UTC
+Replication Status: healthy
+Snapshots Replicated: 847
+```
+
+!!! warning "Common errors"
+    **`Error: Connection failed to 10.20.50.15 — verify the remote management IP is reachable and the arrays have network connectivity on both management and replication networks.`** — Verify network connectivity and correct IP addresses with `ping` and `traceroute`.
+    **`Error: Protection group 'prod-oracle-pg' not found`** — Confirm the protection group name exists on the local array using `purepgroup list`.
+    **`Error: Remote array 'remote-dr-fa-01' is not connected`** — Ensure the initial `purearray connect` command completed successfully before attempting to add it as a replication target.
 ---
 
 ### Take an On-Demand Snapshot
@@ -123,6 +175,27 @@ purepgroup listsnaps prod-oracle-pg
 puresnap list --space
 ```
 
+
+```text title="Expected output"
+Created snapshot: prod-oracle-pg.premigration-20240315
+prod-oracle-pg.premigration-20240315
+
+Name                                    Created                  Source
+prod-oracle-pg.premigration-20240315    2024-03-15 14:32:18 UTC prod-oracle-pg
+prod-oracle-pg.premigration-20240314    2024-03-14 09:15:42 UTC prod-oracle-pg
+prod-oracle-pg.premigration-20240313    2024-03-13 22:47:19 UTC prod-oracle-pg
+
+Name                                    Snapshots  Physical(GB)  Virtual(GB)  Data Reduction
+prod-oracle-pg.premigration-20240315    1          127.4         512.8        4.0x
+prod-oracle-pg.premigration-20240314    1          119.2         512.8        4.3x
+prod-oracle-pg.premigration-20240313    1          115.6         512.8        4.4x
+prod-oracle-pg.premigration-20240312    1          108.9         512.8        4.7x
+...
+```
+
+!!! warning "Common errors"
+    **`Error: Protection group 'prod-oracle-pg' not found`** — Verify the protection group name with `purepgroup list` and ensure it exists on the array.
+    **`Error: Insufficient space to create snapshot`** — Check available capacity with `purearray list --space` and delete old snapshots or add capacity if needed.
 ---
 
 ## Restore Procedures
@@ -144,6 +217,25 @@ purepgroup listsnaps prod-oracle-pg
 purevol list prod-oracle-pg.premigration-20260501.*
 ```
 
+
+```text title="Expected output"
+Name                                    Source                  Created
+prod-oracle-pg.premigration-20260501    prod-oracle-pg          2026-05-01 14:32:18 PDT
+prod-oracle-pg.daily-20260430           prod-oracle-pg          2026-04-30 23:00:02 PDT
+prod-oracle-pg.hourly-20260501-1400     prod-oracle-pg          2026-05-01 14:00:15 PDT
+prod-oracle-pg.hourly-20260501-1300     prod-oracle-pg          2026-05-01 13:00:08 PDT
+prod-oracle-pg.weekly-20260428          prod-oracle-pg          2026-04-28 02:15:33 PDT
+
+Name                                              Source                              Size
+prod-oracle-pg.premigration-20260501.oradb01     prod-oracle-pg.premigration-20260501  2.3T
+prod-oracle-pg.premigration-20260501.oradb02     prod-oracle-pg.premigration-20260501  1.8T
+prod-oracle-pg.premigration-20260501.oralog      prod-oracle-pg.premigration-20260501  847G
+prod-oracle-pg.premigration-20260501.oratemp     prod-oracle-pg.premigration-20260501  512G
+```
+
+!!! warning "Common errors"
+    **`Error: Protection group 'prod-oracle-pg' not found`** — Verify the protection group name with `purepgroup list` and ensure it exists on the array.
+    **`Error: No snapshots found matching 'prod-oracle-pg.premigration-20260501.*'`** — Check that the snapshot name is spelled correctly and exists using `purepgroup listsnaps prod-oracle-pg`.
 **Step 2 — Clone the snapshot to a temporary volume for validation:**
 
 ```bash
@@ -158,6 +250,25 @@ purehost connect validate-host-01 --vol restore-validate-oracle-data-01
 # Mount and validate the data on the validation host before overwriting production
 ```
 
+
+```text title="Expected output"
+Volume copy started: prod-oracle-pg.premigration-20260501.prod-oracle-data-01 → restore-validate-oracle-data-01
+Copy progress: 100%
+Volume restore-validate-oracle-data-01 created successfully (847.3 GB)
+
+Host Connection Details:
+  Host: validate-host-01
+  Volume: restore-validate-oracle-data-01
+  LUN: 2
+  WWN: 600144588c4c3f0000005a6e2d8c0001
+  Connection Status: Connected
+
+Ready for mount and validation on validate-host-01
+```
+
+!!! warning "Common errors"
+    **`Error: Volume 'prod-oracle-pg.premigration-20260501.prod-oracle-data-01' not found`** — Verify the snapshot name matches exactly using `purevol list --snap` and check for typos in the source volume name.
+    **`Error: Host 'validate-host-01' not found or not initialized`** — Ensure the validation host exists and is registered on the array with `purehost list`, and that its WWNs are properly configured.
 **Step 3 — Overwrite production volume (disruptive — requires host quiesce):**
 
 ```bash

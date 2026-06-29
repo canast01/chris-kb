@@ -58,6 +58,17 @@ purecli array list | grep -i version
 # or in GUI: System → Software
 ```
 
+
+```text title="Expected output"
+Name                          Version           Controller Model
+array-prod-01                 6.4.2.1234        FA-m70
+array-prod-02                 6.4.2.1234        FA-m70
+array-dr-01                   6.3.8.998         FA-x70r2
+```
+
+!!! warning "Common errors"
+    **`purecli: command not found`** — Install the Pure CLI tools or add the installation directory to your PATH environment variable.
+    **`Error: Unable to connect to array. Connection refused`** — Verify the array management IP is reachable and purecli credentials are configured in ~/.purerc or via environment variables.
 ## Drive Replacement
 
 Drives are monitored by Pure1 and replaced proactively before failure:
@@ -73,6 +84,24 @@ purecli drive list
 purecli drive list --filter "status!=healthy"
 ```
 
+
+```text title="Expected output"
+Name                Serial              Capacity  Status    Temperature
+drive.0             SN-PUR-2847-A1K9    1.92TB    healthy   28°C
+drive.1             SN-PUR-2848-B2L7    1.92TB    healthy   29°C
+drive.2             SN-PUR-2849-C3M5    1.92TB    healthy   27°C
+drive.3             SN-PUR-2850-D4N6    1.92TB    healthy   30°C
+drive.4             SN-PUR-2851-E5P2    1.92TB    healthy   28°C
+drive.5             SN-PUR-2852-F6Q8    1.92TB    degraded  45°C
+drive.6             SN-PUR-2853-G7R3    1.92TB    healthy   29°C
+
+Name                Serial              Capacity  Status    Temperature
+drive.5             SN-PUR-2852-F6Q8    1.92TB    degraded  45°C
+```
+
+!!! warning "Common errors"
+    **`purecli: command not found`** — Verify the Pure Storage CLI is installed and the PATH includes its bin directory, or use the full path to the purecli executable.
+    **`Error: Authentication failed. Invalid credentials.`** — Ensure your Pure Storage array credentials are configured in ~/.purerc or set PURE_API_TOKEN environment variable with a valid token.
 ## Controller Refresh (Evergreen//Forever)
 
 Under Evergreen//Forever, controllers are refreshed when new generations are available:
