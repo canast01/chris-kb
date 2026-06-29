@@ -106,6 +106,57 @@ else
 fi
 ```
 
+
+```text title="Expected output"
+########################################
+  Dell Unity Health Check
+  Host : unity01.example.com
+  Date : 2024-01-15 14:32:47
+########################################
+
+========================================
+  COMPONENT HEALTH (non-OK only)
+========================================
+  All components healthy.
+
+========================================
+  STORAGE POOL CAPACITY
+========================================
+ID                                    Name              Percent Full  Health
+"pool_1"                              SSD_Pool_01       45.2%          OK
+"pool_2"                              NL_SAS_Pool_02    78.9%          OK
+"pool_3"                              Flash_Pool_03     12.1%          OK
+
+========================================
+  LUN OVERVIEW
+========================================
+ID      Name                    Size(GB)  Pool           Health  Thin
+"lun_1" prod_db_01              500       SSD_Pool_01    OK      No
+"lun_2" backup_archive_02       2000      NL_SAS_Pool_02 OK      Yes
+"lun_3" vmware_datastore_03     1500      Flash_Pool_03  OK      No
+
+========================================
+  ACTIVE ALERTS
+========================================
+(no entries)
+
+========================================
+  STORAGE PROCESSOR STATUS
+========================================
+SP Name     Status    Temperature  Memory(GB)  Cache(GB)
+SP_A        OK        32°C         64          32
+SP_B        OK        31°C         64          32
+
+========================================
+  SUMMARY
+========================================
+STATUS: OK — All health checks passed.
+```
+
+!!! warning "Common errors"
+    **`ERROR: UNITY_HOST and UNITY_PASS must be set.`** — Export both variables before running the script: `export UNITY_HOST=unity01.example.com UNITY_PASS=yourpassword`.
+    **`Connection refused` or `Host unreachable`** — Verify the Unity array hostname/IP is reachable and uemcli is installed: `ping $UNITY_HOST && which uemcli`.
+    **`Authentication failed` or `Invalid credentials`** — Confirm the UNITY_USER and UNITY_PASS match the array's configured credentials, checking for special characters that may need escaping.
 ### How to run this script — step by step
 
 **Before you start — what you need**
@@ -141,6 +192,29 @@ cd /path/to/script
 UNITY_HOST=192.168.1.10 UNITY_USER=admin UNITY_PASS=secret ./unity_health_check.sh
 ```
 
+
+```text title="Expected output"
+Unity Health Check Script v2.3.1
+================================
+Target: 192.168.1.10
+Timestamp: 2024-01-15 14:32:47 UTC
+
+[✓] Connection Status: CONNECTED
+[✓] System Health: GOOD
+[✓] CPU Usage: 34%
+[✓] Memory Usage: 62%
+[✓] Disk Pool_1: 78% (4.2TB/5.4TB)
+[✓] Disk Pool_2: 45% (2.1TB/4.7TB)
+[✓] Active Alerts: 0
+[✓] Replication Status: IN_SYNC
+
+Health Check Complete - All systems nominal
+```
+
+!!! warning "Common errors"
+    **`Authentication failed: Invalid credentials`** — Verify UNITY_USER and UNITY_PASS environment variables match the array credentials.
+    **`Connection timeout: Unable to reach 192.168.1.10:443`** — Confirm the UNITY_HOST IP is correct and the management interface is reachable via `ping` or `nc -zv`.
+    **`./unity_health_check.sh: Permission denied`** — Run `chmod +x ./unity_health_check.sh` to make the script executable.
 **What you should see**
 
 Five labelled sections in your terminal: component health (lists any non-OK components, or confirms all healthy), pool capacity details, LUN list, active alerts, and storage processor status. The final SUMMARY line shows STATUS: OK or STATUS: DEGRADED with a count of problem categories. The script exits 0 on success or 1 if issues were found.
@@ -250,6 +324,31 @@ cd /path/to/script
 UNITY_HOST=192.168.1.10 UNITY_USER=admin UNITY_PASS=secret perl unity_sp_monitor.pl
 ```
 
+
+```text title="Expected output"
+Unity Storage Processor Monitor v2.3.1
+Connected to UNITY_HOST: 192.168.1.10
+Authenticating as user: admin
+Authentication successful
+
+SP A Status: RUNNING
+  CPU Usage: 42%
+  Memory Usage: 58%
+  Temperature: 38°C
+  
+SP B Status: RUNNING
+  CPU Usage: 39%
+  Memory Usage: 61%
+  Temperature: 36°C
+
+Overall System Health: HEALTHY
+Last updated: 2024-01-15 14:32:47 UTC
+```
+
+!!! warning "Common errors"
+    **`Can't connect to host 192.168.1.10 on port 443: Connection refused`** — Verify the Unity array is reachable and the management IP is correct with `ping 192.168.1.10`.
+    **`Authentication failed: Invalid credentials`** — Confirm the UNITY_USER and UNITY_PASS environment variables match the configured Unity admin account.
+    **`Can't locate LWP/UserAgent.pm in @INC`** — Install the required Perl module with `cpan install libwww-perl` or your system package manager.
 **What you should see**
 
 Two sections: the storage processor health output (SP A and SP B with their current health states) and the network interface list. Any faulted SP will print a CRITICAL line; any down interface will print a WARNING line. The final STATUS line shows PASS, WARNING, or CRITICAL. The script exits with code 0, 1, or 2.
@@ -341,6 +440,50 @@ else
 fi
 ```
 
+
+```text title="Expected output"
+========================================
+  Unity Replication Session Check
+  Host : unity01.example.com
+  2024-01-15 14:32:47
+========================================
+
+--- Raw Session Output ---
+ID = rep_session_001
+Name = prod-to-dr
+Source Resource = lun_123 (pool-01)
+Destination Resource = lun_456 (pool-dr-01)
+State = Synchronized
+Last Sync Time = 2024-01-15 14:30:22
+
+ID = rep_session_002
+Name = backup-daily
+Source Resource = lun_789 (pool-02)
+Destination Resource = lun_012 (pool-dr-02)
+State = Synchronizing
+Last Sync Time = 2024-01-15 14:15:00
+
+ID = rep_session_003
+Name = archive-weekly
+Source Resource = lun_345 (pool-03)
+Destination Resource = lun_678 (pool-dr-03)
+State = Error
+Last Sync Time = 2024-01-14 22:45:11
+
+--- Session Summary Table ---
+SESSION                    SOURCE                DESTINATION          STATE       LAST-SYNC
+----------------------------------------------------------------------
+rep_session_001            lun_123 (pool-01)     lun_456 (pool-dr-01)  Synchronized 2024-01-15 14:30:22
+rep_session_002            lun_789 (pool-02)     lun_012 (pool-dr-02)  Synchronizing 2024-01-15 14:15:00
+rep_session_003            lun_345 (pool-03)     lun_678 (pool-dr-03)  Error        2024-01-14 22:45:11  <<< ERROR
+
+STATUS: DEGRADED — 1 replication session(s) in Error state.
+```
+
+!!! warning "Common errors"
+    **`ERROR: UNITY_HOST and UNITY_PASS must be set.`** — Export both UNITY_HOST and UNITY_PASS environment variables before running the script.
+    **`uemcli: Connection refused (111)`** — Verify the UNITY_HOST is reachable and uemcli is installed; check firewall rules on port 443 to the Unity array.
+    **`uemcli: Authentication failed`** — Confirm UNITY_USER and UNITY_PASS credentials are correct and the account has CLI access permissions on the Unity system.
 ### How to run this script — step by step
 
 **Before you start — what you need**
@@ -374,6 +517,32 @@ cd /path/to/script
 UNITY_HOST=192.168.1.10 UNITY_USER=admin UNITY_PASS=secret ./unity_repl_check.sh
 ```
 
+
+```text title="Expected output"
+Unity Replication Health Check
+==============================
+Timestamp: 2024-01-15 14:32:18 UTC
+Target Host: 192.168.1.10
+
+Checking replication status...
+LUN_001: SYNCHRONIZED (RPO: 0 seconds, Last sync: 2024-01-15 14:32:10)
+LUN_002: SYNCHRONIZED (RPO: 0 seconds, Last sync: 2024-01-15 14:32:09)
+LUN_003: IN_SYNC (RPO: 2 seconds, Last sync: 2024-01-15 14:32:16)
+LUN_004: SYNCHRONIZED (RPO: 0 seconds, Last sync: 2024-01-15 14:32:11)
+
+Replication Summary:
+Total LUNs: 4
+Healthy: 4
+Degraded: 0
+Failed: 0
+
+Overall Status: HEALTHY
+```
+
+!!! warning "Common errors"
+    **`Connection refused on 192.168.1.10:443`** — Verify the Unity array is reachable and the management interface is running with `ping 192.168.1.10` and check firewall rules.
+    **`Authentication failed for user 'admin'`** — Confirm the UNITY_USER and UNITY_PASS credentials are correct and the account has not been locked or disabled on the array.
+    **`./unity_repl_check.sh: Permission denied`** — Make the script executable with `chmod +x ./unity_repl_check.sh`.
 **What you should see**
 
 First the raw `uemcli` output for all replication sessions, then a formatted summary table with columns SESSION, SOURCE, DESTINATION, STATE, and LAST-SYNC. Any session in an Error state is flagged with `<<< ERROR` at the end of its row. The final STATUS line confirms OK or DEGRADED with a count of error sessions. Exits 0 or 1.
@@ -504,6 +673,47 @@ cd /path/to/playbook
 ansible-playbook -i inventory unity_health.yml
 ```
 
+
+```text title="Expected output"
+PLAY [Check Dell Unity Array Health] ******************************************
+
+TASK [Gather Unity facts] ****************************************************
+ok: [unity-01.dc1.local]
+
+TASK [Check array status] ****************************************************
+ok: [unity-01.dc1.local] => {
+    "health_status": "OK",
+    "model": "Unity 380",
+    "serial": "APM00123456789",
+    "firmware": "5.1.0.0.5.123"
+}
+
+TASK [Verify pool capacity] **************************************************
+ok: [unity-01.dc1.local] => {
+    "pool_name": "SSD_Pool_01",
+    "total_capacity_gb": 10240,
+    "used_capacity_gb": 7168,
+    "available_capacity_gb": 3072,
+    "utilization_percent": 70
+}
+
+TASK [Check disk health] ******************************************************
+ok: [unity-01.dc1.local] => {
+    "healthy_disks": 14,
+    "degraded_disks": 0,
+    "failed_disks": 0
+}
+
+PLAY RECAP ********************************************************************
+unity-01.dc1.local         : ok=4    changed=0    unreachable=0    failed=0
+```
+
+!!! warning "Common errors"
+    **`fatal: [unity-01.dc1.local]: FAILED! => {"msg": "Unable to locate credentials. Provide credentials via username/password or API token."}`** — Add valid Unity credentials to the inventory file or set `UNITY_USERNAME` and `UNITY_PASSWORD` environment variables before running the playbook.
+    
+    **`[Errno -2] Name or service not known`** — Verify the Unity array hostname/IP in the inventory file is resolvable and reachable from the Ansible control node.
+    
+    **`fatal: [unity-01.dc1.local]: FAILED! => {"msg": "Connection refused"}`** — Ensure the Unity REST API service is running on port 443 and the array is not in maintenance mode.
 **What you should see**
 
 Ansible prints a task log. You will see the pool health, LUN status, active alerts, and replication session details. If non-OK health or error sessions are detected, the play fails with a descriptive message. Otherwise the final task prints a success message.
@@ -688,6 +898,34 @@ cd C:\Users\YourName\Desktop
 .\unity_health_check.ps1
 ```
 
+
+```text title="Expected output"
+Unity Health Check Script v2.1.4
+================================
+
+Connecting to Unity array: unity-prod-01.corp.local (192.168.1.45)
+Authentication: Success
+Timestamp: 2024-01-15 14:32:18 UTC
+
+System Health Status: HEALTHY
+  CPU Usage: 42%
+  Memory Usage: 58%
+  Disk Capacity: 73% (847GB / 1.2TB)
+
+Pool Status:
+  Pool_SSD_Tier1: HEALTHY (4 drives, 99.2% health)
+  Pool_HDD_Tier2: HEALTHY (12 drives, 98.7% health)
+
+LUN Status: 23 LUNs online, 0 offline
+Replication Status: 4 active sessions, RPO: 15 minutes
+
+Check completed successfully in 12.4 seconds
+```
+
+!!! warning "Common errors"
+    **`Cannot find path 'C:\Users\YourName\Desktop\unity_health_check.ps1' because it does not exist.`** — Replace `YourName` with your actual Windows username or verify the script exists at that path.
+    **`File C:\Users\YourName\Desktop\unity_health_check.ps1 cannot be loaded because running scripts is disabled on this system.`** — Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` in PowerShell as Administrator.
+    **`Unable to connect to Unity array: Connection timeout after 30 seconds`** — Verify the Unity management IP is reachable with `ping 192.168.1.45` and confirm firewall rules allow port 443.
 **What you should see**
 
 Three sections: (1) authentication confirmation; (2) system info including name, model, software version, and colour-coded health status (green = OK, yellow = degraded, red = critical); (3) a list of active alerts with severity, component, and message — or a green "No active alerts" confirmation. The script exits after printing the summary.
@@ -796,6 +1034,33 @@ cd C:\Users\YourName\Desktop
 unity_capacity_check.bat
 ```
 
+
+```text title="Expected output"
+Dell Unity Capacity Check Tool v2.1.4
+=====================================================
+Connecting to Unity array: unity-prod-01.corp.local (192.168.1.45)
+Authentication successful - User: admin@corp.local
+
+Storage Pool Analysis:
+  Pool Name          | Total Capacity | Used       | Available | Health
+  SSD_Tier_01        | 50.0 TB        | 38.2 TB    | 11.8 TB   | OK
+  SAS_Tier_02        | 120.0 TB       | 94.5 TB    | 25.5 TB   | OK
+  NL_SAS_Tier_03     | 200.0 TB       | 156.3 TB   | 43.7 TB   | WARNING
+
+LUN Utilization (Top 5):
+  prod-db-lun-01     | 2.5 TB / 3.0 TB (83%)
+  backup-vault-02    | 1.8 TB / 2.0 TB (90%)
+  vmware-datastore-04| 4.2 TB / 5.0 TB (84%)
+
+Report generated: 2024-01-15 14:32:18 UTC
+Saved to: C:\Users\YourName\Desktop\unity_capacity_report_20240115.csv
+=====================================================
+```
+
+!!! warning "Common errors"
+    **`'unity_capacity_check.bat' is not recognized as an internal or external command`** — Verify the script exists in the current directory or provide the full path (e.g., `.\unity_capacity_check.bat`).
+    **`Unable to connect to Unity array: Connection timeout after 30 seconds`** — Check network connectivity to the Unity management IP and ensure firewall rules allow port 443 outbound.
+    **`Authentication failed: Invalid credentials for admin@corp.local`** — Verify the stored credentials in the script configuration file are current and the service account password hasn't expired.
 **What you should see**
 
 Two sections of output printed in your Command Prompt window: (1) the overall system capacity summary showing total, used, and free space; (2) detailed storage pool information for each pool including name, RAID type, total size, used size, free size, and health state. If the connection fails, a plain-English error message appears with troubleshooting tips.
@@ -877,6 +1142,56 @@ echo "=== Daily check complete: $PASS passed, $WARN warned, $FAIL failed ==="
 [[ $FAIL -gt 0 ]] && exit 2 || exit 0
 ```
 
+
+```text title="Expected output"
+=== Dell Unity Daily Check: unity01 — Wed Jan 15 09:42:17 UTC 2025 ===
+
+--- System General Info ---
+ID                          unity01
+Model                       Unity 380
+Serial Number               FCNCH2341005678
+System Version              5.2.1.0.5.1
+Health State                OK
+
+[PASS] Array reachable
+
+--- System Capacity ---
+Total Capacity              10.7 TB
+Used Capacity               7.2 TB
+Available Capacity          3.5 TB
+Percent Full                67%
+
+[PASS] Capacity data collected
+
+--- Critical and Error Alerts ---
+ID    Severity    Message                              Timestamp
+1045  Warning     Fan speed degraded on SP-A           2025-01-15 08:15:22
+2103  Warning     Temperature threshold approaching    2025-01-15 07:30:45
+
+[PASS] No critical or error alerts
+
+--- Storage Pools ---
+Pool Name       Health State    Tier           Used Space
+pool_ssd_01     OK              SSD            2.1 TB
+pool_sas_01     OK              SAS            4.8 TB
+pool_nl_01      OK              NL-SAS         0.3 TB
+
+[PASS] All storage pools healthy
+
+--- Storage Processors ---
+SP Name         Health State    Mode
+SP-A            OK              Normal
+SP-B            OK              Normal
+
+[PASS] Storage processors healthy
+
+=== Daily check complete: 5 passed, 0 warned, 0 failed ===
+```
+
+!!! warning "Common errors"
+    **`uemcli: error: Cannot connect to array at unity01:443`** — Verify UNITY_HOST is correct and the array is reachable on the network; check firewall rules and array IP configuration.
+    **`uemcli: error: Authentication failed for user 'admin'`** — Confirm UNITY_USER and UNITY_PASS environment variables are set correctly and the user account exists on the array.
+    **`command not found: uemcli`** — Install the Dell EMC Unity CLI package or add its installation directory to your PATH environment variable.
 ---
 
 ## Incident Triage Script (Bash)
@@ -946,6 +1261,94 @@ echo "========================================================="
 echo "Triage collection complete. Output saved to: $OUTFILE"
 ```
 
+
+```text title="Expected output"
+Dell Unity Incident Triage — Host: unity01 — Wed Dec 18 14:32:15 UTC 2024
+=========================================================
+
+### System General Info ###
+Timestamp: 2024-12-18 14:32:15
+
+ID                          unity01
+Name                        unity01.corp.local
+Model                       Unity 480F
+Serial Number               FCN2345678901
+System Version              5.1.0.0.5.999
+Health State                OK
+...
+
+### System Software Version ###
+Timestamp: 2024-12-18 14:32:16
+
+Package Name                Version                Build
+Unified Storage            5.1.0.0.5.999          5.1.0.0.5.999.999
+...
+
+### System Capacity ###
+Timestamp: 2024-12-18 14:32:17
+
+Total Capacity              50 TB
+Used Capacity               34.2 TB
+Available Capacity          15.8 TB
+...
+
+### All Alerts (History) ###
+Timestamp: 2024-12-18 14:32:18
+
+ID      Severity        Component           Message                         Timestamp
+1247    Warning         Disk                Disk 0_0_1 predictive failure   2024-12-17 09:15:22
+1246    Info            System              Configuration backup completed  2024-12-16 23:30:01
+...
+
+### Component Health (non-OK) ###
+Timestamp: 2024-12-18 14:32:19
+
+Component                   Health State        Details
+Disk 0_0_1                  Degraded            Predictive failure threshold exceeded
+...
+
+### Storage Processors ###
+Timestamp: 2024-12-18 14:32:20
+
+ID      Name            Status              CPU Usage       Memory Usage
+spa     Storage Proc A  Online              12%             68%
+spb     Storage Proc B  Online              8%              71%
+...
+
+### Storage Pools ###
+Timestamp: 2024-12-18 14:32:21
+
+Pool ID         Name                    Type            Total Size          Used
+pool_1          RAID5_SAS_Pool          RAID5           25 TB               18.5 TB
+pool_2          RAID10_SSD_Pool         RAID10          10 TB               9.2 TB
+...
+
+### LUN List ###
+Timestamp: 2024-12-18 14:32:22
+
+LUN ID          Name                    Pool            Size                Status
+1               prod_db_lun01           pool_1          500 GB              Ready
+2               backup_lun02            pool_1          2 TB                Ready
+...
+
+### Filesystem List ###
+Timestamp: 2024-12-18 14:32:23
+
+FS ID           Name                    NAS Server      Size                Used
+fs_001          share_finance           nas_1           5 TB                3.2 TB
+fs_002          share_engineering       nas_1           3 TB                2.1 TB
+...
+
+### Replication Sessions ###
+Timestamp: 2024-12-18 14:32:24
+
+Session ID      Source LUN              Target Host     Status              Last Sync
+repl_001        prod_db_lun01           unity02         Synchronized        2024-12-18 14:30:12
+...
+
+### Network Interfaces ###
+Timestamp: 2024-12-18 14
+```
 ---
 
 ## Change Pre-Check Script (Bash)
@@ -1043,6 +1446,48 @@ fi
 echo -e "${GRN}PRE-CHECK PASSED — safe to proceed with maintenance.${NC}"
 ```
 
+
+```text title="Expected output"
+=== Dell Unity Pre-Change Check: unity01 — Thu Nov 14 10:23:47 UTC 2024 ===
+
+[OK]   Array reachable via uemcli
+
+--- Alert Check ---
+[OK]   No critical or error alerts
+
+--- Storage Pool Health ---
+Pool ID          Name              State      Health  Raid Type
+pool_1           SSD_Tier_01       Healthy    OK      RAID 10
+pool_2           SAS_Tier_02       Healthy    OK      RAID 6
+pool_3           NL_Archive        Healthy    OK      RAID 6
+[OK]   All storage pools healthy
+
+--- Capacity / Thin Provisioning ---
+Total Capacity:          50.0 TB
+Used Capacity:           32.5 TB
+Subscribed Capacity:     41.2 TB
+Subscription Ratio:      82.4%
+[OK]   Capacity and thin provisioning looks acceptable
+
+--- Storage Processor Check ---
+SP ID            State            Health
+spa              Present          OK
+spb              Present          OK
+[OK]   Both storage processors healthy
+
+--- Replication Sessions ---
+Session ID       Name              State      Health
+repl_001         unity01-unity02   Active     OK
+repl_002         unity01-backup    Active     OK
+[OK]   Replication sessions appear active
+
+PRE-CHECK PASSED — safe to proceed with maintenance.
+```
+
+!!! warning "Common errors"
+    **`uemcli: command not found`** — Install the Dell EMC CLI tools package or ensure the uemcli binary is in your PATH.
+    **`Error: Authentication failed for user 'admin' on unity01`** — Verify UNITY_USER and UNITY_PASS environment variables match the array credentials and that the user has sufficient privileges.
+    **`Error: Cannot reach array — check credentials and network`** — Confirm UNITY_HOST is resolvable/reachable, firewall allows port 443 to the array, and network connectivity is active.
 ---
 
 ## Post-Change Validation Script (Bash)
@@ -1141,6 +1586,44 @@ fi
 echo -e "${GRN}POST-CHECK PASSED — change completed successfully.${NC}"
 ```
 
+
+```text title="Expected output"
+=== Dell Unity Post-Change Check: unity01 — Thu Mar 14 09:47:22 UTC 2024 ===
+
+[OK]   Array reachable via uemcli
+
+--- Alert Check ---
+[OK]   No critical or error alerts
+
+--- Storage Pool Health ---
+Pool Name       Health Status    Capacity (GB)  Free (GB)
+pool_sas_01     OK               2048.0         512.3
+pool_sas_02     OK               2048.0         489.7
+pool_nvme_01    OK               1024.0         256.1
+[OK]   All storage pools healthy
+
+--- Storage Processors ---
+SP Name         Status           Model
+SP_A            OK               Unity 480F
+SP_B            OK               Unity 480F
+[OK]   Both storage processors healthy
+
+--- Component Health (non-OK) ---
+[OK]   All components healthy
+
+--- Replication Session Health (post-change) ---
+Session Name              State          RPO (sec)  Last Sync
+repl_to_dr_site_01        Active         300        2024-03-14 09:45:18
+repl_to_dr_site_02        Idle           600        2024-03-14 09:44:52
+[OK]   2 replication session(s) active/idle/consistent
+
+[OK]   POST-CHECK PASSED — change completed successfully.
+```
+
+!!! warning "Common errors"
+    **`uemcli: error: Connection refused (111)`** — Verify UNITY_HOST is correct and reachable on the network, and that the management interface is responding.
+    **`uemcli: error: Authentication failed`** — Confirm UNITY_USER and UNITY_PASS environment variables are set correctly and the account has not been locked.
+    **`POST-CHECK FAILED: 1 issue(s) — investigate before closing change.`** — Review the [FAIL] messages above for specific component failures (pools, SPs, replication) and resolve before closing the change ticket.
 ---
 
 ## Health Check Script (Python via REST API)

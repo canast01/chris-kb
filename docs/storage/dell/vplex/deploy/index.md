@@ -109,6 +109,27 @@ Gateway: 192.168.1.1
 vplexcli -h <director1_mgmt_ip> -u admin -p <password> -q "ll /clusters/*"
 ```
 
+
+```text title="Expected output"
+Cluster: cluster-1
+  Director: director-1a (10.50.12.45)
+  Director: director-1b (10.50.12.46)
+  Status: Online
+  Version: 6.2.1.0-20231015
+  Witness: witness-1 (10.50.12.50)
+
+Cluster: cluster-2
+  Director: director-2a (10.50.13.45)
+  Director: director-2b (10.50.13.46)
+  Status: Online
+  Version: 6.2.1.0-20231015
+  Witness: witness-2 (10.50.13.50)
+```
+
+!!! warning "Common errors"
+    **`Connection refused: Unable to connect to 10.50.12.45:443`** — Verify the director management IP is correct and the VPLEX management interface is reachable on port 443.
+    **`Authentication failed: Invalid credentials for user 'admin'`** — Confirm the admin password is correct and the user account has not been locked after failed login attempts.
+    **`Command not found: vplexcli`** — Ensure the VPLEX CLI tools are installed and the installation directory is in your system PATH.
 **Connect VMS to VPLEX directors:**
 
 ```bash

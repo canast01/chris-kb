@@ -232,6 +232,31 @@ vplexcli -q -e "ll /clusters/cluster-2/cluster-witness/"
 # — do not perform this test in production without a detailed runbook and application owner approval
 ```
 
+
+```text title="Expected output"
+Cluster: cluster-1
+  Witness:
+    address: 192.168.100.50
+    port: 7080
+    status: connected
+    reachable: true
+    last_heartbeat: 2024-01-15T14:32:18Z
+    quorum_capable: true
+
+Cluster: cluster-2
+  Witness:
+    address: 192.168.100.50
+    port: 7080
+    status: connected
+    reachable: true
+    last_heartbeat: 2024-01-15T14:32:19Z
+    quorum_capable: true
+```
+
+!!! warning "Common errors"
+    **`Witness: status = unreachable`** — Verify network connectivity between the witness appliance and both cluster management IPs, and confirm firewall rules allow port 7080.
+    **`Error: witness not configured for cluster-2`** — Run `vplexcli -e "create /clusters/cluster-2/cluster-witness/ address=<witness-ip>"` to register the witness with the second cluster.
+    **`Connection refused on 192.168.100.50:7080`** — SSH to the witness appliance and verify the witness service is running with `systemctl status vplex-witness`.
 ## Build Baseline
 
 Every VPLEX deployment must be configured to this baseline before handover to operations.

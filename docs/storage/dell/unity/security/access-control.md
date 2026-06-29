@@ -92,6 +92,26 @@ uemcli -d <ip> -u admin /user -name storageadmin01 set -passwd "NewPassword1!"
 uemcli -d <ip> -u admin /user -name storageadmin01 delete
 ```
 
+
+```text title="Expected output"
+User Name                Role                 Enabled  Locked
+admin                    Administrator        Yes      No
+guest                    Guest                Yes      No
+storageadmin01           Storage Administrator Yes      No
+
+User storageadmin01 created successfully.
+
+User storageadmin01 role changed to operator.
+
+User storageadmin01 password changed successfully.
+
+User storageadmin01 deleted successfully.
+```
+
+!!! warning "Common errors"
+    **`Error: User admin does not exist or access denied`** — Verify the management IP address with `-d` flag and ensure the admin account credentials are correct.
+    **`Error: Cannot delete user admin - last Administrator account cannot be removed`** — Create an additional Administrator account before deleting the current one, or delete a non-Administrator user instead.
+    **`Error: Password does not meet complexity requirements`** — Use a password with at least 8 characters including uppercase, lowercase, numbers, and special characters.
 ### Local Account Best Practices
 
 - Keep the number of local Administrator accounts to a minimum — ideally one break-glass account.
@@ -128,6 +148,35 @@ uemcli -d <ip> -u admin /user/ldap -id <ldap_id> set \
 uemcli -d <ip> -u admin /user/ldap -id <ldap_id> verify
 ```
 
+
+```text title="Expected output"
+ID: ldap_1
+Addr: 192.168.10.50
+Protocol: ldap
+Port: 389
+BaseDN: DC=corp,DC=local
+BindDN: CN=unity-svc,OU=Service Accounts,DC=corp,DC=local
+Status: Connected
+Last Verified: 2024-01-15 14:32:18
+
+The operation completed successfully.
+
+ID: ldap_1
+Addr: 192.168.10.51
+Protocol: ldap
+Port: 389
+BaseDN: DC=corp,DC=local
+BindDN: CN=unity-svc,OU=Service Accounts,DC=corp,DC=local
+Status: Connected
+Last Verified: 2024-01-15 14:35:42
+
+LDAP connectivity test passed.
+```
+
+!!! warning "Common errors"
+    **`Error: Authentication failed for user admin`** — Verify the admin credentials and ensure the user has sufficient privileges to manage LDAP configurations.
+    **`Error: Unable to connect to LDAP server at <ldap_server_ip>:389`** — Confirm the LDAP server IP address is correct, the server is online, and network connectivity exists from the Unity array to the LDAP server.
+    **`Error: Invalid bindDN or bindPasswd`** — Verify the service account credentials are correct and the account has permission to bind to the LDAP directory.
 ### Mapping LDAP Groups to Unity Roles
 
 Once directory services are configured, map LDAP/AD security groups to Unity roles:
@@ -155,6 +204,29 @@ uemcli -d <ip> -u admin /user/role create \
 uemcli -d <ip> -u admin /user/role -id <mapping_id> delete
 ```
 
+
+```text title="Expected output"
+ID  Name                                              Role              Domain
+1   CN=Unity-StorageAdmins,OU=Groups,DC=corp,DC=local  storageadmin      corp.local
+2   CN=Unity-Operators,OU=Groups,DC=corp,DC=local      operator          corp.local
+3   CN=Unity-Viewers,OU=Groups,DC=corp,DC=local        viewer            corp.local
+
+Role mapping created successfully.
+ID: 4
+
+Role mapping created successfully.
+ID: 5
+
+Role mapping created successfully.
+ID: 6
+
+Role mapping with ID 4 deleted successfully.
+```
+
+!!! warning "Common errors"
+    **`Error: The specified user/role does not exist`** — Verify the AD group DN is correct and the group exists in Active Directory with `ldapsearch` or Active Directory Users and Computers.
+    **`Error: Connection failed to <ip>. Check IP address and network connectivity`** — Confirm the Unity array IP is reachable with `ping <ip>` and that admin credentials are correct.
+    **`Error: Insufficient privileges to perform this operation`** — Ensure the admin account used has Storage Administrator role assigned on the Unity array.
 ## iSCSI CHAP Authentication
 
 For iSCSI host access, Unity supports CHAP (Challenge Handshake Authentication Protocol) to authenticate initiators. This prevents unauthorised hosts from connecting to Unity iSCSI targets.
@@ -197,6 +269,16 @@ uemcli -d <ip> -u admin /remote/host -id <host_id> set \
     -reverseChapPassword <reverse_secret>
 ```
 
+
+```text title="Expected output"
+The operation completed successfully.
+The operation completed successfully.
+```
+
+!!! warning "Common errors"
+    **`Error: The host object with id '<host_id>' was not found.`** — Verify the host ID exists on the array using `uemcli -d <ip> -u admin /remote/host list` and use the correct ID from the output.
+    **`Error: Authentication failed for user 'admin'.`** — Confirm the admin credentials are correct and the user has sufficient privileges; try `uemcli -d <ip> -u admin /remote/system get` to test connectivity first.
+    **`Error: CHAP password does not meet minimum complexity requirements (minimum 12 characters).`** — Use a CHAP secret that is at least 12 characters long and includes uppercase, lowercase, numbers, and special characters.
 On the Linux host side, configure `/etc/iscsi/iscsid.conf`:
 
 ```ini
@@ -236,6 +318,30 @@ uemcli -d <ip> -u admin /prot/nfs -id <nfs_id> set \
 # -noAccessHosts : explicitly deny access
 ```
 
+
+```text title="Expected output"
+ID                                    Server    Path  Filesystem  RW Hosts        RO Hosts        Root Hosts      No Access Hosts
+nfs_1                                 nas_1     /     fs_1        10.10.10.0/24   —               10.10.10.0/24   0.0.0.0/0
+nfs_2                                 nas_1     /data fs_2        192.168.1.0/24  192.168.2.0/24  192.168.1.0/24  —
+
+NFS Export created successfully.
+ID: nfs_3
+Server: nas_1
+Path: /
+Filesystem: fs_1
+RW Hosts: 10.10.10.0/24
+Root Hosts: 10.10.10.0/24
+No Access Hosts: 0.0.0.0/0
+
+NFS Export modified successfully.
+ID: nfs_1
+RO Hosts: 10.10.20.0/24
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid filesystem ID '<fs_id>'`** — Verify the filesystem exists with `uemcli -d <ip> -u admin /stor/fs show` and use the correct ID.
+    **`Error: Access denied — insufficient privileges`** — Ensure the admin user has NFS management permissions or use an account with higher privileges.
+    **`Error: Subnet mask format invalid for '-rwHosts 10.10.10.0'`** — Specify hosts in CIDR notation (e.g., `10.10.10.0/24`) or as individual IPs separated by commas.
 **Root squash:** By default, Unity maps the root user from NFS clients to a non-privileged `nobody` account (root squash enabled). To allow root access from specific trusted hosts (such as backup servers), add those hosts to `-rootHosts`.
 
 ## SMB Share Permissions
@@ -260,6 +366,32 @@ uemcli -d <ip> -u admin /prot/smb create \
 # GUI path: Storage > File > File Systems > [filesystem] > SMB Shares > [share] > Permissions
 ```
 
+
+```text title="Expected output"
+SMB Protocol Configuration:
+  ID                          | Name              | Server    | Path     | State
+  ============================================================================
+  SMB_1                       | OracleBackups     | nas-unity-01 | /        | Enabled
+  SMB_2                       | ComplianceArchive | nas-unity-02 | /archive | Enabled
+  SMB_3                       | UserProfiles      | nas-unity-01 | /home    | Enabled
+
+Share Permissions (Default):
+  Share Name: OracleBackups
+  Everyone: Full Control (Read, Write, Modify, Delete)
+  Inheritance: Enabled
+
+Created SMB share 'OracleBackups' successfully.
+  Share ID: SMB_4
+  Server: nas-unity-01
+  File System: fs_oracle_001
+  Path: /
+  State: Online
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid server ID '<nas_id>'`** — Verify the NAS server ID exists by running `uemcli -d <ip> -u admin /prot/smb/server show` and use the correct ID from the output.
+    **`Error: File system '<fs_id>' not found`** — Confirm the filesystem ID with `uemcli -d <ip> -u admin /stor/fs show` and substitute the correct filesystem identifier.
+    **`Error: Access denied: insufficient privileges`** — Ensure the admin user account has SMB management permissions or use a service account with appropriate UEMCLI roles assigned.
 For production environments, restrict share-level permissions to the AD groups that require access, then use NTFS permissions for fine-grained control within the share. Do not leave the default "Everyone: Full Control" share permission in place.
 
 ## Management Interface Restrictions
@@ -297,6 +429,28 @@ uemcli -d <ip> -u admin /event/audit show
 uemcli -d <ip> -u admin /event/syslog show
 ```
 
+
+```text title="Expected output"
+ID              Timestamp                    User      Action                          Resource                Status
+1847            2024-01-15 14:32:18 UTC      admin     Modify User Account             user_operator1          Success
+1846            2024-01-15 14:28:45 UTC      admin     Change Password Policy          Security Settings       Success
+1845            2024-01-15 13:55:12 UTC      svc_backup Login                         System Access           Success
+1844            2024-01-15 13:22:33 UTC      admin     Modify NTP Server               ntp.corp.local          Success
+1843            2024-01-15 12:18:07 UTC      admin     Export Configuration            unity-backup-20240115   Success
+...
+
+Timestamp                    Severity  Component        Message
+2024-01-15 14:35:22 UTC      INFO      SecurityManager  User admin logged in from 192.168.1.105
+2024-01-15 14:32:18 UTC      WARNING   UserManagement   Password policy updated: min length 12
+2024-01-15 14:28:45 UTC      INFO      Authentication   Failed login attempt from 192.168.1.200
+2024-01-15 13:55:12 UTC      INFO      SystemHealth     Certificate expiration warning: 45 days remaining
+2024-01-15 13:22:33 UTC      INFO      TimeSync         NTP synchronization successful with ntp.corp.local
+```
+
+!!! warning "Common errors"
+    **`Authentication failed: Invalid credentials`** — Verify the admin user password and ensure the management IP address is correct and reachable.
+    **`Connection timeout: Unable to reach <ip>`** — Confirm the storage array IP is accessible from your management station and that firewall rules permit UEMCLI traffic on port 443.
+    **`Permission denied: User 'admin' does not have audit view privileges`** — Ensure the admin account has the required audit log read permissions assigned in the Unity security role configuration.
 Review the audit log regularly for:
 - Logins from unexpected IP addresses or user accounts.
 - Configuration changes made outside of approved change windows.

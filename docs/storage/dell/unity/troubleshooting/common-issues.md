@@ -211,6 +211,53 @@ uemcli -d <ip> -u admin /net/nas/if show
 uemcli -d <ip> -u admin /prot/rep/session show
 ```
 
+
+```text title="Expected output"
+Step 1 — Health check (no unhealthy components):
+(no output — all components report OK status)
+
+Step 2 — Storage Processor status:
+SP Name              Health  Needs Attention  Needs Replacement
+SP_A                 OK      No               No
+SP_B                 OK      No               No
+
+Step 3 — Pool configuration and capacity:
+Pool Name            RAID Type  Total Capacity  Free Capacity  Health
+pool_sas_01          RAID 10    50.0 TB         12.3 TB        OK
+pool_sas_02          RAID 6     100.0 TB        34.7 TB        OK
+pool_nl_sas_01       RAID 6     200.0 TB        8.2 TB         Degraded
+
+Step 4 — Active alerts (last 2 hours):
+Timestamp            Severity  Component        Message
+2024-01-15 14:32:01  Warning   pool_nl_sas_01   Capacity threshold exceeded
+2024-01-15 13:18:44  Info      SP_A             Firmware update available
+
+Step 5 — Host registration and LUN access:
+Host Name            Initiator Type  Registered  IP Address
+host-prod-01         iSCSI           Yes         192.168.1.45
+host-prod-02         FC              Yes         N/A
+LUN  Host            Access Type  Size
+0    host-prod-01    Read/Write   500 GB
+1    host-prod-01    Read/Write   1 TB
+2    host-prod-02    Read/Write   2 TB
+
+Step 6 — NAS server and interface status:
+NAS Server           Health  Joined to Domain  IP Address
+nas_server_01        OK      Yes               192.168.2.10
+Interface Name       Status  IP Address       Netmask
+nas_cifs_if_01       Up      192.168.2.11     255.255.255.0
+nas_nfs_if_01        Up      192.168.2.12     255.255.255.0
+
+Step 7 — Replication sessions:
+Session Name         Status    Source Array     Destination Array  Last Sync
+rep_session_prod_01  Active    10.0.0.50        10.0.0.51          2024-01-15 14:28:33
+rep_session_prod_02  Idle      10.0.0.50        10.0.0.52          2024-01-15 14:15:22
+```
+
+!!! warning "Common errors"
+    **`Authentication failed: Invalid credentials`** — Verify the admin account password and ensure the user has sufficient privileges on the array.
+    **`Connection refused: Unable to reach <ip>`** — Confirm the array IP address is correct, the management interface is online, and network connectivity exists from your management station.
+    **`Command not found: uemcli`** — Install the EMC CLI tools package or add the uemcli binary directory to your system PATH.
 ### Incident Data Collection Form
 
 | Question | Answer |

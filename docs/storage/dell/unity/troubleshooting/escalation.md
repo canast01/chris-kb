@@ -89,6 +89,40 @@ uemcli -d <sp-ip> -u admin -p <password> /sys/general show
 uemcli -d <sp-ip> -u admin -p <password> /env/sp show
 ```
 
+
+```text title="Expected output"
+# OE version (note full version string including build)
+SP IP: 192.168.1.100
+Version: OE 5.1.0.0.5.123
+Build: 5.1.0.0.5.123
+Release Date: 2023-11-15
+
+# System info (model, serial, health)
+System Model: Unity 380
+System Serial Number: APM00123456789
+Health State: OK
+System Status: OK
+Capacity: 100 TB
+Used Capacity: 67.5 TB
+
+# SP serial numbers and health
+SP A:
+  Serial Number: APM00123456789A
+  Health State: OK
+  Status: Present
+  IP Address: 192.168.1.100
+
+SP B:
+  Serial Number: APM00123456789B
+  Health State: OK
+  Status: Present
+  IP Address: 192.168.1.101
+```
+
+!!! warning "Common errors"
+    **`Authentication failed`** — Verify the SP IP address is reachable and credentials are correct with `ping <sp-ip>` and confirm the password has no special characters requiring escaping.
+    **`Connection timed out`** — Ensure the management host has network connectivity to the SP IP on port 443 and check firewall rules with `telnet <sp-ip> 443`.
+    **`uemcli: command not found`** — Install the Dell EMC CLI package on the management host or verify the installation path is in your `$PATH` environment variable.
 ### 2. Capture component health and active alerts
 
 ```bash
@@ -108,6 +142,38 @@ uemcli -d <sp-ip> -u admin -p <password> /sys/alert/hist show \
 uemcli -d <sp-ip> -u admin -p <password> /env/disk show >> /tmp/unity-health-$(date +%Y%m%d%H%M).txt
 ```
 
+
+```text title="Expected output"
+Health Components Not OK:
+ID | Name | Health | Description
+spa_battery | SPA Battery | DEGRADED | Battery charge below threshold
+spb_psu_1 | SPB PSU 1 | FAILED | Power supply unit failure detected
+dae_0_disk_12 | DAE 0 Disk 12 | FAILED | Drive offline
+
+Active Alerts (3 total):
+ID | Severity | Message | Timestamp
+ALERT-0847291 | CRITICAL | SPA battery degraded, charge 45% | 2024-01-15 14:32:18
+ALERT-0847290 | MAJOR | SPB PSU 1 failed, redundancy lost | 2024-01-15 14:31:05
+ALERT-0847289 | MINOR | DAE 0 disk 12 offline | 2024-01-15 14:28:42
+
+Alert History (72 hours):
+ID | Severity | Message | Timestamp
+ALERT-0847288 | MAJOR | SPA cache flush initiated | 2024-01-13 09:15:22
+ALERT-0847287 | MINOR | Disk predictive failure detected | 2024-01-12 22:41:09
+...
+
+Disk Health Summary:
+ID | Name | State | Health
+dae_0_disk_0 | Disk 0 | READY | OK
+dae_0_disk_1 | Disk 1 | READY | OK
+dae_0_disk_12 | Disk 12 | OFFLINE | FAILED
+dae_1_disk_5 | Disk 5 | DEGRADED | DEGRADED
+```
+
+!!! warning "Common errors"
+    **`Error: Connection refused (111)`** — Verify the SP IP address is correct and the management interface is reachable with `ping <sp-ip>`.
+    **`Error: Authentication failed for user 'admin'`** — Confirm the password is correct and the admin account is not locked; reset credentials via the Unisphere GUI if needed.
+    **`uemcli: command not found`** — Install the UEMCLI package on your management host or run commands from a system with UEMCLI already configured.
 ### 3. Capture pool and storage health
 
 ```bash
@@ -124,6 +190,47 @@ uemcli -d <sp-ip> -u admin -p <password> /net/nas/server show \
   >> /tmp/unity-pools-$(date +%Y%m%d).txt
 ```
 
+
+```text title="Expected output"
+Storage Pool Information
+=======================
+Pool ID: pool_1
+Name: SAN_Pool_01
+Health: OK
+Total Capacity: 50.0 TB
+Used Capacity: 34.2 TB
+Available Capacity: 15.8 TB
+RAID Type: RAID 6
+Pool ID: pool_2
+Name: NAS_Pool_02
+Health: OK
+Total Capacity: 100.0 TB
+Used Capacity: 87.5 TB
+Available Capacity: 12.5 TB
+RAID Type: RAID 10
+
+LUNs with Non-OK Health
+=======================
+(no LUNs returned)
+
+NAS Servers
+=======================
+NAS Server ID: nas_1
+Name: NAS-Server-01
+Health: OK
+Operational Status: Running
+File Systems: 12
+NAS Server ID: nas_2
+Name: NAS-Server-02
+Health: OK
+Operational Status: Running
+File Systems: 8
+```
+
+!!! warning "Common errors"
+    **`Connection refused (Connection refused)`** — Verify the SP IP address is correct and reachable with `ping <sp-ip>`, and confirm the management interface is running with `uemcli -d <sp-ip> -u admin -p <password> /sys show`.
+    **`Authentication failed (Authentication failed)`** — Confirm the admin password is correct and the user account has not been locked by attempting login through the Unisphere GUI first.
+    **`Command: /stor/pool show not found`** — Ensure you are running uemcli version 4.1 or later by checking `uemcli -version` and update if necessary.
 ### 4. Generate the service information bundle
 
 **Via Unisphere UI (preferred):**
@@ -142,6 +249,26 @@ uemcli -d <sp-ip> -u admin -p <password> /sys/serviceinfo show
 # Download when complete (follow the download URL from the status output)
 ```
 
+
+```text title="Expected output"
+Service bundle collection initiated.
+Collection ID: SB-20240115-084532
+Status: In Progress
+Estimated time remaining: 8 minutes
+
+Service Information
+Collection ID: SB-20240115-084532
+Status: Completed
+Size: 2.3 GB
+Created: 2024-01-15 08:45:32
+Download URL: https://192.168.1.50:443/api/types/serviceinfo/instances/SB-20240115-084532/download
+Expiration: 2024-01-22 08:45:32
+```
+
+!!! warning "Common errors"
+    **`Authentication failed: Invalid credentials`** — Verify the SP IP address is correct and admin credentials are current; reset the password if needed.
+    **`Connection timeout: Unable to reach <sp-ip>`** — Confirm the SP management IP is reachable with `ping <sp-ip>` and that the storage array is online.
+    **`Collection already in progress`** — Wait for the existing collection to complete or use `uemcli -d <sp-ip> -u admin -p <password> /sys/serviceinfo cancel` to abort it first.
 ### 5. Write the timeline
 
 ```text
@@ -243,6 +370,64 @@ uemcli -d <sp-ip> -u admin -p <password> /sys/alert show
 uemcli -d <sp-ip> -u admin -p <password> /stor/pool show
 ```
 
+
+```text title="Expected output"
+System Health Summary:
+  System Name: UNITY-SN-APM00123456789
+  Model: Unity 380
+  Serial Number: APM00123456789
+  Health: OK
+  Capacity (GB): 10485760
+  Used Capacity (GB): 4194304
+
+SP Health:
+  SP Name: SPA
+    Health: OK
+    Temperature: 32°C
+    Power Supply 1: OK
+    Power Supply 2: OK
+  SP Name: SPB
+    Health: OK
+    Temperature: 31°C
+    Power Supply 1: OK
+    Power Supply 2: OK
+
+Non-OK Components:
+  Component: Disk_15
+    Health: DEGRADED
+    Type: SAS_Flash
+    Slot: 15
+  Component: Fan_Module_3
+    Health: DEGRADED
+    Speed: 45%
+
+Active Alerts:
+  Alert ID: 0x7f0000a1
+    Severity: WARNING
+    Message: Disk 15 predictive failure detected
+    Timestamp: 2024-01-15 14:23:45
+  Alert ID: 0x7f0000b2
+    Severity: INFORMATIONAL
+    Message: Fan module 3 operating below optimal speed
+    Timestamp: 2024-01-15 14:20:12
+
+Pool Health:
+  Pool Name: Pool_SSD_Tier
+    Health: DEGRADED
+    Total Capacity (GB): 2097152
+    Free Capacity (GB): 524288
+    RAID Type: RAID10
+  Pool Name: Pool_NL_SAS
+    Health: OK
+    Total Capacity (GB): 8388608
+    Free Capacity (GB): 2097152
+    RAID Type: RAID6
+```
+
+!!! warning "Common errors"
+    **`Connection refused — check that <sp-ip> is reachable and uemcli service is running on the SP.`** — Verify network connectivity with `ping <sp-ip>` and confirm the management IP is correct.
+    **`Authentication failed for user 'admin'`** — Reset the admin password via the Unisphere web UI or use the correct password in the `-p` parameter.
+    **`uemcli: command not found`** — Install the uemcli package on the management host using your distribution's package manager or download from Dell EMC support portal.
 ---
 
 ## Support SLA Reference

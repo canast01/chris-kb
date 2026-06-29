@@ -170,6 +170,56 @@ ll /distributed-storage/consistency-groups/
 ll /clusters/cluster-1/cluster-witness/
 ```
 
+
+```text title="Expected output"
+/clusters/cluster-1/health-indications/:
+total 48
+drwxr-xr-x  4 root root  4096 Nov 14 09:23 .
+drwxr-xr-x 12 root root  4096 Nov 14 09:15 ..
+-rw-r--r--  1 root root  2847 Nov 14 09:23 health-status.xml
+-rw-r--r--  1 root root  1256 Nov 14 09:22 alerts.log
+
+/clusters/cluster-2/health-indications/:
+total 44
+drwxr-xr-x  4 root root  4096 Nov 14 09:24 .
+drwxr-xr-x 12 root root  4096 Nov 14 09:16 ..
+-rw-r--r--  1 root root  3102 Nov 14 09:24 health-status.xml
+
+/engines/engine-1/directors/director-1/hardware/:
+total 52
+drwxr-xr-x  3 root root  4096 Nov 14 09:21 .
+drwxr-xr-x  5 root root  4096 Nov 14 09:18 ..
+-rw-r--r--  1 root root  4521 Nov 14 09:21 pcie-cards.xml
+-rw-r--r--  1 root root  2198 Nov 14 09:20 memory-modules.xml
+-rw-r--r--  1 root root  1847 Nov 14 09:19 cpu-status.xml
+
+/distributed-storage/distributed-devices/device-001/health-indications/:
+total 40
+drwxr-xr-x  2 root root  4096 Nov 14 09:25 .
+drwxr-xr-x  2 root root  4096 Nov 14 09:25 ..
+-rw-r--r--  1 root root  1923 Nov 14 09:25 device-health.xml
+
+Health Check Report - Full Diagnostic
+======================================
+Cluster Status: HEALTHY
+Engine Status: HEALTHY (2/2 engines online)
+Director Status: HEALTHY (4/4 directors online)
+Storage Device Status: HEALTHY (24/24 devices operational)
+Witness Connectivity: CONNECTED
+Last Check: 2024-11-14T09:25:47Z
+
+/clusters/cluster-1/exports/storage-views/:
+total 56
+drwxr-xr-x  6 root root  4096 Nov 14 09:26 .
+drwxr-xr-x  6 root root  4096 Nov 14 09:18 ..
+drwxr-xr-x  3 root root  4096 Nov 14 09:26 view-prod-01
+drwxr-xr-x  3 root root  4096 Nov 14 09:26 view-prod-02
+drwxr-xr-x  3 root root  4096 Nov 14 09:25 view-dev-01
+
+/distributed-storage/consistency-groups/:
+total 64
+drwxr-xr-
+```
 ---
 
 ## See also
