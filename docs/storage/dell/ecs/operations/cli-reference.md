@@ -262,6 +262,77 @@ aws s3api put-bucket-lifecycle-configuration \
   }' $PROFILE
 ```
 
+
+```text title="Expected output"
+AWS Access Key ID [None]: 
+AWS Secret Access Key [None]: 
+Default region name [None]: us-east-1
+Default output format [None]: json
+
+{
+    "Buckets": [
+        {
+            "Name": "app-data-bucket",
+            "CreationDate": "2024-01-15T08:32:14.000Z"
+        },
+        {
+            "Name": "backup-archive",
+            "CreationDate": "2024-02-03T11:47:22.000Z"
+        },
+        {
+            "Name": "new-bucket",
+            "CreationDate": "2024-02-20T14:19:05.000Z"
+        }
+    ],
+    "Owner": {
+        "DisplayName": "object_user",
+        "ID": "a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6"
+    }
+}
+
+{
+    "LocationConstraint": "us-east-1"
+}
+
+2024-02-20 09:15:32    4.2 GiB backups/
+2024-02-19 14:22:18  512.0 MiB configs/
+2024-02-18 16:45:01    1.1 GiB logs/
+
+2024-02-20 09:15:32    4.2 GiB backups/file.tar.gz
+2024-02-20 08:30:15    256.0 MiB backups/file-old.tar.gz
+2024-02-19 14:22:18    512.0 MiB configs/app.conf
+2024-02-18 16:45:01    1.1 GiB logs/system.log
+...
+
+upload: /local/path/file.tar.gz to s3://app-data-bucket/backups/file.tar.gz
+
+Completed 12 of 15 files with 4.8 GiB transferred
+upload: /local/backup/db-dump.sql to s3://app-data-bucket/backups/db-dump.sql
+upload: /local/backup/config.yaml to s3://app-data-bucket/backups/config.yaml
+Completed 15 of 15 files with 8.3 GiB transferred
+
+download: s3://app-data-bucket/backups/file.tar.gz to /local/restore/file.tar.gz
+
+delete: s3://app-data-bucket/backups/file.tar.gz
+
+remove_bucket: app-data-bucket
+
+(no output — command completes silently)
+
+{
+    "Versions": [
+        {
+            "ETag": "\"a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6\"",
+            "Size": 4294967296,
+            "StorageClass": "STANDARD",
+            "Key": "backups/file.tar.gz",
+            "VersionId": "v1708420532000",
+            "IsLatest": true,
+            "LastModified": "2024-02-20T09:15:32.000Z"
+        },
+        {
+            "ETag": "\"b2c3d
+```
 ---
 
 ## Object Store Admin API (curl)
@@ -334,6 +405,94 @@ curl -s -k -H "X-SDS-AUTH-TOKEN: ${TOKEN}" \
   "${ECS}/logout"
 ```
 
+
+```text title="Expected output"
+HTTP/1.1 200 OK
+X-SDS-AUTH-TOKEN: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzeXNhZG1pbiIsImV4cCI6MTcwOTMxNjgwMH0.abc123def456
+{
+  "totalProvisioned_GB": 50000,
+  "totalFree_GB": 12450,
+  "usedStorageCapacity_GB": 37550
+}
+{
+  "nodes": [
+    {
+      "id": "ecs-node-01.corp.local",
+      "health": "Good",
+      "version": "3.6.1.0.1234",
+      "ip_address": "192.168.1.101"
+    },
+    {
+      "id": "ecs-node-02.corp.local",
+      "health": "Good",
+      "version": "3.6.1.0.1234",
+      "ip_address": "192.168.1.102"
+    }
+  ]
+}
+{
+  "id": "ecs-node-01.corp.local",
+  "health": "Good",
+  "cpu_usage_percent": 34.2,
+  "memory_usage_percent": 58.7,
+  "disk_usage_percent": 75.1
+}
+{
+  "alerts": [
+    {
+      "id": "alert-5f8c2a1b",
+      "severity": "Warning",
+      "message": "Disk usage above 75% on ecs-node-03",
+      "timestamp": "2024-03-01T14:32:15Z"
+    }
+  ]
+}
+{
+  "id": "app_team_ns",
+  "default_data_services_vpool": "vpool-prod-01",
+  "is_stale_allowed": true,
+  "is_compliance_enabled": false,
+  "created": "2024-03-01T14:35:22Z"
+}
+{
+  "namespaces": [
+    {
+      "id": "app_team_ns",
+      "created": "2024-03-01T14:35:22Z"
+    },
+    {
+      "id": "legacy_ns",
+      "created": "2023-11-15T09:12:44Z"
+    }
+  ]
+}
+{
+  "buckets": [
+    {
+      "name": "app-data-bucket",
+      "created": "2024-02-28T10:15:33Z",
+      "size_bytes": 2147483648
+    }
+  ]
+}
+{
+  "name": "app-data-bucket",
+  "namespace": "app_team_ns",
+  "size_bytes": 2147483648,
+  "object_count": 1024,
+  "versioning_enabled": false
+}
+{
+  "vpools": [
+    {
+      "id": "vpool-prod-01",
+      "name": "Production-Replication",
+      "replication_factor": 3,
+      "status": "Active"
+    },
+    {
+      "id
+```
 ---
 
 ## System CLI (SSH — Node-Level Access)
@@ -381,6 +540,46 @@ chronyc tracking
 timedatectl status
 ```
 
+
+```text title="Expected output"
+admin@ecs-node-01:~$ df -h /data/
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda3       7.3T  4.2T  3.1T  58% /data
+
+admin@ecs-node-01:~$ df -h
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1       512M  128M  384M  25% /boot
+/dev/sda2        50G   18G   32G  36% /
+/dev/sda3       7.3T  4.2T  3.1T  58% /data
+tmpfs           7.8G     0  7.8G   0% /dev/shm
+
+admin@ecs-node-01:~$ lsblk -o NAME,SIZE,FSTYPE,MOUNTPOINT,STATE
+NAME    SIZE FSTYPE MOUNTPOINT STATE
+sda     7.3T                   running
+├─sda1  512M ext4   /boot      running
+├─sda2   50G ext4   /          running
+└─sda3  7.3T xfs    /data      running
+sdb     7.3T xfs    /data2     running
+
+admin@ecs-node-01:~$ viprexec -v -cmd "df -h /data/"
+ecs-node-01: /dev/sda3 7.3T 4.2T 3.1T 58% /data
+ecs-node-02: /dev/sda3 7.3T 3.9T 3.4T 54% /data
+ecs-node-03: /dev/sda3 7.3T 4.5T 2.8T 62% /data
+
+admin@ecs-node-01:~$ viprexec -v -cmd "uptime"
+ecs-node-01:  14:32:18 up 187 days, 3:42, 2 users, load average: 2.14, 1.87, 1.92
+ecs-node-02:  14:32:19 up 185 days, 8:15, 1 user,  load average: 1.43, 1.51, 1.68
+ecs-node-03:  14:32:18 up 189 days, 1:03, 2 users, load average: 3.21, 2.94, 2.87
+
+admin@ecs-node-01:~$ viprexec -v -cmd "service storageos status"
+ecs-node-01: ● storageos.service - EMC ECS StorageOS
+   Loaded: loaded (/etc/systemd/system/storageos.service; enabled; vendor preset: disabled)
+   Active: active (running) since Wed 2024-01-10 08:15:22 UTC; 6 days ago
+ecs-node-02: ● storageos.service - EMC ECS StorageOS
+   Active: active (running) since Wed 2024-01-10 08:16:05 UTC; 6 days ago
+ecs-node-03: ● storageos.service - EMC ECS StorageOS
+   Active: active (running) since Wed 2024-
+```
 ---
 
 ## Common Troubleshooting Commands
@@ -432,6 +631,55 @@ curl -s -k -X POST \
   "${ECS}/vdc/support-bundle" | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+root@ecs-node-01:~# /opt/storageos/tools/dtquery query --type CHUNK --id 0x00a4c8f2e1b9d7c3
+Chunk ID: 0x00a4c8f2e1b9d7c3
+Status: HEALTHY
+Replication Factor: 3
+Replicas: [ecs-node-01, ecs-node-02, ecs-node-03]
+Last Modified: 2024-01-15T14:32:18Z
+
+root@ecs-node-01:~# /opt/storageos/tools/nodetool status
+Datacenter: us-east-1
+===============================
+Status=Up/Down
+|/ State=Normal/Leaving/Joining/Moving
+--  Address          Load       Tokens  Owns (effective)  Host ID
+UN  192.168.1.101    256.42 KB  256     33.3%             a7f2c1e8-9d4b-4a2f-b1c3-8e9f2d4a6b7c
+UN  192.168.1.102    251.88 KB  256     33.3%             b8g3d2f9-0e5c-5b3g-c2d4-9f0g3e5b7c8d
+UN  192.168.1.103    248.15 KB  256     33.4%             c9h4e3g0-1f6d-6c4h-d3e5-0g1h4f6c8d9e
+
+root@ecs-node-01:~# /opt/storageos/tools/nodetool compactionstats
+pending tasks: 0
+Active compaction remaining time :   0h00m00s
+
+root@ecs-node-01:~# /opt/storageos/tools/nodetool flush
+Flushing keyspace system...
+Flushing keyspace system_auth...
+Flushing keyspace system_distributed...
+
+root@ecs-node-01:~# /opt/storageos/tools/nodetool info | grep -i heap
+Heap Memory (MB)        : 4096.00 / 8192.00
+
+root@ecs-node-01:~# echo "stat" | nc localhost 2181
+Zookeeper version: 3.4.13-2d71af4dbe22557fda74f9a9a4309dee, built on 06/29/2018 12:17 GMT
+Latency min/avg/max: 0/1/45
+Received: 18472
+Sent: 18491
+Mode: follower
+Node count: 847
+
+root@ecs-node-01:~# echo "conf" | nc localhost 2181
+server.1=ecs-zk-01:2888:3888
+server.2=ecs-zk-02:2888:3888
+server.3=ecs-zk-03:2888:3888
+
+root@ecs-node-01:~# echo "srvr" | nc localhost 2181 | grep Mode
+Mode: follower
+
+root@ecs-node-01:~# curl -s -k -H "X-SDS-AUTH-TOKEN: ${TOKEN}" "${ECS
+```
 ---
 
 ## Verify

@@ -288,6 +288,26 @@ purehost connect prod-oracle-01 --vol prod-oracle-data-01
 # Rescan HBA on the host; mount filesystem; validate at application layer
 ```
 
+
+```text title="Expected output"
+Disconnecting volume prod-oracle-data-01 from host prod-oracle-01...
+Volume prod-oracle-data-01 successfully disconnected from host prod-oracle-01
+Copying snapshot prod-oracle-pg.premigration-20260501.prod-oracle-data-01 to prod-oracle-data-01 with overwrite...
+Copy job started: job-id 8f4a2c1b-9e7d-4d2a-b1c3-5a8f9e2d3c4b
+Copy job completed successfully in 47 seconds
+Volume prod-oracle-data-01 overwritten with snapshot content
+Connecting volume prod-oracle-data-01 to host prod-oracle-01...
+Volume prod-oracle-data-01 successfully connected to host prod-oracle-01
+Connection details:
+  LUN: 42
+  WWN: 600144588f4a2c1b9e7d4d2ab1c35a8f
+  iSCSI IQN: iqn.2010-06.com.purestorage:flasharray.prod-oracle-01.42
+```
+
+!!! warning "Common errors"
+    **`Error: Volume prod-oracle-data-01 is still connected to 1 host(s). Use --force to disconnect.`** — Add the `--force` flag to the disconnect command if the volume must be forcibly unmapped despite active connections.
+    **`Error: Snapshot prod-oracle-pg.premigration-20260501.prod-oracle-data-01 not found`** — Verify the snapshot name matches exactly (check with `purevol list --snap`) and confirm the snapshot has not expired or been deleted.
+    **`Error: Cannot overwrite volume prod-oracle-data-01: insufficient space in pod`** — Ensure the target volume has sufficient capacity to accommodate the snapshot data, or expand the volume before retrying the copy operation.
 ---
 
 ### Restore a Volume from a Volume-Level Snapshot
@@ -308,6 +328,27 @@ purevol copy prod-oracle-data-01.preupgrade-20260501 \
     --overwrite prod-oracle-data-01
 ```
 
+
+```text title="Expected output"
+prod-oracle-data-01.preupgrade-20260501
+prod-oracle-data-01.preupgrade-20260415
+prod-oracle-data-01.preupgrade-20260301
+prod-oracle-data-01.daily-20260501
+prod-oracle-data-01.daily-20260430
+
+Volume prod-oracle-data-01.preupgrade-20260501 copied to restore-validate-01
+Copy completed in 47 seconds
+Source: prod-oracle-data-01.preupgrade-20260501 (2.3 TB)
+Destination: restore-validate-01 (2.3 TB)
+
+Volume prod-oracle-data-01.preupgrade-20260501 copied to prod-oracle-data-01 (overwrite)
+Copy completed in 52 seconds
+WARNING: Production volume prod-oracle-data-01 has been overwritten
+```
+
+!!! warning "Common errors"
+    **`Error: Volume prod-oracle-data-01 is currently connected to host oracle-prod-01`** — Disconnect the volume from all hosts using `purevol disconnect prod-oracle-data-01 --host oracle-prod-01` before attempting overwrite.
+    **`Error: Snapshot prod-oracle-data-01.preupgrade-20260501 not found`** — Verify the snapshot name exists by running `purevol list prod-oracle-data-01.*` and use the exact name from the output.
 ---
 
 ### Restore from an Async Replication Snapshot at the DR Site
@@ -328,6 +369,26 @@ purevol copy \
 purehost connect dr-oracle-01 --vol dr-restore-oracle-data-01
 ```
 
+
+```text title="Expected output"
+Name                                          Source                                         Created
+prod-oracle-pg.premigration-20260501.prod-oracle-data-01  prod-oracle-data-01                            2026-05-01 14:32:18 UTC
+prod-oracle-pg.premigration-20260501.prod-oracle-data-02  prod-oracle-data-02                            2026-05-01 14:32:19 UTC
+prod-oracle-pg.premigration-20260501.prod-oracle-logs-01  prod-oracle-logs-01                            2026-05-01 14:32:20 UTC
+
+Volume dr-restore-oracle-data-01 created from snapshot prod-oracle-pg.premigration-20260501.prod-oracle-data-01
+Size: 500GB
+Serial: 8e3f7c2a9b1d4e6f
+
+Connected dr-oracle-01 to volume dr-restore-oracle-data-01
+LUN: 3
+Host IQN: iqn.1991-05.com.example:dr-oracle-01.storage
+```
+
+!!! warning "Common errors"
+    **`Error: Snapshot prod-oracle-pg.premigration-20260501.prod-oracle-data-01 not found`** — Verify the snapshot name matches exactly with `purepgroup listsnaps prod-oracle-pg --on local` output, including the date and source volume suffix.
+    **`Error: Volume dr-restore-oracle-data-01 already exists`** — Use a unique volume name or delete the existing volume with `purevol destroy dr-restore-oracle-data-01` before retrying the copy command.
+    **`Error: Host dr-oracle-01 not found on array`** — Register the DR host first using `purehost create dr-oracle-01 --iqn <host-iqn>` before attempting to connect volumes.
 ---
 
 ### ActiveDR: Pod Promotion for DR Failover
@@ -349,6 +410,37 @@ purepod list dr-oracle-pod
 purevol list dr-oracle-pod::*
 ```
 
+
+```text title="Expected output"
+# purepod replica-link list
+Name                  Status      Direction    Lag(ms)    Last_Updated
+prod-oracle-pod       Connected   Inbound      12         2024-01-15T14:32:18Z
+prod-mysql-pod        Connected   Inbound      8          2024-01-15T14:32:19Z
+prod-app-cache-pod    Connected   Inbound      156        2024-01-15T14:32:05Z
+
+# purepod demote prod-oracle-pod
+Demoting pod 'prod-oracle-pod'...
+Pod 'prod-oracle-pod' demoted to secondary. Replication direction reversed.
+
+# purepod promote dr-oracle-pod
+Promoting pod 'dr-oracle-pod' to primary...
+Pod 'dr-oracle-pod' promoted successfully. Volumes are now writable.
+
+# purepod list dr-oracle-pod
+Name              Status    Primary    Mediator      Volumes
+dr-oracle-pod     Online    dr-array   10.20.30.40   12
+
+# purevol list dr-oracle-pod::*
+Name                          Size      Provisioned    Thin    Snapshots
+dr-oracle-pod::ora_data_01    500GB     450GB          Yes     3
+dr-oracle-pod::ora_data_02    500GB     480GB          Yes     2
+dr-oracle-pod::ora_logs       100GB     95GB           Yes     1
+dr-oracle-pod::ora_archive    250GB     210GB          Yes     0
+```
+
+!!! warning "Common errors"
+    **`Error: Pod 'prod-oracle-pod' is not in a replicable state`** — Verify the pod exists on the production array and has an active replica-link before attempting demotion.
+    **`Error: Cannot promote pod 'dr-oracle-pod' — replica-link status is 'Disconnected'`** — Check network connectivity between arrays and ensure the replica-link is in 'Connected' state using `purepod replica-link list`.
 For unplanned failover (production array is offline), promote the DR pod without demoting production first, then reconcile after production is restored.
 
 ---
@@ -371,6 +463,26 @@ purevol list prod-oracle-data-01
 purehost connect prod-oracle-01 --vol prod-oracle-data-01
 ```
 
+
+```text title="Expected output"
+Name                          Size      Source    Pending Eradication
+prod-oracle-data-01           1.0T      —         True
+prod-mysql-backup-02          500G      —         True
+prod-kafka-log-01             2.0T      —         True
+prod-elasticsearch-heap-03    750G      —         True
+
+Volume prod-oracle-data-01 recovered successfully.
+
+Name                 Size      Provisioned    Used      Data Reduction    Hosts
+prod-oracle-data-01  1.0T      1.0T           847.3G    1.8x               prod-oracle-01
+
+Connection established: prod-oracle-01 → prod-oracle-data-01 (LUN 3)
+```
+
+!!! warning "Common errors"
+    **`Error: Volume prod-oracle-data-01 not found in pending eradication queue`** — Verify the volume name is correct and check if it has already been eradicated with `purevol list --destroyed`.
+    **`Error: Host prod-oracle-01 not found or offline`** — Confirm the host exists and is registered in Pure with `purehost list` before attempting reconnection.
+    **`Error: Volume prod-oracle-data-01 is already connected to host prod-oracle-01`** — Remove the redundant connection attempt or use `purehost disconnect` first if reassigning the volume.
 > If `purealert list` shows a volume was eradicated (permanent deletion after 24 hours), recovery is not possible from the array. Recovery requires restoring from a protection group snapshot.
 
 ---
@@ -388,6 +500,25 @@ puresnap recover prod-oracle-pg.premigration-20260501
 purepgroup listsnaps prod-oracle-pg
 ```
 
+
+```text title="Expected output"
+Name                                    Created                 Source
+prod-oracle-pg.premigration-20260501    2026-05-01 14:32:18Z    prod-oracle-pg
+prod-oracle-pg.backup-20260430          2026-04-30 09:15:42Z    prod-oracle-pg
+prod-oracle-pg.weekly-20260428          2026-04-28 22:00:01Z    prod-oracle-pg
+...
+
+Snapshot prod-oracle-pg.premigration-20260501 recovered successfully.
+
+Name                                    Created                 Source              Size
+prod-oracle-pg.premigration-20260501    2026-05-01 14:32:18Z    prod-oracle-pg      847.3GB
+prod-oracle-pg.backup-20260430          2026-04-30 09:15:42Z    prod-oracle-pg      823.1GB
+prod-oracle-pg.weekly-20260428          2026-04-28 22:00:01Z    prod-oracle-pg      798.5GB
+```
+
+!!! warning "Common errors"
+    **`Error: Snapshot prod-oracle-pg.premigration-20260501 not found`** — Verify the exact snapshot name with `puresnap list --pending` and check for typos in the recovery command.
+    **`Error: Permission denied`** — Ensure your user account has array administrator or snapshot recovery privileges on the Pure FlashArray.
 ---
 
 ## Backup Validation
@@ -427,6 +558,37 @@ puresnap eradicate prod-oracle-pg.old-snapshot-20250101
 puresnap eradicate --all
 ```
 
+
+```text title="Expected output"
+Name                                    Size      Provisioned   Snapshots
+prod-oracle-pg                          2.3T      5.0T          847.2G
+prod-mysql-pg                           1.8T      3.5T          612.4G
+prod-app-pg                             950G      2.0T          284.1G
+dev-test-pg                             420G      1.0T          156.3G
+...
+Total snapshot space: 1.9T
+
+Array Name          Capacity      Used          Snapshots         Data Reduction
+flasharray-01       100T          67.3T         1.9T              3.2x
+...
+
+Name                                    Enabled   Frequency   Retention
+prod-oracle-pg                          Yes       hourly      7 days
+prod-mysql-pg                           Yes       daily       30 days
+prod-app-pg                             Yes       4-hourly    14 days
+dev-test-pg                             Yes       weekly      90 days
+
+Eradicated snapshot: prod-oracle-pg.old-snapshot-20250101
+
+WARNING: Eradicating all pending snapshots. This action cannot be undone.
+Proceed? [y/N]: y
+Eradicated 23 snapshots (847.2G freed)
+```
+
+!!! warning "Common errors"
+    **`Error: Array connection failed. Check credentials and array IP.`** — Verify the Pure array hostname/IP is reachable and credentials are configured in `~/.purerc` or environment variables.
+    **`Error: Snapshot 'prod-oracle-pg.old-snapshot-20250101' not found or already eradicated.`** — Confirm the snapshot name exists using `puresnap list` before attempting eradication.
+    **`Error: Cannot eradicate snapshot—still referenced by active replication or clone.`** — Wait for dependent clones/replicas to complete or break the relationship before eradicating the source snapshot.
 **Capacity thresholds:**
 
 | Snapshot Capacity | Action |
@@ -459,6 +621,22 @@ puresnap list | grep -i veeam
 purepgroup list | grep -i veeam
 ```
 
+
+```text title="Expected output"
+Name                                    Source                          Created
+veeam-db-prod-backup.1                  veeam-db-prod-backup            2024-01-15 14:32:18 PST
+veeam-exchange-daily.2                  veeam-exchange-daily            2024-01-15 09:15:42 PST
+veeam-fileserver-hourly.5               veeam-fileserver-hourly         2024-01-15 16:45:03 PST
+veeam-sql-incremental.3                 veeam-sql-incremental           2024-01-15 13:22:17 PST
+
+Name                                    Hosts
+veeam-protection-group-01               host-esx-01, host-esx-02, host-esx-03
+veeam-protection-group-02               host-hyperv-04, host-hyperv-05
+```
+
+!!! warning "Common errors"
+    **`puresnap: command not found`** — Verify the Pure Storage FlashArray CLI tools are installed and the PATH environment variable includes the installation directory.
+    **`No matches found`** — This is expected output if no Veeam snapshots or protection groups exist; confirm Veeam backup jobs have run and are configured to use this FlashArray.
 > The service account API token provided to Veeam requires `storage_admin` role — it needs to create and delete snapshots and protection groups. Do not give it `array_admin`.
 
 ---

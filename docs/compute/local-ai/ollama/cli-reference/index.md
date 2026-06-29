@@ -438,9 +438,6 @@ success
 ```
 Running model my-local-model...
 What would you like to know?
-```
-```
-
 !!! warning "Common errors"
     **`Error: model "llama3.2" not found, try pulling it first`** — Run `ollama pull llama3.2` before attempting to run the model.
     **`Error: connection refused — connect to localhost:11434`** — Ensure the Ollama service is running with `ollama serve` or verify it's listening on port 11434.

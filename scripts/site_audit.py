@@ -1184,11 +1184,20 @@ for _md in all_md():
 
 
 # ── Check 55: Bash blocks missing example output ─────────────────────────────
-# Every bash block should be followed immediately by a non-bash code fence
-# containing expected output.  Measures progress of add_command_output.py.
+# Every non-silent bash block should be followed by a non-bash code fence.
+# Silent = comment-only or reboot/shutdown/poweroff/halt commands (no output).
 issues = check(55, 'Bash blocks missing example output')
 _BASH_OPEN55   = re.compile(r'^```bash\b', re.MULTILINE)
 _FENCE_CLOSE55 = re.compile(r'^```\s*$', re.MULTILINE)
+_SILENT_PFX55  = ('reboot', 'shutdown', 'poweroff', 'halt')
+
+def _is_silent55(block):
+    lines = [l.strip() for l in block.splitlines() if l.strip() and not l.startswith('```')]
+    code = [l for l in lines if l and not l.startswith('#')]
+    if not code:
+        return True
+    return all(any(l.startswith(p) for p in _SILENT_PFX55) for l in code)
+
 _missing55 = 0
 _total55   = 0
 for _md in all_md():
@@ -1203,10 +1212,12 @@ for _md in all_md():
         _mc = _FENCE_CLOSE55.search(_txt, _mo.end())
         if not _mc:
             break
-        _total55 += 1
-        _after = _txt[_mc.end():_mc.end()+300].lstrip('\n ')
-        if not (_after.startswith('```') and not _after.startswith('```bash')):
-            _missing55 += 1
+        _block55 = _txt[_mo.start():_mc.end()]
+        if not _is_silent55(_block55):
+            _total55 += 1
+            _after = _txt[_mc.end():_mc.end()+300].lstrip('\n ')
+            if not (_after.startswith('```') and not _after.startswith('```bash')):
+                _missing55 += 1
         _pos = _mc.end()
 if _missing55:
     warn(issues, f'{_missing55}/{_total55} bash blocks site-wide are missing example output (run add_command_output.py)')

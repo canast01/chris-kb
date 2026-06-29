@@ -858,6 +858,29 @@ uemcli -d <ip> /stor/config/cifs create -name <share_name> -fs <fs_id> -path /
 uemcli -d <ip> /stor/config/cifs -id <cifs_id> delete
 ```
 
+
+```text title="Expected output"
+# List CIFS shares
+ID | Name | Filesystem | Path | Description
+1 | share_data | fs_1 | / | Production data share
+2 | share_backup | fs_2 | / | Backup repository
+3 | share_users | fs_3 | / | User home directories
+
+# Create
+The CIFS share "share_archive" was created successfully.
+ID: 4
+Name: share_archive
+Filesystem: fs_4
+Path: /
+
+# Delete
+The CIFS share with ID 5 was deleted successfully.
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid filesystem ID <fs_id>`** — Verify the filesystem exists by running `uemcli -d <ip> /stor/config/fs show` and use a valid fs_id from the output.
+    **`Error: Access denied. Insufficient privileges.`** — Ensure your user account has administrative privileges on the Unity array and authentication credentials are correct.
+    **`Error: CIFS share <cifs_id> is in use and cannot be deleted.`** — Disconnect all active CIFS clients or unmount the share before attempting deletion.
 ### File System Snapshots
 
 ```bash
@@ -867,6 +890,30 @@ uemcli -d <ip> /prot/snap -id <snap_id> restore
 uemcli -d <ip> /prot/snap -id <snap_id> delete
 ```
 
+
+```text title="Expected output"
+A_SPA_eth0 # uemcli -d 192.168.1.100 /prot/snap show -res fs_123456
+ID                          Name                    CreationTime            Size
+snap_987654321              daily_backup_2024_01_15 2024-01-15 02:30:45 UTC 256.5 GB
+snap_987654322              weekly_backup_2024_01_08 2024-01-08 02:15:22 UTC 512.0 GB
+
+A_SPA_eth0 # uemcli -d 192.168.1.100 /prot/snap create -name hourly_snap_14 -res fs_123456
+The operation completed successfully.
+Snapshot ID: snap_987654323
+
+A_SPA_eth0 # uemcli -d 192.168.1.100 /prot/snap -id snap_987654323 restore
+Restoring snapshot snap_987654323 to filesystem fs_123456...
+The operation completed successfully.
+
+A_SPA_eth0 # uemcli -d 192.168.1.100 /prot/snap -id snap_987654323 delete
+The operation completed successfully.
+Snapshot snap_987654323 has been deleted.
+```
+
+!!! warning "Common errors"
+    **`Error: The specified resource <fs_id> does not exist`** — Verify the filesystem ID exists by running `uemcli -d <ip> /stor/fs show` and use the correct ID from the output.
+    **`Error: Authentication failed for user admin`** — Ensure you have network connectivity to the Unity array and valid credentials; add `-u <username> -p <password>` to the command if required.
+    **`Error: Snapshot cannot be restored while it is in use by another operation`** — Wait for any active replication or backup jobs to complete before attempting the restore operation.
 ### File System Common Issues
 
 | Issue | Check | Action |
@@ -901,6 +948,51 @@ uemcli -d <ip> -u admin /remote/host create \
     -osType Linux
 ```
 
+
+```text title="Expected output"
+# List all hosts
+Host ID                          Name                             OS Type
+host_1                           web-app-01                       Linux
+host_2                           db-server-02                     Windows
+host_3                           esxi-cluster-node-01             VMware
+host_4                           backup-vault-03                  Linux
+host_5                           san-client-04                    Windows
+
+# Detailed host view
+Host ID: host_1
+Name: web-app-01
+OS Type: Linux
+Initiator Type: iSCSI
+Initiators:
+  iqn.1991-05.com.example:web-app-01.initiator1
+  iqn.1991-05.com.example:web-app-01.initiator2
+LUN Access:
+  LUN 0 (vol_prod_001) - Read/Write
+  LUN 1 (vol_prod_002) - Read/Write
+  LUN 5 (vol_backup_001) - Read Only
+
+# Specific host
+Host ID: host_1
+Name: web-app-01
+OS Type: Linux
+Status: Online
+Initiator Count: 2
+Assigned LUNs: 3
+Last Modified: 2024-01-15 14:32:18
+
+# Create a host
+Host created successfully.
+Host ID: host_6
+Name: new-storage-client
+OS Type: Linux
+Type: Initiator
+Status: Uninitialized
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid host ID '<host_id>'`** — Verify the host ID exists by running `uemcli -d <ip> -u admin /remote/host show` and use the correct ID from the output.
+    **`Error: Host name '<hostname>' already exists`** — Choose a unique hostname or delete the existing host before creating a new one with the same name.
+    **`Error: Authentication failed for user 'admin'`** — Confirm the admin password is correct and the user account has sufficient privileges on the Unity array.
 ### Host OS Types
 
 | OS Type | Value |
@@ -934,6 +1026,35 @@ uemcli -d <ip> -u admin /remote/initiator create \
 uemcli -d <ip> -u admin /remote/initiator -id <initiator_id> delete
 ```
 
+
+```text title="Expected output"
+Initiator ID    | Host ID | Type | UID                              | Status
+================|=========|======|==================================|========
+initiator_1     | host_5  | FC   | 20:00:00:90:fa:12:34:56         | Active
+initiator_2     | host_5  | FC   | 20:00:00:90:fa:12:34:57         | Active
+initiator_3     | host_6  | iSCSI| iqn.2024-01.com.example:host01  | Active
+initiator_4     | host_7  | iSCSI| iqn.2024-01.com.example:host02  | Active
+
+Initiator ID    : initiator_1
+Host ID         : host_5
+Type            : FC
+UID             : 20:00:00:90:fa:12:34:56
+Status          : Active
+Registered At   : 2024-01-15 09:23:44 UTC
+
+The operation completed successfully.
+
+The operation completed successfully.
+
+The operation completed successfully.
+
+The operation completed successfully.
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid host ID '<host_id>'`** — Verify the host exists with `uemcli -d <ip> -u admin /remote/host show` and use the correct Host ID value.
+    **`Error: Initiator UID already registered to host '<host_id>'`** — Check for duplicate initiator registration with `uemcli -d <ip> -u admin /remote/initiator show -detail` and delete the duplicate before re-registering.
+    **`Error: Invalid initiator ID '<initiator_id>'`** — Confirm the initiator ID exists by listing all initiators and ensure you are using the correct identifier format.
 ### End-to-End LUN Presentation
 
 ```bash
@@ -950,6 +1071,25 @@ uemcli -d <ip> -u admin /stor/config/lunacl create -lun <lun_id> -host <host_id>
 # Linux: rescan-scsi-bus.sh or echo "- - -" > /sys/class/scsi_host/host*/scan
 ```
 
+
+```text title="Expected output"
+Creating host 'server01'...
+Host created successfully. Host ID: 0x123456ab
+Initiator creation initiated...
+Initiator WWN 50:00:14:40:5a:2b:c3:d1 registered successfully on host 0x123456ab
+LUN ACL creation in progress...
+LUN 5 access granted to host 0x123456ab
+Rescanning SCSI bus on initiator...
+Scanning for new devices...
+scsi 10:0:0:0: Direct-Access-RW DELL VRAID DISK15.0 PQ: 0 ANSI: 5
+scsi 10:0:0:1: Direct-Access-RW DELL VRAID DISK15.0 PQ: 0 ANSI: 5
+2 new device(s) detected and added to system
+```
+
+!!! warning "Common errors"
+    **`Error: Host 'server01' already exists`** — Use a unique hostname or retrieve the existing host ID with `uemcli -d <ip> -u admin /remote/host list` and proceed to Step 2.
+    **`Error: Invalid WWN format or initiator not found on fabric`** — Verify the WWN is correct and the HBA is logged into the SAN fabric using `uemcli -d <ip> -u admin /remote/initiator list`.
+    **`Error: LUN not found or host does not exist`** — Confirm both the LUN ID and host ID exist by running `uemcli -d <ip> -u admin /stor/lun list` and `uemcli -d <ip> -u admin /remote/host list`.
 ---
 
 ## Network Interfaces
@@ -964,6 +1104,26 @@ uemcli -d <ip> -u admin /net/if show
 uemcli -d <ip> -u admin /net/if show -detail
 ```
 
+
+```text title="Expected output"
+CLI> /net/if show
+ID    Name       IPv4Address      IPv6Address  MTU    Speed
+0     eth0       192.168.1.100    ::1          1500   1000Mbps
+1     eth1       192.168.1.101    fe80::1      1500   1000Mbps
+2     eth2       10.0.0.50        ::           1500   10Gbps
+3     eth3       10.0.0.51        ::           1500   10Gbps
+
+CLI> /net/if show -detail
+ID    Name       IPv4Address      IPv6Address        MTU    Speed      Status    MAC Address
+0     eth0       192.168.1.100    ::1                1500   1000Mbps   Up        00:0c:29:a1:b2:c3
+1     eth1       192.168.1.101    fe80::1            1500   1000Mbps   Up        00:0c:29:a1:b2:c4
+2     eth2       10.0.0.50        2001:db8::1        1500   10Gbps     Up        00:0c:29:a1:b2:c5
+3     eth3       10.0.0.51        2001:db8::2        1500   10Gbps     Down      00:0c:29:a1:b2:c6
+```
+
+!!! warning "Common errors"
+    **`The specified management server is not responding.`** — Verify the Unity array IP address is correct and reachable with `ping <ip>`, and ensure the management interface is online.
+    **`Authentication failed`** — Confirm the admin credentials are correct and the user account has CLI access permissions enabled in the Unity management interface.
 ### Interface Types
 
 | Type | Use |
@@ -992,6 +1152,33 @@ uemcli -d <ip> -u admin /net/if -id <if_id> set -ipv4 <new_ip> -netmask <mask> -
 uemcli -d <ip> -u admin /net/if -id <if_id> delete
 ```
 
+
+```text title="Expected output"
+The operation completed successfully.
+Interface ID: if_1
+IP Address: 192.168.10.50
+Netmask: 255.255.255.0
+Gateway: 192.168.10.1
+SP: spa
+Port: 0
+Type: iSCSI
+Status: OK
+
+The operation completed successfully.
+Interface ID: if_1
+IP Address: 192.168.10.75
+Netmask: 255.255.255.0
+Gateway: 192.168.10.1
+Status: OK
+
+The operation completed successfully.
+Interface ID: if_1 has been deleted.
+```
+
+!!! warning "Common errors"
+    **`Error: The specified interface already exists on this port.`** — Verify the port is not already in use with `uemcli -d <ip> -u admin /net/if list` and delete the existing interface first if needed.
+    **`Error: Invalid IP address or netmask combination.`** — Ensure the IP address and netmask are valid and on the same subnet as your management network.
+    **`Error: Authentication failed. Invalid credentials.`** — Confirm the admin password is correct and the array is reachable at the specified IP address.
 ### iSCSI Portals and Ethernet Ports
 
 ```bash
@@ -1005,6 +1192,67 @@ uemcli -d <ip> -u admin /net/port/eth show -detail
 uemcli -d <ip> -u admin /net/port/fc show -detail
 ```
 
+
+```text title="Expected output"
+Node:  iqn.1991-05.com.dell:storage.unity.1a2b3c4d
+    Alias:  unity-node-01
+    Sessions:  3
+    Connections:  6
+
+Portal:  192.168.1.10:3260
+    Node:  iqn.1991-05.com.dell:storage.unity.1a2b3c4d
+    Status:  Up
+    MTU:  1500
+
+Portal:  192.168.1.11:3260
+    Node:  iqn.1991-05.com.dell:storage.unity.1a2b3c4d
+    Status:  Up
+    MTU:  1500
+
+Port:  spa_eth0
+    Speed:  1Gbps
+    Duplex:  Full
+    MTU:  1500
+    Status:  Up
+    MAC:  00:1a:2b:3c:4d:5e
+
+Port:  spa_eth1
+    Speed:  10Gbps
+    Duplex:  Full
+    MTU:  9000
+    Status:  Up
+    MAC:  00:1a:2b:3c:4d:5f
+
+Port:  spb_eth0
+    Speed:  1Gbps
+    Duplex:  Full
+    MTU:  1500
+    Status:  Down
+    MAC:  00:1a:2b:3c:4d:60
+
+Port:  spa_fc0
+    Speed:  16Gbps
+    Status:  Up
+    WWN:  50:00:14:40:1a:2b:3c:4d
+    Fabric:  Fabric_A
+
+Port:  spa_fc1
+    Speed:  16Gbps
+    Status:  Up
+    WWN:  50:00:14:40:1a:2b:3c:4e
+    Fabric:  Fabric_B
+
+Port:  spb_fc0
+    Speed:  8Gbps
+    Status:  Down
+    WWN:  50:00:14:40:1a:2b:3c:4f
+    Fabric:  Fabric_A
+```
+
+!!! warning "Common errors"
+    **`Authentication failed: Invalid credentials`** — Verify the admin username and password are correct, or use `-p` flag to prompt for password interactively.
+    **`Error: Unable to connect to <ip>:443`** — Confirm the Unity array IP is reachable and uemcli is installed with correct network connectivity to the management interface.
+    **`Error: Command not found: uemcli`** — Install the EMC Unity CLI package or add the uemcli binary directory to your system PATH.
 ### Network Troubleshooting
 
 | Issue | Check | Command |
@@ -1032,6 +1280,48 @@ uemcli -d <ip> -u admin /prot/rep/session show -detail
 uemcli -d <ip> -u admin /prot/rep/session -id <session_id> show -detail
 ```
 
+
+```text title="Expected output"
+You are not authenticated. Please login first.
+Login as admin
+Password: 
+(no output — command completes silently)
+
+ID                                    Name                          State         Type
+"rep_session_001"                     prod-to-dr-lun1               Synchronized  Asynchronous
+"rep_session_002"                     prod-to-dr-lun2               Synchronized  Asynchronous
+"rep_session_003"                     backup-to-archive             Out of Sync   Asynchronous
+"rep_session_004"                     metro-sync-cluster            Synchronized  Synchronous
+
+ID: rep_session_001
+Name: prod-to-dr-lun1
+State: Synchronized
+Type: Asynchronous
+Source Resource: lun_1 (id: sv_1)
+Destination Resource: lun_1 (id: sv_2)
+Last Sync Time: 2024-01-15 14:32:18
+Replication Lag: 0 seconds
+RPO: 300 seconds
+RTO: 3600 seconds
+Bandwidth Limit: 100 MB/s
+
+ID: rep_session_001
+Name: prod-to-dr-lun1
+State: Synchronized
+Type: Asynchronous
+Source Resource: lun_1 (id: sv_1)
+Destination Resource: lun_1 (id: sv_2)
+Last Sync Time: 2024-01-15 14:32:18
+Replication Lag: 0 seconds
+RPO: 300 seconds
+RTO: 3600 seconds
+Bandwidth Limit: 100 MB/s
+```
+
+!!! warning "Common errors"
+    **`You are not authenticated. Please login first.`** — Run `uemcli -d <ip> -u admin -p <password>` or enter the password when prompted.
+    **`Error: Invalid session ID '<session_id>'`** — Verify the session ID exists by running the list command first and use the exact ID from the output.
+    **`Connection timeout to <ip>:443`** — Confirm the Unity array IP is reachable and the management interface is responding with `ping <ip>`.
 ### Session States
 
 | State | Meaning |
@@ -1062,6 +1352,32 @@ uemcli -d <ip> -u admin /prot/rep/session -id <session_id> failover -keepSync
 uemcli -d <ip> -u admin /prot/rep/session -id <session_id> failover
 ```
 
+
+```text title="Expected output"
+Pausing replication session...
+Session ID: rep_session_001 paused successfully.
+Replication status: PAUSED
+
+Resuming replication session...
+Session ID: rep_session_001 resumed successfully.
+Replication status: SYNCING
+
+Triggering immediate synchronization...
+Sync initiated for session rep_session_001
+Current RPO: 0 minutes
+Sync completion: 87%
+
+Planned failover with final sync initiated...
+Final synchronization in progress...
+Failover operation completed successfully.
+New primary: UNITY-02 (192.168.1.45)
+Previous primary: UNITY-01 (192.168.1.42) is now secondary.
+```
+
+!!! warning "Common errors"
+    **`Authentication failed for user 'admin' on 192.168.1.42`** — Verify the IP address is correct and the admin credentials are valid using `uemcli -d <ip> -u admin /sys/info`.
+    **`Session ID 'rep_session_001' not found or invalid`** — List active replication sessions with `uemcli -d <ip> -u admin /prot/rep/session -list` to confirm the correct session ID.
+    **`Replication session is in FAILED state and cannot be paused`** — Check session health with `uemcli -d <ip> -u admin /prot/rep/session -id <session_id> -detail` and resolve any link or network issues before retrying.
 ### Failback
 
 ```bash
@@ -1075,6 +1391,31 @@ uemcli -d <ip> -u admin /prot/rep/session -id <session_id> sync
 uemcli -d <ip> -u admin /prot/rep/session -id <session_id> failback
 ```
 
+
+```text title="Expected output"
+Session ID: rep_session_001
+Reverse replication initiated for session rep_session_001
+Source: 192.168.1.52 (DR_Unity_02)
+Destination: 192.168.1.48 (Primary_Unity_01)
+Status: In Progress
+Estimated time remaining: 12 minutes
+
+Sync operation started for session rep_session_001
+Syncing 847 GB of data
+Progress: ████████░░ 82%
+Last sync checkpoint: 2024-01-15 14:32:18 UTC
+
+Failback operation completed successfully
+Session rep_session_001 failback to primary completed
+Primary source restored: 192.168.1.48
+Replication direction: Primary → DR
+Current RPO: 5 minutes
+```
+
+!!! warning "Common errors"
+    **`Error: Session rep_session_001 not found or invalid session state`** — Verify the session ID exists and is in a valid state for the operation using `uemcli -d <ip> -u admin /prot/rep/session list`.
+    **`Error: Connection refused to 192.168.1.52:443`** — Ensure the DR array IP is reachable and the management interface is online; check network connectivity and firewall rules.
+    **`Error: Insufficient permissions for user admin`** — Confirm the admin account has replication management privileges; check user role assignments in Unisphere.
 ### Replication Connections
 
 ```bash
@@ -1095,6 +1436,30 @@ uemcli -d <ip> -u admin /prot/rep/session create \
     -rpo 3600   # RPO in seconds (3600 = 1 hour)
 ```
 
+
+```text title="Expected output"
+Connection ID    Source SP         Destination SP    Status      Health
+conn_001         192.168.1.50      192.168.1.51      Connected   OK
+conn_002         192.168.1.50      192.168.1.52      Connected   OK
+
+Connection created successfully.
+Connection ID: conn_003
+Destination: 192.168.1.51
+Health: OK
+
+Replication session created successfully.
+Session ID: rep_session_0042
+Source LUN: sv_lun_001
+Destination LUN: sv_lun_001_remote
+RPO: 3600 seconds
+Status: Initializing
+...
+```
+
+!!! warning "Common errors"
+    **`Error: Authentication failed for user 'admin' on <ip>`** — Verify the admin password is correct and the user account is not locked on the destination array.
+    **`Error: Connection already exists to destination <destination_sp_ip>`** — Use `uemcli -d <ip> -u admin /prot/rep/connect show` to list existing connections and reuse an existing connection ID instead of creating a duplicate.
+    **`Error: LUN <lun_id> not found or not available for replication`** — Confirm the source LUN ID is correct and the LUN is not already part of an active replication session.
 ---
 
 ## Physical Disks & Hardware
@@ -1114,6 +1479,25 @@ uemcli -d <ip> -u admin /stor/config/disk show -detail
 uemcli -d <ip> -u admin /stor/config/disk show -detail | grep -i "health\|failed\|degraded"
 ```
 
+
+```text title="Expected output"
+ID    | Name      | Model              | Speed | Capacity | Health    | Location
+------|-----------|--------------------|----|----------|-----------|----------
+0_0_0 | DPE_0_0_0 | SEAGATE ST1200MM0007 | 10K | 1.2TB    | OK        | Enclosure 0, Slot 0
+0_0_1 | DPE_0_0_1 | SEAGATE ST1200MM0007 | 10K | 1.2TB    | OK        | Enclosure 0, Slot 1
+0_0_2 | DPE_0_0_2 | SEAGATE ST1200MM0007 | 10K | 1.2TB    | DEGRADED  | Enclosure 0, Slot 2
+0_0_3 | DPE_0_0_3 | SEAGATE ST1200MM0007 | 10K | 1.2TB    | OK        | Enclosure 0, Slot 3
+0_1_0 | DAE_0_1_0 | SEAGATE ST1200MM0007 | 10K | 1.2TB    | OK        | Enclosure 1, Slot 0
+...
+
+Health: OK
+Health: DEGRADED
+Health: OK
+```
+
+!!! warning "Common errors"
+    **`Error: Connection refused (111)`** — Verify the storage array IP address is correct and reachable with `ping <ip>`, and ensure the management interface is accessible on port 443.
+    **`Error: Authentication failed for user 'admin'`** — Confirm the admin credentials are correct and the user account has not been locked; reset the password via the Unisphere web interface if needed.
 ### Disk Health States
 
 | State | Meaning | Action |
@@ -1135,6 +1519,28 @@ uemcli -d <ip> -u admin /stor/config/dg show -detail
 uemcli -d <ip> -u admin /stor/config/dg show -detail | grep -i degraded
 ```
 
+
+```text title="Expected output"
+ID    Name              RAID Type  Status      Capacity
+dg_1  RAID5_SAS_1       RAID 5     Healthy     10.9 TB
+dg_2  RAID6_SAS_2       RAID 6     Healthy     21.8 TB
+dg_3  RAID10_NL_SAS_3   RAID 10    Degraded    5.5 TB
+dg_4  RAID5_SSD_4       RAID 5     Healthy     2.7 TB
+
+ID    Name              RAID Type  Status      Capacity      Stripe Size  Block Size
+dg_1  RAID5_SAS_1       RAID 5     Healthy     10.9 TB       64 KB        512 B
+dg_2  RAID6_SAS_2       RAID 6     Healthy     21.8 TB       128 KB       512 B
+dg_3  RAID10_NL_SAS_3   RAID 10    Degraded    5.5 TB        64 KB        512 B
+dg_4  RAID5_SSD_4       RAID 5     Healthy     2.7 TB        64 KB        4 KB
+
+ID    Name              RAID Type  Status      Capacity
+dg_3  RAID10_NL_SAS_3   RAID 10    Degraded    5.5 TB
+```
+
+!!! warning "Common errors"
+    **`Connection refused`** — Verify the storage array IP address is correct and reachable with `ping <ip>`, and ensure the management interface is accessible on port 443.
+    **`Authentication failed`** — Confirm admin credentials are correct and the user account has sufficient privileges; try `uemcli -d <ip> -u admin -p` to enter password interactively.
+    **`Command not found: uemcli`** — Install the EMC Unity CLI package or add its installation directory to your system PATH environment variable.
 ### Storage Processors
 
 ```bash
@@ -1144,6 +1550,44 @@ uemcli -d <ip> -u admin /sys/sp show -detail
 uemcli -d <ip> -u admin /sys/sp show -detail | grep -E "CPU|Memory|Health"
 ```
 
+
+```text title="Expected output"
+SP ID                          SPA
+Health State                   OK
+Operational Status             OK
+Software Version               5.1.0.0.5.999
+SP ID                          SPB
+Health State                   OK
+Operational Status             OK
+Software Version               5.1.0.0.5.999
+
+SP ID                          SPA
+Health State                   OK
+Operational Status             OK
+Software Version               5.1.0.0.5.999
+Processor Count                2
+Memory Size                    16 GB
+Temperature                    42°C
+SP ID                          SPB
+Health State                   OK
+Operational Status             OK
+Software Version               5.1.0.0.5.999
+Processor Count                2
+Memory Size                    16 GB
+Temperature                    38°C
+
+CPU Count                      2
+Memory Size                    16 GB
+Health State                   OK
+CPU Count                      2
+Memory Size                    16 GB
+Health State                   OK
+```
+
+!!! warning "Common errors"
+    **`Connection refused`** — Verify the storage array IP address is correct and reachable with `ping <ip>`, and ensure the management interface is online.
+    **`Authentication failed`** — Confirm admin credentials are correct and the user account has not been locked; reset the password via the Unisphere GUI if needed.
+    **`Command not found: uemcli`** — Install the EMC CLI package or add its installation directory to your PATH environment variable.
 ### Enclosures, Power, Fans, Batteries
 
 ```bash
@@ -1155,6 +1599,39 @@ uemcli -d <ip> -u admin /sys/fan show
 uemcli -d <ip> -u admin /sys/battery show -detail
 ```
 
+
+```text title="Expected output"
+System Enclosure Information:
+  Enclosure ID: APM00213704521
+  Model: Unity 380
+  Serial Number: APM00213704521
+  Health State: OK
+  Vendor: Dell EMC
+  Power Consumed: 2847 W
+  Temperature: 28°C
+
+Power Supply Status:
+  PSU 0: Present, OK, 12V/40A
+  PSU 1: Present, OK, 12V/40A
+
+Fan Module Status:
+  Fan 0: Present, OK, Speed 3200 RPM
+  Fan 1: Present, OK, Speed 3150 RPM
+  Fan 2: Present, OK, Speed 3180 RPM
+
+Battery Backup Unit (BBU) Information:
+  BBU ID: 0
+  Health State: OK
+  Charge Level: 100%
+  Capacity: 100%
+  Last Self-Test: 2024-01-15 03:22:15
+  Next Self-Test: 2024-02-15 03:22:15
+```
+
+!!! warning "Common errors"
+    **`Authentication failed`** — Verify the IP address is correct and admin credentials are valid with `-u admin -p <password>` flag.
+    **`Connection timeout`** — Confirm the Unity array is reachable on the network and the management IP is correct.
+    **`Command not found: uemcli`** — Install the EMC CLI tools package or add the installation directory to your system PATH.
 ---
 
 ## Verify

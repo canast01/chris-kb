@@ -609,6 +609,29 @@ snapmirror resync -destination-path svm_dr:vol_dr_app01
 # Document the RPO breach and data loss window in the incident ticket
 ```
 
+
+```text title="Expected output"
+Vserver     Volume          Snapshot                                  Size  State
+----------- --------------- ----------------------------------------- ------ --------
+svm_dr      vol_dr_app01    hourly.2024-01-15_2300                   2.1GB valid
+svm_dr      vol_dr_app01    hourly.2024-01-15_2200                   2.0GB valid
+svm_dr      vol_dr_app01    hourly.2024-01-15_2100                   2.1GB valid
+svm_dr      vol_dr_app01    daily.2024-01-15_0000                    2.3GB valid
+svm_dr      vol_dr_app01    daily.2024-01-14_0000                    2.2GB valid
+
+Volume restore: Restoring from snapshot "hourly.2024-01-15_2300" on volume "vol_dr_app01" in Vserver "svm_dr".
+This operation will overwrite all data on the volume.
+Do you want to continue? {y|n}: y
+Restore operation completed successfully.
+
+[2024-01-15 23:47:22] Resynchronizing SnapMirror relationship for destination svm_dr:vol_dr_app01...
+[2024-01-15 23:47:45] Resync operation initiated. Waiting for completion...
+[2024-01-15 23:52:18] SnapMirror resync completed successfully.
+```
+
+!!! warning "Common errors"
+    **`Error: command failed: There is no snapshot with name "hourly.2024-01-15_2400"`** — Verify the exact snapshot name from the `snapshot show` output and use the correct timestamp.
+    **`Error: SnapMirror relationship is not in a valid state for resync`** — Confirm the primary volume is online and the SnapMirror relationship status is "snapmirrored" using `snapmirror show -destination-path svm_dr:vol_dr_app01`.
 ---
 
 ## Escalation Contacts Template

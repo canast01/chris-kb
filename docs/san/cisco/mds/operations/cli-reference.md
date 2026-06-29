@@ -720,10 +720,46 @@ interface fc<slot/port>
   switchport trunk allowed vsan add <vsan_id>
   switchport trunk allowed vsan remove <vsan_id>
 ```
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`% Invalid command`** — Verify you are in interface configuration mode by running `config t` then `interface fc1/1` before entering switchport commands.
+    **`% VSAN <vsan_id> does not exist`** — Create the VSAN first using `vsan <vsan_id>` in global configuration mode before adding it to the trunk.
 ```bash
 show interface fc<slot/port> counters
 show interface fc<slot/port> counters errors
 ```
+
+```text title="Expected output"
+Interface fc1/1 Counters:
+  Frames transmitted:                   45,234,567
+  Frames received:                      42,891,234
+  Transmit B2B credit remaining:        15
+  Receive B2B credit remaining:         15
+  Link failures:                        0
+  Sync losses:                          0
+  Signal losses:                        0
+  Protocol errors:                      0
+  Invalid CRCs:                         127
+  Delimiter errors:                     0
+  Disparity errors:                     43
+
+Interface fc1/1 Error Counters:
+  CRC errors:                           127
+  Encoding disparity errors:            43
+  Frames with bad CRC:                  12
+  Frames with encoding errors:          5
+  Class 3 discards:                     0
+  Class 2 discards:                     0
+  Too many BB credit loss:              0
+```
+
+!!! warning "Common errors"
+    **`% Invalid command`** — Verify the slot/port syntax matches your MDS model (e.g., fc1/1, fc2/48) and that the interface exists with `show interface brief`.
+    **`% Interface does not exist`** — Confirm the port is physically present and licensed; check `show interface fc-all` to list all available interfaces.
 ```bash
 interface port-channel <id>
   switchport mode E
@@ -736,6 +772,32 @@ interface fc<slot/port>
 show port-channel summary
 show interface port-channel <id>
 ```
+
+```text title="Expected output"
+port-channel1 is up
+    Interfaces:  fc1/1  fc1/2  fc1/3  fc1/4
+    Type:        Fibre Channel
+    Load-balancing: src-id, dst-id, src-wwn, dst-wwn
+    Port-channel status: OK
+
+Interface port-channel1 is up
+  Hardware is Fibre Channel
+  Port WWN is 50:00:09:73:a2:1c:4d:80
+  Admin port mode is E, Oper port mode is E
+  Port mode is E
+  Speed is 16 Gbps
+  Flow Control is off
+  Rate Mode is dedicated
+  Transmit B2B Credit is 64
+  Receive B2B Credit is 64
+  Receive data field Size is 2112
+  Beacon is turned off
+```
+
+!!! warning "Common errors"
+    **`% Invalid command`** — Verify the port-channel ID exists and syntax matches your MDS OS version (use `show port-channel summary` first to confirm).
+    **`% Interface not found`** — Ensure the slot/port notation (e.g., `fc1/1`) is correct for your MDS module configuration with `show interface brief`.
+    **`% Port-channel member ports are not compatible`** — Confirm all member interfaces have matching speed and duplex settings using `show interface fc<slot/port>`.
 ```bash
 # Port errors
 show interface fc<slot/port> counters
@@ -755,12 +817,73 @@ show logging last <n>
 # Core health
 show system internal sysmgr status
 ```
+
+```text title="Expected output"
+fc1/1: 4
+  CRC Errors: 0
+  Frames Received: 1,247,392
+  Frames Transmitted: 1,251,847
+  Link Resets: 0
+  Primitive Seq Errors: 0
+  Invalid Transmission Words: 2
+
+fc1/1
+  CRC Errors: 0
+  Link Resets: 0
+
+(no output — command completes silently)
+
+fc1/1 is up
+  CRC Errors: 0
+  Link Resets: 0
+
+Module 1 Diagnostics Status: PASS
+  BIOS: PASS
+  Memory: PASS
+  CPU: PASS
+  Fabric: PASS
+
+2024 Jan 15 14:32:18 +00:00 mds9710-01 %SYSMGR-2-SYSMGR_SERVICES_CRITICAL: Critical service down: fspf
+2024 Jan 15 14:28:02 +00:00 mds9710-01 %ETHPORT-5-IF_RX_FLOW_CONTROL: Interface fc1/1, receive flow control enabled
+2024 Jan 15 14:25:47 +00:00 mds9710-01 %LINK-3-UPDOWN: Interface fc1/2 changed state to down
+
+System Services Status:
+  sysmgr: UP
+  fspf: UP
+  fcns: UP
+  fcs: UP
+  vsan_mgr: UP
+```
+
+!!! warning "Common errors"
+    **`Invalid command`** — Verify the slot/port syntax matches your switch model (e.g., `fc1/1` for single-digit slots or `fc10/48` for multi-digit).
+    **`Module <slot> not found`** — Confirm the module slot number exists on your switch using `show module` before running diagnostics.
+    **`% Invalid command`** — Ensure you are in the correct command mode (exec mode, not config mode) and the switch supports onboard logging with `show logging onboard`.
 ```bash
 show monitor session all
 monitor session <n> source interface fc<slot/port>
 monitor session <n> destination interface fc<slot/port>
 no monitor session <n>
 ```
+
+```text title="Expected output"
+Session   Source Interface      Destination Interface  State
+-------   ----------------      ---------------------  -----
+1         fc1/1                  fc1/2                  up
+2         fc2/3                  fc2/4                  up
+3         fc3/5                  fc3/6                  down
+4         fc4/1                  fc4/2                  up
+
+Monitor session 5 created successfully.
+Source interface fc1/3 added to session 5.
+Destination interface fc1/4 added to session 5.
+Monitor session 5 removed.
+```
+
+!!! warning "Common errors"
+    **`% Invalid command`** — Verify the slot and port numbers exist on your MDS switch using `show interface brief`.
+    **`% Source and destination interfaces cannot be the same`** — Assign different physical ports for source and destination in the monitor session configuration.
+    **`% Monitor session <n> does not exist`** — Confirm the session number with `show monitor session all` before attempting to delete or modify it.
 ```bash
 # Current version
 show version
@@ -775,6 +898,46 @@ install all nxos <url> non-disruptive
 # Preview impact before committing
 install all kickstart <url> system <url> status
 ```
+
+```text title="Expected output"
+Cisco MDS 9148S Multilayer Fabric Switch
+System uptime is 45 day(s), 12 hour(s), 3 minute(s), 22 second(s)
+Kernel uptime is 45 day(s), 11 hour(s), 57 minute(s), 8 second(s)
+System version: 9.1(1)
+BIOS: version 3.45.01
+Kickstart: version 9.1(1)
+
+Last Install Status:
+  Install operation completed successfully on 2024-01-15 14:32:18 +00:00
+  Kickstart image: bootflash:///mds9148-kickstart.9.1.2.bin
+  System image: bootflash:///mds9148-system.9.1.2.bin
+  Status: INSTALL_SUCCESS
+
+Install operation initiated for kickstart and system images
+Downloading kickstart image from tftp://192.168.1.50/mds9148-kickstart.9.1.3.bin ... 100%
+Downloading system image from tftp://192.168.1.50/mds9148-system.9.1.3.bin ... 100%
+Compatibility check passed
+Installation completed successfully. Reload required to activate new images.
+
+ISSU compatibility check in progress...
+Current version: 9.1(1)
+Target version: 9.1(3)
+ISSU capable: Yes
+Estimated downtime: 0 minutes (non-disruptive upgrade possible)
+
+Install preview for kickstart and system images:
+  Current kickstart: bootflash:///mds9148-kickstart.9.1(1).bin
+  New kickstart: bootflash:///mds9148-kickstart.9.1(3).bin
+  Current system: bootflash:///mds9148-system.9.1(1).bin
+  New system: bootflash:///mds9148-system.9.1(3).bin
+  Impact: Non-disruptive (ISSU capable)
+  Estimated time: 8 minutes
+```
+
+!!! warning "Common errors"
+    **`Error: Image file not found at tftp://192.168.1.50/mds9148-kickstart.9.1.3.bin`** — Verify the TFTP server is reachable and the image filename matches exactly (check case sensitivity and extension).
+    **`Error: Incompatible image version. Current: 9.1(1), Target: 9.1(3). Downgrade not supported.`** — Ensure the target image version is equal to or higher than the current version.
+    **`Error: Insufficient bootflash space. Required: 2048 MB, Available: 512 MB`** — Delete old images using `delete bootflash:///mds9148-system.9.0.*.bin` to free space before staging.
 ```bash
 # Save running to startup (before any change)
 copy running-config startup-config
@@ -792,6 +955,49 @@ copy tftp://<server>/<filename> running-config
 show running-config
 show startup-config
 ```
+
+```text title="Expected output"
+Cisco MDS9148S# copy running-config startup-config
+[########################################] 100%
+Copy complete.
+
+Cisco MDS9148S# copy running-config tftp://192.168.1.50/mds-backup-20240115.cfg
+[########################################] 100%
+Copy complete.
+
+Cisco MDS9148S# copy running-config scp://admin@192.168.1.50/backups/mds-config.cfg
+Password: 
+[########################################] 100%
+Copy complete.
+
+Cisco MDS9148S# copy tftp://192.168.1.50/mds-backup-20240115.cfg running-config
+[########################################] 100%
+Copy complete.
+
+Cisco MDS9148S# show running-config
+version 8.4(2b)
+feature telnet
+feature ssh
+feature tacacs+
+interface fc1/1
+  description "Storage Array Port"
+  speed auto
+  no shutdown
+...
+(output truncated)
+
+Cisco MDS9148S# show startup-config
+version 8.4(2b)
+feature telnet
+feature ssh
+...
+(output truncated)
+```
+
+!!! warning "Common errors"
+    **`Error opening tftp://192.168.1.50/mds-backup-20240115.cfg (Connection timed out)`** — Verify TFTP server is running and reachable on port 69, and check firewall rules allow UDP traffic from the switch.
+    **`Error opening scp://admin@192.168.1.50/backups/mds-config.cfg (Authentication failed)`** — Confirm SSH credentials are correct and the remote user has read/write permissions on the target directory.
+    **`% Invalid command`** — Ensure you are in the correct privilege level (use `enable` if needed) and that the TFTP/SCP server path and filename are properly formatted without extra spaces.
 ```bash
 # Save a named checkpoint
 checkpoint <checkpoint_name>
@@ -800,6 +1006,29 @@ show checkpoint summary
 # Rollback to checkpoint
 rollback running-config checkpoint <checkpoint_name>
 ```
+
+```text title="Expected output"
+Checkpoint created successfully.
+Checkpoint Name: prod-backup-2024
+Created: 2024-01-15 14:32:18 UTC
+Size: 2.4 MB
+
+Checkpoint Summary
+==================
+Name                          Created                    Size
+prod-backup-2024              2024-01-15 14:32:18       2.4 MB
+maintenance-config            2024-01-14 09:15:42       2.3 MB
+baseline-v3                   2024-01-10 16:45:00       2.2 MB
+
+Rollback initiated for checkpoint: prod-backup-2024
+Configuration rollback in progress...
+Rollback completed successfully.
+Running configuration has been restored to checkpoint: prod-backup-2024
+```
+
+!!! warning "Common errors"
+    **`% Invalid command`** — Verify you are in the correct configuration mode (use `config terminal` first if needed).
+    **`% Checkpoint 'prod-backup-2024' does not exist`** — List available checkpoints with `show checkpoint summary` and use an existing checkpoint name.
 ```bash
 # Show all local users
 show users
@@ -816,6 +1045,30 @@ no username <user>
 # Assign admin role
 username <user> role network-admin
 ```
+
+```text title="Expected output"
+User Name                 Session Type     Session ID  Host
+admin                     telnet           1           10.45.23.12
+operator                  ssh              2           192.168.1.50
+backup_svc                ssh              3           10.45.23.88
+
+Role Name                 Description
+network-admin             Network Administrator
+vsan-manager              VSAN Manager
+storage-admin             Storage Administrator
+read-only                 Read Only Access
+
+(no output — command completes silently)
+
+(no output — command completes silently)
+
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: User already exists`** — Choose a different username or delete the existing user with `no username <user>` first.
+    **`Error: Invalid role specified`** — Verify the role name exists by running `show role` and use the exact role name from the output.
+    **`Error: Password does not meet complexity requirements`** — Ensure the password is at least 8 characters and includes uppercase, lowercase, numbers, and special characters.
 ```bash
 # Show AAA config
 show aaa
@@ -832,6 +1085,37 @@ aaa group server tacacs+ <group_name>
   server <ip>
 aaa authentication login default group <group_name>
 ```
+
+```text title="Expected output"
+aaa new-model
+aaa authentication login default group tacacs_servers
+aaa authentication enable default group tacacs_servers
+aaa authorization command default group tacacs_servers local
+aaa accounting all default start-stop group tacacs_servers
+
+TACACS+ Server Information:
+  Server Address: 192.168.100.50
+  Port: 49
+  Timeout: 5 seconds
+  Single-Connect: disabled
+
+RADIUS Server Information:
+  Server Address: 192.168.100.51
+  Auth Port: 1812
+  Acct Port: 1813
+  Timeout: 5 seconds
+  Retransmit: 2
+
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`% Invalid command`** — Verify the TACACS+ server IP address format is correct (e.g., 192.168.100.50, not a hostname without DNS configured).
+    **`% AAA group server tacacs+ <group_name> not found`** — Create the AAA group server before referencing it in authentication policies using `aaa group server tacacs+ <group_name>`.
+    **`% Connection refused to TACACS+ server 192.168.100.50:49`** — Confirm the TACACS+ server is reachable and listening on port 49, and verify the pre-shared key matches on both the switch and server.
 ```bash
 show ssh server
 show users
@@ -839,6 +1123,22 @@ show users
 # Generate RSA keys
 crypto key generate rsa
 show crypto key mypubkey rsa
+```
+
+```text title="Expected output"
+SSH Server is Enabled
+Timeout: 120 seconds
+Version: SSHv2
+
+NAME             LINE       TIME                 IDLE       PID    SERIAL
+admin            vty 0      May 10 14:32:15 +00 00:00:12   12345  0
+operator         vty 1      May 10 14:28:03 +00 00:03:44   12346  0
+
+Generating RSA keys...
+% Key pair generation in progress. This may take a few minutes...
+% Key pair generation completed successfully.
+
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDk7vN9xK2pL8mQ4jR9vK3nL5pM2qR8sT1uV2wX3yZ4aB5cD6eF7gH8iJ9kL0mN1oP2qR3sT4uV5wX6yZ7aB8cD9eF0gH1iJ2kL3mN4oP5qR6sT7uV8wX9yZ0aB1cD2eF3gH4iJ5kL6mN7oP8qR9sT0uV1wX2yZ3aB4cD5eF6gH7iJ8kL9mN0oP1qR2sT3uV4wX5yZ6aB7cD8eF9gH0iJ1kL2mN3oP2qR3sT4uV5wX6yZ7aB8cD9eF0gH1iJ2kL3mN4oP5qR6sT7uV8wX9yZ0aB1cD2eF3gH4iJ5kL6mN7oP8qR9sT0uV1wX2yZ3aB4cD5eF6gH7iJ8kL9mN0oP1qR2sT3uV4wX5yZ6aB7cD8eF9gH0iJ1kL2mN3oP2qR3sT4uV5wX6yZ7aB8cD9eF0gH1iJ2kL3mN4oP5qR6sT7uV8wX9yZ0aB1cD2eF3gH4iJ5kL6mN7oP8qR9sT0uV1wX2yZ3aB4cD5eF6gH7iJ8kL9mN0oP1qR2sT3uV4wX5yZ6aB7cD8eF9gH0iJ1kL2mN3oP2qR3sT4uV5wX6yZ7aB8cD9eF0gH1iJ2kL3mN4oP5qR6sT7uV8wX9yZ0aB1cD2eF3gH4iJ5kL6mN7oP8qR9sT0uV1wX2yZ3aB4cD5eF6gH7iJ
 ```
 ```bash
 show snmp user
@@ -848,6 +1148,24 @@ show snmp community
 snmp-server user <user> <group> v3 auth sha <auth_pass> priv aes 128 <priv_pass>
 ```
 
+
+```text title="Expected output"
+SNMP users:
+  user1              auth sha         priv aes-128
+  monitoring_user    auth sha         priv aes-128
+  backup_agent       auth md5         priv des
+
+SNMP communities:
+  public             read-only
+  private            read-write
+  monitoring_ro      read-only
+
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`% Invalid command`** — Replace angle brackets with actual values: `snmp-server user netmon_user netmon_group v3 auth sha MyAuthPass123 priv aes 128 MyPrivPass456`.
+    **`% Error: User already exists`** — Choose a unique username or delete the existing user first with `no snmp-server user <user>`.
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

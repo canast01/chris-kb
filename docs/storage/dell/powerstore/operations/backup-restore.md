@@ -351,6 +351,46 @@ curl -k -X POST "https://<mgmt-ip>/api/rest/host_volume_mapping" \
 # Or restore in place on production host (schedule downtime)
 ```
 
+
+```text title="Expected output"
+{
+  "entries": [
+    {
+      "id": "snap-0a1f4c8e-92d3-11ee-b9d1-005056b3d4a2",
+      "name": "ora-data-vol_snap_20260505_0200",
+      "volume_id": "vol-7c2a9f1b-44e6-11ee-a1c2-005056b3d4a2",
+      "creation_timestamp": "2026-05-05T02:00:15Z",
+      "size": 536870912000
+    },
+    {
+      "id": "snap-1b2g5d9f-93e4-11ee-c0d2-005056b3d4a3",
+      "name": "ora-data-vol_snap_20260504_0200",
+      "volume_id": "vol-7c2a9f1b-44e6-11ee-a1c2-005056b3d4a2",
+      "creation_timestamp": "2026-05-04T02:00:22Z",
+      "size": 536870912000
+    }
+  ]
+}
+{
+  "id": "vol-e8f3a2c7-55g7-11ee-d3e4-005056b3d4a4",
+  "name": "ora-restore-validation-20260507",
+  "size": 536870912000,
+  "state": "Ready",
+  "source_snapshot_id": "snap-0a1f4c8e-92d3-11ee-b9d1-005056b3d4a2"
+}
+{
+  "id": "mapping-9h4i6j1k-77h8-11ee-e5f6-005056b3d4a5",
+  "volume_id": "vol-e8f3a2c7-55g7-11ee-d3e4-005056b3d4a4",
+  "host_id": "host-restore-prod-01",
+  "logical_unit_number": 10,
+  "state": "Mapped"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or import the PowerStore management certificate into your system trust store.
+    **`{"error": "Invalid or expired token"}`** — Regenerate the DELL-EMC-TOKEN by re-authenticating to the PowerStore API and ensure the token has not exceeded its TTL.
+    **`{"error": "Host not found or not registered"}`** — Verify the restore-host-id exists in PowerStore inventory by running `curl -k -X GET "https://<mgmt-ip>/api/rest/host" -H "DELL-EMC-TOKEN: <token>"` and confirm the host is properly registered.
 ## Recovery Objectives
 
 | Recovery Scenario | Method | Typical RTO | RPO |

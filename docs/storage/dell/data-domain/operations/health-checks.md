@@ -322,6 +322,31 @@ replication status | grep -v "replicating\|idle"
 replication show stats
 ```
 
+
+```text title="Expected output"
+Replication Contexts:
+  Context Name          Source              Destination        State
+  prod-backup-01        192.168.1.50        192.168.2.100       replicating
+  dr-sync-02            192.168.1.51        192.168.2.101       idle
+  archive-weekly-03     192.168.1.52        192.168.2.102       replicating
+  hotspot-04            192.168.1.53        192.168.2.103       idle
+
+Replication Status (non-idle/non-replicating):
+  Context Name          State               Last Error
+  hotspot-04            error               Connection timeout at 14:32:15
+  archive-weekly-03     paused              Manual pause by admin@ddmd1
+
+Replication Statistics:
+  Context               Sent (GB)    Lag (hours)    Last Update
+  prod-backup-01        2847.3       0.25           2024-01-15 09:42:31
+  dr-sync-02            5124.8       1.12           2024-01-15 09:41:15
+  archive-weekly-03     891.2        18.45          2024-01-14 15:30:22
+  hotspot-04            156.4        72.33          2024-01-13 09:15:08
+```
+
+!!! warning "Common errors"
+    **`error: replication context 'hotspot-04' not responding`** — Verify network connectivity to the destination system and check firewall rules between source and destination Data Domain appliances.
+    **`error: insufficient bandwidth for replication context 'archive-weekly-03'`** — Increase the bandwidth throttle limit or reduce concurrent replication contexts using `replication modify <context> -bandwidth <Mbps>`.
 ## Hardware Health
 
 ![Hardware Health](../../../../assets/storage-dell-data-domain-hc-hardware-health.svg)
@@ -337,6 +362,17 @@ enclosure show hardware | grep -iE "fault|failed|warning"
 raid show all | grep -v "normal\|OK"
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`disk show state: command not found`** — Verify you are logged into the Data Domain CLI (SSH to the management IP) and not a standard Linux shell.
+    **`enclosure show hardware: No such file or directory`** — Confirm the Data Domain system is online and responding; try `system show` first to verify connectivity.
+    **`raid show all: Invalid command`** — Check your Data Domain firmware version supports this syntax; use `raid show` without the `all` parameter on older versions.
 ## Pre-Change Checklist
 
 - [ ] No critical or error alerts active

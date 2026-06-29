@@ -23,6 +23,13 @@ grep -i "vmx\|ept\|svm\|npt" /proc/cpuinfo | head -5
 # Or check in vSphere client: Host > Manage > Hardware > CPU > Virtualisation
 ```
 
+
+```text title="Expected output"
+flags		: fpu vme de pse tsc msr pae mce cx8 vmx mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer aes xsave ept xsave avx f16c rdrand hypervisor lahf_lm cpuid_fault epb pti ssbd ibrs ibpb stibp tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid xsaveopt ept vpid
+flags		: fpu vme de pse tsc msr pae mce cx8 vmx mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer aes xsave ept xsave avx f16c rdrand hypervisor lahf_lm cpuid_fault epb pti ssbd ibrs ibpb stibp tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid xsaveopt ept vpid
+flags		: fpu vme de pse tsc msr pae mce cx8 vmx mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc cpuid aperfmperf pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2 ssse3 cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer aes xsave ept xsave avx f16c rdrand hypervisor lahf_lm cpuid_fault epb pti ssbd ibrs ibpb stibp tpr_shadow vnmi flexpriority ept vpid fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid xsaveopt ept vpid
+flags		: fpu vme de pse
+```
 **1.2 Enable promiscuous mode on the management portgroup**
 
 In vSphere client on the physical host:
@@ -103,6 +110,23 @@ ping 192.168.1.11
 # Access ESXi host client: https://192.168.1.11
 ```
 
+
+```text title="Expected output"
+PING 192.168.1.11 (192.168.1.11) 56(84) bytes of data.
+64 bytes from 192.168.1.11: icmp_seq=1 ttl=64 time=2.34 ms
+64 bytes from 192.168.1.11: icmp_seq=2 ttl=64 time=1.89 ms
+64 bytes from 192.168.1.11: icmp_seq=3 ttl=64 time=2.12 ms
+64 bytes from 192.168.1.11: icmp_seq=4 ttl=64 time=1.95 ms
+^C
+--- 192.168.1.11 statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3004ms
+rtt min/avg/max/stddev = 1.89/2.07/2.34/0.18 ms
+```
+
+!!! warning "Common errors"
+    **`ping: connect: Network is unreachable`** — Verify the workstation is on the same subnet as 192.168.1.11 or configure appropriate routing.
+    **`ping: unknown host 192.168.1.11`** — Confirm the ESXi host IP address is correct and the host is powered on and network-connected.
+    **`From 192.168.1.11 icmp_seq=1 Destination Host Unreachable`** — Check that the ESXi management network interface is configured and the host firewall allows ICMP traffic.
 Repeat Phase 3 for ESXi-02 (use IP 192.168.1.12, hostname `esxi-02.lab.local`).
 
 ---

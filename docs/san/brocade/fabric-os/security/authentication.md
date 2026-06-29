@@ -320,6 +320,28 @@ date                       # Check current system time against expected
 ntpshow
 ```
 
+
+```text title="Expected output"
+NTP Server(s) set to: 192.168.1.50 203.0.113.10
+(no output — command completes silently)
+
+NTP Server(s): 192.168.1.50 203.0.113.10
+
+Fri Mar 15 14:32:47 UTC 2024
+
+NTP status: synchronized
+NTP server: 192.168.1.50
+Stratum: 2
+Offset: 0.002345 seconds
+Delay: 0.015678 seconds
+Jitter: 0.001234 seconds
+Last update: 3 seconds ago
+```
+
+!!! warning "Common errors"
+    **`NTP Server(s) set to: (none)`** — Verify both NTP servers are reachable and specify them with `tsclockserver "server1 server2"` using valid hostnames or IPs.
+    **`ntpshow: command not found`** — Confirm you are running FOS 9.x or later; use `firmwareshow` to verify the FOS version and upgrade if necessary.
+    **`NTP status: unsynchronized`** — Check network connectivity to the NTP servers with `ping`, verify firewall rules allow UDP port 123, and wait 5-10 minutes for initial synchronization.
 NTP servers should be on the management network, reachable from the switch management IP. Use internal NTP stratum 2 servers — do not rely on public internet NTP from a SAN switch.
 
 ---

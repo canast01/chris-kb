@@ -50,6 +50,15 @@ esxcli system ntp set --server pool.ntp.org
 esxcli system ntp set --enabled true
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown option or flag '--server'`** — Use `esxcli system ntp set --servers=pool.ntp.org` with `--servers=` instead of `--server`.
+    **`Error: Unable to set NTP server: Connection refused`** — Ensure the NTP service is running with `esxcli system service start ntpd` before configuring servers.
 ---
 
 ## Phase 2 — Fill In the VCF Configuration Workbook
@@ -159,6 +168,26 @@ If a task fails, Cloud Builder logs are at `/var/log/vmware/vcf/` on the Cloud B
 tail -100f /var/log/vmware/vcf/bringup/vcf-bringup.log
 ```
 
+
+```text title="Expected output"
+2024-01-15T09:42:33.847Z [INFO] Validating infrastructure prerequisites...
+2024-01-15T09:42:45.123Z [INFO] Network connectivity check: PASSED
+2024-01-15T09:43:12.456Z [INFO] Storage validation: 2.8TB available, 2.5TB required - OK
+2024-01-15T09:43:28.789Z [INFO] vSAN cluster health: HEALTHY
+2024-01-15T09:44:01.234Z [INFO] Starting VCF bringup sequence...
+2024-01-15T09:44:15.567Z [INFO] Deploying SDDC Manager VM (vcf-sddc-mgr-01)...
+2024-01-15T09:45:32.891Z [INFO] SDDC Manager IP assigned: 192.168.10.20
+2024-01-15T09:46:08.124Z [INFO] Configuring management domain networking...
+2024-01-15T09:47:22.456Z [INFO] vCenter Server deployment in progress...
+2024-01-15T09:48:45.789Z [INFO] Waiting for vCenter services to initialize...
+2024-01-15T09:49:33.012Z [INFO] Management domain bringup: 67% complete
+2024-01-15T09:50:11.345Z [INFO] Configuring NSX Manager cluster...
+2024-01-15T09:51:28.678Z [INFO] NSX overlay network setup: COMPLETED
+```
+
+!!! warning "Common errors"
+    **`tail: cannot open '/var/log/vmware/vcf/bringup/vcf-bringup.log' for reading: No such file or directory`** — Verify you are logged into the Cloud Builder VM and the bringup process has started; check `/var/log/vmware/vcf/` exists first.
+    **`Permission denied`** — Run the command with `sudo` or ensure your user account has read permissions on the log file.
 ---
 
 ## Phase 6 — Post-Deployment

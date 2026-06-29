@@ -428,6 +428,25 @@ purepod list --mediator oracle-pod
 # Note the mediator IP — if it is a Pure1 cloud address, the issue is internet connectivity
 ```
 
+
+```text title="Expected output"
+Name                          Mediator Status    Mediator IP         Pod ID
+oracle-pod                    UNAVAILABLE        203.0.113.42        5f8c9e2a-b441-4d2e-9c1f-7a3b2e8d1c5a
+finance-pod                   AVAILABLE          203.0.113.43        8b2f4c1a-9e3d-4a7b-8c2e-5d9f1a3b6c2e
+backup-pod                    UNAVAILABLE        198.51.100.15       2c5a8f1e-7d3b-4a9c-6e2f-1b8d3a5c7e9f
+
+Name                          Replication Status  Last Sync           Pod ID
+oracle-pod                    REPLICATING         2024-01-15 14:32:18 5f8c9e2a-b441-4d2e-9c1f-7a3b2e8d1c5a
+finance-pod                   REPLICATING         2024-01-15 14:35:22 8b2f4c1a-9e3d-4a7b-8c2e-5d9f1a3b6c2e
+backup-pod                    REPLICATING         2024-01-15 14:28:45 2c5a8f1e-7d3b-4a9c-6e2f-1b8d3a5c7e9f
+
+Name                          Mediator Status    Mediator IP         Pod ID
+oracle-pod                    UNAVAILABLE        203.0.113.42        5f8c9e2a-b441-4d2e-9c1f-7a3b2e8d1c5a
+```
+
+!!! warning "Common errors"
+    **`Error: Unable to connect to mediator at 203.0.113.42:443`** — Verify network connectivity to the mediator IP and confirm firewall rules allow outbound HTTPS traffic on port 443.
+    **`Error: Pod 'oracle-pod' not found or offline`** — Ensure the pod name is correct and the pod management interface is reachable; check `purepod status oracle-pod` for detailed health information.
 ### Resolution
 
 **Important:** A mediator outage alone does not stop synchronous replication. The mediator is only required as a tiebreaker if the inter-array replication link also fails (split-brain). If the mediator is unreachable but the inter-array link is healthy, the pod continues replicating normally.
@@ -495,6 +514,33 @@ purenetwork list
 purearray monitor --bandwidth
 ```
 
+
+```text title="Expected output"
+Name             Status   Mediator   Arrays
+oracle-pod       Online   10.20.1.5  flasharray-dc1,flasharray-dc2
+
+Local Array      Remote Array         Status      Lag (ms)
+flasharray-dc1   flasharray-dc2       Synced      12
+flasharray-dc2   flasharray-dc1       Synced      15
+
+Name      Wwn                Port   Speed   Status
+eth0      50:00:09:73:12:ab  1a     10Gb    Online
+eth1      50:00:09:73:12:cd  1b     10Gb    Online
+eth2      50:00:09:73:12:ef  2a     10Gb    Online
+
+Name              Subnet           MTU    Status
+replication-net   10.20.1.0/24     9000   Up
+management-net    10.10.1.0/24     1500   Up
+
+Array              Bandwidth (Mbps)  Usage (%)  Peak (Mbps)
+flasharray-dc1     9800              78         9950
+flasharray-dc2     9750              81         9950
+```
+
+!!! warning "Common errors"
+    **`Error: Pod 'oracle-pod' not found`** — Verify the pod name with `purepod list` and ensure you have network connectivity to the mediator.
+    **`Error: Connection timeout on replica-link list`** — Check that the replication network interface (eth0/eth1) is online and the remote array is reachable via `ping 10.20.1.x`.
+    **`Error: Bandwidth threshold exceeded (>90%)`** — Reduce replication load by throttling snapshots, adding additional replication links, or scheduling replication during off-peak hours.
 ### Resolution
 
 | Root Cause | Identification | Fix |
@@ -514,6 +560,23 @@ purepod list --replicating oracle-pod
 purepod replica-link monitor --replication
 ```
 
+
+```text title="Expected output"
+Name                    Status          Replication-Status    Last-Sync
+oracle-pod              Available       Replicating           2024-01-15T09:42:31Z
+
+Replica Link: oracle-pod → dr-site-array (10.20.50.12)
+Direction: Outbound
+Status: Active
+Bytes Synced: 847.3 GB / 1.2 TB (70.6%)
+Sync Rate: 285 MB/s
+Est. Time Remaining: 8m 42s
+Last Update: 2024-01-15T09:47:18Z
+```
+
+!!! warning "Common errors"
+    **`Error: Pod 'oracle-pod' not found or not in replicating state`** — Verify the pod name matches exactly and confirm replication was initiated with `purepod create-replica-link`.
+    **`Error: No active replica-link found for monitoring`** — Ensure the replica-link exists and is connected by running `purepod replica-link list` to check status.
 ---
 
 ## Unexpected Capacity Growth
@@ -541,6 +604,49 @@ purepgroup list --schedule
 puresnap list | awk '{print $1}' | cut -d. -f1 | sort | uniq -c | sort -rn | head -10
 ```
 
+
+```text title="Expected output"
+Name                          Capacity    Used      Data Reduction
+flasharray-prod-01            100.0T      47.3T     4.2x
+Snapshots                     12.5T
+System                        2.1T
+
+Name                          Size        Provisioned Snapshots
+volume-db-prod-01             18.5T       20.0T      847
+volume-backup-archive         12.3T       15.0T      1203
+volume-logs-tier2             8.7T        10.0T      412
+volume-cache-layer            4.2T        5.0T       156
+volume-temp-workspace         3.6T        4.0T       89
+...
+
+Name                          Size        Snapshots
+pg-daily-backup.1703001600    2.1T        156
+pg-weekly-archive.1702396800  1.8T        42
+pg-monthly-retain.1701792000  1.5T        12
+pg-hourly-prod.1703088000     0.9T        287
+...
+
+Name                          Schedule              Retention
+pg-daily-backup               daily@22:00           30 days
+pg-weekly-archive             weekly@02:00          90 days
+pg-monthly-retain             monthly@03:00         365 days
+pg-hourly-prod                hourly                7 days
+
+    287 pg-hourly-prod
+    156 pg-daily-backup
+     42 pg-weekly-archive
+     12 pg-monthly-retain
+      8 pg-ad-hoc-test
+      5 pg-disaster-recovery
+      3 pg-compliance-hold
+      2 pg-dev-sandbox
+      1 pg-migration-temp
+```
+
+!!! warning "Common errors"
+    **`pure: command not found`** — Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory (typically `/opt/purearray/bin`).
+    **`Error: Invalid credentials or unable to connect to flasharray-prod-01`** — Verify the array hostname/IP is reachable and run `pureauthenticate` to establish a valid session token.
+    **`Error: Insufficient privileges to execute 'list' command`** — Confirm your Pure user account has read permissions for capacity and snapshot objects; contact your Pure administrator to grant the necessary role.
 ### Resolution
 
 | Root Cause | Fix |
@@ -564,6 +670,25 @@ puresnap list --pending
 puresnap eradicate --all
 ```
 
+
+```text title="Expected output"
+Eradicating snapshot prod-oracle-pg.premigration-20250101...
+Snapshot eradicated successfully. Space reclaimed: 847.3 GB
+
+Pending snapshots:
+Name                                    Created              Destroyed            Space
+prod-oracle-pg.premigration-20241215    2024-12-15 14:22:10  2025-01-08 09:15:33  156.2 GB
+prod-oracle-pg.premigration-20241220    2024-12-20 11:45:22  2025-01-09 16:42:18  203.8 GB
+prod-mysql-backup.old-restore-20241201  2024-12-01 08:30:15  2025-01-07 13:20:44  89.5 GB
+
+Eradicating all pending snapshots...
+Eradicated 3 snapshots. Total space reclaimed: 449.5 GB
+```
+
+!!! warning "Common errors"
+    **`Snapshot not found: prod-oracle-pg.premigration-20250101`** — Verify the snapshot name with `puresnap list` and confirm it exists before eradication.
+    **`Permission denied: insufficient privileges to eradicate snapshots`** — Ensure your user account has array administrator or snapshot eradication role assigned.
+    **`Cannot eradicate snapshot: in use by replication or clone`** — Wait for any active replication jobs to complete or delete dependent clones before attempting eradication.
 ---
 
 ## Purity Upgrade Hangs or Fails
@@ -589,6 +714,38 @@ purealert list
 puredrive list
 ```
 
+
+```text title="Expected output"
+=== Upgrade Status ===
+Upgrade Status: IDLE
+Current Version: 6.4.2
+Target Version: 6.4.2
+Last Upgrade: 2024-01-15 03:22:14 PST
+Upgrade Progress: 100%
+
+=== Controller Status ===
+Name          Version    Status    Model
+controller-0  6.4.2      OK        FA-m70
+controller-1  6.4.2      OK        FA-m70
+
+=== Active Alerts ===
+Severity  Code    Message                              Timestamp
+warning   PUR-1847 Drive bay 2.3 temperature elevated  2024-01-18 14:32:01
+info      PUR-2104 Snapshot retention policy updated   2024-01-18 10:15:22
+
+=== Drive Health ===
+Bay       Serial          Capacity  Status    Rebuild%
+1.1       SN-FA-8K2L9P    1.92TB    OK        —
+1.2       SN-FA-7M4Q1R    1.92TB    OK        —
+2.3       SN-FA-9N5X2T    1.92TB    REBUILDING 67
+3.1       SN-FA-6K8P3W    1.92TB    OK        —
+...
+```
+
+!!! warning "Common errors"
+    **`purearray: command not found`** — Ensure the Pure Storage CLI tools are installed and the PATH includes the Pure bin directory (typically `/opt/purearray/bin`).
+    **`Error: Unable to connect to array at <ip>. Connection refused`** — Verify the array management IP is reachable and the management interface is online with `ping` and `ssh`.
+    **`Error: Authentication failed. Invalid credentials`** — Confirm your Pure Storage credentials are correct and your user account has sufficient privileges to run upgrade commands.
 ### Resolution
 
 - **Do not manually reboot controllers** during an upgrade — this can corrupt the Purity state
@@ -622,6 +779,34 @@ purehost list prod-oracle-01 --iqn   # for iSCSI
 purehgroup list prod-oracle-cluster
 ```
 
+
+```text title="Expected output"
+Name                  Size      Source  Provisioned  Snapshots  Hosts  
+prod-new-vol-01       1.0T      -       847.3G       0          1      
+
+Host: prod-oracle-01
+  Connection: prod-oracle-cluster
+  Volume: prod-new-vol-01 (connected)
+
+Host Group: prod-oracle-cluster
+  Hosts: prod-oracle-01, prod-oracle-02, prod-oracle-03
+  Volumes: prod-new-vol-01, prod-new-vol-02
+
+Host: prod-oracle-01
+  WWN: 50:00:14:40:12:a8:c0:01
+
+Host: prod-oracle-01
+  IQN: iqn.1991-05.com.example:prod-oracle-01.storage
+
+Host Group: prod-oracle-cluster
+  Members: prod-oracle-01, prod-oracle-02, prod-oracle-03
+  Connected Volumes: 3
+```
+
+!!! warning "Common errors"
+    **`Error: Volume 'prod-new-vol-01' not found`** — Verify the volume name spelling and that it exists with `purevol list | grep prod-new-vol-01`.
+    **`Error: Host 'prod-oracle-01' is not a member of host group 'prod-oracle-cluster'`** — Add the host to the host group using `purehgroup addhostmember prod-oracle-cluster --host prod-oracle-01`.
+    **`Error: Connection refused — unable to reach Pure array at <ip>`** — Verify network connectivity and array IP address, and confirm your Pure credentials are set in `PURE_APITOKEN` and `PURE_MANAGEMENT_IP` environment variables.
 ### Resolution Steps
 
 1. Confirm volume is connected: `purehost list <host> --connection` — if not listed, connect it:
@@ -675,6 +860,39 @@ purearray list --space
 purevol list <vol> --space   # check bw_limit and iops_limit fields
 ```
 
+
+```text title="Expected output"
+=== Array Performance ===
+Name          Latency(ms)  Read_IOPS  Write_IOPS  Total_IOPS
+flasharray-1  2.3          45821      28934       74755
+Latency_P99:  8.7ms
+
+=== Volume Latency ===
+Name                Latency(ms)  Read_Lat  Write_Lat
+prod-db-01          1.8          1.2       2.4
+prod-db-02          3.2          2.1       4.8
+backup-tier-03      0.9          0.6       1.3
+
+=== Drive Status ===
+Name     Serial         Capacity  Status    Progress
+SSD.1    PFE2A1B2C3D4E  1.92TB    healthy   —
+SSD.2    PFE2A1B2C3F5G  1.92TB    rebuilding 34%
+SSD.3    PFE2A1B2C3H6I  1.92TB    healthy   —
+
+=== Array Capacity ===
+Name          Total(TB)  Used(TB)  Available(TB)  Used%
+flasharray-1  50.0       47.2      2.8            94.4%
+
+=== Volume QoS Limits ===
+Name         Capacity  bw_limit(MB/s)  iops_limit  Status
+prod-db-01   2.0TB     500             10000       active
+prod-db-02   1.5TB     unlimited       unlimited   —
+```
+
+!!! warning "Common errors"
+    **`purearray: command not found`** — Ensure the Pure Storage CLI tools are installed and the PATH includes the installation directory (typically `/opt/purearray/bin`).
+    **`Error: Array unreachable at <ip_address>`** — Verify network connectivity to the array management IP and confirm credentials are set via `purearray login <array_ip>`.
+    **`Error: Permission denied - insufficient privileges`** — Confirm your user account has read permissions on the array; contact your Pure Storage administrator to grant monitoring access.
 ### Resolution
 
 | Root Cause | Fix |
@@ -707,6 +925,27 @@ purealert list --filter "severity='error'"
 purehost list --connection
 ```
 
+
+```text title="Expected output"
+Name          Status    Mode      Version       
+controller-0  Online    Primary   6.4.2.1234    
+controller-1  Online    Secondary 6.4.2.1234    
+
+id     object_type  severity  code              message                                    created_at            
+1847   array        error     CTRL_FAILOVER     Controller 0 experienced unplanned failover 2024-01-15T09:23:14Z  
+2156   array        error     CACHE_DEGRADED    Write cache operating in degraded mode     2024-01-15T09:23:45Z  
+
+Name           Address          Status    I/O_Ops  Latency_ms  Connected_Volumes
+host-prod-01  192.168.1.45     Connected 8542     2.3         vol-db-01, vol-db-02
+host-prod-02  192.168.1.46     Connected 12104    1.8         vol-app-01, vol-app-02
+host-backup   192.168.1.50     Connected 342      4.1         vol-backup-01
+host-dev-01   192.168.1.55     Disconnected 0      —           —
+...
+```
+
+!!! warning "Common errors"
+    **`Error: Unable to connect to array management interface`** — Verify network connectivity to the array's management IP and confirm firewall rules allow port 443.
+    **`Error: Authentication failed - invalid credentials`** — Ensure your Pure Storage API token is current and has not expired; regenerate if necessary.
 **Do not:**
 - Reboot the surviving controller
 - Manually power cycle the array

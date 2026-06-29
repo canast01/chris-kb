@@ -326,6 +326,49 @@ curl -s -X PUT $AUTH "$RP/group/${CG_UID}/copy/${COPY_UID}/disable_image_access"
 curl -s -X PUT $AUTH "$RP/group/${CG_UID}/test_consistency" | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "groupUid": "7f8c3a2b-1e9d-4f6a-9c2e-5d3b8a1f4e7c",
+  "name": "production-db-cg",
+  "status": "SUSPENDED",
+  "suspendTime": "2024-01-15T14:32:18Z",
+  "lastConsistencyCheckTime": "2024-01-15T14:28:45Z"
+}
+{
+  "groupUid": "7f8c3a2b-1e9d-4f6a-9c2e-5d3b8a1f4e7c",
+  "name": "production-db-cg",
+  "status": "ACTIVE",
+  "resumeTime": "2024-01-15T14:33:22Z",
+  "replicationHealth": "HEALTHY"
+}
+{
+  "copyUid": "a4f2e8d1-7b3c-4e9a-2f5d-8c1a6b3e9f2d",
+  "imageAccessMode": "VIRTUAL_ACCESS",
+  "scenario": "DR",
+  "accessStartTime": "2024-01-15T14:34:01Z",
+  "accessState": "ENABLED"
+}
+{
+  "copyUid": "a4f2e8d1-7b3c-4e9a-2f5d-8c1a6b3e9f2d",
+  "imageAccessMode": "NONE",
+  "accessState": "DISABLED",
+  "replicationResumed": true,
+  "resumeTime": "2024-01-15T14:35:15Z"
+}
+{
+  "groupUid": "7f8c3a2b-1e9d-4f6a-9c2e-5d3b8a1f4e7c",
+  "consistencyStatus": "CONSISTENT",
+  "consistencyCheckTime": "2024-01-15T14:36:42Z",
+  "rpoBookmarksVerified": 12,
+  "oldestBookmarkAge": "PT2H15M"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to 192.168.1.45 port 443: Connection refused`** — Verify the RecoverPoint appliance IP in the `$RP` variable and confirm the management interface is reachable and the API service is running.
+    **`"error": "Invalid group UID format"`** — Ensure `$CG_UID` is a valid UUID (e.g., `7f8c3a2b-1e9d-4f6a-9c2e-5d3b8a1f4e7c`) and the consistency group exists on the appliance.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to the curl command to skip SSL verification, or import the RecoverPoint appliance certificate into your system's trusted store.
 ### RPA Health
 
 ```bash
@@ -349,6 +392,21 @@ for c in data.get('clustersDetails', []):
 "
 ```
 
+
+```text title="Expected output"
+RPA ID=RPA-001-ABC123  state=ACTIVE
+RPA ID=RPA-002-DEF456  state=ACTIVE
+RPA ID=RPA-003-GHI789  state=STANDBY
+RPA ID=RPA-004-JKL012  state=ACTIVE
+Cluster: prod-cluster-01      Quorum: 3/5
+Cluster: dr-cluster-west      Quorum: 5/5
+Cluster: backup-cluster-02    Quorum: 2/5
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to <host>: Connection refused`** — Verify the RecoverPoint API endpoint is reachable and the service is running with `systemctl status recoverpoint-api`.
+    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Confirm `$AUTH` and `$RP` variables are set correctly with `echo $RP $AUTH` and check API authentication credentials.
+    **`KeyError: 'innerSet'`** — The API response structure may differ by RecoverPoint version; add error handling with `.get('innerSet', [])` or verify API documentation for your version.
 ### Journal Usage
 
 ```bash
@@ -364,6 +422,21 @@ journal_vols={len(journal.get('innerSet',[]))}\")
 "
 ```
 
+
+```text title="Expected output"
+CG=prod-db-cg                 copy=local                  journal_vols=2
+CG=prod-db-cg                 copy=remote-dr              journal_vols=2
+CG=prod-app-cg                copy=local                  journal_vols=1
+CG=prod-app-cg                copy=remote-dr              journal_vols=1
+CG=test-cg                    copy=local                  journal_vols=3
+CG=backup-cg                  copy=local                  journal_vols=4
+CG=backup-cg                  copy=remote-vault           journal_vols=4
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to <ip>: Connection refused`** — Verify the RecoverPoint appliance IP in `$RP` is reachable and the REST API service is running.
+    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Confirm `$AUTH` contains valid credentials (e.g., `-u admin:password`) and the endpoint `/group/all_groups_details` exists on this RP version.
+    **`KeyError: 'innerSet'`** — The API response structure differs from expected; check RecoverPoint firmware version compatibility and validate the JSON schema with `curl -s $AUTH "$RP/group/all_groups_details" | python3 -m json.tool`.
 ---
 
 ## Key Operational Scenarios
@@ -386,6 +459,46 @@ curl -s -X PUT $AUTH "$RP/group/${CG_UID}/copy/${COPY_UID}/disable_image_access"
   python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "groups": [
+    {
+      "groupUID": "urn:emc:recoverypoint:group:7f8a9c2e-1b4d-4a6f-9e3d-5c2b1a8f7d9e",
+      "groupName": "Production-DB-CG",
+      "groupState": "HEALTHY",
+      "replicationHealth": "HEALTHY",
+      "copies": [
+        {
+          "copyUID": "urn:emc:recoverypoint:copy:a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6",
+          "copyName": "DR-Copy-SanFrancisco",
+          "copyState": "ACTIVE",
+          "imageAccessMode": "DISABLED"
+        }
+      ]
+    }
+  ]
+}
+{
+  "copyUID": "urn:emc:recoverypoint:copy:a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6",
+  "imageAccessMode": "VIRTUAL_ACCESS",
+  "scenario": "DR",
+  "status": "ENABLED",
+  "timestamp": "2024-01-15T14:32:18Z"
+}
+{
+  "copyUID": "urn:emc:recoverypoint:copy:a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6",
+  "imageAccessMode": "DISABLED",
+  "status": "DISABLED",
+  "replicationResumed": true,
+  "timestamp": "2024-01-15T14:47:52Z"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to 10.50.12.45 port 443: Connection refused`** — Verify RecoverPoint appliance is running and accessible; check firewall rules and $RP variable is set correctly.
+    **`{"error":"Invalid copy UID","errorCode":40001}`** — Confirm $COPY_UID matches an actual copy in the consistency group; list all copies with the first curl command to verify the UID.
+    **`{"error":"Image access already enabled on copy","errorCode":40015}`** — Disable image access first before re-enabling; check current copy state with the all_groups_details query.
 ---
 
 ## Verify

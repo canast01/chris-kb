@@ -112,20 +112,17 @@ jsmith:
 	Latest failure: Mon Dec 18 14:32:17 2023
 	Root login failures: 0
 	Failures before permanent lockout: 3
-```
+```text
 
 After running the reset command:
 ```
 (no output — command completes silently)
-```
+```text
 
 Verify the reset:
 ```
 jsmith:
 	Failures: 0
-```
-```
-
 !!! warning "Common errors"
     **`faillock: user jsmith does not exist`** — Verify the username is correct and the user exists in the system with `getent passwd jsmith`.
     

@@ -41,6 +41,22 @@ curl -k https://192.168.1.20/api/v1/cluster/status
 # Expect: {"mgmt_cluster_status":{"status":"STABLE"}}
 ```
 
+
+```text title="Expected output"
+{
+  "mgmt_cluster_status": {
+    "status": "STABLE",
+    "node_count": 3,
+    "healthy_nodes": 3,
+    "last_update": "2024-01-15T14:32:18Z"
+  }
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to 192.168.1.20 port 443: Connection refused`** — Verify the NSX Manager VM is powered on and has finished booting by checking vCenter; wait additional 2-3 minutes if still initializing.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — The `-k` flag is already present in the command; if still failing, verify you're using the correct IP address and that the management cluster initialization completed.
+    **`{"error":"Unauthorized","code":401}`** — Provide credentials using `-u admin:password` flag or configure API authentication token in the request header.
 Access the NSX Manager UI: `https://192.168.1.20` → login as `admin`.
 
 **1.4 Apply NSX license**
@@ -110,6 +126,25 @@ esxcli software vib list | grep nsx   # confirm NSX VIBs are installed
 nsxdp-cli ens stats get               # confirm data plane is active
 ```
 
+
+```text title="Expected output"
+Name                           Version                Install Date
+nsx-vib                        3.2.1.0-21150471       2024-01-15
+nsx-container-plugin           3.2.1.0-21150471       2024-01-15
+nsx-esx-dataplane              3.2.1.0-21150471       2024-01-15
+
+Port: ens192
+  RX packets: 2847392
+  TX packets: 1923847
+  RX bytes: 1847362918
+  TX bytes: 923847291
+  RX errors: 0
+  TX errors: 0
+```
+
+!!! warning "Common errors"
+    **`grep: command not found`** — Ensure you are running this command directly on the ESXi host via SSH, not from a remote shell where grep is unavailable.
+    **`nsxdp-cli: command not found`** — Verify NSX data plane VIBs are installed by running `esxcli software vib list | grep nsx-esx-dataplane` and reinstall if missing.
 ---
 
 ## Phase 4 — Create an Overlay Segment

@@ -250,6 +250,22 @@ purefb fs-replica-link list
 purefb bucket-replica-link list
 ```
 
+
+```text title="Expected output"
+Name                          Status    Remote Array          Remote FS/Bucket      Direction    Lag
+fs-replica-prod-01            Synced    pureflashblade-dr-01  fs-replica-prod-01   Bi-Directional  0 B
+fs-replica-prod-02            Synced    pureflashblade-dr-01  fs-replica-prod-02   Uni-Directional  0 B
+fs-replica-test               Synced    pureflashblade-dr-02  fs-replica-test      Uni-Directional  128 KB
+
+Name                          Status    Remote Array          Remote Bucket         Direction    Lag
+bucket-app-data-01            Synced    pureflashblade-dr-01  bucket-app-data-01    Bi-Directional  0 B
+bucket-backup-vault           Synced    pureflashblade-dr-01  bucket-backup-vault   Uni-Directional  2.3 MB
+bucket-logs-archive           Synced    pureflashblade-dr-02  bucket-logs-archive   Uni-Directional  512 KB
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid credentials or unable to connect to array`** — Verify the FlashBlade management IP is reachable and authentication credentials in `~/.purerc` are current.
+    **`Error: No filesystem/bucket replica links found`** — Confirm replica links have been created using `purefb fs-replica-link create` or `purefb bucket-replica-link create` before listing.
 Verify replica links show `lag-time` within expected RPO.
 
 ## Pre-Change Checklist

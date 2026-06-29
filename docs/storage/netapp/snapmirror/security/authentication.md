@@ -110,6 +110,22 @@ cluster peer delete -cluster <stale-peer-cluster>
 # Note: all SVM peers and SnapMirror relationships must be deleted first
 ```
 
+
+```text title="Expected output"
+Peer Cluster Name          Auth Status  Availability
+------------------------  -----------  ----------------
+cluster-dr-01              ok           available
+cluster-dr-02              ok           available
+cluster-backup-legacy      expired      unavailable
+cluster-test-sandbox       ok           available
+4 entries were displayed.
+
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: command failed: Cluster peer relationship cannot be deleted: SVM peer relationships exist`** — Delete all SVM peer relationships with `vserver peer delete -vserver <local-svm> -peer-vserver <remote-svm>` before removing the cluster peer.
+    **`Error: command failed: Cluster peer relationship cannot be deleted: SnapMirror relationships exist`** — Delete all SnapMirror relationships referencing this peer with `snapmirror delete -destination-path <dest-svm>:<vol>` before removing the cluster peer.
 ---
 
 ## ONTAP Credential Security for Replication Management
@@ -163,6 +179,29 @@ security login create \
 security login show -username svc-snapmirror
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+Please enter a password for user "svc-snapmirror":
+Please confirm the password:
+Vserver       User Name              Application Authentication Method Role Name
+------------- ---------------------- ----------- ---------------------- ----------------
+prod-cluster  svc-snapmirror         http        password               snapmirror-ops
+```
+
+!!! warning "Common errors"
+    **`Error: command failed: The role "snapmirror-ops" does not exist.`** — Create the role with the DEFAULT command first before assigning specific command permissions to it.
+    **`Error: command failed: Invalid vserver name "<cluster-name>"`** — Replace `<cluster-name>` with the actual cluster or SVM name (e.g., `cluster1` or `svm-dr`).
+    **`Error: command failed: User "svc-snapmirror" already exists.`** — Delete the existing user with `security login delete -username svc-snapmirror -vserver <cluster-name>` before recreating it.
 ### Read-Only Monitoring Role
 
 Separate monitoring-only access from operational access. Monitoring tools (Prometheus ONTAP exporter, Zabbix, Nagios) only need `snapmirror show` and related read-only commands.
@@ -202,6 +241,22 @@ security login publickey create \
     -publickey "ssh-ed25519 AAAA...monitoring-key"
 ```
 
+
+```text title="Expected output"
+Role "snapmirror-monitor" created successfully.
+Role "snapmirror-monitor" created successfully.
+Role "snapmirror-monitor" created successfully.
+Role "snapmirror-monitor" created successfully.
+Role "snapmirror-monitor" created successfully.
+Role "snapmirror-monitor" created successfully.
+User "svc-sm-monitor" created successfully.
+Public key added for user "svc-sm-monitor".
+```
+
+!!! warning "Common errors"
+    **`Error: entry already exists`** — Drop the existing role with `security login role delete -role snapmirror-monitor -vserver <cluster-name>` before recreating it.
+    **`Error: Invalid public key format`** — Ensure the public key string is complete and valid; verify it starts with `ssh-ed25519` or `ssh-rsa` and contains no line breaks.
+    **`Error: User "svc-sm-monitor" already exists`** — Delete the existing user with `security login delete -username svc-sm-monitor -vserver <cluster-name>` before creating a new one.
 ---
 
 ## REST API Authentication
@@ -226,6 +281,44 @@ security token show -username svc-snapmirror
 security token delete -username svc-snapmirror -token <token-id>
 ```
 
+
+```text title="Expected output"
+c83f7e2a-9b4c-4d12-8f3a-2e1b5c7d9a6f
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  2847  100  2847    0     0   8934      0 --:--:-- -- 0:00:00 --:--:-- 0:00:00
+{
+  "records": [
+    {
+      "uuid": "550e8400-e29b-41d4-a716-446655440001",
+      "source": {"cluster": "cluster-a", "svm": "svm-dr"},
+      "destination": {"cluster": "cluster-b", "svm": "svm-dr"},
+      "state": "snapmirrored",
+      "healthy": true
+    },
+    {
+      "uuid": "550e8400-e29b-41d4-a716-446655440002",
+      "source": {"cluster": "cluster-a", "svm": "svm-prod"},
+      "destination": {"cluster": "cluster-b", "svm": "svm-prod"},
+      "state": "snapmirrored",
+      "healthy": true
+    }
+  ],
+  "num_records": 2
+}
+
+Username: svc-snapmirror
+Token ID                             Application  Expiration
+------------------------------------ ------------ ----------
+c83f7e2a-9b4c-4d12-8f3a-2e1b5c7d9a6f http         2025-01-15
+
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid application "http". Valid applications are: ontapi, http, console, snmp`** — Use `http` (lowercase) or specify `ontapi` if using ZAPI instead of REST.
+    **`Error: REST API token not supported on this cluster. Minimum ONTAP version required: 9.12.0`** — Upgrade ONTAP to 9.12 or later, or use basic authentication with `-u username:password` in curl instead.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or install the cluster's CA certificate in your trust store.
 ---
 
 ## SMBC Mediator Authentication
@@ -248,6 +341,22 @@ snapmirror mediator show
 snapmirror mediator remove -mediator-address <mediator-ip>
 ```
 
+
+```text title="Expected output"
+Please enter the password for user "mediatoradmin":
+Mediator "192.168.1.45" added successfully.
+
+Mediator Address    Peer Cluster           Connection Status    Quorum Status
+192.168.1.45        cluster2.example.com   connected            true
+192.168.1.45        cluster1.example.com   connected            true
+
+Mediator "192.168.1.45" removed successfully.
+```
+
+!!! warning "Common errors"
+    **`Error: Mediator address 192.168.1.45 is already configured`** — Remove the existing mediator entry first using `snapmirror mediator remove` before re-adding it.
+    **`Error: Failed to authenticate to mediator at 192.168.1.45: Connection refused`** — Verify the mediator IP address is correct, the mediator service is running, and network connectivity exists between the cluster and mediator host.
+    **`Error: Cannot remove mediator 192.168.1.45: mediator is in use by active SnapMirror relationships`** — Delete or quiesce all active SnapMirror relationships using this mediator before attempting removal.
 Mediator credentials are configured during Mediator VM installation. The Mediator VM password should be stored in a secrets vault and rotated per the password policy. Certificate trust between ONTAP and the Mediator is established at `snapmirror mediator add` time — certificates are not manually managed.
 
 ---

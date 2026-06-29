@@ -568,6 +568,21 @@ show logging | grep -i zone
 # Filter to FLOGI events
 show logging | grep -i flogi
 ```
+
+```text title="Expected output"
+2024 Mar 15 14:32:18 +00:00 mds9148-01 %ETHPORT-5-IF_UP: Interface fc1/1 is up
+2024 Mar 15 14:31:52 +00:00 mds9148-01 %ZONE-5-ZONESET_ACTIVATED: ZoneSet 'PROD_ZONES' activated
+2024 Mar 15 14:31:45 +00:00 mds9148-01 %FLOGI-3-FLOGI_FAILED: FLOGI failed for port fc2/3, WWN 50:00:14:40:5d:a2:b1:c8
+2024 Mar 15 14:30:22 +00:00 mds9148-01 %ETHPORT-5-IF_DOWN: Interface fc1/2 is down (link failure)
+2024 Mar 15 14:29:15 +00:00 mds9148-01 %ZONE-3-INVALID_ZONE: Zone 'LEGACY_SAN' contains invalid member
+2024 Mar 15 14:28:03 +00:00 mds9148-01 %FLOGI-5-FLOGI_ACCEPT: FLOGI accepted for port fc1/1, WWN 50:00:14:40:5d:a2:b1:d4
+2024 Mar 15 14:27:41 +00:00 mds9148-01 %ETHPORT-5-IF_UP: Interface fc3/48 is up
+2024 Mar 15 14:26:18 +00:00 mds9148-01 %ZONE-2-ZONE_CONFLICT: Zone member conflict detected in 'BACKUP_ZONES'
+```
+
+!!! warning "Common errors"
+    **`% Invalid command`** — Verify the switch is in the correct mode (use `config terminal` or ensure you're in exec mode); some log filters may require piping to `grep` rather than `include`.
+    **`% No matching output`** — The filter pattern is case-sensitive; use `grep -i` for case-insensitive matching or verify the event type exists in the buffer.
 ```bash
 # Enable zone debug
 debug zone all vsan 10
@@ -584,6 +599,25 @@ undebug all
 # Confirm debug is cleared
 show debug
 ```
+
+```text title="Expected output"
+MDS9148S# debug zone all vsan 10
+Zone debugging enabled for VSAN 10
+MDS9148S# debug flogi all
+FLOGI debugging enabled for all VSANs
+MDS9148S# debug fspf all vsan 10
+FSPF debugging enabled for VSAN 10
+MDS9148S# undebug all
+All debugging disabled
+MDS9148S# show debug
+No debugging is enabled
+MDS9148S#
+```
+
+!!! warning "Common errors"
+    **`Invalid VSAN ID 10`** — Verify the VSAN exists with `show vsan` and use a valid VSAN ID (1-4094).
+    **`% Invalid command`** — Ensure you are in the correct mode (config mode for some debug commands); use `configure terminal` if needed.
+    **`Zone debugging is already enabled for VSAN 10`** — This is informational; proceed with your troubleshooting or use `undebug all` to clear and restart.
 ```bash
 terminal monitor     # send log to this terminal
 debug zone all vsan 10
@@ -591,6 +625,20 @@ debug zone all vsan 10
 undebug all
 terminal no monitor
 ```
+
+```text title="Expected output"
+2024-03-15 14:32:18 UTC: Zone merge request received for VSAN 10
+2024-03-15 14:32:18 UTC: Processing zone: prod_servers_zone
+2024-03-15 14:32:18 UTC: Zone member add: 50:00:14:40:5a:1b:2c:3d
+2024-03-15 14:32:19 UTC: Zone member add: 50:00:14:40:5a:1b:2c:3e
+2024-03-15 14:32:19 UTC: Zone activation initiated for VSAN 10
+2024-03-15 14:32:20 UTC: Zone merge completed successfully
+2024-03-15 14:32:20 UTC: All debugging disabled
+```
+
+!!! warning "Common errors"
+    **`% Invalid command`** — Ensure you are in the correct mode (config-zone or exec); use `configure terminal` first if needed.
+    **`% VSAN 10 does not exist`** — Create the VSAN first with `vsan 10` command before attempting to debug it.
 ```bash
 # Redirect to bootflash (takes 5-10 minutes)
 show tech-support > bootflash:tech-support-<hostname>-<date>.txt
