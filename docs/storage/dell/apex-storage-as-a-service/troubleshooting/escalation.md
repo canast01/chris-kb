@@ -108,6 +108,39 @@ for disk in /dev/sd*; do
 done > /tmp/smart-errors.txt
 ```
 
+
+```text title="Expected output"
+mpatha (360014056b2d45e00001000000010001) dm-0 DELL,COMPELLENT
+size=2.0T features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
+|-+- policy='service-time 0' prio=50 status=active
+| |- 2:0:0:0 sda 8:0   active ready running
+| `- 3:0:0:0 sdb 8:16  active ready running
+`-+- policy='service-time 0' prio=10 status=enabled
+  |- 4:0:0:0 sdc 8:32  active ready running
+  `- 5:0:0:0 sdd 8:48  active ready running
+mpathb (360014056b2d45e00001000000010002) dm-1 DELL,COMPELLENT
+size=1.5T features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
+|-+- policy='service-time 0' prio=50 status=active
+| `- 2:0:1:0 sde 8:64  active ready running
+`-+- policy='service-time 0' prio=10 status=enabled
+  `- 3:0:1:0 sdf 8:80  active ready running
+[  142.556234] sd 2:0:0:0: [sda] Assuming drive cache: write through
+[  156.234891] device-mapper: core: 4.47.0-ioctl (2023-03-01) initialised: dm-devel@redhat.com
+[  201.445123] scsi 4:0:0:0: Direct-Access-RDisk DELL COMPELLENT 0001 PQ: 0 ANSI: 5
+[ 2847.123456] multipathd: sdc: path reinstated
+[ 3021.987654] iscsid: Connection1:0: detected conn error (1011)
+Nov 15 10:23:45 storage-node-01 multipathd[1234]: dm-0: size change detected: old 2097152000 new 2097152000
+Nov 15 10:24:12 storage-node-01 iscsid: Connection1:0: login negotiation failed
+Nov 15 10:25:33 storage-node-01 kernel: [scsi_eh_0]: scsi_eh_0 timed out after 180 seconds
+Nov 15 10:26:01 storage-node-01 multipathd[1234]: mpatha: load table [0 4194304000 multipath 1 queue_if_no_path 0 1 1 service-time 0 1 1 8:0 1 1]
+Nov 15 10:27:15 storage-node-01 fcoe: [fcoe_ctlr_mode_set]: ENABLED
+=== /sys/class/fc_host/host2 ===
+0x500143800012a4b1
+Online
+16 Gbit
+=== /sys/class/fc_host/host3 ===
+0x500143800012a4
+```
 ### 2. Collect host-side diagnostics (Windows)
 
 ```powershell
@@ -145,6 +178,23 @@ scg logs collect --output /tmp/scg-logs-$(date +%F).zip
 # Export the last 7 days of events as CSV
 ```
 
+
+```text title="Expected output"
+admin@scg-prod-01's password: 
+Collecting SCG logs...
+Gathering system logs from /var/log/scg/
+Collecting configuration data...
+Compressing diagnostic bundle...
+Log bundle created successfully: /tmp/scg-logs-2024-01-15.zip
+Bundle size: 287 MB
+Timestamp: 2024-01-15T14:32:18Z
+SCG Version: 2.4.1.0
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify the SCG hostname is correct and your SSH credentials are valid; check with your infrastructure team if the admin account is locked.
+    **`scg: command not found`** — Ensure you are logged into the SCG appliance itself (not a different host) and that the scg CLI tool is installed in the PATH.
+    **`Disk space insufficient for log collection (need 500 MB, have 120 MB available).`** — Increase available space on the SCG appliance or specify an alternate output path on a mounted external volume.
 ### 4. Write the timeline
 
 ```text
@@ -244,6 +294,46 @@ nc -zv <iscsi-target-ip> 3260
 systool -c fc_host -v | grep -E "node_name|port_name|port_state|speed"
 ```
 
+
+```text title="Expected output"
+mpatha (36006016054d024002688c37e8e2e911) dm-0 DELL,APEX Storage
+size=2.0T features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
+|-+- policy='service-time 0' prio=50 status=active
+| |- 2:0:0:0 sda 8:0  active ready running
+| `- 3:0:0:0 sdb 8:16 active ready running
+`-+- policy='service-time 0' prio=10 status=enabled
+  |- 4:0:0:0 sdc 8:32 active ready running
+  `- 5:0:0:0 sdd 8:48 active ready running
+[  245.123456] sd 2:0:0:0: [sda] Assuming drive cache: write through
+[  512.987654] scsi 3:0:0:0: Device offlined - not ready after error recovery
+[  1024.456789] Path sdb reinstated: fc_host3
+[  2048.112233] iSCSI: connection restored to 10.50.12.44:3260
+iscsi: iscsid is running
+iscsiadm: No active sessions.
+system-prod-01: health=95 last_seen=2024-01-15T14:32:18Z
+system-dr-02: health=78 last_seen=2024-01-15T14:28:05Z
+PING 10.50.12.44 (10.50.12.44) 56(84) bytes of data.
+64 bytes from 10.50.12.44: icmp_seq=1 time=2.14 ms
+64 bytes from 10.50.12.44: icmp_seq=2 time=2.08 ms
+64 bytes from 10.50.12.44: icmp_seq=3 time=2.11 ms
+64 bytes from 10.50.12.44: icmp_seq=4 time=2.09 ms
+--- 10.50.12.44 statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3004ms
+Connection to 10.50.12.44 3260 port [tcp/*] succeeded!
+node_name=0x5001405abcd12345
+port_name=0x5001405abcd12346
+port_state=Online
+speed=16Gbit
+node_name=0x5001405abcd12347
+port_name=0x5001405abcd12348
+port_state=Online
+speed=16Gbit
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag (already present) or import the CloudIQ CA certificate into your system trust store.
+    **`iscsiadm: No active sessions.`** — Verify iSCSI discovery is configured with `iscsiadm -m discovery -t sendtargets -p <target-ip>` and log in with `iscsiadm -m node --login`.
+    **`nc: connect to 10.50.12.44 port 3260 (tcp) failed: No route to host`**
 ---
 
 ## Verify resolution

@@ -265,6 +265,39 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 cd C:\Users\YourName\Desktop
 .\cloudiq_system_health.ps1
 ```
+
+```text title="Expected output"
+CloudIQ System Health Check v2.3.1
+=====================================
+Timestamp: 2024-01-15 14:32:47 UTC
+
+System Information:
+  Hostname: dell-storage-01.corp.local
+  OS: Windows Server 2019 (Build 17763)
+  PowerShell Version: 5.1.17763.3287
+
+CloudIQ Agent Status:
+  Service Status: Running
+  Agent Version: 3.8.2.1045
+  Last Heartbeat: 2024-01-15 14:31:22 UTC
+  Connected Arrays: 3
+
+Storage Array Health:
+  Array 1 (SAN-PROD-01): Healthy
+  Array 2 (SAN-PROD-02): Healthy
+  Array 3 (SAN-DEV-01): Healthy
+
+Disk Space Analysis:
+  C:\ - 78% used (542 GB / 695 GB)
+  D:\ - 45% used (1.2 TB / 2.7 TB)
+
+Health Summary: All systems operational ✓
+```
+
+!!! warning "Common errors"
+    **`cannot be loaded because running scripts is disabled on this system`** — Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` to enable script execution.
+    **`The term '.\cloudiq_system_health.ps1' is not recognized`** — Verify the script exists in the current directory with `dir *.ps1` and check the filename spelling.
+    **`Access Denied`** — Run PowerShell as Administrator or ensure your user account has read permissions on the script file.
 ```bash
 #!/bin/bash
 # cloudiq_daily_check.sh — Daily operations check for Dell CloudIQ
@@ -351,6 +384,30 @@ echo "========================================"
 echo "  PASS: $PASS   FAIL: $FAIL"
 [[ "$FAIL" -eq 0 ]] && echo "  STATUS: OK" && exit 0 || echo "  STATUS: DEGRADED" && exit 1
 ```
+
+```text title="Expected output"
+========================================
+  CloudIQ Daily Check
+  2024-01-15 09:42:17
+========================================
+  [INFO] systems reporting: 7
+  systems reporting (>0)                                  PASS
+  [INFO] alerts — CRITICAL:0  ERROR:2  WARNING:5
+  CRITICAL/ERROR alerts (none)                            FAIL
+  WARNING alerts (none)                                   FAIL
+  [INFO] systems with health_score < 80: 1 (["vmax-prod-01"])
+  health_score >= 80 (all systems)                        FAIL
+  [INFO] systems with < 30 days to capacity: 2
+  capacity forecast >= 30 days (all)                      FAIL
+========================================
+  PASS: 1   FAIL: 4
+  STATUS: DEGRADED
+```
+
+!!! warning "Common errors"
+    **`ERROR: Authentication failed.`** — Verify CLOUDIQ_CLIENT_ID and CLOUDIQ_CLIENT_SECRET environment variables are set correctly and not expired.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl commands or import the Dell CloudIQ certificate into your system's CA bundle.
+    **`jq: error (at <stdin>:0): Cannot index null with string "results"`** — Ensure the API endpoint is accessible and returning valid JSON; check network connectivity and API base URL.
 ```bash
 #!/bin/bash
 # cloudiq_triage.sh — Incident triage data capture for Dell CloudIQ
@@ -408,6 +465,67 @@ done < <(echo "$SYSTEMS" | jq -c '.results[]')
 
 echo "Triage data written to: $OUTFILE"
 ```
+
+```text title="Expected output"
+CloudIQ Triage Capture
+Date : 2024-01-15 14:32:47
+
+========================================
+  ACTIVE ALERTS
+========================================
+{
+  "results": [
+    {
+      "id": "alert-7f2a9c1e",
+      "severity": "WARNING",
+      "category": "CAPACITY",
+      "message": "Array capacity approaching threshold",
+      "affected_system": "VMAX-prod-01",
+      "created_at": "2024-01-15T09:18:22Z"
+    },
+    {
+      "id": "alert-3b5d8f42",
+      "severity": "INFO",
+      "category": "PERFORMANCE",
+      "message": "High latency detected on SAN fabric",
+      "affected_system": "Unity-dr-02",
+      "created_at": "2024-01-15T11:45:10Z"
+    }
+  ],
+  "total": 2
+}
+
+========================================
+  STORAGE SYSTEMS (health scores)
+========================================
+[
+  {
+    "id": "sys-001a2b3c",
+    "system_name": "VMAX-prod-01",
+    "system_type": "VMAX",
+    "health_score": 87
+  },
+  {
+    "id": "sys-004d5e6f",
+    "system_name": "Unity-dr-02",
+    "system_type": "Unity",
+    "health_score": 92
+  }
+]
+
+========================================
+  CAPACITY FORECASTS
+========================================
+  VMAX-prod-01: {"used_tib":18.4,"total_subscribed_tib":25.0,"days_until_full":47}
+  Unity-dr-02: {"used_tib":8.2,"total_subscribed_tib":12.0,"days_until_full":89}
+
+Triage data written to: cloudiq_triage_20240115_143247.txt
+```
+
+!!! warning "Common errors"
+    **`ERROR: CLOUDIQ_CLIENT_ID and CLOUDIQ_CLIENT_SECRET must be set.`** — Export both variables before running: `export CLOUDIQ_CLIENT_ID=xxx CLOUDIQ_CLIENT_SECRET=yyy`
+    **`ERROR: Authentication failed.`** — Verify credentials are correct and the CloudIQ tenant is accessible; check that the API endpoint `https://cloudiq.dell.com/auth/v1/token` is reachable.
+    **`curl: (60) SSL certificate problem`** — Add `-k` flag to curl commands or ensure your system's CA certificates are up-to-date with `update-ca-certificates`.
 ```bash
 #!/bin/bash
 # cloudiq_precheck.sh — Pre-change validation for Dell CloudIQ
@@ -497,6 +615,25 @@ fi
 echo "  PRE-CHECK PASSED — Safe to proceed."
 exit 0
 ```
+
+```text title="Expected output"
+========================================
+  CloudIQ Pre-Change Check
+  Target: my-powerstore-01
+  2024-01-15 14:32:47
+========================================
+  PASS: system found and reporting
+  PASS: health_score 89 > 75
+  PASS: no CRITICAL alerts
+  PASS: capacity forecast 47 days (>= 14)
+========================================
+  PRE-CHECK PASSED — Safe to proceed.
+```
+
+!!! warning "Common errors"
+    **`ERROR: CLOUDIQ_CLIENT_ID and CLOUDIQ_CLIENT_SECRET must be set.`** — Export both variables before running the script: `export CLOUDIQ_CLIENT_ID=xxx CLOUDIQ_CLIENT_SECRET=yyy`.
+    **`ERROR: Authentication failed.`** — Verify credentials are correct and not expired; regenerate API credentials in Dell CloudIQ console if needed.
+    **`FAIL: system 'my-powerstore-01' not found in CloudIQ`** — Confirm the exact system name matches CloudIQ inventory using `curl -H "Authorization: Bearer $TOKEN" https://cloudiq.dell.com/cloudiq/rest/v1/storage-systems | jq '.results[].system_name'`.
 ```bash
 #!/bin/bash
 # cloudiq_postcheck.sh — Post-change validation for Dell CloudIQ
@@ -594,6 +731,28 @@ fi
 echo "  POST-CHECK PASSED — All checks healthy."
 exit 0
 ```
+
+```text title="Expected output"
+========================================
+  CloudIQ Post-Change Validation
+  Target: my-powerstore-01
+  2024-01-15 14:32:47
+========================================
+  PASS: system found
+  PASS: system reporting
+  PASS: health_score 94 > 75
+  PASS: no CRITICAL alerts
+  PASS: capacity forecast 28 days (>= 14)
+  health_score: baseline=92  current=94
+  PASS: health_score not dropped vs baseline
+========================================
+  POST-CHECK PASSED — All checks healthy.
+```
+
+!!! warning "Common errors"
+    **`ERROR: CLOUDIQ_CLIENT_ID and CLOUDIQ_CLIENT_SECRET must be set.`** — Export both variables before running the script: `export CLOUDIQ_CLIENT_ID=xxx CLOUDIQ_CLIENT_SECRET=yyy`.
+    **`ERROR: Authentication failed.`** — Verify credentials are correct and not expired; regenerate API tokens in CloudIQ console if necessary.
+    **`FAIL: system 'my-powerstore-01' not found`** — Confirm the exact system name in CloudIQ matches TARGET_SYSTEM_NAME, or omit it to validate all systems.
 ```bash
 #!/bin/bash
 # cloudiq_health.sh — Cron-safe health check for Dell CloudIQ
@@ -668,6 +827,22 @@ echo "OVERALL: ${LABELS[$STATE]}"
 exit "$STATE"
 ```
 
+
+```text title="Expected output"
+CloudIQ Health — 2024-01-15 14:32:47
+  [INFO] total systems: 12
+  [INFO] alerts — CRITICAL:0  ERROR:2  WARNING:5
+  [CRIT] 2 CRITICAL/ERROR alert(s)
+  [WARN] 5 WARNING alert(s)
+  [INFO] systems with health_score < 80: 3
+  [WARN] 3 system(s) with health_score < 80
+OVERALL: CRIT
+```
+
+!!! warning "Common errors"
+    **`CRIT: CloudIQ authentication failed`** — Verify CLOUDIQ_CLIENT_ID and CLOUDIQ_CLIENT_SECRET environment variables are set correctly and have not expired.
+    **`curl: (7) Failed to connect to cloudiq.dell.com port 443: Connection timed out`** — Check network connectivity and firewall rules allow outbound HTTPS to cloudiq.dell.com, or verify the API endpoint is accessible from your environment.
+    **`jq: parse error: Cannot index number with string "results"`** — Ensure the CloudIQ API response is valid JSON; the token may be invalid or the API endpoint may have changed—re-authenticate and verify the API_BASE URL.
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

@@ -93,6 +93,27 @@ symcfg -sid <SID> list -v | grep -i "microcode\|firmware"
 # Unisphere web UI → Help → About
 ```
 
+
+```text title="Expected output"
+Symmetrix ID: 000123456789012
+Symmetrix ID: 000987654321098
+Symmetrix ID: 000555444333222
+
+Symmetrix ID: 000123456789012
+Symmetrix Model: VMAX 250F
+Microcode Version: 5978.669.669
+System Serial Number: 123ABC456DEF
+System Capacity: 50.2 TB
+Number of Engines: 2
+Number of Directors: 16
+Cache Size: 384 GB
+Firmware Version: T10.2.0.0.5978.669.669
+```
+
+!!! warning "Common errors"
+    **`symcfg: Command not found`** — Ensure Solutions Enabler is installed and the `$PATH` includes the SE installation directory (typically `/opt/emc/SYMCLI/bin`).
+    **`Symmetrix ID: <SID> -- Not Found`** — Verify the SID is correct and the array is properly discovered by running `symcfg list` first to see all available arrays.
+    **`Permission denied`** — Run the command with appropriate privileges (use `sudo` or ensure your user is in the `symcli` or `root` group).
 ### 2. Collect current license state
 
 ```bash

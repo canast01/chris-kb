@@ -69,6 +69,57 @@ curl -s -H "Authorization: Bearer ${CLOUDIQ_TOKEN}" \
   jq '.results[] | select(.severity == "CRITICAL") | {resource: .resource_name, description: .description}'
 ```
 
+
+```text title="Expected output"
+{
+  "name": "APEX-SYS-001",
+  "health_score": 95,
+  "status": "HEALTHY",
+  "type": "PowerFlex"
+}
+{
+  "name": "APEX-SYS-002",
+  "health_score": 87,
+  "status": "HEALTHY",
+  "type": "PowerStore"
+}
+{
+  "name": "APEX-SYS-003",
+  "health_score": 72,
+  "status": "DEGRADED",
+  "type": "Unity"
+}
+{
+  "name": "APEX-SYS-001",
+  "contracted_tb": 500,
+  "consumed_tb": 385.2,
+  "percent_consumed": 77.04
+}
+{
+  "name": "APEX-SYS-002",
+  "contracted_tb": 1000,
+  "consumed_tb": 642.8,
+  "percent_consumed": 64.28
+}
+{
+  "name": "APEX-SYS-003",
+  "contracted_tb": 250,
+  "consumed_tb": 248.5,
+  "percent_consumed": 99.4
+}
+{
+  "resource": "APEX-SYS-003-NODE-04",
+  "description": "Drive failure detected on enclosure 2, slot 8"
+}
+{
+  "resource": "APEX-SYS-001-CONTROLLER-B",
+  "description": "Controller temperature threshold exceeded"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (401) Unauthorized`** — Verify the APEX_TOKEN and CLOUDIQ_TOKEN are valid and not expired by regenerating them in the Dell APEX console.
+    **`jq: error (at <stdin>:1): Cannot index null with string "results"`** — Confirm the API endpoint URLs are correct and the API gateway is reachable; check for typos in APEX_BASE and CloudIQ URLs.
 ## Change Readiness
 
 - [ ] Contracted capacity headroom is sufficient for the planned workload increase (consumed < 80% of contracted)

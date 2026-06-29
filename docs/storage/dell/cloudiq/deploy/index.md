@@ -169,6 +169,31 @@ sudo /opt/dell/scg/bin/scg-version.sh
 # Settings → Software Update → Check for Updates → Install
 ```
 
+
+```text title="Expected output"
+admin@192.168.1.45's password: 
+Last login: Wed Jan 15 14:22:33 2025 from 10.0.0.88
+SCG Appliance [scg-prod-01] ~$
+
+SCG Version Information
+======================
+Current Version: 2.8.4.1
+Build Number: 20250115-001
+Release Date: 2025-01-15
+Installed Packages:
+  - CloudIQ Agent: 5.2.1
+  - Dell OpenManage Enterprise: 3.9.2
+  - Storage Monitoring Service: 2.8.4
+
+Update Status: Available update detected (v2.8.5.0)
+Last Check: 2025-01-15 14:20:15 UTC
+
+SCG Appliance [scg-prod-01] ~$
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password)`** — Verify SSH credentials and that the SCG appliance IP address is correct and reachable on the network.
+    **`sudo: command not found`** — The admin user may not have sudo privileges; contact your Dell support team to grant elevated permissions.
 ---
 
 ## Validate Data Collection

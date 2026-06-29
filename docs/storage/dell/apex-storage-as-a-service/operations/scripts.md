@@ -170,6 +170,36 @@ set APEX_CLIENT_SECRET=your-client-secret
 python apex_capacity_monitor.py
 ```
 
+
+```text title="Expected output"
+APEX Capacity Monitor v2.1.4
+Initializing client authentication...
+Successfully authenticated to APEX Console (tenant: acme-prod-01)
+Fetching capacity metrics from 5 storage systems...
+
+System: APEX-SAN-01 (10.42.18.55)
+  Total Capacity: 487.2 TB | Used: 312.8 TB (64.2%) | Available: 174.4 TB
+  
+System: APEX-SAN-02 (10.42.18.56)
+  Total Capacity: 512.0 TB | Used: 298.5 TB (58.3%) | Available: 213.5 TB
+
+System: APEX-SAN-03 (10.42.18.57)
+  Total Capacity: 256.0 TB | Used: 201.3 TB (78.6%) | Available: 54.7 TB
+
+System: APEX-SAN-04 (10.42.18.58)
+  Total Capacity: 768.0 TB | Used: 445.2 TB (57.9%) | Available: 322.8 TB
+
+System: APEX-SAN-05 (10.42.18.59)
+  Total Capacity: 384.0 TB | Used: 289.1 TB (75.3%) | Available: 94.9 TB
+
+Report generated: 2024-01-15_capacity_report.json
+Execution completed in 12.4 seconds
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid credentials. Authentication failed (401 Unauthorized)`** — Verify that APEX_CLIENT_ID and APEX_CLIENT_SECRET environment variables are set correctly and have not expired.
+    **`Error: Unable to connect to APEX Console at default endpoint. Connection timeout after 30s`** — Confirm network connectivity to the APEX management console and that the correct endpoint URL is configured in the script or environment.
+    **`FileNotFoundError: [Errno 2] No such file or directory: 'apex_capacity_monitor.py'`** — Ensure the script is located in the current working directory (C:\Users\YourName\Desktop) or provide the full path to the script.
 **What you should see**
 
 A table listing each APEX subscription with committed capacity, consumed capacity, percentage used, and status (OK/WARNING/CRITICAL). The final line shows overall status. The script exits non-zero if any subscription is in WARNING or CRITICAL state.
@@ -299,6 +329,31 @@ set APEX_CLIENT_SECRET=your-client-secret
 python apex_alert_report.py
 ```
 
+
+```text title="Expected output"
+APEX Alert Report Generator v2.1.4
+Loading configuration from environment variables...
+✓ Client ID validated: apex-client-prod-001
+✓ Connecting to APEX Console at https://apex.dell.com/api/v2
+✓ Authentication successful
+Fetching alerts from last 7 days...
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│ APEX Storage System Alert Summary                                                                     │
+├─────────────────────────────────────────────────────────────────┤
+│ Total Alerts: 47                                                                                      │
+│ Critical: 3  | Warning: 12  | Info: 32                                                                │
+│ System: PowerVault-EMC-SAN-01 (192.168.1.45)                                                          │
+│ System: PowerVault-EMC-SAN-02 (192.168.1.46)                                                          │
+│ System: PowerVault-EMC-SAN-03 (192.168.1.47)                                                          │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
+Report generated: apex_alert_report_2024-01-15_143022.csv
+Execution completed in 12.4 seconds
+```
+
+!!! warning "Common errors"
+    **`'python' is not recognized as an internal or external command`** — Ensure Python is installed and added to PATH, or use the full path to python.exe (e.g., `C:\Python311\python.exe apex_alert_report.py`).
+    **`Error: Invalid credentials - APEX_CLIENT_ID or APEX_CLIENT_SECRET not set`** — Verify both environment variables are set correctly with `echo %APEX_CLIENT_ID%` and `echo %APEX_CLIENT_SECRET%`, and that they match your APEX Console credentials.
+    **`ConnectionError: Failed to connect to https://apex.dell.com/api/v2`** — Check network connectivity and firewall rules; confirm the APEX Console endpoint is reachable with `ping apex.dell.com` or `curl https://apex.dell.com/api/v2`.
 **What you should see**
 
 A table with severity, resource name, and description for each active alert. The final line shows total active alert count. The script exits with a non-zero code if any CRITICAL or ERROR alerts are present.
@@ -411,6 +466,43 @@ export APEX_CLIENT_SECRET=your-client-secret
 ansible-playbook apex_health.yml
 ```
 
+
+```text title="Expected output"
+PLAY [Check APEX Storage Health] ************************************************************
+
+TASK [Gather APEX cluster facts] ************************************************************
+ok: [apex-cluster-01]
+
+TASK [Check storage capacity] ***************************************************************
+ok: [apex-cluster-01] => {
+  "capacity": {
+    "total_gb": 102400,
+    "used_gb": 78956,
+    "available_gb": 23444,
+    "utilization_percent": 77.1
+  }
+}
+
+TASK [Verify replication status] ************************************************************
+ok: [apex-cluster-01] => {
+  "replication_status": "Healthy",
+  "lag_seconds": 2
+}
+
+TASK [Check system alerts] ******************************************************************
+ok: [apex-cluster-01] => {
+  "active_alerts": 0,
+  "warning_count": 1
+}
+
+PLAY RECAP ******************************************************************************
+apex-cluster-01 : ok=4 changed=0 unreachable=0 failed=0 skipped=0 rescued=0 ignored=0
+```
+
+!!! warning "Common errors"
+    **`fatal: [apex-cluster-01]: FAILED! => {"msg": "Authentication failed: Invalid APEX_CLIENT_ID or APEX_CLIENT_SECRET"}`** — Verify credentials are correctly exported and have not expired by checking them in your APEX management console.
+    **`fatal: [apex-cluster-01]: FAILED! => {"msg": "Unable to reach APEX cluster at apex-cluster-01: Name or service not known"}`** — Ensure the APEX cluster hostname is resolvable and network connectivity exists from the Ansible control node.
+    **`fatal: [apex-cluster-01]: FAILED! => {"msg": "apex_health.yml: No such file or directory"}`** — Verify the playbook file exists in the current working directory and the path is correct.
 **What you should see**
 
 Ansible authenticates to the APEX API, lists all subscriptions, and retrieves active alerts. If any CRITICAL alerts are found the play fails with a message to investigate via the APEX Console.
@@ -522,6 +614,33 @@ else
 fi
 ```
 
+
+```text title="Expected output"
+========================================
+  APEX Daily Check
+  Date : 2024-01-15 09:47:23
+========================================
+
+--- System Health Scores ---
+  APEX-PDC-01                         health_score=92.5
+  APEX-PDC-02                         health_score=78.3  <<< BELOW THRESHOLD
+  APEX-PDC-03                         health_score=88.1
+  APEX-PDC-04                         health_score=95.0
+
+--- Capacity vs Contracted ---
+  APEX-PDC-01                         committed=500.0T consumed=412.5T (82.5%)
+  APEX-PDC-02                         committed=750.0T consumed=651.2T (86.8%)  <<< ABOVE THRESHOLD
+  APEX-PDC-03                         committed=1000.0T consumed=820.0T (82.0%)
+  APEX-PDC-04                         committed=600.0T consumed=510.0T (85.0%)  <<< ABOVE THRESHOLD
+
+========================================
+  Result: WARNING — review items above
+```
+
+!!! warning "Common errors"
+    **`ERROR: Authentication failed — check APEX_CLIENT_ID and APEX_CLIENT_SECRET`** — Verify credentials are exported as environment variables and have not expired; regenerate tokens in the APEX console if needed.
+    **`curl: (28) Operation timeout was reached`** — Increase the `--max-time` parameter from 15 to 30 seconds or verify network connectivity to the Dell API endpoint.
+    **`json.decoder.JSONDecodeError: Expecting value`** — Confirm the API endpoint URL is correct and the Bearer token is still valid; re-authenticate if the token has expired.
 ---
 
 ## Incident Triage Script
@@ -606,6 +725,91 @@ echo ""
 echo "Output saved to: $OUTFILE"
 ```
 
+
+```text title="Expected output"
+========================================
+  APEX Incident Triage Capture
+  Time : 2024-01-15 14:32:47
+========================================
+
+--- All APEX Systems ---
+{
+  "results": [
+    {
+      "id": "sys-4a7f2e91-b3c4-11ee-9d2f-0242ac110002",
+      "system_name": "APEX-PROD-01",
+      "model": "PowerFlex 7.2",
+      "status": "healthy",
+      "capacity_gb": 524288
+    },
+    {
+      "id": "sys-6c2d1f44-a8e9-11ee-8f1a-0242ac110003",
+      "system_name": "APEX-DR-02",
+      "model": "PowerFlex 7.1",
+      "status": "degraded",
+      "capacity_gb": 262144
+    }
+  ]
+}
+
+--- Active Alerts ---
+{
+  "results": [
+    {
+      "alert_id": "ALT-20240115-0847",
+      "severity": "warning",
+      "message": "Storage pool utilization above 85%",
+      "system_id": "sys-4a7f2e91-b3c4-11ee-9d2f-0242ac110002",
+      "timestamp": "2024-01-15T13:22:15Z"
+    }
+  ]
+}
+
+--- Recent Events ---
+{
+  "results": [
+    {
+      "event_id": "EVT-20240115-0912",
+      "type": "capacity_threshold",
+      "description": "Pool capacity threshold exceeded",
+      "timestamp": "2024-01-15T14:12:33Z"
+    },
+    {
+      "event_id": "EVT-20240115-0901",
+      "type": "replication_lag",
+      "description": "Replication lag detected on snapshot",
+      "timestamp": "2024-01-15T14:01:22Z"
+    }
+  ]
+}
+
+--- Capacity: APEX-PROD-01 ---
+{
+  "total_capacity_gb": 524288,
+  "used_capacity_gb": 445000,
+  "available_capacity_gb": 79288,
+  "utilization_percent": 84.87
+}
+
+--- Capacity: APEX-DR-02 ---
+{
+  "total_capacity_gb": 262144,
+  "used_capacity_gb": 198108,
+  "available_capacity_gb": 64036,
+  "utilization_percent": 75.56
+}
+
+========================================
+  Triage capture complete: /tmp/apex_triage_20240115_143247.txt
+========================================
+
+Output saved to: /tmp/apex_triage_20240115_143247.txt
+```
+
+!!! warning "Common errors"
+    **`ERROR: Authentication failed`** — Verify APEX_CLIENT_ID and APEX_CLIENT_SECRET environment variables are set correctly and the TOKEN_URL is reachable.
+    **`curl: (28) Operation timeout was reached`** — Increase the `--max-time` value from 15 to 30 seconds or check network connectivity to api.dell.com.
+    **`json.decoder.JSONDecodeError:
 ---
 
 ## Change Pre-Check Script
@@ -712,6 +916,28 @@ else
 fi
 ```
 
+
+```text title="Expected output"
+========================================
+  APEX Pre-Change Check
+  Date : 2024-01-15 14:32:47
+========================================
+
+  [PASS] APEX-SYS-001: health_score=92.5
+  [PASS] APEX-SYS-001: capacity headroom 34.2%
+  [PASS] APEX-SYS-002: health_score=88.1
+  [PASS] APEX-SYS-002: capacity headroom 22.7%
+  [PASS] No active CRITICAL alerts
+  [INFO] Verify no Dell maintenance scheduled in next 4h via APEX Console before proceeding
+
+========================================
+  Result: READY — proceed with workload change
+```
+
+!!! warning "Common errors"
+    **`ERROR: Auth failed`** — Verify APEX_CLIENT_ID and APEX_CLIENT_SECRET environment variables are set correctly and the OAuth token endpoint is reachable.
+    **`[FAIL] APEX-SYS-001: capacity headroom 18.3% (min 20%)`** — Reduce planned workload increase or add capacity to the system before proceeding.
+    **`[FAIL] APEX-SYS-002: health_score=76 (min 80)`** — Investigate and resolve the system health issues (check alerts, disk status, and replication lag) before increasing workload.
 ---
 
 ## Post-Change Validation Script
@@ -812,6 +1038,30 @@ else
 fi
 ```
 
+
+```text title="Expected output"
+========================================
+  APEX Post-Change Validation
+  Baseline consumed : 45 TiB
+  Expected growth   : 8 TiB
+  Date : 2024-01-15 14:32:18
+========================================
+
+  [PASS] APEX-PROD-01: health_score=92
+  [PASS] APEX-PROD-01: consumed=48.75 TiB (delta=+3.75 TiB vs baseline)
+  [PASS] APEX-PROD-02: health_score=87
+  [PASS] APEX-PROD-02: consumed=52.10 TiB (delta=+7.10 TiB vs baseline)
+  [SKIP] APEX-PROD-03: capacity check failed (HTTP Error 403: Forbidden)
+  Active alerts post-change: 2 (verify no new alerts vs pre-change baseline)
+
+========================================
+  Result: PASS — APEX post-change validation successful
+```
+
+!!! warning "Common errors"
+    **`ERROR: Auth failed`** — Verify APEX_CLIENT_ID and APEX_CLIENT_SECRET environment variables are set correctly and the token endpoint is reachable.
+    **`[FAIL] <system>: health_score=<score> dropped below 80`** — Investigate system health degradation in CloudIQ console and resolve any reported issues before proceeding.
+    **`[FAIL] <system>: consumed=<value> TiB exceeds expected max <value> TiB`** — Review actual capacity consumption against baseline and expected growth parameters; adjust EXPECTED_GROWTH_TIB or investigate unexpected data growth.
 ---
 
 ## Health Check Script
@@ -889,6 +1139,17 @@ sys.exit(worst)
 " <<< "$SYSTEMS"
 ```
 
+
+```text title="Expected output"
+APEX_HEALTH system=APEX-NYC-01 health_score=95.0 committed_tib=500.0 consumed_tib=380.5 pct_used=76.1% alerts=2 status=OK
+APEX_HEALTH system=APEX-LAX-02 health_score=72.0 committed_tib=250.0 consumed_tib=215.0 pct_used=86.0% alerts=2 status=WARNING
+APEX_HEALTH system=APEX-CHI-03 health_score=45.0 committed_tib=1000.0 consumed_tib=920.0 pct_used=92.0% alerts=12 status=CRITICAL
+```
+
+!!! warning "Common errors"
+    **`APEX_HEALTH status=CRITICAL reason=auth_failed`** — Verify APEX_CLIENT_ID and APEX_CLIENT_SECRET environment variables are set correctly and the OAuth token endpoint is reachable.
+    **`curl: (28) Operation timeout was reached`** — Increase the `--max-time` parameter from 15 to 30 seconds or check network connectivity to api.dell.com.
+    **`json.decoder.JSONDecodeError: Expecting value`** — Confirm the API token is still valid (may have expired) and re-run the script to obtain a fresh token.
 ---
 
 ## Windows: APEX Storage Capacity Report via REST API (PowerShell)
@@ -1030,6 +1291,29 @@ cd C:\Users\YourName\Desktop
 .\apex_capacity_report.ps1
 ```
 
+
+```text title="Expected output"
+Dell APEX Capacity Report Generator v2.1.4
+============================================
+
+Connecting to APEX Management Console at apex-mgmt-01.corp.local...
+Authentication successful (User: admin@corp.local)
+
+Fetching capacity data from 5 systems...
+  System: APEX-SAN-001 | Used: 847.2 TB / 1200 TB (70.6%)
+  System: APEX-SAN-002 | Used: 612.5 TB / 1200 TB (51.0%)
+  System: APEX-SAN-003 | Used: 1089.3 TB / 1200 TB (90.8%) ⚠ WARNING
+  System: APEX-SAN-004 | Used: 445.8 TB / 1200 TB (37.2%)
+  System: APEX-SAN-005 | Used: 756.1 TB / 1200 TB (63.0%)
+
+Report generated: C:\Users\YourName\Desktop\APEX_Capacity_Report_20240115.html
+Execution completed in 47 seconds.
+```
+
+!!! warning "Common errors"
+    **`cannot be loaded because running scripts is disabled on this system`** — Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` before executing the script.
+    **`The term 'apex_capacity_report.ps1' is not recognized`** — Verify the script exists in the current directory with `dir apex_capacity_report.ps1` and check the filename spelling.
+    **`Unable to connect to APEX Management Console`** — Confirm network connectivity to the APEX management server and verify credentials in the script's configuration section.
 **What you should see**
 
 For each APEX Block storage system: the system name, type, contracted capacity in TiB, and current used capacity with percentage. Any system at 80% or above of its contracted amount is flagged. The summary shows how many systems are flagged and the overall status.

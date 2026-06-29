@@ -24,6 +24,15 @@ curl -s -X POST "https://cloudiq.apis.dell.com/auth/oauth/v2/token" \
   | python3 -c "import sys,json; d=json.load(sys.stdin); print('OK' if 'access_token' in d else 'FAIL')"
 ```
 
+
+```text title="Expected output"
+OK
+```
+
+!!! warning "Common errors"
+    **`curl: (6) Could not resolve host: cloudiq.apis.dell.com`** — Verify network connectivity and DNS resolution; check if your firewall or proxy is blocking access to Dell's API endpoint.
+    **`FAIL`** — Confirm the CLIENT_ID and CLIENT_SECRET values are correct and have not expired; regenerate credentials from the Dell CloudIQ API Access page if necessary.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl to skip certificate verification in lab/test environments, or update your system's CA certificate bundle.
 ```bash
 # Export audit log via CloudIQ portal
 # Admin > Audit Log > Export as CSV
@@ -77,6 +86,46 @@ curl -s -X POST "${BASE}/notification-rules/<rule-id>/test" \
   -H "Authorization: Bearer ${TOKEN}"
 ```
 
+
+```text title="Expected output"
+{
+  "id": "rule-5f8c2a1b-9e4d-47c3-b2f1-3d7a8c9e0f5a",
+  "name": "storage-ops-critical-email",
+  "severity": [
+    "CRITICAL"
+  ],
+  "notification_type": "EMAIL",
+  "recipients": [
+    "storage-ops@corp.example.com"
+  ],
+  "enabled": true,
+  "created_at": "2024-01-15T14:32:18Z",
+  "updated_at": "2024-01-15T14:32:18Z"
+}
+{
+  "id": "rule-7d3e9f2c-1a5b-48d9-a6e2-4c8b1f3d7e9a",
+  "name": "servicenow-incident-critical",
+  "severity": [
+    "CRITICAL"
+  ],
+  "notification_type": "WEBHOOK",
+  "webhook_url": "https://your-instance.service-now.com/api/now/table/incident",
+  "enabled": true,
+  "created_at": "2024-01-15T14:32:25Z",
+  "updated_at": "2024-01-15T14:32:25Z"
+}
+{
+  "status": "success",
+  "message": "Test notification sent successfully",
+  "rule_id": "rule-5f8c2a1b-9e4d-47c3-b2f1-3d7a8c9e0f5a",
+  "timestamp": "2024-01-15T14:32:31Z"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to cloudiq.example.com port 443: Connection refused`** — Verify the BASE URL is correct and the CloudIQ API endpoint is reachable with `curl -I ${BASE}/notification-rules`.
+    **`{"error": "Unauthorized", "code": 401}`** — Ensure the TOKEN variable is set correctly and has not expired by re-authenticating with your CloudIQ credentials.
+    **`{"error": "Invalid webhook URL", "code": 400}`** — Confirm the webhook_url is accessible and the ServiceNow instance credentials/permissions allow API writes from the CloudIQ server.
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

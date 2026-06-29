@@ -71,6 +71,20 @@ ceph config set global public_network 10.0.0.0/24
 ceph daemon osd.0 config show | grep -E "cluster_network|public_network"
 ```
 
+
+```text title="Expected output"
+10.0.1.0/24
+10.0.0.0/24
+(no output — command completes silently)
+(no output — command completes silently)
+    "cluster_network": "10.0.1.0/24",
+    "public_network": "10.0.0.0/24",
+```
+
+!!! warning "Common errors"
+    **`Error ENOENT: error calling set_config_option`** — Ensure the OSD daemon is running with `ceph osd stat` before applying config changes.
+    **`error connecting to the cluster`** — Verify cluster connectivity and that your `ceph.conf` or `CEPH_ARGS` environment variable points to a valid monitor address.
+    **`grep: (standard input) is empty`** — The OSD may not have reloaded the config; restart it with `sudo systemctl restart ceph-osd@0` or wait for the next config reload cycle.
 ## Firewall Rules
 
 | Port | Protocol | From | To | Purpose |
@@ -97,6 +111,21 @@ firewall-cmd --reload
 # Block all other inbound on cluster network from outside Ceph nodes
 ```
 
+
+```text title="Expected output"
+success
+success
+success
+success
+success
+success
+FirewallD is reloading...
+```
+
+!!! warning "Common errors"
+    **`Error: INVALID_ZONE: public`** — Verify the zone exists with `firewall-cmd --get-zones` and create it if needed with `firewall-cmd --permanent --new-zone=public`.
+    **`Error: INVALID_ADDR: '10.0.1.0/24' not usable`** — Ensure the CIDR notation is valid and the source network matches your actual cluster network topology.
+    **`Error: COMMAND_FAILED: 'firewall-cmd --reload' failed with exit code 1`** — Check syntax of all previous rules with `firewall-cmd --permanent --list-all` and fix any malformed entries before reloading.
 ## Disable Insecure msgr1
 
 ```bash
@@ -112,6 +141,18 @@ ceph config set global ms_client_mode secure     # outgoing client connections
 ceph config get mon ms_cluster_mode   # expected: secure
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+secure
+```
+
+!!! warning "Common errors"
+    **`Error EINVAL: ms_bind_msgr1 = false not supported by this Ceph version`** — Upgrade to Ceph Nautilus or later, as msgr2 enforcement requires a recent cluster version.
+    **`Error: set config failed: unknown option 'ms_cluster_mode'`** — Verify the config option name matches your Ceph version (some versions use `ms_mode` instead); check `ceph config help` for available options.
 ## Dashboard Security
 
 ```bash
@@ -139,6 +180,22 @@ ceph dashboard ac-user-create monitoring --roles=read-only
 ceph mgr module disable dashboard
 ```
 
+
+```text title="Expected output"
+{"password": "NewSecurePassword123!", "username": "admin"}
+SSL certificate updated.
+SSL certificate key updated.
+(no output — command completes silently)
+Self-signed certificate created.
+dashboard: https://mgr-node-01.ceph.local:8443
+User [monitoring] created.
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error EINVAL: invalid password`** — Ensure the password meets complexity requirements (minimum 8 characters, uppercase, lowercase, number, and special character).
+    **`Error ENOENT: /etc/ceph/dashboard.crt: No such file or directory`** — Verify the certificate file path is correct and readable by the ceph-mgr process.
+    **`Error: User [monitoring] already exists`** — Delete the existing user with `ceph dashboard ac-user-delete monitoring` before recreating it.
 ## Disable Unnecessary MGR Modules
 
 ```bash
@@ -157,6 +214,33 @@ ceph mgr module disable pg_autoscaler
 ceph mgr services
 ```
 
+
+```text title="Expected output"
+enabled_modules:
+- balancer
+- crash
+- diskprediction_local
+- insights
+- pg_autoscaler
+- rbd_support
+- telemetry
+- volumes
+
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+
+{
+  "ceph mgr": "http://ceph-mgr-01.prod.local:7000/",
+  "prometheus": "http://ceph-mgr-01.prod.local:9283/",
+  "dashboard": "https://ceph-mgr-01.prod.local:8443/"
+}
+```
+
+!!! warning "Common errors"
+    **`Error ENOENT: mgr module 'telemetry' is not enabled`** — Verify the module name with `ceph mgr module ls` and check if it's already disabled.
+    **`Error EINVAL: cannot disable module 'pg_autoscaler': it is required`** — This error occurs on older Ceph versions; skip disabling this module or upgrade to Ceph Quincy or later.
 ## Audit Logging
 
 ```bash
@@ -178,6 +262,24 @@ tail -f /var/log/ceph/ceph.log | grep -E "auth|audit"
 ceph config rm global auth_debug
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+2024-01-15T14:32:18.456+0000 7f8a2c1d9e4a -1 auth: client.admin@10.0.1.42 authenticated successfully
+2024-01-15T14:32:19.123+0000 7f8a2c1d9e4b -1 audit: config change global/auth_debug=true by client.admin
+2024-01-15T14:32:22.789+0000 7f8a2c1d9e4c -1 auth: client.osd.0@10.0.2.15 heartbeat auth check passed
+2024-01-15T14:32:45.234+0000 7f8a2c1d9e4d -1 audit: osd_op_log_threshold set to 5 seconds
+2024-01-15T14:33:01.567+0000 7f8a2c1d9e4e -1 auth: client.mon.node-02 auth renewal initiated
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: ENOENT: No such file or directory '/var/log/ceph/ceph.log'`** — Create the log directory with `mkdir -p /var/log/ceph && chown ceph:ceph /var/log/ceph` before enabling logging.
+    **`Error: permission denied: unable to set config key 'global/auth_debug'`** — Run the command with appropriate Ceph admin privileges or use `sudo ceph` if the user lacks cluster permissions.
+    **`tail: cannot open '/var/log/ceph/ceph.log' for reading: Permission denied`** — Change log file permissions with `sudo chmod 644 /var/log/ceph/ceph.log` or run tail with sudo.
 ## Least Privilege: Key Hygiene
 
 ```bash
@@ -199,6 +301,32 @@ ceph auth del client.myapp        # delete old
 ceph auth get-or-create client.myapp mon 'allow r' osd 'allow rw pool=myapp-pool'
 ```
 
+
+```text title="Expected output"
+[client.myapp]
+	key = AQC7vZdnK3p4ExAAr8vL9Z2m8K9vQ1p2K3K4Kw==
+	caps mon = "allow r"
+	caps osd = "allow rw pool=myapp-pool"
+
+ceph-admin-01: PRESENT
+ceph-admin-02: PRESENT
+ceph-mon-01: absent
+ceph-mon-02: absent
+ceph-osd-01: absent
+ceph-osd-02: absent
+ceph-osd-03: absent
+
+updated caps for client.myapp
+[client.myapp]
+	key = AQC7vZdnK3p4ExAAr8vL9Z2m8K9vQ1p2K3K4Kw==
+	caps mon = "allow r"
+	caps osd = "allow rw pool=myapp-pool"
+```
+
+!!! warning "Common errors"
+    **`Error EACCES: permission denied`** — Ensure the user running `ceph auth` commands has sudo access or is part of the ceph group on the admin host.
+    **`ssh: Could not resolve hostname <hostname>: Name or service not known`** — Verify all hostnames from `ceph orch host ls` are resolvable via DNS or add entries to `/etc/hosts` on the admin workstation.
+    **`entity client.myapp does not exist`** — Run `ceph auth get-or-create` before attempting `ceph auth del`, or use `ceph auth rm` if the entity was already removed.
 ## CIS Hardening Controls
 
 | Control | Implementation | Command |
@@ -231,6 +359,18 @@ ceph dashboard set-prometheus-credentials <username> <password>
 ss -tlnp | grep 9283
 ```
 
+
+```text title="Expected output"
+success
+success
+success
+(no output — command completes silently)
+LISTEN    0      128        127.0.0.1:9283       0.0.0.0:*       users:(("ceph-mgr",pid=4521,fd=45))
+```
+
+!!! warning "Common errors"
+    **`Error: INVALID_ZONE: internal`** — Verify the zone exists with `firewall-cmd --get-zones` and use an available zone like `public` or `trusted`.
+    **`Error: INVALID_ADDR: <prometheus-host-ip>`** — Replace the placeholder with an actual IP address in CIDR notation (e.g., `192.168.1.50/32`) or remove angle brackets.
 ## Admin Socket Permissions
 
 Each Ceph daemon creates a Unix domain socket for runtime queries. Restrict these to prevent local privilege escalation.
@@ -247,6 +387,23 @@ find /var/run/ceph -name "*.asok" -exec ls -la {} \;
 ceph config set global admin_socket_mode 0660
 ```
 
+
+```text title="Expected output"
+total 48
+drwxr-x--- 3 ceph ceph 4096 Nov 14 10:23 .
+drwxr-xr-x 13 root root 4096 Nov 14 09:15 ..
+srwxr-x--- 1 ceph ceph    0 Nov 14 10:23 ceph.client.admin.asok
+srwxr-x--- 1 ceph ceph    0 Nov 14 10:23 ceph.mon.ceph-mon01.asok
+srwxr-x--- 1 ceph ceph    0 Nov 14 10:23 ceph.osd.0.asok
+srwxr-x--- 1 ceph ceph    0 Nov 14 10:23 ceph.osd.1.asok
+srwxr-x--- 1 ceph ceph    0 Nov 14 10:23 ceph.mgr.ceph-mgr01.asok
+srwxr-x--- 1 ceph ceph    0 Nov 14 10:23 ceph.mds.ceph-mds01.asok
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`find: '/var/run/ceph': Permission denied`** — Run the command with `sudo` to access the ceph runtime directory.
+    **`Error EINVAL: invalid admin_socket_mode value`** — Use octal notation without leading zero (e.g., `ceph config set global admin_socket_mode 432` for 0660 in decimal) or verify the parameter name with `ceph config help admin_socket_mode`.
 ## Hardening Verification Commands
 
 Run these after applying hardening controls to confirm the state matches intent.
@@ -277,6 +434,33 @@ for host in $(ceph orch host ls -f json | python3 -c \
 done
 ```
 
+
+```text title="Expected output"
+secure
+secure
+false
+10.0.1.0/24
+10.0.2.0/24
+dashboard https://ceph-mgr-01.example.com:8443
+    encryption: true
+    encryption_type: block
+client.admin
+	key: AQDvB8Zl7x9kLhAAixN3pK8q9mN2oP5rQ6sT7u==
+	caps: [mds] allow *
+	caps: [mon] allow *
+	caps: [osd] allow *
+client.bootstrap-osd
+	key: AQEvB8Zl8y0lMiBbjxO4qL9r0nO3pQ6rR7tU8v==
+	caps: [mon] allow profile bootstrap-osd
+ceph-mon-01: System time offset: 0.000123456 seconds
+ceph-osd-01: System time offset: -0.000087654 seconds
+ceph-osd-02: System time offset: 0.000045678 seconds
+```
+
+!!! warning "Common errors"
+    **`error: entity name 'client.admin' does not have caps`** — Ensure the admin keyring exists by running `ceph auth get client.admin` or reinitialize with `ceph-authtool`.
+    **`ssh: Could not resolve hostname ceph-osd-01: Name or service not known`** — Verify hostname resolution by checking `/etc/hosts` or DNS, or use IP addresses directly in the `ceph orch host ls` output.
+    **`ModuleNotFoundError: No module named 'json'`** — Install Python3 json module or simplify the hostname extraction using `ceph orch host ls | awk '{print $1}'` instead.
 ## See also
 
 - [Ceph — Access Control](../access-control/)

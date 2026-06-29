@@ -133,6 +133,40 @@ Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
 cd C:\Users\YourName\Desktop
 .\cod_license_query.ps1
 ```
+
+```text title="Expected output"
+PowerShell 7.3.4
+Copyright (c) Microsoft Corporation. All rights reserved.
+
+COD License Query Tool v2.1.4
+================================
+
+Querying Dell EMC Isilon cluster: isilon-prod-01.corp.local
+Connected successfully to 192.168.45.120
+
+License Status Report
+---------------------
+License ID: LIC-2024-ISL-78945
+Product: Dell EMC Isilon OneFS
+Expiration Date: 2025-12-31
+Status: VALID
+Capacity: 500TB
+Used: 342TB (68.4%)
+
+License ID: LIC-2024-ISL-78946
+Product: Dell EMC Isilon SnapshotIQ
+Expiration Date: 2025-06-15
+Status: VALID
+Capacity: Unlimited
+Used: 127TB
+
+Query completed successfully at 2024-01-15 14:32:47 UTC
+```
+
+!!! warning "Common errors"
+    **`cannot find path 'C:\Users\YourName\Desktop\cod_license_query.ps1' because it does not exist`** — Replace `YourName` with your actual Windows username or verify the script exists in that directory.
+    **`File C:\Users\...\cod_license_query.ps1 cannot be loaded because running scripts is disabled on this system`** — Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` to allow local script execution.
+    **`Unable to connect to isilon-prod-01.corp.local: Name or service not known`** — Verify the Isilon cluster hostname is correct and reachable from your network, or check your DNS configuration.
 ```bash
 #!/bin/bash
 # cod_daily_check.sh — Daily capacity check via Unisphere REST API
@@ -195,6 +229,37 @@ fi
 echo "========================================"
 exit $STATUS
 ```
+
+```text title="Expected output"
+========================================
+  COD Daily Check
+  SID  : 000123456789
+  Date : 2024-01-15 09:47:32
+========================================
+
+  Total usable : 450.5 TB
+  Used         : 398.2 TB
+  % Used       : 88.4%
+
+  Status       : WARNING — capacity above 85%
+
+--- Licensed vs Consumed COD Capacity ---
+Symmetrix ID: 000123456789
+
+                                Pool Name  Num Devs  Usable Cap(MB)  Used Cap(MB)  Free Cap(MB)
+                                     SRP_1     12544         450560.0       398144.0        52416.0
+
+License Information for Symmetrix 000123456789:
+  Feature Name                    Licensed Capacity(TB)  Consumed Capacity(TB)  Status
+  Compression                                      200.0                  156.3  Active
+  Replication                                      100.0                   78.5  Active
+========================================
+```
+
+!!! warning "Common errors"
+    **`ERROR: Could not reach Unisphere at 192.168.1.100`** — Verify UNISPHERE_HOST is correct, Unisphere service is running on port 8443, and network connectivity exists with `ping` or `curl -sk https://${UNISPHERE_HOST}:8443/univmax/restapi/100/system/symmetrix`.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already present) or import the Unisphere certificate into your system's CA bundle with `curl -k` or configure `~/.curlrc` with `insecure`.
+    **`jq: command not found` or `python3: command not found`** — Install the missing dependency (`apt-get install python3` or `yum install python3`) or verify the interpreter path matches your system's installation.
 ```bash
 #!/bin/bash
 # cod_triage.sh — Capture COD capacity and license state to timestamped file
@@ -253,6 +318,58 @@ AUTH=$(printf '%s:%s' "$UNISPHERE_USER" "$UNISPHERE_PASS" | base64)
 echo ""
 echo "Output saved to: $OUTFILE"
 ```
+
+```text title="Expected output"
+========================================
+  COD Incident Triage Capture
+  SID  : 000297123456
+  Time : 2024-01-15 14:32:47
+========================================
+
+--- Unisphere REST: system_capacity ---
+{
+  "symmetrix_capacity": {
+    "symmetrix_id": "000297123456",
+    "usable_total_tb": 450.5,
+    "usable_used_tb": 387.2,
+    "usable_percent": 85.9,
+    "snapshot_total_tb": 120.0,
+    "snapshot_used_tb": 98.4
+  }
+}
+
+--- Unisphere REST: license ---
+{
+  "license": {
+    "license_id": "LIC-2024-EMC-COD-001",
+    "status": "VALID",
+    "expiration_date": "2025-06-30",
+    "features": ["COD", "SRDF", "RecoverPoint"],
+    "days_remaining": 532
+  }
+}
+
+--- SYMCLI: symcfg list -license ---
+Symmetrix ID: 000297123456
+License Status: VALID
+Feature Licenses: COD(Active), SRDF(Active), RecoverPoint(Active)
+
+--- SYMCLI: pool list ---
+Pool ID  Pool Name         Total(GB)  Used(GB)  Free(GB)  Percent
+SRP_1    SRP_Production    450560     387225    63335     85.9%
+SRP_2    SRP_Archive       120000     98400     21600     82.0%
+
+========================================
+  Triage capture complete: /tmp/cod_triage_000297123456_20240115_143247.txt
+========================================
+
+Output saved to: /tmp/cod_triage_000297123456_20240115_143247.txt
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl (already present) or import the Unisphere certificate into your system CA bundle.
+    **`Authorization: Basic: command not found`** — Ensure `UNISPHERE_USER` and `UNISPHERE_PASS` environment variables are set before running the script.
+    **`SYMCLI not available`** — Install Unisphere CLI tools or set `SYMCLI_PATH` to the correct installation directory (e.g., `export SYMCLI_PATH=/opt/emc/SYMCLI/bin`).
 ```bash
 #!/bin/bash
 # cod_precheck.sh — Pre-check before COD activation request
@@ -325,6 +442,26 @@ else
   exit 2
 fi
 ```
+
+```text title="Expected output"
+========================================
+  COD Activation Pre-Check
+  SID  : 000297123456
+  Date : 2024-01-15 14:32:47
+========================================
+
+  [PASS] Unisphere reachable (HTTP 200)
+  [PASS] Capacity utilisation is 82.3% (above 80% threshold — COD activation warranted)
+  [PASS] No pending license changes detected via SYMCLI
+
+========================================
+  Result: READY — proceed with COD activation request
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to unisphere.prod.local port 8443: Connection refused`** — Verify UNISPHERE_HOST is correct and Unisphere service is running on the target system.
+    **`  [FAIL] Unisphere not reachable (HTTP 000)`** — Check network connectivity to the Unisphere host and confirm UNISPHERE_USER and UNISPHERE_PASS credentials are valid.
+    **`  [FAIL] Capacity utilisation is only 45.2% (below 80% — COD activation may not be needed yet)`** — Confirm the array actually requires COD activation or adjust ACTIVATION_THRESHOLD if business requirements warrant lower utilization.
 ```bash
 #!/bin/bash
 # cod_postcheck.sh — Post-change validation after COD activation
@@ -394,6 +531,34 @@ else
   exit 1
 fi
 ```
+
+```text title="Expected output"
+========================================
+  COD Post-Change Validation
+  SID  : 000297123456
+  Date : 2024-01-15 14:32:47
+========================================
+
+--- New capacity visible in SYMCLI ---
+Usable Capacity (GBs)     : 524288
+Total Capacity (GBs)      : 589824
+  [PASS] symcfg show completed — review capacity figures above
+
+--- Storage groups accessible ---
+  [PASS] 12 storage group(s) visible via Unisphere REST
+
+--- Post-activation capacity summary ---
+  Total usable TB : 512.0
+  Used usable TB  : 287.5
+
+========================================
+  Result: PASS — COD activation validated
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl (already present) or import the Unisphere certificate into your system CA bundle.
+    **`No storage groups returned — verify array connectivity and COD activation status`** — Verify UNISPHERE_HOST is reachable on port 8443, credentials are correct, and the SID matches an active array in Unisphere.
+    **`command not found: python3`** — Install Python 3 or replace `python3` with `python` if only Python 2 is available on the system.
 ```bash
 #!/bin/bash
 # cod_health.sh — Cron-safe COD health check
@@ -440,6 +605,15 @@ echo "COD_HEALTH SID=${SID} total_tb=${TOTAL} used_tb=${USED} avail_tb=${AVAIL} 
 exit $EXIT
 ```
 
+
+```text title="Expected output"
+COD_HEALTH SID=000296900111 total_tb=450.5 used_tb=382.1 avail_tb=68.4 pct_used=84.8% status=WARNING
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl (already present in script) or import the Unisphere CA certificate into your system trust store.
+    **`jq: command not found`** — The script uses `python3` for JSON parsing; ensure Python 3 is installed with `apt install python3` or `yum install python3`.
+    **`jq: error (at <stdin>:1): Cannot index number with string "system_capacity"`** — Verify the SID is correct and the Unisphere API endpoint is reachable; test with `curl -sk https://${UNISPHERE_HOST}:8443/univmax/restapi/100/system/symmetrix/${SID}/system_capacity`.
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

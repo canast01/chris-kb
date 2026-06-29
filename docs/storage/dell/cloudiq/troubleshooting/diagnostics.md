@@ -106,6 +106,34 @@ df -h /
 # SCG log accumulation can fill disk; alert if < 20% free
 ```
 
+
+```text title="Expected output"
+admin@192.168.1.45's password: 
+Last login: Wed Jan 15 14:22:33 2025 from 10.0.0.88
+
+SCG Service: Running
+Version: 2.4.1-build.8847
+Connected to CloudIQ: Yes
+Last sync: 2025-01-15 14:18:47 UTC
+
+● dsagw.service - Dell Storage Gateway
+     Loaded: loaded (/etc/systemd/system/dsagw.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2025-01-15 13:45:22 UTC; 33min ago
+   Main PID: 4521 (dsagw)
+      Tasks: 24 (limit: 4096)
+     Memory: 287.3M
+        CPU: 12m 34.234s
+     CGroup: /system.slice/dsagw.service
+             └─4521 /opt/dell/dsagw/bin/dsagw -c /etc/dsagw/dsagw.conf
+
+Filesystem     Size  Used Avail Use% Mounted on
+/dev/sda1       50G   38G   9.2G  82% /
+```
+
+!!! warning "Common errors"
+    **`ssh: connect to host 192.168.1.45 port 22: Connection refused`** — Verify the SCG appliance is powered on and the IP address is correct; check network connectivity with `ping <scg-ip>`.
+    **`● dsagw.service - Dell Storage Gateway ... Active: failed (Result: exit-code)`** — Check the dsagw service logs with `journalctl -u dsagw -n 100` to identify the root cause, then restart with `systemctl restart dsagw`.
+    **`Filesystem ... Use% Mounted on ... 95% /`** — Archive or delete old SCG logs in `/var/log/dsagw/` using `find /var/log/dsagw/ -mtime +30 -delete` to free disk space before the appliance becomes unresponsive.
 **If SCG service is not running:**
 1. `systemctl start dsagw` to restart; wait 30 seconds and re-check `scg status`
 2. If service fails to start: check `/var/log/dsagw/` for startup errors
@@ -138,6 +166,44 @@ env | grep -i proxy
 # Compare to SCG UI → Settings → Proxy settings
 ```
 
+
+```text title="Expected output"
+Testing HTTPS connectivity to CloudIQ endpoints...
+  cloudiq.dell.com:443 ............................ Reachable
+  esrs3.emc.com:443 ............................... Reachable
+  telemetry.dell.com:443 .......................... Reachable
+  api.cloudiq.dell.com:443 ........................ Reachable
+All endpoints reachable. Configuration valid.
+
+*   Trying 143.166.84.52...
+* Connected to cloudiq.dell.com (143.166.84.52) port 443 (#0)
+* TLSv1.2 (OUT), TLS handshake, Client hello (1):
+* TLSv1.2 (IN), TLS handshake, Server hello (2):
+* TLSv1.2 (IN), TLS Handshake finished (20):
+> GET / HTTP/1.1
+< HTTP/1.1 301 Moved Permanently
+< Location: https://cloudiq.dell.com/login
+
+*   Trying 207.126.97.18...
+* Connected to esrs3.emc.com (207.126.97.18) port 443 (#0)
+* TLSv1.2 (IN), TLS handshake, Server hello (2):
+< HTTP/1.1 200 OK
+
+Server:  203.0.113.45
+Address:  203.0.113.45
+
+Name:    cloudiq.dell.com
+Address:  143.166.84.52
+
+http_proxy=http://proxy.corp.local:8080
+https_proxy=http://proxy.corp.local:8080
+no_proxy=localhost,127.0.0.1,.corp.local
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to cloudiq.dell.com port 443: Connection timed out`** — Verify firewall rules allow outbound HTTPS on port 443 and check if a proxy is required in your environment.
+    **`Server returned nothing (or only header "HTTP/1.0 407 Proxy Authentication Required")`** — Add proxy credentials to SCG via Settings → Proxy settings or configure curl with `-x http://user:pass@proxy:port`.
+    **`nslookup: can't find cloudiq.dell.com: NXDOMAIN`** — Verify DNS servers are configured correctly and can reach public DNS (try `nslookup cloudiq.dell.com 8.8.8.8`).
 **If connectivity test fails:**
 1. Verify the proxy is configured correctly in SCG UI → Settings → Proxy
 2. Test proxy connectivity directly: `curl -v --proxy http://<proxy-host>:<port> https://cloudiq.dell.com`
@@ -171,6 +237,40 @@ curl -sk -u admin:<password> "https://<array-ip>/api/rest/system?fields=name,mod
 # SCG UI → Settings → Polling Interval (default: 5 minutes)
 ```
 
+
+```text title="Expected output"
+$ scg device list
+Device ID                            Name                 Type        Status    Last Poll Time
+a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6 array-prod-01        PowerStore  OK        2024-01-15 14:32:15
+b2c3d4e5-f6g7-48h9-i0j1-k2l3m4n5o6p7 array-prod-02        PowerStore  OK        2024-01-15 14:31:42
+c3d4e5f6-g7h8-49i0-j1k2-l3m4n5o6p7q8 array-dr-01          Unity       Error     2024-01-15 13:15:22
+d4e5f6g7-h8i9-40j1-k2l3-m4n5o6p7q8r9 array-test-01        PowerStore  OK        2024-01-15 14:33:01
+
+$ scg device test --id c3d4e5f6-g7h8-49i0-j1k2-l3m4n5o6p7q8
+Testing device: array-dr-01 (192.168.1.45)
+Authentication: FAILED - Invalid credentials
+API Reachability: UNREACHABLE
+Connection Status: TLS handshake failed
+
+$ curl -sk https://192.168.1.45/
+HTTP/1.1 200 OK
+Content-Type: text/html
+Set-Cookie: sessionid=abc123def456; Path=/
+<html><head><title>Dell EMC Unity - Login</title>...
+
+$ curl -sk -u admin:MyP@ssw0rd "https://192.168.1.50/api/rest/system?fields=name,model"
+{
+  "content": {
+    "name": "array-prod-01",
+    "model": "PowerStore 7000T"
+  }
+}
+```
+
+!!! warning "Common errors"
+    **`Authentication: FAILED - Invalid credentials`** — Verify the SCG credentials stored in Settings match the current array admin password, or reset the array credentials in the SCG UI.
+    **`Connection Status: TLS handshake failed`** — Confirm the array management interface certificate is valid and trusted by the SCG server, or disable certificate verification if using self-signed certs in a test environment.
+    **`curl: (7) Failed to connect to 192.168.1.45 port 443: Connection refused`** — Verify the array management IP is correct and reachable from the SCG host using `ping` or `traceroute`, and confirm the array's management interface is running.
 ---
 
 ## Step 4 — Read SCG log files
@@ -207,6 +307,47 @@ journalctl -u scg -n 100 --no-pager 2>/dev/null || true
 } > /tmp/cloudiq-diag-$(date +%F-%H%M).txt
 ```
 
+
+```text title="Expected output"
+tail: cannot open '/var/log/scg/scg.log' for reading: No such file or directory
+2024-01-15T09:42:33.521Z ERROR [PollingThread-3] Failed to poll device 10.50.12.44: Connection timeout after 30s
+2024-01-15T09:42:45.103Z WARN [AuthManager] Token refresh failed for device SN-EMC0001: 401 Unauthorized
+2024-01-15T09:43:12.667Z ERROR [UploadQueue] Upload to CloudIQ failed: HTTP 503 Service Unavailable
+
+-rw-r--r-- 1 root root 2847291 Jan 15 09:45 device-SN-EMC0001.log
+-rw-r--r-- 1 root root 1923847 Jan 15 09:40 device-SN-EMC0002.log
+-rw-r--r-- 1 root root  847291 Jan 15 09:35 device-SN-EMC0003.log
+
+Jan 15 09:44:22 scg-host dsagw[4521]: TLS handshake failed: certificate verify failed
+Jan 15 09:43:55 scg-host dsagw[4521]: Connection reset by peer (10.200.1.5:443)
+Jan 15 09:42:10 scg-host dsagw[4521]: Proxy authentication required for 10.200.1.100:8080
+
+=== scg status ===
+SCG Service: running (PID 3847)
+Connected Devices: 3/5
+Last Telemetry Upload: 2024-01-15 09:45:12 UTC
+=== scg connectivity --test ===
+Testing connectivity to CloudIQ endpoint (api.cloudiq.dell.com)...
+✓ DNS resolution: OK
+✓ TCP connection: OK
+✗ TLS certificate validation: FAILED (untrusted CA)
+=== scg device list ===
+SN-EMC0001 | 10.50.12.44 | Connected | Last poll: 9s ago
+SN-EMC0002 | 10.50.12.45 | Connected | Last poll: 15s ago
+SN-EMC0003 | 10.50.12.46 | Disconnected | Last poll: 4m ago
+=== disk space ===
+Filesystem     Size  Used Avail Use% Mounted on
+/dev/sda1       50G   38G   9.2G  82% /
+=== dsagw service ===
+● dsagw.service - Dell CloudIQ Telemetry Gateway
+   Loaded: loaded (/etc/systemd/system/dsagw.service; enabled; vendor preset: enabled)
+   Active: active (running) since Mon 2024-01-15 08:12:44 UTC; 1h 33min ago
+   Main PID: 4521 (dsagw)
+   Tasks: 12 (limit: 4915)
+   Memory: 287.4M
+   CGroup: /system.slice/dsagw.service
+           └─4521 /opt/dell/dsagw/bin/dsagw -c /etc/dsagw/dsag
+```
 ---
 
 ## Step 5 — Collect support bundle
@@ -220,6 +361,24 @@ scg log collect --output /tmp/scg-bundle-$(date +%F).tar.gz
 scp admin@<scg-ip>:/tmp/scg-bundle-*.tar.gz /tmp/
 ```
 
+
+```text title="Expected output"
+Collecting SCG diagnostic bundle...
+Gathering application logs... [████████████████████] 100%
+Collecting device poll history... [████████████████████] 100%
+Sanitizing configuration data... [████████████████████] 100%
+Capturing system information... [████████████████████] 100%
+Bundle created: /tmp/scg-bundle-2024-01-15.tar.gz (287 MB)
+Compression complete in 42 seconds.
+
+admin@192.168.1.45's password:
+scg-bundle-2024-01-15.tar.gz                          100%  287MB   8.2MB/s   00:35
+```
+
+!!! warning "Common errors"
+    **`scg: command not found`** — Verify SCG is installed and in PATH, or use the full path `/opt/dell/scg/bin/scg` instead.
+    **`Permission denied (publickey,password)`** — Ensure the admin user credentials are correct and SSH key-based auth is configured, or add `-o PubkeyAuthentication=no` to force password auth.
+    **`No such file or directory`** — Check that the bundle file was successfully created in `/tmp/` by running `ls -lh /tmp/scg-bundle-*.tar.gz` on the SCG host first.
 ---
 
 ## Log locations

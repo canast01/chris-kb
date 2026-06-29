@@ -120,6 +120,44 @@ multipathd show paths
 multipathd show maps
 ```
 
+
+```text title="Expected output"
+$ iscsiadm -m session
+tcp: [1] 192.168.10.45:3260,1 iqn.1991-05.com.dell:storage.apex01.target1 (non-flash)
+tcp: [2] 192.168.10.46:3260,1 iqn.1991-05.com.dell:storage.apex01.target1 (non-flash)
+tcp: [3] 192.168.10.47:3260,1 iqn.1991-05.com.dell:storage.apex01.target2 (non-flash)
+tcp: [4] 192.168.10.48:3260,1 iqn.1991-05.com.dell:storage.apex01.target2 (non-flash)
+
+$ iscsiadm -m node
+192.168.10.45:3260,1 iqn.1991-05.com.dell:storage.apex01.target1
+192.168.10.46:3260,1 iqn.1991-05.com.dell:storage.apex01.target1
+192.168.10.47:3260,1 iqn.1991-05.com.dell:storage.apex01.target2
+192.168.10.48:3260,1 iqn.1991-05.com.dell:storage.apex01.target2
+
+$ multipath -ll
+360060e80057f5200000057f52a2d5d11 dm-0 DELL,APEX Storage
+size=2.0T features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
+|- 2:0:0:0 sdb 8:16 active ready running
+|- 3:0:0:0 sdc 8:32 active ready running
+|- 4:0:0:0 sdd 8:48 active ready running
+|- 5:0:0:0 sde 8:64 active ready running
+360060e80057f5200000057f52a2d5d12 dm-1 DELL,APEX Storage
+size=1.5T features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
+|- 2:0:0:1 sdf 8:80 active ready running
+|- 3:0:0:1 sdg 8:96 active ready running
+|- 4:0:0:1 sdh 8:112 failed faulty offline
+|- 5:0:0:1 sdi 8:128 active ready running
+
+$ multipath -ll | grep -E "failed|faulty|checker failed"
+|- 4:0:0:1 sdh 8:112 failed faulty offline
+
+$ multipathd show paths
+hcil    dev dev_t pri dm_st chk_st next_check
+2:0:0:0 sdb 8:16  50  0    ready  *
+3:0:0:0 sdc 8:32  50  0    ready  *
+4:0:0:0 sdd 8:48  50  0    ready  *
+5:0:0:0 sde 8:64  50  0    ready  *
+```
 ### Linux hosts (FC)
 
 ```bash
@@ -134,6 +172,26 @@ cat /sys/class/fc_transport/*/roles 2>/dev/null | head -20
 multipath -ll | grep -E "DELL|failed|faulty"
 ```
 
+
+```text title="Expected output"
+Online
+Online
+Online
+Online
+initiator
+target
+initiator,target
+initiator
+size=100G features='0' hwhandler='1 alua' wp=rw
+|-+- policy='service-time 0' prio=50 status=active
+| `- 4:0:0:1 sda 8:0  active ready running
+`-+- policy='service-time 0' prio=10 status=enabled
+  `- 5:0:0:1 sdb 8:16 failed faulty offline
+```
+
+!!! warning "Common errors"
+    **`cat: /sys/class/fc_host/host*/port_state: No such file or directory`** — Verify FC HBA drivers are loaded with `lsmod | grep qla2xxx` and reseat the HBA if needed.
+    **`failed faulty offline`** — Check FC cable connections and zoning on the SAN switch, then run `multipathd reconfigure` to refresh paths.
 ### Windows hosts
 
 ```powershell
@@ -208,6 +266,47 @@ scg device test --id <device-id>
 scg log collect --output /tmp/scg-apex-$(date +%F).tar.gz
 ```
 
+
+```text title="Expected output"
+admin@scg-01:~$ scg status
+SCG Service = Running
+Connected to CloudIQ = Yes
+Last Heartbeat = 2024-01-15 14:32:18 UTC
+Version = 2.4.1.5
+
+admin@scg-01:~$ scg connectivity --test
+Testing endpoint connectivity...
+APEX Console (apex.dell.com:443) = Reachable
+CloudIQ (cloudiq.dell.com:443) = Reachable
+NTP Server (time.nist.gov:123) = Reachable
+DNS Resolver (8.8.8.8:53) = Reachable
+
+admin@scg-01:~$ scg device list
+Device ID | Name | Type | Last Poll Time | Status
+----------|------|------|----------------|--------
+dev-4a7f2c | APEX-SAN-01 | PowerFlex | 2024-01-15 14:31:42 | Connected
+dev-8b1e9d | APEX-OBJ-02 | ObjectScale | 2024-01-15 14:29:15 | Connected
+dev-5c3a6e | APEX-NAS-03 | PowerScale | 2024-01-15 14:30:58 | Connected
+
+admin@scg-01:~$ scg device test --id dev-4a7f2c
+Testing device connectivity for APEX-SAN-01...
+Authentication OK
+API Endpoint Reachable = Yes
+Response Time = 142ms
+Status = Healthy
+
+admin@scg-01:~$ scg log collect --output /tmp/scg-apex-2024-01-15.tar.gz
+Collecting diagnostic bundle...
+Gathering system logs...
+Gathering connectivity logs...
+Gathering device metrics...
+Bundle created: /tmp/scg-apex-2024-01-15.tar.gz (287 MB)
+```
+
+!!! warning "Common errors"
+    **`scg: command not found`** — Verify SSH session is connected to the SCG appliance (not a standard Linux host) and the scg CLI is in the PATH.
+    **`Authentication failed for device dev-4a7f2c`** — Confirm the APEX array credentials stored in SCG are current and the array's management IP is reachable from the SCG network.
+    **`Connected to CloudIQ = No`** — Check SCG outbound firewall rules allow HTTPS to cloudiq.dell.com and verify the SCG proxy settings if applicable.
 ---
 
 ## Step 4 — Check the underlying array (Unisphere)
@@ -231,6 +330,49 @@ curl -sk -H "Authorization: Basic $(echo -n admin:<password> | base64)" \
   "https://<pfx-gateway>:443/api/types/System/instances" | jq '.name,.capacity'
 ```
 
+
+```text title="Expected output"
+{
+  "name": "vol_prod_db_001",
+  "state": "Ready",
+  "health": "OK"
+}
+{
+  "name": "vol_prod_db_002",
+  "state": "Ready",
+  "health": "OK"
+}
+{
+  "name": "vol_backup_tier2",
+  "state": "Ready",
+  "health": "OK"
+}
+{
+  "host_id": "host-5f8c2a1b",
+  "volume_id": "vol_prod_db_001",
+  "logical_unit_number": 0
+}
+{
+  "host_id": "host-5f8c2a1b",
+  "volume_id": "vol_prod_db_002",
+  "logical_unit_number": 1
+}
+{
+  "name": "FC_Port_A0",
+  "current_speed": "16 Gbps"
+}
+{
+  "name": "FC_Port_B0",
+  "current_speed": "16 Gbps"
+}
+"PowerStore-Array-01"
+"18.5 TB"
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; verify the flag is not being stripped by shell escaping).
+    **`jq: parse error: Invalid numeric literal at line 1 column 7`** — Ensure the API response is valid JSON by checking credentials and endpoint URL are correct; test with `curl -sk ... | head -c 200` to inspect raw response.
+    **`curl: (7) Failed to connect to <powerstore-ip> port 443: Connection refused`** — Verify the PowerStore/PowerFlex management IP is reachable and the REST API service is running with `ping <powerstore-ip>` and check firewall rules.
 ---
 
 ## Collect diagnostic snapshot for Dell SR
@@ -251,6 +393,36 @@ curl -sk -H "Authorization: Basic $(echo -n admin:<password> | base64)" \
 } > /tmp/apex-host-diag-$(date +%F-%H%M).txt
 ```
 
+
+```text title="Expected output"
+=== iSCSI sessions ===
+tcp: [1] 192.168.100.45:3260,1 iqn.1991-05.com.dell:APEX.array01.target1 (non-flash)
+tcp: [2] 192.168.100.46:3260,1 iqn.1991-05.com.dell:APEX.array01.target1 (non-flash)
+=== multipath ===
+mpatha (360060e80057900000057900000010001) dm-0 DELL,APEX Storage
+size=2.0T features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
+`-+- policy='service-time 0' prio=50 status=active
+  |- 2:0:0:0 sdb 8:16 active ready running
+  `- 3:0:0:0 sdc 8:32 active ready running
+=== multipathd paths ===
+hcil    dev dev_t pri dm_st chk_st next_check
+2:0:0:0 sdb 8:16  50 active ready  XXXXXXXX.XXX
+3:0:0:0 sdc 8:32  50 active ready  XXXXXXXX.XXX
+=== FC HBA state ===
+Online
+Online
+=== block devices ===
+NAME   SIZE TYPE TRAN MODEL
+sdb    2.0T disk sas  APEX Storage
+sdc    2.0T disk sas  APEX Storage
+mpatha 2.0T mpath
+Diagnostic data saved to: /tmp/apex-host-diag-2024-01-15-1430.txt
+```
+
+!!! warning "Common errors"
+    **`iscsiadm: No records found`** — Verify iSCSI target is configured and running with `iscsiadm -m discovery -t st -p <target_ip>`.
+    **`multipath: command not found`** — Install device-mapper-multipath package with `apt-get install device-mapper-multipath` or `yum install device-mapper-multipath`.
+    **`multipathd: socket connect failed, No such file or directory`** — Start the multipathd service with `systemctl start multipathd && systemctl enable multipathd`.
 ---
 
 ## See also

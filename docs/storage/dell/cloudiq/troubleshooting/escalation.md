@@ -97,6 +97,40 @@ scg connectivity test
 scg system connectivity --system-id <system-serial-number>
 ```
 
+
+```text title="Expected output"
+admin@scg-prod-01:~$ scg version
+SCG Version: 7.2.1.0
+Build: 20240115.001
+Release Date: 2024-01-15
+
+admin@scg-prod-01:~$ scg status
+SCG Service Status:
+  scg-core         : running (PID: 2847)
+  scg-api          : running (PID: 2851)
+  scg-collector    : running (PID: 2856)
+  scg-database     : running (PID: 2862)
+Overall Status: Healthy
+
+admin@scg-prod-01:~$ scg connectivity test
+Testing CloudIQ connectivity...
+  Endpoint: cloudiq.dell.com:443
+  Status: Connected
+  Response Time: 142ms
+  Certificate Valid: Yes (expires 2025-06-30)
+
+admin@scg-prod-01:~$ scg system connectivity --system-id EMC123456789ABC
+Testing connectivity to system EMC123456789ABC...
+  Array Name: VMAX-PROD-01
+  Management IP: 192.168.1.50
+  Status: Connected
+  Last Heartbeat: 2024-01-20 14:32:15 UTC
+```
+
+!!! warning "Common errors"
+    **`scg: command not found`** — Ensure you are logged in as the admin user and the SCG CLI tools are in your PATH; run `export PATH=$PATH:/opt/dell/scg/bin` if needed.
+    **`Error: Unable to connect to CloudIQ endpoint (timeout)`** — Verify network connectivity and firewall rules allow outbound HTTPS (port 443) to cloudiq.dell.com from the SCG appliance.
+    **`Error: System EMC123456789ABC not found in SCG inventory`** — Confirm the system serial number is correct and the array has been successfully registered in SCG using `scg system list`.
 ### 2. Collect SCG log bundle
 
 ```bash
@@ -114,6 +148,23 @@ scg logs collect --output /tmp/scg-logs-$(date +%F).zip
 #   - Error trace for the last 48 hours
 ```
 
+
+```text title="Expected output"
+Collecting SCG logs...
+Gathering application logs from /var/log/dsagw/
+Collecting connectivity test results...
+Retrieving system registration details...
+Compiling error traces (last 48 hours)...
+Creating support bundle archive...
+Support bundle created successfully: /tmp/scg-logs-2024-01-15.zip
+Bundle size: 24.3 MB
+Timestamp: 2024-01-15T14:32:18Z
+```
+
+!!! warning "Common errors"
+    **`Permission denied: /var/log/dsagw/`** — Run the command with `sudo` or as a user with read access to the SCG log directory.
+    **`No space left on device`** — Specify an output directory with sufficient free space using `--output /var/tmp/scg-logs-$(date +%F).zip` or similar.
+    **`scg: command not found`** — Ensure the SCG CLI is installed and its installation directory is in your `$PATH`, or use the full path to the scg binary.
 ### 3. Collect application logs manually (if scg logs collect fails)
 
 ```bash
@@ -129,6 +180,50 @@ scg system list
 scg system status --system-id <system-serial-number>
 ```
 
+
+```text title="Expected output"
+total 2847
+-rw-r--r-- 1 root root  512000 Jan 15 14:32 application.log
+-rw-r--r-- 1 root root  256000 Jan 15 14:15 application.log.1
+-rw-r--r-- 1 root root  128000 Jan 15 13:45 application.log.2
+-rw-r--r-- 1 root root   64000 Jan 15 12:30 system.log
+-rw-r--r-- 1 root root   32000 Jan 15 11:20 system.log.1
+-rw-r--r-- 1 root root   16000 Jan 15 10:05 audit.log
+-rw-r--r-- 1 root root    8000 Jan 15 09:15 audit.log.1
+-rw-r--r-- 1 root root    4000 Jan 15 08:00 debug.log
+-rw-r--r-- 1 root root    2000 Jan 15 07:30 debug.log.1
+-rw-r--r-- 1 root root     512 Jan 15 06:45 dsagw.log
+
+scg-applogs-2025-01-15.tar.gz created successfully (1.2 MB)
+
+2025-01-15 14:28:33 ERROR [DataCollector] Connection refused to array 192.168.1.50:443
+2025-01-15 14:25:12 EXCEPTION [AuthService] Timeout waiting for token response after 30000ms
+2025-01-15 14:22:45 ERROR [HealthCheck] Failed to retrieve system metrics: Connection timeout
+2025-01-15 14:18:33 WARN [Scheduler] Retry attempt 3/5 for system sync
+2025-01-15 14:15:22 ERROR [APIClient] HTTP 503 Service Unavailable from gateway
+2025-01-15 14:12:10 EXCEPTION [ConfigManager] Invalid certificate chain detected
+...
+
+System ID: SYS-7F4A2B9C-E1D3-4K8L-9M2N-3P5Q6R7S8T9U
+Name: Dell-Unity-Array-01
+Model: Unity 550F
+Status: REGISTERED
+Last Heartbeat: 2025-01-15T14:35:22Z
+
+System ID: SYS-9K3L5M7N-2P4Q-6R8S-1T3U-4V5W6X7Y8Z9A
+Name: Dell-Unity-Array-02
+Model: Unity 650F
+Status: REGISTERED
+Last Heartbeat: 2025-01-15T14:33:15Z
+
+System Serial: SYS-7F4A2B9C-E1D3-4K8L-9M2N-3P5Q6R7S8T9U
+Status: REGISTERED
+Health Score: 87%
+Last Sync: 2025-01-15 14:35:22 UTC
+```
+
+!!! warning "Common errors"
+    **`scg: command not found`** — Verify the scg CLI tool is installed and in PATH by running `which scg` or reinst
 ### 4. Collect CloudIQ API diagnostics
 
 ```bash
@@ -156,6 +251,47 @@ print(f'Health: {data.get(\"system_health_score\")}')
 # F12 → Console tab → reload the page → Export Console as file
 ```
 
+
+```text title="Expected output"
+{
+  "systems": [
+    {
+      "system_id": "sys-a1b2c3d4e5f6",
+      "system_name": "VMAX-Production-01",
+      "system_type": "VMAX",
+      "last_seen_timestamp": "2024-01-15T14:32:18Z",
+      "system_health_score": 92
+    },
+    {
+      "system_id": "sys-f6e5d4c3b2a1",
+      "system_name": "PowerFlex-Cluster-West",
+      "system_type": "PowerFlex",
+      "last_seen_timestamp": "2024-01-15T14:28:45Z",
+      "system_health_score": 87
+    },
+    {
+      "system_id": "sys-9x8y7z6w5v4u",
+      "system_name": "Unity-XT-DC2",
+      "system_type": "Unity",
+      "last_seen_timestamp": "2024-01-15T14:15:22Z",
+      "system_health_score": 95
+    }
+  ],
+  "page_info": {
+    "total_systems": 12,
+    "returned": 3
+  }
+}
+System: VMAX-Production-01
+Type: VMAX
+Last telemetry: 2024-01-15T14:32:18Z
+Health: 92
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or update your CA certificate bundle.
+    **`{"error": "Unauthorized", "code": 401}`** — Verify your API token is valid and not expired by regenerating it in CloudIQ Settings → API Keys.
+    **`curl: (7) Failed to connect to cloudiq.dell.com port 443: Connection refused`** — Check your network connectivity and firewall rules; confirm CloudIQ API endpoint is accessible from your location.
 ### 5. Write the timeline
 
 ```text
@@ -263,6 +399,37 @@ grep -c "ERROR" /var/log/dsagw/application.log
 grep "ERROR" /var/log/dsagw/application.log | tail -50
 ```
 
+
+```text title="Expected output"
+SCG Version: 5.2.1.0 (Build 2024.01.15)
+SCG Status: Running
+SCG Connectivity Test: PASSED
+System Name: VMAX-001-SYM
+Status: Connected
+Last Contact: 2024-01-22 14:32:18 UTC
+System Name: UNITY-LAB-02
+Status: Connected
+Last Contact: 2024-01-22 14:31:45 UTC
+
+Filesystem     Size  Used Avail Use% Mounted on
+/dev/sda2      100G   78G   18G  82% /var/log
+
+200 0.847s
+
+247
+
+2024-01-22 14:28:33 ERROR [StorageConnector] Failed to authenticate with array VMAX-001-SYM: Invalid credentials
+2024-01-22 14:27:15 ERROR [CloudIQSync] Timeout connecting to cloudiq.dell.com:443 after 30s
+2024-01-22 14:26:02 ERROR [MetricsCollector] Disk space low on /var/log (18% remaining)
+2024-01-22 14:25:44 ERROR [APIHandler] HTTP 503 response from CloudIQ endpoint
+2024-01-22 14:24:19 ERROR [DataUpload] Failed to upload metrics batch: connection reset by peer
+...
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already present) or import the CloudIQ CA certificate into the SCG trust store.
+    **`grep: /var/log/dsagw/application.log: No such file or directory`** — Verify the SCG application log path with `find /var/log -name "application.log"` and adjust the path accordingly.
+    **`df: '/var/log': No such file or directory`** — Run `df -h` without the mount point argument to verify the filesystem layout, then check if `/var/log` is on a separate partition.
 ---
 
 ## Verify resolution
