@@ -9388,59 +9388,7 @@ How It Works reference covering Networking Architecture, VMkernel Adapters (vmk)
 <h2 id="vmkernel-architecture">VMkernel Architecture<a class="headerlink" href="#vmkernel-architecture" title="Permanent link">&para;</a></h2>
 <p><img alt="Kroki" src="https://kroki.io/d2/svg/eNp9U01vwjAMvfdX-FgOE4JjDpMYmwSHVpU62DlLLRq1Tao4LasQ_31OGYxJdJfYiZ8_nu0U2qHy2hoBhT2aKCqlK47SoYCsHEgrWcPm5wlOEYBqOwHrbEdwolK2jAsBpDnUeGZzg42ABBvrhscAo5WAFP3RugridLum2WNg-SkF5N46eUCINy8rgjmk-wQf4s9R1DcVOoO1gH1y0dhtaNH1mqybjdWTKrHoanQjB8iv10kyytc3Pok0XMsE1qAnL1Ul4H2dzbfZjWMeXh_7tHRH8YKLs3w1T5NsimRH6DhsXQjYsQofQWcvZxUSIV1olpY8I0YBcRDAKYyfaHXffnEh4YS4XzOOA_-HN77l6OHkkdBAtT1MzoR4HNr5jvcokarUBmkssW8WYVCwCCl5FHPok7ckCN6JIF41VVP1NsvRdzllNqM5nSjquuLw9Ay_S1OMPwFuRqlCR29bFcB3zWfWHhvg71H_xYyM-wtjTVhwbrKd41jRN7JrK4E=?" /></p>
 <h3 id="vmkernel-resource-scheduling">VMkernel Resource Scheduling<a class="headerlink" href="#vmkernel-resource-scheduling" title="Permanent link">&para;</a></h3>
-<pre class="mermaid"><code>graph TB
-    subgraph VMs["VM Layer"]
-        VM1["VM 1&lt;br/&gt;Guest OS + VMX"]
-        VM2["VM 2&lt;br/&gt;Guest OS + VMX"]
-        VM3["VM 3&lt;br/&gt;Guest OS + VMX"]
-    end
-
-    subgraph SCHED["VMkernel Scheduler"]
-        CPU["CPU Scheduler&lt;br/&gt;vCPU → pCPU mapping&lt;br/&gt;%RDY / %CSTP / NUMA"]
-        MEM["Memory Manager&lt;br/&gt;TPS · Balloon · Compress · Swap"]
-    end
-
-    subgraph STORAGE["Storage I/O Path"]
-        PSA["Storage Stack — PSA&lt;br/&gt;NMP → SATP → PSP"]
-        HBA["HBA / iSCSI Initiator&lt;br/&gt;FC · iSCSI · NVMe-oF"]
-        DISKS["Physical Disks&lt;br/&gt;NVMe · SSD · HDD · SAN LUN"]
-    end
-
-    subgraph NETWORK["Network I/O Path"]
-        VSWITCH["vSwitch / dvSwitch&lt;br/&gt;vmknic · port groups · NIOC"]
-        PNIC["pNIC Uplinks&lt;br/&gt;10 / 25 / 100 GbE"]
-        PHYSNET["Physical Network&lt;br/&gt;ToR switch · fabric"]
-    end
-
-    subgraph HW["Hardware Layer"]
-        CPURAM["CPU / RAM&lt;br/&gt;x86 · NUMA nodes · ECC"]
-        NIC["NIC Hardware&lt;br/&gt;Intel · Broadcom · Mellanox"]
-        HBAHW["HBA Hardware&lt;br/&gt;QLogic · Emulex · NVMe"]
-    end
-
-    VM1 &amp; VM2 &amp; VM3 --&gt; CPU
-    VM1 &amp; VM2 &amp; VM3 --&gt; MEM
-    CPU --&gt; PSA
-    CPU --&gt; VSWITCH
-    MEM --&gt; CPURAM
-    PSA --&gt; HBA
-    HBA --&gt; DISKS
-    VSWITCH --&gt; PNIC
-    PNIC --&gt; PHYSNET
-    DISKS --&gt; HBAHW
-    PNIC --&gt; NIC
-    CPURAM --- NIC
-    NIC --- HBAHW
-
-    classDef vmStyle fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef schedStyle fill:#15803d,stroke:#166534,color:#fff
-    classDef ioStyle fill:#b45309,stroke:#92400e,color:#fff
-    classDef hwStyle fill:#7c3aed,stroke:#6d28d9,color:#fff
-
-    class VM1,VM2,VM3 vmStyle
-    class CPU,MEM schedStyle
-    class PSA,HBA,DISKS,VSWITCH,PNIC,PHYSNET ioStyle
-    class CPURAM,NIC,HBAHW hwStyle</code></pre>
+<p><img alt="VMkernel Resource Scheduling" src="../../../../../assets/virtualization-vmware-esxi-vmkernel-scheduling.svg" /></p>
 <hr />
 <h2 id="cpu-and-memory-scheduling">CPU and Memory Scheduling<a class="headerlink" href="#cpu-and-memory-scheduling" title="Permanent link">&para;</a></h2>
 <h3 id="cpu-scheduling">CPU Scheduling<a class="headerlink" href="#cpu-scheduling" title="Permanent link">&para;</a></h3>
@@ -9708,7 +9656,7 @@ How It Works reference covering Networking Architecture, VMkernel Adapters (vmk)
     <span class="md-icon" title="Last update">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21 13.1c-.1 0-.3.1-.4.2l-1 1 2.1 2.1 1-1c.2-.2.2-.6 0-.8l-1.3-1.3c-.1-.1-.2-.2-.4-.2m-1.9 1.8-6.1 6V23h2.1l6.1-6.1zM12.5 7v5.2l4 2.4-1 1L11 13V7zM11 21.9c-5.1-.5-9-4.8-9-9.9C2 6.5 6.5 2 12 2c5.3 0 9.6 4.1 10 9.3-.3-.1-.6-.2-1-.2s-.7.1-1 .2C19.6 7.2 16.2 4 12 4c-4.4 0-8 3.6-8 8 0 4.1 3.1 7.5 7.1 7.9l-.1.2z"/></svg>
     </span>
-    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 28, 2026 23:13:44 UTC"><span class="timeago" datetime="2026-06-28T23:13:44+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 28, 2026 23:13:44 UTC">2026-06-28</span>
+    <span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-timeago" title="June 29, 2026 00:07:57 UTC"><span class="timeago" datetime="2026-06-29T00:07:57+00:00" locale="en"></span></span><span class="git-revision-date-localized-plugin git-revision-date-localized-plugin-iso_date" title="June 29, 2026 00:07:57 UTC">2026-06-29</span>
   </span>
 
     
