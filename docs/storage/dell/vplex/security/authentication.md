@@ -74,6 +74,35 @@ ssh-copy-id -i ~/.ssh/vplex_ed25519.pub service@<VMS_IP>
 ssh -i ~/.ssh/vplex_ed25519 service@<VMS_IP> "vplexcli -q -e 'health-check'"
 ```
 
+
+```text title="Expected output"
+Generating public/private ed25519 key pair.
+Enter passphrase (empty for no passphrase): 
+Enter same passphrase again: 
+Your identification has been saved in /home/automation/.ssh/vplex_ed25519
+Your public key has been saved in /home/automation/.ssh/vplex_ed25519.pub
+The key fingerprint is:
+SHA256:kR9mL2pQxZ7vN4jH8sT1wY3aB5cD6eF9gH0iJ2kL3mN vplex-automation@example.com
+The key's randomart image is:
++--[ED25519 256]--+
+|        .o+o.    |
+|       o.o.o .   |
+|      . + o . .  |
++----[SHA256]-----+
+/home/automation/.ssh/vplex_ed25519.pub)
+Number of key(s) added: 1
+
+Now try logging in with:	"ssh -i '/home/automation/.ssh/vplex_ed25519' 'service@192.168.50.42'"
+
+CLUSTER_STATUS: HEALTHY
+COMPONENT_STATUS: OK
+LAST_CHECK: 2024-01-15T09:47:33Z
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify the public key was copied to `~service/.ssh/authorized_keys` on the VMS and check that SSH permissions are 600 on the key file and 700 on the .ssh directory.
+    **`ssh-copy-id: INFO: Source of key(s) to be installed: "/home/automation/.ssh/vplex_ed25519.pub" ... Permission denied (password).`** — Ensure the service account password is correct and SSH password authentication is enabled on the VMS (check `PasswordAuthentication yes` in `/etc/ssh/sshd_config`).
+    **`vplexcli: command not found`** — Confirm the vplexcli binary is installed and in the PATH on the VMS, or use the full path to the executable.
 After SSH key authentication is confirmed to work for all operators and automation accounts, disable password-based SSH authentication on the VMS:
 
 ```bash
@@ -85,6 +114,14 @@ ChallengeResponseAuthentication no
 systemctl restart sshd
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Job for sshd.service failed because the control process exited with error code.`** — Check `/etc/ssh/sshd_config` for syntax errors using `sshd -t` before restarting.
+    **`Permission denied`** — Ensure you are running the commands with `sudo` or as the root user.
 Verify the change does not lock out any account before closing the session.
 
 ## LDAP / Active Directory Integration
@@ -157,6 +194,15 @@ if $programname == 'vplexmanagement' then @<SIEM_IP>:514
 systemctl restart rsyslog
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Job for rsyslog.service failed because the control process exited with error code.`** — Validate rsyslog syntax with `rsyslog -N1` before restarting, as malformed rules in vplex-siem.conf will prevent the service from starting.
+    **`Cannot assign requested address`** — Replace `<SIEM_IP>` with an actual IP address (e.g., `192.168.1.100`) and verify network connectivity to the SIEM server with `ping <SIEM_IP>`.
+    **`Permission denied`** — Run the entire configuration block with `sudo` or as the root user, since `/etc/rsyslog.d/` requires elevated privileges.
 Verify log ingestion in the SIEM within 24 hours of configuration. Set up SIEM alerts for:
 
 - Multiple failed SSH login attempts to VMS (brute-force indicator)

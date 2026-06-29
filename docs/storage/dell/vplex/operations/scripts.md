@@ -124,6 +124,51 @@ else
 fi
 ```
 
+
+```text title="Expected output"
+########################################
+  VPLEX Health Check
+  Host : vplex-mgmt.example.com
+  Date : 2024-01-15 14:32:47
+########################################
+
+========================================
+  CLUSTER HEALTH INDICATIONS
+========================================
+/clusters/cluster-1/health-indications/
+  health-state = ok
+  health-check-time = 2024-01-15T14:30:22Z
+
+========================================
+  DISTRIBUTED DEVICE HEALTH
+========================================
+/distributed-storage/distributed-devices/dd-vol-prod-01/health-indications/
+  health-state = ok
+  health-check-time = 2024-01-15T14:31:05Z
+/distributed-storage/distributed-devices/dd-vol-prod-02/health-indications/
+  health-state = ok
+  health-check-time = 2024-01-15T14:31:06Z
+
+========================================
+  DIRECTOR HARDWARE STATUS
+========================================
+/engines/engine-1/directors/director-1a/hardware/
+  health-state = ok
+  temperature = 42C
+/engines/engine-1/directors/director-1b/hardware/
+  health-state = ok
+  temperature = 41C
+
+========================================
+  SUMMARY
+========================================
+STATUS: OK — All VPLEX health checks passed.
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify SSH key is loaded with `ssh-add` or configure password authentication; ensure VPLEX_USER has SSH access to VPLEX_HOST.
+    **`vplexcli: command not found`** — Confirm vplexcli is installed and in PATH on the VPLEX management console, or use the full path to the binary in the vplex_cmd function.
+    **`ERROR: VPLEX_HOST is not set.`** — Export VPLEX_HOST environment variable before running the script: `export VPLEX_HOST=vplex-mgmt.example.com`.
 **Usage:**
 ```text
 VPLEX_HOST=192.168.1.20 VPLEX_USER=service ./vplex_device_health.sh
@@ -272,6 +317,34 @@ echo "  PASS: $PASS   FAIL: $FAIL"
 [[ "$FAIL" -eq 0 ]] && echo "  STATUS: OK" && exit 0 || echo "  STATUS: DEGRADED" && exit 1
 ```
 
+
+```text title="Expected output"
+========================================
+  VPLEX Daily Check — vplex-mgmt.example.com
+  2024-01-15 09:47:23
+========================================
+System Health Status: OK
+No errors detected
+  health-check                                   PASS
+cluster-1
+cluster-2
+  ls /clusters                                   PASS
+engine-1 (active)
+engine-2 (standby)
+  ls /engines                                    PASS
+cg-prod-db (in-sync)
+cg-prod-app (in-sync)
+cg-dr-replica (in-sync)
+  consistency-groups (no degraded)               PASS
+========================================
+  PASS: 4   FAIL: 0
+  STATUS: OK
+```
+
+!!! warning "Common errors"
+    **`ssh: connect to host vplex-mgmt.example.com port 22: Connection timed out`** — Verify VPLEX_HOST is reachable and SSH_USER has network access; check firewall rules and host DNS resolution.
+    **`Permission denied (publickey,gssapi-keyexchange).`** — Ensure the service account has SSH key-based authentication configured on the VPLEX management console and BatchMode=yes is compatible with your auth method.
+    **`vplexcli: command not found`** — Confirm vplexcli is installed and in the PATH on the VPLEX management node, or use the full path to the binary in the vplex() function.
 ---
 
 ## Pre-Change Validation Script
@@ -329,6 +402,26 @@ echo "  PRE-CHECK PASSED — Safe to proceed."
 exit 0
 ```
 
+
+```text title="Expected output"
+========================================
+  VPLEX Pre-Change Check — vplex-mgmt.example.com
+  2024-01-15 14:32:47
+========================================
+  PASS: health-check clean
+  PASS: all engines running
+  PASS: all consistency groups healthy
+  PASS: all directors online
+========================================
+  PRE-CHECK PASSED — Safe to proceed.
+```
+
+!!! warning "Common errors"
+    **`ERROR: VPLEX_HOST is not set.`** — Export the VPLEX_HOST environment variable before running the script: `export VPLEX_HOST=vplex-mgmt.example.com`.
+    
+    **`Permission denied (publickey).`** — Ensure the SSH_USER account has passwordless key-based authentication configured and the public key is in the VPLEX management node's authorized_keys file.
+    
+    **`FAIL: health-check reports errors`** — Run `vplexcli -e "health-check"` directly on the VPLEX management node to identify and resolve the underlying fault before proceeding with changes.
 ---
 
 ## Verify

@@ -115,6 +115,53 @@ health-check --full
 ll /clusters/*/hardware/
 ```
 
+
+```text title="Expected output"
+total 48
+drwxr-xr-x 3 root root 4096 Jan 15 10:23 cluster-1/
+drwxr-xr-x 3 root root 4096 Jan 15 10:23 cluster-2/
+
+total 156
+drwxr-xr-x 2 root root 4096 Jan 15 10:22 dev-0/
+drwxr-xr-x 2 root root 4096 Jan 15 10:22 dev-1/
+drwxr-xr-x 2 root root 4096 Jan 15 10:22 dev-2/
+drwxr-xr-x 2 root root 4096 Jan 15 10:22 dev-3/
+
+total 92
+drwxr-xr-x 4 root root 4096 Jan 15 10:21 engine-1-director-1/
+drwxr-xr-x 4 root root 4096 Jan 15 10:21 engine-2-director-1/
+
+total 28
+drwxr-xr-x 2 root root 4096 Jan 15 10:20 witness-node-a/
+drwxr-xr-x 2 root root 4096 Jan 15 10:20 witness-node-b/
+
+total 64
+drwxr-xr-x 3 root root 4096 Jan 15 10:19 cg-prod-01/
+drwxr-xr-x 3 root root 4096 Jan 15 10:19 cg-prod-02/
+drwxr-xr-x 3 root root 4096 Jan 15 10:19 cg-dr-01/
+
+total 112
+drwxr-xr-x 5 root root 4096 Jan 15 10:18 sv-esx-cluster-01/
+drwxr-xr-x 5 root root 4096 Jan 15 10:18 sv-database-tier/
+drwxr-xr-x 5 root root 4096 Jan 15 10:18 sv-backup-01/
+
+System Health Check Results:
+  Cluster Status: HEALTHY
+  Distributed Devices: 4/4 ONLINE
+  Director Hardware: 2/2 OPERATIONAL
+  Witness Connectivity: CONNECTED
+  Consistency Groups: 3/3 SYNCHRONIZED
+  Overall System Status: OPTIMAL
+
+total 204
+drwxr-xr-x 3 root root 4096 Jan 15 10:17 cluster-1/
+drwxr-xr-x 3 root root 4096 Jan 15 10:17 cluster-2/
+```
+
+!!! warning "Common errors"
+    **`ls: cannot access '/clusters/*/health-indications/': No such file or directory`** — Verify the VPLEX management console is running and the cluster paths are correctly mounted with `mount | grep clusters`.
+    **`health-check: command not found`** — Ensure you are logged into the VPLEX management CLI with proper credentials and the health-check utility is in your PATH.
+    **`Permission denied`** — Run the commands with appropriate VPLEX administrative privileges
 ## Cluster Status
 
 ![Cluster Status](../../../../assets/storage-dell-vplex-hc-cluster-status.svg)
@@ -125,6 +172,28 @@ VPlexcli:/> ll /clusters/cluster-1/
 VPlexcli:/> ll /clusters/cluster-2/
 ```
 
+
+```text title="Expected output"
+VPlexcli:/> ll /clusters/
+    cluster-1
+    cluster-2
+
+VPlexcli:/> ll /clusters/cluster-1/
+    director-1
+    director-2
+    storage-array-1
+    storage-array-2
+
+VPlexcli:/> ll /clusters/cluster-2/
+    director-1
+    director-2
+    storage-array-3
+    storage-array-4
+```
+
+!!! warning "Common errors"
+    **`Error: path does not exist`** — Verify the cluster name is correct and the cluster is online using `ll /clusters/` first.
+    **`Error: insufficient privileges`** — Ensure your VPlexcli user account has read permissions; contact your VPLEX administrator to grant access.
 All clusters should show `operational-status: ok`.
 
 ## Director Health
@@ -136,6 +205,36 @@ VPlexcli:/> ll /engines/*/directors/
 VPlexcli:/> ll /engines/engine-1-1/directors/
 ```
 
+
+```text title="Expected output"
+/engines/engine-1-1/directors/:
+  director-1-1-a
+  director-1-1-b
+  director-1-2-a
+  director-1-2-b
+
+/engines/engine-1-2/directors/:
+  director-1-2-a
+  director-1-2-b
+  director-1-3-a
+  director-1-3-b
+
+/engines/engine-2-1/directors/:
+  director-2-1-a
+  director-2-1-b
+  director-2-2-a
+  director-2-2-b
+
+/engines/engine-1-1/directors/:
+  director-1-1-a
+  director-1-1-b
+  director-1-2-a
+  director-1-2-b
+```
+
+!!! warning "Common errors"
+    **`Invalid path /engines/*/directors/`** — Use the full engine name (e.g., `/engines/engine-1-1/directors/`) as wildcard expansion is not supported in VPlexcli.
+    **`No such object: /engines/engine-1-1/directors/`** — Verify the engine is online and the director objects exist by running `ll /engines/engine-1-1/` first to confirm the engine name.
 All directors should be `operational-status: ok` and `health-state: ok`.
 
 ## Pre-Change Checklist

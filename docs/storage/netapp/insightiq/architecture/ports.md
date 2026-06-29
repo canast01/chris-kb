@@ -74,6 +74,17 @@ curl -sk -o /dev/null -w "%{http_code}" https://<insightiq-ip>/
 nc -zv <powerscale-mgmt-ip> 8080
 ```
 
+
+```text title="Expected output"
+200
+200
+Connection to 192.168.1.50 8080 port [tcp/*] succeeded!
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to 192.168.1.50 port 8080: Connection refused`** — Verify the PowerScale management node is running and the API service is listening on port 8080 with `netstat -tlnp | grep 8080`.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — The `-k` flag should suppress this; if it persists, ensure curl is updated and the certificate chain is not corrupted on the InsightIQ appliance.
+    **`nc: getaddrinfo: Name or service not known`** — Confirm the PowerScale management hostname or IP address is correct and resolvable from the InsightIQ appliance using `nslookup <powerscale-mgmt>` or `ping`.
 ## See also
 
 - [NetApp InsightIQ — Architecture](../how-it-works/)

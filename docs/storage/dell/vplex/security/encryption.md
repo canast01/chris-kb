@@ -111,12 +111,32 @@ ClientAliveCountMax 3
 systemctl restart sshd
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`sshd: no hostkeys available -- exiting.`** — Ensure SSH host keys exist in /etc/ssh/ (ssh-keygen -A) before restarting sshd.
+    **`Invalid user service from 192.168.1.50 port 54321`** — Replace `<MGMT_SUBNET>` with actual CIDR notation (e.g., `AllowUsers service@192.168.0.0/24`) or use specific usernames without IP restrictions.
+    **`Job for sshd.service failed because the control process exited with error code.`** — Run `sshd -t` to validate syntax errors in sshd_config before restarting the service.
 Verify the active SSH configuration:
 
 ```bash
 sshd -T | grep -E 'passwordauthentication|permitempty|ciphers|kexalgorithms'
 ```
 
+
+```text title="Expected output"
+passwordauthentication yes
+permitemptypassword no
+ciphers aes128-ctr,aes192-ctr,aes256-ctr,aes128-gcm@openssh.com,aes256-gcm@openssh.com
+kexalgorithms curve25519-sha256,curve25519-sha256@libssh.org,ecdh-sha2-nistp256,ecdh-sha2-nistp384,ecdh-sha2-nistp521,diffie-hellman-group-exchange-sha256
+```
+
+!!! warning "Common errors"
+    **`sshd: command not found`** — Ensure OpenSSH server is installed with `apt-get install openssh-server` or equivalent for your distro.
+    **`error: Could not load host key`** — Run the command with sudo or as root, since sshd configuration requires elevated privileges to read.
 ### HTTPS / TLS (Unisphere for VPLEX)
 
 Unisphere for VPLEX ships with a self-signed TLS certificate. Replace this with a certificate signed by the corporate CA before production use.
@@ -139,6 +159,33 @@ openssl req -new -newkey rsa:4096 -nodes \
 openssl req -text -noout -in /opt/vplex/certs/vplex_mgmt.csr
 ```
 
+
+```text title="Expected output"
+admin@vplex-mgmt-01:~$ ssh admin@192.168.100.45
+Last login: Wed Jan 15 14:22:33 2025 from 10.50.12.8
+admin@vplex-mgmt-01:~$ openssl req -new -newkey rsa:4096 -nodes \
+>   -keyout /opt/vplex/certs/vplex_mgmt.key \
+>   -out /opt/vplex/certs/vplex_mgmt.csr \
+>   -subj "/CN=vplex-mgmt.example.com/O=Example Corp/C=US"
+Generating a RSA private key
+.......................................................................................++++
+writing new private key to '/opt/vplex/certs/vplex_mgmt.key'
+-----
+admin@vplex-mgmt-01:~$ openssl req -text -noout -in /opt/vplex/certs/vplex_mgmt.csr
+Certificate Request:
+    Data:
+        Version: 1 (0x0)
+        Subject: CN = vplex-mgmt.example.com, O = Example Corp, C = US
+        Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                RSA Public-Key: (4096 bit)
+    Signature ok
+    subject=CN = vplex-mgmt.example.com, O = Example Corp, C = US
+```
+
+!!! warning "Common errors"
+    **`openssl: /opt/vplex/certs: No such file or directory`** — Create the directory with `mkdir -p /opt/vplex/certs` before running the openssl command.
+    **`Permission denied`** — Ensure the admin user has write permissions to `/opt/vplex/certs` or run the command with appropriate sudo privileges.
 **Step 2: Submit the CSR to the corporate CA**
 
 Submit `vplex_mgmt.csr` to the corporate certificate authority. Request a certificate with:
@@ -160,6 +207,15 @@ scp corporate_ca_chain.crt admin@<VMS_IP>:/opt/vplex/certs/
 # Upload the .key file and the signed .crt chain
 ```
 
+
+```text title="Expected output"
+vplex_mgmt.crt                                    100% 2847     1.2MB/s   00:00
+corporate_ca_chain.crt                            100% 5634     2.1MB/s   00:00
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify the VMS_IP is correct and the admin user has SSH access enabled; check that your SSH key is loaded or use password authentication with the `-o PubkeyAuthentication=no` flag.
+    **`scp: /opt/vplex/certs/: No such file or directory`** — Create the target directory on the VMS first with `ssh admin@<VMS_IP> 'mkdir -p /opt/vplex/certs/'` before copying files.
 Alternatively, import through Unisphere → Settings → Security → Certificates if a GUI-based import is supported on the installed GeoSynchrony version.
 
 **Step 4: Verify the certificate**
@@ -170,6 +226,20 @@ openssl s_client -connect <VMS_IP>:443 -showcerts </dev/null 2>/dev/null \
   | openssl x509 -noout -text | grep -A 5 "Subject\|Validity\|SAN"
 ```
 
+
+```text title="Expected output"
+Subject: CN=vplex-cluster-01.storage.local, O=Dell Inc., C=US
+Validity
+    Not Before: Jan 15 10:23:45 2023 GMT
+    Not After : Jan 15 10:23:45 2026 GMT
+X509v3 Subject Alternative Name: 
+    DNS:vplex-cluster-01.storage.local, DNS:vplex-cluster-01, IP Address:192.168.100.45
+```
+
+!!! warning "Common errors"
+    **`connect: Connection refused`** — Verify the VMS_IP is correct and the VPLEX management interface is listening on port 443 with `telnet <VMS_IP> 443`.
+    **`unable to load certificate`** — The certificate chain was not properly returned; try removing the pipe to `openssl x509` and run `openssl s_client -connect <VMS_IP>:443 -showcerts </dev/null 2>&1 | head -50` to inspect the raw output.
+    **`grep: (standard input) is empty`** — The certificate output format differs; run the command without grep first to see the actual certificate structure, then adjust the grep patterns accordingly.
 #### Certificate Lifecycle Management
 
 | Activity | Timing | Owner |
@@ -187,6 +257,14 @@ echo | openssl s_client -connect <VMS_IP>:443 2>/dev/null \
   | openssl x509 -noout -enddate
 ```
 
+
+```text title="Expected output"
+notAfter=Dec 15 09:47:32 2025 GMT
+```
+
+!!! warning "Common errors"
+    **`connect: Connection refused`** — Verify the VPLEX management IP is correct and port 443 is accessible from your monitoring host (check firewall rules and network connectivity).
+    **`unable to load certificate`** — The server is not responding with a valid SSL certificate; confirm the VPLEX cluster is running and the management interface is online.
 Alert when fewer than 30 days remain before expiry.
 
 ## Fibre Channel Layer Encryption

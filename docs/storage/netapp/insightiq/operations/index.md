@@ -53,6 +53,42 @@ sudo journalctl -u iiq --since "24 hours ago" | grep -i error
 psql -U iiq -c "SELECT pg_size_pretty(pg_database_size('iiq'));"
 ```
 
+
+```text title="Expected output"
+● iiq.service - InsightIQ Service
+     Loaded: loaded (/etc/systemd/system/iiq.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2024-01-15 09:23:47 UTC; 2 days ago
+   Main PID: 4782 (java)
+      Tasks: 47 (limit: 4096)
+     Memory: 2.3G
+     CGroup: /system.slice/iiq.service
+             └─4782 /usr/lib/jvm/java-11-openjdk-amd64/bin/java -Xmx4g...
+
+● postgresql.service - PostgreSQL Database Server
+     Loaded: loaded (/etc/systemd/system/postgresql.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2015-01-15 09:18:12 UTC; 2 days ago
+   Main PID: 3891 (postgres)
+      Tasks: 12 (limit: 4096)
+     Memory: 856M
+     CGroup: /system.slice/postgresql.service
+
+Filesystem     Size  Used Avail Use% Mounted on
+/dev/sda3      500G  387G  113G  78% /data
+
+Jan 15 09:45:23 iiq-prod-01 iiq[4782]: ERROR: Connection timeout to collector 192.168.1.45
+Jan 15 10:12:08 iiq-prod-01 iiq[4782]: ERROR: Failed to parse metrics from array-sn-7a8b9c
+Jan 15 11:33:41 iiq-prod-01 iiq[4782]: ERROR: Database query exceeded 30s timeout
+
+ pg_size_pretty
+----------------
+ 4821 MB
+(1 row)
+```
+
+!!! warning "Common errors"
+    **`psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed: FATAL: Ident authentication failed for user "iiq"`** — Verify the PostgreSQL pg_hba.conf allows local connections for the iiq user, or run psql with `-h localhost` and ensure the iiq user exists.
+    **`Unit iiq.service could not be found.`** — Confirm the InsightIQ service file exists at `/etc/systemd/system/iiq.service` and run `sudo systemctl daemon-reload` to refresh systemd.
+    **`df: '/data': No such file or directory`** — Mount the data volume with `sudo mount /dev/sdX /data` or verify the mount point exists and is accessible.
 ## Alert Threshold Review (Monthly)
 
 - Review the past month's active alerts for noise patterns

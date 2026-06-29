@@ -160,6 +160,35 @@ vplexcli -q -e "ll /clusters/cluster-1/exports/storage-views/<view_name>/"
 vplexcli -q -e "ll /clusters/cluster-1/exports/initiator-ports/"
 ```
 
+
+```text title="Expected output"
+/engines/VPLEX-01/directors/director-1/hardware/
+  Name                          Status      Temperature  Power
+  -------                       ---------   -----------  -----
+  director-1-cm                 OK          38°C         OK
+  director-1-dm-a               OK          42°C         OK
+  director-1-dm-b               OK          41°C         OK
+  director-1-sp-a               OK          Normal       OK
+  director-1-sp-b               OK          Normal       OK
+
+/clusters/cluster-1/exports/storage-views/sv-prod-db-01/
+  Name                          Volumes     Ports       Status
+  -------                       ---------   ---------   ------
+  sv-prod-db-01                 vol-001     FA-2E:0     Active
+                                vol-002     FA-2E:1     Active
+                                vol-003     FA-2F:0     Active
+
+/clusters/cluster-1/exports/initiator-ports/
+  Name                          WWPN                      Status    View
+  -------                       ------------------------  --------  --------
+  host-db-01-hba0               50:00:14:40:5a:2b:c1:01   Registered sv-prod-db-01
+  host-db-01-hba1               50:00:14:40:5a:2b:c1:02   Registered sv-prod-db-01
+  host-app-02-hba0              50:00:14:40:5a:2c:d2:03   Registered sv-prod-app-02
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid path /clusters/cluster-1/exports/storage-views/<view_name>/`** — Replace `<view_name>` with the actual storage view name (e.g., `sv-prod-db-01`).
+    **`Error: Connection refused to VPLEX management interface`** — Verify vplexcli is installed, the VPLEX cluster IP is reachable, and credentials are configured in `~/.vplexrc` or via environment variables.
 On the host:
 
 ```bash
@@ -174,6 +203,48 @@ esxcli storage core adapter rescan --all
 esxcli storage nmp path list | grep -i "state\|transport"
 ```
 
+
+```text title="Expected output"
+Class = "fc_host"
+  Device = "host0"
+    port_state = "Online"
+    port_name = "50:00:09:73:00:1a:2b:4c"
+  Device = "host1"
+    port_state = "Online"
+    port_name = "50:00:09:73:00:1a:2b:4d"
+  Device = "host2"
+    port_state = "Offline"
+    port_name = "50:00:09:73:00:1a:2b:4e"
+
+Pseudo name=vplex_lun01
+ CLARiiON ID=APM00123456789 [vplex-array-01]
+ Logical device ID=6006048000019003a533533030313233
+ state=enabled; policy=SymmOpt; priority=0; queued-IOs=0;
+ ===================================
+ host  :dev(  %),disk( %),Q-IOs(  0) state: ENABLED
+ dmpd  :dev(  %),disk( %),Q-IOs(  0) state: ENABLED
+ dmpd  :dev(  %),disk( %),Q-IOs(  0) state: ENABLED
+ dmpd  :dev(  %),disk( %),Q-IOs(  0) state: DEAD
+
+Rescan started for HBA vmhba2...
+Rescan started for HBA vmhba3...
+Rescan completed successfully.
+
+Name: vmhba2:C0:T0:L0
+   State: active
+   Transport: fiber
+Name: vmhba2:C0:T1:L0
+   State: active
+   Transport: fiber
+Name: vmhba3:C0:T0:L0
+   State: standby
+   Transport: fiber
+```
+
+!!! warning "Common errors"
+    **`systool: command not found`** — Install sysfstools package with `apt-get install sysfstools` or `yum install sysfstools`.
+    **`powermt: command not found`** — Verify EMC PowerPath is installed and the powermt binary is in PATH; check `/opt/emc/powerpath/bin/powermt display dev=all`.
+    **`Error: Unknown command or namespace esxcli storage core adapter rescan`** — Verify ESXi version supports the command; use `esxcli storage core adapter list` first to confirm adapter presence.
 **Resolution:** Replace failed director hardware (engage Dell Support). Recreate the storage view if it was accidentally deleted. Restore SAN zoning if the fabric was disrupted.
 
 ---
@@ -194,6 +265,39 @@ vplexcli -q -e "ll /clusters/cluster-1/communication/inter-cluster-links/"
 vplexcli -q -e "ll /clusters/cluster-2/communication/inter-cluster-links/"
 ```
 
+
+```text title="Expected output"
+health-indications/
+  device-1/
+    out-of-sync-indication
+    consistency-status: INCONSISTENT
+  device-2/
+    out-of-sync-indication
+    consistency-status: CONSISTENT
+  device-3/
+    out-of-sync-indication
+    consistency-status: CONSISTENT
+
+Name                          Health-State    Operational-Status
+device-1                      DEGRADED        RUNNING
+  leg-a (cluster-1)           HEALTHY         RUNNING
+  leg-b (cluster-2)           UNHEALTHY       RUNNING
+
+inter-cluster-links/
+  link-1-to-2-a               HEALTHY         UP
+  link-1-to-2-b               HEALTHY         UP
+  link-1-to-2-c               UNHEALTHY       DOWN
+
+inter-cluster-links/
+  link-2-to-1-a               HEALTHY         UP
+  link-2-to-1-b               HEALTHY         UP
+  link-2-to-1-c               UNHEALTHY       DOWN
+```
+
+!!! warning "Common errors"
+    **`vplexcli: command not found`** — Ensure vplexcli is installed and in your PATH, or use the full path to the binary (typically `/opt/dell/vplex/bin/vplexcli`).
+    **`Error: Invalid path '/distributed-storage/distributed-devices/<device_name>/'`** — Replace the literal `<device_name>` placeholder with an actual device name from the first command's output (e.g., `device-1`).
+    **`Error: Connection refused on management console`** — Verify the VPLEX management console is reachable and vplexcli credentials are configured (check `/root/.vplexcli/config` or use `-u` and `-p` flags).
 **Resolution:**
 
 1. Restore the ICL if it is still interrupted.
@@ -204,6 +308,15 @@ vplexcli -q -e "ll /distributed-storage/distributed-devices/<device_name>/" \
   | grep -i "health-state\|rebuild-progress"
 ```
 
+
+```text title="Expected output"
+health-state                                    OK
+rebuild-progress                                100%
+```
+
+!!! warning "Common errors"
+    **`Error: Unable to connect to VPLEX management server at localhost:443`** — Verify the VPLEX management IP is reachable and vplexcli is configured with the correct `-h` hostname parameter.
+    **`Error: Invalid device name '<device_name>'`** — Replace `<device_name>` with an actual device name from your VPLEX cluster (e.g., `device-1` or `raid-group-01`).
 3. If resync does not start automatically within 10 minutes of ICL recovery, initiate manually:
 
 ```bash
@@ -211,6 +324,21 @@ vplexcli -q -e "device rebuild \
   --device /distributed-storage/distributed-devices/<device_name>"
 ```
 
+
+```text title="Expected output"
+Rebuild initiated for device: EMC-VPLEX-device-prod-01
+Device: /distributed-storage/distributed-devices/EMC-VPLEX-device-prod-01
+Status: REBUILDING
+Progress: 0%
+Estimated time remaining: 4h 32m
+Current rebuild rate: 125 MB/s
+Rebuild started at: 2024-01-15 14:23:47 UTC
+```
+
+!!! warning "Common errors"
+    **`Error: device not found: /distributed-storage/distributed-devices/<device_name>`** — Replace `<device_name>` with the actual device name from `vplexcli -e "device list"`.
+    **`Error: device is already rebuilding`** — Wait for the current rebuild to complete or use `vplexcli -e "device rebuild --cancel"` to stop it first.
+    **`Error: insufficient cluster connectivity`** — Verify both VPLEX cluster nodes are online and communicating using `vplexcli -e "cluster status"`.
 4. Do not perform maintenance on the out-of-sync cluster leg during rebuild.
 
 ---
@@ -233,6 +361,33 @@ vplexcli -q -e "ll /clusters/cluster-2/cluster-witness/"
 vplexcli -q -e "ll /clusters/cluster-1/communication/inter-cluster-links/"
 ```
 
+
+```text title="Expected output"
+Name                           Health    Operational-Status
+cg-prod-db-01                  OK        suspended
+cg-prod-db-02                  OK        suspended
+cg-prod-app-tier               WARNING   suspended
+cg-dr-replica                  OK        suspended
+
+Name                           Health    Operational-Status
+cluster-witness                OK        connected
+witness-link-1                 OK        active
+witness-link-2                 OK        active
+
+Name                           Health    Operational-Status
+cluster-witness                OK        connected
+witness-link-1                 OK        active
+witness-link-2                 OK        active
+
+Name                           Health    Operational-Status
+icl-link-cluster-1-to-2        OK        connected
+icl-link-cluster-2-to-1        OK        connected
+icl-redundancy-link            OK        active
+```
+
+!!! warning "Common errors"
+    **`Error: cluster-witness not found or unreachable`** — Verify witness connectivity and network routing between clusters using `vplexcli -e "ll /clusters/cluster-1/health/"`
+    **`Error: inter-cluster-links communication timeout`** — Check ICL network interfaces are up with `ip link show` and confirm no firewall rules are blocking port 8443 between cluster nodes.
 **Resolution:**
 
 1. Restore ICL connectivity first.
@@ -245,6 +400,20 @@ vplexcli -q -e "device resume \
   --device /distributed-storage/distributed-devices/<device_name>"
 ```
 
+
+```text title="Expected output"
+Device resume initiated for device: /distributed-storage/distributed-devices/device-001
+Resume status: IN_PROGRESS
+Current rebuild percentage: 0%
+Estimated time remaining: 45 minutes
+Device state transitioning from PAUSED to ONLINE
+Resume operation queued successfully
+```
+
+!!! warning "Common errors"
+    **`Error: Device not found at path /distributed-storage/distributed-devices/<device_name>`** — Replace `<device_name>` with the actual device name from `vplexcli -e "device list"` output.
+    **`Error: Device is already in ONLINE state, resume not applicable`** — Verify the device is actually in PAUSED state using `vplexcli -e "device status --device /distributed-storage/distributed-devices/<device_name>"` before attempting resume.
+    **`Error: Insufficient permissions to resume device`** — Ensure your vplexcli user account has administrative privileges or run the command with appropriate credentials.
 **Do not manually resume without understanding which cluster leg holds the most recent data.** Incorrect manual resume risks undetected data divergence.
 
 ---
@@ -266,6 +435,30 @@ vplexcli -q -e "ll /clusters/cluster-1/exports/storage-views/<view_name>/"
 vplexcli -q -e "ll /clusters/cluster-1/exports/initiator-ports/<initiator_name>/"
 ```
 
+
+```text title="Expected output"
+/clusters/cluster-1/exports/storage-views/sv-prod-db-01/
+  initiators:
+    iqn.1991-05.com.example:db-server-01
+    iqn.1991-05.com.example:db-server-02
+  volumes:
+    v-lun-001
+    v-lun-002
+  host-initiators:
+    host-01-initiator-a
+    host-01-initiator-b
+
+/clusters/cluster-1/exports/initiator-ports/host-01-initiator-a/
+  name: host-01-initiator-a
+  type: iSCSI
+  port-address: iqn.1991-05.com.example:db-server-01
+  status: registered
+  registered-at: 2024-01-15T09:47:23Z
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid path /clusters/cluster-1/exports/storage-views/<view_name>/`** — Replace `<view_name>` with the actual storage view name (e.g., `sv-prod-db-01`).
+    **`Error: No such object`** — Verify the initiator or storage view exists by running `vplexcli -q -e "ll /clusters/cluster-1/exports/"` to list available objects.
 On the host:
 
 ```bash
@@ -276,6 +469,42 @@ multipath -ll
 esxcli storage nmp path list -d <naa_id>
 ```
 
+
+```text title="Expected output"
+# multipath -ll output (Linux):
+mpatha (360014056b1d45e8fa6e4f7a9c8d2b1f) dm-0 DELL,VRAID
+size=2.0T features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
+|-+- policy='service-time 0' prio=50 status=active
+| |- 2:0:0:0 sda 8:0   active ready running
+| `- 3:0:0:0 sdb 8:16  active ready running
+`-+- policy='service-time 0' prio=10 status=enabled
+  |- 4:0:0:0 sdc 8:32  active ready running
+  `- 5:0:0:0 sdd 8:48  active ready running
+
+mpathb (360014056b1d45e8fa6e4f7a9c8d2b2g) dm-1 DELL,VRAID
+size=1.5T features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
+|-+- policy='service-time 0' prio=50 status=active
+| `- 6:0:0:0 sde 8:64  active ready running
+`-+- policy='service-time 0' prio=10 status=enabled
+  `- 7:0:0:0 sdf 8:80  failed faulty offline
+
+# esxcli storage nmp path list output (ESXi):
+fc.20000024ff45a1b2:21000024ff45a1b2-50:0a:09:20 : fc.20000024ff45a1b2:21000024ff45a1b2-50:0a:09:20
+   Runtime Name: vmhba2:C0:T0:L0
+   Device: naa.60014056b1d45e8fa6e4f7a9c8d2b1f
+   Device Display Name: DELL VRAID (naa.60014056b1d45e8fa6e4f7a9c8d2b1f)
+   Adapter: vmhba2  Channel: 0  Target: 0  LUN: 0
+   Plugin: NMP  Transport: FC  Extentions: ALUA
+   State: active  Status: OK
+
+fc.20000024ff45a1b3:21000024ff45a1b3-50:0a:09:20 : fc.20000024ff45a1b3:21000024ff45a1b3-50:0a:09:20
+   Runtime Name: vmhba3:C0:T0:L0
+   Device: naa.60014056b1d45e8fa6e4f7a9c8d2b1f
+   Device Display Name: DELL VRAID (naa.60014056b1d45e8fa6e4f7a9c8d2b1f)
+   Adapter: vmhba3  Channel: 0  Target: 0  LUN: 0
+   Plugin: NMP  Transport: FC  Extentions: ALUA
+   State: stand
+```
 Check SAN fabric zoning for the host HBA → VPLEX FE port zone.
 
 **Resolution:** Add the initiator back to the storage view if it was removed. Register the new HBA WWN if the HBA was replaced. Restore SAN zoning if the zone was deleted or modified.
@@ -296,6 +525,30 @@ vplexcli -q -e "ll /engines/engine-1-1/directors/director-1-1-A/hardware/"
 vplexcli -q -e "ll /engines/engine-1-1/directors/director-1-1-A/hardware/ports/"
 ```
 
+
+```text title="Expected output"
+Name                                    Attributes
+----                                    ----------
+director-1-1-A                          (object)
+  hardware                              (object)
+    fan-modules                         (object)
+    power-supplies                      (object)
+    temperature-sensors                 (object)
+    ports                               (object)
+
+Name                                    Attributes
+----                                    ----------
+port-0                                  health=DEGRADED, speed=8Gb/s, state=ONLINE
+port-1                                  health=HEALTHY, speed=8Gb/s, state=ONLINE
+port-2                                  health=FAULT, speed=unknown, state=OFFLINE
+port-3                                  health=HEALTHY, speed=8Gb/s, state=ONLINE
+port-4                                  health=FAULT, speed=unknown, state=OFFLINE
+port-5                                  health=HEALTHY, speed=8Gb/s, state=ONLINE
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid path /engines/engine-1-1/directors/director-1-1-A/hardware/`** — Verify the correct engine and director names using `vplexcli -q -e "ll /engines/"` and adjust the path accordingly.
+    **`Error: vplexcli: command not found`** — Ensure you are logged into the VPLEX management console or add the vplexcli binary path to your $PATH environment variable.
 **Immediate actions:**
 
 1. Confirm the surviving director in the pair is healthy — I/O continues on the surviving director.
@@ -323,6 +576,38 @@ vplexcli -q -e "ll /clusters/cluster-2/cluster-witness/"
 ping -c 5 <witness_VM_IP>
 ```
 
+
+```text title="Expected output"
+Witness:
+  Witness-1 (enabled)
+    IP Address: 192.168.100.45
+    Status: ALIVE
+    Cluster: cluster-1
+    Last Heartbeat: 2024-01-15 14:32:18 UTC
+
+Witness:
+  Witness-1 (enabled)
+    IP Address: 192.168.100.45
+    Status: ALIVE
+    Cluster: cluster-2
+    Last Heartbeat: 2024-01-15 14:32:19 UTC
+
+PING 192.168.100.45 (192.168.100.45) 56(84) bytes of data.
+64 bytes from 192.168.100.45: icmp_seq=1 ttl=64 time=2.34 ms
+64 bytes from 192.168.100.45: icmp_seq=2 ttl=64 time=2.41 ms
+64 bytes from 192.168.100.45: icmp_seq=3 ttl=64 time=2.38 ms
+64 bytes from 192.168.100.45: icmp_seq=4 ttl=64 time=2.39 ms
+64 bytes from 192.168.100.45: icmp_seq=5 ttl=64 time=2.36 ms
+
+--- 192.168.100.45 statistics ---
+5 packets transmitted, 5 received, 0% packet loss, time 4012ms
+rtt min/avg/max/stddev = 2.34/2.38/2.41/0.03 ms
+```
+
+!!! warning "Common errors"
+    **`Witness: UNREACHABLE`** — Verify the Witness VM is powered on and check network connectivity from the management interface to the Witness IP address.
+    **`ping: unknown host <witness_VM_IP>`** — Replace `<witness_VM_IP>` with the actual Witness VM IP address (e.g., 192.168.100.45) or verify DNS resolution is working.
+    **`vplexcli: command not found`** — Ensure you are running this command from a VPLEX management console or node with vplexcli installed in the PATH.
 **Resolution:**
 
 1. If the Witness VM is powered off, power it on and wait for the Witness service to start.
@@ -347,6 +632,22 @@ vplexcli -q -e "health-check --full" > /tmp/vplex_healthcheck_$(date +%Y%m%d_%H%
 # "operational-status: degraded" on a CG — one or more member volumes are not in-sync
 ```
 
+
+```text title="Expected output"
+vplexcli -q -e "health-check --full" > /tmp/vplex_healthcheck_20240115_1423.txt
+Health check initiated on cluster: vplexcluster-01
+Scanning 12 storage arrays...
+Scanning 4 director nodes...
+Scanning 18 consistency groups...
+Scanning 156 virtual volumes...
+Health check completed successfully in 47 seconds
+Results written to: /tmp/vplex_healthcheck_20240115_1423.txt
+```
+
+!!! warning "Common errors"
+    **`vplexcli: command not found`** — Ensure the VPLEX CLI tools are installed and the PATH includes the VPLEX bin directory (typically `/opt/vplex/bin`).
+    **`Error: Unable to connect to management server at localhost:443`** — Verify the VPLEX management console is running and accessible; check network connectivity and firewall rules for port 443.
+    **`Permission denied: Cannot write to /tmp/vplex_healthcheck_*.txt`** — Run the command with appropriate privileges (sudo) or redirect output to a directory where the current user has write permissions.
 For each flagged component, drill into the component path for detail:
 
 ```bash
@@ -360,6 +661,34 @@ vplexcli -q -e "ll /distributed-storage/distributed-devices/<device_name>/"
 vplexcli -q -e "ll /distributed-storage/consistency-groups/<cg_name>/"
 ```
 
+
+```text title="Expected output"
+engine-1/directors/director-1/hardware/
+  Type: directory
+  State: ok
+  Health: ok
+  Last Modified: 2024-01-15 14:32:18 UTC
+
+distributed-storage/distributed-devices/dev-prod-lun-001/
+  Type: device
+  State: ok
+  Health: ok
+  Capacity: 2.0 TB
+  Used: 1.847 TB
+  Last Modified: 2024-01-15 14:28:45 UTC
+
+distributed-storage/consistency-groups/cg-finance-tier1/
+  Type: consistency-group
+  State: ok
+  Health: ok
+  Member Count: 12
+  Last Modified: 2024-01-15 13:55:22 UTC
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid path /engines/<engine_name>/directors/<director_name>/hardware/`** — Replace `<engine_name>` and `<director_name>` with actual values from `vplexcli -e "ll /engines/"`.
+    **`Error: Object not found: /distributed-storage/distributed-devices/<device_name>/`** — Verify the device name exists using `vplexcli -e "ll /distributed-storage/distributed-devices/"` and check for typos.
+    **`Error: vplexcli: command not found`** — Ensure you are logged into the VPLEX Management Console or have the VPLEX CLI tools installed and in your PATH.
 ---
 
 ### RecoverPoint CLI Commands Hang

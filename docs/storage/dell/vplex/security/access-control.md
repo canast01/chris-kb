@@ -66,6 +66,25 @@ vplexcli -q -e "ls /management/accounts"
 vplexcli -q -e "ll /management/accounts/<username>/"
 ```
 
+
+```text title="Expected output"
+User: admin
+User: monitor
+User: backup_svc
+User: readonly_ops
+
+Name: admin
+Type: local
+Role: administrator
+Created: 2024-01-15T09:23:47Z
+Last-Modified: 2024-03-22T14:51:32Z
+Password-Expiry: never
+Account-Status: active
+```
+
+!!! warning "Common errors"
+    **`Error: /management/accounts: No such file or directory`** — Verify the GeoSynchrony version supports management account queries; older versions may require alternative authentication inspection methods.
+    **`Error: Authentication failed for user vplexcli`** — Ensure the vplexcli user has sufficient privileges; run the command with appropriate credentials or use `sudo vplexcli` if permitted.
 ## Data Plane Access Control — Storage Views
 
 Host access to VPLEX virtual volumes is exclusively controlled via storage views. A host can only see volumes that are:
@@ -142,6 +161,27 @@ vplexcli -q -e "storage-view add-virtual-volumes \
 vplexcli -q -e "ll /clusters/cluster-1/exports/storage-views/sv_db_prod_01/"
 ```
 
+
+```text title="Expected output"
+/clusters/cluster-1/exports/ports/A0-FC00
+/clusters/cluster-1/exports/ports/A0-FC01
+/clusters/cluster-1/exports/ports/B0-FC00
+/clusters/cluster-1/exports/ports/B0-FC01
+/clusters/cluster-1/exports/ports/B0-FC02
+
+Name                 sv_db_prod_01
+Cluster              /clusters/cluster-1
+Front-end Ports      A0-FC00, B0-FC00
+Initiator Ports      db_prod_01_hba0 (10:00:00:00:c9:ab:cd:ef)
+Virtual Volumes      vv_oracle_prod_01, vv_oracle_prod_02
+LUN Assignments      0, 1
+View State           Active
+```
+
+!!! warning "Common errors"
+    **`Error: Initiator port 10:00:00:00:c9:ab:cd:ef not found`** — Verify the WWN is correctly obtained from the host and registered before adding it to the storage view.
+    **`Error: Virtual volume /virtual-volumes/vv_oracle_prod_01 does not exist`** — Confirm the virtual volume names exist in VPLEX using `vplexcli -q -e "ls /virtual-volumes"` before adding them to the view.
+    **`Error: Port /clusters/cluster-1/exports/ports/A0-FC00 is already in use by another storage view`** — Use different front-end ports or remove the port from the conflicting storage view first.
 ### Storage View Design Principles
 
 | Principle | Detail |
@@ -177,6 +217,34 @@ vplexcli -q -e "storage-view destroy \
   --storage-view /clusters/cluster-1/exports/storage-views/sv_db_prod_01 --force"
 ```
 
+
+```text title="Expected output"
+/clusters/cluster-1/exports/storage-views/sv_db_prod_01
+/clusters/cluster-1/exports/storage-views/sv_db_prod_02
+/clusters/cluster-2/exports/storage-views/sv_app_tier_01
+/clusters/cluster-2/exports/storage-views/sv_app_tier_02
+
+iqn.1991-05.com.example:host-db-01
+iqn.1991-05.com.example:host-db-02
+wwn.500143800000a1b2:500143800000a1b3
+wwn.500143800000c4d5:500143800000c4d6
+
+Initiator Port: wwn.500143800000a1b2:500143800000a1b3
+  Cluster: /clusters/cluster-1
+  Port WWN: 50:01:43:80:00:00:a1:b2
+  Node WWN: 50:01:43:80:00:00:a1:b3
+  Status: Registered
+  Storage Views: sv_db_prod_01
+
+Virtual volume vv_oracle_prod_01 removed from storage view sv_db_prod_01
+
+Storage view sv_db_prod_01 destroyed successfully
+```
+
+!!! warning "Common errors"
+    **`Error: Storage view /clusters/cluster-1/exports/storage-views/sv_db_prod_01 not found`** — Verify the storage view path exists using `vplexcli -q -e "ll /clusters/cluster-1/exports/storage-views/"` and correct the name.
+    **`Error: Virtual volume /virtual-volumes/vv_oracle_prod_01 is still mapped to initiators`** — Remove all initiator mappings from the virtual volume before removal using `storage-view remove-virtual-volumes` or unregister initiators first.
+    **`Error: Cannot destroy storage view: active I/O detected`** — Ensure all host I/O is quiesced and the storage view has no active connections before retrying with `--force`.
 **Quarterly review task**: list all storage views and cross-reference initiator WWNs against the CMDB. Remove any views for decommissioned hosts and unregister their initiators.
 
 ## SAN Fabric Zoning
@@ -215,6 +283,50 @@ esxcli storage nmp path list -d <naa_id>
 powermt display dev=all
 ```
 
+
+```text title="Expected output"
+# zoneshow --active
+Defined configuration:
+ cfg: PROD_SAN_CFG
+  zone: PROD_ZONE_01
+    member: 50:00:14:40:5d:2a:b1:c3
+    member: 50:00:09:73:48:1f:a2:e7
+  zone: PROD_ZONE_02
+    member: 50:00:14:40:5d:2a:b1:c4
+    member: 50:00:14:40:5d:2a:b1:c5
+
+# zoneshow --name PROD_ZONE_01
+zone: PROD_ZONE_01
+  member: 50:00:14:40:5d:2a:b1:c3
+  member: 50:00:09:73:48:1f:a2:e7
+
+# multipath -ll
+mpatha (360001405d2ab1c3a1b2c3d4e5f6g7h8) dm-0 EMC,VPLEX
+size=500G features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
+|-+- policy='service-time 0' prio=50 status=active
+| |- 2:0:0:0 sda 8:0  active ready running
+| `- 3:0:0:0 sdb 8:16 active ready running
+`-+- policy='service-time 0' prio=10 status=enabled
+  |- 4:0:0:0 sdc 8:32 active ready running
+  `- 5:0:0:0 sdd 8:48 active ready running
+
+# multipathd show paths
+hcil    dev dev_t pri dm_st chk_st next_check
+2:0:0:0 sda 8:0   50  active ready  /dev/sda
+3:0:0:0 sdb 8:16  50  active ready  /dev/sdb
+4:0:0:0 sdc 8:32  10  active ready  /dev/sdc
+5:0:0:0 sdd 8:48  10  active ready  /dev/sdd
+
+# esxcli storage nmp path list -d naa.60001405d2ab1c3a1b2c3d4e5f6g7h8
+naa.60001405d2ab1c3a1b2c3d4e5f6g7h8
+   vmhba2:C0:T0:L0 fc.500014405d2ab1c3:50000940735d2ab1c naa.60001405d2ab1c3a1b2c3d4e5f6g7h8 active ready
+   vmhba3:C0:T0:L0 fc.500014405d2ab1c4:50000940735d2ab1d naa.60001405d2ab1c3a1b2c3d4e5f6g7h8 active ready
+
+# powermt display dev=all
+Symmetrix ID: 000297900123
+Logical Device ID: 0ABC
+state=alive; policy=SymmO
+```
 ## Privileged Access Management
 
 For production environments handling sensitive workloads:

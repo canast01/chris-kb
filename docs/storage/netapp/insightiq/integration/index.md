@@ -60,11 +60,27 @@ InsightIQ appliance events (user logins, configuration changes, service errors) 
 *.* @@<SIEM-IP>:514       # TCP
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`error: cannot open /etc/rsyslog.d/insightiq.conf: Permission denied`** — Run the command with `sudo` or edit as root user.
+    **`error: rsyslog service failed to start: Address already in use`** — Verify port 514 is not in use with `sudo netstat -tlnp | grep 514` and adjust the port or stop conflicting services.
 Restart rsyslog after configuration change:
 ```bash
 sudo systemctl restart rsyslog
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Failed to restart rsyslog.service: Unit rsyslog.service not found.`** — Verify rsyslog is installed with `sudo apt-get install rsyslog` (Debian/Ubuntu) or `sudo yum install rsyslog` (RHEL/CentOS).
+    **`sudo: systemctl: command not found`** — Ensure systemd is the init system in use; on older systems use `sudo service rsyslog restart` instead.
 ## CSV / PDF Report Export
 
 InsightIQ generates scheduled reports distributed via email or available for download.

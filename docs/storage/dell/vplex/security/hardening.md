@@ -133,6 +133,15 @@ X11Forwarding no
 AllowAgentForwarding no
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`sshd[12847]: Invalid user service from 192.168.1.50 port 54321`** — Ensure the service account exists on the VPLEX system with `useradd service` before applying these settings.
+    **`sshd: no hostkeys available -- exiting.`** — Verify SSH host keys exist in `/etc/ssh/` (ssh_host_rsa_key, ssh_host_ed25519_key) and regenerate with `ssh-keygen -A` if missing.
+    **`sshd[12847]: fatal: kex_exchange_identification: Connection closed by remote host`** — Replace `<MGMT_JUMP_HOST_IP>` with the actual management host IP address (e.g., `AllowUsers service@10.20.30.40`) before restarting sshd.
 After editing, test the configuration and restart:
 
 ```bash
@@ -146,6 +155,24 @@ systemctl restart sshd
 ssh -i ~/.ssh/vplex_ed25519 service@<VMS_IP> "vplexcli -q -e 'health-check'"
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+(no output — command completes silently)
+VPLEX CLI Version 6.2.1.0.0 (Build 6.2.1.0.0-20231015)
+Connected to VPLEX cluster: vplex-prod-01
+Health Status: HEALTHY
+  Storage Array: HEALTHY
+  Engines: HEALTHY (2/2 online)
+  Directors: HEALTHY (4/4 online)
+  Witness: HEALTHY
+  Network: HEALTHY
+```
+
+!!! warning "Common errors"
+    **`sshd: no hostkeys available -- exiting.`** — Regenerate SSH host keys with `ssh-keygen -A` or restore from backup before restarting sshd.
+    **`Permission denied (publickey).`** — Verify the vplex_ed25519 private key has 600 permissions and the public key is in service@<VMS_IP>'s ~/.ssh/authorized_keys file.
+    **`Connection refused`** — Confirm sshd restarted successfully with `systemctl status sshd` and that <VMS_IP> is reachable before attempting the key authentication test.
 ---
 
 ## Network Segmentation
@@ -200,6 +227,41 @@ vplexcli -q -e "ll /clusters/*/exports/storage-views/"
 vplexcli -q -e "health-check --full"
 ```
 
+
+```text title="Expected output"
+service@10.48.12.15's password:
+health-check: PASSED
+subject=CN=vplex-vms-01.corp.local,O=Acme Corp,C=US
+issuer=CN=Acme Corporate CA,O=Acme Corp,C=US
+notAfter=Mar 15 12:34:56 2026 GMT
+/engines/engine-1/directors/director-1/hardware/
+  operational-status: OK
+  temperature-sensors: OK
+  power-supplies: OK
+/engines/engine-2/directors/director-1/hardware/
+  operational-status: OK
+  temperature-sensors: OK
+  power-supplies: OK
+/clusters/cluster-1/cluster-witness/
+  connectivity-status: CONNECTED
+  witness-ip: 10.48.10.88
+  last-heartbeat: 2024-01-15T09:23:41Z
+/clusters/cluster-2/cluster-witness/
+  connectivity-status: CONNECTED
+  witness-ip: 10.48.10.88
+  last-heartbeat: 2024-01-15T09:23:42Z
+/clusters/cluster-1/exports/storage-views/
+  sv-prod-esx-01: 6 initiators
+  sv-prod-esx-02: 6 initiators
+/clusters/cluster-2/exports/storage-views/
+  sv-prod-esx-03: 6 initiators
+health-check --full: PASSED (completed in 47 seconds)
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey).`** — Verify the SSH key path is correct and the service account public key is installed on the VMS with `ssh-copy-id -i ~/.ssh/vplex_ed25519.pub service@<VMS_IP>`.
+    **`unable to load certificate`** — Ensure the corporate CA certificate is properly installed in the VMS trust store by running `vplexcli -q -e "certificate-import --ca-cert /path/to/ca.pem"`.
+    **`Witness connectivity-status: DISCONNECTED`** — Confirm network connectivity to the witness server at 10.48.10.88 and verify firewall rules allow port 7225 bidirectionally.
 ---
 
 ## See also
