@@ -70,6 +70,14 @@ blacklist {
 }
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`syntax error in /etc/multipath.conf at line 3`** — Verify the blacklist block syntax matches the multipath.conf man page format and check for mismatched braces.
+    **`multipathd: configuration reload failed`** — Run `multipath -v3` to validate the configuration file syntax before reloading the daemon with `systemctl reload multipathd`.
 After modifying `multipath.conf`, reload: `systemctl reload multipathd`
 
 ## VMware VAAI Integration (PowerPath/VE)
@@ -101,6 +109,22 @@ journalctl -f | grep -i "emcp\|PowerPath\|dead path"
 powermt display dev=all | awk '/Pseudo name=/{dev=$3} /dead/{print "DEAD PATH on " dev}' 
 ```
 
+
+```text title="Expected output"
+-- Logs begin at Mon 2024-01-15 09:23:14 UTC. --
+Jan 15 09:24:31 storage-node-02 kernel: emc: emcp device registered: /dev/emcpoweraa
+Jan 15 09:24:32 storage-node-02 kernel: PowerPath: Path failover detected on device emcpoweraa
+Jan 15 09:24:45 storage-node-02 kernel: emc: dead path detected on controller A, LUN 0x0042
+Jan 15 09:25:12 storage-node-02 kernel: PowerPath: Restored path to device emcpowerab
+Jan 15 09:25:18 storage-node-02 kernel: emc: emcp failover complete, 3 active paths
+Jan 15 09:26:03 storage-node-02 kernel: PowerPath: dead path on SAN fabric B, initiator 2
+DEAD PATH on emcpoweraa
+DEAD PATH on emcpowerab
+```
+
+!!! warning "Common errors"
+    **`journalctl: command not found`** — Install systemd-journal or use `tail -f /var/log/messages` on systems without journald.
+    **`powermt: command not found`** — Verify PowerPath is installed with `rpm -qa | grep -i powerpath` and add `/opt/emc/powerpath/bin` to PATH.
 Integrate the path health check script from the scripts section into your monitoring platform (Nagios, Zabbix, Prometheus textfile collector) to alert on degraded path counts.
 
 ---

@@ -97,6 +97,38 @@ ldapsearch -H ldaps://ldap.corp.example.com:636 \
   -w 'password' -b "DC=corp,DC=example,DC=com" "(sAMAccountName=<test_user>)"
 ```
 
+
+```text title="Expected output"
+# extended LDIF
+#
+# LDAPv3
+# base <DC=corp,DC=example,DC=com> with scope subtree
+# filter: (sAMAccountName=<test_user>)
+# requesting: All userApplicationAttributes
+#
+
+dn: CN=Test User,OU=Users,DC=corp,DC=example,DC=com
+objectClass: person
+objectClass: organizationalPerson
+objectClass: user
+cn: Test User
+sAMAccountName: test_user
+userPrincipalName: test_user@corp.example.com
+mail: test_user@corp.example.com
+memberOf: CN=PowerMax-Admins,OU=Groups,DC=corp,DC=example,DC=com
+
+# search result
+search: 2
+result: 0 Success
+
+# numResponses: 2
+# numEntries: 1
+```
+
+!!! warning "Common errors"
+    **`ldap_bind: Invalid credentials (49)`** — Verify the service account password is correct and the account is not locked in Active Directory.
+    **`Can't contact LDAP server (-1)`** — Confirm the LDAP server hostname/IP is resolvable and port 636 is open from the Unisphere management network.
+    **`No such object (32)`** — Ensure the base DN "DC=corp,DC=example,DC=com" matches your Active Directory domain structure exactly.
 ### TLS Hardening
 
 ```bash
@@ -120,6 +152,42 @@ nmap --script ssl-enum-ciphers -p 8443 <unisphere-host>
 # - Preferred ciphers: GCM-based AEAD suites
 ```
 
+
+```text title="Expected output"
+depth=0 C = US, ST = California, L = San Jose, O = Dell EMC, CN = unisphere-prod-01.corp.local
+verify error:num=20:unable to get local issuer certificate
+verify return:1
+CONNECTED(00000001)
+139876543210496:error:1409E0E5:SSL routines:SSL_CTX_set_tlsext_host_name:tlsv1 alert protocol version:../ssl/statem/statem_clnt.c:1089:
+SSL_ERROR_SSL
+139876543210496:error:14094410:SSL routines:SSL_CTX_set_cipher_list:sslv3 alert handshake failure:../ssl/statem/statem_clnt.c:1089:
+SSL_ERROR_SSL
+
+Protocol  : TLSv1.2
+Cipher    : ECDHE-RSA-AES256-GCM-SHA384
+Session-ID: a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6
+
+Starting Nmap 7.92 ( https://nmap.org ) at 2024-01-15 14:32:15 UTC
+Nmap scan report for unisphere-prod-01.corp.local (192.168.1.45)
+Host is up (0.0042s latency).
+
+PORT     STATE SERVICE
+8443/tcp open  https-alt
+
+| ssl-enum-ciphers:
+|   TLSv1.2:
+|     ECDHE-RSA-AES256-GCM-SHA384 (256 bits) - A
+|     ECDHE-RSA-AES128-GCM-SHA256 (128 bits) - A
+|     ECDHE-RSA-CHACHA20-POLY1305 (256 bits) - A
+|_    DHE-RSA-AES256-GCM-SHA384 (256 bits) - A
+
+Nmap done at 2024-01-15 14:32:18 UTC; 1 IP address (1 host up) scanned in 3.12 seconds
+```
+
+!!! warning "Common errors"
+    **`SSL_ERROR_SSL:14094410:SSL routines:SSL_CTX_set_cipher_list:sslv3 alert handshake failure`** — Verify the Unisphere host is reachable on port 8443 and the hostname resolves correctly with `nslookup <unisphere-host>`.
+    **`unable to get local issuer certificate`** — Add the Unisphere CA certificate to your system's trusted store with `sudo cp unisphere-ca.pem /etc/ssl/certs/ && sudo update-ca-certificates`.
+    **`Nmap done; 0 hosts up`** — Ensure the Unisphere host is online and firewall rules permit outbound connections to port 8443 from your scanning host.
 ### Certificate Hardening
 
 Replace the factory-installed self-signed certificate before going into production:
@@ -146,6 +214,27 @@ echo | openssl s_client -connect <unisphere-host>:8443 2>/dev/null \
   | openssl x509 -noout -issuer -subject -dates
 ```
 
+
+```text title="Expected output"
+Generating RSA private key, 4096 bit long modulus (2 primes)
+.....................................................................+++++
+.......................................................................+++++
+e is 65537 (0x010001)
+
+Redirecting to /bin/systemctl restart dell-unisphere
+dell-unisphere.service: Stopped.
+dell-unisphere.service: Started.
+
+subject=C = GB, ST = London, O = Example Corp, OU = Storage, CN = unisphere.corp.example.com
+issuer=C = GB, O = Example Corp, CN = Example Corp Root CA
+notBefore=Jan 15 10:23:45 2025 GMT
+notAfter=Jan 15 10:23:45 2026 GMT
+```
+
+!!! warning "Common errors"
+    **`error: /tmp/unisphere.key: No such file or directory`** — Ensure /tmp has write permissions and sufficient disk space; run `ls -ld /tmp` to verify.
+    **`unable to load certificate`** — Verify the certificate file is in PEM format and the CA chain is appended in correct order (leaf → intermediate → root) using `openssl x509 -in <cert> -text -noout`.
+    **`Connection refused`** — Wait 30–60 seconds after service restart for Unisphere to fully initialize, then retry the s_client command.
 | Certificate Parameter | Requirement |
 |---|---|
 | Key size | RSA 4096 or ECDSA P-256/P-384 |
@@ -172,6 +261,18 @@ nc -zv <management-host-ip> 8443   # should succeed
 nc -zv <untrusted-host-ip> 8443    # should fail/timeout
 ```
 
+
+```text title="Expected output"
+success
+success
+success
+Connection to 192.168.10.45 8443 port [tcp/https] succeeded!
+nc: connect to 192.168.10.200 port 8443 (tcp) failed: Connection refused
+```
+
+!!! warning "Common errors"
+    **`Error: INVALID_RULE`** — Verify the rich rule syntax matches firewalld XML format and escape special characters correctly with backslashes.
+    **`nc: connect to <management-host-ip> port 8443 (tcp) failed: Connection refused`** — Confirm Unisphere service is running on the target host with `systemctl status unisphere` and that port 8443 is listening via `netstat -tlnp | grep 8443`.
 ## Solutions Enabler Hardening
 
 ### SYMAPI Daemon Hardening
@@ -203,6 +304,18 @@ systemctl restart storsrvd
 netstat -tlnp | grep 2707
 ```
 
+
+```text title="Expected output"
+SYMAPI_SERVER - 192.168.1.10 - 000123456789 - 2707 SECURE
+SYMAPI_SERVER - 192.168.1.11 - 000987654321 - 2707 SECURE
+tcp        0      0 192.168.1.10:2707      0.0.0.0:*               LISTEN      4521/storsrvd
+tcp        0      0 192.168.1.11:2707      0.0.0.0:*               LISTEN      4521/storsrvd
+```
+
+!!! warning "Common errors"
+    **`grep: /var/symapi/config/daemon_users: No such file or directory`** — Ensure the netcnfg file is written first and the /var/symapi/config directory exists; create it with `mkdir -p /var/symapi/config` if needed.
+    **`Failed to restart storsrvd: Unit storsrvd.service not found.`** — Verify the correct daemon name with `systemctl list-units | grep stor` and use the actual service name (may be `Symmetrix` or `emc-storsrvd` depending on version).
+    **`netstat: command not found`** — Install net-tools with `apt-get install net-tools` or use `ss -tlnp | grep 2707` as a modern alternative.
 ### SE Host OS Hardening
 
 The Solutions Enabler host (typically a Linux VM) requires its own OS hardening:
@@ -224,6 +337,19 @@ chmod 750 /usr/symcli/bin/sym*
 grep -E "storadm|symcli" /etc/sudoers /etc/sudoers.d/*
 ```
 
+
+```text title="Expected output"
+/etc/sudoers:storadm ALL=(ALL) NOPASSWD: /usr/symcli/bin/symcli
+/etc/sudoers.d/powermax-admin:storadm ALL=(ALL) NOPASSWD: /usr/symcli/bin/sym*
+/etc/sudoers.d/powermax-admin:%storadm ALL=(ALL) NOPASSWD: /usr/symcli/bin/symacl
+/etc/sudoers.d/powermax-admin:%storadm ALL=(ALL) NOPASSWD: /usr/symcli/bin/symdev
+/etc/sudoers.d/powermax-admin:%storadm ALL=(ALL) NOPASSWD: /usr/symcli/bin/symrdf
+```
+
+!!! warning "Common errors"
+    **`grep: /etc/sudoers.d/*: No such file or directory`** — Create the `/etc/sudoers.d/` directory with `mkdir -p /etc/sudoers.d/` if it does not exist, or adjust the grep pattern to `grep -r "storadm\|symcli" /etc/sudoers* 2>/dev/null`.
+    **`chown: changing ownership of '/usr/symcli/bin/sym*': No such file or directory`** — Verify the SYMCLI package is installed with `rpm -qa | grep symcli` and install it if missing before applying ownership changes.
+    **`chmod: cannot access '/var/symapi/config/daemon_users': No such file or directory`** — Ensure the Symmetrix SE daemon is installed and initialized with `symcfg discover` to create the required configuration files.
 ### Logging and Audit on SE Host
 
 ```bash
@@ -246,6 +372,20 @@ augenrules --load
 auditctl -l | grep symcli
 ```
 
+
+```text title="Expected output"
+Created symlink /etc/systemd/system/multi-user.target.wants/auditd.service → /etc/systemd/system/auditd.service.
+(no output — command completes silently)
+(no output — command completes silently)
+Loading rules from /etc/audit/rules.d/powermax.rules
+No rules loaded
+-a always,exit -F dir=/usr/symcli/bin -F perm=x -F auid>=1000 -F auid!=4294967295 -k symcli
+```
+
+!!! warning "Common errors"
+    **`augenrules: No such file or directory`** — Install audit-libs package with `yum install audit-libs` or use `auditctl -R /etc/audit/rules.d/powermax.rules` directly instead.
+    **`Error: audit rules directory does not exist: /etc/audit/rules.d`** — Create the directory with `mkdir -p /etc/audit/rules.d` before appending rules.
+    **`No rules loaded`** — Restart auditd with `systemctl restart auditd` after loading rules to activate them in the kernel.
 ## Host Connectivity Hardening
 
 ### Zoning and Initiator Group Isolation
@@ -269,6 +409,44 @@ symaccess list -sid <SID> -type initiator | awk 'NR>2 && $NF > 4 {print $0}'
 # switch# show zone member <wwn>
 ```
 
+
+```text title="Expected output"
+Symmetrix ID: 000297900001
+
+                              Initiator Group
+                              ---------------
+Name                          Type       Flags  Num WWNs
+----                          ----       -----  --------
+host-prod-01-ig               Fibre      (*)         2
+host-prod-02-ig               Fibre      (*)         2
+host-dev-03-ig                Fibre             1
+host-backup-04-ig             Fibre      (*)         3
+shared-legacy-ig              Fibre             6
+
+host-prod-01-ig               Fibre      (*)         2
+  50:00:09:73:a4:2e:1b:c0
+  50:00:09:73:a4:2e:1b:c1
+
+host-backup-04-ig             Fibre      (*)         3
+  50:00:09:73:a4:2e:1b:d2
+  50:00:09:73:a4:2e:1b:d3
+  50:00:09:73:a4:2e:1b:d4
+
+shared-legacy-ig              Fibre             6
+  50:00:09:73:a4:2e:1b:e0
+  50:00:09:73:a4:2e:1b:e1
+  50:00:09:73:a4:2e:1b:e2
+  50:00:09:73:a4:2e:1b:e3
+  50:00:09:73:a4:2e:1b:e4
+  50:00:09:73:a4:2e:1b:e5
+
+shared-legacy-ig              Fibre             6
+host-backup-04-ig             Fibre      (*)         3
+```
+
+!!! warning "Common errors"
+    **`SYMCLI_ERROR (5): The specified Symmetrix does not exist`** — Verify the SID value matches your array's actual Symmetrix ID using `symcfg list -v`.
+    **`awk: syntax error: unexpected newline or statement`** — Correct the awk syntax; use `awk 'NR>2 && $NF > 4 {print $0}'` with proper field separator if needed.
 ### Port Group Isolation
 
 ```bash
@@ -288,6 +466,35 @@ symaccess list -sid <SID> -type port | awk 'NR>2 {print $1}' | while read pg; do
 done | sort -t: -k2 -rn | head -10
 ```
 
+
+```text title="Expected output"
+Symmetrix ID: 000297900001
+
+                                Port Group Name
+                                ================
+                           PROD_FABRIC_A_PG
+                           PROD_FABRIC_B_PG
+                           DEV_TEST_FABRIC_PG
+                           DR_FABRIC_PG
+                           BACKUP_FABRIC_PG
+
+Director:Port                                  Port Group
+===========                                    ==========
+FA-1e:4                                        PROD_FABRIC_A_PG
+FA-1e:5                                        PROD_FABRIC_A_PG
+FA-2e:4                                        PROD_FABRIC_B_PG
+FA-2e:5                                        PROD_FABRIC_B_PG
+
+PROD_FABRIC_A_PG: 24 ports
+BACKUP_FABRIC_PG: 18 ports
+DR_FABRIC_PG: 16 ports
+PROD_FABRIC_B_PG: 14 ports
+DEV_TEST_FABRIC_PG: 8 ports
+```
+
+!!! warning "Common errors"
+    **`symaccess: Error: Invalid Symmetrix ID <SID>`** — Replace `<SID>` with the actual Symmetrix serial number (e.g., `000297900001`) or use `-sid all` to query all arrays.
+    **`symaccess: Error: Port group <name> not found`** — Verify the port group name exists with `symaccess list -sid <SID> -type port` and check for typos or case sensitivity.
 ### Unused Object Cleanup
 
 Regularly remove stale masking views, initiator groups, and port groups from decommissioned hosts:
@@ -309,6 +516,23 @@ symaccess delete view <stale_mv_name> -sid <SID>
 symaccess delete -sid <SID> -name <stale_ig_name> -type initiator
 ```
 
+
+```text title="Expected output"
+symaccess list -sid 000123456789 view | awk 'NR>2 {print $2}' | sort -u > /tmp/igs_in_mvs.txt
+symaccess -sid 000123456789 list logins | awk '{print $4}' | sort -u > /tmp/igs_with_logins.txt
+IG_prod_web_01
+IG_legacy_db_02
+IG_test_app_03
+symaccess delete view MV_legacy_db_02_prod -sid 000123456789
+Masking view MV_legacy_db_02_prod deleted successfully.
+symaccess delete -sid 000123456789 -name IG_legacy_db_02 -type initiator
+Initiator group IG_legacy_db_02 deleted successfully.
+```
+
+!!! warning "Common errors"
+    **`symaccess: Command not found`** — Ensure the PowerMax CLI tools are installed and the `$PATH` includes the Symantec/Dell EMC bin directory (typically `/opt/emc/SYMCLI/bin`).
+    **`Error: Masking view MV_legacy_db_02_prod is still in use by active host connections`** — Verify the host is truly decommissioned by checking fabric logins with `symaccess list logins -sid <SID>` before deletion.
+    **`Error: Initiator group IG_legacy_db_02 not found`** — Confirm the exact initiator group name using `symaccess list -sid <SID> -name IG_legacy_db_02 -type initiator` before attempting deletion.
 ## SupportAssist and Remote Access Hardening
 
 SupportAssist enables Dell to proactively monitor the array and create automated service requests for hardware faults. It also enables remote support sessions.

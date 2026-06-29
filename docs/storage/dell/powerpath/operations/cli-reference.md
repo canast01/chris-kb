@@ -78,6 +78,35 @@ powermt display class=symmetrix
 powermt display class=vplex
 ```
 
+
+```text title="Expected output"
+PowerPath for Linux Version 6.2.0.0 (build 247)
+Symmetrix ID: 000297900123  Logical Device Count: 24
+Host: prod-storage-01  OS: Linux 5.10.0-8-generic #1 SMP Debian 5.10.60-1
+Fibre Channel: 4 Initiators, 8 Targets, 32 Paths
+Disk Devices: 24
+  Enabled: 24  Dead: 0  Standby: 0  Failed: 0
+
+Name           Attr  Paths  Prio  Owner               Algo  State
+emcpower0      -     4/4    0     prod-storage-01    LB    Alive
+emcpower1      -     4/4    0     prod-storage-01    LB    Alive
+emcpower2      -     4/4    0     prod-storage-01    LB    Alive
+emcpower3      -     2/4    0     prod-storage-01    LB    Alive
+...
+
+PowerPath Version: 6.2.0.0 (build 247)
+License Status: Valid (expires 2025-12-31)
+
+Symmetrix ID: 000297900123
+  Device: emcpower0  Paths: 4  State: Alive  Class: CLARIION
+  Device: emcpower1  Paths: 4  State: Alive  Class: SYMMETRIX
+  Device: emcpower2  Paths: 4  State: Alive  Class: VPLEX
+```
+
+!!! warning "Common errors"
+    **`powermt: command not found`** — Install PowerPath package with `apt-get install powerpath` or equivalent for your distribution.
+    **`powermt: permission denied`** — Run the command with `sudo` or ensure your user is in the powerpath group with `sudo usermod -aG powerpath $USER`.
+    **`powermt display: No devices found`** — Verify PowerPath daemon is running with `sudo systemctl status powerpath` and rescan paths using `powermt config`.
 ---
 
 ## Paths

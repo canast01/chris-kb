@@ -135,6 +135,59 @@ symsnap list -sid XXXX
 symreplicate list -sid XXXX
 ```
 
+
+```text title="Expected output"
+Symmetrix ID: 000123456789012
+Symmetrix ID: 000123456789013
+Symmetrix ID: 000123456789014
+
+Symmetrix ID: 000123456789012
+Director: FA-1e (Online)
+Director: FA-2e (Online)
+Director: SE-1 (Online)
+Port: FA-1e:0 (Online, 16 Gb Fibre)
+Port: FA-1e:1 (Online, 16 Gb Fibre)
+Port: FA-2e:0 (Online, 16 Gb Fibre)
+
+Physical Disk: 0.0.0 (Online, 1.2TB SSD)
+Physical Disk: 0.0.1 (Online, 1.2TB SSD)
+Physical Disk: 0.0.2 (Online, 1.2TB SSD)
+Physical Disk: 0.0.3 (Online, 1.2TB SSD)
+Physical Disk: 0.0.4 (Online, 1.2TB SSD)
+...
+
+(no output — command completes silently)
+
+RDF Group: 001 (Synchronized)
+RDF Group: 002 (Synchronized)
+RDF Group: 003 (Synchronized)
+
+Pair State: Synchronized
+RDF Mode: Synchronous
+Link State: Online
+Pair Count: 24
+
+Device Group: dg_prod_ora
+Device Group: dg_prod_sql
+Device Group: dg_backup
+
+Storage Group: sg_prod_ora_01
+Storage Group: sg_prod_sql_02
+Storage Group: sg_backup_daily
+
+Snapshot ID: 0x0a1b2c3d (Created: 2024-01-15 14:32:15, 256GB)
+Snapshot ID: 0x0f4e5d6c (Created: 2024-01-14 09:18:42, 512GB)
+Snapshot ID: 0x1a2b3c4d (Created: 2024-01-13 22:05:33, 1.2TB)
+
+Replication Session: SRDF_001 (Synchronized, 24 devices)
+Replication Session: SNAP_002 (Active, 8 snapshots)
+Replication Session: SRDF_003 (Synchronized, 12 devices)
+```
+
+!!! warning "Common errors"
+    **`SYMCLI Error: The specified Symmetrix ID is not available`** — Verify the SID is correct and the array is reachable via `symcfg discover`.
+    **`SYMCLI Error: You do not have the required privileges to execute this command`** — Ensure your user account is in the `symuser` group or has appropriate SYMCLI permissions configured.
+    **`SYMCLI Error: Cannot connect to the Symmetrix`** — Check that the Symmetrix Management Console (SMC) daemon is running with `service symcli status` and restart if necessary.
 ## Array Connectivity and Status
 
 ![Array Connectivity and Status](../../../../assets/storage-dell-powermax-hc-array-connectivity-and-status.svg)
@@ -149,6 +202,22 @@ curl -sk -X GET "https://<unisphere-ip>:8443/univmax/restapi/system/symmetrix/<s
     -H "Authorization: Bearer <token>" | python3 -m json.tool | grep -E "model|health|microcode"
 ```
 
+
+```text title="Expected output"
+Symmetrix ID: 000123456789
+Product: VMAX 250F
+Microcode: 5978.1221.1221
+Online: Yes
+
+model: VMAX250F
+health: Healthy
+microcode: 5978.1221.1221
+```
+
+!!! warning "Common errors"
+    **`symcfg: Command not found`** — Install EMC Solutions Enabler package or add its bin directory to your PATH environment variable.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Use the `-k` flag (already present) or import the Unisphere certificate into your system's CA bundle if SSL verification is required.
+    **`401 Unauthorized`** — Verify the bearer token is valid and not expired; regenerate it from Unisphere's REST API authentication endpoint.
 ## Director and Port Status
 
 ![Director and Port Status](../../../../assets/storage-dell-powermax-hc-director-and-port-status.svg)
@@ -164,6 +233,30 @@ symcfg -sid <sid> list -port all | grep -v RDY
 symcfg -sid <sid> list -fa -online | grep -E "Port|Logins"
 ```
 
+
+```text title="Expected output"
+# Check all directors — flag any offline
+Director 0 (SE)        Offline
+Director 1 (SE)        Online
+Director 2 (IM)        Online
+Director 3 (IM)        Online
+
+# Check all ports — flag any not RDY
+Port 0a                NotRdy
+Port 1b                RDY
+Port 2a                RDY
+Port 3d                RDY
+
+# FA port login count (host connectivity
+Port 0a                Logins: 12
+Port 1b                Logins: 28
+Port 2a                Logins: 0
+Port 3d                Logins: 15
+```
+
+!!! warning "Common errors"
+    **`symcfg: Cannot open array <sid>`** — Verify the SID is correct and the Symmetrix is online by running `symcfg -sid <sid> list -v`.
+    **`grep: (standard input) is empty`** — Confirm the array has FA ports configured and the symcfg command executed successfully without permission errors.
 ## Events and Alerts
 
 ![Events and Alerts](../../../../assets/storage-dell-powermax-hc-events-and-alerts.svg)
@@ -176,6 +269,27 @@ symevent list -sid <sid> -v | grep -i "uncleared\|Warning\|Error\|Fatal" | head 
 symevent list -sid <sid> -start_time "$(date -d 'yesterday' '+%m/%d/%Y') 00:00:00" -v | head -30
 ```
 
+
+```text title="Expected output"
+Event ID: 12847392 | Timestamp: 2024-01-15 14:32:18 | Severity: Warning | Message: Drive predictive failure threshold exceeded on disk 0_0_A4
+Event ID: 12847391 | Timestamp: 2024-01-15 13:18:45 | Severity: Error | Message: Cache battery backup unit degraded on SP A
+Event ID: 12847389 | Timestamp: 2024-01-15 11:05:22 | Severity: Warning | Message: Temperature sensor reading above normal on director 4
+Event ID: 12847385 | Timestamp: 2024-01-15 09:47:33 | Severity: Uncleared | Message: Fibre channel link flapping detected on port 2_0
+Event ID: 12847380 | Timestamp: 2024-01-15 07:21:11 | Severity: Fatal | Message: Storage processor failover initiated on SP B
+Event ID: 12847376 | Timestamp: 2024-01-15 05:14:09 | Severity: Warning | Message: Vault drive wear level at 87%
+...
+
+Event ID: 12847392 | Timestamp: 2024-01-15 14:32:18 | Severity: Warning | Message: Drive predictive failure threshold exceeded on disk 0_0_A4
+Event ID: 12847388 | Timestamp: 2024-01-14 22:15:44 | Severity: Error | Message: Snapshot consistency group sync delayed
+Event ID: 12847384 | Timestamp: 2024-01-14 19:43:27 | Severity: Warning | Message: Replication link latency spike detected
+Event ID: 12847379 | Timestamp: 2024-01-14 16:29:55 | Severity: Warning | Message: Thin pool utilization at 92%
+Event ID: 12847375 | Timestamp: 2024-01-14 13:08:12 | Severity: Error | Message: SRDF mirror out of sync on RDF group 3
+```
+
+!!! warning "Common errors"
+    **`symevent: command not found`** — Ensure the Unisphere CLI tools are installed and the `$PATH` includes the Unisphere bin directory (typically `/opt/emc/unisphere/bin`).
+    **`Invalid SID: <sid>`** — Replace `<sid>` with a valid array serial number (e.g., `000297900000`) and verify connectivity to that array with `symcfg list -sid <sid>`.
+    **`date: invalid date 'yesterday'`** — Use `date -d '1 day ago'` or `date -v-1d` (macOS) instead of the GNU-specific `yesterday` keyword.
 ## Storage Pool (SRP) Capacity
 
 ![Storage Pool (SRP) Capacity](../../../../assets/storage-dell-powermax-hc-storage-pool-srp-capacity.svg)
@@ -191,6 +305,31 @@ symcfg -sid <sid> show -pool -thin -demand
 symcfg -sid <sid> list -srp | awk '$5+0 > 80 {print "WARNING:", $0}'
 ```
 
+
+```text title="Expected output"
+Symmetrix ID: 000123456789012
+
+                                    Subscribed Percent
+SRP       Usable Capacity  Free Cap  Capacity   Used
+--------  ---------------  --------  ---------  -----
+SRP_1     45.6 TB          8.2 TB    38.4 TB    84.1%
+SRP_2     45.6 TB          12.1 TB   33.5 TB    73.5%
+SRP_3     45.6 TB          6.9 TB    38.7 TB    88.3%
+
+Thin Pool Name          Allocated Cap  Consumed Cap  Percent Consumed
+--------------------    ---------------  -----------  ----------------
+THINPOOL_PROD_01        12.5 TB          9.8 TB       78.4%
+THINPOOL_PROD_02        8.3 TB           6.1 TB       73.5%
+THINPOOL_DEV_01         5.2 TB           2.1 TB       40.4%
+
+WARNING: SRP_1     45.6 TB          8.2 TB    38.4 TB    84.1%
+WARNING: SRP_3     45.6 TB          6.9 TB    38.7 TB    88.3%
+```
+
+!!! warning "Common errors"
+    **`symcfg: Command not found`** — Verify the Symmetrix CLI tools are installed and the PATH includes the installation directory (typically `/opt/emc/SYMCLI/bin`).
+    **`Symmetrix ID: <sid> — Could not be resolved`** — Replace `<sid>` with the actual 12-digit Symmetrix ID (e.g., `000123456789012`) or verify the array is reachable via `symcfg discover`.
+    **`awk: syntax error at source line 1`** — Ensure the awk command is on a single line without line breaks; the pipe may have been corrupted during copy-paste.
 ## SRDF Replication State
 
 ![SRDF Replication State](../../../../assets/storage-dell-powermax-hc-srdf-replication-state.svg)
@@ -203,6 +342,25 @@ symrdf -sid <sid> list -rdfg all
 symrdf -sid <sid> query -rdfg all | grep -v "Synchronized\|InSync" | grep -v "^$\|Group\|Pair\|---"
 ```
 
+
+```text title="Expected output"
+Group Pair  Local Dev  Remote Dev  State           RDF Mode  Link State
+--------- ---- ---------- ---------- --------------- --------- ----------
+0         0    000123     000124     Synchronized    Sync      OK
+0         1    000125     000126     Synchronized    Sync      OK
+1         0    000127     000128     Synchronized    Async     OK
+1         1    000129     000130     InSync          Async     OK
+2         0    000131     000132     Suspended       Sync      LINK_DOWN
+2         1    000133     000134     Failed Over     Sync      OK
+
+000131     000132     Suspended       Sync      LINK_DOWN
+000133     000134     Failed Over     Sync      OK
+```
+
+!!! warning "Common errors"
+    **`symrdf: Command not found`** — Ensure the PowerMax/VMAX CLI tools are installed and the PATH includes the Symmetrix tools directory (typically `/opt/emc/SYMCLI/bin`).
+    **`Error: Invalid SID <sid>`** — Replace `<sid>` with the actual array serial number (e.g., `000123456789`) or verify connectivity to the array with `symcfg list`.
+    **`Error: Insufficient privileges to query RDF groups`** — Run the command with appropriate user permissions or use `sudo` if your account lacks SYMCLI access rights.
 ## Device Status
 
 ![Device Status](../../../../assets/storage-dell-powermax-hc-device-status.svg)
@@ -218,6 +376,39 @@ symdev list -sid <sid> -NR
 symdev list -sid <sid> -spare
 ```
 
+
+```text title="Expected output"
+Symmetrix ID: 000297900001
+
+                                    Device
+Device        Sym       Cap    Status  Allo Stat
+Number        ID        (MB)   (Type)  (%)  
+-------       -----     -----  ------  ---  ----
+000           0001      2048   (RDF)   100  Failed
+001           0002      2048   (RDF)   100  Degraded
+015           000F      4096   (TDEV)  95   Degraded
+
+Symmetrix ID: 000297900001
+
+Device        Sym       Cap    Status  Allo Stat
+Number        ID        (MB)   (Type)  (%)  
+-------       -----     -----  ------  ---  ----
+042           002A      1024   (TDEV)  50   Not Ready
+089           0059      2048   (RDF)   100  Not Ready
+
+Symmetrix ID: 000297900001
+
+Device        Sym       Cap    Status  Allo Stat
+Number        ID        (MB)   (Type)  (%)  
+-------       -----     -----  ------  ---  ----
+256           0100      2048   (TDEV)  0    Spare
+257           0101      2048   (TDEV)  0    Spare
+```
+
+!!! warning "Common errors"
+    **`SYMCLI_ERROR: The Symmetrix ID <sid> is not valid or not available`** — Verify the Symmetrix ID with `symcfg list` and ensure the array is reachable via the management network.
+    **`SYMCLI_ERROR: User does not have the required privileges to execute the command`** — Run the command with appropriate SYMCLI credentials or as a user with storage administrator role.
+    **`SYMCLI_ERROR: Cannot connect to the Symmetrix`** — Confirm the Solutions Enabler daemon is running with `sudo /opt/emc/SYMCLI/bin/stordaemon start` and the array gateway is accessible.
 ## Cache Health
 
 ![Cache Health](../../../../assets/storage-dell-powermax-hc-cache-health.svg)
@@ -227,6 +418,21 @@ symdev list -sid <sid> -spare
 symstat -sid <sid> list -type cache | grep -E "WP\|Write Pending"
 ```
 
+
+```text title="Expected output"
+Cache Write Pending Percentage:
+Director  Enclosure  Port  WP%
+FA-1D     1          0     34
+FA-1D     1          1     28
+FA-2D     2          0     47
+FA-2D     2          1     52
+Symmetrix ID: 000123456789012
+```
+
+!!! warning "Common errors"
+    **`symstat: command not found`** — Ensure the EMC Solutions Enabler package is installed and the `symcli` binaries are in your PATH, or run the command with the full path `/opt/emc/SYMCLI_7.6.0.0/bin/symstat`.
+    **`Symmetrix ID <sid> not found or not responding`** — Verify the SID is correct, the Symmetrix array is online and reachable, and your user has proper credentials configured in `/var/symapi/config/netcnf.txt`.
+    **`grep: (standard input) is empty`** — The cache statistics output format may differ in your array's firmware version; try `symstat -sid <sid> list -type cache` without grep to see the actual column headers.
 ## Health Check Decision Flow
 
 ![Health Check Decision Flow](../../../../assets/storage-dell-powermax-hc-health-check-decision-flow.svg)

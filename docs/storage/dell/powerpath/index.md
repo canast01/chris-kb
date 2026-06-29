@@ -82,6 +82,45 @@ powermt version
 powermt restore
 ```
 
+
+```text title="Expected output"
+Symmetrix ID: 000123456789ABCD
+Logical device name: emcpowerb
+Symmetrix address: 50:00:14:40:12:34:56:78
+Director: 4e
+Port: 0
+Physical device name: sdb
+Capacity: 2097152 blocks
+Megabytes: 1048576
+Number of Paths: 4
+Failed paths: 0
+Standby paths: 0
+Dead paths: 0
+
+HBA Port WWN: 50:00:09:73:12:34:56:78 Class: FA Port: 0 Status: OPEN
+HBA Port WWN: 50:00:09:73:12:34:56:79 Class: FA Port: 1 Status: OPEN
+HBA Port WWN: 50:00:09:73:12:34:56:7a Class: FA Port: 2 Status: OPEN
+HBA Port WWN: 50:00:09:73:12:34:56:7b Class: FA Port: 3 Status: OPEN
+
+Load Balancing Policy: Adaptive
+Failover Mode: Enabled
+Restore Options: Enabled
+Auto-failback: Disabled
+
+PowerPath License Status: REGISTERED
+License Expiration: 2025-12-31
+Licensed Capacity: 10TB
+
+PowerPath Version: 6.2.1.0
+Build: 2023.11.15
+
+All paths restored. 0 paths marked for retry.
+```
+
+!!! warning "Common errors"
+    **`powermt: Command not found`** — Install PowerPath package with `rpm -ivh PowerPath*.rpm` or verify `/opt/emc/powerpath/bin` is in your PATH.
+    **`powermt: Not authorized to run this command`** — Run commands with `sudo` or add your user to the `powerpath` group with `usermod -a -G powerpath <username>`.
+    **`No Symmetrix devices found`** — Verify storage array is zoned and LUNs are presented to the host using `powermt discover` to rescan for devices.
 ## Common Issues
 
 | Symptom | Likely Cause | Action |

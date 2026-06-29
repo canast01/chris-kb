@@ -106,6 +106,25 @@ powermt restore              # retest dead paths and restore alive
 powermt check_registration   # verify PowerPath license is registered
 ```
 
+
+```text title="Expected output"
+Symmetrix ID: 000123456789ABCD
+Logical Device ID: 0001
+state=alive; policy=SymmOpt; queued-IOs=0; total-IOs=12847392
+------------ Host --------- -- Logical Device -- -- Dev -- -- Symmetrix -- -- Logical
+Initiator    Name          Sym ID             Attr Sts Logical  ID          Device
+c0t0d0       emc0          000123456789ABCD   N   U   0001      000123456789ABCD 0001
+c1t1d0       emc0          000123456789ABCD   N   U   0001      000123456789ABCD 0001
+c2t2d0       emc0          000123456789ABCD   N   D   0001      000123456789ABCD 0001
+c3t3d0       emc0          000123456789ABCD   N   U   0001      000123456789ABCD 0001
+
+Restore: 1 dead path(s) restored, 0 path(s) still dead
+Registration: PowerPath license registered for Symmetrix ID 000123456789ABCD
+```
+
+!!! warning "Common errors"
+    **`powermt: command not found`** — Install EMC PowerPath software or add /opt/PowerPath/bin to your PATH environment variable.
+    **`Restore: 0 dead path(s) restored, 0 path(s) still dead`** — All paths are already alive; this is normal output if no paths were previously marked dead.
 ---
 
 ## See also

@@ -178,6 +178,55 @@ echo "  Health check complete — $(date '+%Y-%m-%d %H:%M:%S')"
 echo "========================================"
 ```
 
+
+```text title="Expected output"
+########################################
+  PowerMax Health Check
+  SID  : 000123456789
+  Date : 2024-01-15 14:32:47
+########################################
+
+========================================
+  ARRAY OVERVIEW
+========================================
+Symmetrix ID: 000123456789
+Symmetrix Model: PowerMax 8000
+Microcode Version: 5978.1221.1221
+Cache (MB): 2097152
+Physical Capacity (TB): 487.5
+Usable Capacity (TB): 412.3
+
+========================================
+  FAILED PHYSICAL DRIVES
+========================================
+  No failed drives detected.
+
+========================================
+  STORAGE GROUPS
+========================================
+SG_PROD_DB_01
+SG_PROD_APP_02
+SG_DEV_TEST_03
+SG_ARCHIVE_04
+...
+
+========================================
+  QUICK I/O STATISTICS (5s interval, 3 samples, R2 side)
+========================================
+Timestamp              Read MB/s  Write MB/s  Read IOs/s  Write IOs/s
+2024-01-15 14:32:47   1247.3     892.1       18432      12847
+2024-01-15 14:32:52   1156.8     945.2       17821      13102
+2024-01-15 14:32:57   1289.4     876.5       19104      12634
+
+========================================
+  Health check complete — 2024-01-15 14:32:57
+========================================
+```
+
+!!! warning "Common errors"
+    **`ERROR: SID is not set.`** — Export the SID environment variable before running the script: `export SID=000123456789`.
+    **`symcfg: Command not found`** — Verify SYMCLI is installed and set SYMCLI_PATH correctly: `export SYMCLI_PATH=/opt/emc/SYMCLI/bin` (or the actual installation path).
+    **`SYMCLI Error: Array 000123456789 not found or not responding`** — Confirm the SID is correct and the array is reachable; check network connectivity and SYMCLI daemon status with `symcfg list`.
 **Usage**: `SID=000123456789 SYMCLI_PATH=/usr/symcli/bin ./powermax_health_check.sh`
 
 ---
@@ -269,6 +318,61 @@ echo "    3. When ready to fail back, use: symrdf ... restore"
 echo "========================================"
 ```
 
+
+```text title="Expected output"
+########################################
+  PowerMax SRDF Planned Failover
+  SID       : 000123456789
+  RDF Group : 1
+  CG Name   : prod-cg
+  2024-01-15 14:32:18
+########################################
+
+>>> CONFIRM: STEP 1 — Suspend consistency group 'prod-cg' (quiesce I/O).
+    Type YES to proceed: YES
+  Suspending consistency group...
+  Consistency group suspended successfully.
+  Checking SRDF state (expecting: Suspended)...
+  R1 State: Suspended
+  R2 State: Suspended
+  Consistency group suspended successfully.
+
+>>> CONFIRM: STEP 2 — Split SRDF pair for consistency group 'prod-cg'.
+    Type YES to proceed: YES
+  Splitting SRDF pair...
+  SRDF pair split successfully.
+  Checking SRDF state (expecting: Split)...
+  R1 State: Split
+  R2 State: Split
+  SRDF pair split successfully.
+
+>>> CONFIRM: STEP 3 — Activate R2 devices (failover). Hosts at R2 site will gain write access.
+    Type YES to proceed: YES
+  Activating R2 devices via failover...
+  Failover command issued.
+
+========================================
+  FAILOVER SUMMARY
+========================================
+Symmetrix ID: 000123456789
+RDF Group: 1
+Consistency Group: prod-cg
+R1 State: Failed Over
+R2 State: Active
+Last Update: 2024-01-15 14:32:47
+
+  Planned failover complete — 2024-01-15 14:32:47
+  Next steps:
+    1. Confirm R2 hosts can see and mount the failed-over devices.
+    2. Validate application recovery at the DR site.
+    3. When ready to fail back, use: symrdf ... restore
+========================================
+```
+
+!!! warning "Common errors"
+    **`ERROR: SID, RDF_GROUP, and CG_NAME must all be set.`** — Export all three required environment variables before running the script: `export SID=000123456789 RDF_GROUP=1 CG_NAME=prod-cg`.
+    **`ERROR: Expected state 'Suspended' not confirmed. Aborting.`** — Verify the consistency group exists and is in the correct state with `symrdf -sid $SID -rdfg $RDF_GROUP -cg $CG_NAME query` before retrying.
+    **`symrdf: Command not found`** — Ensure the SYMCLI package is installed and set `SYMCLI_PATH` to the correct installation directory, or verify `/usr/symcli/bin` exists in your PATH.
 **Usage**: `SID=000123456789 RDF_GROUP=1 CG_NAME=prod-cg ./powermax_srdf_failover.sh`
 
 ---
@@ -495,6 +599,22 @@ echo "Daily check complete: $PASS passed, $WARN warned, $FAIL failed"
 [[ $FAIL -gt 0 ]] && exit 2 || exit 0
 ```
 
+
+```text title="Expected output"
+=== PowerMax Daily Check: SID 000123456789 — Wed Jan 15 09:42:17 UTC 2025 ===
+[PASS] Array config
+[PASS] Failed drives
+[PASS] SRDF pair states
+[PASS] Storage groups
+[PASS] Active alerts
+
+Daily check complete: 5 passed, 0 warned, 0 failed
+```
+
+!!! warning "Common errors"
+    **`ERROR: SID not set`** — Export the SID variable before running the script: `export SID=000123456789`
+    **`symcfg: command not found`** — Verify SYMCLI_PATH is correct and the Symmetrix CLI package is installed: `ls -la /usr/symcli/bin/symcfg`
+    **`[FAIL] SRDF pair states`** — Check SRDF licensing and array connectivity: `$SYMCLI_PATH/symrdf list -sid $SID -v` for detailed error output
 ---
 
 ## Incident Triage Script (Bash)
@@ -522,6 +642,53 @@ header "Storage Groups"; "$SYMCLI_PATH/symsg" list -sid "$SID" || true
 echo ""; echo "Triage output saved to: $OUTFILE"
 ```
 
+
+```text title="Expected output"
+PowerMax Incident Triage — SID: 000123456789 — Wed Dec 18 14:32:47 UTC 2024
+
+### Array Config ###
+2024-12-18 14:32:47
+
+Symmetrix ID: 000123456789
+Symmetrix Model: PowerMax 2000
+Microcode Version: 5978.1221.1221
+Cache (MB): 1048576
+Thin Provisioning: Enabled
+SRDF: Enabled
+Local Replication: Enabled
+
+### Active Alerts ###
+2024-12-18 14:32:48
+
+Alert ID: 12847, Severity: WARNING, Component: Director_5E, Message: High cache miss rate detected
+Alert ID: 12851, Severity: INFO, Component: Power_Supply_B, Message: PSU temperature nominal
+...
+
+### Failed Physical Drives ###
+2024-12-18 14:32:49
+
+Disk ID: 14.0.1, Status: FAILED, Capacity: 1.2TB, Type: SSD, Failed_Hours: 72
+Disk ID: 25.3.7, Status: FAILED, Capacity: 1.2TB, Type: SSD, Failed_Hours: 18
+
+### SRDF Pair States ###
+2024-12-18 14:32:50
+
+Pair ID: R1_PROD_DR, State: Synchronized, RDF_Mode: Synchronous, Link_Status: OK
+Pair ID: R2_PROD_DR, State: Synchronized, RDF_Mode: Asynchronous, Link_Status: OK
+
+### Storage Groups ###
+2024-12-18 14:32:51
+
+SG Name: PROD_DB_SG, Num_Devs: 48, Capacity_GB: 2400, Status: Ready
+SG Name: TEST_APP_SG, Num_Devs: 12, Capacity_GB: 600, Status: Ready
+
+Triage output saved to: powermax_triage_000123456789_20241218_143247.txt
+```
+
+!!! warning "Common errors"
+    **`ERROR: SID not set`** — Export the SID environment variable before running the script: `export SID=000123456789`.
+    **`symcfg: command not found`** — Verify SYMCLI_PATH is correct and the EMC Solutions Enabler package is installed: `which symcfg` or adjust `SYMCLI_PATH=/opt/emc/SYMCLI/bin`.
+    **`Permission denied`** — Run the script with appropriate privileges (typically root or symcli group membership): `sudo ./powermax_triage.sh` or add your user to the symcli group.
 ---
 
 ## Change Pre-Check Script (Bash)
@@ -548,6 +715,24 @@ echo ""; [[ $FAIL -gt 0 ]] && echo "PRE-CHECK FAILED: $FAIL issue(s) found — d
 echo "PRE-CHECK PASSED — safe to proceed with maintenance."
 ```
 
+
+```text title="Expected output"
+=== PowerMax Pre-Change Check: SID 000123456789 — Wed Jan 15 14:32:47 UTC 2025 ===
+[OK] Array visible
+Symmetrix ID: 000123456789
+Array Model: PowerMax 2000
+Microcode Version: 5978.1221.1221
+[OK] No failed drives
+[OK] SRDF states OK
+[OK] No critical alerts
+
+PRE-CHECK PASSED — safe to proceed with maintenance.
+```
+
+!!! warning "Common errors"
+    **`ERROR: SID not set`** — Export the SID variable before running the script: `export SID=000123456789 && ./powermax_precheck.sh`
+    **`symcfg: Command not found`** — Verify SYMCLI is installed and set the correct path: `export SYMCLI_PATH=/opt/emc/SYMCLI/bin && ./powermax_precheck.sh`
+    **`PRE-CHECK FAILED: 1 issue(s) found — do NOT proceed.`** — Run `$SYMCLI_PATH/sympd list -sid $SID -failed` to identify failed drives and resolve hardware issues before retrying.
 ---
 
 ## Post-Change Validation Script (Bash)
@@ -575,6 +760,27 @@ echo ""; [[ $FAIL -gt 0 ]] && echo "POST-CHECK FAILED: $FAIL issue(s) — invest
 echo "POST-CHECK PASSED — change completed successfully."
 ```
 
+
+```text title="Expected output"
+=== PowerMax Post-Change Check: SID 000123456789 — Wed Jan 15 14:32:18 UTC 2025 ===
+[OK] Array visible and healthy
+[OK] No failed drives
+[OK] All SRDF pairs Synchronized or Consistent
+[OK] No new critical alerts
+[OK] Storage group listing OK
+Symmetrix ID: 000123456789
+   Device Count: 2847
+   Thin Devices: 1203
+   SRDF Pairs: 456
+   Replication Set Count: 12
+
+POST-CHECK PASSED — change completed successfully.
+```
+
+!!! warning "Common errors"
+    **`ERROR: SID not set`** — Export the SID variable before running the script: `export SID=000123456789 && ./powermax_postcheck.sh`
+    **`symcfg: command not found`** — Verify SYMCLI is installed and set the correct path: `export SYMCLI_PATH=/opt/emc/SYMCLI/bin && ./powermax_postcheck.sh`
+    **`POST-CHECK FAILED: 1 issue(s)`** — Review the failed check output above and verify the array state with `symcfg -sid $SID show -v` before retrying.
 ---
 
 ## Verify

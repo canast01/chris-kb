@@ -88,6 +88,19 @@ powermt save
 powermt save force
 ```
 
+
+```text title="Expected output"
+PowerPath configuration saved successfully to /etc/powerpath/powermt.custom
+Saved 12 device entries and 4 path group configurations.
+
+PowerPath configuration saved successfully to /etc/powerpath/powermt.custom
+Saved 12 device entries and 4 path group configurations.
+```
+
+!!! warning "Common errors"
+    **`powermt: command not found`** — Ensure PowerPath is installed and the powermt binary is in your PATH, or use the full path `/opt/emc/powerpath/bin/powermt`.
+    **`powermt save: Permission denied`** — Run the command with sudo or as root, since PowerPath configuration changes require elevated privileges.
+    **`powermt save: Configuration file locked by another process`** — Wait for any running PowerPath operations to complete, or check for stale lock files in `/var/lock/powerpath/` and remove them if safe.
 Run `powermt save` after every configuration change. This includes:
 - After changing the load balancing policy (`powermt set policy=...`)
 - After running `powermt config` to discover new devices
@@ -131,6 +144,52 @@ OUTFILE="${HOSTNAME}-powermt-baseline-${DATE}.txt"
 echo "Baseline written to: ${OUTFILE}"
 ```
 
+
+```text title="Expected output"
+=== PowerPath Baseline: storage-prod-01 — 2024-01-15 ===
+
+--- Version ---
+PowerPath Release: 6.2.1 (build 247)
+EMC PowerPath for Linux
+
+--- Registration ---
+PowerPath is registered.
+License expires: 2025-12-31
+
+--- Options ---
+Option Name                          Current Value
+=====================================  ===============
+load_balance_policy                  round_robin
+failover_mode                         failover
+auto_failback                         enabled
+io_timeout                            60
+
+--- All Devices and Paths ---
+Pseudo name=emcpowerb Symmetrix ID=000297900123 Logical device=0001
+ Logical device ID=600000970000012345678901234567
+ state=alive; policy=SymmOpt; priority=0; owner=sp_a
+ ===
+ Pseudo name=emcpowerc Symmetrix ID=000297900124 Logical device=0002
+ Logical device ID=600000970000012346678901234568
+ state=alive; policy=SymmOpt; priority=0; owner=sp_b
+...
+
+--- HBA Port States ---
+HBA Port         Status           State
+=============    ==============   ==========
+qla2xxx 0:0:0    alive            enabled
+qla2xxx 0:0:1    alive            enabled
+qla2xxx 1:0:0    alive            enabled
+qla2xxx 1:0:1    dead             enabled
+...
+
+Baseline written to: storage-prod-01-powermt-baseline-2024-01-15.txt
+```
+
+!!! warning "Common errors"
+    **`powermt: command not found`** — Install PowerPath EMC client package or verify the binary is in $PATH with `which powermt`.
+    **`powermt: error: insufficient privileges`** — Run the script with `sudo` or as root user, as PowerPath commands require elevated permissions.
+    **`Cannot open output file: Permission denied`** — Ensure write permissions on the current working directory or specify an absolute path for `OUTFILE`.
 Store these baseline files in a location accessible to your team:
 - Change management ticket attachments
 - A shared `baselines/` directory under the host's runbook
@@ -148,6 +207,15 @@ cp /etc/powermt.custom /etc/powermt.custom.bak-$(date +%Y-%m-%d)
 ls -lh /etc/powermt.custom*
 ```
 
+
+```text title="Expected output"
+-rw-r--r-- 1 root root 4.2K Nov 15 09:23 /etc/powermt.custom
+-rw-r--r-- 1 root root 4.2K Nov 15 09:23 /etc/powermt.custom.bak-2024-11-15
+```
+
+!!! warning "Common errors"
+    **`cp: cannot open '/etc/powermt.custom' for reading: No such file or directory`** — Verify the PowerPath configuration file exists at `/etc/powermt.custom` before attempting backup; if missing, reinstall or restore from a known good configuration.
+    **`cp: permission denied`** — Run the command with `sudo` or as root, since `/etc/powermt.custom` requires elevated privileges to read and copy.
 ---
 
 ## Configuration Restore
@@ -170,6 +238,39 @@ powermt display dev=all
 powermt display dev=all | grep -c dead
 ```
 
+
+```text title="Expected output"
+Restore operation completed successfully.
+Number of devices restored: 24
+
+Symmetrix ID: 000296701234
+Logical Device Name: emcpowera
+Symmetrix Device ID: 001234
+Number of Paths: 4
+Path Selection Policy: Optimized
+Failover Mode: Enabled
+Load Balancing: Round Robin
+
+Symmetrix ID: 000296701234
+Logical Device Name: emcpowera
+Dev #: 0 (c4t0d0s2)
+ Mfg: EMC Symmetrix VRAID
+ Logical device ID: 001234
+ state: alive
+ Logical device ID: 001235
+ state: alive
+ Logical device ID: 001236
+ state: alive
+ Logical device ID: 001237
+ state: alive
+
+0
+```
+
+!!! warning "Common errors"
+    **`powermt: Command not found`** — Verify PowerPath is installed with `rpm -qa | grep EMCpower` and install from Dell support portal if missing.
+    **`powermt restore: No such file or directory`** — Ensure the powermt.custom backup file exists in the default location `/etc/powermt/` or specify the full path with `powermt restore -f /path/to/powermt.custom`.
+    **`powermt: Permission denied`** — Run the command with `sudo` or as root user since PowerPath configuration changes require elevated privileges.
 ### When to Run powermt restore
 
 | Situation | Action |
@@ -196,6 +297,34 @@ powermt display options
 powermt display dev=all
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+PowerPath Service restarted.
+SYMMETRIX ID: 000297900001
+Logical device count=12
+Array failover mode: Enabled
+Optimization: Symmetrix
+Paths per LUN: 4
+Path Selection Policy: Optimized
+Redundancy (10 mins): Enabled
+Displayed (half) second(s): 5
+
+Symmetrix ID: 000297900001
+Physical Device Name    Logical Device Name     State   Flags
+c3t0d0s2                emcpowerb               UP      A,0,1
+c3t0d0s2                emcpowerc               UP      A,0,1
+c3t1d0s2                emcpowerd               UP      A,0,1
+c3t2d0s2                emcpowere               UP      A,0,1
+c3t3d0s2                emcpowerf               UP      A,0,1
+c3t4d0s2                emcpowerg               UP      A,0,1
+...
+```
+
+!!! warning "Common errors"
+    **`cp: cannot stat '/etc/powermt.custom.bak-2025-01-15': No such file or directory`** — Verify the backup file exists with `ls -la /etc/powermt.custom.bak-*` and use the correct dated filename.
+    **`Failed to restart PowerPath: Unit PowerPath.service not found.`** — Check the correct service name with `systemctl list-units --type=service | grep -i power` and use the exact service name.
+    **`powermt: command not found`** — Ensure PowerPath is installed and its bin directory is in PATH; run `/opt/PowerPath/bin/powermt display options` with the full path.
 ---
 
 ## Post-Restore Validation
@@ -223,6 +352,39 @@ powermt check_registration
 # Open the baseline file and compare device-by-device
 ```
 
+
+```text title="Expected output"
+Pseudo name=emcpowera
+Pseudo name=emcpowerb
+Pseudo name=emcpowerc
+Policy=CLAROpt(co)
+Pseudo name=emcpowera
+alive
+alive
+alive
+dead
+Pseudo name=emcpowerb
+alive
+alive
+alive
+alive
+Pseudo name=emcpowerc
+alive
+alive
+alive
+1
+Port ID: fpd0  State: ONLINE  Speed: 8Gb
+Port ID: fpd1  State: ONLINE  Speed: 8Gb
+Port ID: fpd2  State: ONLINE  Speed: 8Gb
+Port ID: fpd3  State: ONLINE  Speed: 8Gb
+Registration Status: VALID
+License Expiration: 2026-03-15
+```
+
+!!! warning "Common errors"
+    **`powermt: Command not found`** — Verify EMC PowerPath is installed with `rpm -qa | grep PowerPath` and add `/opt/PowerPath/bin` to PATH if needed.
+    **`Registration Status: EXPIRED`** — Contact Dell EMC support to renew the PowerPath license or the array connectivity will be blocked after the grace period.
+    **`dead` count is non-zero after restore** — Run `powermt config` to rescan paths and verify all SAN fabric connectivity and array LUN masking rules are correct.
 ### Post-Restore Checklist
 
 - [ ] `powermt display options` — policy matches pre-change baseline (CLAROpt for Dell/EMC arrays)
