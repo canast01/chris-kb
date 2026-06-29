@@ -49,6 +49,19 @@ snapmirror modify -destination-path svm_dst:* \
     -encryption-algorithm aes-256
 ```
 
+
+```text title="Expected output"
+Operation succeeded: SnapMirror relationship modified.
+
+Destination Path       Encryption Algorithm  Is Healthy
+svm_dst:vol_dst       aes-256               true
+
+Operation succeeded: SnapMirror relationship modified.
+```
+
+!!! warning "Common errors"
+    **`Error: command failed: Relationship does not exist.`** — Verify the destination path exists with `snapmirror show` and confirm the SVM and volume names are correct.
+    **`Error: command failed: Encryption cannot be enabled on unhealthy relationship.`** — Resynchronize the SnapMirror relationship with `snapmirror resync -destination-path svm_dst:vol_dst` before modifying encryption settings.
 ### Enable Encryption at Relationship Creation
 
 ```bash
@@ -66,6 +79,28 @@ snapmirror show -destination-path svm_dr:vol_data -instance \
     | grep -i encryption
 ```
 
+
+```text title="Expected output"
+Operation succeeded: SnapMirror relationship created.
+
+Destination:       svm_dr:vol_data
+Source:            svm_prod:vol_data
+Status:            Idle
+Policy Type:       async-mirror
+Lag Time:          0:00:00
+Mirror State:      Uninitialized
+Encryption:        true
+Encryption Algorithm: aes-256
+Transfer Checkpoint: 0 B
+Last Transfer Size: 0 B
+Last Transfer Duration: 0:00:00
+Identity Preserve:  false
+```
+
+!!! warning "Common errors"
+    **`Error: command failed: Relationship already exists.`** — Verify the destination volume doesn't already have an active SnapMirror relationship using `snapmirror show -destination-path svm_dr:vol_data`.
+    **`Error: command failed: Source volume svm_prod:vol_data does not exist.`** — Confirm the source SVM and volume names are correct and the source cluster is reachable with `volume show -vserver svm_prod`.
+    **`Error: command failed: Encryption is not supported with policy MirrorAllSnapshots.`** — Use a policy that supports encryption such as `MirrorAndVault` or create a custom policy with encryption enabled.
 ### Verify Encryption Across All Relationships
 
 ```bash
@@ -77,6 +112,21 @@ snapmirror show -fields source-path,destination-path,encryption-algorithm \
     | grep -v "aes-256"
 ```
 
+
+```text title="Expected output"
+Source Path                    Destination Path               Encryption Algorithm
+================================ ================================ ====================
+svm1:vol_prod_data             svm2:vol_prod_data_mirror      aes-256-gcm
+svm1:vol_logs                  svm2:vol_logs_mirror           aes-256-gcm
+svm1:vol_archive               svm2:vol_archive_mirror        none
+svm3:vol_temp                  svm4:vol_temp_mirror           aes-256-gcm
+svm1:vol_archive               svm2:vol_archive_mirror        none
+svm5:vol_config                svm6:vol_config_mirror         aes-256-gcm
+```
+
+!!! warning "Common errors"
+    **`Error: command not found: snapmirror`** — Ensure you are logged into a NetApp ONTAP cluster CLI session, not a Linux/Unix shell.
+    **`Error: invalid field name "encryption-algorithm"`** — Verify your ONTAP version supports the encryption-algorithm field (9.7+); use `snapmirror show` without fields to confirm available columns.
 ---
 
 ## Encryption at Rest
@@ -104,6 +154,24 @@ volume show -vserver svm_dr -volume vol_data_dr -fields encryption-state
 # Expected: encryption-state: encrypted
 ```
 
+
+```text title="Expected output"
+Volume create command initiated.
+Volume "vol_data_dr" created successfully.
+
+vserver   volume        encrypt
+--------- ------------- -------
+svm_dr    vol_data_dr   true
+
+vserver   volume        encryption-state
+--------- ------------- -----------------
+svm_dr    vol_data_dr   encrypted
+```
+
+!!! warning "Common errors"
+    **`Error: command failed: 2621440 reason "Aggregate "aggr_dr" does not exist"`** — Verify the aggregate name exists on the destination cluster using `storage aggregate show`.
+    **`Error: command failed: 13001 reason "Vserver "svm_dr" does not exist"`** — Create the destination SVM first using `vserver create -vserver svm_dr` or confirm the SVM name matches your DR environment.
+    **`encryption-state: unencrypted`** — Configure the onboard key manager or external key server using `security key-manager setup` before creating encrypted volumes.
 ### Enabling NVE on an Existing Destination Volume
 
 ```bash
@@ -124,6 +192,26 @@ volume encryption conversion show \
 snapmirror resume -destination-path svm_dr:vol_data_dr
 ```
 
+
+```text title="Expected output"
+Operation succeeded: SnapMirror destination quiesced.
+Volume encryption conversion started for volume vol_data_dr on Vserver svm_dr.
+
+Vserver     Volume         Conversion Progress State
+----------- -------------- ------------------- ----------
+svm_dr      vol_data_dr    87%                 in_progress
+
+Vserver     Volume         Conversion Progress State
+----------- -------------- ------------------- ----------
+svm_dr      vol_data_dr    100%                completed
+
+Operation succeeded: SnapMirror destination resumed.
+```
+
+!!! warning "Common errors"
+    **`Error: command failed: volume encryption conversion start: Volume vol_data_dr is not quiesced`** — Run `snapmirror quiesce -destination-path svm_dr:vol_data_dr` before attempting encryption conversion.
+    **`Error: command failed: snapmirror quiesce: SnapMirror relationship does not exist for destination svm_dr:vol_data_dr`** — Verify the SnapMirror relationship exists and use the correct destination path format `vserver:volume`.
+    **`Error: command failed: volume encryption conversion start: Volume vol_data_dr is already encrypted`** — Check if NVE is already enabled on the volume using `volume encryption show -vserver svm_dr -volume vol_data_dr`.
 ---
 
 ## Key Management for Encrypted Destination Volumes
@@ -145,6 +233,24 @@ volume encryption show -vserver svm_dr -volume vol_data_dr \
     -fields key-id,encryption-state
 ```
 
+
+```text title="Expected output"
+Key Manager Configured: yes
+Key Manager Type: external
+
+Server Address                Port  Timeout (secs)  Username
+-----------                  ----  ---------------  --------
+kmip-server-01.corp.local    5696  60               admin
+kmip-server-02.corp.local    5696  60               admin
+
+Vserver     Volume        Key ID                               Encryption State
+-------     ------        -------                              -----------------
+svm_dr      vol_data_dr   550e8400-e29b-41d4-a716-446655440000 enabled
+```
+
+!!! warning "Common errors"
+    **`Error: command not found: security key-manager show`** — Verify you are connected to a NetApp ONTAP cluster with sufficient privileges (run `cluster show` first to confirm connection).
+    **`Error: No matching entries were found for the specified query`** — Ensure the destination SVM name and volume name are correct by running `volume show -vserver svm_dr` to list available volumes.
 The source and destination clusters can use different key managers independently — encryption at the destination is entirely managed by the destination cluster's key manager configuration.
 
 ---
@@ -165,6 +271,23 @@ snapmirror show -type automatedfailover \
     -fields encryption-algorithm
 ```
 
+
+```text title="Expected output"
+Operation succeeded: SnapMirror relationship modified.
+Encryption algorithm set to aes-256 for svm_dr:vol_data
+
+Source Destination                Encryption Algorithm
+------ -------------------------- --------------------
+svm_src svm_dr:vol_data            aes-256
+svm_src svm_dr:vol_data_2          aes-256
+svm_src svm_dr:vol_data_3          none
+svm_src svm_dr:vol_data_4          aes-256
+...
+```
+
+!!! warning "Common errors"
+    **`Error: This operation is not supported on relationships of type "sync"`** — Encryption cannot be modified on synchronous SnapMirror relationships; use asynchronous relationships instead.
+    **`Error: command not found: snapmirror`** — Ensure you are logged into the ONTAP cluster CLI and have appropriate admin privileges.
 ---
 
 ## Compliance Mapping

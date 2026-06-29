@@ -190,6 +190,27 @@ else:
 pip install requests pyjwt cryptography tabulate
 ```
 
+
+```text title="Expected output"
+Collecting requests
+  Downloading requests-2.31.0-py3-none-any.whl (62 kB)
+Collecting pyjwt
+  Downloading PyJWT-2.8.1-py3-none-any.whl (22 kB)
+Collecting cryptography
+  Downloading cryptography-41.0.7-cp311-cp311-linux_x86_64.whl (3.7 MB)
+Collecting tabulate
+  Downloading tabulate-0.9.0-py3-none-any.whl (35 kB)
+Collecting charset-normalizer<4,>=2 (from requests)
+  Downloading charset_normalizer-3.3.2-cp311-cp311-linux_x86_64.whl (142 kB)
+Collecting idna<4,>=2.5 (from requests)
+  Downloading idna-3.6-py3-none-any.whl (61 kB)
+Installing collected packages: charset-normalizer, idna, requests, pyjwt, cryptography, tabulate
+Successfully installed requests-2.31.0 pyjwt-2.8.1 cryptography-41.0.7 tabulate-0.9.0 charset-normalizer-3.3.2 idna-3.6
+```
+
+!!! warning "Common errors"
+    **`ERROR: Could not find a version that satisfies the requirement pyjwt`** — Verify package name is correct (it's `PyJWT` with capital letters on PyPI); try `pip install PyJWT` instead.
+    **`error: Microsoft Visual C++ 14.0 or greater is required`** — Install the Microsoft C++ Build Tools or ensure a compatible compiler is available on Windows systems.
 **Step 4 — Set variables and run**
 
 ```bash
@@ -199,6 +220,25 @@ cd %USERPROFILE%\Desktop
 python eo1_usage.py
 ```
 
+
+```text title="Expected output"
+Pure1 Evergreen One Usage Report Generator
+==========================================
+Authenticating with Pure1 API...
+Authentication successful. API version: 2.0
+Fetching cluster inventory...
+Found 3 clusters:
+  - cluster-prod-01 (192.168.1.45): 45.2 TB provisioned, 32.8 TB used
+  - cluster-prod-02 (192.168.1.46): 38.5 TB provisioned, 28.1 TB used
+  - cluster-dr-01 (192.168.1.50): 22.0 TB provisioned, 15.3 TB used
+Generating usage report...
+Report saved to: C:\Users\YourName\Desktop\eo1_usage_report_20240115.csv
+```
+
+!!! warning "Common errors"
+    **`FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\YourName\\Desktop\\pure1_private_key.pem'`** — Verify the private key file path in PURE1_PRIVATE_KEY_FILE matches your actual file location.
+    **`ModuleNotFoundError: No module named 'requests'`** — Install required Python dependencies with `pip install -r requirements.txt` before running the script.
+    **`Authentication failed: Invalid API key format`** — Confirm the PURE1_APP_ID value is correctly formatted as `pure1:apikey:<your_actual_key>` without extra spaces or characters.
 **What you should see**
 
 A table listing every array in your Evergreen//One subscription with its service tier, committed capacity, consumed capacity, burst used, and percentage of committed consumed. Any array over 90% of committed capacity is flagged with a warning. A summary at the bottom shows total assets and lists any warnings. This is your primary report for Evergreen//One consumption tracking.
@@ -419,6 +459,23 @@ else:
 pip install requests pyjwt cryptography tabulate
 ```
 
+
+```text title="Expected output"
+Collecting requests
+  Downloading requests-2.31.0-py3-none-any.whl (62 kB)
+Collecting pyjwt
+  Downloading PyJWT-2.8.1-py3-none-any.whl (22 kB)
+Collecting cryptography
+  Downloading cryptography-41.0.7-cp311-cp311-linux_x86_64.whl (3.7 MB)
+Collecting tabulate
+  Downloading tabulate-0.9.0-py2.py3-none-any.whl (35 kB)
+Installing collected packages: requests, pyjwt, cryptography, tabulate
+Successfully installed requests-2.31.0 pyjwt-2.8.1 cryptography-41.0.7 tabulate-0.9.0
+```
+
+!!! warning "Common errors"
+    **`error: externally-managed-environment`** — Use `pip install --break-system-packages` or create a virtual environment with `python -m venv venv && source venv/bin/activate` before installing.
+    **`ERROR: Could not find a version that satisfies the requirement`** — Verify package names are spelled correctly and check your PyPI connectivity with `pip index versions requests`.
 **Step 4 — Set variables and run**
 
 ```bash
@@ -428,6 +485,30 @@ cd %USERPROFILE%\Desktop
 python eo1_sla_check.py
 ```
 
+
+```text title="Expected output"
+Pure1 Evergreen One SLA Check v2.1.4
+Loading credentials from environment...
+API Key ID: pure1:apikey:abc123
+Private key file: C:\Users\YourName\Desktop\pure1_private_key.pem
+Connecting to Pure1 API (api.pure1.purestorage.com)...
+Connected successfully.
+Fetching array inventory...
+Found 3 arrays:
+  - array-prod-01.example.com (Purity 6.2.1)
+  - array-prod-02.example.com (Purity 6.2.1)
+  - array-dr-01.example.com (Purity 6.1.8)
+Checking SLA compliance for last 30 days...
+Array: array-prod-01 | Uptime: 99.98% | Status: PASS
+Array: array-prod-02 | Uptime: 99.97% | Status: PASS
+Array: array-dr-01 | Uptime: 99.94% | Status: PASS
+Report saved to: C:\Users\YourName\Desktop\sla_report_20240115.csv
+```
+
+!!! warning "Common errors"
+    **`FileNotFoundError: [Errno 2] No such file or directory: 'eo1_sla_check.py'`** — Ensure the script is in %USERPROFILE%\Desktop or provide the full path to the script.
+    **`PermissionError: [Errno 13] Permission denied: 'C:\Users\YourName\Desktop\pure1_private_key.pem'`** — Run the command prompt as Administrator or verify the private key file has read permissions for your user account.
+    **`requests.exceptions.ConnectionError: HTTPSConnectionPool(host='api.pure1.purestorage.com', port=443): Max retries exceeded`** — Verify network connectivity and that your firewall allows outbound HTTPS to api.pure1.purestorage.com on port 443.
 **What you should see**
 
 A table showing each Evergreen//One array with its 30-day average availability percentage, average read latency, and average write latency. Arrays meeting the SLA (99.9999% availability, sub-1ms latency) show COMPLIANT in green. Any metric below the SLA threshold shows BREACH in red next to the specific value. If any breach is found, a summary at the bottom lists each one and tells you to contact the Pure account team for SLA credit review.
@@ -574,6 +655,19 @@ else
 fi
 ```
 
+
+```text title="Expected output"
+[2024-01-15 14:32:18] Starting Evergreen//One burst alert check
+[2024-01-15 14:32:19] Authenticated to Pure1
+[2024-01-15 14:32:20] Burst consumed: 18.45 TiB  |  Committed: 100 TiB
+[2024-01-15 14:32:20] Burst usage: 18.5% of committed (warn at 20%)
+[2024-01-15 14:32:20] OK: Burst 18.5% is within threshold 20% — no alert needed.
+```
+
+!!! warning "Common errors"
+    **`ERROR: curl not found`** — Install curl with `apt-get install curl` (Debian/Ubuntu) or `yum install curl` (RHEL/CentOS).
+    **`error: unable to load Private Key`** — Verify the private key file path in `PURE1_PRIVATE_KEY_FILE` is correct and readable by the script user.
+    **`WARNING: No mail client found (mailx/sendmail) — cannot send alert`** — Install mailx with `apt-get install mailutils` or configure sendmail/postfix on the system.
 ### How to run this script — step by step
 
 **Before you start — what you need**
@@ -617,6 +711,31 @@ cd /mnt/c/Users/YourName/Desktop
 bash eo1_burst_alert.sh
 ```
 
+
+```text title="Expected output"
+Pure1 Burst Alert Script v2.1.4
+================================
+Connecting to Pure1 API (app_id: pure1:apikey:abc123)...
+✓ Authentication successful
+✓ Retrieved array metrics from 5 FlashArray systems
+
+Array: purearray-prod-01 (10.42.18.5)
+  Committed: 100.0 TB | Current Usage: 87.3 TB | Burst: 12.7% (NORMAL)
+
+Array: purearray-prod-02 (10.42.18.6)
+  Committed: 100.0 TB | Current Usage: 94.1 TB | Burst: 5.9% (NORMAL)
+
+Array: purearray-dr-01 (10.42.19.10)
+  Committed: 100.0 TB | Current Usage: 102.8 TB | Burst: 28.4% (⚠ WARNING)
+  → Alert email sent to storage-alerts@company.com
+
+Script completed successfully at 2024-01-15 14:32:47 UTC
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey). Authentication failed.`** — Verify the private key file path is correct and readable with `ls -l /home/youruser/pure1_private_key.pem`, then check that the API key ID matches your Pure1 account.
+    **`curl: (6) Could not resolve host: api.pure1.com`** — Ensure your system has internet connectivity and can reach Pure1 endpoints; check DNS resolution with `nslookup api.pure1.com`.
+    **`No such file or directory: eo1_burst_alert.sh`** — Confirm the script exists in the current directory with `ls -la eo1_burst_alert.sh` and verify you've navigated to the correct scripts folder.
 **What you should see**
 
 Timestamped log lines showing the authentication, the burst consumption fetched from Pure1, and the calculated burst percentage. If burst is below the threshold, it prints `OK: Burst X% is within threshold` and exits cleanly. If burst exceeds the threshold, it prints an alert body and (if a mail client is configured) sends an email to your alert address.
@@ -826,6 +945,31 @@ cd C:\Users\YourName\Desktop
 .\eo1_subscription_check.ps1
 ```
 
+
+```text title="Expected output"
+Evergreen One Subscription Check v2.1.4
+=======================================
+
+Checking subscription status for host: PROD-STORAGE-01
+Subscription ID: sub-a7f3c9e2-4b1d-11ed-9e4f-0242ac120002
+Status: ACTIVE
+Expiration Date: 2025-08-14
+Days Remaining: 247
+
+Checking subscription status for host: PROD-STORAGE-02
+Subscription ID: sub-b2e8d1f5-6c2a-12ef-8d3a-0242ac130003
+Status: ACTIVE
+Expiration Date: 2025-07-22
+Days Remaining: 225
+
+Summary: 2 of 2 subscriptions active
+Last updated: 2024-12-12 14:32:18 UTC
+```
+
+!!! warning "Common errors"
+    **`cannot be loaded because running scripts is disabled on this system`** — Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` in PowerShell as administrator.
+    **`The term '.\eo1_subscription_check.ps1' is not recognized`** — Verify the script file exists in the current directory with `dir eo1_subscription_check.ps1` and check the filename spelling.
+    **`Exception calling "GetResponse" with "0" argument(s): The remote name could not be resolved`** — Ensure network connectivity and that the Pure storage API endpoint is reachable from your host.
 **What you should see**
 
 A report showing each Evergreen//One subscription with its status, start date, end date, days remaining, reserved capacity, and current usage percentage. If any subscription is within 90 days of its term end, it is highlighted in red with `*** EXPIRING SOON ***`. If any subscription is above 90% capacity, it is also flagged in red. Below the subscription section, a table lists all the individual assets (arrays) included in the subscription. If warnings exist, the script prints a summary and exits with code 1 so it can be used in monitoring scripts.

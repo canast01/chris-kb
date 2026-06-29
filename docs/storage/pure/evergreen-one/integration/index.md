@@ -84,4 +84,31 @@ curl -s -H "Authorization: Bearer <pure1-api-key>" \
   "https://api.pure1.purestorage.com/api/1.x/metrics?names=array_total_load" | jq .
 ```
 
+
+```text title="Expected output"
+{
+  "items": [
+    {
+      "name": "array_total_load",
+      "resource_id": "11111111-2222-3333-4444-555555555555",
+      "resource_name": "evergreen-one-array-01",
+      "timestamp": 1699564800000,
+      "value": 42.5
+    },
+    {
+      "name": "array_total_load",
+      "resource_id": "66666666-7777-8888-9999-aaaaaaaaaaaa",
+      "resource_name": "evergreen-one-array-02",
+      "timestamp": 1699564800000,
+      "value": 58.3
+    }
+  ],
+  "continuation_token": null
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (6) Could not resolve host: api.pure1.purestorage.com`** — Verify network connectivity and DNS resolution; check if your environment requires a proxy configured via `curl -x`.
+    **`{"error_code":"401","message":"Invalid API token"}`** — Regenerate your Pure1 API key in the Pure1 management console and ensure the token is not expired or revoked.
+    **`jq: parse error: Invalid JSON at line 1`** — Confirm the API response is valid JSON by removing the `jq` filter temporarily and checking the raw curl output for error messages.
 Use the Pure1 API for integration with FinOps platforms, CMDB automation, and capacity planning tools to avoid dependency on per-array management access.

@@ -117,6 +117,53 @@ isi network pools list
 isi sync service view
 ```
 
+
+```text title="Expected output"
+OneFS Version: 9.4.0.0 (Build 9.4.0.0.12345)
+Cluster Name: prod-pscale-01
+Cluster Health: HEALTHY
+Nodes: 8
+Drives: 64
+
+Category: critical
+ID: ALERT-2847
+Message: Node 3 disk enclosure temperature warning
+Severity: CRITICAL
+Time: 2024-01-15T09:23:44Z
+
+ID: ALERT-2851
+Message: SyncIQ replication lag exceeds threshold
+Severity: CRITICAL
+Time: 2024-01-15T09:18:12Z
+
+Node: 2
+Status: DEGRADED
+Reason: 1 failed drive in enclosure 2
+
+Node: 5
+Status: HEALTHY
+
+Name: prod-smartconnect-pool
+Subnet: 192.168.10.0/24
+Rebalance Policy: auto
+Health: DEGRADED
+Access Zone: System
+
+Name: dr-smartconnect-pool
+Subnet: 192.168.20.0/24
+Health: HEALTHY
+
+Service: SyncIQ
+Status: RUNNING
+Version: 9.4.0.0
+Last Updated: 2024-01-15T09:45:22Z
+Replication Jobs: 12 active, 0 failed
+```
+
+!!! warning "Common errors"
+    **`isi: command not found`** — Ensure you are logged into the PowerScale cluster via SSH or run commands from a system with the OneFS CLI installed.
+    **`Error: Authentication failed`** — Verify your credentials and that your user account has administrative privileges on the cluster.
+    **`Error: SyncIQ service is not running`** — Restart the SyncIQ service using `isi sync service start` and verify replication jobs are queued.
 ---
 
 ## Weekly DR Readiness Check
@@ -139,6 +186,27 @@ egcli drtest preflight --cluster <dr-cluster>
 # Eyeglass UI: https://<eyeglass-ip>:8443 → DR Dashboard
 ```
 
+
+```text title="Expected output"
+Running preflight checks on DR cluster dr-cluster-02...
+
+[✓] PASS: SyncIQ policies configured (12 policies found, 11 running)
+[✓] PASS: Access zones replicated (4/4 zones synchronized)
+[✓] PASS: NFS exports replicated (28/28 exports present on DR)
+[✓] PASS: SMB shares replicated (15/15 shares present on DR)
+[✓] PASS: DNS integration operational (resolving via 10.45.12.8)
+[✓] PASS: Eyeglass connectivity to source cluster (latency: 12ms)
+[✓] PASS: Eyeglass connectivity to DR cluster (latency: 18ms)
+[✓] PASS: Replication lag within threshold (<5 minutes)
+
+Preflight check completed: 8/8 PASS
+DR cluster dr-cluster-02 is ready for failover operations.
+```
+
+!!! warning "Common errors"
+    **`Error: Unable to connect to cluster dr-cluster — connection refused`** — Verify the DR cluster hostname/IP is reachable and Eyeglass has network connectivity on port 443.
+    **`Error: SyncIQ policy 'policy-backup-03' not running — status: paused`** — Resume all paused SyncIQ policies on the DR cluster before proceeding with failover.
+    **`Error: 3 NFS exports missing on DR site — replication incomplete`** — Wait for SyncIQ replication to complete or manually sync missing exports before running preflight again.
 ---
 
 ## Health Check Summary Table
@@ -217,6 +285,28 @@ egcli drtest preflight --policy <policy_name>
 # Review any WARN or FAIL items and remediate before proceeding
 ```
 
+
+```text title="Expected output"
+Running preflight checks against DR cluster: dr-cluster-01
+Connecting to source cluster: prod-cluster-01... OK
+Connecting to DR cluster: dr-cluster-01... OK
+[PASS] SyncIQ policy last run: 3 minutes ago
+[PASS] Access zones configured on DR cluster
+[PASS] NFS exports replicated to DR cluster
+[PASS] SMB shares replicated to DR cluster
+[PASS] DNS zones configured
+[PASS] Eyeglass connectivity to both clusters confirmed
+[PASS] SyncIQ service running on both clusters
+[PASS] Replication lag: 45 seconds
+[PASS] Certificate validation successful
+
+Preflight check completed: 10/10 PASS, 0 WARN, 0 FAIL
+```
+
+!!! warning "Common errors"
+    **`[FAIL] Unable to connect to DR cluster dr-cluster-01`** — Verify the DR cluster hostname/IP is correct and reachable from the Eyeglass appliance using `ping` or `ssh`.
+    **`[WARN] SyncIQ policy last run: 2 hours ago`** — Manually trigger the SyncIQ policy on the source cluster or check for policy scheduling issues before proceeding with DR operations.
+    **`[FAIL] Eyeglass connectivity to both clusters confirmed: FAILED`** — Confirm Eyeglass has network connectivity and valid credentials configured for both clusters in the web UI settings.
 ### DR Test (Rehearsal)
 
 ![DR Test (Rehearsal)](../../../../assets/storage-netapp-superna-eyeglass-hc-dr-test-rehearsal.svg)
@@ -247,6 +337,63 @@ egcli drtest status --policy <policy_name>
 # Expected: State = Rolled Back / Replicating
 ```
 
+
+```text title="Expected output"
+# Step 1 — Run Eyeglass DR test (non-destructive rehearsal)
+Test run initiated for policy 'prod-cluster-dr'
+Test ID: dr-test-20240315-0847
+Status: In Progress
+
+# Step 2 — Monitor test progress
+Policy: prod-cluster-dr
+Test ID: dr-test-20240315-0847
+State: Running
+Progress: 78%
+Elapsed Time: 12m 34s
+Estimated Remaining: 3m 22s
+
+# Step 3 — Validate access zones activated on DR cluster
+Access Zone: System
+  Status: Active
+  Nodes: 3
+Access Zone: zone-finance
+  Status: Active
+  Nodes: 3
+Access Zone: zone-engineering
+  Status: Active
+  Nodes: 3
+
+# Step 4 — Validate NFS exports on DR cluster
+ID  Path                    Clients         Protocols
+1   /ifs/data/finance       192.168.10.0/24 nfs3,nfs4
+2   /ifs/data/engineering   192.168.20.0/24 nfs3,nfs4
+3   /ifs/backup/archive     0.0.0.0/0       nfs3
+
+# Step 5 — Validate SMB shares on DR cluster
+Share Name              Path                    Permissions
+finance-shared         /ifs/data/finance       Everyone: Read
+eng-projects           /ifs/data/engineering   Domain Admins: Full
+backup-archive         /ifs/backup/archive     SYSTEM: Full
+
+# Step 6 — Confirm DNS resolution (if Eyeglass DNS integration active)
+Server:  10.50.1.10
+Address: 10.50.1.10#53
+Name:    smartconnect.prod.local
+Address: 192.168.50.100
+
+# Step 7 — After validation, confirm DR test rollback is complete
+Policy: prod-cluster-dr
+Test ID: dr-test-20240315-0847
+State: Rolled Back
+Status: Replicating
+Last Sync: 2024-03-15 09:15:22 UTC
+Next Sync: 2024-03-15 10:15:22 UTC
+```
+
+!!! warning "Common errors"
+    **`Error: Policy 'prod-cluster-dr' not found or not accessible`** — Verify the policy name matches exactly and your Eyeglass user has read permissions on the policy.
+    **`ssh: connect to host <dr-cluster> port 22: Connection timed out`** — Confirm the DR cluster hostname/IP is reachable and SSH is enabled; check firewall rules between your admin host and DR cluster.
+    **`drtest status: Test rollback failed — manual intervention required`** — Check Eyeglass logs for replication errors and ensure the primary cluster is still reachable before attempting rollback again.
 ### Post-Failover Validation
 
 ![Post-Failover Validation](../../../../assets/storage-netapp-superna-eyeglass-hc-post-failover-validation.svg)
@@ -276,6 +423,58 @@ ls -la /mnt/drtest
 ssh admin@<production-cluster> "isi sync policies list"
 ```
 
+
+```text title="Expected output"
+Policy Name: prod-to-dr
+Policy ID: 8f4c2e91-a3d5-11ec-8429-0a1234567890
+State: Failed Over
+Last Sync: 2024-01-15T14:32:18Z
+Direction: prod-to-dr
+
+isi status
+OneFS Version: 9.5.0.0 (Build 9.5.0.0.1234567)
+Cluster Health: Healthy
+Nodes: 6/6 online
+Drives: 144/144 healthy
+
+isi alerts list --category critical
+(no alerts)
+
+Cluster: dr-cluster-01
+Access Zone: System
+Status: Active
+Access Zone: data-zone-01
+Status: Active
+Access Zone: data-zone-02
+Status: Active
+
+isi nfs exports list
+ID  Path                    Clients         Protocols
+1   /ifs/data/prod-export   0.0.0.0/0       nfs3,nfs4
+2   /ifs/archive/backup     10.0.0.0/8      nfs3,nfs4
+
+isi smb shares list
+ID  Share Name              Path                    Clients
+1   prod_data               /ifs/data/prod-export   Everyone
+2   archive_backup          /ifs/archive/backup     CORP\Domain Users
+
+mount -t nfs 192.168.50.100:/ifs/data/prod-export /mnt/drtest
+total 48
+drwxr-xr-x  8 root root  4096 Jan 15 14:22 .
+drwxr-xr-x 12 root root  4096 Jan 15 10:15 ..
+-rw-r--r--  1 user user 24576 Jan 15 13:45 report_2024.xlsx
+drwxr-xr-x  3 user user  4096 Jan 15 12:30 projects
+
+isi sync policies list
+Policy Name: prod-to-dr
+State: Stopped
+Last Run: 2024-01-15T14:32:18Z
+```
+
+!!! warning "Common errors"
+    **`mount.nfs: access denied by server while mounting <dr-smartconnect-ip>:/<export_path>`** — Verify the NFS export exists on the DR cluster and client IP is in the allowed clients list using `isi nfs exports view <export_id>`.
+    **`ssh: connect to host <dr-cluster> port 22: Connection refused`** — Confirm the DR cluster management IP is correct and SSH is enabled; check network connectivity with `ping <dr-cluster>`.
+    **`egcli: command not found`** — Ensure you are running commands from the Superna Eyeglass appliance or have the egcli tools installed and in your PATH.
 ### Post-Failback Validation
 
 ![Post-Failback Validation](../../../../assets/storage-netapp-superna-eyeglass-hc-post-failback-validation.svg)
@@ -300,6 +499,41 @@ ssh admin@<production-cluster> "isi sync reports list --limit 5"
 nslookup <production-smartconnect-zone>
 ```
 
+
+```text title="Expected output"
+Policy Name                    State              Last Run           Next Run
+prod-to-dr-policy             Replicating        2024-01-15 14:32   2024-01-15 15:32
+dr-to-prod-policy             Idle               2024-01-15 12:15   Never
+
+Cluster is healthy.
+Status: OK
+Version: OneFS 9.4.0.1234
+
+Access Zone Name               Cluster                Status
+System                         prod-cluster-1       Active
+zone-finance                   prod-cluster-1       Active
+zone-marketing                 prod-cluster-1       Active
+
+Policy Name                    State              Source            Target
+prod-to-dr-policy             Running            prod-cluster-1    dr-cluster-1
+dr-to-prod-policy             Paused             dr-cluster-1      prod-cluster-1
+
+Policy Name                    State              Duration          Files Changed
+prod-to-dr-policy             Completed          2h 14m            45,230
+prod-to-dr-policy             Completed          2h 08m            38,156
+prod-to-dr-policy             Completed          2h 22m            52,891
+
+Name Server: 192.168.1.10
+Address: 10.50.20.45
+prod-smartconnect.example.com canonical name = prod-smartconnect-vip.example.com.
+Name: prod-smartconnect-vip.example.com
+Address: 10.50.20.45
+```
+
+!!! warning "Common errors"
+    **`Error: Connection refused to drpolicy service`** — Verify Superna Eyeglass service is running with `systemctl status eyeglass` and check network connectivity to the Eyeglass appliance.
+    **`ssh: Could not resolve hostname <production-cluster>: Name or service not known`** — Replace `<production-cluster>` with the actual FQDN or IP address of your production cluster (e.g., `prod-cluster-1.example.com`).
+    **`nslookup: can't resolve '<production-smartconnect-zone>': No address associated with hostname`** — Confirm the SmartConnect zone name is correct and DNS is properly configured; verify with `isi network smartconnect list` on the production cluster.
 ### Validation Record Template
 
 ![Validation Record Template](../../../../assets/storage-netapp-superna-eyeglass-hc-validation-record-template.svg)

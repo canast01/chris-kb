@@ -105,6 +105,28 @@ igls license status
 # Expected: Status: Licensed, with expiry date > today
 ```
 
+
+```text title="Expected output"
+admin@eyeglass-prod-01:~$ igls adm status
+Eyeglass Services:     Running
+SyncIQ Monitor:        Running
+DFS Sync Service:      Running
+RAPA Service:          Running
+Database:              Running
+admin@eyeglass-prod-01:~$ igls version
+Eyeglass Version: 5.4.2.1
+Build: 20240115-084532
+admin@eyeglass-prod-01:~$ igls license status
+Status: Licensed
+License Key: EG-5K4X9-M2L7P-9QR3T
+Expiry Date: 2025-06-30
+Days Remaining: 187
+```
+
+!!! warning "Common errors"
+    **`Connection refused`** — Verify the Eyeglass hostname/IP is correct and the appliance is reachable with `ping <eyeglass-hostname>`.
+    **`RAPA Service:         Stopped`** — Restart the service with `igls adm restart rapa` and verify with `igls adm status`.
+    **`Status: Expired`** — Contact NetApp support or your reseller to renew the license key using `igls license update <new-key>`.
 **If a service is stopped:**
 1. Check appliance disk space: `df -h /opt/superna/` — full disk can crash services
 2. Check memory: `free -m` — if swap is high, the appliance may need a reboot
@@ -139,6 +161,51 @@ igls rapa status
 # Shows: monitored paths, quarantine events (if any)
 ```
 
+
+```text title="Expected output"
+# Overall DR readiness score
+igls dr readiness
+DR Readiness Score: 95%
+Status: Ready
+  SyncIQ Replication: Healthy (98%)
+  Configuration Sync: Healthy (100%)
+  DFS Namespaces: Healthy (92%)
+  RAPA Protection: Healthy (94%)
+Last Updated: 2024-01-15 14:32:18 UTC
+
+# SyncIQ policy replication status
+igls synciq status
+Policy Name              Status          Last Run              Progress
+dr-policy-prod-01        Running         2024-01-15 14:28:00   87%
+dr-policy-prod-02        Completed       2024-01-15 13:15:22   100%
+dr-policy-archive        Completed       2024-01-15 12:00:45   100%
+dr-policy-test           Error: Job Failed 2024-01-15 11:30:12   0%
+
+# Configuration replication status
+igls config replication status
+Policy                   Last Sync              Status
+config-sync-primary      2024-01-15 14:31:05    In Sync
+config-sync-secondary    2024-01-15 14:30:52    In Sync
+quota-sync-hourly        2024-01-15 14:00:00    In Sync
+
+# DFS namespace sync status
+igls dfs status
+DFS Namespace            Current Target         Sync State
+\\corp.local\data        isilon-dr-02.local     Synchronized
+\\corp.local\archive     isilon-dr-02.local     Synchronized
+
+# RAPA protection status
+igls rapa status
+Monitored Path                    Status              Quarantine Events
+/ifs/data/sensitive               Protected           0
+/ifs/compliance/legal             Protected           2
+/ifs/backups/incremental          Protected           0
+```
+
+!!! warning "Common errors"
+    **`Error: Job Failed`** — Check the SyncIQ job logs with `igls synciq logs dr-policy-test` to identify network, authentication, or capacity issues on the target cluster.
+    **`Out of Sync`** — Verify network connectivity between clusters and ensure the Eyeglass service is running on both source and target with `igls service status`.
+    **`Connection refused on port 8443`** — Confirm the Eyeglass management interface is accessible and the target cluster IP/hostname is correctly configured in `igls config show`.
 ---
 
 ## Step 3 — Check SyncIQ on the PowerScale cluster
@@ -171,6 +238,53 @@ isi sync targets list
 # Shows target policies and their last sync time
 ```
 
+
+```text title="Expected output"
+admin@prod-cluster1:~# isi sync policies list
+Name                     Enabled  Action  Target Host        Schedule         Last Result
+backup-daily-nightly     Yes      sync    dr-cluster.local   Every day at 2am  Success
+backup-hourly-critical   Yes      sync    dr-cluster.local   Every hour       Failed
+archive-weekly-cold      No       sync    archive.local      Every Sunday     Success
+repl-finance-data        Yes      sync    dr-cluster.local   Every 6 hours    Success
+
+admin@prod-cluster1:~# isi sync jobs list
+ID       Policy Name              State    Start Time           Progress
+12847    backup-hourly-critical   failed   2024-01-15 14:32:10  100%
+12846    backup-daily-nightly     running  2024-01-15 14:28:45  67%
+12845    repl-finance-data        success  2024-01-15 14:15:22  100%
+
+admin@prod-cluster1:~# isi sync reports list --policy-name backup-hourly-critical --limit 5
+Start Time           End Time             Result   Files Xferred  Error
+2024-01-15 14:32:10  2024-01-15 14:35:22  failed   45821          Connection timeout to target host
+2024-01-15 14:26:10  2024-01-15 14:29:15  failed   0              Target path does not exist: /ifs/backup/hourly
+2024-01-15 14:20:10  2024-01-15 14:23:08  success  89234          -
+2024-01-15 14:14:10  2024-01-15 14:17:45  success  87912          -
+2024-01-15 14:08:10  2024-01-15 14:11:32  success  88456          -
+
+admin@prod-cluster1:~# isi sync policies view backup-hourly-critical
+Name:                    backup-hourly-critical
+Enabled:                 Yes
+Action:                  sync
+Target Host:             dr-cluster.local
+Target Path:             /ifs/backup/hourly
+Source Path:             /ifs/data/critical
+Schedule:                Every hour
+Last Run:                2024-01-15 14:32:10
+Last Result:             Failed
+Throttle Enabled:        Yes
+Throttle Rate (MB/s):    500
+
+admin@prod-cluster1:~# ssh admin@dr-cluster
+admin@dr-cluster:~# isi sync targets list
+Target Host        Policy Name              Last Sync Time       Status
+dr-cluster.local   backup-daily-nightly     2024-01-15 14:28:45  Active
+dr-cluster.local   backup-hourly-critical   2024-01-15 14:20:10  Inactive
+dr-cluster.local   repl-finance-data        2024-01-15 14:15:22  Active
+```
+
+!!! warning "Common errors"
+    **`Connection timeout to target host`** — Verify network connectivity between clusters with `ping <dr-cluster>` and confirm firewall rules allow port 8080 for SyncIQ.
+    **`Target path does not exist: /ifs/backup/hourly`** — Create the target directory on the DR cluster with `isi
 **Common SyncIQ failure patterns:**
 - `"Source path not found"` → files moved since the policy was created; update source path in Eyeglass → Configuration Replication
 - `"Target host unreachable"` → network issue between clusters; check ICMP and TCP 445 between cluster SmartConnect zones
@@ -199,6 +313,33 @@ nslookup <cluster-smartconnect-zone>
 # Should resolve to one of the node IP addresses
 ```
 
+
+```text title="Expected output"
+% Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   284  100   284    0     0   1847      0 --:--:-- --:--:-- --:--:--  0:00:00
+<!DOCTYPE html><html><head><title>OneFS API</title></head><body><h1>OneFS API Gateway</h1></body></html>
+
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   284  100   284    0     0   1923      0 --:--:-- --:--:-- --:--:-- 0:00:00
+<!DOCTYPE html><html><head><title>OneFS API</title></head><body><h1>OneFS API Gateway</h1></body></html>
+
+{"cluster": {"name": "prod-cluster-01", "nodes": [1, 2, 3, 4], "onefs_version": {"release": "9.4.0.0", "build": "B_9_4_0_0_047(RELEASE)"}}, "status": "ok"}
+
+Server:		10.20.1.10
+Address:	10.20.1.10#53
+
+Name:	prod-cluster-sc.example.com
+Address:	192.168.10.45
+Address:	192.168.10.46
+Address:	192.168.10.47
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to 192.168.10.45 port 8080: Connection refused`** — Verify the OneFS cluster API service is running with `isi status -s` on the cluster, and confirm port 8080 is not blocked by firewall rules between Eyeglass and the cluster.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — The `-k` flag should suppress this, but if it persists, ensure you are using the exact SmartConnect FQDN and that SSL certificate validation is disabled with `-k` in the curl command.
+    **`nslookup: can't resolve '<cluster-smartconnect-zone>': No address associated with hostname`** — Verify the SmartConnect zone name is correct and that DNS is properly configured on the Eyeglass appliance (check `/etc/resolv.conf` and test with `dig` or `host` as alternatives).
 ---
 
 ## Step 5 — Read Eyeglass log files
@@ -239,6 +380,48 @@ grep -i "error\|exception" /opt/superna/log/eyeglass.log | tail -100
 } > /tmp/eyeglass-diag-$(date +%F-%H%M).txt
 ```
 
+
+```text title="Expected output"
+admin@eyeglass-prod01's password: 
+2024-01-15 14:32:18 WARN [SyncManager] Quota sync delayed for \\netapp-cluster1\vol_finance (retry 2/5)
+2024-01-15 14:31:45 ERROR [ReplicationEngine] Failed to replicate share config for share_hr_backup: Connection timeout to secondary cluster
+2024-01-15 14:30:22 WARN [SnapshotMgr] Snapshot creation took 45s (threshold: 30s) on vol_marketing
+
+2024-01-15 13:58:10 INFO [FailoverMgr] STEP 1: Pre-check validation started
+2024-01-15 13:58:15 INFO [FailoverMgr] STEP 2: DNS delegation update in progress
+2024-01-15 13:58:22 ERROR [FailoverMgr] STEP 3: Failed to update DFS namespace root - Access denied to AD domain controller
+
+2024-01-15 12:45:33 WARN [DNSIntegration] DNS update queued for eyeglass.corp.local (10.45.120.15)
+2024-01-15 12:44:18 ERROR [DNSIntegration] Failed to reach DNS server 10.20.5.10 - Connection refused
+
+2024-01-15 11:22:05 INFO [RAPA] Quarantine triggered for vol_prod_data: 847 suspicious file modifications detected
+2024-01-15 11:21:40 ALERT [RAPA] Ransomware-like activity detected on share_backup_01: 12 executables written to protected directory
+
+2024-01-15 10:15:42 ERROR [EyeglassApp] Exception in thread "SyncWorker-3": java.net.SocketTimeoutException: Connection timeout
+2024-01-15 10:14:18 WARN [EyeglassApp] Low memory condition detected (78% heap usage)
+
+=== igls dr readiness ===
+DR Readiness Status: READY
+  Primary Cluster: netapp-cluster1.corp.local (192.168.1.50)
+  Secondary Cluster: netapp-cluster2.corp.local (192.168.1.51)
+  Replication Lag: 2.3 seconds
+  Last Sync: 2024-01-15 14:35:22 UTC
+
+=== igls synciq status ===
+SyncIQ Policy Status:
+  policy_hourly_shares: RUNNING (847 MB/s, ETA 3m 22s)
+  policy_daily_quotas: IDLE (Last run: 2024-01-15 02:15:00, Duration: 18m 45s)
+  policy_config_sync: IDLE (Last run: 2024-01-15 14:30:00, Duration: 2m 15s)
+
+=== igls config replication status ===
+Configuration Replication: HEALTHY
+  Shares: 127 replicated, 0 failed
+  Exports: 89 replicated, 0 failed
+  Quotas: 342 replicated, 2 pending
+
+=== igls dfs status ===
+DFS Namespace Status:
+```
 ---
 
 ## Log locations

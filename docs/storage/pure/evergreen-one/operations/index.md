@@ -61,6 +61,28 @@ purepod list                   # replication pod and ActiveCluster status
 purevol list --space           # per-volume space usage
 ```
 
+
+```text title="Expected output"
+Name             Capacity    Data Reduction    Used Space    Available
+pure-esg-01      100.0 TB    2.5x              45.2 TB       54.8 TB
+
+AlertId    Severity    Component        Message                              Timestamp
+1847       warning     controller-1     Temperature threshold approaching    2024-01-15 14:32:18
+1846       info        disk-shelf-3     Predictive failure detected on SSD   2024-01-15 13:18:45
+
+Name                 Role              Status    Replication_Lag
+pod-us-east-01       primary           online    0.2 ms
+pod-us-west-02       secondary         online    12.4 ms
+
+Name                 Size      Used       Data_Reduction    Snapshots
+vol-prod-db-01       5.0 TB    3.2 TB     1.8x              8
+vol-prod-db-02       2.0 TB    1.1 TB     2.1x              5
+vol-backup-daily     10.0 TB   6.7 TB     3.2x              28
+```
+
+!!! warning "Common errors"
+    **`purearray: command not found`** — Install the Pure Storage CLI tools or verify the PATH includes the Pure bin directory; contact Pure Support for CLI access credentials.
+    **`Error: Invalid credentials or array unreachable`** — Verify network connectivity to the array management IP and confirm API token/credentials are valid and not expired.
 ## Change Readiness
 
 - [ ] Review billing period timing before any large provisioning change — avoid large capacity spikes immediately before the monthly billing close

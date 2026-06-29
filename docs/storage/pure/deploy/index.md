@@ -168,6 +168,24 @@ ssh pureuser@<flashblade_ip>
 purity setup
 ```
 
+
+```text title="Expected output"
+The authenticity of host '10.42.18.55 (10.42.18.55)' can't be established.
+ECDSA key fingerprint is SHA256:aBcD1EfGhIjKlMnOpQrStUvWxYz2345678901234567.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '10.42.18.55' (ECDSA) to the known_hosts file.
+pureuser@10.42.18.55's password:
+Pure Storage FlashBlade Setup Wizard v6.2.1
+System Name: flashblade-prod-01
+System ID: 8d4c2e1f-9a3b-4c5d-8e7f-1a2b3c4d5e6f
+Current Status: Unconfigured
+Starting setup process...
+Configuration complete. System ready for use.
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify the pureuser account exists on the FlashBlade and the password is correct.
+    **`ssh: Could not resolve hostname <flashblade_ip>: Name or service not known`** — Replace `<flashblade_ip>` with the actual management IP address of the FlashBlade system.
 The setup wizard prompts for:
 
 - Array name
@@ -183,6 +201,20 @@ purehw list
 # All blades should show status OK
 ```
 
+
+```text title="Expected output"
+Name                          Status    Model              Serial Number
+blade-01                      OK        FlashArray//X70    PUREARRAY001A
+blade-02                      OK        FlashArray//X70    PUREARRAY001B
+blade-03                      OK        FlashArray//X70    PUREARRAY001C
+blade-04                      OK        FlashArray//X70    PUREARRAY001D
+blade-05                      OK        FlashArray//X70    PUREARRAY001E
+```
+
+!!! warning "Common errors"
+    **`purehw: command not found`** — Ensure the Pure Hardware CLI tools are installed and the PATH includes the Pure installation directory.
+    **`Error: Unable to connect to management interface`** — Verify network connectivity to the array management IP and that SSH credentials are properly configured.
+    **`Status: DEGRADED`** — Check blade logs with `purehw logs <blade-name>` and contact Pure support if hardware failure is indicated.
 **Configure data network:**
 
 ```bash
@@ -190,6 +222,21 @@ purehw list
 purenetwork create vip --name datavip01 --address 192.168.20.100 --gateway 192.168.20.1 --services data-eth
 ```
 
+
+```text title="Expected output"
+Virtual Interface created successfully
+Name: datavip01
+Address: 192.168.20.100
+Gateway: 192.168.20.1
+Netmask: 255.255.255.0
+Services: data-eth
+Status: Active
+ID: vif-a7f2c9e1-4b8d-11ed-9c42-0242ac120002
+```
+
+!!! warning "Common errors"
+    **`Error: Address 192.168.20.100 already in use`** — Verify the IP is not assigned to another interface using `purenetwork list vip` and choose an unused address.
+    **`Error: Invalid service type 'data-eth'`** — Replace `data-eth` with a valid service name such as `data`, `nfs`, or `s3` (check available services with `purenetwork list services`).
 For a complete FlashBlade deployment walkthrough see [FlashBlade — Initial Deployment](../flashblade/deploy/index.md).
 
 ---

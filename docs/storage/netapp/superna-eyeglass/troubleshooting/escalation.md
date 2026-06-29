@@ -94,6 +94,26 @@ igls support bundle
 scp admin@<eyeglass-hostname>:/opt/superna/support/superna-bundle-*.zip /tmp/
 ```
 
+
+```text title="Expected output"
+admin@eyeglass-prod.corp.local's password: 
+Welcome to Superna Eyeglass v5.8.2 (Build 2847)
+Last login: Wed Jan 15 14:32:18 2025 from 192.168.1.105
+
+eyeglass-prod> igls support bundle
+Generating support bundle...
+Collecting system logs... [████████████████████] 100%
+Collecting configuration data... [████████████████████] 100%
+Collecting replication status... [████████████████████] 100%
+Bundle created successfully: /opt/superna/support/superna-bundle-20250115-143245.zip
+Size: 287 MB
+
+superna-bundle-20250115-143245.zip                    100%  287MB   8.2MB/s   00:35
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify SSH credentials and that the admin user exists; check firewall rules allowing port 22 to the Eyeglass appliance.
+    **`scp: /opt/superna/support/superna-bundle-*.zip: No such file or directory`** — Confirm the bundle generation completed successfully by running `igls support bundle` again and check the exact filename in `/opt/superna/support/` using SSH.
 ### 2. Collect igls status output
 
 ```bash
@@ -133,6 +153,61 @@ igls version
 } > /tmp/eyeglass-status-$(date +%F-%H%M%S).txt
 ```
 
+
+```text title="Expected output"
+admin@eyeglass-prod:~$ ssh admin@eyeglass-01.corp.local
+Last login: Wed Jan 15 14:32:18 2025 from 10.50.12.45
+eyeglass-01:~$ igls dr readiness
+DR Readiness Status: HEALTHY
+  Primary Cluster: isilon-prod-1 (OneFS 9.4.0.0)
+  Secondary Cluster: isilon-dr-1 (OneFS 9.4.0.0)
+  Replication Lag: 2.3 seconds
+  Policy Compliance: 100%
+
+eyeglass-01:~$ igls synciq status
+SyncIQ Policies: 12 active
+  prod-shares-hourly: RUNNING (87% complete, ETA 3m 22s)
+  archive-daily: IDLE (last run: 2025-01-15 08:00:00, duration: 18m 45s)
+  config-sync-15min: IDLE (last run: 2025-01-15 14:30:00, duration: 2m 11s)
+
+eyeglass-01:~$ igls config replication status
+Configuration Replication: SYNCED
+  Shares: 247 replicated
+  Exports: 89 replicated
+  Quotas: 156 replicated
+  Last sync: 2025-01-15 14:33:12 UTC
+
+eyeglass-01:~$ igls dfs status
+DFS Namespace Status: OPERATIONAL
+  Namespace: \\corp.local\shares
+  Referrals: 2,847 served (24h)
+  Health: GOOD
+
+eyeglass-01:~$ igls version
+Eyeglass Version: 5.2.1-build.4521
+  License: DR + RAPA + DFS
+  Build Date: 2024-12-10
+
+eyeglass-01:~$ {
+>   echo "=== igls dr readiness ==="
+>   igls dr readiness
+>   echo "=== igls synciq status ==="
+>   igls synciq status
+>   echo "=== igls config replication status ==="
+>   igls config replication status
+>   echo "=== igls dfs status ==="
+>   igls dfs status
+>   echo "=== igls version ==="
+>   igls version
+> } > /tmp/eyeglass-status-2025-01-15-143401.txt
+eyeglass-01:~$ echo "Status report saved to /tmp/eyeglass-status-2025-01-15-143401.txt"
+Status report saved to /tmp/eyeglass-status-2025-01-15-143401.txt
+```
+
+!!! warning "Common errors"
+    **`igls: command not found`** — Verify Eyeglass is running with `systemctl status eyeglass` and confirm you're logged into the correct appliance hostname.
+    **`Connection refused` or `ssh: connect to host <eyeglass-hostname> port 22: Connection refused`** — Confirm the Eyeglass appliance IP/hostname is reachable with `ping` and that SSH is enabled in Eyeglass admin console.
+    **`Permission denied (publickey,password)`** — Verify your SSH credentials and that the admin user exists; reset the password via
 ### 3. Collect PowerScale SyncIQ status (from both clusters)
 
 ```bash
@@ -152,6 +227,41 @@ isi sync targets list
 isi sync target rules list
 ```
 
+
+```text title="Expected output"
+admin@prod-cluster-01:~# isi sync policies list
+Name                          ID       Enabled  Source              Target
+----                          --       -------  ------              ------
+daily-prod-sync               pol-001  Yes      10.45.12.50         10.67.89.120
+hourly-critical-data          pol-002  Yes      10.45.12.50         10.67.89.120
+weekly-archive-backup          pol-003  No       10.45.12.50         10.67.89.121
+nightly-compliance-sync        pol-004  Yes      10.45.12.50         10.67.89.120
+
+admin@prod-cluster-01:~# isi sync jobs list
+ID                                    Policy Name              Status    Progress  Start Time
+--                                    -----------              ------    --------  ----------
+job-8f4a2c91-7e3b-4d2a-b1f5-9c3e2a1b  daily-prod-sync          RUNNING   67%       2024-01-15 03:22:15
+job-7d3b1c8a-9f2e-4b5c-a3d2-8e1f7c9a  hourly-critical-data     COMPLETED 100%      2024-01-15 02:15:00
+job-6c2a0b7f-8e1d-3a4b-9c2e-7d0e6b8f  weekly-archive-backup    FAILED    45%       2024-01-15 01:30:22
+
+admin@prod-cluster-01:~# isi sync reports list --limit 10
+Report ID                             Policy Name              Status    Duration  Timestamp
+---------                             -----------              ------    --------  ---------
+rpt-9f8e7d6c-5b4a-3c2d-1e0f-9a8b7c6d  daily-prod-sync          SUCCESS   2h 14m    2024-01-14 03:45:00
+rpt-8e7d6c5b-4a3b-2c1d-0e9f-8a7b6c5d  hourly-critical-data     SUCCESS   18m 32s   2024-01-15 02:15:00
+rpt-7d6c5b4a-3b2c-1d0e-9f8a-7b6c5d4e  daily-prod-sync          SUCCESS   2h 08m    2024-01-13 03:50:15
+rpt-6c5b4a39-2b1c-0d9e-8f7a-6b5c4d3e  weekly-archive-backup    FAILED    1h 22m    2024-01-14 22:30:00
+
+admin@prod-cluster-01:~# isi sync policies view daily-prod-sync
+Name:                    daily-prod-sync
+ID:                      pol-001
+Enabled:                 Yes
+Source Cluster:          10.45.12.50
+Target Cluster:          10.67.89.120
+Schedule:                0 3 * * * (Daily at 3:00 AM)
+Last Run:                2024-01-15 03:22:15
+Last Status:
+```
 ### 4. Collect component versions and license info
 
 ```bash
@@ -171,6 +281,29 @@ igls license status
 # Compare to UUID in Superna licensing portal
 ```
 
+
+```text title="Expected output"
+Eyeglass Version: 5.2.1 Build 2847
+Release Date: 2024-01-15
+
+OneFS Version: 9.4.0.0
+Build: L9.4.0.0_210824_001
+Cluster: isilon-prod-01
+
+License Status: ACTIVE
+UUID: 550e8400-e29b-41d4-a716-446655440000
+Expiry Date: 2025-06-30
+Features: Snapshots, Replication, Compliance
+Days Remaining: 527
+
+Superna Portal UUID: 550e8400-e29b-41d4-a716-446655440000
+Status: MATCHED
+```
+
+!!! warning "Common errors"
+    **`igls: command not found`** — Verify Eyeglass is installed and /opt/superna/bin is in your PATH, or use the full path /opt/superna/bin/igls.
+    **`License Status: UNLICENSED`** — Confirm the UUID in the Superna licensing portal matches the UUID shown in Eyeglass Admin UI → About, then re-register the license.
+    **`isi: command not found`** — Run this command directly on an OneFS cluster node (SSH to the cluster), not from the Eyeglass appliance.
 ### 5. Write the timeline
 
 ```text
@@ -282,6 +415,62 @@ isi sync policies list
 isi sync jobs list | grep -i "error\|fail"
 ```
 
+
+```text title="Expected output"
+Eyeglass Version: 5.2.1 (Build 2024.01.15)
+DR Readiness Status: HEALTHY
+  Primary Cluster: prod-isilon-01.corp.local
+  Secondary Cluster: dr-isilon-02.corp.local
+  Replication Lag: 45 seconds
+  Last Sync: 2024-01-22 14:32:18 UTC
+
+SyncIQ Status Summary:
+  Total Policies: 23
+  Active Jobs: 5
+  Completed (24h): 18
+  Failed (24h): 0
+  Warnings: 2
+
+Filesystem Usage:
+/opt/superna/              87G    52G    35G   60% /opt/superna/
+
+Memory Usage:
+              total        used        free      shared  buff/cache   available
+Mem:          16384        9821        4563         128        1000        6563
+
+Configuration Replication Status:
+[WARNING] Cluster 'dr-isilon-02' config sync delayed by 3 minutes
+[ERROR] Failed to replicate access zone 'az-finance' — connection timeout
+
+RAPA Status:
+  Status: OPERATIONAL
+  Replication Appliance Pool: 5 nodes active, 0 degraded
+  Last Health Check: 2024-01-22 14:35:42 UTC
+  Bandwidth Utilization: 2.1 Gbps / 10 Gbps
+
+Eyeglass Application Log (error lines):
+2024-01-22T14:28:33Z [ERROR] SyncIQ job 'policy-backup-daily' exceeded retry limit
+2024-01-22T14:15:12Z [ERROR] Connection refused to secondary cluster dr-isilon-02:8080
+2024-01-22T13:42:05Z [EXCEPTION] NullPointerException in ReplicationManager.validatePolicy()
+2024-01-22T13:15:33Z [WARNING] High memory pressure detected — 89% utilization
+
+SyncIQ Policies (PowerScale):
+Name                          Source              Target              State
+backup-daily                  prod-isilon-01      dr-isilon-02        enabled
+incremental-hourly            prod-isilon-01      dr-isilon-02        enabled
+archive-weekly                prod-isilon-01      archive-vault       enabled
+
+SyncIQ Jobs (PowerScale):
+ID      Policy                  State       Progress    Bytes Transferred
+12847   backup-daily            completed   100%        2.3 TB
+12848   incremental-hourly      running     67%         1.8 TB
+12849   archive-weekly          failed      0%          0 B
+```
+
+!!! warning "Common errors"
+    **`[ERROR] Failed to replicate access zone 'az-finance' — connection timeout`** — Verify network connectivity between Eyeglass and secondary cluster; check firewall rules for port 8080 and 3218.
+    **`Connection refused to secondary cluster dr-isilon-02:8080`** — Confirm the secondary cluster is online and accessible; run `ping dr-isilon-02` and `isi status` on the target cluster.
+    **`SyncIQ job 'policy-backup-daily' exceeded retry limit`** — Check the SyncIQ job logs on PowerScale with `isi sync jobs view <job-id>` and resolve the underlying replication failure before manual
 ---
 
 ## License Issues

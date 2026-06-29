@@ -52,6 +52,24 @@ pureuser list
 pureuser apitoken list
 ```
 
+
+```text title="Expected output"
+Name                     Type      Role
+admin                    local     Administrator
+pureuser                 local     PureUser
+monitoring_svc           local     ReadOnly
+backup_operator          local     Operator
+audit_viewer             local     ReadOnly
+
+Name                     Created                  Expires                  Owner
+token-prod-backup-01     2024-01-15T09:23:44Z    2025-01-15T09:23:44Z    backup_operator
+token-monitoring-02      2024-02-20T14:17:12Z    2025-02-20T14:17:12Z    monitoring_svc
+token-api-automation     2024-03-10T11:45:33Z    Never                    admin
+```
+
+!!! warning "Common errors"
+    **`pureuser: command not found`** — Ensure you are logged into the Pure Storage appliance CLI or source the Pure environment variables.
+    **`Error: Authentication failed`** — Verify your user account has Administrator or PureUser role privileges to list users and API tokens.
 Configure SAML/SSO in the Purity GUI to enforce IdP-managed MFA for all interactive access. This ensures that even if a local account is compromised, interactive login requires a second factor controlled by the IdP.
 
 ## Encryption
@@ -94,6 +112,19 @@ purearray syslog add --uri tls://siem:6514
 purearray syslog list
 ```
 
+
+```text title="Expected output"
+Syslog destination added: udp://siem:514
+Syslog destination added: tls://siem:6514
+Name                 URI                    Status      Last Event
+udp-siem-514         udp://siem:514         connected   2024-01-15T09:42:31Z
+tls-siem-6514        tls://siem:6514        connected   2024-01-15T09:42:28Z
+```
+
+!!! warning "Common errors"
+    **`Error: Failed to add syslog destination: Connection refused`** — Verify the syslog server hostname/IP is reachable and the port is open using `ping siem` and `telnet siem 514`.
+    **`Error: TLS certificate verification failed for tls://siem:6514`** — Import the syslog server's CA certificate to the array using `purearray certificate import --file ca.pem --type syslog`.
+    **`Error: Syslog destination already exists`** — Remove the duplicate destination first with `purearray syslog remove --uri udp://siem:514` before re-adding.
 Because Pure Support engineers access the arrays as part of the managed service, off-array audit log retention is especially important for Evergreen//One — it provides the customer with an independent record of all operations performed on customer data, including by Pure staff.
 
 ## Subscription Security — Pure-Managed Responsibilities

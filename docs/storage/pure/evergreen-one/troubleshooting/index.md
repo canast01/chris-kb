@@ -91,6 +91,51 @@ purevol list --space
 purepgroup list --schedule
 ```
 
+
+```text title="Expected output"
+Name                          Capacity(GB)  Used(GB)  Reserved(GB)  Snapshots(GB)
+pure-array-01                 102400        45230     8192          12450
+Data Reduction Ratio: 2.3:1
+Thin Provisioning Savings: 34%
+
+Name       Status   Model              Version
+ct0        Online   FlashArray//X70    6.4.2
+ct1        Online   FlashArray//X70    6.4.2
+
+Severity  Code      Message                                    Timestamp
+warning   PUR-CONN  Replication link latency high (>50ms)     2024-01-15T09:23:14Z
+info      PUR-CAP   Capacity threshold at 78%                 2024-01-15T08:45:22Z
+
+Name              Status      Replication_Status
+pod-prod-01       Healthy     Synced
+pod-prod-02       Healthy     Synced
+
+Snapshot_Name                 Created                Volume        Size(GB)
+prod-db-snap-20240115-0200   2024-01-15T02:00:12Z  prod-database  2340
+prod-db-snap-20240114-0200   2024-01-15T02:00:08Z  prod-database  2340
+prod-app-snap-20240115-0100  2024-01-15T01:00:45Z  prod-app       1850
+...
+
+Host              Volume         Status   Paths
+host-app-01       prod-database  Active   4/4
+host-app-02       prod-database  Active   4/4
+host-db-01        prod-app       Active   2/2
+
+Volume            Provisioned(GB)  Used(GB)  Snapshots(GB)
+prod-database     5120             3240      890
+prod-app          2048             1560      340
+backup-vol        10240            8900      1200
+
+Name              Schedule_Type  Frequency  Status
+pg-prod-daily     Snapshot       Daily      Active
+pg-prod-hourly    Snapshot       Hourly     Active
+pg-repl-4h        Replication    4 hours    Active
+```
+
+!!! warning "Common errors"
+    **`Error: Connection refused — Verify the array management IP is reachable and the Pure1 REST API service is running with `systemctl status pure-rest-api`.`**
+    **`Error: Authentication failed — Ensure your Pure credentials are configured in `~/.purerc` or via environment variables `PURE_API_TOKEN` and `PURE_MGMT_IP`.`**
+    **`Error: Command not found: purearray — Install the Pure Storage Python SDK with `pip install purestorage` or verify the CLI tools are in your PATH.`**
 For issues related to the service agreement, SLA compliance, or capacity billing, all investigation starts in Pure1 — not the array CLI.
 
 ## Log Locations

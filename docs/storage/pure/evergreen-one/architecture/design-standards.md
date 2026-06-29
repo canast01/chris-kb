@@ -80,6 +80,14 @@ Phonehome is mandatory for all Evergreen//One installations. Without it, Pure ca
 puresetting set --proxy http://proxy.example.local:8080
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid proxy URL format`** — Ensure the proxy URL follows the format `http://hostname:port` or `https://hostname:port` without trailing slashes.
+    **`Error: Connection refused to proxy server`** — Verify the proxy server is reachable from the FlashArray management network by testing connectivity to the proxy host and port first.
 ### Host Data Network (iSCSI / NVMe-TCP)
 
 | Requirement | Specification |
@@ -101,6 +109,29 @@ vmkping -I vmk1 -d -s 8972 192.168.100.10
 # Should succeed without fragmentation
 ```
 
+
+```text title="Expected output"
+Name  Port  Portset      Active  MAC Address        IPv4 Address      IPv6 Address  MTU  TSO MSS  Enabled
+vmk0  0     Management   true    00:50:56:a9:12:34  192.168.1.100     ::1           1500 65535   true
+vmk1  0     iSCSI        true    00:50:56:a9:56:78  192.168.100.50    ::1           9000 65535   true
+vmk2  0     vMotion      true    00:50:56:a9:9a:bc  192.168.2.100     ::1           1500 65535   true
+
+IPv4 Address: 192.168.100.50
+Netmask: 255.255.255.0
+Broadcast: 192.168.100.255
+Gateway: 192.168.100.1
+DHCP: false
+
+PING 192.168.100.10 (192.168.100.10): 8972 data bytes
+8980 bytes from 192.168.100.10: icmp_seq=0 ttl=64 time=2.341 ms
+8980 bytes from 192.168.100.10: icmp_seq=1 ttl=64 time=2.156 ms
+8980 bytes from 192.168.100.10: icmp_seq=2 ttl=64 time=2.298 ms
+```
+
+!!! warning "Common errors"
+    **`Connect: Network is unreachable`** — Verify vmk1 is on the correct VLAN and has a route to 192.168.100.10 using `esxcli network ip route ipv4 list`.
+    **`PING 192.168.100.10 (192.168.100.10): sendto: Message too long`** — Confirm MTU is set to 9000 on vmk1 with `esxcli network ip interface ipv4 set --interface-name vmk1 --mtu=9000` and verify the switch port supports jumbo frames.
+    **`100% packet loss`** — Check that the FlashArray iSCSI port 192.168.100.10 is online and reachable by testing connectivity from a different ESXi host or pinging the array management IP first.
 ### Host Data Network (FC)
 
 | Requirement | Specification |

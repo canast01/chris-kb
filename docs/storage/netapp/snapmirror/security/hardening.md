@@ -90,6 +90,28 @@ network interface show -fields address,role | grep -v intercluster
 # Check there are no data LIFs on the same subnet as the intercluster LIF
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+
+Vserver     Lif                    Role            Status       Network            Current      Current Is
+                                                                 Address            Node         Port    Home
+----------- ---------------------- --------------- ------------ ------------------ ------------ ------- ----
+cluster-01  ic-node01-e0e          intercluster    up/up        10.0.1.101/24      node01       e0e     true
+cluster-01  ic-node02-e0f          intercluster    up/up        10.0.1.102/24      node02       e0f     true
+
+Vserver     Lif                    Address         Role
+----------- ---------------------- --------------- ---------------
+cluster-01  node01_mgmt            192.168.1.50    mgmt
+cluster-01  node01_data01          192.168.2.100   data
+cluster-01  node02_data01          192.168.2.101   data
+cluster-01  node02_mgmt            192.168.1.51    mgmt
+```
+
+!!! warning "Common errors"
+    **`Error: "e0e" is not a valid port on node01`** — Verify the physical port exists on the node using `network port show -node <node01>`.
+    **`Error: Address 10.0.1.101 is already in use`** — Confirm the IP address is not assigned to another LIF or device on the network.
+    **`Error: Intercluster LIF cannot be created on a port already hosting a data LIF`** — Use a dedicated physical port that is not currently assigned to any data or management LIF.
 ### Restrict Peer Cluster Access
 
 On the external firewall or network ACL, restrict TCP 11104 and 11105 to the specific intercluster LIF IP pairs only:
@@ -103,6 +125,14 @@ deny tcp any any eq 11104
 deny tcp any any eq 11105
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`error: invalid syntax near '<src-ic-lif-ip>'`** — Replace angle-bracket placeholders with actual IP addresses (e.g., 192.168.1.10) before applying the rule.
+    **`error: rule conflict detected on ports 11104/11105`** — Ensure deny rules are placed after permit rules, or consolidate overlapping rules to avoid ambiguous evaluation order.
 ---
 
 ## RBAC: Restricting Break and Resync Operations
@@ -144,6 +174,44 @@ security login role show -role dr-admin
 security login role show -role snapmirror-operator
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+Role                 Vserver          Command                       Access
+-------------------- ---------------- ----------------------------- ------
+dr-admin             cluster-prod     DEFAULT                       none
+dr-admin             cluster-prod     snapmirror show               readonly
+dr-admin             cluster-prod     snapmirror update             all
+dr-admin             cluster-prod     snapmirror break              all
+dr-admin             cluster-prod     snapmirror resync             all
+dr-admin             cluster-prod     snapmirror quiesce            all
+dr-admin             cluster-prod     snapmirror abort              all
+dr-admin             cluster-prod     snapmirror initialize         all
+dr-admin             cluster-prod     volume show                   readonly
+dr-admin             cluster-prod     volume mount                  all
+snapmirror-operator  cluster-prod     DEFAULT                       none
+snapmirror-operator  cluster-prod     snapmirror show               readonly
+snapmirror-operator  cluster-prod     snapmirror update             all
+snapmirror-operator  cluster-prod     snapmirror quiesce            all
+```
+
+!!! warning "Common errors"
+    **`Error: "dr-admin" already exists.`** — Delete the existing role with `security login role delete -role dr-admin -vserver <cluster-name>` before recreating it.
+    **`Error: Invalid vserver "<cluster-name>"`** — Replace `<cluster-name>` with the actual cluster name from `cluster show` output.
+    **`Error: Unknown command "snapmirror break"`** — Verify the SnapMirror license is installed with `system license show` and the command syntax matches your ONTAP version.
 ---
 
 ## EMS Alerting for Replication Events
@@ -173,6 +241,28 @@ event notification show
 event notification destination show
 ```
 
+
+```text title="Expected output"
+Notification destination "snapmirror-alerts" created successfully.
+Filter "snapmirror-events" created successfully.
+Rule added to filter "snapmirror-events".
+Rule added to filter "snapmirror-events".
+Rule added to filter "snapmirror-events".
+Notification "snapmirror-events" created successfully.
+
+Filter Name                  Destinations
+---------------------------- ----------------------------------------
+snapmirror-events            snapmirror-alerts
+
+Destination Name             Type    Address
+---------------------------- -------- --------------------------------
+snapmirror-alerts            mail    storage-team@corp.local
+```
+
+!!! warning "Common errors"
+    **`Error: Notification destination "snapmirror-alerts" already exists`** — Delete the existing destination with `event notification destination delete -name snapmirror-alerts` before recreating it.
+    **`Error: Invalid email address "storage-team@corp.local"`** — Verify the email address is valid and the mail server is configured with `system services smtp show`.
+    **`Error: Filter "snapmirror-events" already exists`** — Remove the existing filter using `event filter delete -filter-name snapmirror-events` before creating a new one.
 ---
 
 ## Annual Review Tasks
