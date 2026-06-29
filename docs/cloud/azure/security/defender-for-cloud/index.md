@@ -25,7 +25,7 @@ Microsoft Defender for Cloud (formerly Security Center / Azure Defender) is a cl
 ## Defender for Cloud Coverage
 
 ```mermaid
-flowchart TD
+flowchart LR
     dfc["Defender for Cloud"]
     subgraph cspm["CSPM — Posture Management"]
         secScore["Secure Score\nrecommendations"]

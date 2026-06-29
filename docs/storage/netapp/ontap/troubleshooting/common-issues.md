@@ -56,15 +56,15 @@ A2: "Bring online — see Volume Full / Write Errors" {shape: rectangle}
 A3: "Check autogrow and snapshot reserve" {shape: rectangle}
 B1: "B1" {shape: rectangle}
 B2: "Check LIF and export policy — see NFS Mount Hangs" {shape: rectangle}
-B3: "Check AD join and CIFS server — see SMB/CIFS Share Inaccessible" {shape: rectangle}
+B3: "Check AD join and CIFS server — see SMB/CIFS Share\nInaccessible" {shape: rectangle}
 C1: "C1" {shape: rectangle}
-C2: "Move volumes or add disks — see Aggregate Capacity Critical" {shape: rectangle}
+C2: "Move volumes or add disks — see Aggregate Capacity\nCritical" {shape: rectangle}
 C3: "Check volume snapshot reserves" {shape: rectangle}
 D1: "D1" {shape: rectangle}
-D2: "Resume or resync — see SnapMirror Lag / Unhealthy Relationship" {shape: rectangle}
+D2: "Resume or resync — see SnapMirror Lag / Unhealthy\nRelationship" {shape: rectangle}
 D3: "Check throttle and intercluster LIF" {shape: rectangle}
 E1: "E1" {shape: rectangle}
-E2: "Re-enable failover — see Storage Failover Not Triggering" {shape: rectangle}
+E2: "Re-enable failover — see Storage Failover Not\nTriggering" {shape: rectangle}
 E3: "Check cluster interconnect and heartbeat" {shape: rectangle}
 
 S -> A

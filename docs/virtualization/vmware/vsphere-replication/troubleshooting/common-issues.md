@@ -24,7 +24,7 @@ direction: down
 
 symptom: Identify Symptom {shape: diamond}
 diagnostic_flow: "Diagnostic Flow" {shape: rectangle}
-replication_fails_with_connection_re: "Replication Fails with 'Connection Refused' / 'Connection Ti" {shape: rectangle}
+replication_fails_with_connection_re: "Replication Fails with 'Connection Refused' /\n'Connection Ti" {shape: rectangle}
 verify_resolution: "Verify resolution" {shape: rectangle}
 resolution: Resolve or Escalate {shape: oval}
 

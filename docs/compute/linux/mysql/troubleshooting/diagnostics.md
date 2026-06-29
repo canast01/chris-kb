@@ -66,7 +66,7 @@ direction: down
 
 symptom: Identify Symptom {shape: diamond}
 step_1_check_the_error_log_and_servi: "Step 1 — Check the error log and service status" {shape: rectangle}
-step_2_check_active_connections_and_: "Step 2 — Check active connections and long-running queries" {shape: rectangle}
+step_2_check_active_connections_and_: "Step 2 — Check active connections and long-running\nqueries" {shape: rectangle}
 step_3_find_and_resolve_lock_content: "Step 3 — Find and resolve lock contention" {shape: rectangle}
 step_4_check_innodb_engine_status: "Step 4 — Check InnoDB engine status" {shape: rectangle}
 step_5_enable_and_analyse_the_slow_q: "Step 5 — Enable and analyse the slow query log" {shape: rectangle}

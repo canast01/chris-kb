@@ -35,7 +35,7 @@ Health Checks reference covering Daily Checks, Health Check, Cluster Status, Dir
 ![Daily Checks](../../../../assets/storage-dell-vplex-hc-daily-checks.svg)
 
 ```mermaid
-flowchart TD
+flowchart LR
     start(["Daily check run"]) --> cl
 
     subgraph "Cluster Layer"

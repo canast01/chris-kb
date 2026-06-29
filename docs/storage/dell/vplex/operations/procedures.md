@@ -28,7 +28,7 @@ Verify these items before performing any VPLEX change — GeoSynchrony upgrades,
 direction: right
 
 startChange: "Maintenance window requested" {shape: rectangle}
-ddCheck: "ll /distributed-storage/distributed-devices/*/health-indications/\nAll devices health-state: ok?" {shape: rectangle}
+ddCheck: "ll /distributed-storage/distributed-\ndevices/*/health-indications/\nAll devices health-state: ok?" {shape: rectangle}
 witnessChk: "ll /metro-node/*/witness/\nWitness connected from both clusters?" {shape: rectangle}
 cgChk: "ll /distributed-storage/consistency-groups/\nAll CGs operational-status: ok?" {shape: rectangle}
 hostPathChk: "powermt display dev=all\nmultipath -ll\nHost path counts match baseline?" {shape: rectangle}

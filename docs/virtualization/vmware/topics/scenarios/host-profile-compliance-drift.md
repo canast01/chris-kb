@@ -215,6 +215,6 @@ If using vLCM:
 
 ## Related Scenarios
 
-- [Host Maintenance and Patching](host-maintenance-patching/index.md) — patching frequently introduces host profile drift; check compliance after every patch cycle.
-- [ESXi Host Disconnected](esxi-host-disconnected/index.md) — a host that disconnected from vCenter may have stale configuration that shows as drift after reconnection.
-- [NTP Drift / SSO Certificate Errors](ntp-drift-sso-certificate/index.md) — NTP configuration drift in host profiles is a common trigger for SSO and certificate failures.
+- [Host Maintenance and Patching](host-maintenance-patching.md) — patching frequently introduces host profile drift; check compliance after every patch cycle.
+- [ESXi Host Disconnected](esxi-host-disconnected.md) — a host that disconnected from vCenter may have stale configuration that shows as drift after reconnection.
+- [NTP Drift / SSO Certificate Errors](ntp-drift-sso-certificate.md) — NTP configuration drift in host profiles is a common trigger for SSO and certificate failures.

@@ -42,11 +42,11 @@ P1 -> ARR: Remote assist session (Pure1 Connect)
 ```d2
 direction: right
 
-Arrays: "FlashArray / FlashBlade · Purity OS phonehome · every 30 seconds · HTTPS outbound" {shape: rectangle}
-Pure1Cloud: "Pure1 Cloud Platform · SaaS · Pure-managed · time-series DB · full resolution storage" {shape: rectangle}
-Meta: "Pure1 Meta (AI) · ML health scoring · workload classification · capacity forecasting" {shape: rectangle}
-Dashboard: "Pure1 Dashboard · fleet management · health scores · alerts · capacity trends" {shape: rectangle}
-TAC: "Pure Storage TAC · auto case creation · proactive swap · zero-touch resolution" {shape: rectangle}
+Arrays: "FlashArray / FlashBlade · Purity OS phonehome ·\nevery 30 seconds · HTTPS outbound" {shape: rectangle}
+Pure1Cloud: "Pure1 Cloud Platform · SaaS · Pure-managed · time-\nseries DB · full resolution storage" {shape: rectangle}
+Meta: "Pure1 Meta (AI) · ML health scoring · workload\nclassification · capacity forecasting" {shape: rectangle}
+Dashboard: "Pure1 Dashboard · fleet management · health scores\n· alerts · capacity trends" {shape: rectangle}
+TAC: "Pure Storage TAC · auto case creation · proactive\nswap · zero-touch resolution" {shape: rectangle}
 
 Arrays -> Pure1Cloud
 Pure1Cloud -> Meta

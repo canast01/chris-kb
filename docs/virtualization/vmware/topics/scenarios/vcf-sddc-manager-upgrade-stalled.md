@@ -194,7 +194,7 @@ notAfter=Jan 15 10:23:45 2024 GMT
 !!! warning "Common errors"
     **`unable to load certificate`** — Ensure the vCenter FQDN is correct and the host is reachable on port 443; verify network connectivity with `ping <vcenter-fqdn>` first.
     **`error in x509 parsing`** — The certificate chain may not be complete; add `-showcerts` to `openssl s_client` to inspect the full chain and identify parsing issues.
-For certificate rotation in SDDC Manager, see the [Certificate Expiry and Rotation](certificate-expiry-rotation/index.md) scenario.
+For certificate rotation in SDDC Manager, see the [Certificate Expiry and Rotation](certificate-expiry-rotation.md) scenario.
 
 **vSAN health blocking upgrade:**
 
@@ -381,6 +381,6 @@ Look for: any FAIL or WARN in the SOS health check output indicates that the upg
 
 ## Related Scenarios
 
-- [Certificate Expiry and Rotation](certificate-expiry-rotation/index.md) — certificate issues are a frequent cause of VCF upgrade precheck failures.
-- [vCenter Upgrade Failure](vcenter-upgrade-failure/index.md) — vCenter-specific upgrade failures that can occur as a sub-step within a VCF bundle upgrade.
-- [vSAN Disk or Component Failure](vsan-disk-component-failure/index.md) — active vSAN resync blocks VCF upgrades; resolve disk issues before starting.
+- [Certificate Expiry and Rotation](certificate-expiry-rotation.md) — certificate issues are a frequent cause of VCF upgrade precheck failures.
+- [vCenter Upgrade Failure](vcenter-upgrade-failure.md) — vCenter-specific upgrade failures that can occur as a sub-step within a VCF bundle upgrade.
+- [vSAN Disk or Component Failure](vsan-disk-component-failure.md) — active vSAN resync blocks VCF upgrades; resolve disk issues before starting.

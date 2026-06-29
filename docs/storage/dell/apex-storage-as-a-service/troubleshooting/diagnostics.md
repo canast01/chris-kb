@@ -56,7 +56,7 @@ direction: down
 
 symptom: Identify Symptom {shape: diamond}
 step_1_check_hostside_storage_connec: "Step 1 — Check host-side storage connectivity" {shape: rectangle}
-step_2_check_apex_console_for_system: "Step 2 — Check APEX Console for system and capacity status" {shape: rectangle}
+step_2_check_apex_console_for_system: "Step 2 — Check APEX Console for system and\ncapacity status" {shape: rectangle}
 step_3_check_scg_telemetry_reporting: "Step 3 — Check SCG telemetry reporting" {shape: rectangle}
 step_4_check_the_underlying_array_un: "Step 4 — Check the underlying array (Unisphere)" {shape: rectangle}
 collect_diagnostic_snapshot_for_dell: "Collect diagnostic snapshot for Dell SR" {shape: rectangle}

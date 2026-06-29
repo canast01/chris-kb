@@ -26,7 +26,7 @@ direction: down
 auth: "Access Control\nAuthentication" {shape: rectangle}
 audit_space_permissions_via_rest_api: "Audit space permissions via REST API" {shape: rectangle}
 check_if_any_spaces_allow_anonymous_: "Check if any spaces allow anonymous access via REST API" {shape: rectangle}
-then_for_each_space_key_check_for_an: "Then for each space key, check for anonymous permissions:" {shape: rectangle}
+then_for_each_space_key_check_for_an: "Then for each space key, check for anonymous\npermissions:" {shape: rectangle}
 trigger_manual_ldap_sync_confluence_: "Trigger manual LDAP sync (Confluence admin)" {shape: rectangle}
 administration_user_directories_sync: "Administration > User Directories > Synchronise" {shape: rectangle}
 or_via_api: "Or via API" {shape: rectangle}

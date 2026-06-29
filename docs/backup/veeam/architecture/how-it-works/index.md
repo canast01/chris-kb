@@ -21,10 +21,10 @@ Veeam Backup & Replication provides backup, replication, recovery, and disaster 
 direction: right
 
 VMs: "VMs / Workloads · vSphere · Hyper-V · Physical · Cloud" {shape: rectangle}
-Proxy: "Backup Proxy · transport: SAN / HotAdd / NBD · CBT · compression · dedup" {shape: rectangle}
-Repo: "Backup Repository · local disk · NAS · S3 · tape · SOBR tiers" {shape: rectangle}
-VeeamONE: "Veeam ONE · monitoring · reporting · dashboards · capacity" {shape: rectangle}
-Console: "Veeam BR Console · admin · REST API · job engine · catalog" {shape: rectangle}
+Proxy: "Backup Proxy · transport: SAN / HotAdd / NBD · CBT\n· compression · dedup" {shape: rectangle}
+Repo: "Backup Repository · local disk · NAS · S3 · tape ·\nSOBR tiers" {shape: rectangle}
+VeeamONE: "Veeam ONE · monitoring · reporting · dashboards ·\ncapacity" {shape: rectangle}
+Console: "Veeam BR Console · admin · REST API · job engine ·\ncatalog" {shape: rectangle}
 
 VMs -> Proxy
 Proxy -> Repo

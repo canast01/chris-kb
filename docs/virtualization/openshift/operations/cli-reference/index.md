@@ -14,10 +14,10 @@ oc command reference: resource management, log collection, exec, adm commands, d
 direction: right
 
 OC: "oc" {shape: rectangle}
-RES: "Resource Ops · get / apply / patch · delete / label / annotate" {shape: rectangle}
+RES: "Resource Ops · get / apply / patch · delete /\nlabel / annotate" {shape: rectangle}
 ADM: "Admin Ops · adm drain / cordon · adm policy / inspect" {shape: rectangle}
 DBG: "Debug Ops · debug node/ · rsh / exec · must-gather" {shape: rectangle}
-IMG: "Image Ops · image mirror · tag / import-image · registry login" {shape: rectangle}
+IMG: "Image Ops · image mirror · tag / import-image ·\nregistry login" {shape: rectangle}
 
 OC -> RES
 OC -> ADM

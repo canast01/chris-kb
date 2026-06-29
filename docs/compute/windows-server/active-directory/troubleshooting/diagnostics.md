@@ -70,9 +70,9 @@ direction: down
 symptom: Identify Symptom {shape: diamond}
 step_1_run_dcdiag_on_the_affected_dc: "Step 1 — Run dcdiag on the affected DC" {shape: rectangle}
 step_2_check_replication_health: "Step 2 — Check replication health" {shape: rectangle}
-step_3_find_fsmo_role_holders_and_ve: "Step 3 — Find FSMO role holders and verify DNS SRV records" {shape: rectangle}
+step_3_find_fsmo_role_holders_and_ve: "Step 3 — Find FSMO role holders and verify DNS SRV\nrecords" {shape: rectangle}
 step_4_test_secure_channel_and_kerbe: "Step 4 — Test secure channel and Kerberos" {shape: rectangle}
-step_5_review_directory_services_and: "Step 5 — Review Directory Services and Security event logs" {shape: rectangle}
+step_5_review_directory_services_and: "Step 5 — Review Directory Services and Security\nevent logs" {shape: rectangle}
 step_6_check_group_policy_and_sysvol: "Step 6 — Check Group Policy and SYSVOL replication" {shape: rectangle}
 resolution: Resolve or Escalate {shape: oval}
 

@@ -22,7 +22,7 @@ SS: "ceph-health-snapshot.sh · full state capture" {shape: rectangle}
 UR: "osd-utilization-report.sh · OSD over-threshold check" {shape: rectangle}
 RS: "rbd-snapshot-rotate.sh · daily snap + 7-day retention" {shape: rectangle}
 O1: "exit 0 = HEALTH_OK · exit 1 = degraded" {shape: rectangle}
-O2: "exit 0 = all within bounds · exit 1 = OSD over threshold" {shape: rectangle}
+O2: "exit 0 = all within bounds · exit 1 = OSD over\nthreshold" {shape: rectangle}
 O3: "creates daily snap · removes snaps older than 7 days" {shape: rectangle}
 O4: "/tmp/ceph-snapshot-DATE.txt · full cluster state dump" {shape: rectangle}
 

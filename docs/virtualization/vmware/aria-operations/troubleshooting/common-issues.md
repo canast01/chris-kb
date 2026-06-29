@@ -284,12 +284,12 @@ R2: "Verify Source Reachability · Check Collector Log\n→ Adapter Disconnected
 D2: "D2" {shape: rectangle}
 R3: "Resolve Adapter Issue First\n→ Adapter Disconnected" {shape: rectangle}
 R4: "Check Widget Scope · Widen Time Range\n→ No Data in Dashboards" {shape: rectangle}
-R5: "Raise Alert Threshold · Add Wait Cycles · Suppress During Maintenance\n→ Alert Storm" {shape: rectangle}
+R5: "Raise Alert Threshold · Add Wait Cycles · Suppress\nDuring Maintenance\n→ Alert Storm" {shape: rectangle}
 R6: "Force Capacity Recalculation via API\n→ Capacity Calculation Wrong" {shape: rectangle}
-R7: "Verify vSAN Management Pack Installed · Check Adapter Log\n→ vSAN Management Pack Missing Metrics" {shape: rectangle}
+R7: "Verify vSAN Management Pack Installed · Check\nAdapter Log\n→ vSAN Management Pack Missing Metrics" {shape: rectangle}
 D3: "D3" {shape: rectangle}
 R8: "Power On Node · Check Inter-node Network\n→ Node Offline / Cluster Issue" {shape: rectangle}
-R9: "Restart vmware-vcops Service · Check VAMI Cluster Status\n→ Node Offline / Cluster Issue" {shape: rectangle}
+R9: "Restart vmware-vcops Service · Check VAMI Cluster\nStatus\n→ Node Offline / Cluster Issue" {shape: rectangle}
 
 S -> B1
 S -> B2

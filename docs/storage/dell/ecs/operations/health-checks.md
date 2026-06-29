@@ -35,7 +35,7 @@ Health Checks reference covering Health Check Layers, Daily Checks, Pre-Change H
 ![Health Check Layers](../../../../assets/storage-dell-ecs-hc-health-check-layers.svg)
 
 ```mermaid
-graph TD
+graph LR
   subgraph "REST API Layer"
     NODES["GET /vdc/nodes\nAll nodes: GOOD?"]
     CAP["GET /vdc/capacity\nUsed < 70%?"]

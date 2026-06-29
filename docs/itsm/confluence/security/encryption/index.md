@@ -47,10 +47,10 @@ server {
 direction: down
 
 database_encryption: "Database Encryption" {shape: rectangle}
-varatlassianapplicationdataconfluenc: "/var/atlassian/application-data/confluence/confluence.cfg.xm" {shape: rectangle}
+varatlassianapplicationdataconfluenc: "/var/atlassian/application-\ndata/confluence/confluence.cfg.xm" {shape: rectangle}
 ensure_the_jdbc_url_includes_ssl_par: "Ensure the JDBC URL includes SSL parameters:" {shape: rectangle}
 for_mysql: "For MySQL:" {shape: rectangle}
-store_the_database_password_encrypte: "Store the database password encrypted in confluence.cfg.xml" {shape: rectangle}
+store_the_database_password_encrypte: "Store the database password encrypted in\nconfluence.cfg.xml" {shape: rectangle}
 use_confluences_builtin_password_enc: "Use Confluence's built-in password encoding tool" {shape: rectangle}
 
 database_encryption -> varatlassianapplicationdataconfluenc: hardens

@@ -13,7 +13,7 @@ Design standards, sizing guidelines, naming conventions, and configuration basel
 ![Dell VPLEX — Standards](../../../../assets/storage-dell-vplex-architecture-design-standards.svg)
 
 ```mermaid
-flowchart TD
+flowchart LR
     subgraph "Naming Convention"
         vv["Virtual Volume\nvv-oracle-prod-01"]
         ld["Local Device\nld-oracle-prod-01"]

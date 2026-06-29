@@ -36,7 +36,7 @@ Health Checks reference covering Monitoring Hierarchy, Daily Checks, Health Chec
 ![Monitoring Hierarchy](../../../../assets/storage-dell-powermax-hc-monitoring-hierarchy.svg)
 
 ```mermaid
-graph TD
+graph LR
     subgraph "Real-Time Monitoring"
         UNI_DASH["Unisphere Dashboard\n(Alerts + Directors + Ports)"]
         SYMSTAT["symstat -type sg/dev/cache\n(IOPS, MB/s, latency, WP%)"]

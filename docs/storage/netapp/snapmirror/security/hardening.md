@@ -25,7 +25,7 @@ SnapMirror hardening: restricting intercluster LIF firewall policy to replicatio
 
 ## Hardening Checklist
 
-Apply this checklist to all clusters participating in SnapMirror relationships. It supplements the broader [ONTAP Security Hardening](../../ontap/security/hardening/index.md) baseline, which should be applied first.
+Apply this checklist to all clusters participating in SnapMirror relationships. It supplements the broader [ONTAP Security Hardening](../../ontap/security/hardening.md) baseline, which should be applied first.
 
 ### Intercluster Network
 

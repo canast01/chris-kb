@@ -108,7 +108,7 @@ Deploying to other regions requires an exception approved by InfoSec.
 ## VPC Architecture
 
 ```mermaid
-flowchart TD
+flowchart LR
     subgraph vpc["VPC — 10.x.0.0/16"]
         subgraph az1["Availability Zone A"]
             pubSubA["Public Subnet /24\nALB · NAT GW"]

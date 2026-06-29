@@ -44,11 +44,11 @@ DS --> ADM: Capacity forecast
 ```d2
 direction: right
 
-Clusters: "PowerScale Clusters · OneFS management IP · SmartConnect zones · PAPI REST API" {shape: rectangle}
-InsightIQ: "InsightIQ Appliance · OVA on mgmt cluster · collection engine · TCP 8080 poll" {shape: rectangle}
-PostgreSQL: "PostgreSQL Database · local on-appliance · 30-sec raw samples · 5-min rollup buckets" {shape: rectangle}
-WebUI: "Web Dashboard · HTTP/HTTPS · pre-built + custom views · time-range queries" {shape: rectangle}
-Reports: "Reports + Alerts · PDF / CSV export · email threshold alerts · SMTP relay" {shape: rectangle}
+Clusters: "PowerScale Clusters · OneFS management IP ·\nSmartConnect zones · PAPI REST API" {shape: rectangle}
+InsightIQ: "InsightIQ Appliance · OVA on mgmt cluster ·\ncollection engine · TCP 8080 poll" {shape: rectangle}
+PostgreSQL: "PostgreSQL Database · local on-appliance · 30-sec\nraw samples · 5-min rollup buckets" {shape: rectangle}
+WebUI: "Web Dashboard · HTTP/HTTPS · pre-built + custom\nviews · time-range queries" {shape: rectangle}
+Reports: "Reports + Alerts · PDF / CSV export · email\nthreshold alerts · SMTP relay" {shape: rectangle}
 
 Clusters -> InsightIQ
 InsightIQ -> PostgreSQL

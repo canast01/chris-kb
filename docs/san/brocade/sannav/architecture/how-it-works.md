@@ -89,7 +89,7 @@ Hypervisors supported: VMware ESXi 6.7+, 7.x; KVM.
 ## Internal Services
 
 ```mermaid
-graph TB
+graph LR
   SW1["Brocade Switch A\nFabricOS · REST/SNMP telemetry"]
   SW2["Brocade Switch B\nFabricOS · REST/SNMP telemetry"]
   SW3["Brocade Switch C\nFabricOS · REST/SNMP telemetry"]

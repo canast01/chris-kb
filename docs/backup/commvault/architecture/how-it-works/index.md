@@ -64,7 +64,7 @@ MediaAgent best practices:
 ## Multi-Site Topology
 
 ```mermaid
-flowchart TD
+flowchart LR
     subgraph primarySite [Primary Site]
         cs["CommServe\n(command & control)"]
         ma1["MediaAgent\ndc1-ma-01"]

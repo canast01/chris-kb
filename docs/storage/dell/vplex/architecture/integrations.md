@@ -13,7 +13,7 @@ Integration with back-end storage arrays, hypervisors, replication systems, and 
 ![Dell VPLEX — Integrations](../../../../assets/storage-dell-vplex-architecture-integrations.svg)
 
 ```mermaid
-flowchart TB
+flowchart LR
     subgraph "Site A"
         hostA["ESXi / Linux Hosts\nSite A"]
         dirA["VPLEX Cluster-1\nDirectors"]

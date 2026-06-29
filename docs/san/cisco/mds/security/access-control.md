@@ -32,7 +32,7 @@ Access control on Cisco MDS operates at two levels: **management plane** (who ca
 ## Access Control Architecture
 
 ```mermaid
-graph TD
+graph LR
   subgraph "Management Plane — Who can log in"
     MGMT["mgmt0 interface\n(SSH port 22 / HTTPS 443)"]
     ACL["IP ACL: permit mgmt subnet only"]

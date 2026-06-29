@@ -42,7 +42,7 @@ TKG --> DEV: Pod running
 vSphere with Tanzu (Workload Management) embeds Kubernetes natively into the ESXi hypervisor layer. The Supervisor cluster runs directly on ESXi hosts via the Spherelet component — a kubelet-equivalent that executes in the ESXi kernel space. Supervisor control plane VMs and workload VMs are scheduled as native vSphere VMs, but managed by Kubernetes APIs exposed through vCenter.
 
 ```mermaid
-graph TB
+graph LR
     VC["vCenter Server\n(Workload Management enabled)"]:::blue
 
     subgraph SUP["Supervisor Cluster"]

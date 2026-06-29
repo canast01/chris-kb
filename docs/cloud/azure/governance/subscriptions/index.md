@@ -13,7 +13,7 @@ An Azure subscription is a logical unit of Azure services that links to an Azure
 ## Azure Subscription Governance Model
 
 ```mermaid
-flowchart TD
+flowchart LR
     tenant["Azure Tenant\nEntra ID"]
     mg["Management Group\nhierarchy"]
     sub["Subscription\nbilling + access boundary"]

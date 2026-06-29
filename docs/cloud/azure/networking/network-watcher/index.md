@@ -14,7 +14,7 @@ Azure Network Watcher provides tools for monitoring, diagnosing, and gaining ins
 ## Network Watcher Toolset
 
 ```mermaid
-flowchart TD
+flowchart LR
     nw["Network Watcher\n(region-scoped)"]
     subgraph diagnostic["Diagnostic Tools"]
         ipFlow["IP Flow Verify\nNSG allow/deny check"]

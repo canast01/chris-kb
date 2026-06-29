@@ -24,7 +24,7 @@ SSO, LDAP, local accounts, and identity sources for Dell PowerScale.
 ## Overview
 
 ```mermaid
-graph TD
+graph LR
     cluster["OneFS Cluster"]
 
     subgraph "System Zone"

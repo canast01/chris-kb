@@ -285,7 +285,7 @@ Look for: TCP RST packets in the capture confirm the DFW is sending a reset (REJ
 
 ## Related Scenarios
 
-- [NSX Connectivity Broken](nsx-connectivity-broken/index.md) — broader NSX connectivity failures including routing, transport zones, and TEP misconfiguration.
-- [NSX Edge Failure / BGP Down](nsx-edge-failure-bgp-down/index.md) — North-South traffic failures when the T0/T1 gateway is unavailable.
-- [NSX Microsegmentation Rollout](nsx-microsegmentation-rollout/index.md) — planned procedure for designing and deploying DFW rules across a cluster.
-- [VM Performance Degraded](vm-performance-degraded/index.md) — DFW hit count overhead can contribute to latency in high-traffic VMs.
+- [NSX Connectivity Broken](nsx-connectivity-broken.md) — broader NSX connectivity failures including routing, transport zones, and TEP misconfiguration.
+- [NSX Edge Failure / BGP Down](nsx-edge-failure-bgp-down.md) — North-South traffic failures when the T0/T1 gateway is unavailable.
+- [NSX Microsegmentation Rollout](nsx-microsegmentation-rollout.md) — planned procedure for designing and deploying DFW rules across a cluster.
+- [VM Performance Degraded](vm-performance-degraded.md) — DFW hit count overhead can contribute to latency in high-traffic VMs.

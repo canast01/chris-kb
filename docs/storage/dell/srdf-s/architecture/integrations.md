@@ -17,7 +17,7 @@ SRDF/S integrations: SRDF/Star three-site topology, Microsoft Cluster Services w
 ## vMSC and SRM Integration Topology
 
 ```mermaid
-graph TD
+graph LR
     subgraph siteA ["Site A — Production"]
         vcA["vCenter\n(Site A)"]
         srmA["SRM Server\n(Protected Site)"]

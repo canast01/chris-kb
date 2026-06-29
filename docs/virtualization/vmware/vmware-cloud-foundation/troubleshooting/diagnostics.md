@@ -29,7 +29,7 @@ I: "I" {shape: rectangle}
 J: "systemctl restart vmware-vcf-operationsmanager\nCheck disk: df -h on SDDC Manager" {shape: rectangle}
 K: "GET /v1/tasks?status=IN_PROGRESS for stuck task IDs\ngrep task-uuid operationsmanager.log" {shape: rectangle}
 L: "L" {shape: rectangle}
-M: "curl -v https://depot.vmware.com to test depot connectivity\nCheck proxy: domain-manager.properties" {shape: rectangle}
+M: "curl -v https://depot.vmware.com to test depot\nconnectivity\nCheck proxy: domain-manager.properties" {shape: rectangle}
 N: "grep precheck FAIL lcm-debug.log for check name\nRemediate flagged item and retry" {shape: rectangle}
 O: "grep UPGRADE_STAGE lcm-debug.log\nCheck last stage entry for timeout" {shape: rectangle}
 P: "ESXi: vmkping -I vmk10 -d -s 1572 remote-tep-ip for MTU\nNSX: get bgp neighbor summary on Edge" {shape: rectangle}
@@ -71,7 +71,7 @@ direction: down
 symptom: Identify Symptom {shape: diamond}
 step_1_check_sddc_manager_services_a: "Step 1 — Check SDDC Manager services and health" {shape: rectangle}
 step_2_analyze_lcm_lifecycle_and_upg: "Step 2 — Analyze LCM lifecycle and upgrade logs" {shape: rectangle}
-step_3_diagnose_nsx_manager_cluster_: "Step 3 — Diagnose NSX Manager cluster and transport nodes" {shape: rectangle}
+step_3_diagnose_nsx_manager_cluster_: "Step 3 — Diagnose NSX Manager cluster and\ntransport nodes" {shape: rectangle}
 step_4_check_vcenter_appliance: "Step 4 — Check vCenter appliance" {shape: rectangle}
 step_5_query_sddc_manager_health_api: "Step 5 — Query SDDC Manager health API" {shape: rectangle}
 step_6_collect_sos_diagnostic_bundle: "Step 6 — Collect SOS diagnostic bundle" {shape: rectangle}

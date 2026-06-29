@@ -24,7 +24,7 @@ Backup & Restore reference covering Overview, Configuration File Location, Confi
 ## Overview
 
 ```mermaid
-graph TD
+graph LR
     subgraph "Items to Preserve"
         cfg["powermt.custom\n(policy + device settings)"]
         baseline["Dated Baseline Snapshot\npowermt display dev=all output"]

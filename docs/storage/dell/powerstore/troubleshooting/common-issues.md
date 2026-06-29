@@ -105,7 +105,7 @@ D5 -> R10
 | Alert: pool degraded | Drive failure or reconstruction in progress | Check drive health; monitor reconstruction; verify pool state |
 | Performance degradation | Workload spike; workload imbalance; DRR inefficiency | Check performance metrics; review per-volume IOPS/latency; check if deduplication is being bypassed |
 | iSCSI sessions not connecting | iSCSI network not reachable; CHAP credentials mismatch | Check iSCSI VLAN; verify CHAP credentials match both sides |
-| Certificate expired | Management certificate past expiry | Renew and import certificate; see [Encryption](../security/encryption/index.md) |
+| Certificate expired | Management certificate past expiry | Renew and import certificate; see [Encryption](../security/encryption.md) |
 | SupportAssist shows disconnected | Proxy blocking outbound HTTPS; ESRS service down | Check proxy for `esrs3.emc.com:443`; restart SupportAssist from Manager UI |
 
 ## Host Connectivity Issues

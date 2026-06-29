@@ -24,7 +24,7 @@ Hardening reference covering Overview, Audit Logging and Syslog, SNMP Security, 
 ## Overview
 
 ```mermaid
-graph TD
+graph LR
     dd["Data Domain Appliance"]
 
     subgraph "Account Security"
@@ -355,7 +355,7 @@ Current Certificate Information:
 
 ## Encryption Hardening
 
-See the [Encryption](encryption/index.md) page for full D@RE configuration. Key hardening requirements:
+See the [Encryption](encryption.md) page for full D@RE configuration. Key hardening requirements:
 
 ```bash
 # Confirm D@RE is enabled

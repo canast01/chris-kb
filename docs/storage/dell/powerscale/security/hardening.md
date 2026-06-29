@@ -24,7 +24,7 @@ Security baselines and compliance configuration for Dell PowerScale.
 ## Hardening Checklist
 
 ```mermaid
-graph TD
+graph LR
     cluster["PowerScale Cluster"]
 
     subgraph "Network Layer"

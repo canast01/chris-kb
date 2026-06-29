@@ -285,7 +285,7 @@ SnapCenter manages retention policies at the backup job level. Expired backup co
 The diagram below shows how ONTAP layers physical drives, RAID groups, aggregates, SVMs, volumes, and sub-volume constructs (LUNs, qtrees, shares) into a coherent hierarchy. The SVM boundary is where multi-tenancy is enforced — each tenant sees only its own namespace, LIFs, and data.
 
 ```mermaid
-flowchart TD
+flowchart LR
     subgraph PHYSICAL["Physical Layer — Node-Owned Hardware"]
         DRIVES["Physical Drives\nNVMe SSDs · SATA HDDs · SAS HDDs\nMixed media supported per aggregate"]
         RAIDG["RAID Groups\nRAID-DP: 2 parity disks, 2-drive fault tolerance\nRAID-TEC: 3 parity disks, 3-drive fault tolerance\nTypical group: 12–28 data drives"]

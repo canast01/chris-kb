@@ -36,7 +36,7 @@ Health Checks reference covering Daily Health Check Procedure, Change Readiness 
 
 ![Daily Health Check Procedure](../../../../assets/storage-dell-powerstore-hc-daily-health-check-procedure.svg)
 
-Run this procedure each morning on all production PowerStore systems. The checks can be automated using the PowerStore REST API — see the scripts in the [Scripts](scripts/index.md) section.
+Run this procedure each morning on all production PowerStore systems. The checks can be automated using the PowerStore REST API — see the scripts in the [Scripts](scripts.md) section.
 
 ### 1. Log In and Review the Dashboard
 
@@ -526,7 +526,7 @@ When a CRITICAL alert fires on PowerStore:
 | `Replication session failed` | Network connectivity lost between sites | Check WAN/MPLS link; check firewall rules for replication port TCP/443 |
 | `NAS server unavailable` | Node-level fault or NAS server software fault | Check node health; attempt NAS server failover manually |
 | `Metro Volume link down` | Metro Volume network connectivity lost or mediator unreachable | Check inter-site network; check mediator VM status; prepare for manual promotion if link is persistently down |
-| `Certificate expired` | Management certificate past expiry date | Renew and import the certificate; see [Security / Authentication](../security/authentication/index.md) |
+| `Certificate expired` | Management certificate past expiry date | Renew and import the certificate; see [Security / Authentication](../security/authentication.md) |
 | `SupportAssist connectivity lost` | Outbound HTTPS to Dell SRS blocked | Check proxy/firewall for `esrs3.emc.com:443`; confirm SupportAssist configuration |
 
 ---

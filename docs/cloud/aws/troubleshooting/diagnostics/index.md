@@ -23,18 +23,18 @@ E: "aws iam simulate-principal-policy\nFind which policy statement denies the ac
 F: "aws ec2 describe-instance-status\nCheck system and instance status checks" {shape: rectangle}
 G: "CloudWatch metrics: CPUUtilization / DBConnections\nCheck enhanced monitoring and slow query log" {shape: rectangle}
 H: "aws logs filter-log-events /aws/lambda/function\nCheck throttling CloudWatch metric" {shape: rectangle}
-I: "kubectl get nodes -o wide\nkubectl get pods -A --field-selector=status.phase!=Running" {shape: rectangle}
+I: "kubectl get nodes -o wide\nkubectl get pods -A --field-\nselector=status.phase!=Running" {shape: rectangle}
 J: "aws cloudformation describe-stack-events\nRead ResourceStatusReason column" {shape: rectangle}
 K: "aws cloudtrail lookup-events --max-results 50\nFilter for ErrorCode or specific resource" {shape: rectangle}
 L: "L" {shape: rectangle}
 M: "Identify SG rule or NACL blocking port\nCheck SG for source IP / CIDR" {shape: rectangle}
 N: "Check route table: aws ec2 describe-route-tables\nCheck internet gateway and NAT gateway" {shape: rectangle}
-O: "simulate-principal-policy output: implicitDeny or explicitDeny\nImplicit = no allow; Explicit = Deny statement present" {shape: rectangle}
+O: "simulate-principal-policy output: implicitDeny or\nexplicitDeny\nImplicit = no allow; Explicit = Deny statement present" {shape: rectangle}
 P: "aws ec2 get-console-output to read serial console\nConnect via SSM Session Manager if SSH fails" {shape: rectangle}
 Q: "Enable Performance Insights\nCheck slow query log /aws/rds/instance/id/slowquery" {shape: rectangle}
 R: "Check ReservedConcurrentExecutions limit\nReview function timeout vs actual execution time" {shape: rectangle}
 S: "kubectl describe node node-name\naws eks describe-nodegroup for health.issues" {shape: rectangle}
-T: "Review ROLLBACK events\nFix the specific resource that caused ROLLBACK_IN_PROGRESS" {shape: rectangle}
+T: "Review ROLLBACK events\nFix the specific resource that caused\nROLLBACK_IN_PROGRESS" {shape: rectangle}
 U: "Collect diagnostics for AWS Support\naws support create-case" {shape: rectangle}
 A: "AWS Issue" {shape: rectangle}
 
@@ -71,7 +71,7 @@ direction: down
 
 symptom: Identify Symptom {shape: diamond}
 step_1_confirm_identity_and_recent_c: "Step 1 — Confirm identity and recent changes" {shape: rectangle}
-step_2_diagnose_vpc_connectivity_wit: "Step 2 — Diagnose VPC connectivity with Flow Logs and Reacha" {shape: rectangle}
+step_2_diagnose_vpc_connectivity_wit: "Step 2 — Diagnose VPC connectivity with Flow Logs\nand Reacha" {shape: rectangle}
 step_3_diagnose_iam_access_denied_er: "Step 3 — Diagnose IAM access denied errors" {shape: rectangle}
 step_4_diagnose_ec2_instance_health: "Step 4 — Diagnose EC2 instance health" {shape: rectangle}
 step_5_diagnose_rds_performance_and_: "Step 5 — Diagnose RDS performance and connectivity" {shape: rectangle}

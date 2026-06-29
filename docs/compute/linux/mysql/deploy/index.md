@@ -20,7 +20,7 @@ plan: "Plan" {shape: oval}
 install_on_rhel_rocky: "Install on RHEL / Rocky" {shape: rectangle}
 install_on_ubuntu_debian: "Install on Ubuntu / Debian" {shape: rectangle}
 postinstall_hardening: "Post-Install Hardening" {shape: rectangle}
-initial_configuration_etcmysqlmysqlc: "Initial Configuration (`/etc/mysql/mysql.conf.d/mysqld.cnf`)" {shape: rectangle}
+initial_configuration_etcmysqlmysqlc: "Initial Configuration\n(`/etc/mysql/mysql.conf.d/mysqld.cnf`)" {shape: rectangle}
 firewall: "Firewall" {shape: rectangle}
 firstconnection_validation: "First-Connection Validation" {shape: rectangle}
 validate: "Validate" {shape: oval}

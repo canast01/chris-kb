@@ -18,7 +18,7 @@ direction: down
 keystone_collector_health_check_bash: "Keystone Collector Health Check (Bash)" {shape: rectangle}
 keystone_usage_report_python: "Keystone Usage Report (Python)" {shape: rectangle}
 volume_service_level_audit_bash: "Volume Service Level Audit (Bash)" {shape: rectangle}
-windows_keystone_subscription_usage_: "Windows: Keystone Subscription Usage via REST API (PowerShel" {shape: rectangle}
+windows_keystone_subscription_usage_: "Windows: Keystone Subscription Usage via REST API\n(PowerShel" {shape: rectangle}
 windows_keystone_usage_trending_powe: "Windows: Keystone Usage Trending (PowerShell)" {shape: rectangle}
 
 keystone_collector_health_check_bash -> keystone_usage_report_python: uses

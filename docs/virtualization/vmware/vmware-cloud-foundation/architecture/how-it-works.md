@@ -87,7 +87,7 @@ SDDC Manager → Network Settings → Network Pools
 ```
 
 ```mermaid
-graph TB
+graph LR
     CB["☁ Cloud Builder<br/>(initial bring-up only)"]
     SM["⚙ SDDC Manager<br/>Lifecycle &amp; Orchestration Hub"]
 

@@ -24,7 +24,7 @@ Authentication reference covering Overview, Active Directory Integration, Disabl
 ## Overview
 
 ```mermaid
-graph TD
+graph LR
     adminUser(["Admin or Service Account"])
 
     subgraph "Management Plane"

@@ -87,7 +87,7 @@ support_bundle.tar.gz                                    100%  487MB   12.4MB/s 
 - Monitor resync progress: `ll /distributed-storage/distributed-devices/*/health-indications/`
 
 ```mermaid
-flowchart TD
+flowchart LR
     subgraph "VMS Loss"
         vmsLost["VMS VM unavailable\n(management plane only)"]
         ioOk["Host I/O continues\nDirectors unaffected"]

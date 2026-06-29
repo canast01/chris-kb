@@ -52,7 +52,7 @@ symptom: Identify Symptom {shape: diamond}
 step_1_check_eyeglass_service_health: "Step 1 — Check Eyeglass service health" {shape: rectangle}
 step_2_check_dr_readiness_score: "Step 2 — Check DR readiness score" {shape: rectangle}
 step_3_check_synciq_on_the_powerscal: "Step 3 — Check SyncIQ on the PowerScale cluster" {shape: rectangle}
-step_4_check_onefs_api_connectivity_: "Step 4 — Check OneFS API connectivity (Eyeglass to cluster)" {shape: rectangle}
+step_4_check_onefs_api_connectivity_: "Step 4 — Check OneFS API connectivity (Eyeglass to\ncluster)" {shape: rectangle}
 step_5_read_eyeglass_log_files: "Step 5 — Read Eyeglass log files" {shape: rectangle}
 log_locations: "Log locations" {shape: rectangle}
 resolution: Resolve or Escalate {shape: oval}

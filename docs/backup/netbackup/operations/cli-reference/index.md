@@ -25,7 +25,7 @@ NetBackup CLI Reference reference covering Master → Media → Client Topology,
 Understanding the three-tier topology is essential before using the CLI — commands execute at the correct tier.
 
 ```mermaid
-flowchart TD
+flowchart LR
     subgraph masterTier [Primary / Master Server]
         master["Primary Server\n(catalog, policy DB,\njob scheduler, EMM)"]
         catalog[("NetBackup Catalog\nbpdbm — image metadata")]

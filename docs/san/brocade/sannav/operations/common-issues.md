@@ -12,7 +12,7 @@ Operations Common Issues reference covering Overview, Switch Not Appearing After
 </div>
 ![SANnav — Operations Common Issues](../../../../assets/san-brocade-sannav-operations-common-issues.svg)
 
-> Part of the [SANnav](../index.md) reference. For deeper diagnosis, see [Troubleshooting > Common Issues](../troubleshooting/common-issues/index.md).
+> Part of the [SANnav](../index.md) reference. For deeper diagnosis, see [Troubleshooting > Common Issues](../troubleshooting/common-issues.md).
 
 ---
 
@@ -167,7 +167,7 @@ This page is a quick-reference for operational issues encountered during day-to-
 
 **Resolution:**
 
-1. The default SANnav deployment uses a self-signed certificate. Replace it with a corporate CA certificate — see [Security > Authentication](../security/authentication/index.md) for the full procedure.
+1. The default SANnav deployment uses a self-signed certificate. Replace it with a corporate CA certificate — see [Security > Authentication](../security/authentication.md) for the full procedure.
 2. If a CA certificate is already installed but the warning persists, check the certificate chain:
    ```bash
    openssl s_client -connect sannav-dc1.corp.example.com:443 \

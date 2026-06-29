@@ -24,7 +24,7 @@ C: "vmon-cli -l to check service state\ndf -h for /storage/db and /storage/log" 
 D: "tail ssoAdminServer.log\nCheck NTP: chronyc tracking" {shape: rectangle}
 E: "nslookup vcenter-fqdn from ESXi\nnc -zv vcenter 443 to test port" {shape: rectangle}
 F: "vecs-cli entry list store MACHINE_SSL_CERT\nopenssl s_client -connect vcenter:443 for expiry" {shape: rectangle}
-G: "vpxd.log for task errors\nPostgres: select pg_stat_activity to check stuck queries" {shape: rectangle}
+G: "vpxd.log for task errors\nPostgres: select pg_stat_activity to check stuck\nqueries" {shape: rectangle}
 H: "curl -sk REST API session acquire\nCheck vpxd.log for API error codes" {shape: rectangle}
 I: "I" {shape: rectangle}
 J: "journalctl -u vmware-vpxd -n 100\nservice-control --start vpxd" {shape: rectangle}

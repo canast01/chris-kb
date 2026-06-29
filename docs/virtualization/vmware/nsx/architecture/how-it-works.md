@@ -43,7 +43,7 @@ MGR --> ADM: Policy enforced
 ### NSX 3-Plane Architecture
 
 ```mermaid
-graph TB
+graph LR
     subgraph MGMT["Management Plane — NSX Manager Cluster"]
         MGR1["NSX Manager 1<br/>Policy API · REST · UI"]
         MGR2["NSX Manager 2<br/>Policy API · REST · UI"]

@@ -44,11 +44,11 @@ AIO -> ML: Feedback loop (improve model)
 ```d2
 direction: right
 
-Sources: "Storage Arrays · PowerStore · PowerMax · PowerScale · Unity XT · Data Domain" {shape: rectangle}
-SCG: "Secure Connect Gateway · on-prem OVA · polls every 5 min · HTTPS outbound only" {shape: rectangle}
-AIPipeline: "Dell AI Pipeline · cloud-managed · anomaly detection · RCA · capacity forecasting" {shape: rectangle}
-Console: "CloudIQ / APEX Console · SaaS portal · recommendations · health scores · alerts" {shape: rectangle}
-Notify: "Notification Channels · PagerDuty · email · webhooks · ITSM" {shape: rectangle}
+Sources: "Storage Arrays · PowerStore · PowerMax ·\nPowerScale · Unity XT · Data Domain" {shape: rectangle}
+SCG: "Secure Connect Gateway · on-prem OVA · polls every\n5 min · HTTPS outbound only" {shape: rectangle}
+AIPipeline: "Dell AI Pipeline · cloud-managed · anomaly\ndetection · RCA · capacity forecasting" {shape: rectangle}
+Console: "CloudIQ / APEX Console · SaaS portal ·\nrecommendations · health scores · alerts" {shape: rectangle}
+Notify: "Notification Channels · PagerDuty · email ·\nwebhooks · ITSM" {shape: rectangle}
 
 Sources -> SCG
 SCG -> AIPipeline

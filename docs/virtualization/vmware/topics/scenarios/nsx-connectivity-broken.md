@@ -467,6 +467,6 @@ Look for: `vmkping -I vmk10 -d -s 1572` success to all remote TEPs confirms the 
 
 ## Related Scenarios
 
-- [VM Performance Degraded](vm-performance-degraded/index.md) — DFW rule overhead on east-west traffic is a common but overlooked cause of VM network latency and dropped packets.
-- [vMotion Failing](vmotion-failing/index.md) — NSX TEP and segment availability issues cause vMotion failures; the vMotion scenario covers TEP vmkping in context.
-- [VM Inaccessible / HA Failover](vm-inaccessible-ha-failover/index.md) — After HA restarts a VM on a new host, NSX transport node state on that host must be healthy for connectivity to restore.
+- [VM Performance Degraded](vm-performance-degraded.md) — DFW rule overhead on east-west traffic is a common but overlooked cause of VM network latency and dropped packets.
+- [vMotion Failing](vmotion-failing.md) — NSX TEP and segment availability issues cause vMotion failures; the vMotion scenario covers TEP vmkping in context.
+- [VM Inaccessible / HA Failover](vm-inaccessible-ha-failover.md) — After HA restarts a VM on a new host, NSX transport node state on that host must be healthy for connectivity to restore.

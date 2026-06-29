@@ -17,8 +17,8 @@ Jira diagnostic commands: check instance health via the /status endpoint and RES
 direction: right
 
 A: "Issue Reported" {shape: rectangle}
-B: "Collect basic info: version, error message, affected users" {shape: rectangle}
-C: "curl status endpoint + grep catalina.out for ERROR OOM Exception" {shape: rectangle}
+B: "Collect basic info: version, error message,\naffected users" {shape: rectangle}
+C: "curl status endpoint + grep catalina.out for ERROR\nOOM Exception" {shape: rectangle}
 D: "D" {shape: rectangle}
 F: "Check HTTP response times: load a Jira project board" {shape: rectangle}
 E: "E" {shape: rectangle}

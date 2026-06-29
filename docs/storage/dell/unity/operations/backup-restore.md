@@ -545,7 +545,7 @@ graph LR
 
 ## Replication as DR Protection
 
-Unity asynchronous replication provides RPO-based protection to a secondary Unity or PowerStore array. See the [CLI Reference — Replication](cli-reference/index.md#replication) section for full replication commands.
+Unity asynchronous replication provides RPO-based protection to a secondary Unity or PowerStore array. See the [CLI Reference — Replication](cli-reference.md#replication) section for full replication commands.
 
 ```bash
 # Show replication sessions with last sync time
@@ -593,7 +593,7 @@ Last Sync Time: 2024-01-15 14:35:47
     **`Error: Session <session_id> not found`** — Verify the session ID exists by running the show command without filters and confirm the exact session identifier.
     **`Error: Authentication failed for user admin`** — Ensure the admin credentials are correct and the user has replication management privileges on the Unity array.
     **`Error: Replication session is in Failed state and cannot sync`** — Check array event logs for the failure cause and resolve the underlying issue (network connectivity, storage capacity, or licensing) before retrying the sync.
-For DR procedures including planned failover, failback, and reverse replication, see the [Procedures](procedures/index.md) page.
+For DR procedures including planned failover, failback, and reverse replication, see the [Procedures](procedures.md) page.
 
 ## Restore Validation
 

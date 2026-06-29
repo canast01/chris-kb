@@ -51,18 +51,18 @@ C: "Audit event not captured" {shape: rectangle}
 D: "Eyeglass appliance unreachable" {shape: rectangle}
 E: "License expiry warning" {shape: rectangle}
 A1: "A1" {shape: rectangle}
-A2: "Re-register cluster credentials in Eyeglass — see Common Issues Reference" {shape: rectangle}
-A3: "Check SyncIQ job status and network bandwidth between sites" {shape: rectangle}
+A2: "Re-register cluster credentials in Eyeglass — see\nCommon Issues Reference" {shape: rectangle}
+A3: "Check SyncIQ job status and network bandwidth\nbetween sites" {shape: rectangle}
 B1: "B1" {shape: rectangle}
-B2: "Fix pre-check error; re-run DR runbook — see Common Issues Reference" {shape: rectangle}
-B3: "Review Eyeglass task log and OneFS audit log for step-level error" {shape: rectangle}
+B2: "Fix pre-check error; re-run DR runbook — see\nCommon Issues Reference" {shape: rectangle}
+B3: "Review Eyeglass task log and OneFS audit log for\nstep-level error" {shape: rectangle}
 C1: "C1" {shape: rectangle}
 C2: "Restart RAPA service on Eyeglass appliance" {shape: rectangle}
-C3: "Verify audit log connector configuration and OneFS audit settings" {shape: rectangle}
+C3: "Verify audit log connector configuration and OneFS\naudit settings" {shape: rectangle}
 D1: "D1" {shape: rectangle}
-D2: "Power on Eyeglass VM in vCenter — see Common Issues Reference" {shape: rectangle}
-D3: "Check management network and Eyeglass service status via console" {shape: rectangle}
-E1: "Log in to Superna portal and renew license; apply key in Eyeglass UI" {shape: rectangle}
+D2: "Power on Eyeglass VM in vCenter — see Common\nIssues Reference" {shape: rectangle}
+D3: "Check management network and Eyeglass service\nstatus via console" {shape: rectangle}
+E1: "Log in to Superna portal and renew license; apply\nkey in Eyeglass UI" {shape: rectangle}
 
 S -> A
 S -> B

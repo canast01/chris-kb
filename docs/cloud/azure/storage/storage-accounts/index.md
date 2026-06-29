@@ -17,7 +17,7 @@ A Storage Account is the top-level namespace for all Azure Storage services (Blo
 ## Storage Account Service Hierarchy
 
 ```mermaid
-flowchart TD
+flowchart LR
     storageAccount["Storage Account\nGPv2 (recommended)"]
     subgraph services["Storage Services"]
         blobs["Blob Storage\nBlock · Append · Page"]

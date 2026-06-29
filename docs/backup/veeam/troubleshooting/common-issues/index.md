@@ -52,19 +52,19 @@ B: "Repository full" {shape: rectangle}
 C: "Restore fails — no valid restore point" {shape: rectangle}
 D: "Tape job error" {shape: rectangle}
 A1: "A1" {shape: rectangle}
-A2: "Check proxy TCP 2500-3300 and VMware Tools — see Triage Decision Tree" {shape: rectangle}
+A2: "Check proxy TCP 2500-3300 and VMware Tools — see\nTriage Decision Tree" {shape: rectangle}
 A3: "Check VSS writer state and quiesce settings on guest" {shape: rectangle}
 B1: "B1" {shape: rectangle}
-B2: "Trigger capacity tier offload manually — see Repository Out of Space" {shape: rectangle}
+B2: "Trigger capacity tier offload manually — see\nRepository Out of Space" {shape: rectangle}
 B3: "Reduce retention or delete orphaned backup files" {shape: rectangle}
 C1: "C1" {shape: rectangle}
-C2: "Check retention policy and catalog — restore point may be expired" {shape: rectangle}
-C3: "Check vPower NFS service and mount server access — see Instant VM Recovery" {shape: rectangle}
+C2: "Check retention policy and catalog — restore point\nmay be expired" {shape: rectangle}
+C3: "Check vPower NFS service and mount server access —\nsee Instant VM Recovery" {shape: rectangle}
 D1: "D1" {shape: rectangle}
 D2: "Check media manager and tape library connectivity" {shape: rectangle}
 D3: "Check media expiry and tape slot inventory" {shape: rectangle}
 E: "E" {shape: rectangle}
-E1: "Restart VBR service and check Windows Event Log — see VBR Service Crash / Instability" {shape: rectangle}
+E1: "Restart VBR service and check Windows Event Log —\nsee VBR Service Crash / Instability" {shape: rectangle}
 
 S -> A
 S -> B

@@ -20,7 +20,7 @@ direction: right
 B: "B" {shape: rectangle}
 C: "health-check --full\nll /clusters/*/health-indications/" {shape: rectangle}
 D: "ll /clusters/*/exports/storage-views/\nll /virtual-volumes/ device name" {shape: rectangle}
-E: "ll /distributed-storage/distributed-devices/*/health-indications/\nCheck rebuild-progress attribute" {shape: rectangle}
+E: "ll /distributed-storage/distributed-\ndevices/*/health-indications/\nCheck rebuild-progress attribute" {shape: rectangle}
 F: "ll /engines/*/directors/*/hardware/\nCheck director health state" {shape: rectangle}
 G: "ll /clusters/*/cluster-witness/\nping cluster-2-mgmt-IP from VMS" {shape: rectangle}
 H: "ll /distributed-storage/consistency-groups/\nCheck CG state and suspension reason" {shape: rectangle}
@@ -28,11 +28,11 @@ I: "I" {shape: rectangle}
 J: "Drill to affected cluster\nll /clusters/cluster-N/health-indications/" {shape: rectangle}
 K: "Check distributed device sync state\nll /distributed-storage/distributed-devices/*/" {shape: rectangle}
 L: "L" {shape: rectangle}
-M: "Confirm HBA WWN: ll /clusters/*/exports/initiator-ports/\nAdd missing initiator or VV to view" {shape: rectangle}
+M: "Confirm HBA WWN: ll /clusters/*/exports/initiator-\nports/\nAdd missing initiator or VV to view" {shape: rectangle}
 N: "Host: multipath -ll or powermt display dev=all\nESXi: esxcli storage core adapter rescan --all" {shape: rectangle}
 O: "O" {shape: rectangle}
 P: "Monitor rebuild-progress until 100%\nDo not interrupt rebuild" {shape: rectangle}
-Q: "Check ICL: ll /clusters/*/communication/inter-cluster-links/\nCheck director health on affected cluster" {shape: rectangle}
+Q: "Check ICL: ll /clusters/*/communication/inter-\ncluster-links/\nCheck director health on affected cluster" {shape: rectangle}
 R: "DANGER: confirm active leg with Dell Support\nbefore device resume command" {shape: rectangle}
 S: "Check director pair health state\nminor-failure or major-failure needs TAC" {shape: rectangle}
 T: "Restore ICL if interrupted\nVerify Witness reachable from both clusters" {shape: rectangle}

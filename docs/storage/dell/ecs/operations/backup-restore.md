@@ -34,7 +34,7 @@ ECS does not have a traditional backup agent. Configuration backup covers the ma
 ## Data Durability Model
 
 ```mermaid
-graph TD
+graph LR
   subgraph "VDC-Level Protection"
     VDC1[("VDC 1 — Site A\n(primary)")]
     VDC2[("VDC 2 — Site B\n(replica)")]

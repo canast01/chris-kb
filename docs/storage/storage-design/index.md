@@ -178,7 +178,7 @@ For ransomware protection, extend to **3-2-1-1**: one of the copies must be **im
 ## Storage Architecture Diagram
 
 ```mermaid
-graph TD
+graph LR
     subgraph Host_Layer["Compute Layer"]
         H1["ESXi Host 1\n2×FC HBA + 2×10GbE iSCSI"]
         H2["ESXi Host 2\n2×FC HBA + 2×10GbE iSCSI"]

@@ -54,19 +54,19 @@ C: "Replication session behind" {shape: rectangle}
 D: "Alert storm from phone-home" {shape: rectangle}
 E: "Purity upgrade failed or hung" {shape: rectangle}
 A1: "A1" {shape: rectangle}
-A2: "Connect volume to host group — see Volume Not Visible on Host After Provisioning" {shape: rectangle}
+A2: "Connect volume to host group — see Volume Not\nVisible on Host After Provisioning" {shape: rectangle}
 A3: "Check initiator registration and rescan HBA on host" {shape: rectangle}
 B1: "B1" {shape: rectangle}
-B2: "P1 case immediately — do not pull drives — see Drive Failure and Rebuild" {shape: rectangle}
-B3: "Single drive — open P2 case; monitor rebuild with puredrive list" {shape: rectangle}
+B2: "P1 case immediately — do not pull drives — see\nDrive Failure and Rebuild" {shape: rectangle}
+B3: "Single drive — open P2 case; monitor rebuild with\npuredrive list" {shape: rectangle}
 C1: "C1" {shape: rectangle}
-C2: "Restore network path; pod resyncs automatically — see ActiveCluster Pod Out of Sync" {shape: rectangle}
+C2: "Restore network path; pod resyncs automatically —\nsee ActiveCluster Pod Out of Sync" {shape: rectangle}
 C3: "Check mediator reachability and bandwidth saturation" {shape: rectangle}
 D1: "D1" {shape: rectangle}
-D2: "Address hardware or capacity alerts — see Array Reporting High Latency" {shape: rectangle}
-D3: "Check Pure1 cloud connectivity and phone-home proxy settings" {shape: rectangle}
+D2: "Address hardware or capacity alerts — see Array\nReporting High Latency" {shape: rectangle}
+D3: "Check Pure1 cloud connectivity and phone-home\nproxy settings" {shape: rectangle}
 E1: "E1" {shape: rectangle}
-E2: "Run purearray upgrade --check and resolve blockers — see Purity Upgrade Hangs or Fails" {shape: rectangle}
+E2: "Run purearray upgrade --check and resolve blockers\n— see Purity Upgrade Hangs or Fails" {shape: rectangle}
 E3: "Contact Pure Support if no progress after 30 minutes" {shape: rectangle}
 
 S -> A

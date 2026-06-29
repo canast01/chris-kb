@@ -14,11 +14,11 @@ Operational scripts: daily health snapshot, CSR auto-approval, node drain wrappe
 direction: right
 
 S: "scripts/" {shape: rectangle}
-CH: "cluster-health-check.sh · CO / nodes / etcd / · CoreDNS / ingress" {shape: rectangle}
+CH: "cluster-health-check.sh · CO / nodes / etcd / ·\nCoreDNS / ingress" {shape: rectangle}
 AC: "auto-approve-csrs.sh · poll + approve · every 30s" {shape: rectangle}
 EB: "etcd-backup.sh · SSH to master · copy tarball local" {shape: rectangle}
 ND: "node-drain.sh · pre-check + · cordon + drain" {shape: rectangle}
-PR: "pod-restart-detector.sh · find crash-looping · pods by threshold" {shape: rectangle}
+PR: "pod-restart-detector.sh · find crash-looping ·\npods by threshold" {shape: rectangle}
 
 S -> CH
 S -> AC

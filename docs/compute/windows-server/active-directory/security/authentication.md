@@ -86,7 +86,6 @@ Get-WinEvent -ComputerName dc1 -FilterHashtable @{
 
 ## Related Reference
 
-- [Standard LDAP Integration](../../ldap-integration/index.md) — field reference, service account standards, TLS requirements, and connectivity testing
 
 ---
 

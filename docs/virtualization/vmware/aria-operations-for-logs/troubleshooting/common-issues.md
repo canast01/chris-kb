@@ -250,12 +250,12 @@ R2: "Check Agent Config · Firewall Port 514 or 9543\n→ Ingestion Issues" {sha
 D2: "D2" {shape: rectangle}
 R3: "Archive and Purge Old Data · Reduce Retention\n→ Disk Usage Over 80 Percent" {shape: rectangle}
 R4: "Check Worker Node Load · Add Worker VM\n→ Ingestion Issues" {shape: rectangle}
-R5: "Check syslog.global.logHost on ESXi · Test logger Command\n→ Ingestion Issues" {shape: rectangle}
+R5: "Check syslog.global.logHost on ESXi · Test logger\nCommand\n→ Ingestion Issues" {shape: rectangle}
 D3: "D3" {shape: rectangle}
 R6: "Re-enable Alert · Test Notification Channel\n→ Alert and Cluster Issues" {shape: rectangle}
 R7: "Check Webhook URL · SMTP Connectivity\n→ Alert and Cluster Issues" {shape: rectangle}
 R8: "Reduce Hot Retention · Archive to NFS · Add Worker Disk\n→ Disk Usage Over 80 Percent" {shape: rectangle}
-R9: "Check NTP Skew · Verify Port 16520 · Restart loginsight Service\n→ Alert and Cluster Issues" {shape: rectangle}
+R9: "Check NTP Skew · Verify Port 16520 · Restart\nloginsight Service\n→ Alert and Cluster Issues" {shape: rectangle}
 
 S -> B1
 S -> B2

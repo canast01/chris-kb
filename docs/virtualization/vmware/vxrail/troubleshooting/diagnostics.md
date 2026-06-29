@@ -26,7 +26,7 @@ F: "vmkernel.log grep APD PDL NMP on ESXi\nesxcli storage core path list" {shape
 G: "racadm getsel filter critical warning\nracadm getsysinfo filter fault" {shape: rectangle}
 H: "hostd.log grep vpxd connect fail\nPing vCenter FQDN from ESXi" {shape: rectangle}
 I: "I" {shape: rectangle}
-J: "Verify VxRail Manager can reach vCenter: ping vcenter-fqdn\nCheck VxRail Manager service: systemctl status mystic" {shape: rectangle}
+J: "Verify VxRail Manager can reach vCenter: ping\nvcenter-fqdn\nCheck VxRail Manager service: systemctl status mystic" {shape: rectangle}
 K: "Re-register VxRail plugin in vCenter\nCheck VxRail Manager vCenter credentials" {shape: rectangle}
 L: "L" {shape: rectangle}
 M: "Check failing check name in lcm.log\nResolve pre-check issue and retry LCM" {shape: rectangle}

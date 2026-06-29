@@ -27,7 +27,7 @@ Health Checks reference covering Overview, SyncIQ Replication Health, PowerScale
 Eyeglass health checks cover the Eyeglass appliance itself, PowerScale cluster connectivity, SyncIQ policy status, and DR policy readiness. Run daily as a minimum; automated checks should run every 15–30 minutes.
 
 ```mermaid
-flowchart TD
+flowchart LR
     start([Health Check Run]) --> appSvc
 
     subgraph "Eyeglass Appliance"

@@ -30,7 +30,7 @@ L: "journalctl -b -1 -p err | grep coreclr\nCheck dmesg for OOM kill" {shape: re
 M: "Check DIMM errors\ndmesg memory\|MCE" {shape: rectangle}
 N: "sesearch -A -s process_type -t file_type\nAudit2allow to create policy or relabel" {shape: rectangle}
 O: "grep Failed /var/log/secure\nCheck pam_tally lockout" {shape: rectangle}
-P: "perf top --sort comm\nCheck WCHAN for blocked threads: ps -eo pid,wchan | grep D" {shape: rectangle}
+P: "perf top --sort comm\nCheck WCHAN for blocked threads: ps -eo pid,wchan\n| grep D" {shape: rectangle}
 Q: "iostat -x 1 sda: await > 20ms = issue\nCheck dmesg for SCSI timeouts" {shape: rectangle}
 R: "Check /proc/PID/fd count vs ulimit -n\nstrace -c -p PID for syscall summary" {shape: rectangle}
 S: "Collect sosreport or gather-tech-support bundle" {shape: rectangle}
@@ -69,7 +69,7 @@ direction: down
 symptom: Identify Symptom {shape: diamond}
 step_1_read_the_service_and_system_l: "Step 1 — Read the service and system log" {shape: rectangle}
 step_2_read_dmesg_for_kernel_and_har: "Step 2 — Read dmesg for kernel and hardware events" {shape: rectangle}
-step_3_search_audit_log_for_selinux_: "Step 3 — Search audit log for SELinux denials and auth event" {shape: rectangle}
+step_3_search_audit_log_for_selinux_: "Step 3 — Search audit log for SELinux denials and\nauth event" {shape: rectangle}
 step_4_diagnose_authentication_and_s: "Step 4 — Diagnose authentication and SSH events" {shape: rectangle}
 step_5_trace_a_failing_process: "Step 5 — Trace a failing process" {shape: rectangle}
 step_6_profile_performance: "Step 6 — Profile performance" {shape: rectangle}

@@ -32,8 +32,8 @@ K: "get services\nCheck disk and memory on the Manager VM" {shape: rectangle}
 L: "L" {shape: rectangle}
 M: "vsipioctl getrules -f filter-name on ESXi\nIdentify rule ID and section in NSX policy" {shape: rectangle}
 N: "Edge: vrf then get route\nCheck T0/T1 route redistribution" {shape: rectangle}
-O: "Check Edge interface counters: get interface fp-eth0 counters\nVerify BGP config: get bgp config" {shape: rectangle}
-P: "vsipioctl getstats -f filter-name to see rule hit counts\nvsipioctl getaddrsets for security group members" {shape: rectangle}
+O: "Check Edge interface counters: get interface fp-\neth0 counters\nVerify BGP config: get bgp config" {shape: rectangle}
+P: "vsipioctl getstats -f filter-name to see rule hit\ncounts\nvsipioctl getaddrsets for security group members" {shape: rectangle}
 Q: "ESXi: vmkping -I vmk2 remote-tep-ip\nesxcli network ip interface ipv4 get to verify TEP IP" {shape: rectangle}
 R: "Review alarm source and recommended action\nCheck realisation: GET /policy/api/v1/infra/segments" {shape: rectangle}
 S: "Collect NSX support bundle\nOpen VMware SR" {shape: rectangle}

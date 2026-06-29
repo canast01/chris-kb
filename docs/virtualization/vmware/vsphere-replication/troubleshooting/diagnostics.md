@@ -71,7 +71,7 @@ symptom: Identify Symptom {shape: diamond}
 step_1_check_vra_service_status: "Step 1 — Check VRA service status" {shape: rectangle}
 step_2_check_vra_rest_api_health: "Step 2 — Check VRA REST API health" {shape: rectangle}
 step_3_read_vra_logs: "Step 3 — Read VRA logs" {shape: rectangle}
-step_4_test_connectivity_from_source: "Step 4 — Test connectivity from source ESXi to target VRA" {shape: rectangle}
+step_4_test_connectivity_from_source: "Step 4 — Test connectivity from source ESXi to\ntarget VRA" {shape: rectangle}
 step_5_check_hbrsvc_on_source_esxi: "Step 5 — Check hbrsvc on source ESXi" {shape: rectangle}
 step_6_verify_vra_certificate: "Step 6 — Verify VRA certificate" {shape: rectangle}
 resolution: Resolve or Escalate {shape: oval}

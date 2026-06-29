@@ -177,20 +177,20 @@ C: "Catalog backup failed" {shape: rectangle}
 D: "Policy class mismatch" {shape: rectangle}
 E: "Master / media server connectivity loss" {shape: rectangle}
 A1: "A1" {shape: rectangle}
-A2: "Start bpcd and verify port 13782 open — see Before you begin" {shape: rectangle}
+A2: "Start bpcd and verify port 13782 open — see Before\nyou begin" {shape: rectangle}
 A3: "Check bpbrm and bpcd logs for TLS or host ID error" {shape: rectangle}
 B1: "B1" {shape: rectangle}
-B2: "Check ltid process and tpconfig -d — see Before you begin" {shape: rectangle}
-B3: "Check for volume in use by another job; wait or cancel conflicting job" {shape: rectangle}
+B2: "Check ltid process and tpconfig -d — see Before\nyou begin" {shape: rectangle}
+B3: "Check for volume in use by another job; wait or\ncancel conflicting job" {shape: rectangle}
 C1: "C1" {shape: rectangle}
-C2: "Check MSDP pool and STU free space — see Before you begin" {shape: rectangle}
-C3: "Run bpdbm -consistency and force catalog backup with bpbackup" {shape: rectangle}
+C2: "Check MSDP pool and STU free space — see Before\nyou begin" {shape: rectangle}
+C3: "Run bpdbm -consistency and force catalog backup\nwith bpbackup" {shape: rectangle}
 D1: "D1" {shape: rectangle}
-D2: "Correct policy type in NetBackup console to match client OS" {shape: rectangle}
+D2: "Correct policy type in NetBackup console to match\nclient OS" {shape: rectangle}
 D3: "Check schedule type and retention level for the policy" {shape: rectangle}
 E1: "E1" {shape: rectangle}
-E2: "Restart NetBackup services on master and check firewall rules" {shape: rectangle}
-E3: "Check NBU CA host ID certificate validity on media server" {shape: rectangle}
+E2: "Restart NetBackup services on master and check\nfirewall rules" {shape: rectangle}
+E3: "Check NBU CA host ID certificate validity on media\nserver" {shape: rectangle}
 
 S -> A
 S -> B

@@ -148,12 +148,12 @@ R2: "Check Storage Policy Match · Datastore Capacity\n→ Provisioning Failures
 D2: "D2" {shape: rectangle}
 R3: "Trigger Manual Data Sync · Check Cloud Acct Log\n→ Integration Failures" {shape: rectangle}
 R4: "Check vIDM SSO Cert · Re-import in VAMI\n→ Integration Failures" {shape: rectangle}
-R5: "Check IPAM Endpoint Connectivity · Verify IP Pool Capacity\n→ Provisioning Failures" {shape: rectangle}
-R6: "Check Approval Policy · Notify Approver · Check Orchestrator Endpoint\n→ Integration Failures" {shape: rectangle}
+R5: "Check IPAM Endpoint Connectivity · Verify IP Pool\nCapacity\n→ Provisioning Failures" {shape: rectangle}
+R6: "Check Approval Policy · Notify Approver · Check\nOrchestrator Endpoint\n→ Integration Failures" {shape: rectangle}
 D3: "D3" {shape: rectangle}
 R7: "Check Project and Catalog Sharing Settings\n→ Diagnostic Steps" {shape: rectangle}
 R8: "Run Blueprint Validator · Fix Syntax Errors\n→ Diagnostic Steps" {shape: rectangle}
-R9: "Increase ABX Action Timeout · Review Action Execution Logs\n→ Integration Failures" {shape: rectangle}
+R9: "Increase ABX Action Timeout · Review Action\nExecution Logs\n→ Integration Failures" {shape: rectangle}
 
 S -> B1
 S -> B2

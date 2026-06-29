@@ -32,7 +32,7 @@ L: "grep ERROR vlcm.log | tail -50\nRead install step and failed component" {sha
 M: "M" {shape: rectangle}
 N: "LCM UI → Lifecycle → Certificate Management\nTrigger rotation" {shape: rectangle}
 O: "Rotate immediately\nStop all operations first" {shape: rectangle}
-P: "find /var/log/vmware/vrlcm -name *.log.* -mtime +30 -delete\nRemove old snapshots and content library cache" {shape: rectangle}
+P: "find /var/log/vmware/vrlcm -name *.log.* -mtime\n+30 -delete\nRemove old snapshots and content library cache" {shape: rectangle}
 Q: "chronyc makestep\nVerify offset < 5 seconds" {shape: rectangle}
 R: "Check all required ports to product VMs\nnc -zv product-vm 443" {shape: rectangle}
 S: "Collect logscraper bundle\nLCM UI → Support → Logscraper" {shape: rectangle}

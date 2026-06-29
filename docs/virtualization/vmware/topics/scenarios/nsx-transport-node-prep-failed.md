@@ -392,9 +392,9 @@ Packets: Sent = 4, Received = 4, Lost = 0 (0% loss)
 
 ## Related Scenarios
 
-- [NSX Connectivity Broken](nsx-connectivity-broken/index.md) — once hosts are prepared, this covers
+- [NSX Connectivity Broken](nsx-connectivity-broken.md) — once hosts are prepared, this covers
   data-plane connectivity failures in the overlay network.
-- [NSX DFW Blocking Application Traffic](nsx-dfw-blocking-application-traffic/index.md) — after
+- [NSX DFW Blocking Application Traffic](nsx-dfw-blocking-application-traffic.md) — after
   successful preparation, DFW policy misconfigurations are a common next issue.
-- [NSX Edge Failure / BGP Down](nsx-edge-failure-bgp-down/index.md) — edge node failures often
+- [NSX Edge Failure / BGP Down](nsx-edge-failure-bgp-down.md) — edge node failures often
   surface after transport node preparation when edge nodes share host clusters.

@@ -33,7 +33,7 @@ N: "Check replication interface: isi sync policies view\nVerify dedicated replic
 O: "isi quota quotas list --type directory\nIdentify which path is over quota" {shape: rectangle}
 P: "isi network interfaces list\nnslookup <smartconnect-zone> to confirm round-robin" {shape: rectangle}
 Q: "isi storagepool nodepools list -v\ndu -sh /ifs/* to find top consumers" {shape: rectangle}
-R: "isi statistics query current --keys CPU,BYTES_OUT,BYTES_IN,LATENCY --nodes all\nCompare latency across nodes" {shape: rectangle}
+R: "isi statistics query current --keys\nCPU,BYTES_OUT,BYTES_IN,LATENCY --nodes all\nCompare latency across nodes" {shape: rectangle}
 S: "Collect isi_gather_info bundle\nOpen Dell Support case" {shape: rectangle}
 A: "PowerScale Issue" {shape: rectangle}
 
@@ -69,7 +69,7 @@ step_1_check_cluster_and_node_health: "Step 1 — Check cluster and node health"
 step_2_check_cluster_event_log: "Step 2 — Check cluster event log" {shape: rectangle}
 step_3_check_synciq_replication_stat: "Step 3 — Check SyncIQ replication status" {shape: rectangle}
 step_4_check_quotas: "Step 4 — Check quotas" {shape: rectangle}
-step_5_check_storage_capacity_and_pe: "Step 5 — Check storage capacity and performance statistics" {shape: rectangle}
+step_5_check_storage_capacity_and_pe: "Step 5 — Check storage capacity and performance\nstatistics" {shape: rectangle}
 step_6_check_network_and_smartconnec: "Step 6 — Check network and SmartConnect" {shape: rectangle}
 resolution: Resolve or Escalate {shape: oval}
 

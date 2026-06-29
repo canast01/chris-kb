@@ -233,9 +233,8 @@ Test backup integrity quarterly:
 
 ## Related Pages
 
-- [Superna Eyeglass — Architecture](../architecture/how-it-works/index.md)
-- [Superna Eyeglass — Health Checks](health-checks/index.md)
-- [PowerScale — Backup & Restore](../../../storage/dell/powerscale/operations/backup-restore/index.md)
+- [Superna Eyeglass — Architecture](../architecture/how-it-works.md)
+- [Superna Eyeglass — Health Checks](health-checks.md)
 
 ---
 

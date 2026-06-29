@@ -15,7 +15,7 @@ The Recovery Services Vault is the top-level management container for both Azure
 ## Recovery Services Vault Structure
 
 ```mermaid
-flowchart TD
+flowchart LR
     vault["Recovery Services Vault\nmanagement container"]
     subgraph backup["Azure Backup"]
         vmBackup["VM Backup\nAzure IaaS VMs"]

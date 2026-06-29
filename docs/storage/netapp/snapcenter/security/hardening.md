@@ -40,7 +40,7 @@ Apply this baseline at installation and validate quarterly. Each item links to t
 - [ ] All operational users authenticate via Active Directory groups — no individual AD user accounts directly granted where group membership is manageable
 - [ ] MFA enabled via SAML 2.0 IdP integration if SnapCenter 6.0+ is deployed and an IdP is available
 - [ ] SnapCenter `admin` local account is treated as a break-glass account only; its usage is monitored via audit logs
-- [ ] ONTAP service account uses a custom least-privilege RBAC role — not `vsadmin` or `admin`; see [Access Control](access-control/index.md)
+- [ ] ONTAP service account uses a custom least-privilege RBAC role — not `vsadmin` or `admin`; see [Access Control](access-control.md)
 - [ ] Plugin host credentials stored in SnapCenter Credential Store; no plaintext passwords in automation scripts or configuration files
 - [ ] RBAC roles configured such that application owners (DBAs, sysadmins) can trigger restores and clones for their own resources without SnapCenter Admin access
 

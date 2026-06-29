@@ -30,7 +30,7 @@ Access control on PowerMax operates at two levels: **management plane access** (
 Unisphere for PowerMax implements RBAC through five built-in roles. There are no custom roles — access must be delegated using these predefined tiers.
 
 ```mermaid
-graph TD
+graph LR
     subgraph "Active Directory Groups"
         AD_ADMIN["GRP-PowerMax-Admins"]
         AD_SA["GRP-PowerMax-StorageAdmins"]

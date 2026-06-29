@@ -13,7 +13,7 @@ Azure Cost Management supports multiple alert types to notify teams of unexpecte
 ## Cost Alert Types Overview
 
 ```mermaid
-flowchart TD
+flowchart LR
     spending["Azure Resource Spending"]
     subgraph alertTypes["Alert Types"]
         budgetAlert["Budget Alert\ncrossed % threshold"]

@@ -19,7 +19,7 @@ Complete all items after every upgrade (vCenter, ESXi, vSAN, NSX, VxRail). Docum
 direction: right
 
 plan: "Plan" {shape: oval}
-immediate_validation_within_15_minut: "Immediate Validation (within 15 minutes of upgrade completio" {shape: rectangle}
+immediate_validation_within_15_minut: "Immediate Validation (within 15 minutes of upgrade\ncompletio" {shape: rectangle}
 vcenter_health: "vCenter Health" {shape: rectangle}
 cluster_ha_and_drs: "Cluster HA and DRS" {shape: rectangle}
 vsan_validation_if_applicable: "vSAN Validation (if applicable)" {shape: rectangle}

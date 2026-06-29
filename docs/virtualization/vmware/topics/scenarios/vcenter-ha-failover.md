@@ -326,7 +326,7 @@ vSphere Client → **Alarms → vCenter High Availability state changed → Rese
 
 ## Related Scenarios
 
-- [vCenter Down / Unreachable](vcenter-down/index.md) — covers active vCenter failures where VCHA is
+- [vCenter Down / Unreachable](vcenter-down.md) — covers active vCenter failures where VCHA is
   not configured or did not complete auto-failover.
-- [NTP Drift Causing SSO or Certificate Errors](ntp-drift-sso-certificate/index.md) — NTP skew
+- [NTP Drift Causing SSO or Certificate Errors](ntp-drift-sso-certificate.md) — NTP skew
   between VCHA nodes can cause replication and quorum failures.

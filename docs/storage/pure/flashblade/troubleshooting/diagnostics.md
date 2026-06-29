@@ -32,7 +32,7 @@ M: "purefb network subnet list\nCheck switch port and VLAN" {shape: rectangle}
 N: "Check NFS export policy\npurefb policy list" {shape: rectangle}
 O: "Check used vs provisioned\nCheck thin provisioning ratio" {shape: rectangle}
 P: "Check link latency and throughput\npurefb replication arrayconnection list -verbose" {shape: rectangle}
-Q: "Rank filesystems by throughput\npurefb fs list --performance sort by write_bytes_per_sec" {shape: rectangle}
+Q: "Rank filesystems by throughput\npurefb fs list --performance sort by\nwrite_bytes_per_sec" {shape: rectangle}
 R: "Collect diagnostic bundle\npurefb support diag" {shape: rectangle}
 S: "Open Pure Support case\nsupport.purestorage.com" {shape: rectangle}
 A: "FlashBlade Issue" {shape: rectangle}

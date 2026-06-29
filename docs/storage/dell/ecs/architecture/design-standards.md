@@ -94,7 +94,7 @@ S3 bucket names must comply with S3 naming rules: 3–63 characters, lowercase l
 ## Replication Group Design
 
 ```mermaid
-graph TB
+graph LR
   subgraph "Site A — lon01-ecs-vdc1"
     NS_A["Namespace: analytics-prod\nBuckets + IAM users"]
     NODES_A["ECS Nodes (N≥4)\n12+4 EC within VDC"]

@@ -54,17 +54,17 @@ B4: "Physical device not discovered" {shape: rectangle}
 B5: "Collector offline in UI" {shape: rectangle}
 B6: "LDAP login failure" {shape: rectangle}
 D1: "D1" {shape: rectangle}
-R1: "Fix API Connectivity · Update Credentials · Re-accept Cert" {shape: rectangle}
+R1: "Fix API Connectivity · Update Credentials · Re-\naccept Cert" {shape: rectangle}
 R2: "Check Service Account Lock · Run Test Connection" {shape: rectangle}
 D2: "D2" {shape: rectangle}
 R3: "Set IPFIX Target to Collector IP · Enable on vDS" {shape: rectangle}
 R4: "Check UDP 2055 Firewall · Review proxy.log" {shape: rectangle}
-R5: "Verify All Source Devices Discovered · Check NSX Data Source" {shape: rectangle}
-R6: "Add Device via SNMP · Verify Credentials · Check Collector Reachability" {shape: rectangle}
+R5: "Verify All Source Devices Discovered · Check NSX\nData Source" {shape: rectangle}
+R6: "Add Device via SNMP · Verify Credentials · Check\nCollector Reachability" {shape: rectangle}
 D3: "D3" {shape: rectangle}
 R7: "Power on Collector VM" {shape: rectangle}
 R8: "Restart ni-collector service · Re-register in UI" {shape: rectangle}
-R9: "Test LDAP Bind DN · Check LDAPS Cert · Use LDAP Browser Tool" {shape: rectangle}
+R9: "Test LDAP Bind DN · Check LDAPS Cert · Use LDAP\nBrowser Tool" {shape: rectangle}
 
 S -> B1
 S -> B2

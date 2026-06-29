@@ -40,7 +40,7 @@ pam_password_policy -> file_system_hardening: hardens
 ## Linux Hardening Layers
 
 ```mermaid
-flowchart TD
+flowchart LR
     subgraph kernel["Kernel Hardening"]
         sysctl["sysctl\nnetwork · ASLR · ptrace"]
         secBoot["Secure Boot\nUEFI · GRUB password"]

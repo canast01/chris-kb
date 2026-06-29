@@ -156,7 +156,7 @@ Validate: log out and log back in with a domain account in each role group to co
 
 SAML SSO delegates authentication to an enterprise IdP (Okta, Azure AD, ADFS) that enforces MFA. This is the preferred mechanism for production FlashBlade arrays where compliance requires MFA for privileged access.
 
-Configure SSO via the Purity//FB GUI: **Settings > Access > Single Sign-On**. See [Authentication](authentication/index.md) for full SAML configuration steps.
+Configure SSO via the Purity//FB GUI: **Settings > Access > Single Sign-On**. See [Authentication](authentication.md) for full SAML configuration steps.
 
 ```bash
 # Verify SSO status after configuration

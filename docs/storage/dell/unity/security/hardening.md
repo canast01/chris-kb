@@ -26,7 +26,7 @@ Hardening reference covering Hardening Overview, Hardening Checklist, Credential
 Apply these hardening steps to all Unity deployments before handing over to production operations. Each step reduces the attack surface, limits privilege exposure, or ensures audit trails are in place.
 
 ```mermaid
-graph TD
+graph LR
   subgraph "Credentials"
     C1["Change default admin password"]
     C2["Integrate LDAP / AD\n(no shared local accounts)"]

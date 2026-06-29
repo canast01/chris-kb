@@ -48,7 +48,7 @@ direction: down
 symptom: Identify Symptom {shape: diamond}
 step_1_check_job_and_session_status: "Step 1 — Check job and session status" {shape: rectangle}
 step_2_check_proxy_and_repository_he: "Step 2 — Check proxy and repository health" {shape: rectangle}
-step_3_test_network_connectivity_to_: "Step 3 — Test network connectivity to proxies and repositori" {shape: rectangle}
+step_3_test_network_connectivity_to_: "Step 3 — Test network connectivity to proxies and\nrepositori" {shape: rectangle}
 step_4_check_cbt_status_and_reset_if: "Step 4 — Check CBT status and reset if needed" {shape: rectangle}
 step_5_collect_the_support_bundle: "Step 5 — Collect the support bundle" {shape: rectangle}
 log_locations: "Log locations" {shape: rectangle}

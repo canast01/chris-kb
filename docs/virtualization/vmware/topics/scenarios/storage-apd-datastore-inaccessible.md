@@ -18,7 +18,7 @@ restoring paths, and recovering VMs that were force-powered-off by VMCP.
 direction: down
 
 products_involved: "Products Involved" {shape: rectangle}
-1_confirm_the_scope_how_many_hosts_a: "1. Confirm the Scope — How Many Hosts and Datastores Affecte" {shape: rectangle}
+1_confirm_the_scope_how_many_hosts_a: "1. Confirm the Scope — How Many Hosts and\nDatastores Affecte" {shape: rectangle}
 2_check_path_state_on_esxi_apd_vs_pd: "2. Check Path State on ESXi — APD vs PDL" {shape: rectangle}
 3_read_vmkernellog_for_path_loss_eve: "3. Read vmkernel.log for Path Loss Events" {shape: rectangle}
 4_check_the_fabric_fc_iscsi_or_nfs_r: "4. Check the Fabric — FC, iSCSI, or NFS Root Cause" {shape: rectangle}
@@ -447,7 +447,7 @@ Look for: any VM with `RestartPriority = Disabled` will not be automatically res
 
 ## Related Scenarios
 
-- [VM Inaccessible / HA Failover](vm-inaccessible-ha-failover/index.md) — Host failure also triggers VMCP; the distinction is that APD/PDL affects VMs on the lost storage while host failure affects all VMs on that host.
-- [Datastore Full / Capacity Alarm](datastore-full-capacity-alarm/index.md) — A nearly full VMFS datastore can cause write failures that look like path issues; always check capacity alongside path state.
-- [vSAN Disk or Component Failure](vsan-disk-component-failure/index.md) — For vSAN clusters, the disk component failure scenario covers the equivalent storage loss scenario; APD/PDL applies to traditional SAN and NFS datastores.
-- [VM Snapshot Consolidation Required](vm-snapshot-consolidation-required/index.md) — APD events frequently leave orphaned snapshot delta files that trigger a consolidation-needed warning post-recovery.
+- [VM Inaccessible / HA Failover](vm-inaccessible-ha-failover.md) — Host failure also triggers VMCP; the distinction is that APD/PDL affects VMs on the lost storage while host failure affects all VMs on that host.
+- [Datastore Full / Capacity Alarm](datastore-full-capacity-alarm.md) — A nearly full VMFS datastore can cause write failures that look like path issues; always check capacity alongside path state.
+- [vSAN Disk or Component Failure](vsan-disk-component-failure.md) — For vSAN clusters, the disk component failure scenario covers the equivalent storage loss scenario; APD/PDL applies to traditional SAN and NFS datastores.
+- [VM Snapshot Consolidation Required](vm-snapshot-consolidation-required.md) — APD events frequently leave orphaned snapshot delta files that trigger a consolidation-needed warning post-recovery.

@@ -296,6 +296,6 @@ Key checks to verify:
 
 ## Related Scenarios
 
-- [vSAN Disk or Component Failure](vsan-disk-component-failure/index.md) — A disk failure at one site during resync after a partition is a common compounding event.
-- [Datastore Full / Capacity Alarm](datastore-full-capacity-alarm/index.md) — vSAN resync after a partition consumes additional capacity; a near-full cluster can hit the 80% write-stop threshold during resync.
-- [NTP Drift / SSO Certificate Issues](ntp-drift-sso-certificate/index.md) — NTP drift between sites causes certificate validation failures that can disrupt vSAN unicast agent communication.
+- [vSAN Disk or Component Failure](vsan-disk-component-failure.md) — A disk failure at one site during resync after a partition is a common compounding event.
+- [Datastore Full / Capacity Alarm](datastore-full-capacity-alarm.md) — vSAN resync after a partition consumes additional capacity; a near-full cluster can hit the 80% write-stop threshold during resync.
+- [NTP Drift / SSO Certificate Issues](ntp-drift-sso-certificate.md) — NTP drift between sites causes certificate validation failures that can disrupt vSAN unicast agent communication.

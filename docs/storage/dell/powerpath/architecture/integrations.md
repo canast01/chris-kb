@@ -25,7 +25,7 @@ Key considerations for Windows:
 ## Linux DM-Multipath Comparison
 
 ```mermaid
-graph TD
+graph LR
     scsiDevs["Raw SCSI Devices\n/dev/sdX"]
 
     subgraph "PowerPath path (recommended for Dell/EMC)"

@@ -24,8 +24,8 @@ D1: "D1" {shape: rectangle}
 D2: "D2" {shape: rectangle}
 W: "W" {shape: rectangle}
 LOST: "Witness partition detected · vSAN health: red" {shape: rectangle}
-RISK: "Risk window: if one data node fails · quorum lost — objects inaccessible" {shape: rectangle}
-ACTION: "Restore witness connectivity · or restart witness VM/host" {shape: rectangle}
+RISK: "Risk window: if one data node fails · quorum lost\n— objects inaccessible" {shape: rectangle}
+ACTION: "Restore witness connectivity · or restart witness\nVM/host" {shape: rectangle}
 HEAL: "vSAN self-heals on reconnect · o manual rebuild needed" {shape: rectangle}
 
 D1 -> D2
@@ -357,9 +357,9 @@ Sub-Cluster Member Count: 3
 
 ## Related Scenarios
 
-- [vSAN Disk or Component Failure](vsan-disk-component-failure/index.md) — a disk failure on a data
+- [vSAN Disk or Component Failure](vsan-disk-component-failure.md) — a disk failure on a data
   node combined with witness loss is the highest-risk event for a 2-node cluster.
-- [vSAN Stretched Cluster Split Brain](vsan-stretched-cluster-split-brain/index.md) — stretched
+- [vSAN Stretched Cluster Split Brain](vsan-stretched-cluster-split-brain.md) — stretched
   cluster quorum failure shares root cause patterns with 2-node witness loss.
-- [Storage APD — Datastore Inaccessible](storage-apd-datastore-inaccessible/index.md) — if vSAN
+- [Storage APD — Datastore Inaccessible](storage-apd-datastore-inaccessible.md) — if vSAN
   objects become inaccessible after quorum loss, APD handling is triggered on the ESXi hosts.

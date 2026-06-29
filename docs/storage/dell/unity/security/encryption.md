@@ -26,7 +26,7 @@ Encryption reference covering Encryption Layers, Data at Rest Encryption (D@RE),
 Dell Unity provides encryption at multiple layers. Understanding which layer is active and how to verify it is essential for compliance audits and security assessments.
 
 ```mermaid
-graph TD
+graph LR
   subgraph "In Transit"
     HTTPS["Management: TLS 1.2+\nUnisphere · REST API · uemcli"]
     CHAP["iSCSI: CHAP\nhost authentication"]

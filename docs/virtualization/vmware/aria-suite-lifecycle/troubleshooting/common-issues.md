@@ -68,9 +68,9 @@ R2: "Review installer.log · Use Retry if Offered\n→ Product Shows Red Health 
 D2: "D2" {shape: rectangle}
 R3: "Re-import Correct Cert · Run Replace Cert Action in LCM\n→ Locker Certificate Import Fails" {shape: rectangle}
 R4: "Check Product Cert Trust Chain · Verify openssl verify\n→ Locker Certificate Import Fails" {shape: rectangle}
-R5: "Click Red Card · Check Service Status · Run Health Check\n→ Product Shows Red Health in LCM Dashboard" {shape: rectangle}
+R5: "Click Red Card · Check Service Status · Run Health\nCheck\n→ Product Shows Red Health in LCM Dashboard" {shape: rectangle}
 R6: "Verify Key Matches Cert · Confirm No Passphrase on Key\n→ Locker Certificate Import Fails" {shape: rectangle}
-R7: "Remount NFS · Verify Write Access · Remap Binary Mapping\n→ NFS Mount Lost During Operation" {shape: rectangle}
+R7: "Remount NFS · Verify Write Access · Remap Binary\nMapping\n→ NFS Mount Lost During Operation" {shape: rectangle}
 R8: "Re-register vIDM in LCM Settings · Update Credentials\n→ VIDM Authentication Failure After Password Change" {shape: rectangle}
 
 S -> B1

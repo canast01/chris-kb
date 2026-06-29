@@ -45,18 +45,18 @@ C: "Transfer stuck in progress" {shape: rectangle}
 D: "Destination volume full" {shape: rectangle}
 E: "SnapMirror Sync out of sync" {shape: rectangle}
 A1: "A1" {shape: rectangle}
-A2: "Resync after confirming data direction — see Common Issues Reference" {shape: rectangle}
-A3: "Check for manual quiesce and break commands in audit log" {shape: rectangle}
+A2: "Resync after confirming data direction — see\nCommon Issues Reference" {shape: rectangle}
+A3: "Check for manual quiesce and break commands in\naudit log" {shape: rectangle}
 B1: "B1" {shape: rectangle}
-B2: "Check intercluster LIF and WAN bandwidth — see Common Issues Reference" {shape: rectangle}
+B2: "Check intercluster LIF and WAN bandwidth — see\nCommon Issues Reference" {shape: rectangle}
 B3: "Increase transfer frequency or adjust throttle" {shape: rectangle}
 C1: "C1" {shape: rectangle}
-C2: "Abort and restart transfer — see Common Issues Reference" {shape: rectangle}
+C2: "Abort and restart transfer — see Common Issues\nReference" {shape: rectangle}
 C3: "Check network interruption and resume transfer" {shape: rectangle}
 D1: "D1" {shape: rectangle}
 D2: "Update SnapVault retention and delete excess snapshots" {shape: rectangle}
-D3: "Expand destination volume size — see Common Issues Reference" {shape: rectangle}
-E1: "Check intercluster latency; relationship auto-resyncs on restore — see Common Issues Reference" {shape: rectangle}
+D3: "Expand destination volume size — see Common Issues\nReference" {shape: rectangle}
+E1: "Check intercluster latency; relationship auto-\nresyncs on restore — see Common Issues Reference" {shape: rectangle}
 
 S -> A
 S -> B

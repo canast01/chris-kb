@@ -235,7 +235,7 @@ Host configuration guidelines:
 The diagram below traces a single host write from the initiator HBA all the way to a DirectFlash Module, showing exactly where inline deduplication and compression occur, how the NVRAM mirror creates the durability guarantee before any ACK is sent, and how the destage pipeline lands data on raw NAND.
 
 ```mermaid
-flowchart TD
+flowchart LR
     subgraph INITIATOR["Initiator (Host)"]
         APP["Application\nOracle / SQL / VMware\nIssues write I/O"]
         HBA["Host HBA / NIC\nFC 32 Gb/s · iSCSI 25 GbE\nNVMe/FC · NVMe/RoCE · NVMe/TCP"]

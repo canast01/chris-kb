@@ -49,7 +49,7 @@ AA: "Review session log\nCheck network path to replica host" {shape: rectangle}
 A: "Replication Failure / Lag Alert" {shape: rectangle}
 C: "symrdf -g RDF_GRP query\nCheck PAIR STATE" {shape: rectangle}
 E: "Check link errors\nsymrdf -g RDF_GRP verify" {shape: rectangle}
-G: "Engage network team\nCheck SRDF port stats: symrdf -g RDF_GRP -type RDFA list" {shape: rectangle}
+G: "Engage network team\nCheck SRDF port stats: symrdf -g RDF_GRP -type\nRDFA list" {shape: rectangle}
 H: "Check RDF group config\nresume if safe: symrdf -g RDF_GRP resume -nop" {shape: rectangle}
 I: "CRITICAL: failover state\nDo NOT resume without DR assessment" {shape: rectangle}
 J: "Check lag: symrdf -g RDF_GRP query\nRW state = consistent but R1 writing" {shape: rectangle}

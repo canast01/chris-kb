@@ -356,7 +356,7 @@ curl -sk -H "Authorization: vRealizeOpsToken <token>" \
 ## Related Sections
 
 - [Operations](index.md) — operational runbooks
-- [Scripts](scripts/index.md) — automation using the API
+- [Scripts](scripts.md) — automation using the API
 - [Troubleshooting](../troubleshooting/index.md) — diagnostic commands
 
 ---

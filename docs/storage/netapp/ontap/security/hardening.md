@@ -24,7 +24,7 @@ Security hardening for ONTAP focuses on reducing attack surface, enforcing stron
 ## Hardening Control Layers
 
 ```mermaid
-graph TB
+graph LR
     subgraph "Network Layer"
         mgmtVlan["Mgmt LIF — dedicated VLAN\nfirewall-restricted"]
         icVlan["Intercluster LIF — dedicated VLAN"]

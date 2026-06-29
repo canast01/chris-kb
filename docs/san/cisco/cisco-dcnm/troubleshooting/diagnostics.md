@@ -30,7 +30,7 @@ K: "pg_isready -U postgres\njournalctl -u postgresql -n 50" {shape: rectangle}
 L: "curl localhost:9200/_cluster/health\nCheck if disk is full" {shape: rectangle}
 M: "ssh -v dcnm_mgmt@switch-ip show version\nsnmpget -v3 switch-ip sysDescr.0" {shape: rectangle}
 N: "psql -U postgres pmdb\nSELECT count FROM pmdata; check retention" {shape: rectangle}
-O: "time curl REST /rest/inventory/switches\nSELECT pid,duration,query FROM pg_stat_activity WHERE state != idle" {shape: rectangle}
+O: "time curl REST /rest/inventory/switches\nSELECT pid,duration,query FROM pg_stat_activity\nWHERE state != idle" {shape: rectangle}
 P: "psql -U postgres\nSELECT now(" {shape: rectangle}
 Q: "curl localhost:9200/_cluster/health?pretty\nCheck status=red or yellow unassigned shards" {shape: rectangle}
 R: "Collect DCNM support bundle\ncollect-support-bundle.sh" {shape: rectangle}

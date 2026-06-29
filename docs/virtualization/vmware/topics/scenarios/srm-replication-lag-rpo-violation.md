@@ -299,6 +299,6 @@ After validation run **Cleanup Test** immediately — leaving test replicas runn
 
 ## Related Scenarios
 
-- [Datastore Full / Capacity Alarm](datastore-full-capacity-alarm/index.md) — A full DR datastore is a hidden cause of replication lag; vSphere Replication silently queues when the DR datastore cannot accept writes.
-- [NSX Edge Failure / BGP Down](nsx-edge-failure-bgp-down/index.md) — A BGP failure at the DR site prevents SRM from establishing network connectivity for recovered VMs.
-- [vSAN Stretched Cluster Split-Brain](vsan-stretched-cluster-split-brain/index.md) — A site partition that triggers stretched cluster split-brain also disrupts vSphere Replication traffic flowing over the same inter-site link.
+- [Datastore Full / Capacity Alarm](datastore-full-capacity-alarm.md) — A full DR datastore is a hidden cause of replication lag; vSphere Replication silently queues when the DR datastore cannot accept writes.
+- [NSX Edge Failure / BGP Down](nsx-edge-failure-bgp-down.md) — A BGP failure at the DR site prevents SRM from establishing network connectivity for recovered VMs.
+- [vSAN Stretched Cluster Split-Brain](vsan-stretched-cluster-split-brain.md) — A site partition that triggers stretched cluster split-brain also disrupts vSphere Replication traffic flowing over the same inter-site link.

@@ -26,7 +26,7 @@ FabricOS encryption: in-flight data encryption via FC-SP-2, IPsec for FCIP tunne
 ## Management Plane Encryption Stack
 
 ```mermaid
-graph TB
+graph LR
     subgraph "Management Access"
         ssh["SSH\nECDSA / RSA host key\nAES-256 transport"]
         https["HTTPS — Web Tools / REST API\nTLS 1.2+\nCA-signed certificate"]
@@ -411,9 +411,9 @@ Configuration saved.
 
 Encryption settings work in conjunction with:
 
-- [Authentication](authentication/index.md) — RADIUS/TACACS+ for central identity
-- [Access Control](access-control/index.md) — IPfilter to limit management plane reachability
-- [Hardening](hardening/index.md) — Full hardening checklist referencing all security controls
+- [Authentication](authentication.md) — RADIUS/TACACS+ for central identity
+- [Access Control](access-control.md) — IPfilter to limit management plane reachability
+- [Hardening](hardening.md) — Full hardening checklist referencing all security controls
 
 ---
 

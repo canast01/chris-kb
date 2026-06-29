@@ -44,7 +44,7 @@ Always verify the compatibility matrix in the Dell Simple Support Matrix (SSM) t
 ## Architecture Overview
 
 ```mermaid
-flowchart TD
+flowchart LR
     subgraph siteA [Site A — Protected]
         hA["ESXi / Physical Hosts"]
         spA["Array/VPLEX/Host Splitter"]

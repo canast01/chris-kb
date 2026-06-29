@@ -358,6 +358,6 @@ signal-to-noise improvement, not permanent suppression.
 
 ## Related Scenarios
 
-- [vSAN Disk or Component Failure](vsan-disk-component-failure/index.md) — vSAN degradation is one of the most common single events that triggers a cluster-wide alert storm.
-- [NSX Edge Failure / BGP Down](nsx-edge-failure-bgp-down/index.md) — A BGP session drop on a T0 gateway produces a cascade of east-west latency and connectivity alerts.
-- [NTP Drift / SSO Certificate Issues](ntp-drift-sso-certificate/index.md) — NTP drift generates cross-product auth and certificate alerts that appear as a storm with no obvious hardware cause.
+- [vSAN Disk or Component Failure](vsan-disk-component-failure.md) — vSAN degradation is one of the most common single events that triggers a cluster-wide alert storm.
+- [NSX Edge Failure / BGP Down](nsx-edge-failure-bgp-down.md) — A BGP session drop on a T0 gateway produces a cascade of east-west latency and connectivity alerts.
+- [NTP Drift / SSO Certificate Issues](ntp-drift-sso-certificate.md) — NTP drift generates cross-product auth and certificate alerts that appear as a storm with no obvious hardware cause.

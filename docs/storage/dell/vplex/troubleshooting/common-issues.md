@@ -97,7 +97,7 @@ direction: right
 
 alert: "Host I/O issue /\nAlert received" {shape: rectangle}
 clHealth: "ll /clusters/*/health-indications/\nCluster non-ok?" {shape: rectangle}
-ddHealth: "ll /distributed-storage/distributed-devices/*/health-indications/\nDevice out-of-sync?" {shape: rectangle}
+ddHealth: "ll /distributed-storage/distributed-\ndevices/*/health-indications/\nDevice out-of-sync?" {shape: rectangle}
 witnessHlth: "ll /clusters/*/cluster-witness/\nWitness unreachable?" {shape: rectangle}
 iclHlth: "Check ICL\nll /clusters/*/communication/inter-cluster-links/" {shape: rectangle}
 dirHealth: "ll /engines/*/directors/*/hardware/\nDirector faulted?" {shape: rectangle}

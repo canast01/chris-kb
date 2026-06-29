@@ -19,11 +19,11 @@ to allow restarts, recovering the cluster, and preventing a recurrence through p
 direction: down
 
 products_involved: "Products Involved" {shape: rectangle}
-1_confirm_the_breach_how_many_hosts_: "1. Confirm the Breach — How Many Hosts Failed and What Remai" {shape: rectangle}
+1_confirm_the_breach_how_many_hosts_: "1. Confirm the Breach — How Many Hosts Failed and\nWhat Remai" {shape: rectangle}
 2_triage_which_vms_are_critical: "2. Triage — Which VMs Are Critical" {shape: rectangle}
 3_assess_remaining_cluster_resources: "3. Assess Remaining Cluster Resources" {shape: rectangle}
 4_option_a_recover_a_failed_host_bes: "4. Option A — Recover a Failed Host (Best Path)" {shape: rectangle}
-5_option_b_temporarily_lower_admissi: "5. Option B — Temporarily Lower Admission Control Reservatio" {shape: rectangle}
+5_option_b_temporarily_lower_admissi: "5. Option B — Temporarily Lower Admission Control\nReservatio" {shape: rectangle}
 
 products_involved -> 1_confirm_the_breach_how_many_hosts_: uses
 1_confirm_the_breach_how_many_hosts_ -> 2_triage_which_vms_are_critical: uses
@@ -339,7 +339,7 @@ Navigate to **Aria Ops → Alerts → Alert Definitions → New Alert Definition
 
 ## Related Scenarios
 
-- [VM Inaccessible / HA Failover](vm-inaccessible-ha-failover/index.md) — Single host failure with sufficient capacity; this scenario extends that to multi-host failure and capacity exhaustion.
-- [vSAN Disk or Component Failure](vsan-disk-component-failure/index.md) — Multi-host failure leaves many vSAN components absent; the resync risk window compounds the admission control breach.
-- [Aria Ops Alert Storm](aria-ops-alert-storm/index.md) — A failover storm fires dozens of alerts simultaneously; alert correlation and noise suppression are critical to triage quickly.
-- [Capacity Planning](capacity-planning/index.md) — Correct N+1 sizing prevents admission control breaches; this scenario and capacity planning are tightly linked.
+- [VM Inaccessible / HA Failover](vm-inaccessible-ha-failover.md) — Single host failure with sufficient capacity; this scenario extends that to multi-host failure and capacity exhaustion.
+- [vSAN Disk or Component Failure](vsan-disk-component-failure.md) — Multi-host failure leaves many vSAN components absent; the resync risk window compounds the admission control breach.
+- [Aria Ops Alert Storm](aria-ops-alert-storm.md) — A failover storm fires dozens of alerts simultaneously; alert correlation and noise suppression are critical to triage quickly.
+- [Capacity Planning](capacity-planning.md) — Correct N+1 sizing prevents admission control breaches; this scenario and capacity planning are tightly linked.

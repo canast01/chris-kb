@@ -269,6 +269,6 @@ Get-Cluster "cluster-name" | Get-VM `
 
 ## Related Scenarios
 
-- [vSAN Disk or Component Failure](vsan-disk-component-failure/index.md) — Host failure and disk failure produce similar vSAN resync queues; the disk failure scenario covers component-level rebuild in depth.
-- [VM Performance Degraded](vm-performance-degraded/index.md) — Surviving hosts may be overloaded after an HA failover, leading to elevated CPU ready on restarted VMs.
-- [vMotion Failing](vmotion-failing/index.md) — DRS may attempt to rebalance VMs after HA restarts; vMotion failures here compound the recovery.
+- [vSAN Disk or Component Failure](vsan-disk-component-failure.md) — Host failure and disk failure produce similar vSAN resync queues; the disk failure scenario covers component-level rebuild in depth.
+- [VM Performance Degraded](vm-performance-degraded.md) — Surviving hosts may be overloaded after an HA failover, leading to elevated CPU ready on restarted VMs.
+- [vMotion Failing](vmotion-failing.md) — DRS may attempt to rebalance VMs after HA restarts; vMotion failures here compound the recovery.

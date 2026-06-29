@@ -13,7 +13,7 @@ An initiative (formerly called a policy set definition) groups multiple related 
 ## Initiative (Policy Set) Structure
 
 ```mermaid
-flowchart TD
+flowchart LR
     initiative["Initiative Definition\norg-baseline-security"]
     subgraph policies["Contained Policy Definitions"]
         p1["Require tags on resources"]

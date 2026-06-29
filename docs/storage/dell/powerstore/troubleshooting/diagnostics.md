@@ -22,16 +22,16 @@ B: "B" {shape: rectangle}
 C: "GET /api/rest/cluster\nGET /api/rest/hardware select=name,type,lifecycle_state" {shape: rectangle}
 D: "GET /api/rest/volume select=name,state\nGET /api/rest/host_volume_mapping" {shape: rectangle}
 E: "GET /api/rest/event filter=severity=Critical\nPowerStore Manager Alerts page" {shape: rectangle}
-F: "GET /api/rest/fc_port select=name,current_speed,link_state\nGET /api/rest/eth_port" {shape: rectangle}
+F: "GET /api/rest/fc_port\nselect=name,current_speed,link_state\nGET /api/rest/eth_port" {shape: rectangle}
 G: "GET /api/rest/nas_server select=name,operational_status\nGET /api/rest/file_system" {shape: rectangle}
 H: "GET /api/rest/replication_session\nCheck replication network path between appliances" {shape: rectangle}
 I: "I" {shape: rectangle}
-J: "GET /api/rest/appliance select=name,model,service_tag,health\nCheck hardware component health" {shape: rectangle}
+J: "GET /api/rest/appliance\nselect=name,model,service_tag,health\nCheck hardware component health" {shape: rectangle}
 K: "GET /api/rest/hardware filter failing components\nCheck physical drive or node LED" {shape: rectangle}
 L: "GET /api/rest/host select=name,os_type,initiators\nVerify host is logged in to correct target ports" {shape: rectangle}
-M: "GET /api/rest/event filter=severity=in.Critical.Major limit=50\nIdentify affected component from event description" {shape: rectangle}
+M: "GET /api/rest/event\nfilter=severity=in.Critical.Major limit=50\nIdentify affected component from event description" {shape: rectangle}
 N: "Check cable and SFP physical state\nVerify FC zone contains both initiator and target WWPNs" {shape: rectangle}
-O: "GET /api/rest/nas_server\nCheck NTP sync: NAS depends on accurate time for Kerberos" {shape: rectangle}
+O: "GET /api/rest/nas_server\nCheck NTP sync: NAS depends on accurate time for\nKerberos" {shape: rectangle}
 P: "GET /api/rest/replication_session\nCheck replication Ethernet port and MTU" {shape: rectangle}
 Q: "Collect SupportAssist bundle\nOpen Dell support case" {shape: rectangle}
 R: "Provide: PowerStore OS version, appliance serial\nEvent log export and support bundle" {shape: rectangle}
@@ -64,7 +64,7 @@ Q -> R
 direction: down
 
 symptom: Identify Symptom {shape: diamond}
-step_1_check_cluster_and_appliance_h: "Step 1 — Check cluster and appliance health via REST API" {shape: rectangle}
+step_1_check_cluster_and_appliance_h: "Step 1 — Check cluster and appliance health via\nREST API" {shape: rectangle}
 step_2_check_recent_critical_events: "Step 2 — Check recent critical events" {shape: rectangle}
 step_3_check_volume_and_host_connect: "Step 3 — Check volume and host connectivity" {shape: rectangle}
 step_4_check_fc_and_ethernet_port_he: "Step 4 — Check FC and Ethernet port health" {shape: rectangle}

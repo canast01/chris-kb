@@ -379,7 +379,7 @@ Security Flavors: krb5
     **`Error: Invalid export ID`** — Verify the export ID exists by running `isi nfs exports list` and use the correct numeric or path identifier.
     **`Error: Security flavor 'krb5p' is not supported on this cluster`** — Ensure Kerberos is configured on the cluster with `isi auth krb5 view` and that the KDC is reachable.
     **`Error: Cannot modify export while clients are actively connected`** — Disconnect all NFS clients from the export or use the `--force` flag to apply changes immediately.
-`krb5p` requires a Kerberos infrastructure (Active Directory or MIT Kerberos KDC). Clients must have valid Kerberos tickets and system time within 5 minutes of the cluster and KDC. See [Authentication](authentication/index.md) for Kerberos setup.
+`krb5p` requires a Kerberos infrastructure (Active Directory or MIT Kerberos KDC). Clients must have valid Kerberos tickets and system time within 5 minutes of the cluster and KDC. See [Authentication](authentication.md) for Kerberos setup.
 
 ---
 

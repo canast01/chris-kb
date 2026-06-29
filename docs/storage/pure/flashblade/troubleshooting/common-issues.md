@@ -50,15 +50,15 @@ A1: "A1" {shape: rectangle}
 A2: "Open Pure Support case immediately — see Common Issues" {shape: rectangle}
 A3: "Normal post-add state; monitor with purefb blade list" {shape: rectangle}
 B1: "B1" {shape: rectangle}
-B2: "Check VIP reachability and export policy — see Common Issues" {shape: rectangle}
-B3: "Regenerate access key with purefb objectstoreuser — see Common Issues" {shape: rectangle}
+B2: "Check VIP reachability and export policy — see\nCommon Issues" {shape: rectangle}
+B3: "Regenerate access key with purefb objectstoreuser\n— see Common Issues" {shape: rectangle}
 C1: "C1" {shape: rectangle}
 C2: "Restore network path between sites — see Common Issues" {shape: rectangle}
 C3: "Check replication policy configuration and RPO lag" {shape: rectangle}
 D1: "D1" {shape: rectangle}
-D2: "Expand with purefb filesystem update --provisioned — see Common Issues" {shape: rectangle}
+D2: "Expand with purefb filesystem update --provisioned\n— see Common Issues" {shape: rectangle}
 D3: "Review snapshot retention and backup tool write rate" {shape: rectangle}
-E1: "Confirm blade replacement underway; monitor rebalancing — see Common Issues" {shape: rectangle}
+E1: "Confirm blade replacement underway; monitor\nrebalancing — see Common Issues" {shape: rectangle}
 
 S -> A
 S -> B

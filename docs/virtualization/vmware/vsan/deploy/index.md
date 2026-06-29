@@ -30,7 +30,7 @@ phase_2_esxi_installation_and_firstb: "Phase 2 — ESXi Installation and First-B
 phase_3_vcenter_deployment_and_initi: "Phase 3 — vCenter Deployment and Initial Configuration" {shape: rectangle}
 phase_4_dvswitch_and_vsan_network_se: "Phase 4 — dvSwitch and vSAN Network Setup" {shape: rectangle}
 phase_5_vsan_cluster_enablement: "Phase 5 — vSAN Cluster Enablement" {shape: rectangle}
-phase_6_aria_suite_lifecycle_and_mon: "Phase 6 — Aria Suite Lifecycle and Monitoring (Optional)" {shape: rectangle}
+phase_6_aria_suite_lifecycle_and_mon: "Phase 6 — Aria Suite Lifecycle and Monitoring\n(Optional)" {shape: rectangle}
 validate: "Validate" {shape: oval}
 
 plan -> phase_1_physical_layer

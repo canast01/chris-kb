@@ -37,7 +37,7 @@ Both layers should be configured in enterprise environments. Management plane AA
 ## Authentication Architecture
 
 ```mermaid
-flowchart TD
+flowchart LR
   subgraph "Management Plane"
     SSH["SSH / HTTPS Login"]
     SSH --> AAA{"AAA method list"}

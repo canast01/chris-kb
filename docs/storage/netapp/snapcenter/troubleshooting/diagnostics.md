@@ -60,7 +60,7 @@ step_1_check_failed_jobs: "Step 1 — Check failed jobs" {shape: rectangle}
 step_2_check_resource_groups_and_hos: "Step 2 — Check resource groups and hosts" {shape: rectangle}
 step_3_check_ontap_storage_connectio: "Step 3 — Check ONTAP storage connections" {shape: rectangle}
 step_4_check_plugin_service_on_the_h: "Step 4 — Check plug-in service on the host" {shape: rectangle}
-step_5_inspect_component_logs_on_the: "Step 5 — Inspect component logs on the SnapCenter server" {shape: rectangle}
+step_5_inspect_component_logs_on_the: "Step 5 — Inspect component logs on the SnapCenter\nserver" {shape: rectangle}
 step_6_generate_support_bundle_for_n: "Step 6 — Generate support bundle for NetApp SR" {shape: rectangle}
 resolution: Resolve or Escalate {shape: oval}
 

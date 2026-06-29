@@ -271,7 +271,7 @@ net-driver-bnx2x               20.2.209.0-1OEM.700.1.0.15160482  Broadcom  Partn
     **`VIB net-driver-bnx2x not found.`** — Verify the exact VIB name with `esxcli software vib list | grep -i <partial-name>` and use the correct name from the output.
     **`Cannot remove VIB: VIB is part of an Image Profile and cannot be removed independently.`** — Use LCM (Lifecycle Manager) or boot into maintenance mode and remove via `esxcli software vib remove --vibname <vib-name> --force` if safe to do so.
 Then use VxRail Manager → LCM to apply the correct validated driver as part of a bundle upgrade. For the full VxRail LCM upgrade procedure, see the
-[VxRail LCM Upgrade Failure](vxrail-lcm-upgrade-failure/index.md) scenario.
+[VxRail LCM Upgrade Failure](vxrail-lcm-upgrade-failure.md) scenario.
 
 ---
 
@@ -313,9 +313,9 @@ Then use VxRail Manager → LCM to apply the correct validated driver as part of
 
 ## Related Scenarios
 
-- [ESXi Host Disconnected from vCenter](esxi-host-disconnected/index.md) — if the host is
+- [ESXi Host Disconnected from vCenter](esxi-host-disconnected.md) — if the host is
   unreachable after the crash with no console access, confirm PSOD vs other unresponsive states.
-- [VxRail LCM Upgrade Failure](vxrail-lcm-upgrade-failure/index.md) — the correct path for
+- [VxRail LCM Upgrade Failure](vxrail-lcm-upgrade-failure.md) — the correct path for
   applying driver and firmware fixes on VxRail nodes after a PSOD.
-- [VM Inaccessible / HA Failover](vm-inaccessible-ha-failover/index.md) — when HA fails to restart
+- [VM Inaccessible / HA Failover](vm-inaccessible-ha-failover.md) — when HA fails to restart
   VMs after a PSOD, the VM inaccessibility scenario covers the next steps.

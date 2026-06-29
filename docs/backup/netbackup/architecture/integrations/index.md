@@ -14,7 +14,7 @@ NetBackup Integration reference covering Integration Architecture, SIEM Integrat
 ## Integration Architecture
 
 ```mermaid
-flowchart TD
+flowchart LR
     master["NetBackup\nPrimary Server"]
 
     subgraph storageIntegrations [Storage Integrations]

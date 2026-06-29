@@ -26,7 +26,7 @@ ONTAP provides encryption at rest via NetApp Volume Encryption (NVE) and NetApp 
 ## Encryption Layer Architecture
 
 ```mermaid
-graph TB
+graph LR
     subgraph "Data In Transit"
         tlsMgmt["TLS 1.2/1.3\nHTTPS · REST API · ONTAPI"]
         kerbNFS["NFS Kerberos krb5p\nAES-256 NFS traffic"]

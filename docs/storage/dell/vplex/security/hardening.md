@@ -13,7 +13,7 @@ Security baseline for VPLEX deployments. Apply all items before production go-li
 ![Dell VPLEX — Hardening](../../../../assets/storage-dell-vplex-security-hardening.svg)
 
 ```mermaid
-flowchart TD
+flowchart LR
     subgraph "Identity and Authentication"
         sshKey["SSH key auth for service account\nPasswordAuthentication no"]
         namedAccounts["Named service accounts\nfor automation — no shared service account"]
@@ -90,7 +90,7 @@ flowchart TD
 
 ### Software and Patching
 
-- [ ] Maintain GeoSynchrony firmware on a supported release; refer to the version matrix in [Install & Upgrade](../operations/install-upgrade/index.md)
+- [ ] Maintain GeoSynchrony firmware on a supported release; refer to the version matrix in [Install & Upgrade](../operations/install-upgrade.md)
 - [ ] Subscribe to Dell security advisories for VPLEX; review advisories before host OS or back-end array firmware upgrades
 - [ ] Upgrade GeoSynchrony and back-end array firmware in separate maintenance windows; do not combine changes that could interact
 - [ ] Test GeoSynchrony upgrades in a non-production environment or staging cluster before applying to production

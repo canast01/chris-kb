@@ -26,7 +26,7 @@ Access Control reference covering Role-Based Access Control (RBAC), Local User M
 Unisphere for Unity implements role-based access control for all administrative operations. Every Unisphere user — whether a local account or an LDAP/AD-mapped user — is assigned one of four built-in roles. There are no custom roles; access is controlled entirely by role assignment.
 
 ```mermaid
-graph TD
+graph LR
   subgraph "Identity Sources"
     LOCAL["Local Accounts\n(break-glass only)"]
     AD["Active Directory\nGroups"]
@@ -457,7 +457,7 @@ Review the audit log regularly for:
 - Multiple failed login attempts (potential credential stuffing).
 - Privilege use — Administrator-role actions performed by accounts that should have Operator-level access.
 
-Forward audit events to a SIEM via syslog for long-term retention and alerting. See the [Authentication](authentication/index.md) page for syslog configuration.
+Forward audit events to a SIEM via syslog for long-term retention and alerting. See the [Authentication](authentication.md) page for syslog configuration.
 
 ---
 

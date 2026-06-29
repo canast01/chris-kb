@@ -26,7 +26,7 @@ Access Control reference covering RBAC, Namespace Isolation, Compliance, Access 
 ECS implements role-based access at two levels: system management and object (data) access.
 
 ```mermaid
-graph TD
+graph LR
   subgraph "Management Plane (portal/API)"
     SYSADMIN["System Admin\n(global — all VDCs)"]
     SYSMON["System Monitor\n(global, read-only)"]

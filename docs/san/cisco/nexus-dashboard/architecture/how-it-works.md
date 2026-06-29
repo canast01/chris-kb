@@ -110,7 +110,7 @@ Nexus Dashboard runs as a 3-node or 5-node cluster. Each node is a physical appl
 A 3-node cluster tolerates the loss of one node. For upgrades, always upgrade the ND platform before upgrading hosted application versions.
 
 ```mermaid
-graph TB
+graph LR
   subgraph ND["Nexus Dashboard Cluster (3 Nodes)"]
     N1["Node 1 — Primary\netcd leader · cluster control"]
     N2["Node 2 — Worker\napplication pods"]

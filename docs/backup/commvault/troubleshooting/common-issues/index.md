@@ -51,18 +51,18 @@ C: "Restore to different client failed" {shape: rectangle}
 D: "Media agent unreachable" {shape: rectangle}
 E: "Schedule not triggering" {shape: rectangle}
 A1: "A1" {shape: rectangle}
-A2: "Check firewall and restart GxCVD on client — see Common Issues Reference" {shape: rectangle}
-A3: "Check job phase log for hung pre/post script or VSS error" {shape: rectangle}
+A2: "Check firewall and restart GxCVD on client — see\nCommon Issues Reference" {shape: rectangle}
+A3: "Check job phase log for hung pre/post script or\nVSS error" {shape: rectangle}
 B1: "B1" {shape: rectangle}
-B2: "Free DDB disk space and run DDB Verification job — see Common Issues Reference" {shape: rectangle}
-B3: "Run qoperation execscript -sn QS_DDBVerify and escalate if phase 2 fails" {shape: rectangle}
+B2: "Free DDB disk space and run DDB Verification job —\nsee Common Issues Reference" {shape: rectangle}
+B3: "Run qoperation execscript -sn QS_DDBVerify and\nescalate if phase 2 fails" {shape: rectangle}
 C1: "C1" {shape: rectangle}
-C2: "Grant restore permission to target client in CommCell Console" {shape: rectangle}
-C3: "Check destination client credentials and iDA compatibility" {shape: rectangle}
+C2: "Grant restore permission to target client in\nCommCell Console" {shape: rectangle}
+C3: "Check destination client credentials and iDA\ncompatibility" {shape: rectangle}
 D1: "D1" {shape: rectangle}
-D2: "Restart CommVault services on MediaAgent — see Common Issues Reference" {shape: rectangle}
-D3: "Check network between CommServe and MediaAgent on port 8400" {shape: rectangle}
-E1: "Verify GxJobMgr service is running and schedule window is active — see Common Issues Reference" {shape: rectangle}
+D2: "Restart CommVault services on MediaAgent — see\nCommon Issues Reference" {shape: rectangle}
+D3: "Check network between CommServe and MediaAgent on\nport 8400" {shape: rectangle}
+E1: "Verify GxJobMgr service is running and schedule\nwindow is active — see Common Issues Reference" {shape: rectangle}
 
 S -> A
 S -> B

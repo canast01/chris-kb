@@ -32,10 +32,10 @@ N: "Replace certificate immediately\nRenew from CA; update on all servers" {shap
 O: "Plan rotation now\nSet calendar reminder" {shape: rectangle}
 P: "P" {shape: rectangle}
 Q: "Server not sending intermediate\nAdd intermediate to server TLS config" {shape: rectangle}
-R: "Check root CA in client trust store\nopenssl verify -CAfile root.pem -untrusted int.pem cert.pem" {shape: rectangle}
+R: "Check root CA in client trust store\nopenssl verify -CAfile root.pem -untrusted int.pem\ncert.pem" {shape: rectangle}
 S: "certutil -verify cert.cer\nCheck chain and revocation in output" {shape: rectangle}
 T: "Check ADCS event log\nEvent Viewer → Application → CertificationAuthority" {shape: rectangle}
-U: "Check CRL freshness\nopenssl crl -in IssuingCA.crl -inform DER -noout -text | grep Next Update" {shape: rectangle}
+U: "Check CRL freshness\nopenssl crl -in IssuingCA.crl -inform DER -noout\n-text | grep Next Update" {shape: rectangle}
 V: "V" {shape: rectangle}
 A: "Certificate Issue" {shape: rectangle}
 

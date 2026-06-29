@@ -410,9 +410,9 @@ Look for: all hosts showing "Connected" in vCenter within 10 minutes of restore 
 
 ## Related Scenarios
 
-- [ESXi Host Disconnected from vCenter](esxi-host-disconnected/index.md) — when vCenter recovers but
+- [ESXi Host Disconnected from vCenter](esxi-host-disconnected.md) — when vCenter recovers but
   individual hosts remain disconnected, use the host disconnect procedure.
-- [NTP Drift Causing SSO or Certificate Errors](ntp-drift-sso-certificate/index.md) — if vpxd.log
+- [NTP Drift Causing SSO or Certificate Errors](ntp-drift-sso-certificate.md) — if vpxd.log
   shows SSL or SSO failures during startup, NTP drift is a common root cause.
-- [VxRail LCM Upgrade Failure](vxrail-lcm-upgrade-failure/index.md) — a failed VxRail upgrade can
+- [VxRail LCM Upgrade Failure](vxrail-lcm-upgrade-failure.md) — a failed VxRail upgrade can
   leave vCenter in a partially upgraded and unbootable state.

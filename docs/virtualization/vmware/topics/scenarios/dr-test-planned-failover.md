@@ -24,7 +24,7 @@ direction: down
 
 products_involved: "Products Involved" {shape: rectangle}
 dr_test_nondisruptive_recovery_valid: "DR Test — Non-Disruptive Recovery Validation" {shape: rectangle}
-planned_failover_graceful_production: "Planned Failover — Graceful Production Migration to DR Site" {shape: rectangle}
+planned_failover_graceful_production: "Planned Failover — Graceful Production Migration\nto DR Site" {shape: rectangle}
 posttask_validation: "Post-Task Validation" {shape: rectangle}
 key_terms: "Key Terms" {shape: rectangle}
 

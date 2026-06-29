@@ -29,7 +29,7 @@ Not all services require the same level of redundancy. Applying the highest-cost
 | 2 | Business-Important | 99.9% (3 nines) | 4 hr | ~8.7 hr | Internal portals, analytics, dev/test |
 | 3 | Standard | 99.5% | 8 hr | ~43 hr | Batch jobs, low-priority apps |
 
-RTO and RPO targets must be defined at tier assignment. Refer to the [Disaster Recovery Design](../disaster-recovery-design/index.md) guide for RPO/RTO tables.
+RTO and RPO targets must be defined at tier assignment. Refer to the Disaster Recovery Design guide for RPO/RTO tables.
 
 ---
 

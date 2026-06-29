@@ -348,6 +348,6 @@ Eth1/10       NSX-Edge-Uplink    connected  trunk   full  10G Ethernet
 
 ## Related Scenarios
 
-- [Aria Ops Alert Storm](aria-ops-alert-storm/index.md) — An NSX edge failure generates a cascade of east-west latency alerts across all VMs that transit the edge, producing a classic alert storm.
-- [NSX Connectivity Broken](nsx-connectivity-broken/index.md) — Broader NSX connectivity troubleshooting covering DFW, T1 routing, and overlay fabric.
-- [VM Performance Degraded](vm-performance-degraded/index.md) — VM performance issues caused by network congestion are investigated via Aria Networks path traces that traverse edge nodes.
+- [Aria Ops Alert Storm](aria-ops-alert-storm.md) — An NSX edge failure generates a cascade of east-west latency alerts across all VMs that transit the edge, producing a classic alert storm.
+- [NSX Connectivity Broken](nsx-connectivity-broken.md) — Broader NSX connectivity troubleshooting covering DFW, T1 routing, and overlay fabric.
+- [VM Performance Degraded](vm-performance-degraded.md) — VM performance issues caused by network congestion are investigated via Aria Networks path traces that traverse edge nodes.

@@ -179,7 +179,7 @@ password-history-length       12
 !!! warning "Common errors"
     **`Error: SAML not configured`** — Configure SAML identity provider settings in the Purity GUI under System > Security > Single Sign-On before enabling SSO.
     **`Error: Command requires administrative privileges`** — Run the command with a user account that has administrative or security-admin role on the FlashArray.
-See the [Authentication](authentication/index.md) page for full SAML configuration steps. SAML integration requires Purity//FA 6.0 or later.
+See the [Authentication](authentication.md) page for full SAML configuration steps. SAML integration requires Purity//FA 6.0 or later.
 
 If SAML is not feasible in the short term, compensate with:
 - Named account controls and PAM vault for credential management
@@ -442,7 +442,7 @@ SSD-005                       1.92TB      SSD               enabled
 !!! warning "Common errors"
     **`purearray: command not found`** — Install the Pure Storage CLI tools or ensure the PATH includes the Pure management tools directory.
     **`Error: Unable to connect to array at <ip>. Authentication failed.`** — Verify your Pure Storage credentials are configured in `~/.purerc` or set the PURE_API_TOKEN environment variable.
-If KMIP external key management is required, configure it now. See [Encryption](encryption/index.md) for the full KMIP configuration procedure.
+If KMIP external key management is required, configure it now. See [Encryption](encryption.md) for the full KMIP configuration procedure.
 
 ---
 

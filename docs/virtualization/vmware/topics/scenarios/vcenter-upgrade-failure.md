@@ -379,6 +379,6 @@ Look for: never upgrade NSX before vCenter — NSX compatibility is validated ag
 
 ## Related Scenarios
 
-- [vCenter Down / Unreachable](vcenter-down/index.md) — Post-upgrade service failures use the same VCSA diagnostic tools (VAMI, service-control, vpxd.log); reference this scenario for service recovery steps.
-- [NTP Drift / SSO and Certificate Errors](ntp-drift-sso-certificate/index.md) — NTP drift and certificate expiry are pre-conditions that cause Stage 2 failures; resolve them before upgrading.
-- [VxRail LCM Upgrade Failure](vxrail-lcm-upgrade-failure/index.md) — VxRail LCM orchestrates vCenter upgrades on VxRail clusters; a VxRail LCM upgrade failure has the same rollback mechanics described here.
+- [vCenter Down / Unreachable](vcenter-down.md) — Post-upgrade service failures use the same VCSA diagnostic tools (VAMI, service-control, vpxd.log); reference this scenario for service recovery steps.
+- [NTP Drift / SSO and Certificate Errors](ntp-drift-sso-certificate.md) — NTP drift and certificate expiry are pre-conditions that cause Stage 2 failures; resolve them before upgrading.
+- [VxRail LCM Upgrade Failure](vxrail-lcm-upgrade-failure.md) — VxRail LCM orchestrates vCenter upgrades on VxRail clusters; a VxRail LCM upgrade failure has the same rollback mechanics described here.

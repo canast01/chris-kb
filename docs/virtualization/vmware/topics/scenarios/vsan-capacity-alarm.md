@@ -125,7 +125,7 @@ Get-VM -Name "vm-name" | Get-Snapshot | Remove-Snapshot -RunAsync -Confirm:$fals
 
 After snapshot removal, monitor the virtual objects view — delta disks should shrink within minutes and the capacity alarm should clear once usage drops below the threshold.
 
-Look for: if snapshot removal does not free space immediately, the VM may have a **snapshot consolidation required** alarm — see [VM Snapshot Consolidation Required](vm-snapshot-consolidation-required/index.md) for that sub-flow.
+Look for: if snapshot removal does not free space immediately, the VM may have a **snapshot consolidation required** alarm — see [VM Snapshot Consolidation Required](vm-snapshot-consolidation-required.md) for that sub-flow.
 
 ---
 
@@ -242,6 +242,6 @@ $report.FreeCapacityB / 1GB
 
 ## Related Scenarios
 
-- [VM Snapshot Consolidation Required](vm-snapshot-consolidation-required/index.md) — snapshot delta files not removed after deletion; separate consolidation workflow.
-- [Storage vMotion / Datastore Migration](storage-vmotion-datastore-migration/index.md) — moving VMs between datastores as a capacity management action.
-- [vSAN Disk or Component Failure](vsan-disk-component-failure/index.md) — disk failure reduces vSAN capacity and triggers a related set of alarms.
+- [VM Snapshot Consolidation Required](vm-snapshot-consolidation-required.md) — snapshot delta files not removed after deletion; separate consolidation workflow.
+- [Storage vMotion / Datastore Migration](storage-vmotion-datastore-migration.md) — moving VMs between datastores as a capacity management action.
+- [vSAN Disk or Component Failure](vsan-disk-component-failure.md) — disk failure reduces vSAN capacity and triggers a related set of alarms.

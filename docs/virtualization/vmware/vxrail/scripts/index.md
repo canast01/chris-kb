@@ -19,7 +19,7 @@ vxrail_cluster_health_check_powershe: "VxRail Cluster Health Check (PowerShell /
 lcm_upgrade_readiness_check_bash: "LCM Upgrade Readiness Check (Bash)" {shape: rectangle}
 node_hardware_status_bash: "Node Hardware Status (Bash)" {shape: rectangle}
 ansible_vxrail_health_playbook: "Ansible VxRail Health Playbook" {shape: rectangle}
-windows_vxrail_cluster_health_via_re: "Windows: VxRail Cluster Health via REST API (PowerShell)" {shape: rectangle}
+windows_vxrail_cluster_health_via_re: "Windows: VxRail Cluster Health via REST API\n(PowerShell)" {shape: rectangle}
 windows_vxrail_node_status_via_plink: "Windows: VxRail Node Status via Plink (CMD)" {shape: rectangle}
 
 vxrail_cluster_health_check_powershe -> lcm_upgrade_readiness_check_bash: uses

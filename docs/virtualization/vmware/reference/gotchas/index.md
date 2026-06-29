@@ -18,11 +18,11 @@ Known pitfalls, unexpected behaviours, and non-obvious operational traps across 
 direction: down
 
 vsan_clomrepairdelay_catches_admins_: "vSAN — clomRepairDelay Catches Admins Off Guard" {shape: rectangle}
-vsan_esa_and_osa_are_mutually_exclus: "vSAN — ESA and OSA Are Mutually Exclusive per Disk Group" {shape: rectangle}
-vsan_stretched_cluster_witness_must_: "vSAN — Stretched Cluster Witness Must Not Be Domain-Joined" {shape: rectangle}
+vsan_esa_and_osa_are_mutually_exclus: "vSAN — ESA and OSA Are Mutually Exclusive per Disk\nGroup" {shape: rectangle}
+vsan_stretched_cluster_witness_must_: "vSAN — Stretched Cluster Witness Must Not Be\nDomain-Joined" {shape: rectangle}
 nsx_dfw_policy_must_be_published_to_: "NSX — DFW Policy Must Be Published to Take Effect" {shape: rectangle}
-nsx_transport_node_reboot_required_a: "NSX — Transport Node Reboot Required After Host Profile Appl" {shape: rectangle}
-nsx_edge_vm_cpu_must_be_pinned_to_a_: "NSX — Edge VM CPU Must Be Pinned to a Dedicated NUMA Node fo" {shape: rectangle}
+nsx_transport_node_reboot_required_a: "NSX — Transport Node Reboot Required After Host\nProfile Appl" {shape: rectangle}
+nsx_edge_vm_cpu_must_be_pinned_to_a_: "NSX — Edge VM CPU Must Be Pinned to a Dedicated\nNUMA Node fo" {shape: rectangle}
 
 vsan_clomrepairdelay_catches_admins_ -> vsan_esa_and_osa_are_mutually_exclus: uses
 vsan_esa_and_osa_are_mutually_exclus -> vsan_stretched_cluster_witness_must_: uses

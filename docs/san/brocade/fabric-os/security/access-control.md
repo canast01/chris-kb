@@ -26,7 +26,7 @@ FabricOS access control: RBAC role assignment, `userconfig` CLI, default account
 ## Access Control Architecture
 
 ```mermaid
-graph TB
+graph LR
     subgraph "Management Plane"
         ipfilter["IPfilter Policy\nsource IP restriction\nSSH · HTTPS · SNMP"]
         rbac["RBAC Roles\nadmin · switchadmin\nzoneadmin · operator"]

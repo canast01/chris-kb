@@ -13,7 +13,7 @@ direction: down
 
 question_pattern_recognition: "Question Pattern Recognition" {shape: rectangle}
 common_wrong_answers_to_avoid: "Common Wrong Answers to Avoid" {shape: rectangle}
-exam_domain_breakdown_aws_certified_: "Exam Domain Breakdown — AWS Certified AI Practitioner (AIF-C" {shape: rectangle}
+exam_domain_breakdown_aws_certified_: "Exam Domain Breakdown — AWS Certified AI\nPractitioner (AIF-C" {shape: rectangle}
 key_terminology_distinctions: "Key Terminology Distinctions" {shape: rectangle}
 scoring_and_exam_strategy: "Scoring and Exam Strategy" {shape: rectangle}
 service_boundary_quick_reference: "Service Boundary Quick Reference" {shape: rectangle}

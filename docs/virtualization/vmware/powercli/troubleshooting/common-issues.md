@@ -60,7 +60,7 @@ R3: "Install-Module VMware.PowerCLI · Check PSModulePath\n→ Module Not Found"
 D2: "D2" {shape: rectangle}
 R4: "Test-NetConnection Port 443 · Check DNS\n→ Connection Refused / Timeout" {shape: rectangle}
 R5: "Check Existing Sessions · Disconnect and Retry\n→ Connection Refused / Timeout" {shape: rectangle}
-R6: "Check IsConnected · Reconnect · Extend SSO Token Lifetime\n→ Session Expired / Invalid Session" {shape: rectangle}
+R6: "Check IsConnected · Reconnect · Extend SSO Token\nLifetime\n→ Session Expired / Invalid Session" {shape: rectangle}
 R7: "Check PowerCLI vs vCenter API Compatibility\n→ Cmdlet Parameter Not Found" {shape: rectangle}
 R8: "Uninstall Old Module Versions · Keep Latest Only\n→ Multiple Module Versions Conflict" {shape: rectangle}
 

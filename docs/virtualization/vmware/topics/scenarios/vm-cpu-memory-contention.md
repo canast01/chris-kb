@@ -20,12 +20,12 @@ direction: right
 
 PRESS: "PRESS" {shape: rectangle}
 BALLOON: "VMkernel inflates balloon driver · inside guest OS" {shape: rectangle}
-BRELIEF: "Memory returned to host pool · moderate performance impact" {shape: rectangle}
-SWAP: "Host swaps VM pages to .vswp file · severe performance impact" {shape: rectangle}
+BRELIEF: "Memory returned to host pool · moderate\nperformance impact" {shape: rectangle}
+SWAP: "Host swaps VM pages to .vswp file · severe\nperformance impact" {shape: rectangle}
 PRESS2: "PRESS2" {shape: rectangle}
 READY: "VMs queue in CPU ready state · %RDY rises > 5% per vCPU" {shape: rectangle}
-ACTION: "Identify top balloon/swap VMs · esxtop → m view → MCTLSZ / SWPRD" {shape: rectangle}
-ACTION2: "Identify top CPU ready VMs · esxtop → v view → %RDY column" {shape: rectangle}
+ACTION: "Identify top balloon/swap VMs · esxtop → m view →\nMCTLSZ / SWPRD" {shape: rectangle}
+ACTION2: "Identify top CPU ready VMs · esxtop → v view →\n%RDY column" {shape: rectangle}
 RESOLVE: "vMotion to less-loaded host · or reduce vRAM allocation" {shape: rectangle}
 RESOLVE2: "Reduce vCPU count · or migrate VM" {shape: rectangle}
 
@@ -373,9 +373,9 @@ incident.
 
 ## Related Scenarios
 
-- [VM Performance Degraded](vm-performance-degraded/index.md) — broader VM performance triage
+- [VM Performance Degraded](vm-performance-degraded.md) — broader VM performance triage
   including storage and network latency contributors.
-- [vSAN Capacity Alarm](vsan-capacity-alarm/index.md) — swap file growth can rapidly consume vSAN
+- [vSAN Capacity Alarm](vsan-capacity-alarm.md) — swap file growth can rapidly consume vSAN
   datastore capacity on HCI deployments.
-- [Storage APD — Datastore Inaccessible](storage-apd-datastore-inaccessible/index.md) — `.vswp`
+- [Storage APD — Datastore Inaccessible](storage-apd-datastore-inaccessible.md) — `.vswp`
   files on an APD datastore cause immediate VM freeze; distinguish from memory contention.

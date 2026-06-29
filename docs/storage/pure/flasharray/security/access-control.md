@@ -28,7 +28,7 @@ FlashArray uses a role-based access control (RBAC) model with four built-in role
 ## RBAC and Access Model
 
 ```mermaid
-graph TD
+graph LR
   subgraph "Identity Sources"
     AD["Active Directory\n(AD group → role mapping)"]
     SAML["SAML SSO IdP\n(Okta / Azure AD / ADFS)"]

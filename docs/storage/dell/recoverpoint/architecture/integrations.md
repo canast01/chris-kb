@@ -17,7 +17,7 @@ RecoverPoint integrations: vSphere plugin registration, VMAX and XtremIO product
 ## Splitter Topology
 
 ```mermaid
-graph TD
+graph LR
     subgraph esxiHost ["ESXi Host (RP4VM)"]
         vmApp["Protected VM"]
         softSplitter["Software Splitter\n(vSphere Kernel Module)"]

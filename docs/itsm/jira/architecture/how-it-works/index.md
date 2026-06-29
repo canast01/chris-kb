@@ -29,7 +29,7 @@ Jira is available in three deployment models, each with distinct architectural c
 ## Data Center Reference Architecture
 
 ```mermaid
-graph TB
+graph LR
     subgraph Users["Users / Clients"]
         B[Browser]
         API[API Consumers]

@@ -13,10 +13,10 @@ direction: down
 
 storage_decisions: "Storage Decisions" {shape: rectangle}
 decision_vsan_as_primary_vm_storage: "Decision: vSAN as Primary VM Storage" {shape: rectangle}
-decision_powermax_pure_storage_for_m: "Decision: PowerMax / Pure Storage for Mission-Critical Workl" {shape: rectangle}
+decision_powermax_pure_storage_for_m: "Decision: PowerMax / Pure Storage for Mission-\nCritical Workl" {shape: rectangle}
 networking_decisions: "Networking Decisions" {shape: rectangle}
 decision_nsxt_as_the_overlay_network: "Decision: NSX-T as the Overlay Network" {shape: rectangle}
-decision_vsphere_distributed_switch_: "Decision: vSphere Distributed Switch (VDS) over Standard Swi" {shape: rectangle}
+decision_vsphere_distributed_switch_: "Decision: vSphere Distributed Switch (VDS) over\nStandard Swi" {shape: rectangle}
 
 storage_decisions -> decision_vsan_as_primary_vm_storage: uses
 decision_vsan_as_primary_vm_storage -> decision_powermax_pure_storage_for_m: uses

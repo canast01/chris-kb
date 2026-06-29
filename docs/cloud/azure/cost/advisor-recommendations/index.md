@@ -13,7 +13,7 @@ Azure Advisor analyses your usage and configuration and surfaces personalised re
 ## Advisor Recommendation Categories
 
 ```mermaid
-flowchart TD
+flowchart LR
     advisor["Azure Advisor\npersonalised recommendations"]
     subgraph categories["Recommendation Categories"]
         cost["Cost\nright-size · unused resources · reservations"]

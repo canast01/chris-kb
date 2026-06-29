@@ -343,6 +343,6 @@ In vCenter, create an alarm:
 
 ## Related Scenarios
 
-- [Storage APD — Datastore Inaccessible](storage-apd-datastore-inaccessible/index.md) — APD events often leave orphaned delta files behind that trigger the consolidation-needed warning post-recovery.
-- [Datastore Full / Capacity Alarm](datastore-full-capacity-alarm/index.md) — Large undetected delta files are one of the most common causes of sudden datastore space exhaustion.
-- [VM Performance Degraded](vm-performance-degraded/index.md) — VMs running on a long delta chain (many snapshots or a very large delta) experience elevated read latency because all reads fan through the snapshot chain.
+- [Storage APD — Datastore Inaccessible](storage-apd-datastore-inaccessible.md) — APD events often leave orphaned delta files behind that trigger the consolidation-needed warning post-recovery.
+- [Datastore Full / Capacity Alarm](datastore-full-capacity-alarm.md) — Large undetected delta files are one of the most common causes of sudden datastore space exhaustion.
+- [VM Performance Degraded](vm-performance-degraded.md) — VMs running on a long delta chain (many snapshots or a very large delta) experience elevated read latency because all reads fan through the snapshot chain.

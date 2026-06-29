@@ -22,11 +22,11 @@ B: "B" {shape: rectangle}
 C: "aws evs list-environment-hosts\naws ec2 describe-instance-status" {shape: rectangle}
 D: "aws ec2 describe-route-tables\nVPC Flow Logs for REJECT entries" {shape: rectangle}
 E: "NSX-T Traceflow for DFW path\nvSphere client ping / traceroute from VM" {shape: rectangle}
-F: "aws cloudtrail lookup-events EventSource=evs.amazonaws.com\nFilter for errorCode field" {shape: rectangle}
+F: "aws cloudtrail lookup-events\nEventSource=evs.amazonaws.com\nFilter for errorCode field" {shape: rectangle}
 G: "vCenter: vmon-cli -l / vpxd.log\nvSAN: vSphere UI Health plugin" {shape: rectangle}
 H: "HCX Manager UI: Interconnect status\nHCX Support > Download Log Bundle" {shape: rectangle}
 I: "I" {shape: rectangle}
-J: "aws ec2 describe-instances for i4i host IDs\nCheck ENI attachment: aws ec2 describe-network-interfaces" {shape: rectangle}
+J: "aws ec2 describe-instances for i4i host IDs\nCheck ENI attachment: aws ec2 describe-network-\ninterfaces" {shape: rectangle}
 K: "Check VPC route tables and security groups\nVerify management ENI connectivity" {shape: rectangle}
 L: "aws logs start-query on evs-flow-logs group\nFilter REJECT entries by srcAddr and dstPort" {shape: rectangle}
 M: "NSX-T: nsxcli get alarms\nTraceflow in NSX UI: Plan > Traceflow" {shape: rectangle}
@@ -34,7 +34,7 @@ N: "Parse CloudTrailEvent.errorCode from lookup-events\nCheck IAM policy for mis
 O: "vc-support.sh for vCenter bundle\nPowerCLI: Get-VsanView for vSAN health" {shape: rectangle}
 P: "Check HCX Interconnect tunnel state in HCX UI\nSSH to HCX Manager: /opt/vmware/log/ for errors" {shape: rectangle}
 Q: "Collect all layer bundles\nOpen AWS and/or VMware SR" {shape: rectangle}
-R: "AWS case: account ID, environment ID, host IDs, CloudTrail event IDs\nVMware case: vSphere bundle, NSX-T bundle, SDDC Manager bundle" {shape: rectangle}
+R: "AWS case: account ID, environment ID, host IDs,\nCloudTrail event IDs\nVMware case: vSphere bundle, NSX-T bundle, SDDC\nManager bundle" {shape: rectangle}
 A: "EVS Issue" {shape: rectangle}
 
 B -> C
@@ -69,7 +69,7 @@ step_2_check_cloudtrail_for_evs_api_: "Step 2 — Check CloudTrail for EVS API e
 step_3_inspect_vpc_flow_logs_for_net: "Step 3 — Inspect VPC Flow Logs for network drops" {shape: rectangle}
 step_4_check_vmware_platform_health: "Step 4 — Check VMware platform health" {shape: rectangle}
 step_5_check_nsxt_health_in_evs: "Step 5 — Check NSX-T health in EVS" {shape: rectangle}
-step_6_collect_vsphere_nsxt_and_sddc: "Step 6 — Collect vSphere, NSX-T, and SDDC Manager bundles" {shape: rectangle}
+step_6_collect_vsphere_nsxt_and_sddc: "Step 6 — Collect vSphere, NSX-T, and SDDC Manager\nbundles" {shape: rectangle}
 resolution: Resolve or Escalate {shape: oval}
 
 symptom -> step_1_check_aws_host_and_infrastruc: investigate

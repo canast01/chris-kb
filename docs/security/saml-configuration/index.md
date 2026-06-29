@@ -225,12 +225,12 @@ notAfter=Mar 22 14:57:12 2026 GMT
 
 Each product documents its exact ACS URL, Entity ID format, and any quirks:
 
-- [Jira — Authentication](../../tools/jira/security/authentication/index.md)
-- [Confluence — Authentication](../../tools/confluence/security/authentication/index.md)
-- [ServiceNow — Authentication](../../tools/servicenow/security/authentication/index.md)
-- [vCenter — Authentication](../../virtualization/vmware/vcenter/security/authentication/index.md)
+- [Jira — Authentication](../../itsm/jira/security/authentication/index.md)
+- [Confluence — Authentication](../../itsm/confluence/security/authentication/index.md)
+- [ServiceNow — Authentication](../../itsm/servicenow/security/authentication/index.md)
+- [vCenter — Authentication](../../virtualization/vmware/vcenter/security/authentication.md)
 - [VCF — Authentication](../../virtualization/vmware/vmware-cloud-foundation/security/authentication//)
-- [ONTAP System Manager — Authentication](../../storage/netapp/ontap/security/authentication/index.md)
+- [ONTAP System Manager — Authentication](../../storage/netapp/ontap/security/authentication.md)
 - [CyberArk — Authentication](../../security/cyberark/security/authentication/index.md)
 
 ---
@@ -240,5 +240,3 @@ Each product documents its exact ACS URL, Entity ID format, and any quirks:
 - [Standard LDAP Integration](../ldap-integration/index.md)
 - [MFA](../mfa/index.md)
 - [Active Directory](../../compute/windows-server/active-directory/index.md)
-- [TLS and HTTPS](../../protocols/tls/index.md)
-- [PKI](../pki/index.md)

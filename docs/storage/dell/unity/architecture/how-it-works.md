@@ -88,7 +88,7 @@ Unity XT uses an active-active dual-SP model:
 ## Storage Pool Architecture
 
 ```mermaid
-graph TD
+graph LR
   subgraph "Unity Array"
     subgraph "Storage Pool"
       DG1["Disk Group 1\nRAID-5 · SAS SSD"]

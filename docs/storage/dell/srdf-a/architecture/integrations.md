@@ -17,7 +17,7 @@ SRDF/A integrations: coexistence with TimeFinder snapshots, RecoverPoint on VMAX
 ## SRM Integration Topology
 
 ```mermaid
-graph TD
+graph LR
     subgraph prodSite ["Production Site"]
         srmProd["SRM Server\n(Protected Site)"]
         sra1["Dell SRA\n(SRM Plugin)"]

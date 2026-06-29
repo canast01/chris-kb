@@ -385,6 +385,6 @@ Get-VM "vm-name" | Get-Stat -Stat disk.totalLatency.average `
 
 ## Related Scenarios
 
-- [vMotion Failing](vmotion-failing/index.md) — vMotion failures often surface during performance investigations when DRS tries to rebalance a degraded host.
-- [vSAN Disk or Component Failure](vsan-disk-component-failure/index.md) — vSAN latency spikes are frequently caused by active component rebuild after a disk event.
-- [NSX Connectivity Broken](nsx-connectivity-broken/index.md) — When dropped packets point to the network layer, a full NSX path trace is the logical next step.
+- [vMotion Failing](vmotion-failing.md) — vMotion failures often surface during performance investigations when DRS tries to rebalance a degraded host.
+- [vSAN Disk or Component Failure](vsan-disk-component-failure.md) — vSAN latency spikes are frequently caused by active component rebuild after a disk event.
+- [NSX Connectivity Broken](nsx-connectivity-broken.md) — When dropped packets point to the network layer, a full NSX path trace is the logical next step.

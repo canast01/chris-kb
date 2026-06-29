@@ -23,7 +23,7 @@ products_involved: "Products Involved" {shape: rectangle}
 2_precheck_failures: "2. Pre-check Failures" {shape: rectangle}
 3_bundle_download_failure: "3. Bundle Download Failure" {shape: rectangle}
 4_midupgrade_node_failure: "4. Mid-Upgrade Node Failure" {shape: rectangle}
-5_use_rest_api_to_check_status_and_g: "5. Use REST API to Check Status and Generate Support Bundle" {shape: rectangle}
+5_use_rest_api_to_check_status_and_g: "5. Use REST API to Check Status and Generate\nSupport Bundle" {shape: rectangle}
 
 products_involved -> 1_identify_the_failure_phase: uses
 1_identify_the_failure_phase -> 2_precheck_failures: uses
@@ -113,7 +113,7 @@ scsi-megaraid-sas                         7.714.06.00-1OEM.700.1.0.15160174  VMw
 Remove any VIBs not in the VxRail approved list before retrying.
 
 **NTP skew:** Check and fix NTP on all nodes — see the
-[NTP Drift Scenario](ntp-drift-sso-certificate/index.md) for the full procedure. Re-run the
+[NTP Drift Scenario](ntp-drift-sso-certificate.md) for the full procedure. Re-run the
 pre-check after NTP is corrected.
 
 ---
@@ -350,9 +350,9 @@ The retry resumes from the failed node and phase — it does not restart from sc
 
 ## Related Scenarios
 
-- [vCenter Down / Unreachable](vcenter-down/index.md) — if the VxRail LCM bundle includes a vCenter
+- [vCenter Down / Unreachable](vcenter-down.md) — if the VxRail LCM bundle includes a vCenter
   upgrade that fails, the vCenter recovery procedure applies.
-- [PSOD — ESXi Kernel Panic](psod-esxi-kernel-panic/index.md) — a PSOD after an LCM upgrade often
+- [PSOD — ESXi Kernel Panic](psod-esxi-kernel-panic.md) — a PSOD after an LCM upgrade often
   indicates a driver/firmware combination issue within the bundle; open a Dell support case.
-- [NTP Drift Causing SSO or Certificate Errors](ntp-drift-sso-certificate/index.md) — NTP skew
+- [NTP Drift Causing SSO or Certificate Errors](ntp-drift-sso-certificate.md) — NTP skew
   is one of the pre-check failures that blocks LCM from starting the upgrade sequence.

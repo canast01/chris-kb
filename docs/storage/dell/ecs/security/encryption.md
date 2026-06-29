@@ -24,7 +24,7 @@ Encryption reference covering Encryption Layers, TLS Configuration, Data at Rest
 ## Encryption Layers
 
 ```mermaid
-graph TD
+graph LR
   subgraph "In Transit"
     TLS_S3["S3 / Swift endpoints\nTLS 1.2+ (port 443/9021/9024)"]
     TLS_MGMT["Management API\nTLS 1.2+ (port 4443)"]

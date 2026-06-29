@@ -215,7 +215,7 @@ direction: right
 issue: "Certificate / CA issue requiring vendor support" {shape: rectangle}
 vendor: "Which CA\n/ vendor?" {shape: rectangle}
 msSupport: "Microsoft — support.microsoft.com\n(Premier / Unified Support for Sev A/B" {shape: rectangle}
-dgSupport: "DigiCert — digicert.com/support\n24/7 for critical; portal + phone\nPre-collect: Order Number, Serial, domain validation method" {shape: rectangle}
+dgSupport: "DigiCert — digicert.com/support\n24/7 for critical; portal + phone\nPre-collect: Order Number, Serial, domain\nvalidation method" {shape: rectangle}
 enSupport: "Entrust — entrust.com/support\nPortal; phone for P1\nPre-collect: Certificate ID, issuance date, error" {shape: rectangle}
 leSupport: "Let" {shape: rectangle}
 venafiSupport: "Venafi — see Venafi vendor-support page" {shape: rectangle}

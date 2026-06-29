@@ -305,7 +305,7 @@ Snapshot Reserve Percentage: 10%
 
 ## SyncIQ — Replication-Based Recovery
 
-SyncIQ replicates directory trees to a remote PowerScale cluster. For full details on policy management, monitoring, and failover, see [Architecture — How It Works](../architecture/how-it-works/index.md).
+SyncIQ replicates directory trees to a remote PowerScale cluster. For full details on policy management, monitoring, and failover, see [Architecture — How It Works](../architecture/how-it-works.md).
 
 ### Backup to a Dedicated DR Cluster
 

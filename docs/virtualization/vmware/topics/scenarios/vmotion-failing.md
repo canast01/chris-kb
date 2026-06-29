@@ -419,6 +419,6 @@ Look for: throughput well below expected link speed (e.g., 2 Gbps on a 10 Gbps l
 
 ## Related Scenarios
 
-- [VM Performance Degraded](vm-performance-degraded/index.md) — DRS triggers vMotion to rebalance load; understanding when vMotion fails under load is connected to performance investigations.
-- [VM Inaccessible / HA Failover](vm-inaccessible-ha-failover/index.md) — HA-initiated restarts and DRS rebalancing after failover both rely on vMotion working correctly.
-- [NSX Connectivity Broken](nsx-connectivity-broken/index.md) — NSX TEP or segment issues that cause vMotion failures overlap with the broader NSX connectivity troubleshooting flow.
+- [VM Performance Degraded](vm-performance-degraded.md) — DRS triggers vMotion to rebalance load; understanding when vMotion fails under load is connected to performance investigations.
+- [VM Inaccessible / HA Failover](vm-inaccessible-ha-failover.md) — HA-initiated restarts and DRS rebalancing after failover both rely on vMotion working correctly.
+- [NSX Connectivity Broken](nsx-connectivity-broken.md) — NSX TEP or segment issues that cause vMotion failures overlap with the broader NSX connectivity troubleshooting flow.

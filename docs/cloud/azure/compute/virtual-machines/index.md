@@ -15,7 +15,7 @@ Reference for creating, managing, sizing, and operating Azure Virtual Machines u
 ## Azure VM Architecture
 
 ```mermaid
-flowchart TD
+flowchart LR
     subgraph vmComponents["VM Components"]
         compute["Compute\nvCPU · RAM (SKU)"]
         osDisk["OS Disk\nManaged Disk (P/E/S)"]
@@ -39,7 +39,7 @@ flowchart TD
 ## Azure VM Deployment Flow
 
 ```mermaid
-flowchart TD
+flowchart LR
     request["Deployment Request\nPortal · CLI · Terraform · ARM"]
     rbacCheck["RBAC Check\nMicrosoft.Compute/virtualMachines/write"]
     policyCheck["Azure Policy Evaluation\nallowed SKUs · location · tags"]

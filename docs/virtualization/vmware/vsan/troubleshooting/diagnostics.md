@@ -20,7 +20,7 @@ vSAN diagnostic commands: check all vSAN health checks from the Skyline Health U
 direction: right
 
 B: "B" {shape: rectangle}
-C: "vSphere Client: Cluster → Monitor → vSAN → Skyline Health\nCheck failed health checks and recommended actions" {shape: rectangle}
+C: "vSphere Client: Cluster → Monitor → vSAN → Skyline\nHealth\nCheck failed health checks and recommended actions" {shape: rectangle}
 D: "esxcli vsan debug object list on ESXi\nFilter: grep -v Healthy to find problem objects" {shape: rectangle}
 E: "vSphere Client: Monitor → vSAN → Performance\nCheck cluster read/write latency and congestion" {shape: rectangle}
 F: "esxcli vsan debug network test\nvmkping -I vmk2 -d -s 8972 peer-vmk-ip" {shape: rectangle}
@@ -35,7 +35,7 @@ N: "esxcli vsan network list\nesxcli network nic stats get -n vmnic2" {shape: re
 O: "Check SMART: Reallocated Pending Uncorrectable sectors\ngrep naa.device vmkernel.log for errors" {shape: rectangle}
 P: "Check slack space: esxcli vsan storage list\nReview resync bandwidth: vSAN config" {shape: rectangle}
 Q: "Collect vCenter and ESXi support bundle\nOpen VMware SR" {shape: rectangle}
-R: "vc-support.sh from VCSA + vm-support --vsan on each ESXi host\nAttach to VMware Support Request" {shape: rectangle}
+R: "vc-support.sh from VCSA + vm-support --vsan on\neach ESXi host\nAttach to VMware Support Request" {shape: rectangle}
 A: "vSAN Issue" {shape: rectangle}
 
 B -> C

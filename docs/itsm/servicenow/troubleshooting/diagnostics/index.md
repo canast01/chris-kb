@@ -25,13 +25,13 @@ G: "System Diagnostics for self-test suite\nCheck failed scheduler jobs: sysauto
 H: "Background Script diagnostic snapshot\nSystem Diagnostics > Diagnostics self-test" {shape: rectangle}
 I: "I" {shape: rectangle}
 J: "Identify blocking transaction and table\nDisable offending Business Rule if causing lock" {shape: rectangle}
-K: "Scale check: contact ServiceNow support for node capacity\nIdentify runaway scheduled job or report" {shape: rectangle}
+K: "Scale check: contact ServiceNow support for node\ncapacity\nIdentify runaway scheduled job or report" {shape: rectangle}
 L: "Identify slow query table and condition\nRequest index via HI portal for cloud instances" {shape: rectangle}
 M: "Check MID server connectivity to instance\nVerify MID server credentials: test connection in UI" {shape: rectangle}
 N: "Session Debug: enable SQL and BR trace\nReproduce issue and check session debug log" {shape: rectangle}
 O: "Sysauto table: filter state=error\nWorkflow Contexts for stuck workflows" {shape: rectangle}
 P: "Run Background Script snapshot\nCapture stats.do output and attach to ticket" {shape: rectangle}
-Q: "Collect stats.do screenshot + thread_monitor + log excerpt\nOpen ServiceNow HI support ticket" {shape: rectangle}
+Q: "Collect stats.do screenshot + thread_monitor + log\nexcerpt\nOpen ServiceNow HI support ticket" {shape: rectangle}
 R: "Provide: instance name, version, affected node\nRepro steps, log excerpts, stats.do screenshot" {shape: rectangle}
 A: "ServiceNow Issue" {shape: rectangle}
 
@@ -66,7 +66,7 @@ step_1_check_instance_health_via_sta: "Step 1 — Check instance health via stat
 step_2_inspect_db_activity_monitor_f: "Step 2 — Inspect DB Activity Monitor for slow queries" {shape: rectangle}
 step_3_run_system_diagnostics_selfte: "Step 3 — Run System Diagnostics self-test" {shape: rectangle}
 step_4_review_application_and_mid_se: "Step 4 — Review application and MID Server logs" {shape: rectangle}
-step_5_enable_session_debug_for_targ: "Step 5 — Enable Session Debug for targeted investigation" {shape: rectangle}
+step_5_enable_session_debug_for_targ: "Step 5 — Enable Session Debug for targeted\ninvestigation" {shape: rectangle}
 step_6_run_background_script_diagnos: "Step 6 — Run Background Script diagnostic snapshot" {shape: rectangle}
 resolution: Resolve or Escalate {shape: oval}
 

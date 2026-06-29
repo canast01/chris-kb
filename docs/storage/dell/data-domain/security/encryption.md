@@ -24,7 +24,7 @@ Encryption reference covering Overview, Key Management, Key Rotation, FIPS Mode,
 ## Overview
 
 ```mermaid
-graph TD
+graph LR
     subgraph "Data at Rest — D@RE"
         dare["AES-256 CBC\n(FIPS 140-2 validated)"]
         km{{"Key Manager"}}

@@ -300,6 +300,6 @@ $vsanHealth.VsanQueryVcClusterHealthSummary($cluster.ExtensionData.MoRef, $null,
 
 ## Related Scenarios
 
-- [VM Inaccessible / HA Failover](vm-inaccessible-ha-failover/index.md) — Host failure produces the same vSAN resync queue as a disk failure; HA adds VM restart complexity.
-- [VM Performance Degraded](vm-performance-degraded/index.md) — Active vSAN resync increases disk latency for all VMs sharing the disk group, causing performance complaints.
-- [vMotion Failing](vmotion-failing/index.md) — DRS may attempt to evacuate VMs from a host with a degraded disk group; Storage vMotion failures can occur if vSAN components are non-compliant.
+- [VM Inaccessible / HA Failover](vm-inaccessible-ha-failover.md) — Host failure produces the same vSAN resync queue as a disk failure; HA adds VM restart complexity.
+- [VM Performance Degraded](vm-performance-degraded.md) — Active vSAN resync increases disk latency for all VMs sharing the disk group, causing performance complaints.
+- [vMotion Failing](vmotion-failing.md) — DRS may attempt to evacuate VMs from a host with a degraded disk group; Storage vMotion failures can occur if vSAN components are non-compliant.

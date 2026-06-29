@@ -15,7 +15,7 @@ Integrations reference covering NetApp PowerScale (SyncIQ), Syslog / SIEM, Email
 ## NetApp PowerScale (SyncIQ)
 
 ```mermaid
-flowchart TB
+flowchart LR
     subgraph "Production Site"
         primaryPS["PowerScale Cluster A\n(Production)"]
         synciqPol["SyncIQ Policies\nContinuous / Scheduled"]

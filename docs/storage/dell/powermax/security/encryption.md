@@ -26,7 +26,7 @@ Encryption reference covering Overview, Data at Rest Encryption (D@RE), Data in 
 PowerMax provides encryption at three layers: data at rest on NVMe drives, data in flight over SRDF replication links, and management traffic over TLS. All three layers are independently configurable. Data at Rest Encryption (D@RE) is enabled by factory default on PowerMax 2000 and 8000 systems; replication encryption and management TLS require explicit configuration to enforce strong settings.
 
 ```mermaid
-graph TD
+graph LR
     subgraph "Layer 3 — Management Traffic"
         TLS_UNI["Unisphere HTTPS :8443\nTLS 1.2 / 1.3\nCA-signed certificate"]
         TLS_SE["SYMAPI Daemon :2707\nTLS (SECURE flag in netcnfg)"]

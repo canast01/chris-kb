@@ -30,7 +30,7 @@ FlashArray supports multiple identity sources for admin authentication: local ac
 ## Authentication Architecture
 
 ```mermaid
-flowchart TD
+flowchart LR
   subgraph "Human Admin Login"
     BROWSER["Browser / SSH"]
     BROWSER --> SAML2{"SAML SSO\nconfigured?"}

@@ -23,7 +23,7 @@ Common Issues (Operations) reference covering Overview, Incident Triage — Firs
 
 ## Overview
 
-This page covers the most frequent operational issues encountered on Dell Data Domain appliances during day-to-day backup operations. For deeper diagnostic procedures see the [Diagnostics](../troubleshooting/diagnostics/index.md) page. For a structured symptom table see [Troubleshooting Common Issues](../troubleshooting/common-issues/index.md).
+This page covers the most frequent operational issues encountered on Dell Data Domain appliances during day-to-day backup operations. For deeper diagnostic procedures see the [Diagnostics](../troubleshooting/diagnostics.md) page. For a structured symptom table see [Troubleshooting Common Issues](../troubleshooting/common-issues.md).
 
 ## Incident Triage — First Response
 

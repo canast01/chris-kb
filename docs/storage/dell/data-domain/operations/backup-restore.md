@@ -24,7 +24,7 @@ Backup & Restore reference covering Overview, DDBoost Restore (Backup Applicatio
 ## Overview
 
 ```mermaid
-graph TD
+graph LR
     backupApp(["Backup App\nVeeam / NetBackup / CommVault"])
 
     subgraph "Restore Paths"

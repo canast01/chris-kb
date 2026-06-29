@@ -430,9 +430,9 @@ Then re-run the health check from vCenter.
 
 ## Related Scenarios
 
-- [ESXi Host Disconnected from vCenter](esxi-host-disconnected/index.md) — NTP drift is one of the
+- [ESXi Host Disconnected from vCenter](esxi-host-disconnected.md) — NTP drift is one of the
   silent causes of host disconnection covered in Step 7 of that scenario.
-- [vCenter Down / Unreachable](vcenter-down/index.md) — if the VCSA itself has drifted severely,
+- [vCenter Down / Unreachable](vcenter-down.md) — if the VCSA itself has drifted severely,
   vpxd refuses to start and the full vCenter recovery procedure applies.
-- [VxRail LCM Upgrade Failure](vxrail-lcm-upgrade-failure/index.md) — NTP skew is one of the
+- [VxRail LCM Upgrade Failure](vxrail-lcm-upgrade-failure.md) — NTP skew is one of the
   pre-check failures that blocks a VxRail LCM upgrade from starting.

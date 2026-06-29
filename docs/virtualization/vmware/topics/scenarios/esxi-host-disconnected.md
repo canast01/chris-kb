@@ -265,7 +265,7 @@ Thu Mar 14 09:47:23 UTC 2024
 Look for: offset column in `ntpq -p` output beyond ±60,000 ms (60 seconds) from the reference server. Compare `date` output on the host with vCenter system time to confirm drift.
 
 Fix NTP if drifted — see the
-[NTP Drift Scenario](ntp-drift-sso-certificate/index.md) for the full remediation procedure.
+[NTP Drift Scenario](ntp-drift-sso-certificate.md) for the full remediation procedure.
 
 ---
 
@@ -362,9 +362,9 @@ Look for: transport node state transitions to "Up" in NSX Manager within 60–90
 
 ## Related Scenarios
 
-- [vCenter Down / Unreachable](vcenter-down/index.md) — when multiple hosts disconnect simultaneously,
+- [vCenter Down / Unreachable](vcenter-down.md) — when multiple hosts disconnect simultaneously,
   vCenter itself may be the failing component rather than the individual hosts.
-- [NTP Drift Causing SSO or Certificate Errors](ntp-drift-sso-certificate/index.md) — the full NTP
+- [NTP Drift Causing SSO or Certificate Errors](ntp-drift-sso-certificate.md) — the full NTP
   diagnosis and remediation procedure referenced in Step 7.
-- [PSOD — ESXi Kernel Panic](psod-esxi-kernel-panic/index.md) — if the host is unreachable at the
+- [PSOD — ESXi Kernel Panic](psod-esxi-kernel-panic.md) — if the host is unreachable at the
   network layer with no management network response, a PSOD may be the cause.

@@ -45,18 +45,18 @@ C: "Restore operation failed" {shape: rectangle}
 D: "Schedule not triggering" {shape: rectangle}
 E: "Credential or auth error" {shape: rectangle}
 A1: "A1" {shape: rectangle}
-A2: "Check VSS writers and app-aware settings — see Common Issues Reference" {shape: rectangle}
+A2: "Check VSS writers and app-aware settings — see\nCommon Issues Reference" {shape: rectangle}
 A3: "Verify ONTAP credentials and SVM connectivity" {shape: rectangle}
 B1: "B1" {shape: rectangle}
-B2: "Restart SnapCenter agent on host — see Common Issues Reference" {shape: rectangle}
+B2: "Restart SnapCenter agent on host — see Common\nIssues Reference" {shape: rectangle}
 B3: "Check firewall on TCP 8145 between server and host" {shape: rectangle}
 C1: "C1" {shape: rectangle}
-C2: "Check igroup membership on ONTAP — see Common Issues Reference" {shape: rectangle}
+C2: "Check igroup membership on ONTAP — see Common\nIssues Reference" {shape: rectangle}
 C3: "Check destination aggregate and FlexClone license" {shape: rectangle}
 D1: "D1" {shape: rectangle}
 D2: "Restart SchedulerSvc and IIS on SnapCenter Server" {shape: rectangle}
 D3: "Review policy schedule and resource group association" {shape: rectangle}
-E1: "Verify ONTAP credentials in Settings — see Common Issues Reference" {shape: rectangle}
+E1: "Verify ONTAP credentials in Settings — see Common\nIssues Reference" {shape: rectangle}
 
 S -> A
 S -> B

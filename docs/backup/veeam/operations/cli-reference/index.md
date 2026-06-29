@@ -25,7 +25,7 @@ CLI Reference reference covering Backup Infrastructure Topology, Sessions & Hist
 The Veeam component hierarchy governs how jobs are routed, where data lands, and which components need to be healthy for a job to succeed.
 
 ```mermaid
-flowchart TD
+flowchart LR
     subgraph controlPlane [Control Plane]
         vbr["Veeam Backup &\nReplication Server\n(job orchestration + config DB)"]
         vone["Veeam ONE\n(monitoring + reporting)"]

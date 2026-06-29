@@ -74,7 +74,7 @@ step_2_check_live_storage_state: "Step 2 — Check live storage state" {shape: r
 step_3_check_network_state: "Step 3 — Check network state" {shape: rectangle}
 step_4_performance_diagnostics_with_: "Step 4 — Performance diagnostics with esxtop" {shape: rectangle}
 step_5_troubleshoot_host_disconnecti: "Step 5 — Troubleshoot host disconnection from vCenter" {shape: rectangle}
-step_6_validate_storage_and_network_: "Step 6 — Validate storage and network before maintenance" {shape: rectangle}
+step_6_validate_storage_and_network_: "Step 6 — Validate storage and network before\nmaintenance" {shape: rectangle}
 resolution: Resolve or Escalate {shape: oval}
 
 symptom -> step_1_check_log_files: investigate

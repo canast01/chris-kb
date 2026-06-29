@@ -180,9 +180,9 @@ result: 0 Success
 
 Each product documents its exact configuration path and any non-standard field names:
 
-- [Jira — Authentication](../../tools/jira/security/authentication/index.md)
-- [Confluence — Authentication](../../tools/confluence/security/authentication/index.md)
-- [ServiceNow — Authentication](../../tools/servicenow/security/authentication/index.md)
+- [Jira — Authentication](../../itsm/jira/security/authentication/index.md)
+- [Confluence — Authentication](../../itsm/confluence/security/authentication/index.md)
+- [ServiceNow — Authentication](../../itsm/servicenow/security/authentication/index.md)
 - [vCenter — Authentication](../../virtualization/vmware/vcenter/security/authentication//)
 - [NSX — Authentication](../../virtualization/vmware/nsx/security/authentication//)
 - [ONTAP — Authentication](../../storage/netapp/ontap/security/authentication//)
@@ -195,6 +195,3 @@ Each product documents its exact configuration path and any non-standard field n
 - [Standard SAML Configuration](../saml-configuration/index.md)
 - [Active Directory](../../compute/windows-server/active-directory/index.md)
 - [MFA](../mfa/index.md)
-- [PKI](../pki/index.md)
-- [TLS and HTTPS](../../protocols/tls/index.md)
-- [LDAP Protocol Reference](../../protocols/ldap/index.md)

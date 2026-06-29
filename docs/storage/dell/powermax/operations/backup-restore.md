@@ -135,7 +135,7 @@ PowerMax backup strategy centres on SnapVX (formerly TimeFinder/SnapVX) for loca
 SnapVX is the native snapshot engine on PowerMax. A snapshot captures a point-in-time view of all devices in a storage group simultaneously. Snapshots are crash-consistent by default; application-consistent snapshots require host-side quiesce (VSS on Windows, Oracle RMAN freeze, or FSFreeze on Linux) before the `establish` call.
 
 ```mermaid
-flowchart TD
+flowchart LR
     subgraph "Production"
         PROD_HOST["Production Host\n(Oracle / SQL / SAP)"]
         PROD_SG["PROD_SG\n(NVMe TDEVs)"]

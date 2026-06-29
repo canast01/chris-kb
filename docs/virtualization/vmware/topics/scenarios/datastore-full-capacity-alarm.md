@@ -245,6 +245,6 @@ Set proactive thresholds: vCenter → **Cluster** → **Monitor** → **vSAN** �
 
 ## Related Scenarios
 
-- [vSAN Stretched Cluster Split-Brain](vsan-stretched-cluster-split-brain/index.md) — vSAN resync after a partition consumes capacity; a near-full cluster can hit write-stop during resync.
-- [SRM Replication Lag / RPO Violation](srm-replication-lag-rpo-violation/index.md) — Full datastores on the DR site prevent vSphere Replication from writing replicated data, causing RPO violations.
-- [Aria Ops Alert Storm](aria-ops-alert-storm/index.md) — Datastore alarms often appear as part of a larger alert storm triggered by sudden snapshot growth or VM provisioning events.
+- [vSAN Stretched Cluster Split-Brain](vsan-stretched-cluster-split-brain.md) — vSAN resync after a partition consumes capacity; a near-full cluster can hit write-stop during resync.
+- [SRM Replication Lag / RPO Violation](srm-replication-lag-rpo-violation.md) — Full datastores on the DR site prevent vSphere Replication from writing replicated data, causing RPO violations.
+- [Aria Ops Alert Storm](aria-ops-alert-storm.md) — Datastore alarms often appear as part of a larger alert storm triggered by sudden snapshot growth or VM provisioning events.

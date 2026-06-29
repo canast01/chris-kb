@@ -605,7 +605,7 @@ Key configuration points:
 - Use a dedicated `vsadmin` service account with minimum required RBAC permissions
 - Configure SnapVault as the secondary target for Veeam backup jobs requiring off-array retention
 
-See the [Integrations](../architecture/integrations/index.md) page for configuration commands.
+See the [Integrations](../architecture/integrations.md) page for configuration commands.
 
 ---
 

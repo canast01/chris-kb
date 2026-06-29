@@ -18,7 +18,7 @@ Git is a distributed version control system where every working copy is a full r
 Unlike centralised VCS tools, every Git clone contains the entire repository history. By convention teams designate one remote (GitHub, GitLab, Bitbucket) as the integration point.
 
 ```mermaid
-graph TD
+graph LR
     subgraph "Developer A"
         WTA[Working Tree] --> LA[Local Repo<br/>.git/]
     end
@@ -60,7 +60,7 @@ graph TD
 ### GitHub Enterprise Server (GHES)
 
 ```mermaid
-graph TD
+graph LR
     subgraph "GHES Primary Appliance"
         HAPROXY[HAProxy / Load Balancer]
         NGINX[Nginx — HTTPS / SSH]

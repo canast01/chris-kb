@@ -15,7 +15,7 @@ Availability Zones are physically separate datacenters within an Azure region, e
 ## Availability Zone Architecture
 
 ```mermaid
-flowchart TD
+flowchart LR
     region["Azure Region\ne.g. West Europe"]
     subgraph az1["Zone 1\nPhysical DC A"]
         vm1["VM Instance 1"]

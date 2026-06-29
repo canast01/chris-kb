@@ -20,10 +20,10 @@ NetBackup operates on a three-tier architecture: a centralized Primary Server (f
 ```d2
 direction: right
 
-Primary: "Primary Server · catalog · policy engine · bpem · scheduler · job control" {shape: rectangle}
-MediaSrv: "Media Servers · proxy I/O · MSDP dedup pools · compression · encryption" {shape: rectangle}
+Primary: "Primary Server · catalog · policy engine · bpem ·\nscheduler · job control" {shape: rectangle}
+MediaSrv: "Media Servers · proxy I/O · MSDP dedup pools ·\ncompression · encryption" {shape: rectangle}
 Clients: "Clients · BU agent · bpbkar · Windows · Linux · NAS" {shape: rectangle}
-Storage: "Storage Units · AdvancedDisk · MSDP pool · tape robot · cloud LSU" {shape: rectangle}
+Storage: "Storage Units · AdvancedDisk · MSDP pool · tape\nrobot · cloud LSU" {shape: rectangle}
 
 Primary -> MediaSrv
 Primary -> Clients

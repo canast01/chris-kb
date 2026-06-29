@@ -27,7 +27,7 @@ Terraform is HashiCorp's infrastructure-as-code tool. You describe your desired 
 ## State Backend Topology
 
 ```mermaid
-graph TD
+graph LR
     tfClient["Terraform Client\n(local / CI runner)"]
 
     subgraph localBackend["Local Backend"]

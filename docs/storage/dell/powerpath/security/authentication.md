@@ -24,7 +24,7 @@ Authentication reference covering Overview, Linux Authentication, Windows Authen
 ## Overview
 
 ```mermaid
-graph TD
+graph LR
     adminUser(["Storage Admin\nor Automation Account"])
 
     subgraph "Linux Host"

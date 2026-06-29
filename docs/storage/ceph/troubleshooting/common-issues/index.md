@@ -71,16 +71,16 @@ A1: "A1" {shape: rectangle}
 A2: "Replace OSD disk — see OSD Down" {shape: rectangle}
 A3: "Restart OSD daemon and check OOM or network issue" {shape: rectangle}
 B1: "B1" {shape: rectangle}
-B2: "Bring OSD back up or reweight to 0 — see PG Degraded / Undersized / Stuck" {shape: rectangle}
+B2: "Bring OSD back up or reweight to 0 — see PG\nDegraded / Undersized / Stuck" {shape: rectangle}
 B3: "Run ceph pg repair and check CRUSH map" {shape: rectangle}
 C1: "C1" {shape: rectangle}
-C2: "Check PG state — may be inactive; resolve OSD first — see OSD Down" {shape: rectangle}
-C3: "Run rados stat on object and check for deletion or naming mismatch" {shape: rectangle}
+C2: "Check PG state — may be inactive; resolve OSD\nfirst — see OSD Down" {shape: rectangle}
+C3: "Run rados stat on object and check for deletion or\nnaming mismatch" {shape: rectangle}
 D1: "D1" {shape: rectangle}
 D2: "Restart ceph-mon service — see MON Quorum Lost" {shape: rectangle}
-D3: "Check clock skew with ceph time-sync-status — see Clock Skew" {shape: rectangle}
+D3: "Check clock skew with ceph time-sync-status — see\nClock Skew" {shape: rectangle}
 E1: "E1" {shape: rectangle}
-E2: "Check iostat await; disable scrub temporarily — see Slow Ops / High Latency" {shape: rectangle}
+E2: "Check iostat await; disable scrub temporarily —\nsee Slow Ops / High Latency" {shape: rectangle}
 E3: "Run iperf3 between nodes; check cluster network path" {shape: rectangle}
 
 S -> A

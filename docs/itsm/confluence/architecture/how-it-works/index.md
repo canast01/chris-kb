@@ -77,7 +77,7 @@ Confluence uses an embedded **Apache Lucene** index for full-text search. In Dat
 ### Data Center — Active/Active Cluster
 
 ```mermaid
-flowchart TD
+flowchart LR
     Users["End Users / Browsers"] --> LB
 
     subgraph LB["Load Balancer (sticky sessions)"]
