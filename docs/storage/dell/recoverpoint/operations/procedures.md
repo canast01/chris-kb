@@ -164,6 +164,36 @@ journals list
 alarms list
 ```
 
+
+```text title="Expected output"
+Production RPA Group Status:
+  Group ID: 7a3f8c2e-91b4-4d2a-b6f1-2c5e9d1a4b7f
+  Role: Production
+  Status: Online
+  Replication Status: Healthy
+  Last Consistency Point: 2024-01-15 14:32:18 UTC
+  Copy Count: 3
+
+Image Access Sessions:
+  (no active sessions)
+
+Journal Status:
+  Journal ID: jnl-prod-01
+  State: Active
+  Used Capacity: 67.3%
+  Oldest Consistency Point: 2024-01-15 08:15:22 UTC
+  Journal ID: jnl-prod-02
+  State: Active
+  Used Capacity: 54.8%
+
+Active Alarms:
+  (no alarms)
+```
+
+!!! warning "Common errors"
+    **`Error: Unable to connect to RPA cluster at 192.168.42.10`** — Verify network connectivity and that the RecoverPoint management interface is accessible on port 7225.
+    **`Error: Group 7a3f8c2e-91b4-4d2a-b6f1-2c5e9d1a4b7f is in Paused state`** — Resume replication using `groups resume <group-id>` before confirming production role transition.
+    **`Error: Stale image access session detected on copy copy-dr-02`** — Disconnect the session with `image access disconnect <session-id>` before proceeding with failover.
 | Check | Expected Result |
 |---|---|
 | DR copy role | Now marked as Production |
@@ -225,6 +255,34 @@ group failback --gname <cg_name>
 groups status
 ```
 
+
+```text title="Expected output"
+Initiating reverse replication for consistency group: app-db-cg
+Reverse replication started successfully
+Replication direction: DR → Production
+Current RPO lag: 2.3 seconds
+Consistency group: app-db-cg
+Status: ACTIVE
+Production copy: PROD_Copy
+DR copy: DR_Copy
+Last image timestamp: 2024-01-15T14:32:18Z
+Replication lag: 1.8 seconds
+Image access enabled on PROD_Copy
+Virtual image mounted at: /mnt/recoverpoint/app-db-cg/latest
+Access mode: virtual
+Failback initiated for consistency group: app-db-cg
+Replication direction restored: Production → DR
+Failback completed successfully
+Consistency Group Status Summary:
+  app-db-cg          ACTIVE      PROD_Copy    0.9s lag
+  web-tier-cg        ACTIVE      PROD_Copy    1.2s lag
+  cache-cg           ACTIVE      PROD_Copy    0.7s lag
+```
+
+!!! warning "Common errors"
+    **`Error: Consistency group '<cg_name>' not found`** — Replace `<cg_name>` with the actual consistency group name from your RecoverPoint configuration.
+    **`Error: Reverse replication failed — primary site storage capacity exceeded`** — Verify primary site has sufficient free storage capacity before initiating reverse replication.
+    **`Error: Image access denied — copy is currently in use by another operation`** — Wait for any ongoing snapshots or replications to complete before enabling image access.
 ---
 
 ## Recovery
@@ -263,6 +321,44 @@ group disable-image-access --gname <cg_name>
 groups status
 ```
 
+
+```text title="Expected output"
+admin@rpa-cluster-01:~$ ssh admin@192.168.50.45
+Password:
+admin@rpa-01:~$ group list_bookmarks --gname Production_DB
+Bookmark Name                          Timestamp            Size (GB)  Type
+prod_db_hourly_2024_01_15_0600        2024-01-15 06:00:12  450.2      Manual
+prod_db_hourly_2024_01_15_0500        2024-01-15 05:00:08  450.2      Manual
+prod_db_hourly_2024_01_15_0400        2024-01-15 04:00:15  450.2      Manual
+prod_db_daily_2024_01_14              2024-01-14 23:59:44  450.2      Scheduled
+...
+
+admin@rpa-01:~$ group enable-image-access --gname Production_DB --copy DR_Copy --image prod_db_hourly_2024_01_15_0600 --access-mode virtual
+Image access enabled for CG 'Production_DB' at bookmark 'prod_db_hourly_2024_01_15_0600' (virtual mode)
+Access ID: img-acc-7f2e9c41-b3d2-4a8f-9e1c-5d6a2b8c0f3a
+
+admin@rpa-01:~$ group status --gname Production_DB
+CG Name: Production_DB
+Status: ACTIVE_IMAGE_ACCESS
+Replication Status: PAUSED (image access active)
+Copy: DR_Copy | State: VIRTUAL_ACCESS | Bookmark: prod_db_hourly_2024_01_15_0600
+Last Sync: 2024-01-15 06:00:12 UTC
+
+admin@rpa-01:~$ group disable-image-access --gname Production_DB
+Image access disabled for CG 'Production_DB'
+Replication resuming...
+
+admin@rpa-01:~$ groups status
+CG Name                    Status         Replication    Last Sync
+Production_DB              ACTIVE         CONSISTENT     2024-01-15 06:15:33 UTC
+Finance_Ledger             ACTIVE         CONSISTENT     2024-01-15 06:14:22 UTC
+HR_Systems                 ACTIVE         CONSISTENT     2024-01-15 06:13:45 UTC
+```
+
+!!! warning "Common errors"
+    **`Error: CG 'Production_DB' not found or invalid copy name 'DR_Copy'`** — Verify the consistency group name and copy name match exactly using `group list_bookmarks --gname <cg_name>` and check for typos.
+    **`Error: Image access already active on CG 'Production_DB'. Disable current access before enabling new access.`** — Run `group disable-image-access --gname Production_DB` first, then retry the enable command.
+    **`Error: Bookmark 'prod_db_hourly_2024_01_15_0600' is older than RPO window and unavailable`** — Select a more recent bookmark from the list or wait for newer snapshots to be created.
 ### Full Failover — Production Site Down
 
 ![Full Failover — Production Site Down](../../../../assets/recoverpoint-proc-full-failover-production-site-down.svg)
@@ -284,6 +380,41 @@ group recover-production --gname <cg_name>
 groups status detail
 ```
 
+
+```text title="Expected output"
+Enabling image access on copy DR_Copy for consistency group prod_db_01...
+Image access enabled successfully in logged mode.
+Access mode: logged (read-write)
+Image timestamp: 2024-01-15T09:47:33Z
+
+Consistency Group: prod_db_01
+Status: image_access_enabled
+Copy: DR_Copy
+Access Mode: logged
+Volumes Accessible: yes
+Volume Count: 4
+Last Sync: 2024-01-15T09:47:12Z
+
+Promoting DR_Copy to production role...
+Production recovery initiated for consistency group prod_db_01
+Previous production copy: PROD_Copy (disabled)
+New production copy: DR_Copy (active)
+Recovery completed successfully
+
+Consistency Group Status Detail:
+  Name: prod_db_01
+  Production Copy: DR_Copy
+  Production Status: active
+  DR Copy: PROD_Copy
+  DR Status: paused
+  Replication Direction: PROD_Copy <- DR_Copy
+  Last Update: 2024-01-15T09:48:51Z
+```
+
+!!! warning "Common errors"
+    **`Error: Production copy still reachable. Disable before recovery.`** — Verify production site is truly offline before attempting recovery, or use `--force-recovery` flag if confirmed unreachable.
+    **`Error: Image access mode 'logged' requires sufficient journal capacity. Current: 87%.`** — Expand the journal volume or wait for synchronization to reduce journal usage before enabling logged access.
+    **`Error: Consistency group prod_db_01 has pending writes. Cannot promote to production.`** — Flush all pending writes with `group flush --gname prod_db_01` before initiating recovery.
 | Step | Command | Verification |
 |---|---|---|
 | Enable image access | `group enable-image-access` | State: ImageAccess |
@@ -315,6 +446,30 @@ group enable-image-access --gname <cg_name> --copy DR_Copy \
 group disable-image-access --gname <cg_name>
 ```
 
+
+```text title="Expected output"
+Bookmarks for consistency group 'prod-db-cg':
+  Bookmark ID: BM-2026-05-06-143000 | Timestamp: 2026-05-06 14:30:00 | Size: 847.3 GB
+  Bookmark ID: BM-2026-05-06-120000 | Timestamp: 2026-05-06 12:00:00 | Size: 847.1 GB
+  Bookmark ID: BM-2026-05-05-180000 | Timestamp: 2026-05-05 18:00:00 | Size: 846.8 GB
+
+Journal information:
+  Journal ID: JNL-DR_Copy-001 | State: Active | Used: 92% | Capacity: 2.1 TB
+  Journal ID: JNL-DR_Copy-002 | State: Active | Used: 87% | Capacity: 2.1 TB
+
+Image access enabled for copy 'DR_Copy' at 2026-05-06 14:30:00 (virtual mode)
+Access Mode: Virtual | State: Enabled | Mount Point: /dev/rpdx-virt-001
+
+Image access mode switched to logged for copy 'DR_Copy'
+Access Mode: Logged | State: Enabled | Writes Permitted: Yes
+
+Image access disabled for consistency group 'prod-db-cg'
+```
+
+!!! warning "Common errors"
+    **`Error: consistency group '<cg_name>' not found`** — Replace `<cg_name>` with the actual consistency group name from the `group list_bookmarks` output.
+    **`Error: image timestamp '2026-05-06 14:30:00' does not exist for copy 'DR_Copy'`** — Verify the timestamp matches exactly one of the available bookmarks listed by `journals list` and use the correct date-time format.
+    **`Error: cannot enable image access — copy 'DR_Copy' is already in use`** — Wait for any ongoing recovery operations to complete or disable access on the copy first with `group disable-image-access`.
 ### Post-Recovery Validation
 
 ![Post-Recovery Validation](../../../../assets/recoverpoint-proc-post-recovery-validation.svg)
@@ -336,6 +491,40 @@ journals list
 alarms list
 ```
 
+
+```text title="Expected output"
+IMAGE_ACCESS_SESSIONS: 0 active sessions
+IMAGE_ACCESS_SESSIONS: 0 pending sessions
+
+Group Name: production-db-cg
+Status: ACTIVE
+Replication Status: IN_SYNC
+Last Consistency Point: 2024-01-15 14:32:18 UTC
+RPO: 45 seconds
+Throughput: 2.3 GB/s
+
+Group Name: production-db-cg
+Status: ACTIVE
+Current RPO: 45 seconds
+SLA Target RPO: 300 seconds
+Replication Health: HEALTHY
+
+Journal Name: journal-01
+Utilization: 62%
+Available Space: 18.5 GB
+Journal Name: journal-02
+Utilization: 58%
+Available Space: 19.2 GB
+
+Alarm Count: 0
+No active alarms detected
+Last Check: 2024-01-15 14:35:42 UTC
+```
+
+!!! warning "Common errors"
+    **`groups: command not found`** — Verify you are logged into the RecoverPoint CLI console or source the appropriate environment setup script.
+    **`Group <cg_name> not found or invalid`** — Replace `<cg_name>` with the actual consistency group name (e.g., `production-db-cg`) and verify the group exists with `groups list`.
+    **`RPO threshold exceeded: current 450s > SLA 300s`** — Check replication link bandwidth and target array performance; if persistent, increase journal size or adjust SLA target.
 ### Recovery RTO/RPO Reference
 
 ![Recovery RTO/RPO Reference](../../../../assets/recoverpoint-proc-recovery-rto-rpo-reference.svg)
@@ -356,12 +545,47 @@ Use the RecoverPoint CLI to add new volumes to an existing consistency group:
 add_volumes_to_group -g <cg-name> -v <volume-id>
 ```
 
+
+```text title="Expected output"
+Adding volumes to consistency group 'prod-db-cg'...
+Volume ID: vol-0a7f2c9e1b3d5f8g added successfully
+Consistency group 'prod-db-cg' updated
+Current group members: 8 volumes
+Replication status: ACTIVE
+Last sync: 2024-01-15 14:32:18 UTC
+```
+
+!!! warning "Common errors"
+    **`Error: Consistency group 'prod-db-cg' not found`** — Verify the consistency group name with `list_consistency_groups` and use the exact name in the `-g` parameter.
+    **`Error: Volume vol-0a7f2c9e1b3d5f8g is already a member of group 'backup-cg'`** — Remove the volume from its current consistency group first using `remove_volumes_from_group` before adding it to a different group.
+    **`Error: Cannot add volume to group during active replication`** — Wait for the current replication cycle to complete or pause replication with `pause_replication -g <cg-name>` before adding volumes.
 After adding volumes, verify the CG protection status to confirm the new volumes are being replicated:
 
 ```bash
 group status --gname <cg-name>
 ```
 
+
+```text title="Expected output"
+Group Status Report for: production-db-cg
+Group Name: production-db-cg
+Group ID: 7a3f8c2e-91b4-4d2a-b5e1-6c9d2f4a8b1c
+Status: HEALTHY
+Replication Status: ACTIVE
+Last Consistency Point: 2024-01-15 14:32:18 UTC
+RPO (Recovery Point Objective): 5 minutes
+RTO (Recovery Time Objective): 15 minutes
+Protected VMs: 12
+Replication Lag: 2.3 seconds
+Bandwidth Usage: 450 MB/s
+Last Successful Backup: 2024-01-15 14:30:00 UTC
+Failover Ready: YES
+```
+
+!!! warning "Common errors"
+    **`Error: Group '<cg-name>' not found`** — Verify the group name with `group list` and use the exact name from the output.
+    **`Error: Connection timeout to RecoverPoint appliance`** — Check network connectivity to the RecoverPoint management interface and verify credentials are still valid.
+    **`Error: Insufficient permissions to query group status`** — Ensure your user account has the appropriate role assigned in RecoverPoint's access control settings.
 Confirm the CG returns to ACTIVE state with all volumes included before closing the change. If the CG shows a degraded state after adding volumes, check storage connectivity and journal capacity.
 
 ---

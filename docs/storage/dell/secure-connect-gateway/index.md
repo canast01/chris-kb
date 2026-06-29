@@ -65,6 +65,52 @@ journalctl -u dell-scg --since "24 hours ago" | grep -i "error\|fail\|disconnect
 symcfg -sid <SID> -esrs list
 ```
 
+
+```text title="Expected output"
+*   Trying 203.0.113.45:443...
+* Connected to esrs.emc.com (203.0.113.45) port 443 (#0)
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES256-GCM-SHA384
+* Server certificate verified
+* Connected to cloudiq.dell.com (198.51.100.72) port 443 (#0)
+* SSL connection using TLSv1.2 / ECDHE-RSA-AES256-GCM-SHA384
+● dell-scg.service - Dell Secure Connect Gateway
+     Loaded: loaded (/etc/systemd/system/dell-scg.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2024-01-17 14:32:18 UTC; 2 days ago
+{
+  "version": "2.4.1.0",
+  "build": "20240115-001",
+  "release_date": "2024-01-15"
+}
+{
+  "devices": [
+    {
+      "device_id": "VMAX-000296900001",
+      "device_type": "PowerMax",
+      "serial": "000296900001",
+      "status": "connected",
+      "last_heartbeat": "2024-01-17T14:28:45Z"
+    },
+    {
+      "device_id": "VMAX-000296900002",
+      "device_type": "PowerMax",
+      "serial": "000296900002",
+      "status": "connected",
+      "last_heartbeat": "2024-01-17T14:29:12Z"
+    }
+  ]
+}
+Jan 17 13:45:22 scg-prod-01 dell-scg[2847]: ERROR: Device heartbeat failed for VMAX-000296900003: connection timeout
+Jan 17 12:18:09 scg-prod-01 dell-scg[2841]: WARN: Retry attempt 2/3 for ESRS sync
+Symmetrix ID: 000296900001
+ESRS Client Version: 9.2.1.0
+ESRS Status: Connected
+Last Heartbeat: 2024-01-17 14:30:15
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to esrs.emc.com port 443: Connection timed out`** — Verify SCG has outbound HTTPS access to Dell support endpoints; check firewall rules and proxy settings if applicable.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Use the `-k` flag to skip certificate verification for self-signed certs on localhost, or import the SCG CA certificate into your system trust store.
+    **`jq: command not found`** — Install `python3-json.tool` or use `python3 -m json.tool` instead of `jq` for JSON formatting on systems without jq.
 ## Common Issues
 
 | Symptom | Likely Cause | Action |

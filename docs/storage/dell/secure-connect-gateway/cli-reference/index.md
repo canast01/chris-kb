@@ -128,6 +128,68 @@ dsagw certificate show
 dsagw certificate regenerate
 ```
 
+
+```text title="Expected output"
+admin@192.168.1.50's password: 
+SCG> dsagw status
+Service Status: RUNNING
+Uptime: 45 days, 3 hours, 22 minutes
+Last Telemetry Upload: 2024-01-15 14:32:18 UTC
+
+SCG> dsagw status --verbose
+Service Status: RUNNING
+Version: 2.4.1
+Build: 20240110.001
+Uptime: 45 days, 3 hours, 24 minutes
+Last Telemetry Upload: 2024-01-15 14:32:18 UTC
+Telemetry Upload Interval: 24 hours
+Connected Devices: 12
+
+SCG> dsagw list-devices
+Device ID                          | Hostname          | Status
+-----------------------------------|-------------------|----------
+5f8c2a1b-4d9e-11ee-a5c1-0242ac120002 | storage-array-01  | ONLINE
+7a3f5e9c-4d9e-11ee-a5c1-0242ac120003 | storage-array-02  | ONLINE
+9b2d1f4a-4d9e-11ee-a5c1-0242ac120004 | nas-cluster-prod  | ONLINE
+...
+
+SCG> dsagw list-devices --format table
+Hostname          | Device ID                            | Last Contact       | Connectivity
+------------------|--------------------------------------|--------------------|--------------
+storage-array-01  | 5f8c2a1b-4d9e-11ee-a5c1-0242ac120002 | 2024-01-15 14:28:45 | CONNECTED
+storage-array-02  | 7a3f5e9c-4d9e-11ee-a5c1-0242ac120003 | 2024-01-15 14:29:12 | CONNECTED
+nas-cluster-prod  | 9b2d1f4a-4d9e-11ee-a5c1-0242ac120004 | 2024-01-15 14:30:01 | CONNECTED
+
+SCG> dsagw restart
+Stopping SCG gateway service...
+Service stopped successfully.
+Starting SCG gateway service...
+Service started successfully.
+Status: RUNNING
+
+SCG> dsagw version
+SCG Version: 2.4.1
+Build Number: 20240110.001
+Build Date: 2024-01-10 09:15:32 UTC
+
+SCG> dsagw network show
+Interface: eth0
+IP Address: 192.168.1.50
+Netmask: 255.255.255.0
+Gateway: 192.168.1.1
+DNS Servers: 8.8.8.8, 8.8.4.4
+
+SCG> dsagw connectivity-check
+Testing connectivity to Dell backend endpoints...
+esrs.emc.com: PASS (response time: 145ms)
+esrs3.emc.com: PASS (response time: 132ms)
+downloads.dell.com: PASS (response time: 198ms)
+api.dell.com: PASS (response time: 156ms)
+Overall Status: ALL ENDPOINTS REACHABLE
+
+SCG> dsagw certificate show
+Certificate Subject: CN=scg-gateway.
+```
 ---
 
 ## Device Registration
@@ -185,6 +247,53 @@ device-collect --id "${DEVICE_ID}"
 device-status --id "${DEVICE_ID}"
 ```
 
+
+```text title="Expected output"
+ID                                   IP            Type       Status       Last Contact
+================================================================================================
+device-001                           10.10.10.50   POWERMAX   CONNECTED    2024-01-15 14:32:18
+device-002                           10.10.10.60   DATADOMAIN CONNECTED    2024-01-15 14:28:45
+device-003                           10.10.10.70   IDRAC      DISCONNECTED  2024-01-15 13:55:02
+
+Device registered successfully.
+Device ID: device-004
+Host: 10.10.10.50
+Type: POWERMAX
+Status: PENDING_VERIFICATION
+
+Device registered successfully.
+Device ID: device-005
+Host: 10.10.10.60
+Type: DATADOMAIN
+Status: PENDING_VERIFICATION
+
+Device registered successfully.
+Device ID: device-006
+Host: 10.10.10.70
+Type: IDRAC
+Status: PENDING_VERIFICATION
+
+Connection Status:    CONNECTED
+Last Contact:        2024-01-15 14:32:18
+Collection Status:   ACTIVE
+Telemetry Enabled:   true
+Firmware Version:    T9.1.0.0
+
+Device device-004 deregistered successfully.
+
+Telemetry collection initiated for device device-004.
+Collection Job ID: job-20240115-001
+
+Connection Status:    CONNECTED
+Last Contact:        2024-01-15 14:35:22
+Collection Status:   ACTIVE
+Telemetry Enabled:   true
+```
+
+!!! warning "Common errors"
+    **`Error: Authentication failed for host 10.10.10.50`** — Verify the username and password are correct and the device account is not locked.
+    **`Error: Unable to reach host 10.10.10.60 on port 443`** — Confirm the device IP is reachable and firewall rules allow SCG to connect on the required port.
+    **`Error: Device type POWERMAX is not supported in this SCG version`** — Check the SCG release notes and upgrade if necessary, or use a supported device type.
 ---
 
 ## Connectivity Check
@@ -226,6 +335,43 @@ nc -zv api.dell.com 443
 nc -zv downloads.dell.com 443
 ```
 
+
+```text title="Expected output"
+SCG> dsagw connectivity-check
+Checking esrs.emc.com:443           ... PASS
+Checking esrs3.emc.com:443          ... PASS
+Checking downloads.dell.com:443     ... PASS
+Checking api.dell.com:443           ... PASS
+Checking *.api.dell.com:443         ... PASS
+
+*   Trying 185.12.45.67:443...
+* Connected to esrs3.emc.com (185.12.45.67) port 443 (#0)
+* SSL connection using TLSv1.3 / ECDHE-RSA-AES256-GCM-SHA384
+* HTTP/1.1 200 OK
+
+*   Trying 10.50.12.8:8080...
+* Connected to proxy.corp.example.com (10.50.12.8) port 8080 (#0)
+* HTTP/1.1 200 OK
+
+Server:  8.8.8.8
+Address: 8.8.8.8#53
+Name:    esrs3.emc.com
+Address: 185.12.45.67
+
+Server:  8.8.8.8
+Address: 8.8.8.8#53
+Name:    api.dell.com
+Address: 203.0.113.42
+
+Connection to esrs3.emc.com 443 port [tcp/https] succeeded!
+Connection to api.dell.com 443 port [tcp/https] succeeded!
+Connection to downloads.dell.com 443 port [tcp/https] succeeded!
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to esrs3.emc.com port 443: Connection timed out`** — Verify outbound HTTPS (port 443) is not blocked by firewall rules; check SCG security group or network ACLs permit egress to Dell domains.
+    **`nslookup: can't resolve 'esrs3.emc.com': No answer`** — Confirm DNS resolver is configured on SCG (check /etc/resolv.conf) and can reach upstream DNS servers; test with `nslookup 8.8.8.8` first.
+    **`nc: getaddrinfo for host "api.dell.com" port 443: Temporary failure in name resolution`** — Ensure DNS is functional by running `nslookup api.dell.com` first; if DNS fails, configure nameserver in SCG network settings before retrying connectivity tests.
 ---
 
 ## Log Collection
@@ -275,6 +421,38 @@ supportbundle create
 # scp admin@<SCG_IP>:/var/support/scg_bundle_<date>.tar.gz /local/path/
 ```
 
+
+```text title="Expected output"
+[2026-01-15T14:32:18.445Z] [gateway] Connection established to collector node-prod-01 (192.168.1.42:8443)
+[2026-01-15T14:32:19.102Z] [gateway] Authentication token refreshed for device 5f8a2c1d-9e4b-11ed-a1eb-0242ac120002
+[2026-01-15T14:32:22.567Z] [gateway] Telemetry upload successful: 1247 metrics, 342 KB
+[2026-01-15T14:32:25.891Z] [gateway] Health check passed for 8 registered devices
+[2026-01-15T14:32:31.234Z] [gateway] API request from 10.0.5.18 - GET /api/v2/devices (200 OK)
+[2026-01-15T14:32:45.678Z] [gateway] Sync cycle completed in 2.3s
+...
+(showing last 200 lines)
+
+Jan 15 14:28:00 scg-appliance scg-gateway[4521]: Started gateway service v2.4.1-build.8847
+Jan 15 14:28:15 scg-appliance scg-gateway[4521]: Listening on 0.0.0.0:8443
+Jan 15 14:28:22 scg-appliance scg-gateway[4521]: Loaded 12 device profiles from /etc/scg/devices.conf
+Jan 15 14:28:45 scg-appliance scg-gateway[4521]: Connected to backend at dell-telemetry.cloud.internal
+Jan 15 14:29:10 scg-appliance scg-gateway[4521]: Collection cycle 1 completed: 8 devices, 0 errors
+
+SupportAssist collection job initiated
+Job ID: sa-job-20260115-7f3a9c2e
+Device: node-prod-01 (5f8a2c1d-9e4b-11ed-a1eb-0242ac120002)
+Status: IN_PROGRESS
+Estimated completion: 2026-01-15T14:45:00Z
+
+Support bundle created successfully
+Location: /var/support/scg_bundle_20260115_143201.tar.gz
+Size: 487 MB
+```
+
+!!! warning "Common errors"
+    **`log show: component 'gateway' not found`** — Verify the component name matches one of the available options (gateway, collector, api, system) and that SCG is running.
+    **`supportassist collect: Device ID not registered or offline`** — Ensure the device is registered in SCG and has active connectivity; check with `log show --component gateway` for connection errors.
+    **`Permission denied: /var/support/scg_bundle_*.tar.gz`** — Run the supportbundle command from the SCG shell with appropriate admin privileges, or use `sudo` if executing from OS shell.
 ---
 
 ## REST API (curl)
@@ -348,6 +526,94 @@ curl -s -k -X PUT \
   }' | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "gatewayId": "SCG-001-PROD",
+  "version": "2.4.1.0",
+  "status": "HEALTHY",
+  "uptime": 847293,
+  "lastHealthCheck": "2024-01-15T14:32:18Z"
+}
+{
+  "devices": [
+    {
+      "id": "dev-powermax-001",
+      "hostname": "192.168.1.45",
+      "type": "POWERMAX",
+      "connectionStatus": "CONNECTED",
+      "lastContactTime": "2024-01-15T14:31:52Z"
+    },
+    {
+      "id": "dev-unity-002",
+      "hostname": "unity-array.corp.local",
+      "type": "UNITY",
+      "connectionStatus": "CONNECTED",
+      "lastContactTime": "2024-01-15T14:30:11Z"
+    },
+    {
+      "id": "dev-datadomain-003",
+      "hostname": "dd-backup-01.corp.local",
+      "type": "DATADOMAIN",
+      "connectionStatus": "DISCONNECTED",
+      "lastContactTime": "2024-01-15T13:15:44Z"
+    }
+  ]
+}
+{
+  "id": "dev-powermax-001",
+  "hostname": "192.168.1.45",
+  "type": "POWERMAX",
+  "model": "PowerMax 8000",
+  "serialNumber": "000297900123",
+  "connectionStatus": "CONNECTED",
+  "lastContactTime": "2024-01-15T14:31:52Z",
+  "firmwareVersion": "5.2.1.0"
+}
+{
+  "backend": "DELL_SUPPORT",
+  "status": "CONNECTED",
+  "latency_ms": 42,
+  "lastSync": "2024-01-15T14:32:01Z"
+}
+{
+  "alerts": [
+    {
+      "id": "alert-5847",
+      "deviceId": "dev-powermax-001",
+      "severity": "WARNING",
+      "message": "Disk utilization above 85%",
+      "timestamp": "2024-01-15T14:15:33Z"
+    },
+    {
+      "id": "alert-5846",
+      "deviceId": "dev-unity-002",
+      "severity": "INFO",
+      "message": "Scheduled snapshot completed",
+      "timestamp": "2024-01-15T14:00:22Z"
+    }
+  ]
+}
+{
+  "alerts": [
+    {
+      "id": "alert-5844",
+      "deviceId": "dev-datadomain-003",
+      "severity": "CRITICAL",
+      "message": "Device unreachable - connection timeout",
+      "timestamp": "2024-01-15T13:16:05Z"
+    }
+  ]
+}
+{
+  "alerts": [
+    {
+      "id": "alert-5847",
+      "deviceId": "dev-powermax-001",
+      "severity": "WARNING",
+      "message": "Disk utilization above 85%",
+      "timestamp": "2
+```
 ## See also
 
 - [Secure Connect Gateway — Overview](../../)

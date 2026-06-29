@@ -15,10 +15,62 @@ boxmgmt list cg
 boxmgmt system status
 ```
 
+
+```text title="Expected output"
+Consistency Group: prod-db-cg
+  Status: HEALTHY
+  RPOs: 4
+  Replicas: 2
+  Last Sync: 2024-01-15 14:32:18 UTC
+  Replication Rate: 2.3 GB/min
+
+Consistency Groups:
+  prod-db-cg          HEALTHY      2 replicas
+  backup-vm-cg        HEALTHY      1 replica
+  archive-cg          WARNING      2 replicas
+  test-cg             HEALTHY      1 replica
+
+System Status Report - RPA-001 (10.45.120.88)
+  Firmware: 8.2.1.4521
+  Uptime: 247 days 14:32:18
+  CPU Usage: 34%
+  Memory Usage: 68%
+  Disk Usage: 71%
+  Network: OPERATIONAL
+  Replication Engine: RUNNING
+```
+
+!!! warning "Common errors"
+    **`boxmgmt: command not found`** — Ensure you are connected via SSH to the RPA appliance and not a local workstation.
+    **`Error: Consistency Group '<CG-name>' not found`** — Replace `<CG-name>` with an actual consistency group name from the `boxmgmt list cg` output.
+    **`Connection refused on port 22`** — Verify the RPA hostname/IP is reachable and SSH service is running with `ping` and check firewall rules.
 ```bash
 boxmgmt cg check_cg <CG-name>
 boxmgmt system performance
 ```
+
+```text title="Expected output"
+Consistency Group: prod-db-cg
+Status: HEALTHY
+RTO: 4 minutes
+RPO: 2 minutes
+Replication Link: ACTIVE
+Last Sync: 2024-01-15 14:32:18 UTC
+Protected VMs: 8
+Replicated Data: 847.3 GB
+
+System Performance Report
+CPU Usage: 34%
+Memory Usage: 62%
+Network Throughput: 1.2 Gbps
+Disk I/O: 4,521 IOPS
+Cache Hit Ratio: 87.3%
+```
+
+!!! warning "Common errors"
+    **`boxmgmt: command not found`** — Ensure the RecoverPoint management tools are installed and the PATH includes the boxmgmt binary location (typically `/opt/emc/recoverpoint/bin`).
+    **`Error: CG '<CG-name>' not found or inaccessible`** — Replace `<CG-name>` with the actual consistency group name and verify you have sufficient permissions to query it.
+    **`Connection refused: Unable to reach appliance at <IP>`** — Verify the RecoverPoint appliance is running and network connectivity exists from your management host to the appliance management interface.
 ```bash
 boxmgmt cg enable_image_access <CG-name> <copy-name>
 boxmgmt cg recover_production <CG-name>

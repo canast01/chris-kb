@@ -81,6 +81,32 @@ echo ""
 exit ${EXIT_CODE}
 ```
 
+
+```text title="Expected output"
+=== SRDF/A Cycle Time Monitor ===
+SID         : 000296802151
+RDF Group   : 3
+Warn > 30s  |  Crit > 60s
+Time        : 2024-01-15 14:23:47
+
+Current Cycle Time             : 18s
+Current Delta Set Proc Time    : 4s
+
+Status: OK
+
+Last 10 samples (from /tmp/srdf_cycle_trend_000296802151_3.log):
+---------------------------------------------------
+2024-01-15 14:18:12 cycle=16s delta=3s status=OK
+2024-01-15 14:19:05 cycle=17s delta=4s status=OK
+2024-01-15 14:20:33 cycle=19s delta=4s status=OK
+2024-01-15 14:21:18 cycle=18s delta=3s status=OK
+2024-01-15 14:23:47 cycle=18s delta=4s status=OK
+```
+
+!!! warning "Common errors"
+    **`ERROR: symrdf command failed: symrdf: Command not found`** — Ensure EMC Solutions Enabler is installed and `symrdf` is in PATH, or source the appropriate environment setup script (typically `/opt/emc/SYMCLI/bin/setenv.sh`).
+    **`SID (Symmetrix serial) is required`** — Export the SID variable before running the script: `export SID=000296802151 RDF_GROUP=3 && ./srdf-cycle-time-monitor.sh`.
+    **`bc: command not found`** — Install `bc` package (`apt-get install bc` on Debian/Ubuntu or `yum install bc` on RHEL/CentOS) for floating-point threshold comparisons.
 ```bash
 #!/usr/bin/env bash
 # srdf-resync-after-dr-test.sh
@@ -178,6 +204,38 @@ log "=== RESYNC COMPLETE ==="
 log "Production SRDF replication is restored."
 log "Log: ${LOGFILE}"
 ```
+
+```text title="Expected output"
+[2024-01-15 14:32:18] === SRDF Resync After DR Test ===
+[2024-01-15 14:32:18] SID=PROD01  RDFG=3  CG=PROD_CG_001  MODE=cg
+
+Step 1: Verifying preconditions...
+
+IMPORTANT: This script will re-establish SRDF replication.
+           R2 volumes will become READ-ONLY / Write Disabled.
+
+Confirm DR hosts have stopped I/O and unmounted R2 LUNs? [yes/no]: yes
+[2024-01-15 14:32:25] Step 2: Establishing SRDF relationships (R1->R2 direction)...
+[2024-01-15 14:32:25] CMD: symrdf -sid PROD01 -rdfg 3 -cg PROD_CG_001 establish -noprompt
+Establish command submitted. Starting sync progress monitor...
+[2024-01-15 14:32:45] Progress: 0/48 Synchronized, 48 still Syncing...
+[2024-01-15 14:33:15] Progress: 12/48 Synchronized, 36 still Syncing...
+[2024-01-15 14:33:45] Progress: 28/48 Synchronized, 20 still Syncing...
+[2024-01-15 14:34:15] Progress: 42/48 Synchronized, 6 still Syncing...
+[2024-01-15 14:34:45] Progress: 48/48 Synchronized, 0 still Syncing...
+[2024-01-15 14:34:45] All devices appear Synchronized.
+[2024-01-15 14:34:45] Step 4: Final state verification...
+[2024-01-15 14:34:46] Step 4: Verified. 48 device pair(s) confirmed Synchronized.
+[2024-01-15 14:34:46] 
+[2024-01-15 14:34:46] === RESYNC COMPLETE ===
+[2024-01-15 14:34:46] Production SRDF replication is restored.
+[2024-01-15 14:34:46] Log: /var/log/srdf-resync-20240115-143218.log
+```
+
+!!! warning "Common errors"
+    **`symrdf: Error: RDF group 3 not found for SID PROD01`** — Verify the RDF_GROUP value matches the configured group number with `symrdf query -sid <SID>` and re-run with correct RDF_GROUP parameter.
+    **`WARNING: Sync timed out after 3600s`** — Increase SYNC_TIMEOUT environment variable (e.g., `SYNC_TIMEOUT=7200 ./srdf-resync-after-dr-test.sh`) or investigate replication delays on the array with `symrdf query -sid <SID> -rdfg <RDF_GROUP> -detail`.
+    **`Aborted by operator. Please ensure DR hosts are off R2 volumes before resyncing.`** — Confirm that all I/O has stopped and R2 volumes are unmounted on DR hosts, then re-run the script and respond with
 ```bash
 chmod +x srdf-resync-after-dr-test.sh
 SID=000123456789 RDF_GROUP=1 CG_NAME=MyAppCG ./srdf-resync-after-dr-test.sh
@@ -365,6 +423,27 @@ plink.exe -ssh symadmin@192.168.1.50
 cd C:\Users\YourName\Desktop
 srdf-a-cycle-check.bat
 ```
+
+```text title="Expected output"
+SRDF-A Cycle Check Utility v2.3.1
+=========================================
+Scanning local SRDF-A configuration...
+Device ID: VMAX450F
+Symmetrix Serial: 000297123456
+RDF Group 1: ONLINE
+  Source LUN 0001: 98.2% synchronized
+  Target LUN 0001: READY
+RDF Group 2: ONLINE
+  Source LUN 0002: 100% synchronized
+  Target LUN 0002: READY
+Cycle check completed successfully.
+Total devices checked: 2
+Status: PASS
+```
+
+!!! warning "Common errors"
+    **`'srdf-a-cycle-check.bat' is not recognized as an internal or external command`** — Verify the batch file exists in the current directory or add its full path (e.g., `C:\Program Files\Dell\SRDF\srdf-a-cycle-check.bat`).
+    **`Access Denied`** — Run the command prompt as Administrator or check that your user account has execute permissions on the batch file.
 ```bash
 #!/bin/bash
 # srdf_daily_check.sh
@@ -404,6 +483,21 @@ echo ""
 echo "Daily check: $FAIL failure(s)"
 [ "$FAIL" -gt 0 ] && exit 2 || exit 0
 ```
+
+```text title="Expected output"
+=== SRDF/A Daily Check: SID=0123 RDFG=2 — Wed Jan 15 09:47:22 UTC 2025 ===
+[OK]   All pairs Consistent/Synchronized
+[OK]   0 pair(s) in Transmit_Idle state
+[OK]   0 pair(s) in Split state
+[OK]   0 pair(s) in Mixed state
+
+Daily check: 0 failure(s)
+```
+
+!!! warning "Common errors"
+    **`SYMCLI_HOST is required`** — Ensure the environment variable is set before running the script: `export SYMCLI_HOST=192.168.1.50`.
+    **`Permission denied (publickey,password).`** — Verify SSH key is installed on the SYMCLI host for the specified user and that `SSH_USER` matches the authorized account.
+    **`symrdf: command not found`** — Confirm `SYMCLI_PATH` points to the correct installation directory, or update it: `export SYMCLI_PATH=/opt/emc/SYMCLI/bin`.
 ```bash
 #!/bin/bash
 # srdf_triage.sh
@@ -437,6 +531,50 @@ ssh_cmd() { ssh $SSH_OPTS "$SSH_USER@$SYMCLI_HOST" "$1" 2>/dev/null; }
 
 echo "Triage data saved to: $OUTFILE"
 ```
+
+```text title="Expected output"
+=== SRDF/A Incident Triage: SID=000123456789 RDFG=001 — Wed Jan 15 14:32:47 UTC 2025 ===
+
+--- symrdf list -sid 000123456789 ---
+Symmetrix ID: 000123456789
+RDF Group #001: SRDF/A
+  Local Device:  000001
+  Remote Device: 000001
+  Remote Symmetrix: 000987654321
+  State: Synchronized
+  Mode: Synchronous
+  Link: FA-1e:0
+  ...
+
+--- symrdf queryall -sid 000123456789 -rdfg 001 ---
+RDF Group #001 (SRDF/A)
+  Pair State: Synchronized
+  Consistency State: Consistent
+  Cycle Time: 2000 ms
+  Pending Writes: 0
+  Bytes Transmitted: 4521847296
+  ...
+
+--- symcfg -sid 000123456789 list -license ---
+Symmetrix ID: 000123456789
+License: SRDF/A
+Status: Valid
+Expiration: 2026-12-31
+...
+
+--- SRDF link utilization ---
+  Bandwidth Utilization: 45.2%
+  Cycle Time: 2000 ms
+  Delta Set Size: 512 MB
+  Link State: Optimal
+
+Triage data saved to: /tmp/srdf_triage_000123456789_001_20250115_143247.txt
+```
+
+!!! warning "Common errors"
+    **`bash: /usr/symcli/bin/symrdf: No such file or directory`** — Verify SYMCLI_PATH is correct and SymCLI is installed on the target host, or override with `SYMCLI_PATH=/opt/emc/symcli/bin ./srdf_triage.sh`.
+    **`Permission denied (publickey,gssapi-keyauth)`** — Ensure SSH key-based authentication is configured for the SSH_USER account on SYMCLI_HOST, or add `-i /path/to/key` to SSH_OPTS.
+    **`symrdf: Invalid RDF Group number`** — Confirm the RDF_GROUP value exists on the array by running `symrdf list -sid $SID` manually to list available groups.
 ```bash
 #!/bin/bash
 # srdf_precheck.sh
@@ -485,6 +623,19 @@ echo ""
 echo "Pre-check: $FAIL failure(s)"
 [ "$FAIL" -gt 0 ] && exit 2 || exit 0
 ```
+
+```text title="Expected output"
+=== SRDF/A Pre-Change Check: SID=000123456789 RDFG=2 — Wed Jan 15 14:32:47 UTC 2025 ===
+[OK]   All pairs Consistent
+[OK]   SRDF link utilisation: 42%
+
+Pre-check: 0 failure(s)
+```
+
+!!! warning "Common errors"
+    **`SYMCLI_HOST is required`** — Set the SYMCLI_HOST environment variable before running the script: `export SYMCLI_HOST=192.168.1.50`
+    **`Permission denied (publickey,password)`** — Ensure SSH key-based authentication is configured for the SSH_USER account on the SYMCLI_HOST, or add `-o PubkeyAuthentication=yes` to SSH_OPTS.
+    **`symrdf: command not found`** — Verify SYMCLI_PATH points to the correct Symmetrix CLI installation directory; check with `ssh $SSH_USER@$SYMCLI_HOST "which symrdf"`.
 ```bash
 #!/bin/bash
 # srdf_postcheck.sh
@@ -525,6 +676,20 @@ echo ""
 echo "Post-change validation: $FAIL failure(s)"
 [ "$FAIL" -gt 0 ] && exit 2 || exit 0
 ```
+
+```text title="Expected output"
+=== SRDF/A Post-Change Validation: SID=000123456789 RDFG=002 — Wed Jan 15 14:32:47 UTC 2025 ===
+[OK]   All pairs Consistent
+[INFO] Delta mark count: 0
+[INFO] SRDF link utilisation: 34%
+
+Post-change validation: 0 failure(s)
+```
+
+!!! warning "Common errors"
+    **`SYMCLI_HOST is required`** — Export the SYMCLI_HOST environment variable before running the script: `export SYMCLI_HOST=192.168.1.50`
+    **`Permission denied (publickey,gssapi-keyexec)`** — Ensure SSH key-based authentication is configured for the SSH_USER account on the SYMCLI host, or add the public key to `~/.ssh/authorized_keys`.
+    **`symrdf: command not found`** — Verify SYMCLI_PATH points to the correct installation directory by running `ssh $SSH_USER@$SYMCLI_HOST "which symrdf"` to confirm the actual path.
 ```bash
 #!/bin/bash
 # srdf_health_check.sh
@@ -558,6 +723,15 @@ fi
 exit 0
 ```
 
+
+```text title="Expected output"
+sid=000191 rdfg=2 total_pairs=48 consistent=47 degraded=1 delta_marks=12847 link_util_pct=34
+```
+
+!!! warning "Common errors"
+    **`ssh: Could not resolve hostname <ip>: Name or service not known`** — Verify SYMCLI_HOST is set to a valid IP or hostname and is reachable from the monitoring host.
+    **`Permission denied (publickey,gssapi-with-mic)`** — Ensure SSH_USER has passwordless key-based authentication configured on SYMCLI_HOST and the key is in ~/.ssh/authorized_keys.
+    **`symrdf: Command not found`** — Confirm SYMCLI_PATH points to the correct installation directory (typically /usr/symcli/bin on Symmetrix hosts) and symcli packages are installed.
 ## Before you begin
 
 - **Access:** Storage admin credentials (cluster admin or equivalent)

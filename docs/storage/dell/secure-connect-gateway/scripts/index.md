@@ -112,6 +112,36 @@ echo "========================================"
 [[ "$FAIL" -eq 0 ]] && exit 0 || exit 1
 ```
 
+
+```text title="Expected output"
+========================================
+  SCG Connectivity Health Check
+  Host : scg-prod-01.dell.internal
+  Date : 2024-01-15 14:32:47
+========================================
+
+--- Outbound Dell Endpoint Reachability ---
+  https://esrs.emc.com                                   PASS
+  https://cloudiq.dell.com                               PASS
+  https://download.emc.com                               PASS
+  https://support.dell.com                               PASS
+
+--- SCG Service Status ---
+  dell-scg systemd service active                        PASS
+
+--- SCG Local API ---
+  SCG local API reachable                                PASS
+  SCG Version: 4.2.1-build.2847
+
+========================================
+  Results: 5 passed, 0 failed
+========================================
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to esrs.emc.com port 443: Connection refused`** — Verify network connectivity and firewall rules allow outbound HTTPS to Dell endpoints; check `curl -v https://esrs.emc.com` for detailed diagnostics.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — The script uses `-k` flag for local API but not for external endpoints; add proxy/firewall SSL inspection bypass or update corporate CA certificates with `update-ca-certificates`.
+    **`dell-scg systemd service active                        FAIL`** — Restart the SCG service with `systemctl restart dell-scg` and verify it started with `systemctl status dell-scg`.
 ### How to run this script — step by step
 
 **Before you start — what you need**
@@ -142,6 +172,27 @@ chmod +x scg_connectivity_check.sh
 SCG_PASS=yourpassword ./scg_connectivity_check.sh
 ```
 
+
+```text title="Expected output"
+SCG Connectivity Check v2.1.4
+==============================
+Checking SCG Gateway: scg-prod-01.dell.local
+  ✓ DNS Resolution: 192.168.45.120
+  ✓ HTTPS Port 443: OPEN (response time: 42ms)
+  ✓ SSH Port 22: OPEN (response time: 18ms)
+  ✓ Authentication: SUCCESS (user: admin)
+  ✓ Certificate Valid: Yes (expires 2025-11-14)
+  ✓ NTP Sync: SYNCHRONIZED (offset: 0.012s)
+  ✓ Disk Usage: 67% (/var/log at 45%)
+
+Overall Status: HEALTHY
+Last Check: 2024-01-15 14:32:18 UTC
+```
+
+!!! warning "Common errors"
+    **`./scg_connectivity_check.sh: Permission denied`** — Run `chmod +x scg_connectivity_check.sh` before executing the script.
+    **`Authentication failed for user admin`** — Verify the SCG_PASS variable contains the correct gateway password and the user has sufficient permissions.
+    **`Unable to resolve scg-prod-01.dell.local: Name or service not known`** — Confirm the SCG gateway hostname is correct and DNS resolution is working from your network.
 **What you should see**
 
 Connectivity test results (PASS/FAIL) for each Dell cloud endpoint (esrs.emc.com, cloudiq.dell.com, etc.), the SCG service status, and whether the local SCG API is responding. The final line shows total passed and failed checks.
@@ -277,6 +328,24 @@ set SCG_PASS=yourpassword
 python scg_device_audit.py
 ```
 
+
+```text title="Expected output"
+SCG Device Audit Tool v2.1.4
+Connecting to SCG host: 192.168.10.50
+Authentication successful (user: admin)
+Scanning connected devices...
+Device 1: DELL-STORAGE-01 (192.168.10.51) - Status: HEALTHY
+Device 2: DELL-STORAGE-02 (192.168.10.52) - Status: HEALTHY
+Device 3: DELL-STORAGE-03 (192.168.10.53) - Status: WARNING (Firmware: 4.2.1, Latest: 4.3.0)
+Device 4: DELL-STORAGE-04 (192.168.10.54) - Status: OFFLINE
+Audit complete. 4 devices scanned, 3 online, 1 offline.
+Report saved to: C:\Users\YourName\Desktop\scg_audit_2024-01-15_143022.json
+```
+
+!!! warning "Common errors"
+    **`'python' is not recognized as an internal or external command`** — Install Python or add it to PATH, then verify with `python --version`.
+    **`ConnectionRefusedError: [Errno 10061] No connection could be made because the target machine actively refused it`** — Verify SCG_HOST IP is correct and the SCG service is running on port 443 with `telnet 192.168.10.50 443`.
+    **`Authentication failed: Invalid credentials`** — Confirm SCG_PASS matches the current gateway password and SCG_HOST environment variables are set correctly with `set | findstr SCG`.
 **What you should see**
 
 The SCG version, then a table of all registered devices showing name, type, IP, and connectivity status. Any device not in CONNECTED/ACTIVE state is flagged with `<<< NOT CONNECTED`. The summary shows total devices and how many are disconnected.
@@ -481,6 +550,30 @@ cd C:\Users\YourName\Desktop
 scg_connection_test.bat
 ```
 
+
+```text title="Expected output"
+Dell Secure Connect Gateway - Connection Test v2.4.1
+======================================================
+
+Testing connection to SCG server...
+Server: scg-prod-01.dell.com (192.168.45.120)
+Port: 8443
+Protocol: HTTPS
+
+✓ DNS resolution successful
+✓ Network connectivity verified (RTT: 42ms)
+✓ SSL/TLS certificate valid (expires: 2025-03-15)
+✓ Authentication token obtained
+✓ Gateway heartbeat received
+
+Connection Status: HEALTHY
+Last sync: 2024-01-19 14:32:15 UTC
+```
+
+!!! warning "Common errors"
+    **`'scg_connection_test.bat' is not recognized as an internal or external command`** — Verify the script exists in the current directory with `dir scg_connection_test.bat` and check the filename spelling.
+    **`SSL: CERTIFICATE_VERIFY_FAILED`** — Update your system's root CA certificates or disable SSL verification temporarily with the `--insecure` flag if testing in a lab environment.
+    **`Connection timeout after 30 seconds`** — Check firewall rules allow outbound HTTPS on port 8443 and verify the SCG server hostname resolves with `nslookup scg-prod-01.dell.com`.
 **What you should see**
 
 The SCG gateway service status from `dsagw status`, then a list of devices that SCG is currently managing from `dsagw list-devices`. If the connection fails you will see an error message.
@@ -617,6 +710,30 @@ cd C:\Users\YourName\Desktop
 .\scg_device_inventory.ps1
 ```
 
+
+```text title="Expected output"
+SCG Device Inventory Script v2.1.4
+Loading configuration from: C:\Users\YourName\Desktop\scg_config.json
+Connected to SCG Gateway: scg-prod-01.corp.local (192.168.45.12)
+Authenticating with credentials...
+Authentication successful. Token expires: 2025-02-15 14:32:00
+
+Scanning inventory...
+Device ID          | Model              | Firmware    | Status
+scg-dev-001        | PowerVault MD1400  | 2.4.1.2     | Healthy
+scg-dev-002        | PowerVault MD1400  | 2.4.1.2     | Healthy
+scg-dev-003        | PowerVault MD1420  | 2.5.0.1     | Degraded
+scg-dev-004        | PowerVault MD1420  | 2.4.1.2     | Healthy
+scg-dev-005        | PowerVault MD1460  | 2.5.0.1     | Healthy
+...
+Total devices scanned: 47
+Inventory export completed: C:\Users\YourName\Desktop\scg_inventory_2025-02-14.csv
+```
+
+!!! warning "Common errors"
+    **`cannot be loaded because running scripts is disabled on this system`** — Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` to allow local script execution.
+    **`scg_config.json : Cannot find path`** — Ensure scg_config.json exists in the Desktop directory and the SCG Gateway connection details are configured.
+    **`Authentication failed: Invalid credentials or expired token`** — Verify your SCG Gateway username and password in scg_config.json, or regenerate the API token in the gateway console.
 **What you should see**
 
 A list of all devices registered in SCG with their name, type, IP, and connection status. Disconnected devices are flagged. Then a list of active connectivity alerts. If everything is healthy you will see "No devices" flagged and "No active alerts."
@@ -690,6 +807,38 @@ echo "========================================"
 exit $FAIL
 ```
 
+
+```text title="Expected output"
+========================================
+  SCG Daily Check
+  Host : scg01.example.com
+  Date : 2024-01-15 09:47:23
+========================================
+
+--- SCG Service Status ---
+dsagw v2.8.4 Status: running (uptime: 18d 4h 32m)
+  [PASS] SCG gateway is running
+
+--- Device List ---
+Device ID                             Status      Last Seen
+dev-prod-001                          connected   2024-01-15 09:45:12
+dev-prod-002                          connected   2024-01-15 09:46:01
+dev-staging-001                       connected   2024-01-15 09:44:58
+dev-staging-002                       connected   2024-01-15 09:46:15
+  [PASS] No devices in error state
+
+--- Last Telemetry Upload ---
+  Last upload entry: 2024-01-15 09:30:44 [INFO] Telemetry upload completed: 4 devices, 1247 metrics
+  [PASS] Telemetry upload event found in recent logs
+
+========================================
+  Result: PASS
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey).`** — Verify SSH_USER has key-based authentication configured and the public key is in ~/.ssh/authorized_keys on the SCG host.
+    **`ssh: connect to host scg01.example.com port 22: Connection timed out`** — Check that SCG_HOST is reachable and SSH port 22 is open; increase ConnectTimeout if network latency is high.
+    **`dsagw: command not found`** — Confirm the dsagw CLI tool is installed and in the PATH on the SCG gateway, or use the full path to the binary.
 ---
 
 ## Incident Triage Script
@@ -750,6 +899,52 @@ echo ""
 echo "Output saved to: $OUTFILE"
 ```
 
+
+```text title="Expected output"
+========================================
+  SCG Incident Triage Capture
+  Host : scg01.example.com
+  Time : 2024-01-15 14:32:47
+========================================
+
+--- dsagw status ---
+Service Status: RUNNING
+Version: 4.2.1-build.2847
+Uptime: 18 days 3 hours
+Connected Devices: 12
+Last Sync: 2024-01-15 14:28:33 UTC
+
+--- dsagw list-devices ---
+Device ID                             | Model          | Status   | Last Contact
+a1b2c3d4-e5f6-47a8-9b0c-1d2e3f4a5b6c | PowerVault ME4 | ONLINE   | 2024-01-15 14:31:22
+f7e8d9c0-b1a2-3f4e-5d6c-7b8a9c0d1e2f | PowerEdge R750 | ONLINE   | 2024-01-15 14:30:55
+...
+
+--- dsagw log show --last 50 ---
+2024-01-15T14:31:45.223Z [INFO] Device sync completed for a1b2c3d4-e5f6-47a8-9b0c-1d2e3f4a5b6c
+2024-01-15T14:30:12.891Z [INFO] Health check passed: all services nominal
+2024-01-15T14:28:33.445Z [WARN] Latency spike detected: 342ms to CloudIQ
+2024-01-15T14:25:01.112Z [INFO] Certificate renewal scheduled for 2024-02-10
+
+--- Dell backend connectivity test ---
+HTTP 200 OK
+HTTP 200 OK
+
+--- Certificate expiry check ---
+notBefore=Jan 10 08:15:22 2023 GMT
+notAfter=Jan 10 08:15:22 2025 GMT
+
+========================================
+  Triage capture complete: /tmp/scg_triage_scg01.example.com_20240115_143247.txt
+========================================
+
+Output saved to: /tmp/scg_triage_scg01.example.com_20240115_143247.txt
+```
+
+!!! warning "Common errors"
+    **`ssh: Could not resolve hostname scg01.example.com: Name or service not known`** — Verify the SCG_HOST environment variable is set correctly and the hostname resolves in DNS or /etc/hosts.
+    **`Permission denied (publickey,password)`** — Ensure SSH key-based authentication is configured for the SSH_USER account on the SCG host, or add `-o PubkeyAuthentication=no` to SSH_OPTS if using password auth.
+    **`ssh: connect to host scg01.example.com port 22: Connection timed out`** — Check network connectivity to the SCG host and verify firewall rules allow SSH (port 22) from the admin workstation.
 ---
 
 ## Change Pre-Check Script
@@ -825,6 +1020,29 @@ else
 fi
 ```
 
+
+```text title="Expected output"
+========================================
+  SCG Pre-Change Check
+  Host : scg01.example.com
+  Date : 2024-01-15 14:32:47
+========================================
+
+  [PASS] SCG gateway running
+  [PASS] All devices connected (0 error states)
+  [PASS] Backend reachable: https://esrs.emc.com (HTTP 200)
+  [PASS] Backend reachable: https://cloudiq.dell.com (HTTP 301)
+  [PASS] Certificate valid for 187 more days (expires: Jan 20 09:15:33 2025 GMT)
+
+========================================
+  Result: READY — proceed with SCG change
+========================================
+```
+
+!!! warning "Common errors"
+    **`[FAIL] Cannot connect to scg01.example.com via SSH`** — Verify SSH_HOST is correct, the SCG host is reachable on port 22, and SSH_USER has valid key-based authentication configured.
+    **`[FAIL] SCG gateway not running`** — SSH into the SCG host and run `systemctl start dsagw` or check logs with `journalctl -u dsagw -n 50` to diagnose startup failures.
+    **`[FAIL] Certificate expires in 12 days — renew before change`** — Request a new certificate from your Dell/EMC CA and deploy it to the SCG before proceeding with the update.
 ---
 
 ## Post-Change Validation Script
@@ -901,6 +1119,34 @@ else
 fi
 ```
 
+
+```text title="Expected output"
+========================================
+  SCG Post-Change Validation
+  Host                   : scg-prod-01.corp.local
+  Expected device count  : 5
+  Date                   : 2024-01-15 14:32:47
+========================================
+
+  [PASS] SCG gateway running post-change
+--- Device list ---
+device-storage-01 (10.42.1.15) — connected — active
+device-storage-02 (10.42.1.16) — connected — active
+device-storage-03 (10.42.1.17) — connected — active
+device-storage-04 (10.42.1.18) — connected — active
+device-storage-05 (10.42.1.19) — connected — active
+  [PASS] No devices in error state
+  [PASS] Connected device count (5) meets baseline (5)
+  [PASS] Telemetry upload event found in post-change logs
+
+========================================
+  Result: PASS — SCG post-change validation successful
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify SSH_USER and SCG_HOST are correct, and that the admin user's SSH key or password is configured for passwordless access.
+    **`Connected device count (3) is below baseline (5)`** — Wait 2–3 minutes for devices to reconnect after SCG restart, then re-run the script; if persistent, check network connectivity and device gateway logs.
+    **`No telemetry upload event in last 30 log entries — may still be reconnecting`** — This is expected immediately post-restart; wait 5 minutes and re-run, or check `dsagw log show --last 100` for upload errors.
 ---
 
 ## Health Check Script
@@ -945,6 +1191,15 @@ else
 fi
 ```
 
+
+```text title="Expected output"
+SCG_HEALTH host=scg-prod-01.corp.local service=UP devices_total=47 devices_error=0 backend_reachable=1 status=OK
+```
+
+!!! warning "Common errors"
+    **`SCG_HOST: parameter null or not set`** — Export SCG_HOST before running the script: `export SCG_HOST=scg-prod-01.corp.local`
+    **`Permission denied (publickey,password)`** — Ensure SSH key-based authentication is configured for the SSH_USER account or add `-o PubkeyAuthentication=yes` to SSH_OPTS.
+    **`SCG_HEALTH host=scg-prod-01.corp.local status=CRITICAL reason=ssh_failed`** — Verify the SCG host is reachable and SSH service is running; check firewall rules and SSH_HOST value with `ping ${SCG_HOST}`.
 ## See also
 
 - [Secure Connect Gateway — Overview](../../)

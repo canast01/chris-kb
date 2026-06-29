@@ -87,6 +87,19 @@ symcli -version
 symcfg -sid <R1-SID> show | grep -i microcode
 ```
 
+
+```text title="Expected output"
+SE_SYMMETRIX_0001 (Symmetrix ID: 000123456789012)
+SE_SYMMETRIX_0002 (Symmetrix ID: 000987654321098)
+
+Solutions Enabler Version: 9.2.1.0 (Build 123)
+
+Microcode Version: 5978.221.221
+```
+
+!!! warning "Common errors"
+    **`symcfg: Command not found`** — Verify Solutions Enabler is installed and the symcli binary path is in your $PATH, or source the SE environment setup script.
+    **`Error: Cannot connect to Symmetrix <R1-SID>`** — Confirm the array SID is correct and the SE daemon (symcfg) is running with `sudo /opt/emc/SYMCLI/bin/symcfg -daemon start`.
 ### 2. Capture SRDF group and pair state
 
 ```bash
@@ -104,6 +117,44 @@ symcfg -sid <R1-SID> list -ra all > /tmp/srdf-rdf-ports-$(date +%Y%m%d).txt
 symcfg -sid <R2-SID> list -ra all >> /tmp/srdf-rdf-ports-$(date +%Y%m%d).txt
 ```
 
+
+```text title="Expected output"
+Symmetrix ID: 000123456789012
+                                SRDF/A Groups
+Group  Type  R1 Dev  R2 Dev  R1 State  R2 State  Link State  Consistency
+    0  RDF1   10000   10000  Synchronized  Synchronized  OK  Consistent
+    1  RDF1   20000   20000  Synchronized  Synchronized  OK  Consistent
+    2  RDF1   30000   30000  Synchronized  Synchronized  OK  Consistent
+    3  RDF1   40000   40000  Synchronized  Synchronized  OK  Consistent
+
+=== Group 0 ===
+Group ID: 0
+R1 Symmetrix ID: 000123456789012
+R2 Symmetrix ID: 000987654321098
+R1 State: Synchronized
+R2 State: Synchronized
+Link State: OK
+Consistency: Consistent
+RDF Mode: Synchronous
+...
+
+RDF Director Status for Symmetrix 000123456789012:
+Dir  Port  Link State  Remote Dir  Remote Port  Bandwidth
+SE-1F  0  OK  SE-2F  0  8 Gbps
+SE-1F  1  OK  SE-2F  1  8 Gbps
+SE-1G  0  OK  SE-2G  0  8 Gbps
+
+RDF Director Status for Symmetrix 000987654321098:
+Dir  Port  Link State  Remote Dir  Remote Port  Bandwidth
+SE-2F  0  OK  SE-1F  0  8 Gbps
+SE-2F  1  OK  SE-1F  1  8 Gbps
+SE-2G  0  OK  SE-1G  0  8 Gbps
+```
+
+!!! warning "Common errors"
+    **`SYMAPI_C_PROC_FAILURE (29) : Could not connect to the Symmetrix`** — Verify the R1-SID and R2-SID values are correct and the Symmetrix arrays are reachable via the management network.
+    **`No such file or directory`** — Ensure /tmp directory has write permissions and sufficient free space (check with `df -h /tmp`).
+    **`symdf: Command not found`** — Confirm EMC Solutions Enabler (SE) is installed and the symcli binaries are in your PATH (add `/opt/emc/SYMCLI/bin` to PATH if needed).
 ### 3. Capture the event log from both arrays
 
 ```bash
@@ -117,6 +168,21 @@ symevent -sid <R2-SID> list -last 500 > /tmp/srdf-events-r2-$(date +%Y%m%d).txt
 grep -iE "SRDF|RDF|replication|suspend|fault" /tmp/srdf-events-r1-$(date +%Y%m%d).txt
 ```
 
+
+```text title="Expected output"
+/tmp/srdf-events-r1-20240115.txt
+/tmp/srdf-events-r2-20240115.txt
+01/15/2024 14:32:18 - SRDF - RDF Link Recovered - R1 (000123456789ABCD) - Severity: Warning
+01/15/2024 14:28:45 - SRDF - Replication Suspended - R1 (000123456789ABCD) - Severity: Critical
+01/15/2024 14:15:22 - RDF - Link Fault Detected - R1 (000123456789ABCD) - Severity: Critical
+01/15/2024 13:47:09 - SRDF - Replication Resume - R1 (000123456789ABCD) - Severity: Info
+01/15/2024 13:22:31 - RDF - Synchronization Complete - R1 (000123456789ABCD) - Severity: Info
+01/15/2024 12:55:14 - SRDF - Suspend Initiated - R1 (000123456789ABCD) - Severity: Warning
+```
+
+!!! warning "Common errors"
+    **`symevent: Error: Invalid SID <R1-SID>`** — Replace `<R1-SID>` and `<R2-SID>` with actual 12-character symmetrix IDs (e.g., `000123456789`).
+    **`grep: /tmp/srdf-events-r1-20240115.txt: No such file or directory`** — Ensure the first two symevent commands complete successfully and verify the user has write permissions to `/tmp`.
 ### 4. Capture SRDF link performance and WAN state
 
 ```bash
@@ -130,6 +196,35 @@ symrdf query -g <group> -v | grep -iE "cycle|lag|delta|consistent"
 symcfg -sid <R1-SID> list -ra all | grep -i "fcip\|iscsi"
 ```
 
+
+```text title="Expected output"
+Symmetrix ID: 000297123456789
+                                    RDF Group 001
+                                    ============
+Concurrent I/O Count        :    1247
+Total I/O Count             :    892156
+Read I/O Count              :    445078
+Write I/O Count             :    447078
+Total MB Read               :    156234.5
+Total MB Written            :    167891.2
+Average Read Latency (ms)   :    12.34
+Average Write Latency (ms)  :    14.67
+Current Bandwidth (MB/s)    :    89.45
+
+RDF Cycle Time              :    2000 ms
+Current Lag                 :    1247 tracks
+Delta Set Size              :    2048 MB
+Consistency State           :    Consistent
+
+RA Port  Link State  Protocol  Remote IP       Status
+FA-1E   Online      FCIP      192.168.100.45  Active
+FA-2E   Online      FCIP      192.168.100.46  Active
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid group number <group-number>`** — Replace `<group-number>` with the actual RDF group ID (e.g., `001` or `1`).
+    **`Error: Symmetrix ID <R1-SID> not found`** — Verify the R1 Symmetrix SID is correct by running `symcfg list -v` to confirm the array serial number.
+    **`No matching records found`** — Ensure SRDF/A is configured and the RDF group is in a valid state; check with `symrdf list -v` to confirm group existence.
 ### 5. Write the timeline
 
 ```text
@@ -228,6 +323,56 @@ symcfg -sid <R1-SID> list -ra all | grep -E "ONLINE|OFFLINE"
 symevent -sid <R1-SID> list -last 20 | grep -iE "SRDF|RDF|suspend|fault"
 ```
 
+
+```text title="Expected output"
+Symmetrix ID: 000123456789ABC
+SRDF Group 0: RDF1 <-> RDF2 (Synchronous)
+  State: Synchronized
+  Link State: Online
+  Pair Count: 47
+
+SRDF Group 1: RDF3 <-> RDF4 (Asynchronous)
+  State: Synchronized
+  Link State: Online
+  Pair Count: 23
+
+Symmetrix ID: 000987654321XYZ
+SRDF Group 5: RDF1 <-> RDF2 (Synchronous)
+  State: Suspended
+  Link State: Offline
+  Pair Count: 12
+
+---
+
+Pair State for Group 0:
+  R1 Dev  R2 Dev  State        RDF Mode    Link State
+  000001  000001  Synchronized Synchronous Online
+  000002  000002  Synchronized Synchronous Online
+  000003  000003  Suspended    Synchronous Offline
+  000004  000004  Synchronized Synchronous Online
+  ...
+
+---
+
+RDF Director States:
+  Director 4e ONLINE
+  Director 4f ONLINE
+  Director 5e OFFLINE
+  Director 5f ONLINE
+
+---
+
+Timestamp            Event Type    Symmetrix ID      Message
+2024-01-15 14:32:18  SRDF_SUSPEND  000123456789ABC  SRDF pair suspended on group 0
+2024-01-15 13:47:05  RDF_LINK_DOWN 000123456789ABC  RDF link offline: director 5e
+2024-01-15 13:46:52  SRDF_FAULT    000123456789ABC  Pair 000003 fault detected
+2024-01-15 12:15:33  RDF_LINK_UP   000123456789ABC  RDF link online: director 5f
+```
+
+!!! warning "Common errors"
+    **`SYMCLI_LIB_CALL_FAILED: Cannot connect to the Solutions Enabler daemon`** — Verify the Solutions Enabler service is running with `sudo /opt/emc/SYMCLI/bin/stordaemon start` and confirm R1 connectivity.
+    **`Invalid Symmetrix ID: <R1-SID>`** — Replace `<R1-SID>` with the actual R1 array SID from `symcfg list` output.
+    **`SRDF group <group-number> not found`** — Confirm the group number exists by running `symdf list -sid <R1-SID>` first to list all valid groups.
 ---
 
 ## Support SLA Reference

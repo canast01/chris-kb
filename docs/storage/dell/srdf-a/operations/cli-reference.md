@@ -84,6 +84,57 @@ symdg show cg_oracle_prod
 symrdf -g cg_oracle_prod -sid 000123456789 query
 ```
 
+
+```text title="Expected output"
+Symmetrix ID: 000123456789
+
+Device        Sym       Cap(MB) Ident       RDF State  RDF Type
+--------      ---       ------- -----       ---------  --------
+00B5          0001      102400 RDF1A       Ready      SRDF/A
+00B6          0002      102400 RDF1A       Ready      SRDF/A
+00B7          0003      102400 RDF1A       Ready      SRDF/A
+00B8          0004      102400 RDF1A       Ready      SRDF/A
+00B9          0005      102400 RDF1A       Ready      SRDF/A
+
+Symmetrix ID: 000123456789
+Device Name:                    00B5
+Identifier:                     RDF1A
+RDF Group Number:               10
+RDF Type:                       SRDF/A
+RDF State:                      Ready
+Mirror State:                   Synchronized
+Pair State:                     Synchronized
+Remote Symmetrix:               000987654321
+Remote Device:                  00B5
+
+Symmetrix ID: 000123456789
+RDF Group:    10
+Device Pair:  00B5 <-> 00B5 (Remote SID: 000987654321)
+State:        Synchronized
+Link State:   Online
+Hop ID:       1
+Last Update:  2024-01-15 14:32:18
+
+Verify Device Pair: 00B5
+State Check:        PASS
+Consistency Check:  PASS
+Link Verification:  PASS
+
+Device Group: cg_oracle_prod
+Symmetrix ID: 000123456789
+Type:         Consistency Group
+Devices:      12
+RDF State:    Ready
+
+Symmetrix ID: 000123456789
+RDF Group:    10
+Group State:  Synchronized
+Device Count: 12
+```
+
+!!! warning "Common errors"
+    **`SYMCLI_ERROR: Device 00B5 not found in RDF group 10`** — Verify the RDF group number with `symrdf -sid 000123456789 list` and confirm the device is enrolled in that group.
+    **`SYMCLI_ERROR: Verify failed — State mismatch detected on device 00B5`** — Check remote array connectivity with `symrdf -sid 000123456789 -rdfg 10 query dev 00B5` and resynchronize if needed using `symrdf -sid 000123456789 -rdfg 10 set -dev 00B5 -state synchronized`.
 ---
 
 ## SRDF/A Consistency Protection
@@ -98,6 +149,23 @@ symrdf -sid 000123456789 -rdfg 10 list -v | grep -E "Consistency|SRDF/A|Mode"
 symrdf -sid 000123456789 -rdfg 10 queryall | grep -v "Synchronized\|SyncInProg"
 ```
 
+
+```text title="Expected output"
+Consistency State: Synchronized
+SRDF/A Mode: Synchronous
+RDF Group: 10
+Device: 000123456789_000F_00001 Consistency: Synchronized
+Device: 000123456789_000F_00002 Consistency: Synchronized
+Device: 000123456789_000F_00003 Consistency: Synchronized
+
+RDF Group 10 - Device Status:
+Device: 000123456789_000F_00004 State: Not Ready (Pending)
+Device: 000123456789_000F_00005 State: SyncInProg (85%)
+```
+
+!!! warning "Common errors"
+    **`SYMAPI Error: Could not connect to the Symmetrix`** — Verify the Symmetrix SID is correct and the SYMAPI daemon is running on the local host.
+    **`Error: RDF Group 10 not found`** — Confirm the RDF group number exists on the array using `symrdf -sid 000123456789 list`.
 ---
 
 ## Unisphere REST API
@@ -149,6 +217,88 @@ curl -s $AUTH "$UNISPHERE/performance/RDFGroup/metrics" \
   }" | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "rdf_group_list": [
+    {
+      "rdfGroupNumber": 10,
+      "label": "SRDF-A-Primary",
+      "remoteSymmetrix": "000987654321",
+      "states": [
+        "Synchronized"
+      ]
+    },
+    {
+      "rdfGroupNumber": 11,
+      "label": "SRDF-A-Secondary",
+      "remoteSymmetrix": "000987654321",
+      "states": [
+        "Synchronized"
+      ]
+    }
+  ]
+}
+{
+  "rdfGroupNumber": 10,
+  "label": "SRDF-A-Primary",
+  "remoteSymmetrix": "000987654321",
+  "states": [
+    "Synchronized"
+  ],
+  "type": "RDF1",
+  "numDevices": 24,
+  "reserved": false
+}
+{
+  "volume_list": [
+    {
+      "volumeId": "00ABC",
+      "rdfpairstate": "Synchronized",
+      "localRdfGroupNumber": 10,
+      "remoteRdfGroupNumber": 10,
+      "remoteVolume": "00ABC"
+    },
+    {
+      "volumeId": "00ABD",
+      "rdfpairstate": "Synchronized",
+      "localRdfGroupNumber": 10,
+      "remoteRdfGroupNumber": 10,
+      "remoteVolume": "00ABD"
+    }
+  ]
+}
+Mode:         000987654321
+SRDF/A State: ['Synchronized']
+Label:        SRDF-A-Primary
+{
+  "rdf_group_list": [
+    {
+      "rdfGroupNumber": 10,
+      "storageGroupName": "sg_oracle_prod",
+      "pairCount": 24
+    }
+  ]
+}
+{
+  "resultList": {
+    "result": [
+      {
+        "timestamp": 1704067200000,
+        "MBSentPerSec": 245.67,
+        "MBReceivedPerSec": 243.12,
+        "AvgCycleTime": 18.4,
+        "CyclesPerSec": 156
+      }
+    ]
+  }
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Remove the `--insecure` flag only if using a valid CA-signed certificate, or ensure the Unisphere server certificate is trusted by the system.
+    **`HTTP/1.1 401 Unauthorized`** — Verify the SMC credentials in the `AUTH` variable are correct and the user has REST API permissions in Unisphere.
+    **`jq: command not found` or `ModuleNotFoundError: No module named 'json'`** — Install Python 3 with the json module (standard library) or use `jq` instead of `python3 -m json.tool` for JSON formatting.
 ---
 
 ## Verify

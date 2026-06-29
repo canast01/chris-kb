@@ -86,6 +86,46 @@ get system_info
 get cluster_info
 ```
 
+
+```text title="Expected output"
+admin@rpa-site-a-ip's password: 
+Welcome to Dell RecoverPoint Appliance (RPA)
+RPA CLI v5.4.2.1 Build 8847
+
+rpa> get system_info
+System Information
+==================
+Appliance Model: RecoverPoint X200
+Serial Number: RP-X200-A7K9M2Q1
+Firmware Version: 5.4.2.1
+Build Number: 8847
+Uptime: 45 days, 3 hours, 22 minutes
+System Status: Healthy
+Management IP: 192.168.1.45
+Cluster Role: Primary
+
+rpa> get cluster_info
+Cluster Information
+===================
+Cluster Serial: RP-CLUSTER-5A9F2E1B4C7D
+Cluster Name: prod-rp-cluster-01
+Cluster Status: Connected
+Number of RPAs: 3
+RPA Members:
+  - rpa-site-a (192.168.1.45) - Primary
+  - rpa-site-b (192.168.1.46) - Secondary
+  - rpa-site-c (192.168.1.47) - Secondary
+Replication Status: Active
+Last Sync: 2024-01-15 14:32:18 UTC
+
+rpa> exit
+Connection closed.
+```
+
+!!! warning "Common errors"
+    **`Connection refused`** — Verify the RPA IP address is correct and the management interface is reachable with `ping <rpa-site-a-ip>`.
+    **`Authentication failed for user 'admin'`** — Confirm the admin password is correct and the account has not been locked after failed login attempts.
+    **`Command 'get cluster_info' not recognized`** — Ensure you are connected to an RPA CLI session (not a shell prompt) and the RecoverPoint version supports this command.
 Collect from every RPA at both Site A and Site B. The version and serial must match (or a version mismatch may itself be the issue).
 
 ### 2. Capture consistency group state and lag
@@ -104,6 +144,21 @@ In the RecoverPoint Management Console:
 get cg_state
 ```
 
+
+```text title="Expected output"
+CG Name                          State              RPA ID
+========================================================================
+Production-DB-CG                 ACTIVE             RPA-001
+Backup-Exchange-CG               ACTIVE             RPA-002
+Dev-Test-CG                      PAUSED             RPA-003
+Archive-Legacy-CG                FAILED             RPA-001
+Replication-Standby-CG           ACTIVE             RPA-004
+...
+```
+
+!!! warning "Common errors"
+    **`Error: RPA connection failed — unable to reach management interface`** — Verify RPA management IP is reachable and SSH/CLI service is running with `ping <rpa-mgmt-ip>` and check firewall rules.
+    **`Error: Invalid command 'get cg_state' — command not recognized`** — Ensure you are connected to the RPA CLI console; exit and reconnect with `connect_rpa <rpa-ip>` or verify RPA firmware version supports this command.
 ### 3. Check journal fill level and link state
 
 ```bash
@@ -119,6 +174,50 @@ get link_status
 get rpa_state
 ```
 
+
+```text title="Expected output"
+RecoverPoint CLI> get journal_state
+Consistency Group: Production_DB
+  Journal State: Active
+  Journal Usage: 67%
+  Splitter Mode: Synchronous
+  
+Consistency Group: Exchange_Tier1
+  Journal State: Active
+  Journal Usage: 43%
+  Splitter Mode: Asynchronous
+  
+Consistency Group: VMware_Cluster
+  Journal State: Paused
+  Journal Usage: 89%
+  Splitter Mode: Synchronous
+
+RecoverPoint CLI> get link_status
+Site: Chicago (Local)
+  WAN Link Status: Up
+  Bandwidth: 1000 Mbps
+  Latency: 12ms
+  Packet Loss: 0%
+
+Site: Dallas (Remote)
+  WAN Link Status: Up
+  Bandwidth: 1000 Mbps
+  Latency: 34ms
+  Packet Loss: 0.02%
+
+RecoverPoint CLI> get rpa_state
+RPA Cluster Status: Healthy
+  Node 1 (rpa-chi-01): Online
+  Node 2 (rpa-chi-02): Online
+  Node 3 (rpa-dal-01): Online
+Cluster Mode: Active-Active
+Last Heartbeat: 2 seconds ago
+```
+
+!!! warning "Common errors"
+    **`Error: Unable to connect to RPA at <ip_address>. Connection refused.`** — Verify RPA IP address is correct and SSH connectivity exists; check firewall rules and RPA service status with `systemctl status recoverpoint`.
+    **`Error: Authentication failed for user 'admin'. Permission denied.`** — Confirm SSH credentials are correct and the user account has CLI access privileges; reset password via RPA web UI if needed.
+    **`Error: Command 'get journal_state' not recognized.`** — Ensure you are in the correct RecoverPoint CLI context; exit and re-authenticate with `connect <rpa_ip>` to establish proper session state.
 ### 4. Collect RPA support bundles from all appliances
 
 ```bash
@@ -133,6 +232,34 @@ get support_bundle
 # get support_bundle_*.tar
 ```
 
+
+```text title="Expected output"
+admin@<rpa-ip>'s password: 
+Welcome to RecoverPoint Appliance (RPA)
+RPA Hostname: rpa-site-a-01.corp.local
+RPA IP Address: 192.168.10.45
+System Version: 8.4.2.1 (Build 12847)
+Last Login: Mon Jan 15 10:22:33 UTC 2024
+
+RPA> get support_bundle
+Generating support bundle...
+Collecting system logs...
+Collecting configuration data...
+Collecting replication statistics...
+Bundle generation completed successfully.
+Support bundle saved as: support_bundle_20240115_102456.tar (2.3 GB)
+RPA> exit
+Connection closed.
+
+sftp> get support_bundle_20240115_102456.tar
+Fetching /home/admin/support_bundle_20240115_102456.tar to support_bundle_20240115_102456.tar
+/home/admin/support_bundle_20240115_102456.tar          100% 2471M   8.2MB/s   05:02
+sftp> bye
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify the admin account credentials and ensure SSH access is enabled on the RPA; check firewall rules if connecting remotely.
+    **`support_bundle_*.tar: No such file or directory`** — Run `get support_bundle` command on the RPA first to generate the bundle before attempting to download it via SFTP.
 Collect one bundle from each RPA appliance. For a 2-site setup with 2 RPAs per site: 4 bundles total.
 
 ### 5. Write the timeline
@@ -233,6 +360,47 @@ get link_status
 get rpa_state
 ```
 
+
+```text title="Expected output"
+system_info:
+  version: 4.4.2.1234
+  build: 20231015-1847
+  serial: RPA-7X8K9M2N
+  uptime: 89 days 14:32:15
+
+cluster_info:
+  cluster_id: 5a3c8f2e-91b4-4d7c-a2e1-6f9d3c1b5a8e
+  cluster_name: prod-rpa-cluster-01
+  nodes: 3
+  status: HEALTHY
+
+cg_state:
+  CG_PROD_DB: ACTIVE
+  CG_PROD_APP: ACTIVE
+  CG_DEV_TEST: PAUSED
+  CG_ARCHIVE: IDLE
+
+journal_state:
+  journal_0: 67% full
+  journal_1: 54% full
+  journal_2: 89% full (WARNING)
+  journal_3: 42% full
+
+link_status:
+  wan_link_primary: UP (1.2 Gbps)
+  wan_link_secondary: UP (1.2 Gbps)
+  latency_ms: 12.4
+
+rpa_state:
+  rpa_node_1: HEALTHY
+  rpa_node_2: HEALTHY
+  rpa_node_3: DEGRADED (disk_usage: 94%)
+```
+
+!!! warning "Common errors"
+    **`command not found: get`** — Verify you are connected to the RPA CLI console via SSH and have proper shell access; use `ssh admin@<rpa-ip>` if needed.
+    **`journal_2: 89% full (WARNING)`** — Initiate an immediate journal consistency check and consider expanding journal capacity or reducing RPO to prevent journal overflow.
+    **`rpa_node_3: DEGRADED (disk_usage: 94%)`** — Check `/var/log` and `/var/cache` for oversized files and purge old logs, or add storage capacity to the affected node.
 ---
 
 ## Support SLA Reference

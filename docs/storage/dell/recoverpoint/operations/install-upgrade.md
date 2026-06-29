@@ -137,6 +137,22 @@ boxmgmt splitter list
 # Expected output shows VPLEX splitter entries with status "Connected"
 ```
 
+
+```text title="Expected output"
+Splitter ID                          Status      Version      Last Heartbeat
+================================================================================
+splitter-vplex-01.prod.local         Connected   5.2.1.1234   2024-01-15 14:32:18
+splitter-vplex-02.prod.local         Connected   5.2.1.1234   2024-01-15 14:32:15
+splitter-vplex-03.prod.local         Connected   5.2.1.1234   2024-01-15 14:32:19
+splitter-vplex-04.prod.local         Connected   5.2.1.1234   2024-01-15 14:32:17
+
+Total Splitters: 4 | Connected: 4 | Disconnected: 0
+```
+
+!!! warning "Common errors"
+    **`boxmgmt: command not found`** — Ensure you are running this command on a RecoverPoint appliance with boxmgmt CLI installed, or source the appropriate environment setup script.
+    **`Error: Unable to connect to splitter splitter-vplex-01.prod.local - Connection timeout`** — Verify network connectivity and that the VPLEX splitter is powered on and reachable from the RecoverPoint appliance.
+    **`Error: Authentication failed - Invalid credentials`** — Confirm your boxmgmt user account has sufficient privileges; re-authenticate or check the RecoverPoint user role permissions.
 !!! warning "VPLEX Splitter Auto-Attach"
     VPLEX splitters attach to all eligible RPA clusters automatically when zoning and masking are configured. Verify that only the intended RPA clusters are attached to avoid unexpected replication paths.
 
@@ -164,6 +180,25 @@ esxcli software vib install -v /tmp/RecoverPoint-*.vib --no-sig-check
 esxcli software vib list | grep -i recoverpoint
 ```
 
+
+```text title="Expected output"
+Installation Result
+   Message: The update completed successfully, but the system needs to be rebooted for the changes to take effect.
+   Reboot Required: true
+
+VIB Installation Status:
+   Vendor: Dell
+   Name: RecoverPoint
+   Version: 5.4.2.1
+   Acceptance Level: PartnerSupported
+
+RecoverPoint                                    5.4.2.1                PartnerSupported   2024-01-15
+```
+
+!!! warning "Common errors"
+    **`VIB signature verification failed. Use --no-sig-check to override.`** — Add the `--no-sig-check` flag to the esxcli command as shown in the documentation.
+    **`Error: Could not find a matching VIB package at /tmp/RecoverPoint-*.vib`** — Verify the VIB file exists in /tmp/ by running `ls -la /tmp/RecoverPoint*.vib` and confirm the filename matches the glob pattern.
+    **`HTTP 403 Forbidden` when accessing the vRPA cluster VIB URL`** — Ensure the vRPA cluster IP is correct and reachable from vCenter, and verify network connectivity with `ping <vRPA-cluster-IP>`.
 After VIB installation, trust the splitter from the vRPA cluster UI or via REST API:
 
 ```bash
@@ -174,6 +209,23 @@ curl -sk -X POST "https://<vRPA-IP>/api/splitters/trust" \
   -d '{"esxiHost": "<ESXi-FQDN>"}'
 ```
 
+
+```text title="Expected output"
+{
+  "id": "splitter-7f4a2c91",
+  "status": "success",
+  "message": "Trust relationship established",
+  "esxiHost": "esx-prod-04.datacenter.local",
+  "timestamp": "2024-01-15T14:32:18Z",
+  "certificateThumbprint": "A1:B2:C3:D4:E5:F6:7G:8H:9I:0J:1K:2L:3M:4N:5O:6P",
+  "trustedAt": "2024-01-15T14:32:18.451Z"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; if still failing, verify vRPA IP is correct and accessible).
+    **`curl: (7) Failed to connect to <vRPA-IP> port 443: Connection refused`** — Confirm vRPA management interface is running and listening on port 443 with `netstat -tlnp | grep 443` on the vRPA appliance.
+    **`{"status":"error","message":"Invalid credentials"}`** — Verify the admin password is correct and URL-encoded if it contains special characters; test with `curl -sk -u admin:password https://<vRPA-IP>/api/health` first.
 ---
 
 ## Consistency Group Configuration
@@ -215,6 +267,48 @@ boxmgmt cg check_all
 boxmgmt journal check_all
 ```
 
+
+```text title="Expected output"
+System Status Report
+====================
+System Name: RecoverPoint-RPA-01
+System ID: 5a3c8b2f-9e1d-47c2-b4a9-2c7d1e5f8a3b
+Software Version: 5.4.2.1
+Build: 20231015-001
+Uptime: 45 days 12 hours 23 minutes
+Cluster Status: HEALTHY
+Replication Status: ACTIVE
+Journal Usage: 62%
+Cache Usage: 48%
+
+Consistency Groups
+==================
+CG-PROD-DB-01 (ID: cg-001) — Status: PROTECTED — RPO: 5m
+CG-PROD-APP-02 (ID: cg-002) — Status: PROTECTED — RPO: 15m
+CG-DEV-TEST-03 (ID: cg-003) — Status: PROTECTED — RPO: 30m
+CG-ARCHIVE-04 (ID: cg-004) — Status: PROTECTED — RPO: 1h
+...
+
+Consistency Group Health Check
+===============================
+CG-PROD-DB-01: PASS (last check: 2024-01-15 14:32:15 UTC)
+CG-PROD-APP-02: PASS (last check: 2024-01-15 14:32:18 UTC)
+CG-DEV-TEST-03: PASS (last check: 2024-01-15 14:32:21 UTC)
+CG-ARCHIVE-04: PASS (last check: 2024-01-15 14:32:24 UTC)
+All consistency groups: HEALTHY
+
+Journal Health Check
+====================
+Journal Volume 1: HEALTHY (Used: 58%, Errors: 0)
+Journal Volume 2: HEALTHY (Used: 65%, Errors: 0)
+Journal Volume 3: HEALTHY (Used: 61%, Errors: 0)
+All journals: OPERATIONAL
+```
+
+!!! warning "Common errors"
+    **`boxmgmt: command not found`** — Ensure the RecoverPoint management CLI is installed and the PATH includes the boxmgmt binary directory (typically `/opt/RecoverPoint/bin`).
+    **`Error: Unable to connect to cluster — Connection refused on port 7225`** — Verify the RecoverPoint cluster is running and accessible; check network connectivity and firewall rules for the management port.
+    **`CG-PROD-DB-01: FAIL — Journal write error detected`** — Run `boxmgmt journal repair` on the affected journal volume and verify storage array connectivity before proceeding with upgrade.
 ### Rolling Upgrade Sequence
 
 RecoverPoint upgrades use EasyInstaller and are performed in a rolling fashion — one RPA node at a time within each cluster, maintaining replication continuity throughout.
@@ -279,6 +373,35 @@ esxcli system maintenanceMode set --enable false
 # Step 6 — Re-trust the splitter from vRPA UI
 ```
 
+
+```text title="Expected output"
+Entering maintenance mode...
+(no output — command completes silently)
+Removal Result
+   Message: The update completed successfully, but the system needs to be rebooted.
+   Reboot Required: true
+   VIBs Installed: RecoverPoint-splitter-8.2.1.0-12345678
+   VIBs Removed: RecoverPoint-splitter-8.2.0.5-87654321
+   VIBs Skipped: 
+   VIBs Obsoleted: 
+   VIBs Rolled Back: 
+   Reboot Required: true
+Installation Result
+   Message: The update completed successfully, but the system needs to be rebooted.
+   Reboot Required: true
+   VIBs Installed: RecoverPoint-splitter-8.2.1.0-12345678
+   VIBs Removed: 
+   VIBs Skipped: 
+   VIBs Obsoleted: 
+   VIBs Rolled Back: 
+Exiting maintenance mode...
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`VIB RecoverPoint-splitter not installed`** — Verify the VIB name matches the installed package using `esxcli software vib list | grep -i recoverpoint` before removal.
+    **`[Errno 2] No such file or directory: /tmp/RecoverPoint-<new-version>.vib`** — Confirm the VIB file exists and the version placeholder is replaced with the actual version number (e.g., `RecoverPoint-8.2.1.0.vib`).
+    **`Host has running virtual machines`** — Complete vMotion of all VMs to other hosts before entering maintenance mode, or use `esxcli vm process list` to verify the host is empty.
 !!! warning "Minimum Splitter Redundancy"
     Keep at least 2 ESXi hosts per cluster with a working splitter active at all times. Single-host splitter maintenance is safe only if at least one other host in the cluster still has an active splitter.
 
@@ -306,6 +429,46 @@ boxmgmt journal check_all
 boxmgmt splitter list
 ```
 
+
+```text title="Expected output"
+RPA Software Version: 5.4.2.1 (Build 12847)
+Firmware Version: 8.1.5
+System Status: HEALTHY
+Cluster Mode: Active-Active
+Node 1 (rpa-prod-01.dc1): ONLINE
+Node 2 (rpa-prod-02.dc1): ONLINE
+Replication Link Status: ACTIVE
+
+CG Name                    State         Type        RTO(min)  RPO(sec)
+cg-db-prod-01              REPLICATING   Synchronous 5         0
+cg-app-tier-02             REPLICATING   Asynchronous 60        30
+cg-fileserver-backup       REPLICATING   Synchronous 5         0
+cg-vm-cluster-03           REPLICATING   Asynchronous 120       45
+cg-archive-data            REPLICATING   Asynchronous 180       60
+
+CG Check Summary: 5 CGs checked
+  HEALTHY: 5
+  WARNING: 0
+  CRITICAL: 0
+All CGs replicating with acceptable RPO.
+
+Journal Utilization Report:
+  Journal 1: 62% utilized (4.2 GB / 6.8 GB)
+  Journal 2: 58% utilized (3.9 GB / 6.8 GB)
+  Journal 3: 71% utilized (4.8 GB / 6.8 GB)
+All journals operating within normal parameters.
+
+Splitter Connectivity Status:
+  Splitter ID: splitter-emc-01 | IP: 192.168.50.41 | Status: CONNECTED | Link: 10Gbps
+  Splitter ID: splitter-emc-02 | IP: 192.168.50.42 | Status: CONNECTED | Link: 10Gbps
+  Splitter ID: splitter-netapp-01 | IP: 192.168.51.33 | Status: CONNECTED | Link: 1Gbps
+All splitters healthy and communicating.
+```
+
+!!! warning "Common errors"
+    **`ERROR: RPA cluster unreachable — verify network connectivity to the RPA management IP and confirm firewall rules allow port 7225.`**
+    **`WARNING: Journal utilization above 85% on Journal 2 — increase journal size or reduce replication load to prevent RPO violations.`**
+    **`ERROR: Splitter splitter-emc-02 status DISCONNECTED — check physical network cable, verify splitter IP configuration, and restart the splitter management service.`**
 Validation checklist after upgrade:
 
 - [ ] All RPA nodes show correct new software version
@@ -324,6 +487,23 @@ boxmgmt cg enable_image_access <CG-name> latest
 boxmgmt cg disable_image_access <CG-name>
 ```
 
+
+```text title="Expected output"
+Enabling image access for consistency group 'prod-db-cg'...
+Image access enabled successfully.
+Mount point: /mnt/recoverpoint/prod-db-cg-snapshot-20240115T143022Z
+Snapshot ID: rp-img-7f4a2c91-e8d9-4b12-9c3f-5d8e1a2b3c4d
+Access expires in: 24 hours
+Status: ACTIVE
+
+Disabling image access for consistency group 'prod-db-cg'...
+Image access disabled successfully.
+Cleanup completed. Snapshot unmounted from /mnt/recoverpoint/prod-db-cg-snapshot-20240115T143022Z
+```
+
+!!! warning "Common errors"
+    **`Error: Consistency group 'prod-db-cg' not found or offline`** — Verify the CG name matches exactly and check cluster connectivity with `boxmgmt cluster status`.
+    **`Error: Image access already enabled for this CG. Disable existing access before enabling new access.`** — Run `boxmgmt cg disable_image_access <CG-name>` first, then retry the enable command.
 ---
 
 ## Refresh Planning

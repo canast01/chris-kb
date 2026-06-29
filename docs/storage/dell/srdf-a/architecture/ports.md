@@ -55,6 +55,24 @@ curl -sk -o /dev/null -w "%{http_code}" https://<powermax-ip>:8443/univmax/resta
 symrdf -g <rdfg-number> query
 ```
 
+
+```text title="Expected output"
+200
+Symmetrix ID: 000296802151
+RDF Group Number: 4
+Local Director: 4e
+Remote Director: 5e
+SRDF Mode: Synchronous
+RDF Link Status: Ready
+Local RA Port: 4e.0
+Remote RA Port: 5e.0
+Replication Status: Synchronized
+Write Pending (tracks): 0
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the PowerMax certificate into your system's CA bundle.
+    **`symcli error: (0x00000001) SYMAPI_C_PROC_FAILURE - Could not connect to the Symmetrix`** — Verify the Symmetrix ID is correct, the SYMAPI daemon is running on the admin workstation, and network connectivity exists to the PowerMax management interface.
 ## See also
 
 - [Dell SRDF/A — Architecture](../how-it-works/)

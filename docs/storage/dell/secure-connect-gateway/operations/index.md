@@ -60,6 +60,50 @@ dsagw certificate show
 dsagw proxy show
 ```
 
+
+```text title="Expected output"
+admin@scg-appliance:~$ dsagw status
+Gateway Service Status: RUNNING
+Service PID: 2847
+Uptime: 45 days 12 hours 23 minutes
+Last Health Check: 2024-01-15 14:32:18 UTC
+
+admin@scg-appliance:~$ dsagw list-devices
+Device ID                            | Hostname          | IP Address      | Status    | Last Seen
+7a4c9f2e-1b3d-4e8f-a2c1-5d6e7f8g9h0i | dell-server-01    | 192.168.1.45    | Connected | 2024-01-15 14:35:02
+8b5d0g3f-2c4e-5f9g-b3d2-6e7f8g9h0i1j | dell-server-02    | 192.168.1.46    | Connected | 2024-01-15 14:34:55
+9c6e1h4g-3d5f-6g0h-c4e3-7f8g9h0i1j2k | dell-server-03    | 192.168.1.47    | Disconnected | 2024-01-15 13:22:10
+...
+
+admin@scg-appliance:~$ dsagw version
+SCG Version: 2.4.1
+Build Number: 4521
+Release Date: 2024-01-10
+Firmware: 5.2.3
+
+admin@scg-appliance:~$ dsagw log show --last 100
+[2024-01-15 14:35:18] INFO: Device 7a4c9f2e-1b3d-4e8f-a2c1-5d6e7f8g9h0i heartbeat received
+[2024-01-15 14:34:55] INFO: Device 8b5d0g3f-2c4e-5f9g-b3d2-6e7f8g9h0i1j heartbeat received
+[2024-01-15 13:22:10] WARN: Device 9c6e1h4g-3d5f-6g0h-c4e3-7f8g9h0i1j2k connection timeout
+[2024-01-15 12:15:43] ERROR: TLS handshake failed for 10.50.12.8 - certificate validation error
+[2024-01-15 11:08:22] INFO: Gateway service restarted successfully
+...
+
+admin@scg-appliance:~$ dsagw connectivity-check
+Testing connectivity to Dell SupportAssist Cloud...
+Backend Endpoint: api.dell-supportassist.com:443
+Status: REACHABLE
+Response Time: 142ms
+Authentication: VALID
+
+admin@scg-appliance:~$ dsagw certificate show
+Certificate Subject: CN=scg-appliance.internal,O=Dell Inc.
+Issuer: CN=Dell Intermediate CA,O=Dell Inc.
+Valid From: 2023-06-15 10:30:00 UTC
+Valid Until: 2025-06-15 10:30:00 UTC
+Days Until Expiry: 517 days
+Status: VALID
+```
 ## Change Readiness
 
 - [ ] Confirm all connected devices are currently sending telemetry (`dsagw list-devices` — all CONNECTED)

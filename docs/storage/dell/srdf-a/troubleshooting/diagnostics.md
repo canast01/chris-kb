@@ -99,6 +99,27 @@ symrdf query -sid <SID> -rdfg <rdfg-number>
 #   R2_PAIR_ST = "Transmitting"  → large initial sync or re-sync in progress
 ```
 
+
+```text title="Expected output"
+# List all SRDF groups for a given array SID
+RDFG  Mode  Pair_Count  State
+1     A     4           Ready
+2     A     2           Ready
+3     A     6           Suspended
+4     A     3           Ready
+
+# Query detailed state for a specific RDFG
+RDFG  R1_ST    R2_ST           R2_PAIR_ST  MODE  LINK_ST  R1_CAPACITY  R2_CAPACITY
+1     Ready    Write Disabled  Consistent  A     Ready    10.5TB       10.5TB
+2     Ready    Write Disabled  Consistent  A     Ready    5.2TB        5.2TB
+3     Suspended Write Disabled Consistent  A     Ready    8.7TB        8.7TB
+4     Ready    Write Disabled  Transmitting A    Ready    15.3TB       15.3TB
+```
+
+!!! warning "Common errors"
+    **`symrdf: Error: Invalid SID <SID>`** — Verify the array SID with `symcfg list` and ensure it matches your target array identifier.
+    **`LINK_ST = "Not Ready"`** — Check RF port connectivity and WAN link status with `symrdf -sid <SID> -rdfg <rdfg-number> check` and verify network routing between sites.
+    **`R2_PAIR_ST = "Partitioned"`** — Resume replication with `symrdf -sid <SID> -rdfg <rdfg-number> resume` after confirming R2 data integrity and link restoration.
 **Decision flow:**
 - All fields healthy but lag alert firing → proceed to Step 2 (performance check)
 - `LINK_ST = Not Ready` → proceed to Step 4 (RF link diagnostics)
@@ -123,6 +144,29 @@ symrdf showperf -sid <SID> -rdfg <rdfg-number> -a -delta_t 60
 symrdf showperf -sid <SID> -a -delta_t 60 | grep -E "RDFG|LAG|CYCLE"
 ```
 
+
+```text title="Expected output"
+Symmetrix ID: 000297123456789
+
+                                SRDF/A Performance Report
+                                  Sample Interval: 60 sec
+
+RDFG  Dir  DSE_LAG  CYCLE_TIME  HOST_MBS  LINK_MBS  RDFG_LAG  Q_DEPTH  STATE
+----  ---  -------  ----------  --------  --------  --------  -------  -----
+  001   R1    2.34         30.0      145.2     142.8       3.12        2  Normal
+  001   R2    1.89         30.0       18.3      18.1       2.98        0  Normal
+  002   R1    5.67         45.0      287.5     201.3      12.45       18  Normal
+  002   R2    4.12         45.0       22.1      21.9      11.89        1  Normal
+  003   R1    0.45         15.0       52.3      51.9       1.23        0  Normal
+  003   R2    0.38         15.0        8.7       8.6       1.18        0  Normal
+
+Summary: 6 SRDF/A groups monitored. Max RDFG_LAG: 12.45 sec (RDFG 002 R1)
+```
+
+!!! warning "Common errors"
+    **`symrdf: ERROR - Invalid RDF group number <rdfg-number>`** — Verify the RDF group number exists with `symrdf list -sid <SID>` and use the correct numeric identifier.
+    **`symrdf: ERROR - Symmetrix <SID> not found or not accessible`** — Confirm the SID is correct and the Symmetrix array is online and reachable via `symcfg list -v`.
+    **`No matching SRDF groups found`** — Remove the `-rdfg` filter or specify a valid group; use `symrdf list -sid <SID>` to list all configured SRDF/A groups.
 **Interpreting lag:**
 - `DSE_LAG` consistently above 2× `CYCLE_TIME` → link bandwidth is saturated; verify with Step 4
 - `HOST_MBS` is 2× or more of `LINK_MBS` → production write rate exceeds link capacity; either throttle applications or upgrade link bandwidth
@@ -147,6 +191,35 @@ symrdf list -sid <SID> -rdfg <rdfg-number> -v
 # Shows: cycle time, number of RA groups, director config, port assignments
 ```
 
+
+```text title="Expected output"
+Verifying SRDF pair consistency...
+Pair consistency check completed successfully.
+No diverged tracks detected.
+
+Symmetrix ID: 000123456789
+Device Group: prod_srdf_dg
+   Device: 0ABC
+      SRDF State: Synchronized
+      Pair Type: R1
+      Mode: Synchronous
+   Device: 0DEF
+      SRDF State: Synchronized
+      Pair Type: R2
+      Mode: Synchronous
+
+RDFG Number: 1
+Cycle Time (ms): 5000
+RA Groups: 4
+Director Configuration: FA-1E, FA-2E
+Port Assignments: 0, 1
+Link Status: Online
+Replication Rate: 45.2 MB/s
+```
+
+!!! warning "Common errors"
+    **`symrdf: Error: Invalid RDFG number <rdfg-number> for Symmetrix <SID>`** — Verify the RDFG number exists by running `symrdf list -sid <SID>` without the `-rdfg` parameter.
+    **`symdg: Error: Device group '<group-name>' not found`** — Confirm the device group name is correct and exists on this Symmetrix by running `symdg list`.
 ---
 
 ## Step 4 — Check RF ports and SRDF link health
@@ -169,6 +242,29 @@ syminq -sid <SID> rdf
 # Key: Packet loss > 0% or Retransmit count > 0 = WAN link quality issue
 ```
 
+
+```text title="Expected output"
+# symcfg -sid 000123456789 list -rdf -v
+Director  Port  Link_Status  Speed  RDF_Group  Remote_SID
+RA        0     Online       16G    1          000987654321
+RA        1     Online       16G    1          000987654321
+RA        2     Online       16G    2          000987654322
+RA        3     Offline      16G    2          000987654322
+RA        4     Online       32G    3          000987654323
+
+# syminq -sid 000123456789 rdf
+RA Port  State      Utilization  Queue_Depth  Link_Speed  Remote_Port
+0   0    Ready      12.3%        0            16Gbps      RA 0
+1   1    Ready      8.7%         0            16Gbps      RA 1
+2   2    Ready      45.2%        2            32Gbps      RA 2
+3   3    Failed     0.0%         N/A          16Gbps      N/A
+4   4    Ready      19.5%        1            32Gbps      RA 4
+```
+
+!!! warning "Common errors"
+    **`symcfg: Cannot open device driver`** — Verify the Symmetrix CLI is installed and the EMC management agent is running with `sudo /etc/init.d/emc-management start`.
+    **`syminq: SID <SID> not found in configuration`** — Confirm the SID is correct and the array is discovered by running `symcfg list` to display all available arrays.
+    **`LINK_STATUS: Offline`** — Check physical FC cable connections, verify switch zoning includes both array and remote site ports, and confirm the remote array SRDF port is also online.
 **If RF port shows "Offline":**
 1. Check the physical FC cable on the back-end RF director
 2. Check the FC switch zone that includes the RF ports from both arrays
@@ -198,6 +294,57 @@ ls -lth /var/symapi/log/ | head -10
 # Attach symapi.log and any core dumps to the Dell TAC case
 ```
 
+
+```text title="Expected output"
+=== symrdf query ===
+RDF Group: 000
+  RDF Mode: Synchronous
+  RDF State: Synchronized
+  Local SymmID: 000123456789ABC
+  Remote SymmID: 000987654321XYZ
+  Consistency State: Consistent
+  
+=== symrdf showperf ===
+SymmID: 000123456789ABC
+RDF Group 000 Performance Data (60 second delta):
+  Write I/Os: 1247
+  Write MBs: 312.4
+  Read I/Os: 3891
+  Read MBs: 987.2
+  
+=== symcfg rdf ===
+Symmetrix ID: 000123456789ABC
+RDF Information
+  RDF Group 000:
+    Local Port: SE-4E:0
+    Remote Port: SE-4E:0
+    Remote Symmetrix: 000987654321XYZ
+    RDF Mode: Synchronous
+    
+=== symrdf list ===
+Symmetrix ID: 000123456789ABC
+RDF Group: 000
+  State: Synchronized
+  Mode: Synchronous
+  Pair Count: 24
+  
+total 2847
+-rw-r--r-- 1 root root 1247856 Jan 15 14:32 symapi.log
+-rw-r--r-- 1 root root  384921 Jan 15 14:28 symapi.log.1
+-rw-r--r-- 1 root root  156234 Jan 15 14:24 symapi.log.2
+-rw-r--r-- 1 root root   89456 Jan 15 14:20 symapi.log.3
+-rw-r--r-- 1 root root   45123 Jan 15 14:16 symapi.log.4
+-rw-r--r-- 1 root root   23891 Jan 15 14:12 symapi.log.5
+-rw-r--r-- 1 root root   12456 Jan 15 14:08 symapi.log.6
+-rw-r--r-- 1 root root    8934 Jan 15 14:04 symapi.log.7
+-rw-r--r-- 1 root root    5621 Jan 15 14:00 symapi.log.8
+-rw-r--r-- 1 root root    3847 Jan 15 13:56 symapi.log.9
+```
+
+!!! warning "Common errors"
+    **`symrdf: Error: Cannot connect to the Symmetrix`** — Verify the Symmetrix ID is correct and Solutions Enabler daemon (storsrvd) is running with `service storsrvd status`.
+    **`symrdf: Error: RDF Group <rdfg-number> not found`** — Confirm the RDF group number exists on the array using `symcfg -sid <SID> list -rdf` without specifying a group.
+    **`Permission denied` on `/var/symapi/log/`** — Run the diagnostic collection with `sudo` or as root user to access Solutions Enabler log files.
 ---
 
 ## Log locations
