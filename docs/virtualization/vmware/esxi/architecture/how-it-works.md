@@ -57,61 +57,7 @@ vmkernel -> vms: virtualised resources
 
 ### VMkernel Resource Scheduling
 
-```mermaid
-graph TB
-    subgraph VMs["VM Layer"]
-        VM1["VM 1<br/>Guest OS + VMX"]
-        VM2["VM 2<br/>Guest OS + VMX"]
-        VM3["VM 3<br/>Guest OS + VMX"]
-    end
-
-    subgraph SCHED["VMkernel Scheduler"]
-        CPU["CPU Scheduler<br/>vCPU → pCPU mapping<br/>%RDY / %CSTP / NUMA"]
-        MEM["Memory Manager<br/>TPS · Balloon · Compress · Swap"]
-    end
-
-    subgraph STORAGE["Storage I/O Path"]
-        PSA["Storage Stack — PSA<br/>NMP → SATP → PSP"]
-        HBA["HBA / iSCSI Initiator<br/>FC · iSCSI · NVMe-oF"]
-        DISKS["Physical Disks<br/>NVMe · SSD · HDD · SAN LUN"]
-    end
-
-    subgraph NETWORK["Network I/O Path"]
-        VSWITCH["vSwitch / dvSwitch<br/>vmknic · port groups · NIOC"]
-        PNIC["pNIC Uplinks<br/>10 / 25 / 100 GbE"]
-        PHYSNET["Physical Network<br/>ToR switch · fabric"]
-    end
-
-    subgraph HW["Hardware Layer"]
-        CPURAM["CPU / RAM<br/>x86 · NUMA nodes · ECC"]
-        NIC["NIC Hardware<br/>Intel · Broadcom · Mellanox"]
-        HBAHW["HBA Hardware<br/>QLogic · Emulex · NVMe"]
-    end
-
-    VM1 & VM2 & VM3 --> CPU
-    VM1 & VM2 & VM3 --> MEM
-    CPU --> PSA
-    CPU --> VSWITCH
-    MEM --> CPURAM
-    PSA --> HBA
-    HBA --> DISKS
-    VSWITCH --> PNIC
-    PNIC --> PHYSNET
-    DISKS --> HBAHW
-    PNIC --> NIC
-    CPURAM --- NIC
-    NIC --- HBAHW
-
-    classDef vmStyle fill:#2563eb,stroke:#1d4ed8,color:#fff
-    classDef schedStyle fill:#15803d,stroke:#166534,color:#fff
-    classDef ioStyle fill:#b45309,stroke:#92400e,color:#fff
-    classDef hwStyle fill:#7c3aed,stroke:#6d28d9,color:#fff
-
-    class VM1,VM2,VM3 vmStyle
-    class CPU,MEM schedStyle
-    class PSA,HBA,DISKS,VSWITCH,PNIC,PHYSNET ioStyle
-    class CPURAM,NIC,HBAHW hwStyle
-```
+![VMkernel Resource Scheduling](../../../../assets/virtualization-vmware-esxi-vmkernel-scheduling.svg)
 
 ---
 
