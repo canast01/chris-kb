@@ -87,6 +87,48 @@ nc -zv <peer-esxi-ip> 2233
 aws ec2 describe-security-groups --group-ids <evs-sg-id>
 ```
 
+
+```text title="Expected output"
+200
+200
+Connection to 10.42.18.15 port 2233 [tcp/*] succeeded!
+{
+    "SecurityGroups": [
+        {
+            "GroupId": "sg-0a7f2c8e9d1b4f3c2",
+            "GroupName": "evs-vsan-cluster",
+            "IpPermissions": [
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 2233,
+                    "ToPort": 2233,
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.42.18.0/24",
+                            "Description": "vSAN peer communication"
+                        }
+                    ]
+                },
+                {
+                    "IpProtocol": "tcp",
+                    "FromPort": 8182,
+                    "ToPort": 8182,
+                    "IpRanges": [
+                        {
+                            "CidrIp": "10.42.18.0/24"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example; if error persists, verify vCenter/NSX Manager is running and accessible).
+    **`Connection to <peer-esxi-ip> port 2233 [tcp/*] failed!`** — Verify the peer ESXi host IP is correct, the security group allows inbound port 2233 from the source ESXi host's security group, and the host is running.
+    **`An error occurred (InvalidGroupId.NotFound) when calling the DescribeSecurityGroups operation: The security group 'sg-xxxxx' does not exist`** — Confirm the EVS security group ID is correct and exists in the same AWS region and VPC as your EVS cluster.
 ## See also
 
 - [AWS EVS — Architecture](../how-it-works/)

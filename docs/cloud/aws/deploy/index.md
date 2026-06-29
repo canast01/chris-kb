@@ -853,6 +853,21 @@ aws securityhub get-findings \
     --output table
 ```
 
+
+```text title="Expected output"
+|                                          Title                                           | Severity | AccountId    |
+|------------------------------------------------------------------------------------------|----------|--------------|
+| IAM policy allows public access to S3 bucket                                             | CRITICAL | 123456789012 |
+| EC2 instance has unrestricted SSH access from 0.0.0.0/0                                  | CRITICAL | 123456789012 |
+| RDS database encryption is disabled                                                      | CRITICAL | 987654321098 |
+| CloudTrail logging is disabled for production account                                    | CRITICAL | 123456789012 |
+| Secrets Manager secret is not rotated in 90 days                                         | CRITICAL | 654321987654 |
+```
+
+!!! warning "Common errors"
+    **`An error occurred (AccessDenied) when calling the GetFindings operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: securityhub:GetFindings`** — Attach the `SecurityHubReadOnlyAccess` policy or equivalent to the IAM user/role.
+    **`An error occurred (ResourceNotFoundException) when calling the GetFindings operation: The request is missing a required parameter.`** — Ensure Security Hub is enabled in your AWS account by running `aws securityhub describe-hub`.
+    **`Invalid filter property SeverityLabel`** — Use the correct filter key `SeverityLabel` (case-sensitive) or check your Security Hub API version supports this filter.
 Address all `CRITICAL` findings before workloads are deployed into the accounts.
 
 ---

@@ -74,6 +74,46 @@ aws iam attach-role-policy --role-name EVS-ReadOnly \
   --policy-arn arn:aws:iam::aws:policy/AmazonEVSReadOnlyAccess
 ```
 
+
+```text title="Expected output"
+{
+    "UserId": "AIDACKCEVSXMPL12345",
+    "Account": "123456789012",
+    "Arn": "arn:aws:iam::123456789012:user/evs-admin"
+}
+{
+    "environments": [
+        {
+            "environmentId": "env-0a1b2c3d4e5f6g7h8",
+            "name": "production-us-east-1",
+            "status": "ACTIVE",
+            "createdAt": "2024-01-15T09:22:33Z"
+        },
+        {
+            "environmentId": "env-9i8j7k6l5m4n3o2p1",
+            "name": "staging-us-west-2",
+            "status": "ACTIVE",
+            "createdAt": "2024-01-10T14:45:12Z"
+        }
+    ]
+}
+{
+    "Role": {
+        "Path": "/",
+        "RoleName": "EVS-ReadOnly",
+        "RoleId": "AIDAQ7XMPLEXAMPLE9",
+        "Arn": "arn:aws:iam::123456789012:role/EVS-ReadOnly",
+        "CreateDate": "2024-01-20T11:33:47+00:00",
+        "AssumeRolePolicyDocument": "%7B%22Version%22%3A%222012-10-17%22%2C%22Statement%22%3A%5B%7B%22Effect%22%3A%22Allow%22%2C%22Principal%22%3A%7B%22AWS%22%3A%22arn%3Aaws%3Aiam%3A%3A123456789012%3Aroot%22%7D%2C%22Action%22%3A%22sts%3AAssumeRole%22%7D%5D%7D"
+    }
+}
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`An error occurred (AccessDenied) when calling the ListEnvironments operation: User: arn:aws:iam::123456789012:user/evs-admin is not authorized to perform: evs:ListEnvironments`** — Attach the `AmazonEVSFullAccess` or `AmazonEVSReadOnlyAccess` policy to the IAM user or role.
+    **`An error occurred (EntityAlreadyExists) when calling the CreateRole operation: Role with name EVS-ReadOnly already exists`** — Use `aws iam delete-role --role-name EVS-ReadOnly` first, or choose a different role name.
+    **`An error occurred (MalformedPolicyDocument) when calling the CreateRole operation: Invalid principal in AssumeRolePolicyDocument`** — Replace the hardcoded account ID `123456789012` with your actual AWS account ID from `aws sts get-caller-identity`.
 ## IAM Policy Design
 
 ### Minimal Cluster Management Policy
@@ -249,6 +289,28 @@ curl -sk -u "$SDDC_USER:$SDDC_PASS" \
   python3 -c "import sys,json; [print(f\"{u['name']}: {u['role']['name']}\") for u in json.load(sys.stdin)['elements']]"
 ```
 
+
+```text title="Expected output"
+{
+  "id": "usr-4a7c9e2f-b1d4-47e9-8f3a-2c5d8e1b9a6f",
+  "name": "ops-user@domain.com",
+  "role": {
+    "name": "OPERATOR",
+    "id": "role-op-001"
+  },
+  "type": "USER",
+  "creationTimestamp": "2024-01-15T14:32:18.456Z"
+}
+admin@domain.com: ADMIN
+ops-user@domain.com: OPERATOR
+sre-team@domain.com: OPERATOR
+backup-svc@domain.com: BACKUP_ADMIN
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; if still failing, verify SDDC_USER and SDDC_PASS are set correctly).
+    **`jq: command not found`** — Use the provided Python one-liner instead, or install jq with `apt-get install jq` and pipe to `jq '.elements[] | "\(.name): \(.role.name)"'`.
+    **`{"error":"Invalid role name OPERATOR"}`** — Verify the role name matches your VCF version (try ADMIN, OPERATOR, or BACKUP_ADMIN) by listing available roles with `curl -sk -u "$SDDC_USER:$SDDC_PASS" "https://sddc-manager.vcf.internal/v1/roles"`.
 ## Principle of Least Privilege
 
 Separate IAM identities by function. Do not use a single IAM role for both EVS cluster management and vSphere VM management — these are independent planes of control.

@@ -88,6 +88,35 @@ switchshow | head -20
 chassisshow | grep -i serial
 ```
 
+
+```text title="Expected output"
+FOS v9.1.0b
+Fabric OS v9.1.0b
+
+Switch State:   Online
+Switch Mode:    Native
+Switch Role:    Principal
+Switch Domain:  1
+Switch Name:    brocade-switch-01
+Switch WWN:     10:00:00:27:f1:5a:bc:d0
+Enet IP Addr:   192.168.1.100
+FC Port Count:  16
+FC Port Speed:  16Gb
+Health Status:  OK
+
+Chassis WWN:    10:00:00:27:f1:5a:bc:d0
+Chassis Name:   brocade-switch-01
+Chassis Model:  Brocade G630
+Chassis Serial: SN-BR-G630-0847291
+Fabric ID:      128
+...
+
+Chassis Serial Number: SN-BR-G630-0847291
+```
+
+!!! warning "Common errors"
+    **`switchshow: command not found`** — Ensure you are logged into the Brocade switch via SSH/Telnet, not your local workstation; these commands run on the switch itself.
+    **`Permission denied`** — Verify your user account has admin privileges on the switch; use `userconfig --show` to check your role.
 ### 2. Capture fabric state (before anything changes)
 
 ```bash
@@ -104,6 +133,41 @@ islshow
 porterrshow
 ```
 
+
+```text title="Expected output"
+Switch Name: fabric-switch-01
+Switch Domain ID: 1
+Switch IP Address: 192.168.1.10
+Switch Model: Brocade 6510
+Switch Firmware: v8.2.1b
+Switch Status: Online
+
+Fabric Members:
+  Domain 1: fabric-switch-01 (192.168.1.10)
+  Domain 2: fabric-switch-02 (192.168.1.11)
+  Domain 3: fabric-switch-03 (192.168.1.12)
+
+ISL Ports:
+  Port 0/24: fabric-switch-01 to fabric-switch-02 (Online)
+  Port 0/25: fabric-switch-01 to fabric-switch-03 (Online)
+  Port 1/24: fabric-switch-02 to fabric-switch-03 (Online)
+
+Current configuration: cfg_prod
+Defined zones: 25
+Active zones: 25
+
+Port Error Summary:
+  Port 0/1: CRC=0, Loss-Sync=0, Loss-Sig=0
+  Port 0/2: CRC=2, Loss-Sync=0, Loss-Sig=0
+  Port 0/15: CRC=0, Loss-Sync=1, Loss-Sig=0
+  Port 1/8: CRC=15, Loss-Sync=3, Loss-Sig=1
+  ...
+```
+
+!!! warning "Common errors"
+    **`fabricshow: command not found`** — Verify you are logged into the Brocade switch CLI (not the host OS) by checking the prompt shows `switch>` or `switch#`.
+    **`Access denied: insufficient privileges`** — Ensure your user account has admin or read-only permissions; use `userconfig --show` to verify role assignments.
+    **`ISL port offline or isolated`** — Check physical cable connections and run `portshow <port>` to diagnose link state; verify switch firmware versions match across the fabric.
 Copy the full output of each command into a text file. Paste this into the TAC case description — it gives TAC an immediate view of the fabric state at the time of the issue.
 
 ### 3. Run supportsave on each affected switch (takes 2–5 minutes per switch)
@@ -119,6 +183,26 @@ supportsave
 # It includes: running config, all logs, zone database, port stats, SNMP history
 ```
 
+
+```text title="Expected output"
+Preparing support save archive...
+Collecting system information...
+Collecting configuration data...
+Collecting log files...
+Collecting zone database...
+Collecting port statistics...
+Collecting SNMP history...
+Creating archive: support_sw-fcswitch01_20240115_143022.tar.gz
+Archive size: 287 MB
+Transferring to scp-server.corp.local:/backups/fabric-logs/
+Transfer complete: support_sw-fcswitch01_20240115_143022.tar.gz
+Archive stored at: /backups/fabric-logs/support_sw-fcswitch01_20240115_143022.tar.gz
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify SSH credentials and that the SCP server's SSH key is configured with `ssave --scp <username>@<scp-server-ip>:<path>` using a valid user account.
+    **`No space left on device`** — Check available disk space on the SCP destination with `df -h` and ensure at least 500 MB is free, or configure an alternate SCP path.
+    **`Connection refused`** — Confirm the SCP server is reachable and SSH is running on port 22 by testing with `ping <scp-server-ip>` and `telnet <scp-server-ip> 22` from the switch.
 Run supportsave on **every** switch in the affected fabric, not just the one that appears to be the source. Fabric issues often show on the downstream switch, not the root cause switch.
 
 ### 4. Capture the error log (timeline of events)
@@ -131,6 +215,41 @@ errshow | head -100
 errshow > /tmp/errshow-$(hostname)-$(date +%Y%m%d).txt
 ```
 
+
+```text title="Expected output"
+Error Log ID: 0x000001a2 | Severity: INFORMATIONAL | Time: 2024-01-15 14:32:18 UTC
+  Message: Port 0/1 link up at 16Gbps
+  Source: portLogicalModule
+
+Error Log ID: 0x000001a1 | Severity: WARNING | Time: 2024-01-15 14:28:45 UTC
+  Message: Temperature sensor reading 62°C (threshold: 70°C)
+  Source: environmentalMonitoring
+
+Error Log ID: 0x000001a0 | Severity: INFORMATIONAL | Time: 2024-01-15 14:15:22 UTC
+  Message: Fabric reconfiguration completed successfully
+  Source: fabricManager
+
+Error Log ID: 0x0000019f | Severity: CRITICAL | Time: 2024-01-15 13:52:10 UTC
+  Message: Port 1/3 link down - signal loss detected
+  Source: portLogicalModule
+
+Error Log ID: 0x0000019e | Severity: WARNING | Time: 2024-01-15 13:48:33 UTC
+  Message: SFP module temperature elevated on port 2/5
+  Source: sfpMonitoring
+
+Error Log ID: 0x0000019d | Severity: INFORMATIONAL | Time: 2024-01-15 13:30:15 UTC
+  Message: Configuration backup completed to remote server 10.50.12.8
+  Source: configManager
+
+...
+(94 additional entries)
+
+/tmp/errshow-switch-prod-01-20240115.txt
+```
+
+!!! warning "Common errors"
+    **`errshow: command not found`** — Verify you are logged into a Brocade Fabric OS switch (not a Linux host); this command only exists on switch CLI.
+    **`Permission denied`** — Ensure your user account has administrative privileges; request `admin` role assignment from the fabric administrator.
 ### 5. Write the timeline
 
 ```text
@@ -242,6 +361,59 @@ snmpconfig --show
 version
 ```
 
+
+```text title="Expected output"
+Switch Name:   brocade-switch-01
+Switch State:  Online
+Fabric ID:     100
+FC Address ID: 010000
+Fabric Parameters (Max R_A_TOV): 32 seconds
+Connection Parameters (E_D_TOV): 2 seconds
+Ports:  16
+PortName  PortType  State     Proto  Connected PortWWN
+0         F-Port    Online    FC-4   host-01   50:00:09:73:a1:20:00:01
+1         F-Port    Online    FC-4   host-02   50:00:09:73:a1:20:00:02
+2         E-Port    Online    FC-4   switch-02 50:00:09:73:a1:20:00:03
+3         F-Port    Online    FC-4   storage   50:00:09:73:a1:20:00:04
+4-15      F-Port    Offline   -      -         -
+
+ISL Port List:
+Port 2 (brocade-switch-01) <-> Port 2 (brocade-switch-02)
+Port 3 (brocade-switch-01) <-> Port 3 (brocade-switch-02)
+
+Port Status and Counters:
+Port 0: Online, Speed: 16Gb, State: Enabled, Frames: 1,234,567
+Port 1: Online, Speed: 16Gb, State: Enabled, Frames: 987,654
+Port 2: Online, Speed: 16Gb, State: Enabled, Frames: 2,456,789
+Port 3: Online, Speed: 16Gb, State: Enabled, Frames: 654,321
+Port 4-15: Offline
+
+Error Log (last 50 entries):
+[2024-01-15 14:32:10] Port 0: Link up
+[2024-01-15 14:31:45] Port 1: Link up
+[2024-01-15 14:25:12] Fan module 1: Status OK
+[2024-01-15 14:20:33] Temperature sensor: 42°C (Normal)
+[2024-01-15 13:45:22] Port 2: ISL established
+[2024-01-15 13:44:55] Port 3: ISL established
+
+Port Error Counters:
+Port 0: CRC: 0, Loss-of-Sync: 0, Timeout: 0
+Port 1: CRC: 0, Loss-of-Sync: 0, Timeout: 0
+Port 2: CRC: 0, Loss-of-Sync: 0, Timeout: 0
+Port 3: CRC: 0, Loss-of-Sync: 0, Timeout: 0
+
+cfg: prod_config
+Defined configurations:
+prod_config
+test_config
+Effective configuration:
+prod_config
+
+SNMP Trap History:
+Trap ID: 1001, Type: linkUp, Port: 0, Timestamp: 2024-01-15 14:32:10
+Trap ID: 1002, Type: linkUp, Port: 1, Timestamp: 2024-01-15 14:31:45
+Trap ID: 1003, Type:
+```
 ---
 
 ## Support Tiers and SLA Reference

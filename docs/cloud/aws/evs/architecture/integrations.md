@@ -252,6 +252,19 @@ aws cloudwatch put-metric-alarm \
   --alarm-actions arn:aws:sns:us-east-1:123456789012:evs-alerts
 ```
 
+
+```text title="Expected output"
+{
+    "AlarmArn": "arn:aws:cloudwatch:us-east-1:123456789012:alarm:evs-host-unhealthy"
+}
+{
+    "AlarmArn": "arn:aws:cloudwatch:us-east-1:123456789012:alarm:evs-host-count-low"
+}
+```
+
+!!! warning "Common errors"
+    **`An error occurred (InvalidParameterValue) when calling the PutMetricAlarm operation: Invalid namespace: AWS/EVS`** — Use a custom namespace like `EVS/Cluster` or verify the metric namespace exists in your CloudWatch metrics.
+    **`An error occurred (ValidationError) when calling the PutMetricAlarm operation: 1 validation error detected: Value at 'alarmActions' failed to satisfy constraint: Member must satisfy regular expression pattern: arn:aws[a-z\-]*:[a-z0-9\-]+:.*`** — Verify the SNS topic ARN is correctly formatted and the topic exists in the specified region.
 ## AWS Native Service Integration
 
 ```bash
@@ -287,6 +300,57 @@ aws cloudwatch get-metric-statistics \
   --end-time $(date -u +%Y-%m-%dT%H:%M:%SZ)
 ```
 
+
+```text title="Expected output"
+{
+    "VpcEndpoint": {
+        "VpcEndpointId": "vpce-0a1b2c3d4e5f6g7h8",
+        "VpcId": "vpc-evs-xxx",
+        "ServiceName": "com.amazonaws.us-east-1.s3",
+        "State": "available",
+        "RouteTableIds": [
+            "rtb-evs-workload"
+        ],
+        "CreationTimestamp": "2024-01-15T14:32:18.000Z"
+    }
+}
+{
+    "HostedZone": {
+        "Id": "/hostedzone/Z0A1B2C3D4E5F6",
+        "Name": "vcf.internal.",
+        "CallerReference": "1705334538",
+        "Config": {
+            "PrivateZone": true
+        },
+        "ResourceRecordSetCount": 2
+    },
+    "ChangeInfo": {
+        "Id": "/change/C2ABCD1234EF5",
+        "Status": "PENDING",
+        "SubmittedAt": "2024-01-15T14:32:40.000Z"
+    }
+}
+{
+    "Datapoints": [
+        {
+            "Timestamp": "2024-01-15T14:00:00Z",
+            "Average": 1.0,
+            "Unit": "Count"
+        },
+        {
+            "Timestamp": "2024-01-15T14:05:00Z",
+            "Average": 1.0,
+            "Unit": "Count"
+        }
+    ],
+    "Label": "HostStatus"
+}
+```
+
+!!! warning "Common errors"
+    **`An error occurred (InvalidVpcId.NotFound) when calling the CreateVpcEndpoint operation: The VPC ID 'vpc-evs-xxx' does not exist`** — Replace `vpc-evs-xxx` with your actual EVS VPC ID from the AWS console.
+    **`An error occurred (InvalidInput) when calling the CreateHostedZone operation: Invalid VPC association`** — Ensure the VPC ID exists in the specified region and the VPC has DNS support enabled.
+    **`An error occurred (InvalidParameterValue) when calling the GetMetricStatistics operation: The parameter StartTime must be before EndTime`** — Verify the system clock is correct and that the `-v-1H` date offset syntax is supported on your OS (use `date -u -d '1 hour ago'` on Linux instead).
 ## See also
 
 - [Amazon EVS — How It Works](../how-it-works/)

@@ -77,6 +77,25 @@ echo "  PASSED: $PASS  FAILED: $FAIL"
 [[ "$FAIL" -eq 0 ]] && exit 0 || exit 1
 ```
 
+
+```text title="Expected output"
+=== EVS Health Check 2024-01-15 ===
+
+[AWS EVS Cluster]
+  [OK]  Cluster state: CREATED
+  [OK]  All hosts CREATED
+
+[NSX-T Manager]
+  [OK]  NSX control cluster: STABLE
+
+[Summary]
+  PASSED: 3  FAILED: 0
+```
+
+!!! warning "Common errors"
+    **`Set EVS_ENV_ID`** — Export the required environment variable with `export EVS_ENV_ID=<your-environment-id>` before running the script.
+    **`curl: (7) Failed to connect to <NSX_MANAGER_URL> port 443: Connection timed out`** — Verify NSX Manager is reachable and the NSX_MANAGER_URL is correct, then check network/firewall connectivity with `curl -v -k https://<NSX_MANAGER_URL>/api/v1/cluster/status`.
+    **`jq: parse error: Invalid JSON`** — Ensure NSX Manager credentials are correct and the API endpoint is responding with valid JSON by testing `curl -sk -u admin:$NSX_PASS "$NSX_URL/api/v1/cluster/status"` directly.
 ## vsan-capacity.ps1
 
 ```powershell
@@ -133,6 +152,22 @@ curl -sk -u "admin:$HCX_PASS" \
   python3 -c "import sys,json; d=json.load(sys.stdin); print(f\"  Version: {d.get('version','unknown')}\")"
 ```
 
+
+```text title="Expected output"
+=== HCX Service Mesh Status ===
+  [OK]  Site-A-to-AWS-Link: UP
+  [OK]  AWS-to-Site-B-Link: UP
+  [FAIL]  DR-Failover-Link: DOWN
+  [OK]  Replication-Channel-01: UP
+
+=== HCX Version ===
+  Version: 4.8.2.1234567
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl (already present in the script; if still occurring, verify HCX_MANAGER_IP is correct and reachable on port 443).
+    **`bash: HCX_MANAGER_IP: parameter null or not set`** — Export the environment variables before running the script: `export HCX_MANAGER_IP=<ip> HCX_PASSWORD=<password>`.
+    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Verify HCX API is responding by testing `curl -sk -u "admin:$HCX_PASS" "https://$HCX_IP/hybridity/api/about"` directly; the endpoint may be unavailable or authentication may have failed.
 ## host-remove.sh
 
 Automates the safe host removal sequence. Refuses to proceed if vSAN has outstanding resync data.
@@ -260,6 +295,54 @@ echo ""
 echo "=== Host removal complete ==="
 ```
 
+
+```text title="Expected output"
+=== EVS Host Removal: host-0a7f3c2e1b9d4k5m ===
+
+[Step 1] Pre-check: verifying minimum host count...
+  Host count: 5 (will be 4 after removal — OK)
+
+[Step 2] Pre-check: verifying vSAN BytesToSync is 0...
+  BytesToSync=0 — vSAN is healthy.
+
+[Step 3] Entering maintenance mode with vSAN full data evacuation...
+  Putting esx-prod-04.corp.local into maintenance mode with vSAN full data evacuation...
+Maintenance mode requested.
+
+[Step 4] Waiting for vSAN evacuation to complete...
+  Polling vSAN BytesToSync (timeout: 7200s)...
+    [14:32:18] BytesToSync=847293456
+    [14:33:18] BytesToSync=612847293
+    [14:34:18] BytesToSync=389472015
+    [14:35:18] BytesToSync=0
+  vSAN evacuation complete.
+
+[Step 5] Deleting host via AWS EVS API...
+  delete-environment-host submitted.
+
+[Step 6] Waiting for host to be removed from EVS list...
+  Waiting for host to disappear from EVS host list...
+    [14:36:12] Host state: DELETING
+    [14:36:42] Host state: DELETING
+  Host host-0a7f3c2e1b9d4k5m is no longer in the host list.
+
+[Step 7] Remaining hosts in cluster:
+---------------------------------
+hostId                      hostName              state
+---------------------------------
+host-1b8e4d9f2c6a3k7p       esx-prod-01.corp.local  RUNNING
+host-2c9f5e0g3d7b4l8q       esx-prod-02.corp.local  RUNNING
+host-3d0g6f1h4e8c5m9r       esx-prod-03.corp.local  RUNNING
+host-4e1h7g2i5f9d6n0s       esx-prod-05.corp.local  RUNNING
+---------------------------------
+
+=== Host removal complete ===
+```
+
+!!! warning "Common errors"
+    **`ERROR: Only 3 host(s) in cluster. Cannot remove — minimum is 3 remaining.`** — Ensure the cluster has at least 4 hosts before attempting removal, or add additional hosts first.
+    **`ERROR: vSAN BytesToSync=2147483648. Cluster has outstanding resync data.`** — Wait for vSAN rebalancing to complete by monitoring the cluster health in vCenter before retrying the removal.
+    **`Connect-VIServer : Cannot find a vCenter Server system at '${VCENTER}'.`** — Verify the VCENTER_HOST environment variable is set to a valid vCenter hostname/IP and is reachable from the host running this script.
 ## vcf-password-rotate.sh
 
 Automates VCF credential rotation via SDDC Manager REST API.
@@ -375,6 +458,52 @@ echo "=== Credential rotation complete ==="
 echo "  Update any external automation or scripts that reference VCF credentials."
 ```
 
+
+```text title="Expected output"
+=== VCF Credential Rotation ===
+  SDDC Manager: sddc-mgr-01.corp.local
+
+[Step 1] Authenticating to SDDC Manager...
+  Token obtained.
+
+[Step 2] Current credentials managed by SDDC Manager:
+Entity                                   Type                 Username                  
+------------------------------------------------------------------------------------------
+vCenter Server                           VCENTER              administrator@vsphere.local
+NSX Manager                              NSX                  admin
+vSAN Witness                             ESXI                 root
+ESXi Cluster Node 01                     ESXI                 root
+ESXi Cluster Node 02                     ESXI                 root
+...
+
+[Step 3] Initiating credential rotation for ALL components...
+  Rotation task ID: 550e8400-e29b-41d4-a716-446655440000
+
+[Step 4] Polling rotation task until complete...
+  Polling task 550e8400-e29b-41d4-a716-446655440000...
+    [14:32:15] Status: In Progress
+    [14:32:45] Status: In Progress
+    [14:33:15] Status: In Progress
+    [14:33:45] Status: Successful 2024-01-15T14:33:42Z
+
+[Step 5] Final credential list after rotation:
+Entity                                   Type                 Username                  
+------------------------------------------------------------------------------------------
+vCenter Server                           VCENTER              administrator@vsphere.local
+NSX Manager                              NSX                  admin
+vSAN Witness                             ESXI                 root
+ESXi Cluster Node 01                     ESXI                 root
+ESXi Cluster Node 02                     ESXI                 root
+...
+
+=== Credential rotation complete ===
+  Update any external automation or scripts that reference VCF credentials.
+```
+
+!!! warning "Common errors"
+    **`ERROR: Failed to get access token. Check credentials.`** — Verify SDDC_MANAGER_HOST, SDDC_MANAGER_USER, and SDDC_MANAGER_PASSWORD environment variables are set correctly and the SDDC Manager is reachable.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl commands (already present) or import the SDDC Manager's CA certificate into your system trust store.
+    **`ERROR: Task did not complete within 1800s.`** — Increase POLL_TIMEOUT value or check SDDC Manager logs for rotation task failures; the operation may require more time in large environments.
 ## evs-capacity-report.sh
 
 Generates a consolidated capacity report covering AWS host inventory, vSAN storage, and VM density.
@@ -456,6 +585,52 @@ print_section "Report Complete"
 echo "  Generated: $(date)"
 ```
 
+
+```text title="Expected output"
+=== EVS Capacity Report — 2024-01-15 ===
+  Environment: evs-prod-us-east-1
+  vCenter: vcenter.corp.internal
+
+================================================================
+  AWS Host Inventory
+================================================================
+
+hostName                instanceType    state
+----------------------  --------------  -------
+evs-host-01.aws.local   m5.4xlarge      RUNNING
+evs-host-02.aws.local   m5.4xlarge      RUNNING
+evs-host-03.aws.local   m5.4xlarge      RUNNING
+
+================================================================
+  vSAN Storage Capacity
+================================================================
+
+  Datastore : vsanDatastore
+  Capacity  : 2048.5 GB
+  Used      : 1638.4 GB (80.0%)
+  Free      : 410.1 GB
+  Headroom  : 409.6 GB at 80% threshold
+  Status    : WARN
+
+================================================================
+  VM Count and Resource Usage per Host
+================================================================
+
+  evs-host-01.aws.local  VMs=12  CPU=64.3%  MEM=78.2%
+  evs-host-02.aws.local  VMs=11  CPU=58.9%  MEM=71.5%
+  evs-host-03.aws.local  VMs=13  CPU=72.1%  MEM=82.6%
+
+================================================================
+  Report Complete
+================================================================
+
+  Generated: Mon Jan 15 14:32:47 UTC 2024
+```
+
+!!! warning "Common errors"
+    **`Error: Unable to locate credentials. You can configure credentials by running "aws configure".`** — Ensure AWS credentials are configured via `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables.
+    **`Connect-VIServer : Cannot find an overload for "Connect-VIServer" and the argument count: "6".`** — Verify PowerShell Core (pwsh) is installed; if using Windows PowerShell, replace `pwsh` with `powershell` in the script.
+    **`The term 'pwsh' is not recognized as the name of a cmdlet, function, script file, or operable program.`** — Install PowerShell Core with `apt-get install -y powershell` (Linux) or download from Microsoft's GitHub releases.
 ---
 
 ## See also

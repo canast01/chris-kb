@@ -174,6 +174,45 @@ alishow | grep <alias-name>
 nsshow | grep <expected-wwpn>
 ```
 
+
+```text title="Expected output"
+nsshow | grep 50:00:09:73:
+50:00:09:73:a2:1b:4c:d1   ; 1,0  ; 50:00:09:73:a2:1b:4c:d1   ; 1,0
+50:00:09:73:a2:1b:4c:d2   ; 1,1  ; 50:00:09:73:a2:1b:4c:d2   ; 1,1
+
+nsallshow
+Fabric Port Name Identifiers
+Domain 1:
+50:00:09:73:a2:1b:4c:d1   ; 1,0
+50:00:09:73:a2:1b:4c:d2   ; 1,1
+50:00:09:73:a2:1b:4c:d3   ; 1,2
+Domain 2:
+50:00:09:73:b3:2c:5d:e1   ; 2,0
+...
+
+zoneshow | grep host-prod-01
+zone: host-prod-01-zone
+  50:00:09:73:a2:1b:4c:d1
+  50:00:09:73:a2:1b:4c:d2
+  50:00:09:73:c1:3f:6a:b4
+
+cfgshow | grep host-prod-01-zone
+zone: host-prod-01-zone
+cfg: prod-fabric-cfg
+  host-prod-01-zone
+
+alishow | grep host-hba-01
+alias: host-hba-01
+  50:00:09:73:a2:1b:4c:d1
+
+nsshow | grep 50:00:09:73:a2:1b:4c:d1
+50:00:09:73:a2:1b:4c:d1   ; 1,0  ; 50:00:09:73:a2:1b:4c:d1   ; 1,0
+```
+
+!!! warning "Common errors"
+    **`No matching entries found`** — Verify the WWPN is correctly formatted (with colons) and the HBA is actually logged into the fabric by running `nsshow` without grep first.
+    **`zone: <zone-name> not found`** — Confirm the zone name is spelled correctly and exists in the fabric configuration by running `zoneshow` to list all zones.
+    **`alias: <alias-name> not found`** — Check that the alias name matches exactly what is defined in the configuration; run `alishow` without grep to see all defined aliases.
 **Common causes and fixes:**
 
 | Cause | Fix |
@@ -193,6 +232,30 @@ portshow <slot/port>              # confirm logged-in WWN matches host HBA
 portlogshow <slot/port>           # look for FLOGI, PLOGI events
 ```
 
+
+```text title="Expected output"
+switchshow | grep 0/5
+ 0/5: Online      Fabric  F-Port  20/20   engaged
+
+portshow 0/5
+portName:     0/5
+portType:     F-Port
+portState:    Online
+Connected WWN: 50:00:14:40:5d:2a:b1:c3
+Speed:        16 Gbps
+Frame size:   2048
+
+portlogshow 0/5
+[2024/01/15 14:32:18] FLOGI Accept Received
+[2024/01/15 14:32:19] PLOGI Accept Received
+[2024/01/15 14:32:20] PRLI Accept Received
+[2024/01/15 14:33:45] Link Up
+```
+
+!!! warning "Common errors"
+    **`Invalid slot/port number`** — Verify the slot and port format matches your switch model (e.g., `0/5` for slot 0, port 5).
+    **`portlogshow: command not found`** — Ensure you are logged into the Brocade switch via SSH/telnet and have administrative privileges.
+    **`Port is Offline or No_Light`** — Check physical cable connections, SFP transceiver compatibility, and verify the host HBA is powered on and functional.
 ---
 
 ## Port Flapping / High Error Counts
@@ -216,6 +279,52 @@ portlogshow <slot/port>
 portcfgshow <slot/port>
 ```
 
+
+```text title="Expected output"
+Port Error Statistics:
+  Port  0/0: Link Errors: 0, Sync Errors: 0, Signal Errors: 0, Protocol Errors: 0
+  Port  0/1: Link Errors: 12, Sync Errors: 3, Signal Errors: 0, Protocol Errors: 0
+  Port  0/2: Link Errors: 0, Sync Errors: 0, Signal Errors: 0, Protocol Errors: 0
+  Port  0/3: Link Errors: 0, Sync Errors: 0, Signal Errors: 0, Protocol Errors: 0
+  Port  1/0: Link Errors: 247, Sync Errors: 89, Signal Errors: 15, Protocol Errors: 2
+...
+
+Port Statistics for slot 0, port 1:
+  Frames Transmitted: 4,892,156,234
+  Frames Received: 4,891,203,847
+  Bytes Transmitted: 2,345,678,901,234
+  Bytes Received: 2,344,956,123,456
+  CRC Errors: 3
+  Timeout Discards: 0
+
+SFP Information for slot 0, port 1:
+  Vendor: JDSU
+  Part Number: QSFP-40G-SR4
+  Serial Number: ABC123XYZ789
+  Tx Power: -2.1 dBm
+  Rx Power: -5.8 dBm
+  Temperature: 42°C
+  Voltage: 3.28 V
+
+Port Event Log for slot 0, port 1:
+  2024-01-15 14:23:47 - Link Up (Speed: 16 Gbps, Topology: F_Port)
+  2024-01-15 14:18:12 - Link Down (Reason: Signal Loss)
+  2024-01-15 14:17:55 - Sync Loss Detected
+  2024-01-15 14:17:42 - Link Up (Speed: 16 Gbps, Topology: F_Port)
+
+Port Configuration for slot 0, port 1:
+  Port Name: Storage_Array_01
+  Speed: 16 Gbps (Auto-negotiated)
+  Enabled: Yes
+  Topology: F_Port
+  Porttype: F-Port
+  State: Online
+```
+
+!!! warning "Common errors"
+    **`Invalid slot/port format`** — Use the format `<slot>/<port>` (e.g., `0/1`) and verify the port exists with `switchshow`.
+    **`SFP not present or not supported`** — Reseat the SFP transceiver or replace it with a supported model matching your fabric speed.
+    **`Port does not exist`** — Confirm the slot and port number are valid for your switch model using `switchshow` output.
 **Resolution steps:**
 
 1. Replace the SFP on the switch port first — SFPs are the most common cause of signal quality errors.
@@ -256,6 +365,50 @@ portshow <isl-port>   # Look for "Disabled (Incompatible)" or "E_Port Isolated"
 portlogshow <isl-port>
 ```
 
+
+```text title="Expected output"
+Switch Name: fabric-switch-01
+Fabric Port Member: 1
+Domain ID: 1
+Fabric State: Online
+Fabric Mode: Native
+Fabric Topology: Mesh
+Fabric Port Count: 4
+
+ISL Port Statistics:
+Port 0: Online
+Port 1: Online
+Port 2: Online
+Port 3: Online
+
+E_Port Status:
+  0: E_Port (Online)
+  1: E_Port (Online)
+  2: E_Port (Online)
+  3: E_Port (Online)
+
+Domain ID: 1
+Domain ID: 1
+Domain ID: 2
+
+portshow 0
+portName: 0
+portType: E_Port
+portState: Online
+portStatus: OK
+Speed: 16Gb
+Enabled: Yes
+
+portlogshow 0
+[2024-01-15 14:32:10] Port 0: Link Up
+[2024-01-15 14:32:11] Port 0: Speed negotiated to 16Gb
+[2024-01-15 14:32:12] Port 0: E_Port Online
+[2024-01-15 14:32:13] Port 0: Domain ID 1 accepted
+```
+
+!!! warning "Common errors"
+    **`Error: Fabric Segmented - Domain ID Mismatch`** — Run `fabricshow` to identify duplicate domain IDs and use `configure` to assign a unique domain ID to the isolated switch.
+    **`Error: E_Port Isolated (Incompatible)`** — Verify ISL cable connectivity and run `portcfgshow <isl-port>` to confirm port speed and settings match the remote switch.
 **Common causes and fixes:**
 
 | Cause | Fix |
@@ -277,6 +430,31 @@ configure
 fabricshow    # Confirm the switch appears with the new domain ID
 ```
 
+
+```text title="Expected output"
+Fabric parameters
+    Insist domain ID [0]: 1
+Domain [1]: 42
+Configuration saved successfully.
+
+Switch Name: switch-prod-01
+Switch Domain ID: 42
+Switch IP Address: 192.168.1.100
+Switch Model: Brocade G620
+Fabric ID: 128
+FC Port Speed: 16 Gbps
+Status: Online
+
+Fabric Members:
+Domain ID  Switch Name          IP Address       Status
+42         switch-prod-01       192.168.1.100    Online
+10         switch-prod-02       192.168.1.101    Online
+15         switch-prod-03       192.168.1.102    Online
+```
+
+!!! warning "Common errors"
+    **`Domain ID 42 is already in use by switch-prod-02`** — Choose a unique domain ID between 1–239 that is not already assigned in the fabric.
+    **`Failed to save configuration: Read-only mode`** — Exit configuration mode with `exit` and ensure you have admin privileges before running `configure` again.
 ---
 
 ## Principal Switch Changed Unexpectedly
@@ -296,6 +474,36 @@ switchshow | grep Priority
 rasshow -l 100
 ```
 
+
+```text title="Expected output"
+Switch Name   : brocade-switch-01
+Switch State  : Online
+Fabric Name   : prod-fabric-01
+Fabric State  : Stable
+FC Address    : 10:00:00:60:e1:00:12:34
+Principal Switch : Yes (>)
+
+Domain ID     : 1
+Priority      : 1
+Domain ID     : 2
+Priority      : 2
+Domain ID     : 3
+Priority      : 128
+
+RAS Log (100 most recent events):
+2024-01-15 14:32:15 +0000: [INFO] Fabric reconfiguration completed
+2024-01-15 14:31:42 +0000: [WARN] Port 0/5 link speed degraded to 4Gbps
+2024-01-15 14:30:18 +0000: [INFO] Switch brocade-switch-02 joined fabric
+2024-01-15 14:29:05 +0000: [INFO] Domain negotiation completed, assigned ID 2
+2024-01-15 14:28:33 +0000: [WARN] Temperature sensor on blade 3 at 68°C
+2024-01-15 14:27:11 +0000: [INFO] Fabric topology stable
+...
+```
+
+!!! warning "Common errors"
+    **`fabricshow: command not found`** — Verify you are logged into the Brocade switch CLI (SSH/Telnet) and not a Linux shell; this command runs only on FOS devices.
+    **`Permission denied`** — Confirm your user account has admin or read-only fabric privileges; contact your fabric administrator to grant the required role.
+    **`rasshow: Invalid option -- l`** — Use the correct syntax `rasshow -l 100` (lowercase L for line count) or check FOS version compatibility with your command variant.
 **Cause:** The previous principal switch went offline (reboot, power loss, ISL failure), triggering a new principal election. The switch with the highest priority (lowest priority value) or lowest WWN becomes the new principal.
 
 **Resolution:**
@@ -329,6 +537,35 @@ cfgenable <zoneset-name>
 cfgsave
 ```
 
+
+```text title="Expected output"
+Fabric OS (Brocade) v9.1.1a
+Effective configuration:
+ cfg-name: PROD_ZONES_v2
+ number of zones: 24
+ number of members: 156
+ cfg-size: 8192
+ number of zone aliases: 12
+ number of port aliases: 8
+ number of lsan zones: 0
+
+Defined configuration:
+ cfg-name: PROD_ZONES_v2
+ number of zones: 24
+ number of members: 156
+
+You are about to enable a new Defined zoning configuration.
+This action will cause all devices to re-login.
+Do you want to continue? (y/n): y
+
+Zoning configuration PROD_ZONES_v2 has been enabled.
+
+Configuration saved successfully to flash.
+```
+
+!!! warning "Common errors"
+    **`Error: Zoning configuration not found`** — Verify the zoneset name matches exactly with `cfgshow` output and check for typos in the zoneset-name parameter.
+    **`Error: Configuration save failed - flash memory full`** — Delete old configuration backups using `cfgdelete <old-config-name>` to free space before retrying cfgsave.
 Prevent this in future: always include `cfgsave` in zoning SOPs and verify the zone database was saved before closing the change window.
 
 ---
@@ -353,6 +590,44 @@ mapspolicy --show
 mapsrule --show
 ```
 
+
+```text title="Expected output"
+MAPS Dashboard Status:
+  System Health: Healthy
+  Overall Status: OK
+  Last Update: 2024-01-15 14:32:18
+  Critical Alerts: 0
+  Warning Alerts: 2
+  Informational: 7
+
+MAPS Database - Recent Alerts:
+  Timestamp            | Severity | Rule Name              | Object
+  2024-01-15 14:28:45  | Warning  | PortErrorThreshold     | 0/12
+  2024-01-15 13:55:12  | Warning  | FabricWildcardZoneRule | VSAN 100
+  2024-01-15 12:10:33  | Info     | PortSpeedMismatch      | 1/5
+  2024-01-15 11:42:09  | Info     | CRCErrorsDetected      | 2/8
+
+MAPS Policy Configuration:
+  Policy Name: Fabric_Standard_v2
+  Status: Active
+  Last Modified: 2024-01-10 09:15:22
+  Rule Count: 24
+  Monitoring Interval: 60 seconds
+
+MAPS Rule Thresholds:
+  Rule Name                    | Threshold | Current | Status
+  PortErrorThreshold           | 100       | 47      | OK
+  PortCRCErrorThreshold        | 50        | 12      | OK
+  FabricWildcardZoneRule       | 5         | 8       | TRIGGERED
+  MemoryUtilizationThreshold   | 85%       | 72%     | OK
+  CPUUtilizationThreshold      | 90%       | 58%     | OK
+  LinkFailureThreshold         | 3         | 0       | OK
+```
+
+!!! warning "Common errors"
+    **`mapsdashboard: command not found`** — Verify MAPS is installed and enabled with `mapsadmin --status`, then source the Fabric OS environment with `. /etc/profile.d/brocade.sh`.
+    **`MAPS Database is not initialized`** — Initialize the MAPS database with `mapsdb --init` and wait 2-3 minutes for the first data collection cycle to complete.
+    **`Permission denied: insufficient privileges to view MAPS data`** — Run commands with admin credentials or add your user to the `maps` group with `usermod -a -G maps <username>`.
 **Common MAPS alerts and actions:**
 
 | Alert | Meaning | Action |
@@ -389,6 +664,50 @@ islshow
 portperfshow
 ```
 
+
+```text title="Expected output"
+disc_c3: 0
+disc_c3: 0
+disc_c3: 127
+disc_c3: 0
+
+Slot 0, Port 0:
+  BB_Credit: 12
+  BB_Credit_Available: 12
+  BB_Credit_Avail_Perc: 100%
+
+Slot 0, Port 1:
+  BB_Credit: 12
+  BB_Credit_Available: 2
+  BB_Credit_Avail_Perc: 17%
+
+Bottleneck Monitor Report:
+  Port 0/3: Zero-Credit Events: 1247 (CRITICAL)
+  Port 0/2: Zero-Credit Events: 89
+  Port 1/0: Zero-Credit Events: 0
+
+ISL Link 0/0 (portIndex 0):
+  Speed: 16 Gbps
+  Utilization: 94%
+  Frames Transmitted: 2847291847
+  Frames Received: 2847291823
+
+ISL Link 0/1 (portIndex 1):
+  Speed: 16 Gbps
+  Utilization: 12%
+  Frames Transmitted: 184729
+  Frames Received: 184701
+
+Port 0/0: Throughput 14.2 Gbps, Frames/sec: 1847291
+Port 0/1: Throughput 2.1 Gbps, Frames/sec: 127483
+Port 0/2: Throughput 15.8 Gbps, Frames/sec: 2047291
+Port 0/3: Throughput 0.3 Gbps, Frames/sec: 3847
+```
+
+!!! warning "Common errors"
+    **`portbufshow: Invalid slot/port format`** — Use the format `portbufshow <slot>/<port>` (e.g., `portbufshow 0/1`).
+    **`bottleneckmon: command not found`** — Enable the bottleneck monitoring feature with `bottleneckmon --enable` first, or verify the switch supports this command (available on newer FOS versions).
+    **`porterrshow: No such file or directory`** — Run the command from the switch's admin CLI directly via SSH or serial console, not from a remote shell.
 **Resolution:**
 
 1. Identify the specific port showing zero BB credits or highest C3 discards.
@@ -416,6 +735,47 @@ psshow                # Power supply status
 tempshow              # Temperature thresholds
 ```
 
+
+```text title="Expected output"
+Switch Status:
+  switchState: Online
+  switchRole: Principal
+  switchDomain: 1
+  switchName: brocade-switch-01
+  switchType: G620
+  switchStatus: Marginal
+
+Error Log (last 10 entries):
+  [2024-01-15 14:32:18] WARNING: Fan module 2 speed degraded to 8500 RPM
+  [2024-01-15 14:15:42] WARNING: Temperature sensor PSU_1 reading 68°C (threshold: 70°C)
+  [2024-01-15 13:48:09] INFO: Port 12 link established at 16Gbps
+  [2024-01-15 12:22:51] WARNING: PSU 1 voltage output 11.8V (nominal: 12.0V)
+
+Environmental Sensors:
+  Sensor Name          Status    Reading      Threshold
+  Temp_CPU             Normal    52°C         75°C
+  Temp_PSU_1           Warning   68°C         70°C
+  Temp_PSU_2           Normal    61°C         75°C
+  Voltage_12V_Rail     Warning   11.8V        12.0V
+
+Fan Status:
+  Fan Module 1: Normal (9200 RPM)
+  Fan Module 2: Degraded (8500 RPM) — Speed below optimal
+  Fan Module 3: Normal (9150 RPM)
+
+Power Supply Status:
+  PSU 1: Marginal (Output: 11.8V, Current: 18.5A)
+  PSU 2: Normal (Output: 12.0V, Current: 19.2A)
+
+Temperature Summary:
+  Highest reading: PSU_1 at 68°C (threshold: 70°C)
+  Status: Marginal — 2°C from warning threshold
+```
+
+!!! warning "Common errors"
+    **`switchstatusshow: command not found`** — Verify you are logged into the Brocade switch CLI (not the host OS) and have admin privileges.
+    **`errshow: Access denied`** — Ensure your user account has read permissions for system logs; contact switch admin if needed.
+    **`sensorshow: No sensor data available`** — Restart the switch monitoring daemon with `sensormonitor restart` or reboot the switch if sensors are unresponsive.
 **Common causes:**
 
 | Cause | Action |

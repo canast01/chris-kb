@@ -84,6 +84,15 @@ curl -sk -u "admin:$NSX_PASS" "$NSX_URL/api/v1/cluster/status" | \
   python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('control_cluster_status',{}).get('status',''))"
 ```
 
+
+```text title="Expected output"
+STABLE
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to port 443: Connection refused`** — Verify the NSX Manager is running and reachable at the IP/hostname in $NSX_URL, and that port 443 is not blocked by a firewall.
+    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Check that $NSX_PASS is set correctly and the admin user has API permissions; an authentication failure returns HTML instead of JSON.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already present) or import the NSX Manager's CA certificate into your system trust store if `-k` is removed.
 Expected: `STABLE`. Do not upgrade if NSX-T is in `DEGRADED` or `UNSTABLE` state.
 
 **No Active vMotion Operations**
@@ -111,6 +120,16 @@ curl -sk -X POST -H "Authorization: Bearer ${TOKEN}" \
   -d '{"elements":[{"resourceType":"SDDC_MANAGER"}]}'
 ```
 
+
+```text title="Expected output"
+eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbmlzdHJhdG9yQHZzcGhlcmUubG9jYWwiLCJleHAiOjE3MDk4MzIwMDB9.kR9mN2pQxZ1vL4jW8sT5uY6aB3cD7eF9gH0iJ1kL2m
+{"id":"backup-task-20240307-001","resourceType":"SDDC_MANAGER","status":"RUNNING","startTime":"2024-03-07T14:32:15Z","estimatedRemainingTime":"PT45M","progress":0}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present; if error persists, verify SDDC_URL is correct and accessible).
+    **`jq: command not found` or `json.decoder.JSONDecodeError`** — Ensure python3 is installed and the JSON response is valid by testing token endpoint separately with `curl -sk -X POST "${SDDC_URL}/v1/tokens" -H "Content-Type: application/json" -d '{"username":"administrator@vsphere.local","password":"P@ssw0rd"}'`.
+    **`401 Unauthorized`** — Verify the token was successfully extracted by echoing `echo $TOKEN` and confirm credentials are correct; if token is empty, the authentication endpoint may have failed.
 **VCF Compatibility Matrix Check**
 
 Before upgrading, verify the target version combination is supported:
@@ -179,6 +198,18 @@ curl -sk -u "admin:$HCX_PASS" "${HCX_EVS}/hybridity/api/about" | \
   python3 -c "import sys,json; d=json.load(sys.stdin); print(f\"  Version: {d.get('version','unknown')}\")"
 ```
 
+
+```text title="Expected output"
+On-prem HCX:
+  Version: 4.8.2.1
+EVS HCX Cloud:
+  Version: 4.8.2.1
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to hcx-onprem.corp.local port 443: Name or service not known`** — Verify DNS resolution for the HCX hostnames or update `/etc/hosts` with correct IP mappings.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — The `-k` flag is already present; if still failing, ensure the HCX appliance certificate is valid and not expired.
+    **`jq: error (at <stdin>:1): Invalid JSON text at line 1`** — Confirm `$HCX_PASS` is set correctly and the HCX API endpoint is responding with valid JSON (check credentials and network connectivity).
 Both sides must run the same major HCX version. If EVS has upgraded HCX Cloud automatically, upgrade on-prem HCX Manager before using HCX for migrations.
 
 **Upgrade on-prem HCX Manager:**

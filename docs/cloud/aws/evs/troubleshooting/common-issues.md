@@ -115,6 +115,55 @@ aws ec2 describe-instance-status \
 # Provide: environment ID, host ID, approximate failure timestamp, CloudTrail export
 ```
 
+
+```text title="Expected output"
+---------------------------------
+|      hostId      |    state    |
+|---------------------------------|
+| host-0a1b2c3d4e5f6g7h | RUNNING     |
+| host-1f2g3h4i5j6k7l8m | RUNNING     |
+| host-2k3l4m5n6o7p8q9r | FAILED      |
+| host-3p4q5r6s7t8u9v0w | CREATE_FAILED |
+---------------------------------
+
+{
+    "events": [
+        {
+            "eventId": "evt-12345678-1234-1234-1234-123456789012",
+            "timestamp": 1699564800000,
+            "message": "{\"eventSource\":\"evs.amazonaws.com\",\"errorCode\":\"InsufficientCapacity\",\"eventName\":\"CreateEnvironmentHost\"}"
+        },
+        {
+            "eventId": "evt-87654321-4321-4321-4321-210987654321",
+            "timestamp": 1699478400000,
+            "message": "{\"eventSource\":\"evs.amazonaws.com\",\"errorCode\":\"InvalidParameterValue\",\"eventName\":\"CreateEnvironmentHost\"}"
+        }
+    ],
+    "searchedLogStreams": 3
+}
+
+{
+    "InstanceStatuses": [
+        {
+            "InstanceId": "i-0a1b2c3d4e5f6g7h",
+            "SystemStatus": {
+                "Status": "impaired",
+                "Details": [
+                    {
+                        "Name": "reachability",
+                        "Status": "failed"
+                    }
+                ]
+            }
+        }
+    ]
+}
+```
+
+!!! warning "Common errors"
+    **`An error occurred (InvalidParameterValue) when calling the ListEnvironmentHosts operation: Invalid environment ID format`** — Verify the environment ID is set correctly with `echo $ENV_ID` and matches the format `env-xxxxxxxxxxxxxxxx`.
+    **`An error occurred (AccessDenied) when calling the FilterLogEvents operation: User is not authorized to perform: logs:FilterLogEvents`** — Add the `logs:FilterLogEvents` permission to your IAM policy or use an IAM role with CloudTrail log access.
+    **`An error occurred (UnauthorizedOperation) when calling the DescribeInstanceStatus operation: You are not authorized to perform this operation`** — Ensure your IAM user/role has `ec2:DescribeInstanceStatus` permission attached.
 Get the host's event history to understand the sequence of state transitions:
 
 ```bash
@@ -136,6 +185,27 @@ aws ec2 describe-network-interfaces \
   --output table
 ```
 
+
+```text title="Expected output"
+2024-01-15 14:32:18+00:00 | CreateNetworkInterface      | None
+2024-01-15 13:47:52+00:00 | ModifyNetworkInterfaceAttribute | None
+2024-01-15 12:19:33+00:00 | DetachNetworkInterface     | InvalidParameterValue
+2024-01-15 11:05:14+00:00 | DescribeNetworkInterfaces  | None
+2024-01-15 09:41:22+00:00 | AttachNetworkInterface     | None
+
+i-0a7f2c8d9e1b4f6a3
+
+NetworkInterfaceId        | Status    | Attachment.Status
+--------------------------+-----------+------------------
+eni-0c3d5e8f2a1b9d4e6     | in-use    | attached
+eni-1f7a2b4c8d9e0a3f5     | in-use    | attached
+eni-2e8b3c5d9f0a1b4g6     | available | None
+```
+
+!!! warning "Common errors"
+    **`An error occurred (InvalidParameterValue) when calling the LookupEvents operation: Invalid start time format`** — Ensure the date command uses the correct format flag for your OS (use `date -u -d "72 hours ago" +%Y-%m-%dT%H:%M:%SZ` on Linux instead of `-v-72H`).
+    **`An error occurred (ResourceNotFoundException) when calling the GetEnvironmentHost operation: Host not found`** — Verify that `$ENV_ID` and `$HOST_ID` variables are set correctly and the host exists in the specified environment.
+    **`An error occurred (UnauthorizedOperation) when calling the DescribeNetworkInterfaces operation: You are not authorized to perform this operation`** — Ensure your AWS IAM credentials have `ec2:DescribeNetworkInterfaces` and `evs:GetEnvironmentHost` permissions attached.
 Determining recovery vs replacement:
 - If ENIs are detached or the EC2 instance status shows a system failure, the host needs replacement — AWS support will coordinate.
 - If the host's EC2 instance is running and ENIs are attached, the issue may be in the EVS control plane reporting — the host may be recoverable without replacement.
@@ -220,6 +290,45 @@ aws ec2 describe-security-groups --group-ids sg-hcx \
 #    HCX Manager UI → Interconnect → Service Mesh → Actions → Redeploy
 ```
 
+
+```text title="Expected output"
+link-01: UP
+link-02: UP
+link-03: DOWN
+
+{
+    "connections": [
+        {
+            "connectionName": "dx-us-east-1-primary",
+            "connectionState": "available"
+        },
+        {
+            "connectionName": "dx-us-east-1-backup",
+            "connectionState": "available"
+        }
+    ]
+}
+
+[
+    {
+        "IpProtocol": "udp",
+        "FromPort": 500,
+        "ToPort": 500,
+        "IpRanges": [{"CidrIp": "10.0.0.0/8"}]
+    },
+    {
+        "IpProtocol": "udp",
+        "FromPort": 4500,
+        "ToPort": 4500,
+        "IpRanges": [{"CidrIp": "10.0.0.0/8"}]
+    }
+]
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip certificate verification for self-signed HCX Manager certificates.
+    **`An error occurred (InvalidGroupId.NotFound) when calling the DescribeSecurityGroups operation: The security group 'sg-hcx' does not exist`** — Replace `sg-hcx` with the actual security group ID (e.g., `sg-0a1b2c3d4e5f6g7h8`) from your AWS console.
+    **`jq: command not found`** — Install jq with `sudo yum install jq` or `sudo apt-get install jq`, or use the provided Python JSON parser instead.
 To restart individual HCX appliances without redeploying the entire service mesh:
 
 ```bash
@@ -236,6 +345,26 @@ Start-VM -VM $hcxVm
 watch -n 30 "curl -sk -u admin:$HCX_PASSWORD https://$HCX_MANAGER_IP/hybridity/api/interconnect/links | python3 -c \"import sys,json; [print(f'{l[\\\"label\\\"]}: {l[\\\"status\\\"]}') for l in json.load(sys.stdin).get('items',[])]\" "
 ```
 
+
+```text title="Expected output"
+Stopping VM HCX-IX-01...
+VM HCX-IX-01 stopped successfully.
+Starting VM HCX-IX-01...
+VM HCX-IX-01 started successfully.
+Every 30s: curl -sk -u admin:*** https://192.168.1.45/hybridity/api/interconnect/links | python3 -c "import sys,json; [print(f'{l[\"label\"]}: {l[\"status\"]}') for l in json.load(sys.stdin).get('items',[])]"
+
+HCX-Link-01: CONNECTING
+HCX-Link-02: CONNECTING
+HCX-Link-03: CONNECTING
+HCX-Link-01: UP
+HCX-Link-02: UP
+HCX-Link-03: UP
+```
+
+!!! warning "Common errors"
+    **`Get-VM : The term 'Get-VM' is not recognized`** — Load the VMware PowerCLI module with `Import-Module VMware.PowerCLI` before running the script.
+    **`curl: (7) Failed to connect to 192.168.1.45 port 443: Connection refused`** — Wait 2-3 minutes after the appliance starts for HCX services to fully initialize before monitoring the API endpoint.
+    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Verify the HCX_PASSWORD variable is set correctly and the HCX manager IP is reachable with `ping $HCX_MANAGER_IP`.
 Common HCX outage causes:
 
 | Cause | Symptom | Fix |
@@ -273,6 +402,39 @@ aws ec2 describe-route-tables \
 # NSX-T UI → Networking → Tier-0 Gateways → Edge node → Test Connectivity
 ```
 
+
+```text title="Expected output"
+T0-Router-Primary: 8d4c9e2f-1a3b-4c5d-9e2f-1a3b4c5d9e2f
+T0-Router-Secondary: 7f3a2b1c-9d8e-4f5a-1b2c-3d4e5f6a7b8c
+
+192.168.1.1: Established
+192.168.1.2: Established
+10.0.0.1: Idle
+
+[
+    {
+        "DestinationCidrBlock": "10.20.0.0/16",
+        "State": "blackhole",
+        "GatewayId": "local"
+    },
+    {
+        "DestinationCidrBlock": "172.16.0.0/12",
+        "State": "active",
+        "NetworkInterfaceId": "eni-0a1b2c3d4e5f6a7b8",
+        "NetworkInterfaceOwnerId": "123456789012"
+    },
+    {
+        "DestinationCidrBlock": "192.168.0.0/16",
+        "State": "blackhole",
+        "GatewayId": "local"
+    }
+]
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command or import NSX Manager's CA certificate into your system trust store.
+    **`jq: command not found`** — Install jq with `apt-get install jq` or `yum install jq`, or use the provided Python JSON parser instead.
+    **`An error occurred (InvalidParameterValue) when calling the DescribeRouteTables operation: The vpc ID 'vpc-xxxxx' does not exist`** — Verify the `$EVS_VPC_ID` environment variable is set correctly with `echo $EVS_VPC_ID` and matches an actual VPC in your AWS account.
 Check T0 BGP neighbor state via the NSX-T Policy API (preferred for NSX-T 3.x+):
 
 ```bash
@@ -297,6 +459,35 @@ aws ec2 describe-route-tables \
   --query 'RouteTables[*].Routes[?contains(DestinationCidrBlock, `172.16`) || contains(DestinationCidrBlock, `10.`)]'
 ```
 
+
+```text title="Expected output"
+t0-prod-us-east: Tier-0 Production US-East
+t0-dr-us-west: Tier-0 DR US-West
+
+Neighbor: 10.255.1.1 | State: ESTABLISHED | AS: 65001
+Neighbor: 10.255.1.5 | State: ESTABLISHED | AS: 65001
+Neighbor: 10.255.2.1 | State: ESTABLISHED | AS: 65002
+
+[
+    {
+        "DestinationCidrBlock": "172.16.0.0/12",
+        "State": "active",
+        "GatewayId": "eni-0a2f8c9d1e4b5f7c2",
+        "Origin": "CreateRoute"
+    },
+    {
+        "DestinationCidrBlock": "10.0.0.0/8",
+        "State": "active",
+        "NetworkInterfaceId": "eni-0x9k3m2n1p0q8r7s5t",
+        "Origin": "CreateRoute"
+    }
+]
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification or configure proper CA certificates in your environment.
+    **`jq: command not found`** — Install `python3-json` or use the provided Python one-liner instead of piping to `jq`.
+    **`An error occurred (InvalidParameterValue) when calling the DescribeRouteTables operation: The filter 'vpc-id' does not exist`** — Use `--filters Name=vpc-id,Values=$EVS_VPC_ID` with correct filter syntax or verify the VPC ID variable is set with `echo $EVS_VPC_ID`.
 ## AWS EVS API Errors
 
 | Error Code | Meaning | Resolution |
@@ -330,6 +521,47 @@ aws service-quotas request-service-quota-increase \
   --desired-value 10
 ```
 
+
+```text title="Expected output"
+{
+    "Quota": {
+        "ServiceCode": "elasticvmwareservice",
+        "ServiceName": "AWS Elastic VMware Service",
+        "QuotaArn": "arn:aws:service-quotas:us-west-2:123456789012:elasticvmwareservice/L-A1B2C3D4",
+        "QuotaName": "Maximum number of hosts per SDDC",
+        "Description": "The maximum number of hosts that can be added to a single SDDC",
+        "Value": 5.0,
+        "Unit": "None",
+        "Adjustable": true,
+        "GlobalQuota": false,
+        "UsageMetric": {
+            "MetricNamespace": "AWS/ElasticVMwareService",
+            "MetricName": "HostCount",
+            "MetricDimensions": {},
+            "MetricStatisticRecommendation": "Maximum"
+        }
+    }
+}
+{
+    "RequestedServiceQuotaChange": {
+        "Id": "sqr-1a2b3c4d5e6f7g8h",
+        "ServiceCode": "elasticvmwareservice",
+        "ServiceName": "AWS Elastic VMware Service",
+        "QuotaCode": "L-A1B2C3D4",
+        "QuotaName": "Maximum number of hosts per SDDC",
+        "DesiredValue": 10.0,
+        "Status": "PENDING",
+        "CreatedDate": "2024-01-15T14:32:18.000000+00:00",
+        "LastUpdatedDate": "2024-01-15T14:32:18.000000+00:00",
+        "Requester": "arn:aws:iam::123456789012:user/admin"
+    }
+}
+```
+
+!!! warning "Common errors"
+    **`An error occurred (AccessDenied) when calling the GetServiceQuota operation: User: arn:aws:iam::123456789012:user/admin is not authorized to perform: service-quotas:GetServiceQuota`** — Add `service-quotas:GetServiceQuota` and `service-quotas:RequestServiceQuotaIncrease` permissions to the IAM user or role.
+    **`An error occurred (InvalidParameterException) when calling the GetServiceQuota operation: Invalid quota code: L-XXXXXXXX`** — Replace the placeholder quota code with the actual code from the AWS console (e.g., `L-A1B2C3D4`).
+    **`An error occurred (QuotaExceededException) when calling the RequestServiceQuotaIncrease operation: You have already requested a quota increase for this quota`** — Wait for the existing quota increase request to complete or be rejected before submitting a new one.
 ---
 
 ## See also

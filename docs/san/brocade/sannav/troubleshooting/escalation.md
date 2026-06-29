@@ -97,6 +97,51 @@ free -h
 uptime
 ```
 
+
+```text title="Expected output"
+admin@sannav-prod-01:~$ sannav version
+SANnav Version: 2.3.1.0
+Build: 20240115-143022
+Release Date: January 15, 2024
+
+admin@sannav-prod-01:~$ sannav-admin status
+SANnav Services Status:
+  sannav-core         : RUNNING (PID: 4521)
+  sannav-db           : RUNNING (PID: 4389)
+  sannav-api          : RUNNING (PID: 4612)
+  sannav-collector    : RUNNING (PID: 4701)
+  sannav-web          : RUNNING (PID: 4823)
+
+admin@sannav-prod-01:~$ sannav-admin db-status
+Database Status: HEALTHY
+Connected Clients: 12
+Replication Status: IN_SYNC
+Last Backup: 2024-01-18 03:45:22 UTC
+
+admin@sannav-prod-01:~$ df -h /opt/brocade/sannav
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda3       500G  387G  113G  78% /opt/brocade/sannav
+
+admin@sannav-prod-01:~$ df -h
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1       100G   45G   55G  45% /
+/dev/sda2        50G   28G   22G  56% /var
+/dev/sda3       500G  387G  113G  78% /opt/brocade/sannav
+tmpfs            32G     0   32G   0% /dev/shm
+
+admin@sannav-prod-01:~$ free -h
+              total        used        free      shared  buff/cache   available
+Mem:           64Gi        48Gi        8Gi       512Mi        8Gi        15Gi
+Swap:          16Gi       2.1Gi        14Gi
+
+admin@sannav-prod-01:~$ uptime
+ 14:32:18 up 187 days, 14:22,  2 users,  load average: 2.14, 2.08, 1.97
+```
+
+!!! warning "Common errors"
+    **`Connection refused`** — Verify SANnav appliance is reachable with `ping <sannav-ip>` and SSH service is running with `systemctl status ssh`.
+    **`sannav-admin: command not found`** — Ensure you are logged in as the admin user and `/opt/brocade/sannav/bin` is in your PATH, or use the full path `/opt/brocade/sannav/bin/sannav-admin`.
+    **`Database Status: UNHEALTHY`** — Check database logs with `sannav-admin db-logs` and restart the database service using `sannav-admin restart db`.
 ### 2. Generate the SANnav support bundle
 
 ```bash
@@ -113,6 +158,25 @@ ls -lh /tmp/sannav-diag-*.tar.gz
 scp admin@<sannav-ip>:/tmp/sannav-diag-*.tar.gz /tmp/
 ```
 
+
+```text title="Expected output"
+admin@<sannav-ip>'s password: 
+Last login: Wed Jan 15 14:32:18 2025 from 10.45.12.89
+SANnav> sannav support-bundle --output /tmp/sannav-diag-20250115.tar.gz
+Collecting system logs...
+Collecting configuration data...
+Collecting performance metrics...
+Collecting fabric topology...
+Support bundle generated successfully: /tmp/sannav-diag-20250115.tar.gz
+-rw-r--r-- 1 admin admin 487M Jan 15 14:35 /tmp/sannav-diag-20250115.tar.gz
+admin@10.45.67.23's password: 
+sannav-diag-20250115.tar.gz                           100%  487MB   8.2MB/s   00:59
+```
+
+!!! warning "Common errors"
+    **`sannav: command not found`** — Verify you are logged into the SANnav appliance itself (not a switch) and that the sannav CLI is in your PATH; check with `which sannav`.
+    **`Permission denied (publickey,password)`** — Ensure the admin account credentials are correct and SSH key-based authentication is configured, or use `ssh -v` to debug the connection.
+    **`No such file or directory`** — The support-bundle command may have failed silently; re-run the command and check `/tmp/` for any partial `.tar.gz` files or error logs in `/var/log/sannav/`.
 ### 3. Collect the SANnav service log (journalctl)
 
 ```bash
@@ -135,6 +199,38 @@ for i in {1..5}; do
 done > /tmp/sannav-perf-$(date +%Y%m%d).txt
 ```
 
+
+```text title="Expected output"
+admin@sannav-prod-01's password: 
+(no output — command completes silently)
+(no output — command completes silently)
+=== Wed Jan 15 14:32:18 UTC 2025 ===
+              total        used      available
+Mem:           15Gi       12Gi         2.1Gi
+Swap:          4.0Gi      1.2Gi        2.8Gi
+Filesystem     Size  Used Avail Use% Mounted on
+/dev/sda3      500G  387G  113G  78% /opt/brocade/sannav
+ 14:32:18 up 127 days, 14:22,  2 users,  load average: 2.14, 1.98, 1.87
+=== Wed Jan 15 14:32:48 UTC 2025 ===
+              total        used      available
+Mem:           15Gi       12Gi         2.0Gi
+Swap:          4.0Gi      1.2Gi        2.8Gi
+Filesystem     Size  Used Avail Use% Mounted on
+/dev/sda3      500G  387G  113G  78% /opt/brocade/sannav
+ 14:32:48 up 127 days, 14:23,  2 users,  load average: 2.09, 2.01, 1.89
+=== Wed Jan 15 14:33:18 UTC 2025 ===
+              total        used      available
+Mem:           15Gi       12Gi         2.1Gi
+Swap:          4.0Gi      1.2Gi        2.8Gi
+Filesystem     Size  Used Avail Use% Mounted on
+/dev/sda3      500G  387G  113G  78% /opt/brocade/sannav
+ 14:33:18 up 127 days, 14:23,  2 users,  load average: 1.94, 1.99, 1.88
+```
+
+!!! warning "Common errors"
+    **`sudo: journalctl: command not found`** — Verify the SANnav appliance is running a systemd-based OS; if using an older version, use `tail -f /var/log/sannav.log` instead.
+    **`Permission denied (publickey,password)`** — Confirm the admin account credentials and that SSH key-based or password authentication is enabled on the SANnav appliance.
+    **`No such file or directory: /opt/brocade/sannav`** — Verify the SANnav installation path matches your deployment; check with `df -h` to locate the actual mount point.
 ### 4. Run supportsave on affected switches
 
 ```bash
@@ -153,6 +249,49 @@ nsshow
 fabricshow
 ```
 
+
+```text title="Expected output"
+admin@switch-ip's password: 
+Brocade Switch Admin CLI
+
+switch:admin> supportsave
+Generating support bundle...
+Creating tar file /var/log/support/brocade_support_20240115_143022.tar.gz
+Support bundle created successfully.
+File size: 245 MB
+Location: /var/log/support/brocade_support_20240115_143022.tar.gz
+
+switch:admin> firmwareshow
+Firmware Version: v8.2.1b
+Build: 8.2.1.0.0.0.0
+Serial Number: 0621A2B00C4E
+Model: Brocade 6510
+
+switch:admin> cfgshow
+Defined configurations:
+ 0: PROD_ZONE_CFG (current)
+ 1: TEST_ZONE_CFG
+ 2: BACKUP_CFG
+
+switch:admin> nsshow
+ N Port wwn is 50:00:14:40:1b:2c:3d:4e
+ Fabric Port Name: switch1
+ Fabric Port wwn: 50:00:14:40:1b:2c:3d:4e
+ State: Online
+ Speed: 16Gb
+
+switch:admin> fabricshow
+Switch ID   Worldwide Name      Fabric Name         FC Address
+------------------------------------------------------------------
+   1        50:00:14:40:1b:2c:3d:4e  PROD_FABRIC_01      100.0000
+   2        50:00:14:40:1b:2c:3d:4f  PROD_FABRIC_02      100.0001
+   3        50:00:14:40:1b:2c:3d:50  PROD_FABRIC_03      100.0002
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify SSH credentials and that the admin account is not locked; check `/etc/passwd` on the switch or contact your Brocade support team.
+    **`supportsave: command not found`** — Ensure you are logged in as admin user and not in restricted shell mode; use `role show` to verify admin privileges.
+    **`Fabric is offline or not responding`** — Check physical cable connections, port status with `portshow`, and verify switch is not in maintenance mode with `switchstatusshow`.
 Repeat `supportsave` on every switch in the affected fabric. TAC needs the switch-level data alongside the SANnav data.
 
 ### 5. Export the SANnav audit log
@@ -270,6 +409,40 @@ sudo journalctl -u sannav --no-pager -n 200 | grep -i "error\|fatal\|exception"
 free -h && uptime
 ```
 
+
+```text title="Expected output"
+SANnav Version: 2.3.1 Build 2024.01.15
+SANnav Admin Version: 2.3.1
+
+Service Status:
+  sannav-core         RUNNING (pid 4821)
+  sannav-api          RUNNING (pid 4823)
+  sannav-collector    RUNNING (pid 4825)
+  sannav-postgres     RUNNING (pid 4819)
+  sannav-elasticsearch RUNNING (pid 4827)
+
+Database Status:
+  PostgreSQL: HEALTHY
+  Last Backup: 2024-01-18 03:45:22 UTC
+  Replication Status: SYNCED
+  Connection Pool: 45/100 active
+
+Filesystem     Size  Used Avail Use% Mounted on
+/dev/sda3      500G  287G  213G  58% /opt/brocade/sannav
+
+Jan 18 14:32:11 sannav-prod sannav-collector[4825]: ERROR Failed to connect to fabric switch 10.20.15.44
+Jan 18 14:28:03 sannav-prod sannav-api[4823]: EXCEPTION NullPointerException in fabric discovery task
+Jan 18 13:55:47 sannav-prod sannav-core[4821]: ERROR Timeout waiting for elasticsearch cluster health
+
+              total        used        free      shared  buff/cache   available
+Mem:            31Gi       18Gi       8.2Gi      512Mi       4.8Gi       12Gi
+Swap:           16Gi      2.1Gi       14Gi
+ 14:45:22 up 47 days, 3:22, 2 users, load average: 2.14, 1.87, 1.92
+```
+
+!!! warning "Common errors"
+    **`sudo: journalctl: command not found`** — Use `journalctl` without `sudo` prefix or verify the user has passwordless sudo configured in `/etc/sudoers`.
+    **`df: /opt/brocade/sannav: No such file or directory`** — Verify SANnav is installed in the correct path with `ls -d /opt/brocade/sannav` or check mount points with `mount | grep brocade`.
 ---
 
 ## Support SLA Reference

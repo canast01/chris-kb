@@ -91,6 +91,36 @@ This guide covers deploying Brocade SANnav Management Portal from installation t
 # Set: IP address, netmask, gateway, DNS, hostname
 ```
 
+
+```text title="Expected output"
+SANnav Network Configuration Tool v8.2.1
+=========================================
+
+Current Network Settings:
+  Interface: eth0
+  IP Address: 192.168.1.50
+  Netmask: 255.255.255.0
+  Gateway: 192.168.1.1
+  DNS Servers: 8.8.8.8, 8.8.4.4
+  Hostname: sannav-prod-01
+
+Enter new IP address [192.168.1.50]: 
+Enter netmask [255.255.255.0]: 
+Enter gateway [192.168.1.1]: 
+Enter DNS servers (comma-separated) [8.8.8.8, 8.8.4.4]: 
+Enter hostname [sannav-prod-01]: 
+
+Validating configuration...
+Applying network settings...
+Network configuration updated successfully.
+Restarting network services...
+Done. Please verify connectivity.
+```
+
+!!! warning "Common errors"
+    **`Error: Permission denied`** — Run the script with sudo: `sudo /opt/sannav/tools/networkconfig.sh`
+    **`Error: Invalid IP address format`** — Enter a valid IPv4 address in dotted-decimal notation (e.g., 192.168.1.100).
+    **`Error: /opt/sannav/tools/networkconfig.sh: No such file or directory`** — Verify SANnav is installed in /opt/sannav and the tools directory exists.
 7. Restart the network service and verify the SANnav web interface is accessible.
 
 **RPM/DEB install (Linux):**
@@ -104,18 +134,77 @@ rpm -ivh SANnav-<version>.x86_64.rpm
 dpkg -i SANnav-<version>.amd64.deb
 ```
 
+
+```text title="Expected output"
+Preparing...                          ################################# [100%]
+Updating / installing...
+   1:SANnav-9.2.1-1                   ################################# [100%]
+SANnav installation completed successfully.
+Installed: SANnav-9.2.1-1.x86_64
+Installation log written to /var/log/sannav_install.log
+Starting SANnav services...
+sannav-server started (PID: 4827)
+sannav-database started (PID: 4829)
+Web UI available at https://localhost:8443
+```
+
+!!! warning "Common errors"
+    **`error: Failed dependencies: libc.so.6(GLIBC_2.17)(64bit) is needed by SANnav`** — Upgrade glibc to a compatible version or use a newer OS distribution that meets SANnav's minimum requirements.
+    **`E: Unable to locate package SANnav`** — Verify the package file path is correct and the repository is configured, or download the .deb file directly from Brocade's support portal.
+    **`error: cannot open Packages database in /var/lib/rpm`** — Run `rpm --rebuilddb` to repair the RPM database, then retry the installation.
 3. Run the post-install configuration:
 
 ```bash
 /opt/sannav/tools/postinstall.sh
 ```
 
+
+```text title="Expected output"
+SANnav Post-Installation Script v8.2.1
+======================================
+Checking system requirements...
+  ✓ OS: Red Hat Enterprise Linux 8.6
+  ✓ Disk space: 45GB available (required: 20GB)
+  ✓ Memory: 32GB (required: 16GB)
+  ✓ Java version: 11.0.15
+
+Initializing database...
+  Creating schema... done
+  Loading initial data... done
+  Setting permissions... done
+
+Configuring Brocade fabric connectivity...
+  Discovering switches... found 12 switches
+  Validating credentials... passed
+  Registering agents... 12/12 complete
+
+Starting services...
+  sannav-server: started (PID 4821)
+  sannav-collector: started (PID 4835)
+  sannav-web: started (PID 4847)
+
+Post-installation complete. Access SANnav at https://localhost:8443
+Default credentials: admin / changeme (change immediately)
+```
+
+!!! warning "Common errors"
+    **`ERROR: Database connection failed: Connection refused on port 5432`** — Ensure PostgreSQL is running with `systemctl start postgresql` before executing postinstall.sh.
+    **`ERROR: Insufficient disk space: 8GB available, 20GB required`** — Free up disk space or mount additional storage before retrying the script.
+    **`ERROR: Java not found or version < 11 detected`** — Install Java 11+ with `yum install java-11-openjdk-devel` and set JAVA_HOME environment variable.
 4. Start the SANnav service:
 
 ```bash
 systemctl enable --now sannav
 ```
 
+
+```text title="Expected output"
+Created symlink /etc/systemd/system/multi-user.target.wants/sannav.service → /usr/lib/systemd/system/sannav.service.
+```
+
+!!! warning "Common errors"
+    **`Unit sannav.service could not be found.`** — Verify the sannav service file exists at /usr/lib/systemd/system/sannav.service or install the sannav package.
+    **`Failed to enable unit: Unit file /etc/systemd/system/sannav.service is masked.`** — Unmask the service with `systemctl unmask sannav` before enabling it.
 ---
 
 ## Initial Configuration
@@ -194,6 +283,21 @@ portDisable <port_number>
 portEnable <port_number>
 ```
 
+
+```text title="Expected output"
+Port 47 disabled successfully
+Port state change detected: Port 47 (Brocade-6505, slot 1) - Link Down
+SANnav Alert Generated: Port Link Down - Severity: Warning - Timestamp: 2024-01-15 14:23:47 UTC
+Alert ID: ALR-2847392-5F1C
+Port 47 enabled successfully
+Port state change detected: Port 47 (Brocade-6505, slot 1) - Link Up
+SANnav Alert Generated: Port Link Up - Severity: Informational - Timestamp: 2024-01-15 14:24:12 UTC
+```
+
+!!! warning "Common errors"
+    **`portDisable: command not found`** — Source the Brocade CLI environment or use the full path to the portDisable utility (typically `/opt/brocade/bin/portDisable`).
+    **`Error: Port 47 is in use by active zone members`** — Use `zoneDisable` to temporarily deactivate the zone before disabling the port, or select a different non-production port.
+    **`SANnav Alert not generated within timeout`** — Verify SANnav is running with `systemctl status sannav` and check network connectivity between the switch and SANnav server.
 ---
 
 ## Set Up Performance Monitoring

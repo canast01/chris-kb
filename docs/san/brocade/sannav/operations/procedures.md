@@ -68,6 +68,21 @@ ssh admin@<switch-ip>
 snmpconfig --show snmpv3
 ```
 
+
+```text title="Expected output"
+admin@switch-ip's password: 
+SNMPv3 Configuration:
+  Engine ID: 800007E5-03-00-00-A0-00-00-00
+  User: navadmin
+  Auth Protocol: SHA
+  Privacy Protocol: AES
+  Security Level: authPriv
+  Context Name: default
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify the switch IP address is correct and admin credentials are valid; check if SSH is enabled on the switch with `snmpconfig --show ssh`.
+    **`snmpconfig: command not found`** — Log in directly to the switch console or use the correct management interface; SNMPv3 configuration may require access via the switch's web UI or telnet if SSH is not available.
 ---
 
 ## Add a Fabric to SANnav

@@ -27,6 +27,28 @@ tail -f /opt/sannav/logs/event-engine.log | grep "trap\|SNMP"
 # Ensure SNMPv3 credentials on switch match what SANnav has configured
 ```
 
+
+```text title="Expected output"
+Trap Destinations:
+  1.1.1.1 (SANnav-Primary) - UDP 162
+  1.1.1.2 (SANnav-Secondary) - UDP 162
+
+tcpdump: listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes
+14:32:45.123456 IP 10.50.20.15.snmp > 1.1.1.1.snmptrap: Trap(enterprise=.1.3.6.1.4.1.1588.2.1.1.1; genericTrap=6; specificTrap=1; timestamp=45821234)
+14:32:46.234567 IP 10.50.20.15.snmp > 1.1.1.1.snmptrap: Trap(enterprise=.1.3.6.1.4.1.1588.2.1.1.1; genericTrap=6; specificTrap=1; timestamp=45821235)
+
+2024-01-15 14:32:45,821 [event-engine] INFO: Processing SNMP trap from 10.50.20.15
+2024-01-15 14:32:45,822 [event-engine] INFO: Trap OID: 1.3.6.1.4.1.1588.2.1.1.1 - Link Up event
+2024-01-15 14:32:45,823 [event-engine] INFO: Event stored in database - ID: evt_20240115_0847362
+2024-01-15 14:32:46,234 [event-engine] INFO: Processing SNMP trap from 10.50.20.15
+2024-01-15 14:32:46,235 [event-engine] INFO: Trap OID: 1.3.6.1.4.1.1588.2.1.1.1 - Link Up event
+2024-01-15 14:32:46,236 [event-engine] INFO: Event stored in database - ID: evt_20240115_0847363
+```
+
+!!! warning "Common errors"
+    **`snmpconfig: command not found`** — Ensure you are running this command on the Brocade switch (via SSH to the switch IP), not from a remote host.
+    **`tcpdump: Permission denied`** — Run tcpdump with `sudo` or as root to capture packets on the SANnav management network interface.
+    **`No such file or directory: /opt/sannav/logs/event-engine.log`** — Verify SANnav is installed and the event engine service is running with `systemctl status sannav-event-engine`.
 ```bash
 # Test LDAP connectivity from SANnav appliance
 openssl s_client -connect ldap.corp.example.com:636 -brief
@@ -40,6 +62,27 @@ ldapsearch -H ldaps://ldap.corp.example.com \
   "(sAMAccountName=testuser)" sAMAccountName mail
 # Expected: returns the test user's attributes
 ```
+
+```text title="Expected output"
+CONNECTED
+depth=0 OU = corp, O = example, C = US
+verify return:1
+
+# LDAP Search Results
+dn: CN=testuser,OU=Users,DC=corp,DC=example,DC=com
+sAMAccountName: testuser
+mail: testuser@corp.example.com
+
+search result
+result: 0 Success
+numResponses: 2
+numEntries: 1
+```
+
+!!! warning "Common errors"
+    **`ldapsearch: error code 49 - 80090308: LdapErr: DSID-0C090446, comment: AcceptSecurityContext error, data 52e, v3839`** — Verify the bind password is correct and the service account is not locked or expired in Active Directory.
+    **`error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed`** — Add the LDAP server's CA certificate to the SANnav appliance's trusted CA store or use `openssl s_client -connect ldap.corp.example.com:636 -CAfile /path/to/ca.pem` to validate the certificate chain.
+    **`ldapsearch: error code 1 - 000004DC: LdapErr: DSID-0C0906E8, comment: In order to perform this operation a successful bind must be completed before the request is processed, data 0, v3839`** — Ensure the LDAP server hostname, port (636 for LDAPS), and bind DN are correct and that network connectivity exists on port 636.
 ```bash
 # On the switch (FOS CLI)
 firmwareshow
@@ -51,6 +94,33 @@ firmwaredownload --status
 # If upgrade is stuck, check system logs on the switch
 errdump
 ```
+
+```text title="Expected output"
+Firmware Version: 9.1.0
+Firmware Build: 0x4f6b2a15
+Installed: 2024-01-15 14:32:18
+Current Partition: Primary
+Backup Partition: 9.0.1b
+Build: 0x4e8c1f42
+Installed: 2023-11-22 09:18:45
+
+Firmware Download Status:
+Download State: Not in progress
+Last Download: 2024-01-15 14:25:33
+Progress: N/A
+
+System Error Log (Last 10 entries):
+2024-01-15 14:35:22 WARNING Port 0/12: Link failure detected
+2024-01-15 14:28:15 INFO Fabric reconfiguration completed
+2024-01-15 14:15:44 ERROR Temperature sensor 2: Reading 68°C (threshold: 70°C)
+2024-01-15 13:52:09 WARNING Memory utilization: 78%
+2024-01-15 13:45:33 INFO Configuration backup completed
+```
+
+!!! warning "Common errors"
+    **`firmwareshow: command not found`** — Ensure you are logged into the switch FOS CLI directly (not the management interface); use `sshfos` or telnet to the switch IP.
+    **`errdump: Access denied`** — Verify your user account has administrative privileges on the switch; request elevated permissions from your fabric administrator.
+    **`firmwaredownload --status: Download in progress (98%) - Do not power off`** — Wait for the download to complete or contact Brocade support if it stalls beyond 30 minutes; do not interrupt the process.
 ```bash
 # Verify switch firmware from SANnav after reconnect
 # Inventory > Switches > [Switch] > Details
@@ -68,6 +138,29 @@ scp /tmp/testfile.txt sannav-bkp@backup-server.corp.example.com:/backups/sannav/
 # Check SANnav backup logs
 grep -i "backup\|transfer\|ERROR" /opt/sannav/logs/server.log | tail -50
 ```
+
+```text title="Expected output"
+admin@sannav-dc1.corp.example.com's password: 
+sannav-bkp@backup-server.corp.example.com's password: 
+testfile.txt                                          100%  1024     512.3KB/s   00:00
+
+2024-01-15 14:32:18 [INFO] Backup transfer initiated for fabric-01
+2024-01-15 14:32:45 [INFO] Transfer completed: 2.3GB in 27 seconds
+2024-01-15 14:33:02 [INFO] Backup validation passed
+2024-01-15 14:35:18 [INFO] Backup transfer initiated for fabric-02
+2024-01-15 14:36:01 [INFO] Transfer completed: 1.8GB in 43 seconds
+2024-01-15 14:36:15 [INFO] Backup validation passed
+2024-01-15 14:38:22 [ERROR] Connection timeout to backup-server.corp.example.com
+2024-01-15 14:38:23 [ERROR] Backup transfer failed for fabric-03: SSH connection lost
+2024-01-15 14:40:01 [INFO] Retry attempt 1 for fabric-03
+2024-01-15 14:40:45 [INFO] Transfer completed: 2.1GB in 44 seconds
+...
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify SSH credentials for sannav-bkp user on backup-server and ensure the private key is loaded in ssh-agent or explicitly specified with `-i` flag.
+    **`Connection refused`** — Confirm TCP port 22 is open on backup-server.corp.example.com by running `telnet backup-server.corp.example.com 22` from the SANnav host.
+    **`No such file or directory: /opt/sannav/logs/server.log`** — Check the correct log path with `find /opt/sannav -name "*.log" -type f` or verify SANnav is installed and running.
 ```bash
 df -h | grep backup
 # If not mounted: sudo mount -a

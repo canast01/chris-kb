@@ -121,6 +121,54 @@ df -h /opt/sannav /var
 # Alert if RAM < 20% free or disk > 80% used on /opt/sannav
 ```
 
+
+```text title="Expected output"
+admin@sannav-01:~$ sannav-admin status
+sannav-api                 RUNNING
+sannav-collector           RUNNING
+sannav-db                  RUNNING
+sannav-ui                  RUNNING
+sannav-scheduler           RUNNING
+sannav-alerting            RUNNING
+
+admin@sannav-01:~$ curl -sk https://192.168.1.50/api/v1/health | python3 -m json.tool
+{
+  "status": "UP",
+  "services": {
+    "api": "UP",
+    "database": "UP",
+    "collector": "UP",
+    "scheduler": "UP"
+  },
+  "timestamp": "2024-01-15T14:32:18Z"
+}
+
+admin@sannav-01:~$ journalctl -u sannav --since "1 hour ago" | tail -100
+Jan 15 14:15:22 sannav-01 sannav[2847]: INFO: Collector sync completed for fabric-01
+Jan 15 14:20:45 sannav-01 sannav[2847]: INFO: Health check passed for all switches
+Jan 15 14:31:10 sannav-01 sannav[2847]: INFO: Database backup completed
+
+admin@sannav-01:~$ top -b -n 1 | head -20
+top - 14:35:22 up 45 days, 3:22, 1 user, load average: 1.24, 1.18, 1.15
+Tasks: 187 total, 2 running, 185 sleeping, 0 stopped, 0 zombie
+%Cpu(s): 18.3 us, 4.2 sy, 0.0 ni, 77.1 id, 0.2 wa, 0.1 hi, 0.1 si, 0.0 st
+MiB Mem : 32768.0 total, 26144.2 free, 5120.8 used, 1503.0 buff/cache
+MiB Swap: 8192.0 total, 8192.0 free, 0.0 used. 25600.0 avail Mem
+
+admin@sannav-01:~$ free -h
+              total        used        free      shared  buff/cache   available
+Mem:           31Gi       5.0Gi        25Gi       512Mi       1.5Gi        25Gi
+Swap:          8.0Gi          0B       8.0Gi
+
+admin@sannav-01:~$ df -h /opt/sannav /var
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda3       500G  285G  215G  57% /opt/sannav
+/dev/sda2       100G   42G   58G  42% /var
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl to skip SSL verification, or import the SANnav CA certificate into your system's trust store.
+    **`sannav-admin: command not found`** — Ensure you are logged in as the `admin` user and `/opt/sannav/
 ---
 
 ## Step 2 — Check database health
@@ -145,6 +193,20 @@ df -h /opt/sannav/data
 # This runs asynchronously; reclaimed space appears after compaction (may take hours)
 ```
 
+
+```text title="Expected output"
+PostgreSQL is running and healthy
+{"name":"influxdb","status":"pass","message":"ready for queries and writes","checks":[],"output":""}
+1.2G	/opt/sannav/data/influxdb/
+Filesystem     Size  Used Avail Use% Mounted on
+/dev/sda1      100G   87G   13G  87% /opt/sannav/data
+tmpfs          7.8G     0  7.8G   0% /dev/shm
+/dev/sda2      500G  412G   88G  83% /var
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to localhost port 8086: Connection refused`** — Verify InfluxDB is running with `systemctl status influxdb` and check firewall rules allowing localhost:8086.
+    **`du: cannot access '/opt/sannav/data/influxdb/': No such file or directory`** — Confirm InfluxDB data directory path matches your installation; check actual path with `find /opt -name influxdb -type d 2>/dev/null`.
 ---
 
 ## Step 3 — Diagnose switch discovery failures
@@ -173,6 +235,35 @@ curl -sk -X POST https://<switch-ip>/rest/login \
 #   httpcfg --show (verify HTTPS REST API is enabled)
 ```
 
+
+```text title="Expected output"
+2024-01-15 10:23:47 [INFO] Discovery initiated for switch 10.50.12.45
+2024-01-15 10:23:52 [DEBUG] Attempting HTTPS connection to 10.50.12.45:443
+2024-01-15 10:24:01 [ERROR] Connection refused on attempt 1, retrying...
+2024-01-15 10:24:15 [WARN] SSL certificate validation skipped (self-signed detected)
+2024-01-15 10:24:22 [INFO] Discovery completed with 1 warning
+
+HTTP status: 401
+
+{
+  "errors": [
+    {
+      "errorCode": 401,
+      "errorMessage": "Authentication required"
+    }
+  ]
+}
+
+SSH connection to 10.50.12.45 port 22 successful
+FOS Version: v9.1.0
+HTTPS REST API: Enabled
+Management Port: 443
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to 10.50.12.45 port 443: Connection refused`** — Verify the switch management IP is correct and HTTPS is enabled on the switch via `httpcfg --show`.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Use the `-k` flag to skip certificate verification (already included in the example), or import the switch's certificate into your CA bundle.
+    **`{"errorCode": 401, "errorMessage": "Authentication required"}`** — Reset the SANnav service account password on the switch and update the credentials in SANnav's configuration file.
 ---
 
 ## Step 4 — Check SNMP trap reception
@@ -202,6 +293,33 @@ snmpconfig --show snmpv3
 sudo systemctl restart sannav-event-engine
 ```
 
+
+```text title="Expected output"
+udp    UNCONN 0      0      0.0.0.0:162    0.0.0.0:*    users:(("snmptrapd",pid=2847,fd=9))
+udp6   UNCONN 0      0      [::]:162       [::]:*       users:(("snmptrapd",pid=2847,fd=10))
+
+tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+listening on eth0, link-type EN10MB (Ethernet), capture size 65535 bytes
+14:32:15.487291 IP 192.168.1.45.54821 > 10.50.20.18.162: SNMP, length 156
+14:32:18.521847 IP 192.168.1.45.54822 > 10.50.20.18.162: SNMP, length 156
+14:32:21.634012 IP 192.168.1.45.54823 > 10.50.20.18.162: SNMP, length 156
+14:32:24.712556 IP 192.168.1.45.54824 > 10.50.20.18.162: SNMP, length 156
+14:32:27.889234 IP 192.168.1.45.54825 > 10.50.20.18.162: SNMP, length 156
+20 packets captured
+20 packets received by filter
+0 packets dropped by kernel
+
+snmpv3 trap recipients:
+  192.168.1.200 (SANnav-Primary)
+  192.168.1.201 (SANnav-Secondary)
+
+sannav-event-engine.service restarted successfully.
+```
+
+!!! warning "Common errors"
+    **`ss: command not found`** — Install net-tools or use `netstat -tulnp | grep 162` instead on older systems.
+    **`tcpdump: Permission denied`** — Run the tcpdump command with `sudo` or ensure the user is in the pcap group.
+    **`Unit sannav-event-engine.service not found`** — Verify the service name with `sudo systemctl list-units | grep sannav` and use the correct service name.
 ---
 
 ## Step 5 — Check SANnav host system performance
@@ -229,6 +347,40 @@ time curl -sk -X POST https://<sannav-ip>/rest/login \
 # > 5 seconds: SANnav server under load or PostgreSQL is slow
 ```
 
+
+```text title="Expected output"
+USER       PID %CPU %MEM    VSZ   RSS TTY STAT START   TIME COMMAND
+root      2847 18.3  12.5 2847392 412016 ?  Sl   09:22  45:23 /usr/java/default/bin/java -server -Xmx2048m -Xms1024m -Dcom.brocade.sannav.home=/opt/brocade/sannav
+postgres  1923 8.7   9.2 1256480 301504 ?  Sl   09:15  22:11 /usr/pgsql-12/bin/postgres -D /var/lib/pgsql/12/data
+root      2891 3.2   4.1  856320 134208 ?  Sl   09:23   8:45 /opt/brocade/sannav/bin/collector
+root      1847 1.1   2.3  512000  75392 ?  Ss   09:10   2:33 /usr/sbin/sshd -D
+root      2945 0.8   1.9  384000  62144 ?  Sl   09:25   1:52 /opt/brocade/sannav/bin/alertmanager
+
+              total        used        free      shared  buff/cache   available
+Mem:           15Gi       8.2Gi       2.1Gi       512Mi       4.7Gi       6.1Gi
+Swap:          4.0Gi       1.2Gi       2.8Gi
+
+Linux 5.10.0-8-amd64 (sannav-prod-01) 	01/15/2025 	_x86_64_	(8 CPU)
+
+avg-cpu:  %user   %nice %system %iowait  %steal   %idle
+          42.15    0.00   18.33    8.42    0.00   31.10
+
+Device            r/s     w/s     rMB/s     wMB/s   %util rrqm/s wrqm/s r_await w_await svctm
+sda              145.2   287.5    18.4      22.1   68.3   12.1   45.3   4.2     6.8    1.9
+sdb               8.3    12.1     0.6       0.9   12.1    1.2    3.4   3.1     4.2    0.8
+
+RX: bytes  packets  errors  dropped missed  mcast
+    8847392 12453    0       0       0       0
+TX: bytes  packets  errors  dropped carrier collsns
+    5234891 9821     0       0       0       0
+
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   284  100   284    0     284   1847    1847 --:--:-- --:--:-- --:--:-- --:--:--
+{"sessionID":"a7f2c8e9-1b4d-4a2f-9e3c-5d8f2a1b9c4e","userName":"admin"}
+
+real
+```
 ---
 
 ## Step 6 — Collect support bundle for Broadcom TAC
@@ -255,6 +407,32 @@ supportsave
 # - SANnav version: GUI → Administration → System → Version
 ```
 
+
+```text title="Expected output"
+admin@sannav-prod:~$ sannav-admin support-bundle --output /tmp/sannav-support-$(date +%F).tar.gz
+Generating support bundle...
+Collecting system logs (syslog, audit, application)...
+Collecting database state and configuration...
+Collecting service status (nginx, postgresql, elasticsearch)...
+Collecting network diagnostics...
+Bundle created: /tmp/sannav-support-2024-01-15.tar.gz (487 MB)
+Completed in 8 minutes 42 seconds
+
+admin@workstation:~$ scp admin@192.168.1.45:/tmp/sannav-support-*.tar.gz ./
+sannav-support-2024-01-15.tar.gz                    100%  487MB   12.3MB/s   00:40
+
+switch-fab1:admin> supportsave
+Saving system information...
+Saving configuration and logs...
+Saving fabric state and performance data...
+Support save file: /var/log/supportsave_20240115_143022.tar.gz (156 MB)
+Completed successfully
+```
+
+!!! warning "Common errors"
+    **`sannav-admin: command not found`** — Ensure you are logged in as the admin user on the SANnav VM and the sannav-admin CLI tool is in your PATH (typically pre-installed).
+    **`Permission denied (publickey)`** — Verify SSH key is configured for the admin user on the SANnav VM, or use password authentication with `scp -o PubkeyAuthentication=no`.
+    **`supportsave: command not found`** — SSH directly to the Brocade switch (not the SANnav VM) and run supportsave with admin or root privileges.
 ---
 
 ## Log locations

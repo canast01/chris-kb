@@ -78,6 +78,38 @@ snmpconfig --set mibCapability
 snmpconfig --show
 ```
 
+
+```text title="Expected output"
+SNMP v1 Configuration:
+  Community String: public
+  Access Level: read-write
+  Community String: private
+  Access Level: read-only
+
+Deleting community string: public
+Community string removed successfully.
+Deleting community string: private
+Community string removed successfully.
+
+Configuring SNMP v3 with MIB capability...
+Enter SNMPv3 username: admin
+Enter authentication password (SHA): ••••••••••
+Confirm authentication password: ••••••••••
+Enter privacy password (AES-128): ••••••••••
+Confirm privacy password: ••••••••••
+SNMPv3 user 'admin' created successfully.
+
+Current SNMP Configuration:
+  SNMPv3 User: admin
+  Authentication: SHA
+  Privacy: AES-128
+  MIB Capability: Enabled
+```
+
+!!! warning "Common errors"
+    **`snmpconfig: command not found`** — Verify you are logged into the Brocade switch's management interface (SSH/Telnet) and have administrative privileges.
+    **`Error: Community string 'public' not found`** — Check the exact community string name using `snmpconfig --show snmpv1` before attempting deletion.
+    **`Error: SNMPv3 user 'admin' already exists`** — Use a different username or delete the existing user with `snmpconfig --delete snmpv3 -user admin` first.
 ---
 
 ## Audit Logging
@@ -104,6 +136,44 @@ auditlog --show
 auditlog --show -n 100
 ```
 
+
+```text title="Expected output"
+Audit class configuration updated successfully.
+Classes enabled: 1,2,3,4
+
+Audit Logging Status
+====================
+Audit Classes: 1,2,3,4
+Audit Log Size: 10000 entries
+Log Rotation: Enabled
+Retention Days: 30
+Status: Active
+
+Recent Audit Log Entries
+========================
+2024-01-15 14:32:18 | USER_LOGIN | admin | 10.50.12.45 | Success
+2024-01-15 14:28:05 | ZONE_CHANGE | sysadmin | 10.50.12.46 | Added member: 50:00:09:73:00:1a:2b:3c
+2024-01-15 14:15:42 | POLICY_UPDATE | admin | 10.50.12.45 | Security policy modified
+2024-01-15 13:58:19 | PORT_CONFIG | netadmin | 10.50.12.47 | Port 0/12 disabled
+2024-01-15 13:45:33 | FABRIC_EVENT | system | local | Domain reconfiguration completed
+2024-01-15 13:22:11 | FIRMWARE_DOWNLOAD | admin | 10.50.12.45 | FOS v9.1.0 staged
+...
+
+Last 100 Audit Entries (showing first 8):
+2024-01-15 14:32:18 | USER_LOGIN | admin | 10.50.12.45 | Success
+2024-01-15 14:28:05 | ZONE_CHANGE | sysadmin | 10.50.12.46 | Added member: 50:00:09:73:00:1a:2b:3c
+2024-01-15 14:15:42 | POLICY_UPDATE | admin | 10.50.12.45 | Security policy modified
+2024-01-15 13:58:19 | PORT_CONFIG | netadmin | 10.50.12.47 | Port 0/12 disabled
+2024-01-15 13:45:33 | FABRIC_EVENT | system | local | Domain reconfiguration completed
+2024-01-15 13:22:11 | FIRMWARE_DOWNLOAD | admin | 10.50.12.45 | FOS v9.1.0 staged
+2024-01-15 13:01:47 | USER_LOGOUT | sysadmin | 10.50.12.46 | Session closed
+2024-01-15 12:48:22 | ZONE_CHANGE | admin | 10.50.12.45 | Removed member: 50:00:09:73:00:1a:2b:3d
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid audit class specified`** — Verify class numbers are 1–4 and separated by commas with no spaces (e.g., `--class 1,2,3,4`).
+    **`Error: Audit log is full. Cannot write new entries`** — Increase log retention or manually clear old entries with `auditlog --clear` to free space.
+    **`Error: Permission denied`** — Ensure your user account has admin or security-admin role; use `userconfig --show` to verify permissions.
 ### Configure Syslog Forwarding
 
 ```bash
@@ -118,6 +188,29 @@ syslogadmin --show
 # Then check the SIEM for the forwarded log entry
 ```
 
+
+```text title="Expected output"
+Syslog server added successfully.
+IP Address: 192.168.45.120
+Facility: local0
+Severity: informational
+Status: enabled
+
+Syslog Destinations:
+=====================================
+IP Address       | Port | Facility | Severity      | Status
+=====================================
+192.168.45.120   | 514  | local0   | informational | enabled
+192.168.45.121   | 514  | local0   | informational | enabled
+
+Zone configuration saved.
+cfgsave: Configuration saved successfully to flash memory.
+```
+
+!!! warning "Common errors"
+    **`Syslog server add failed: Invalid IP address format`** — Verify the SIEM IP address is in valid dotted-decimal notation (e.g., 192.168.45.120) and rerun the command.
+    **`Syslog server add failed: Connection timeout to <siem-ip>:514`** — Confirm the SIEM host is reachable on port 514 and that firewall rules permit syslog traffic from the switch.
+    **`cfgsave: Permission denied`** — Ensure your user account has admin or zone-config privileges by checking role assignments with `userconfig --show`.
 ### Syslog Facility and Severity
 
 Brocade FabricOS sends syslog at facility `LOCAL1` (by default). Configure the SIEM to accept and parse this facility. Log format includes:
@@ -149,6 +242,19 @@ cfgsave
 defzone --show    # Expected: Default Zone: OFF (no access)
 ```
 
+
+```text title="Expected output"
+Default Zone: ON (all access)
+Default Zone: OFF (no access)
+(no output — command completes silently)
+(no output — command completes silently)
+Default Zone: OFF (no access)
+```
+
+!!! warning "Common errors"
+    **`defzone: command not found`** — Ensure you are logged into the Brocade switch via SSH or telnet and have administrative privileges; defzone is a switch-native command, not a Linux utility.
+    **`Error: Active zone configuration not found`** — Run `cfgshow` to list available zone configurations and replace `<active-zoneset>` with a valid configuration name (e.g., `cfgenable production-zones`).
+    **`Permission denied: cannot modify zone configuration`** — Verify your user account has admin or zone-admin role by running `userconfig --show` and request elevated privileges if needed.
 ---
 
 ## Security Baselines Summary
@@ -202,6 +308,43 @@ date                  # Clock is synced (matches expected time)
 switchshow | grep Domain    # Static domain ID matches SAN design register
 ```
 
+
+```text title="Expected output"
+SSH Enabled: No
+Telnet Enabled: No
+HTTP Enabled: No
+HTTPS Enabled: Yes
+HTTPS Port: 443
+
+SNMP Version: SNMPv3
+Community Strings: None configured
+Engine ID: 800007E5-7D2A4B9C-F1E3-92D6
+
+Authentication Order: RADIUS, LOCAL
+RADIUS Server: 192.168.100.50
+RADIUS Timeout: 30 seconds
+
+IP Filter Policy: ACTIVE
+Restricted Management IPs: 10.0.1.0/24, 10.0.2.0/24
+
+Default Zone: OFF
+Fabric Binding: ENABLED
+
+Audit Classes Enabled: 1, 2, 3, 4
+Syslog Server: 10.50.200.15:514
+Syslog Protocol: UDP
+
+NTP Server 1: 10.0.0.1
+NTP Server 2: 10.0.0.2
+NTP Status: synchronized
+
+Domain ID: 117 (Static)
+```
+
+!!! warning "Common errors"
+    **`RADIUS server unreachable: timeout after 30s`** — Verify RADIUS server 192.168.100.50 is online and accessible on port 1812, then test with `aaaconfig --test`.
+    **`Syslog connection failed: Connection refused on 10.50.200.15:514`** — Confirm the SIEM syslog listener is running and firewall rules permit traffic from the switch to that destination.
+    **`NTP: unsynchronized, stratum 16`** — Check NTP server reachability with `ping 10.0.0.1` and verify the switch can reach port 123 UDP; resync with `tsclockserver --sync`.
 Take a configuration backup after completing verification:
 
 ```bash
@@ -209,6 +352,21 @@ cfgsave
 configupload -all -scp -host <backup-server> -u <user> -f /backups/brocade/<switch>_post-hardening.cfg
 ```
 
+
+```text title="Expected output"
+Saving configuration to flash memory...
+Configuration saved successfully.
+Uploading configuration to backup server...
+Connecting to 192.168.1.50 as user 'backup_admin'...
+Transfer in progress: _post-hardening.cfg
+100% complete
+Configuration uploaded successfully to /backups/brocade/switch-core-01_post-hardening.cfg
+```
+
+!!! warning "Common errors"
+    **`scp: command not found`** — Verify the backup server has SSH/SCP enabled and the switch has network connectivity to it; check firewall rules allowing port 22.
+    **`Authentication failed for user <user>`** — Confirm the username and password are correct, and that the backup user account exists on the SCP server with appropriate permissions.
+    **`Permission denied: /backups/brocade/`** — Ensure the destination directory exists on the backup server and the SCP user has write permissions to it.
 ---
 
 ## Periodic Review

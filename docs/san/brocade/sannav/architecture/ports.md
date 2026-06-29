@@ -96,6 +96,35 @@ snmpconfig --show snmpv1
 # Navigate: SANnav UI → Dashboard → Switches view
 ```
 
+
+```text title="Expected output"
+200
+
+Switch Name:	switch-prod-01
+Switch State:	Online
+Fabric State:	Stable
+FC Port Count:	48
+(Connection successful)
+
+Ncat: Version 7.80 ( https://nmap.org/ncat )
+Ncat: Connected to 192.168.100.45:162
+
+SNMP v1 Configuration:
+  Community Name: public
+  Trap Receiver: 192.168.100.45:162
+  Trap Version: v1
+  Status: Enabled
+
+SANnav Dashboard — Switches Discovered:
+  switch-prod-01 (192.168.100.10) — Status: Managed
+  switch-prod-02 (192.168.100.11) — Status: Managed
+  switch-dr-01 (192.168.100.20) — Status: Managed
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip certificate verification in lab environments.
+    **`ssh: connect to host 192.168.100.10 port 22: Connection timed out`** — Verify switch management IP is reachable and SSH is enabled on the switch with `sshconfig --enable`.
+    **`snmpconfig: command not found`** — Run the command from the switch CLI (via SSH or console), not from the SANnav host.
 ---
 
 ## See also

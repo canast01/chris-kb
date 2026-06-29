@@ -74,6 +74,16 @@ curl -sk -X PUT \
   }'
 ```
 
+
+```text title="Expected output"
+{"accessToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbmlzdHJhdG9yQHZzcGhlcmUubG9jYWwiLCJleHAiOjE3MDk4MzIwMDB9.a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6","expiresIn":3600}
+{"id":"backup-config-001","server":"<transfer-family-endpoint>.server.transfer.us-east-1.amazonaws.com","port":22,"username":"sddc-backup","directoryPath":"/backups/sddc-manager","schedule":{"enabled":true,"frequency":"DAILY","hourOfDay":2},"status":"CONFIGURED","lastModified":"2024-03-07T14:22:15Z"}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command (already present) or import the SDDC Manager CA certificate into your system trust store.
+    **`jq: command not found` or `json.load(sys.stdin).get: error`** — Ensure python3 is installed and the JSON parsing syntax matches your Python version; test with `python3 -c "import json; print(json.dumps({'test':'ok'}))"`.
+    **`{"error":"Invalid token","code":401}`** — Verify the SDDC Manager credentials (username/password) are correct and the `/v1/tokens` endpoint is accessible; check network connectivity to `sddc-manager.vcf.internal`.
 **Trigger an immediate on-demand backup:**
 
 ```bash
@@ -91,6 +101,19 @@ watch -n 15 "curl -sk -H 'Authorization: Bearer ${TOKEN}' \
   python3 -c \"import sys,json; d=json.load(sys.stdin); print(d.get('status',''), d.get('completionTimestamp',''))\""
 ```
 
+
+```text title="Expected output"
+Backup task ID: 550e8400-e29b-41d4-a716-446655440000
+RUNNING 
+RUNNING 
+RUNNING 
+COMPLETED 2024-01-15T14:32:18.000Z
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or ensure your CA certificate is in the system trust store.
+    **`jq: command not found` or `python3: command not found`** — Install the required JSON parser (python3 is already used here) or verify it's in your PATH with `which python3`.
+    **`Authorization: Bearer: command not found`** — Ensure the `TOKEN` environment variable is set before running the script with `export TOKEN="your_bearer_token"`.
 **List available backups:**
 
 ```bash
@@ -104,6 +127,19 @@ for b in d.get('elements', []):
 "
 ```
 
+
+```text title="Expected output"
+2024-01-15T09:42:31.000Z 5.1.2 backup-sddc-prod-20240115-094231.tar.gz
+2024-01-14T22:18:47.000Z 5.1.2 backup-sddc-prod-20240114-221847.tar.gz
+2024-01-13T14:05:12.000Z 5.1.1 backup-sddc-prod-20240113-140512.tar.gz
+2024-01-12T03:33:55.000Z 5.1.1 backup-sddc-prod-20240112-033355.tar.gz
+2024-01-11T18:47:22.000Z 5.0.3 backup-sddc-prod-20240111-184722.tar.gz
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; if still failing, verify `${SDDC_URL}` is correct and reachable).
+    **`curl: (401) Unauthorized`** — Ensure `${TOKEN}` is set and valid by running `echo $TOKEN` and regenerating the API token if expired.
+    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Verify the API endpoint returns valid JSON by testing `curl -sk -H "Authorization: Bearer ${TOKEN}" "${SDDC_URL}/v1/backups"` directly without piping to Python.
 **SFTP target options for EVS:**
 
 - AWS Transfer Family SFTP with S3 backend: recommended for EVS environments; SFTP endpoint backed by S3; requires IAM user with SSH key pair
@@ -155,6 +191,31 @@ curl -sk -X POST "${VAMI_URL}/api/appliance/recovery/backup/schedules/daily-back
   }'
 ```
 
+
+```text title="Expected output"
+{
+  "id": "daily-backup",
+  "enable": true,
+  "recurrence_info": {
+    "minute": 0,
+    "hour": 1,
+    "day_of_week": null
+  },
+  "retention_info": {
+    "max_count": 7
+  },
+  "location_type": "SFTP",
+  "location": "sftp://<transfer-family-endpoint>/backups/vcenter",
+  "location_user": "vcenter-backup",
+  "parts": ["seat", "common"],
+  "status": "SCHEDULED"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification (already present in example, but ensure it's not removed).
+    **`{"error":{"messages":["Authentication failed"],"error_code":"com.vmware.appliance.recovery.backup.error.authentication_failed"}}`** — Verify vCenter root password is correct and user has backup permissions via `curl -sk -X GET "${VAMI_URL}/api/appliance/system/version" --user "root:${VCENTER_PASS}"`.
+    **`{"error":{"messages":["Cannot connect to SFTP location"],"error_code":"com.vmware.appliance.recovery.backup.error.location_connection_failed"}}`** — Confirm SFTP endpoint is reachable and credentials are valid by testing connectivity: `sftp -o StrictHostKeyChecking=no vcenter-backup@<transfer-family-endpoint>`.
 **Trigger an immediate vCenter backup:**
 
 ```bash
@@ -172,6 +233,28 @@ curl -sk -X POST "${VAMI_URL}/api/appliance/recovery/backup/job" \
   }'
 ```
 
+
+```text title="Expected output"
+{
+  "value": {
+    "id": "backup-job-20240115-4a7c9e2f",
+    "state": "RUNNING",
+    "progress": 0,
+    "start_time": "2024-01-15T14:32:18.456Z",
+    "backup_type": "MANUAL",
+    "location_type": "SFTP",
+    "location": "sftp://s-a1b2c3d4e5f6g7h8i.server.transfer.us-east-1.amazonaws.com/backups/vcenter",
+    "parts": ["seat", "common"],
+    "comment": "manual-backup",
+    "estimated_remaining_time": 1847
+  }
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification (already present in the example, but ensure it's not removed).
+    **`{"error": "Invalid location_type or malformed SFTP URL"}`** — Verify the SFTP endpoint format matches `sftp://hostname/path` and that the transfer family endpoint is correctly specified without extra protocols.
+    **`{"error": "Authentication failed for location_user"}`** — Confirm the SFTP credentials (location_user and location_password) are correct and the vCenter backup user has write permissions on the remote SFTP path.
 **Restore vCenter from backup:**
 
 1. Run the vCenter Server Appliance Installer
@@ -210,6 +293,30 @@ curl -sk -X PUT -u "admin:${NSX_PASS}" \
   }'
 ```
 
+
+```text title="Expected output"
+{
+  "server": "s-1a2b3c4d5e6f7g8h9.server.transfer.us-east-1.amazonaws.com",
+  "port": 22,
+  "username": "nsx-backup",
+  "directory_path": "/backups/nsx-manager",
+  "schedule": {
+    "resource_type": "IntervalBackupSchedule",
+    "seconds_between_backups": 86400
+  },
+  "passphrase": "NSXbackupEncrypt123!",
+  "_links": {
+    "self": {
+      "href": "/api/v1/cluster/backups/config"
+    }
+  }
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already present) or import the NSX Manager's CA certificate into your system trust store.
+    **`{"httpStatus":401,"error_code":401,"module_name":"common","error_message":"Invalid credentials"}`** — Verify the NSX admin password in `NSX_PASS` matches the current credentials and the user has backup configuration permissions.
+    **`{"httpStatus":400,"error_code":400,"module_name":"common","error_message":"Invalid SFTP server configuration"}`** — Test SFTP connectivity with `sftp -P 22 nsx-backup@<transfer-family-endpoint>.server.transfer.us-east-1.amazonaws.com` and confirm the directory path exists and is writable.
 **Trigger an immediate NSX-T on-demand backup:**
 
 ```bash
@@ -218,6 +325,15 @@ curl -sk -X POST -u "admin:${NSX_PASS}" \
   python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('backup_id',''))"
 ```
 
+
+```text title="Expected output"
+backup-20240315-143827-a7f9c2e1-9d4a-4b2c-8f3a-6e1d2c9b5a4f
+```
+
+!!! warning "Common errors"
+    **`curl: (6) Could not resolve host`** — Verify the NSX_URL environment variable is set correctly and the NSX Manager hostname is resolvable.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — The `-k` flag should bypass this, but if it persists, ensure your curl version supports the flag or check NSX Manager certificate validity.
+    **`KeyError: 'backup_id'`** — Confirm the NSX Manager API response includes a `backup_id` field; check NSX version compatibility and that the backup request was accepted (HTTP 200/202).
 **List NSX-T backups:**
 
 ```bash
@@ -231,6 +347,20 @@ for b in d.get('results', []):
 "
 ```
 
+
+```text title="Expected output"
+2024-01-15T09:42:33.521Z backup-20240115-094233 SUCCEEDED
+2024-01-14T14:18:47.892Z backup-20240114-141847 SUCCEEDED
+2024-01-13T09:15:12.445Z backup-20240113-091512 SUCCEEDED
+2024-01-12T22:33:05.178Z backup-20240112-223305 FAILED
+2024-01-11T09:42:18.634Z backup-20240111-094218 SUCCEEDED
+2024-01-10T14:27:51.209Z backup-20240110-142751 SUCCEEDED
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in the example, but ensure NSX_URL uses https://).
+    **`curl: (7) Failed to connect to host:port: Connection refused`** — Verify NSX_URL environment variable is set correctly and the NSX manager is reachable on the network.
+    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Confirm NSX_PASS credentials are correct; an authentication failure returns HTML error instead of JSON.
 NSX-T backup includes all policies, segments, firewall rules, and gateway configuration. It does not include fabric-level state (transport nodes are re-associated after restore). After NSX-T restore, you must re-push host transport node configuration.
 
 ## VM Workload Backup

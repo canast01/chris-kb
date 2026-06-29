@@ -95,6 +95,41 @@ curl -sk -u "admin:$NSX_PASSWORD" \
   -X POST "$NSX_URL/api/v1/node/aaa/providers/ldap?action=test" | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "resource_type": "LdapProvider",
+  "id": "ldap-1",
+  "display_name": "corp-ad",
+  "ldap_servers": [
+    {
+      "bind_dn": "CN=svc-nsx,OU=ServiceAccounts,DC=corp,DC=example,DC=com",
+      "ldap_url": "ldap://dc01.corp.example.com:389",
+      "connection_timeout": 10,
+      "search_timeout": 30
+    }
+  ],
+  "domain_name": "corp.example.com",
+  "base_dn": "OU=Users,DC=corp,DC=example,DC=com",
+  "type": "ActiveDirectory",
+  "enabled": true,
+  "_self": {
+    "href": "/api/v1/node/aaa/providers/ldap/ldap-1",
+    "rel": "self"
+  }
+}
+{
+  "status": "success",
+  "message": "LDAP connectivity test passed",
+  "server": "dc01.corp.example.com:389",
+  "response_time_ms": 145
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present; if still failing, verify NSX_URL uses https://).
+    **`{"error_code": 401, "error_message": "Invalid credentials"}`** — Ensure NSX_PASSWORD environment variable is set correctly and the admin user has API access permissions.
+    **`{"error_code": 400, "error_message": "Invalid bind_dn or bind_password"}`** — Verify the service account credentials and DN path match your Active Directory schema exactly.
 ## AWS IAM Identity Center Integration
 
 For organizations using AWS IAM Identity Center (formerly AWS SSO), EVS console and API access is governed through IAM Identity Center permission sets. The vCenter and NSX-T UIs, however, maintain their own SSO — IAM Identity Center does not automatically provide access to these.
@@ -146,6 +181,23 @@ curl -sk -u "$SDDC_USER:$SDDC_PASS" \
   python3 -c "import sys,json; d=json.load(sys.stdin); print(f\"Status: {d['status']} - {d.get('name','')}\")"
 ```
 
+
+```text title="Expected output"
+{
+  "id": "task-a7f2c9e1-4b6d-11ee-9c2a-0050569e1234",
+  "name": "Rotate credentials for VCENTER",
+  "status": "RUNNING",
+  "startTime": "2024-01-15T14:32:18.456Z",
+  "estimatedRemainingTime": 180,
+  "percentageComplete": 35
+}
+Status: RUNNING - Rotate credentials for VCENTER
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present; if still failing, verify SDDC Manager hostname resolves correctly).
+    **`curl: (7) Failed to connect to sddc-manager.vcf.internal port 443: Name or service not known`** — Ensure DNS resolution for sddc-manager.vcf.internal is configured or add the IP to `/etc/hosts`.
+    **`jq: error (at <stdin>:1): Cannot index string with string "status"`** — Verify the API response is valid JSON and that `$SDDC_USER` and `$SDDC_PASS` credentials are correct (401 responses return HTML error pages).
 HCX credentials must be rotated separately because HCX Manager stores its own local admin password and the service mesh uses HCX-specific credentials for inter-site authentication:
 
 ```bash
@@ -163,6 +215,23 @@ curl -sk -u "admin:$NEW_HCX_PASSWORD" \
   python3 -c "import sys,json; [print(f\"{l['label']}: {l['status']}\") for l in json.load(sys.stdin).get('items',[])]"
 ```
 
+
+```text title="Expected output"
+{
+  "ARN": "arn:aws:secretsmanager:us-west-2:123456789012:secret:evs/hcx-admin-password-AbCdE",
+  "Name": "evs/hcx-admin-password",
+  "VersionId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+}
+Mesh-Link-01: UP
+Mesh-Link-02: UP
+Mesh-Link-03: DEGRADED
+Mesh-Link-04: UP
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification (already present in example, but verify HCX_MANAGER_IP is correct if error persists).
+    **`jq: error (at <stdin>:1): Cannot index string with string "items"`** — Ensure the HCX API endpoint returns valid JSON and the admin credentials are correct; test with `curl -sk -u "admin:$NEW_HCX_PASSWORD" "https://$HCX_MANAGER_IP/hybridity/api/interconnect/links" | head -c 200` first.
+    **`An error occurred (InvalidParameterException) when calling the PutSecretValue operation`** — Verify the secret JSON is valid by testing with `echo '{"username":"admin","password":"NEW_PASSWORD"}' | jq .` before passing to AWS Secrets Manager.
 ## AWS Console MFA Enforcement
 
 ```json
@@ -203,6 +272,19 @@ aws iam put-user-policy \
 aws iam list-mfa-devices --user-name evs-operator
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+
+MFADevices:
+- DeviceName: arn:aws:iam::123456789012:mfa/evs-operator
+  SerialNumber: GATP4EXAMPLE1A2B
+  EnableDate: 2024-01-15T10:32:47+00:00
+```
+
+!!! warning "Common errors"
+    **`An error occurred (NoSuchEntity) when calling the PutUserPolicy operation: The user with name evs-operator cannot be found.`** — Verify the EVS operator user exists with `aws iam get-user --user-name evs-operator` before attaching the policy.
+    **`An error occurred (MalformedPolicyDocument) when calling the PutUserPolicy operation: Invalid principal in policy: "Principal": {"AWS": "arn:aws:iam::ACCOUNT:user/evs-operator"}`** — Ensure the require-mfa.json file contains valid IAM policy syntax without a Principal element (use only for trust policies, not inline user policies).
 vCenter SSO cannot enforce MFA natively. The correct approach is to use AD as the identity source and enforce MFA at the AD layer (e.g., Microsoft Entra ID Conditional Access, or Okta MFA for AD-integrated login). When users authenticate to vCenter using their `username@corp.example.com` credentials, MFA is enforced by the IdP before the LDAP bind succeeds. This makes MFA coverage consistent across both AWS console and vSphere access without requiring vCenter-specific MFA configuration.
 
 ## SSH Key Management (ESXi Hosts)
@@ -230,6 +312,30 @@ done
 aws ec2 delete-key-pair --key-name evs-cluster-key
 ```
 
+
+```text title="Expected output"
+-----BEGIN RSA PRIVATE KEY-----
+MIIEpAIBAAKCAQEA2x8vK9pL4mN3qR7sT2uV5wX8yZ0aB1cD4eF6gH7iJ9kL0mN
+1oP2qR3sT4uV5wX6yZ7aB8cD9eF0gH1iJ2kL3mN4oP5qR6sT7uV8wX9yZ0aB2cD
+...
+-----END RSA PRIVATE KEY-----
+{
+    "KeyName": "evs-cluster-key-new",
+    "KeyFingerprint": "a1:b2:c3:d4:e5:f6:g7:h8:i9:j0:k1:l2:m3:n4:o5:p6"
+}
+Updating key on host: host-esx-001.us-west-2a
+Updating key on host: host-esx-002.us-west-2a
+Updating key on host: host-esx-003.us-west-2b
+Updating key on host: host-esx-004.us-west-2b
+{
+    "Return": true
+}
+```
+
+!!! warning "Common errors"
+    **`An error occurred (InvalidKeyPair.Duplicate) when calling the CreateKeyPair operation: The key pair 'evs-cluster-key-new' already exists.`** — Delete the existing key with `aws ec2 delete-key-pair --key-name evs-cluster-key-new` before creating a new one.
+    **`An error occurred (InvalidParameterValue) when calling the ListEnvironmentHosts operation: Invalid environment ID: $ENV_ID`** — Set the ENV_ID variable with `export ENV_ID=<your-environment-id>` before running the loop.
+    **`An error occurred (InvalidKeyPair.NotFound) when calling the DeleteKeyPair operation: The key pair 'evs-cluster-key' does not exist.`** — Verify the old key name exists with `aws ec2 describe-key-pairs` before attempting deletion.
 ## See also
 
 - [Amazon EVS — Access Control](../access-control/)

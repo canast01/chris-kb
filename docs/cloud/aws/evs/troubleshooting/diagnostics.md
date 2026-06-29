@@ -124,6 +124,35 @@ aws ec2 describe-network-interfaces \
 # Expected: all Status = in-use, Attachment.Status = attached
 ```
 
+
+```text title="Expected output"
+HostId                          State
+------------------------------- -----------
+host-0a7f2c1e9d4b5f3a          AVAILABLE
+host-1b8e3d2f0c6a4e9b          AVAILABLE
+host-2c9f4e3g1d7b5f0c          AVAILABLE
+
+InstanceId          SystemStatus    InstanceStatus
+i-0f7a2b9c4d1e5a3f  ok              ok
+i-1g8b3c0d5e2f6b4g  ok              ok
+i-2h9c4d1e6f3g7c5h  ok              ok
+
+DestinationCidrBlock    State    GatewayId        NetworkInterfaceId
+10.0.0.0/16             active   local             None
+10.1.0.0/24             active   igw-0a1b2c3d     None
+10.2.0.0/24             active   eni-0f7a2b9c4d   None
+0.0.0.0/0               active   igw-0a1b2c3d     None
+
+NetworkInterfaceId      Status    AttachmentStatus    Description
+eni-0f7a2b9c4d1e5a3f   in-use    attached            EVS-Host-eth0
+eni-1g8b3c0d5e2f6b4g   in-use    attached            EVS-Host-eth1
+eni-2h9c4d1e6f3g7c5h   in-use    attached            EVS-Host-eth2
+```
+
+!!! warning "Common errors"
+    **`An error occurred (InvalidParameterValue) when calling the ListEnvironmentHosts operation: Invalid environment ID`** — Verify the $ENV_ID variable is set correctly with `echo $ENV_ID` and matches an existing EVS environment.
+    **`An error occurred (InvalidParameterValue) when calling the DescribeRouteTables operation: Invalid id: "vpc-"` — Ensure $EVS_VPC_ID is populated with a valid VPC ID using `aws ec2 describe-vpcs --query 'Vpcs[*].VpcId'`.
+    **`An error occurred (InvalidParameterValue) when calling the DescribeNetworkInterfaces operation: Invalid id: "subnet-"` — Confirm $EVS_MGMT_SUBNET_ID is set to a valid subnet ID with `aws ec2 describe-subnets --query 'Subnets[*].SubnetId'`.
 ---
 
 ## Step 2 — Check CloudTrail for EVS API errors
@@ -159,6 +188,45 @@ aws cloudwatch get-metric-statistics \
   --period 300 --statistics Average
 ```
 
+
+```text title="Expected output"
+|                  EventTime                   |           EventName            |        Username         | ErrorCode |
+|----------------------------------------------+--------------------------------+-------------------------+-----------|
+| 2024-01-15T14:32:18Z                         | CreateEnvironment               | arn:aws:iam::123456789:user/alice | None      |
+| 2024-01-15T13:47:52Z                         | DescribeEnvironments            | arn:aws:iam::123456789:role/lambda-exec | None      |
+| 2024-01-15T12:19:41Z                         | UpdateEnvironmentConfig         | arn:aws:iam::123456789:user/bob | AccessDenied |
+| 2024-01-15T11:05:33Z                         | DeleteEnvironment               | arn:aws:iam::123456789:user/alice | None      |
+| 2024-01-15T09:28:15Z                         | ListEnvironments                | arn:aws:iam::123456789:role/monitoring | None      |
+
+2024-01-15T12:19:41Z UpdateEnvironmentConfig: AccessDenied - User: arn:aws:iam::123456789:user/bob is not authorized to perform: evs:UpdateEnvironmentConfig on resource: arn:aws:evs:us-east-1:123456789:environment/prod-env-001
+2024-01-15T08:43:22Z CreateEnvironment: InvalidParameterValue - Parameter validation failed: invalid value for EnvironmentType
+
+{
+    "Label": "HostState",
+    "Datapoints": [
+        {
+            "Timestamp": "2024-01-15T14:00:00Z",
+            "Average": 1.0,
+            "Unit": "None"
+        },
+        {
+            "Timestamp": "2024-01-15T13:55:00Z",
+            "Average": 1.0,
+            "Unit": "None"
+        },
+        {
+            "Timestamp": "2024-01-15T13:50:00Z",
+            "Average": 0.0,
+            "Unit": "None"
+        }
+    ]
+}
+```
+
+!!! warning "Common errors"
+    **`date: illegal time format`** — Use `date -u -d "24 hours ago" +%Y-%m-%dT%H:%M:%SZ` on Linux instead of the BSD `-v` flag.
+    **`An error occurred (InvalidParameterValue) when calling the LookupEvents operation: Lookup attributes do not support EventSource`** — Use `EventName` or `ResourceName` attributes instead; CloudTrail EVS events may require filtering by specific operation names like `CreateEnvironment`.
+    **`jq: command not found` or Python JSON parsing errors** — Ensure `python3` is installed and the CloudTrail event JSON structure matches your AWS region's API version by testing with `aws cloudtrail lookup-events --max-results 1` first.
 ---
 
 ## Step 3 — Inspect VPC Flow Logs for network drops
@@ -186,6 +254,24 @@ for row in results:
 # REJECT entries show which flows are blocked by security group or NACL
 ```
 
+
+```text title="Expected output"
+{
+    "queryId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "logGroupName": "evs-flow-logs",
+    "status": "Running"
+}
+2024-01-15T14:32:18Z 10.0.1.45 -> 10.0.2.18:443 ACTION=REJECT
+2024-01-15T14:31:52Z 10.0.1.89 -> 172.31.0.5:3306 ACTION=REJECT
+2024-01-15T14:31:28Z 192.168.1.22 -> 10.0.2.18:22 ACTION=REJECT
+2024-01-15T14:30:15Z 10.0.1.45 -> 10.0.2.18:443 ACTION=REJECT
+2024-01-15T14:29:44Z 10.0.1.200 -> 8.8.8.8:53 ACTION=REJECT
+```
+
+!!! warning "Common errors"
+    **`ResourceNotFoundException: The specified log group does not exist.`** — Verify the log group name matches your VPC Flow Logs configuration with `aws logs describe-log-groups --log-group-name-prefix evs-flow-logs`.
+    **`InvalidParameterException: Query string is invalid`** — Ensure the CloudWatch Logs Insights query syntax is correct; test the query string in the CloudWatch console first before running via CLI.
+    **`An error occurred (AccessDenied) when calling the GetQueryResults operation`** — Add `logs:GetQueryResults` and `logs:StartQuery` permissions to your IAM user or role policy.
 ---
 
 ## Step 4 — Check VMware platform health
