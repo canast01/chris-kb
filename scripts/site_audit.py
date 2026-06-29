@@ -1183,6 +1183,35 @@ for _md in all_md():
             break
 
 
+# ── Check 55: Bash blocks missing example output ─────────────────────────────
+# Every bash block should be followed immediately by a non-bash code fence
+# containing expected output.  Measures progress of add_command_output.py.
+issues = check(55, 'Bash blocks missing example output')
+_BASH_OPEN55   = re.compile(r'^```bash\b', re.MULTILINE)
+_FENCE_CLOSE55 = re.compile(r'^```\s*$', re.MULTILINE)
+_missing55 = 0
+_total55   = 0
+for _md in all_md():
+    _txt = open(_md, errors='replace').read()
+    if '```bash' not in _txt:
+        continue
+    _pos = 0
+    while True:
+        _mo = _BASH_OPEN55.search(_txt, _pos)
+        if not _mo:
+            break
+        _mc = _FENCE_CLOSE55.search(_txt, _mo.end())
+        if not _mc:
+            break
+        _total55 += 1
+        _after = _txt[_mc.end():_mc.end()+300].lstrip('\n ')
+        if not (_after.startswith('```') and not _after.startswith('```bash')):
+            _missing55 += 1
+        _pos = _mc.end()
+if _missing55:
+    warn(issues, f'{_missing55}/{_total55} bash blocks site-wide are missing example output (run add_command_output.py)')
+
+
 # ── Report ────────────────────────────────────────────────────────────────────
 print('\n' + '='*70)
 print('KB SITE AUDIT REPORT')
