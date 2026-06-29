@@ -226,6 +226,76 @@ alerts show current
 system show
 ```
 
+
+```text title="Expected output"
+Filesystem Status: HEALTHY
+  Filesystems: 1
+  Total Capacity: 100.0 TB
+  Used Capacity: 67.3 TB
+  Available Capacity: 32.7 TB
+
+Pre-compression Used: 287.4 TB
+Post-compression Used: 67.3 TB
+Compression Ratio: 4.27:1
+
+Global Deduplication Ratio: 2.89:1
+Global Compression Ratio: 1.48:1
+Combined Ratio: 4.27:1
+
+Replication Context: prod-backup
+  State: ACTIVE
+  Lag: 0 seconds
+  Last Sync: 2024-01-15 14:32:18 UTC
+
+Replication Context: dr-site
+  State: ACTIVE
+  Lag: 127 seconds
+  Last Sync: 2024-01-15 14:30:11 UTC
+
+Context: prod-backup
+  Throughput: 487.2 MB/s
+  Total Replicated: 12.4 TB
+  Status: In Sync
+
+MTree: /data/col1/finance-backup
+  Used Space: 18.7 TB
+  Dedup Ratio: 3.12:1
+
+MTree: /data/col1/hr-archive
+  Used Space: 9.2 TB
+  Dedup Ratio: 2.45:1
+
+MTree Compression Ratio (/data/col1/finance-backup): 1.56:1
+
+DDBoost Client: backup-server-01 (192.168.1.45)
+  Status: CONNECTED
+  Storage Unit: /data/col1/finance-backup
+  Connected Since: 2024-01-10 08:15:33 UTC
+
+DDBoost Client: backup-server-02 (192.168.1.46)
+  Status: CONNECTED
+  Storage Unit: /data/col1/hr-archive
+  Connected Since: 2024-01-12 11:22:09 UTC
+
+DDBoost Service Status: RUNNING
+  Port: 3009
+  Connections: 2
+  Active Sessions: 2
+
+Current Alerts: None
+
+System Information:
+  Model: Data Domain DD9900
+  DDOS Version: 7.15.1.0
+  Hardware Health: OPTIMAL
+  CPU Usage: 34%
+  Memory Usage: 62%
+```
+
+!!! warning "Common errors"
+    **`Error: Replication context 'dr-site' not found`** — Verify the replication context name with `replication show` and ensure it is configured on the system.
+    **`Error: MTree '/data/col1/<mtree-name>' does not exist`** — Run `mtree list` to confirm the exact MTree path and replace `<mtree-name>` with the actual MTree identifier.
+    **`Error: DDBoost service is not running`** — Start the DDBoost service with `ddboost start` and verify connectivity with `ddboost status`.
 ## Capacity Monitoring
 
 ![Capacity Monitoring](../../../../assets/storage-dell-data-domain-hc-capacity-monitoring.svg)

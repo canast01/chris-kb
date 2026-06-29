@@ -102,6 +102,49 @@ system show                       # hardware health (fans, PSUs, disks)
 mtree list                        # all MTrees and their quota status
 ```
 
+
+```text title="Expected output"
+Filesystem Status:
+  State: ENABLED
+
+Filesystem Space:
+  Pre-compression capacity:  50.2 TB
+  Post-compression capacity: 2.4 TB
+  Current usage:             1.8 TB
+
+Filesystem Compression:
+  Global dedup ratio: 22.1:1
+  Compression enabled: yes
+
+Replication Context:
+  Context name: dc-repl-01
+  State: REPLICATING
+  Last sync: 2024-01-15 14:32:18 UTC
+
+DDBoost Clients:
+  Host: backup-srv-01.corp.local (10.42.18.55)
+  Host: backup-srv-02.corp.local (10.42.18.56)
+  Connected clients: 2
+
+Current Alerts:
+  CRITICAL: Disk 3.4 predictive failure (SMART threshold exceeded)
+  WARNING: Fan module 2 speed degraded to 60%
+
+System Health:
+  Fans: 1 of 4 degraded
+  Power supplies: OK (2/2 healthy)
+  Disks: 1 of 14 at-risk
+
+MTrees:
+  mtree1 (quota: 10.0 TB, used: 8.2 TB) - 82% full
+  mtree2 (quota: 15.0 TB, used: 3.1 TB) - 21% full
+  mtree3 (quota: 8.0 TB, used: 7.9 TB) - 99% full
+```
+
+!!! warning "Common errors"
+    **`Error: filesystem is DISABLED`** — Run `filesys enable` to activate the filesystem before proceeding with replication or backups.
+    **`Error: replication context not found or in FAILED state`** — Verify network connectivity between Data Domain systems and check `replication show details` for sync errors.
+    **`Error: MTrees at capacity (quota exceeded)`** — Increase MTree quota with `mtree modify <name> -quota <size>` or delete old snapshots to free space.
 ---
 
 ## See also

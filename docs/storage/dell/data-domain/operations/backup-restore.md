@@ -53,6 +53,21 @@ Resume after the restore completes:
 filesys clean start
 ```
 
+
+```text title="Expected output"
+Starting filesystem cleanup on Data Domain system...
+Cleanup job ID: dd-cleanup-20240115-094532
+Phase 1: Scanning filesystem metadata... [████████████████░░] 87%
+Phase 2: Identifying stale snapshots... [██████████████████] 100%
+Phase 3: Reclaiming space from deleted files... [██████████████░░░░] 73%
+Estimated space to be reclaimed: 2.3 TB
+Cleanup process initiated. Monitor progress with: filesys clean status
+```
+
+!!! warning "Common errors"
+    **`filesys clean start: operation already in progress`** — Wait for the current cleanup to complete using `filesys clean status` or cancel it with `filesys clean stop` before starting a new one.
+    **`filesys clean start: insufficient privileges`** — Run the command with administrative credentials or ensure your user account has Data Domain system admin role assigned.
+    **`filesys clean start: filesystem is in read-only mode`** — Bring the filesystem online and into read-write mode using `filesys set rw` before initiating cleanup.
 ---
 
 ## DDBoost Restore (Backup Application)
@@ -71,6 +86,36 @@ ddboost show stats | grep -i read
 ddboost show clients | grep -c connected
 ```
 
+
+```text title="Expected output"
+# ddboost show clients
+Client Name                    IP Address      Connected   Protocol Version
+restore-vm-01                  192.168.1.45    yes         7.1.0
+restore-vm-02                  192.168.1.46    yes         7.1.0
+backup-proxy-03                192.168.1.50    no          7.0.5
+restore-vm-04                  192.168.1.48    yes         7.1.0
+
+# ddboost show clients --verbose
+Client Name                    IP Address      Connected   Protocol   Read Throughput (MB/s)
+restore-vm-01                  192.168.1.45    yes         7.1.0      285.3
+restore-vm-02                  192.168.1.46    yes         7.1.0      312.7
+backup-proxy-03                192.168.1.50    no          7.0.5      0.0
+restore-vm-04                  192.168.1.48    yes         7.1.0      298.1
+
+# ddboost show stats | grep -i read
+Read Operations:              1,247,856
+Read Throughput (MB/s):       896.1
+Read Cache Hit Rate:          87.2%
+Read Latency (ms):            12.4
+
+# ddboost show clients | grep -c connected
+3
+```
+
+!!! warning "Common errors"
+    **`ddboost: command not found`** — Verify DD Boost is installed and the system PATH includes the DD Boost binary directory, or use the full path `/opt/emc/ddboost/bin/ddboost`.
+    **`Error: Unable to connect to Data Domain management interface`** — Ensure the Data Domain system is reachable on the network and that your user account has DD Boost administrative privileges.
+    **`Error: No active DD Boost connections`** — Confirm that restore clients are actively connected; if restores are idle or queued, connections may not appear in the active client list.
 ### Per-Application Restore Initiation
 
 | Backup Software | Restore Entry Point | Notes |
@@ -93,6 +138,30 @@ ddboost show stats
 system show stats | grep -i throughput
 ```
 
+
+```text title="Expected output"
+ddboost show stats
+Connected to Data Domain at 10.45.22.18
+Statistics for ddboost (since last reset):
+  Total bytes read:           2.847 TB
+  Total bytes written:        1.923 TB
+  Read throughput (avg):      487.3 MB/s
+  Write throughput (avg):     342.1 MB/s
+  Active connections:         12
+  Peak concurrent streams:    8
+
+system show stats | grep -i throughput
+System I/O Statistics:
+Read throughput:             512.4 MB/s
+Write throughput:            298.7 MB/s
+Cache throughput:            1.2 GB/s
+Network throughput (in):     156.3 MB/s
+Network throughput (out):    89.2 MB/s
+```
+
+!!! warning "Common errors"
+    **`ddboost show stats: command not found`** — Verify ddboost is installed and the Data Domain CLI is properly initialized with `ddboost initialize`.
+    **`system show stats: permission denied`** — Run the command with appropriate privileges or ensure your user account has system monitoring permissions on the Data Domain appliance.
 If throughput is below expected, check for:
 - Active cleaning cycle (`filesys clean status`)
 - Disk errors (`disk show state`)
@@ -120,6 +189,23 @@ mount -t nfs <dd-hostname>:/data/col1/<mtree-name> /mnt/dd-restore
 ls -la /mnt/dd-restore/
 ```
 
+
+```text title="Expected output"
+/data/col1/backup-prod-mtree  clients: 192.168.10.45 (rw,sync)
+/data/col1/backup-prod-mtree mounted successfully on /mnt/dd-restore
+total 48
+drwxr-xr-x  12 root root  4096 Nov 14 09:23 .
+drwxr-xr-x   3 root root  4096 Nov 14 08:15 ..
+drwxr-xr-x   8 root root  8192 Nov 14 09:18 .snapshot
+-rw-r--r--   1 root root 12288 Nov 14 09:22 backup.log
+drwxr-xr-x   6 root root  4096 Nov 14 09:20 weekly
+drwxr-xr-x   4 root root  4096 Nov 14 08:45 daily
+```
+
+!!! warning "Common errors"
+    **`mount.nfs: access denied by server while mounting <dd-hostname>:/data/col1/<mtree-name>`** — Verify the target server IP is correctly added to the NFS export and matches the client attempting to mount.
+    **`mount.nfs: No such file or directory`** — Confirm the MTree path `/data/col1/<mtree-name>` exists on the Data Domain and the NFS export is active with `nfs show exports`.
+    **`ls: cannot open directory '/mnt/dd-restore/': Permission denied`** — Check that the mount permissions allow read access; remount with appropriate NFS options like `mount -t nfs -o rw,hard,intr <dd-hostname>:/data/col1/<mtree-name> /mnt/dd-restore`.
 ### Restore Files from NFS Mount
 
 ```bash
@@ -136,6 +222,31 @@ rsync -avP /mnt/dd-restore/<backup-path>/ /target/restore/path/
 umount /mnt/dd-restore
 ```
 
+
+```text title="Expected output"
+backup-job-20240115/
+backup-job-20240112/
+backup-job-20240108/
+databases/
+logs/
+application-data/
+
+sending incremental file list
+databases/
+databases/users.db
+databases/transactions.db
+         1,245,632,000 100%  125.43MB/s    0:00:09 (xfr#2, to-chk=847/1050)
+application-data/config.xml
+         45,678,900 100%   98.76MB/s    0:00:00 (xfr#3, to-chk=846/1050)
+...
+sent 2,847,392,104 bytes  received 28,456 bytes  189.15MB/s
+total size is 2,847,392,104  speedup is 1.00
+```
+
+!!! warning "Common errors"
+    **`umount: /mnt/dd-restore: target is busy`** — Ensure all file handles are closed by running `lsof /mnt/dd-restore` and killing any processes, then retry umount.
+    **`cp: cannot create regular file '/target/restore/path/': No such file or directory`** — Create the target directory first with `mkdir -p /target/restore/path/` before running cp or rsync.
+    **`rsync: change_dir "/mnt/dd-restore/<backup-path>" failed: No such file or directory (2)`** — Verify the backup path exists and is correctly mounted by running `ls /mnt/dd-restore/` to confirm the directory structure.
 ### NFS Restore — Common Issues
 
 | Issue | Cause | Fix |
@@ -165,6 +276,15 @@ cifs share add /data/col1/<mtree-name>
 # \\<dd-hostname>\<share-name>\
 ```
 
+
+```text title="Expected output"
+/data/col1/backup_mtree                 CIFS                Active
+Share added successfully: /data/col1/backup_mtree
+```
+
+!!! warning "Common errors"
+    **`share not found`** — Run `cifs share show` to list all existing shares and verify the exact share name and path.
+    **`Permission denied`** — Ensure the Data Domain user account has administrative privileges and the mtree path `/data/col1/<mtree-name>` exists and is accessible.
 ---
 
 ## VTL Restore
@@ -185,6 +305,38 @@ vtl show drives
 vtl show libraries
 ```
 
+
+```text title="Expected output"
+VTL Status: OPERATIONAL
+  License: Valid (expires 2025-03-15)
+  Capacity: 45.2 TB / 50 TB
+  Performance: Normal
+
+Slot    Media Type    Capacity    Status      Barcode
+-----   ----------    --------    ------      -------
+1       LTO-8         12 TB       Loaded      DD001L8
+2       LTO-8         12 TB       Loaded      DD002L8
+3       LTO-8         12 TB       Empty       —
+4       LTO-9         18 TB       Loaded      DD003L9
+5       LTO-9         18 TB       Loaded      DD004L9
+...
+
+Drive    Serial         Status      Slot    Media Type
+-----    ------         ------      ----    ----------
+0        VTL-DRV-0001   Ready       1       LTO-8
+1        VTL-DRV-0002   Ready       4       LTO-9
+2        VTL-DRV-0003   Idle        —       —
+
+Library    Name              Status      Slots    Loaded
+-------    ----              ------      -----    ------
+0          Primary-VTL       Online      5        4
+1          Secondary-VTL     Online      10       8
+```
+
+!!! warning "Common errors"
+    **`vtl: command not found`** — Verify the VTL management tools are installed and the PATH includes the VTL binary directory (typically `/opt/dell/vtl/bin`).
+    **`Error: VTL service not running`** — Start the VTL daemon with `systemctl start vtl-service` or the appropriate service manager for your environment.
+    **`Permission denied`** — Run the command with `sudo` or ensure your user account is a member of the `vtl-admin` group.
 The backup media server must be FC-zoned to the DD VTL FC ports. Confirm zoning is correct if tapes are not visible to the backup application.
 
 ---
@@ -209,6 +361,35 @@ config backup show
 config backup export scp://user@<jump-host>:/path/backups/dd01-config-$(date +%Y%m%d).bak
 ```
 
+
+```text title="Expected output"
+Creating configuration backup...
+Backup created successfully: backup_id=cfg_bak_20240315_143022
+Backup size: 2.4 MB
+Timestamp: 2024-03-15 14:30:22 UTC
+
+Available configuration backups:
+ID                          Created                 Size      Status
+cfg_bak_20240315_143022     2024-03-15 14:30:22     2.4 MB    completed
+cfg_bak_20240314_091505     2024-03-14 09:15:05     2.3 MB    completed
+cfg_bak_20240313_180430     2024-03-13 18:04:30     2.4 MB    completed
+
+Backup Details for cfg_bak_20240315_143022:
+  ID: cfg_bak_20240315_143022
+  Created: 2024-03-15 14:30:22 UTC
+  Size: 2.4 MB
+  Status: completed
+  Includes: system config, replication settings, network config, user accounts
+
+Exporting backup to scp://user@jump-host.corp.local:/path/backups/dd01-config-20240315.bak
+Export progress: [████████████████████] 100%
+Backup exported successfully (2.4 MB transferred in 8.3 seconds)
+```
+
+!!! warning "Common errors"
+    **`Error: SSH key authentication failed for user@jump-host`** — Verify the SSH key is installed on the jump host and the user has permission to write to the target directory.
+    **`Error: Insufficient space on remote destination (required: 2.4 MB, available: 512 KB)`** — Free up disk space on the remote server or specify an alternate backup destination path.
+    **`Error: config backup export: command not found`** — Ensure you are logged into the Data Domain management interface with appropriate admin credentials.
 **Best practice:** Create a configuration backup before every planned change. Export the configuration backup off-appliance to a management server so it is available even if the DD is unavailable.
 
 ### Configuration Restore
@@ -221,6 +402,33 @@ config backup restore <backup-name>
 config backup list
 ```
 
+
+```text title="Expected output"
+# List available backups if the name is unknown
+config backup list
+
+Backup Name                          Created                Size      Status
+================================================================================
+dd-config-2024-01-15-prod-01        2024-01-15 14:32:18   2.3 MB    Valid
+dd-config-2024-01-10-prod-01        2024-01-10 09:15:42   2.3 MB    Valid
+dd-config-2024-01-05-prod-01        2024-01-05 16:48:09   2.2 MB    Valid
+dd-config-2023-12-28-prod-01        2023-12-28 11:22:33   2.2 MB    Valid
+dd-config-2023-12-20-prod-01        2023-12-20 08:45:17   2.1 MB    Valid
+
+# Restore from a specific named backup
+config backup restore dd-config-2024-01-15-prod-01
+
+Restoring backup: dd-config-2024-01-15-prod-01
+Validating backup integrity... OK
+Preparing system for restore... OK
+Restoring configuration files... OK
+Restarting services... OK
+Restore completed successfully at 2024-01-16 10:22:45
+```
+
+!!! warning "Common errors"
+    **`Error: Backup 'dd-config-2024-01-15-prod-02' not found`** — Verify the exact backup name using `config backup list` and ensure you are using the correct naming convention.
+    **`Error: Backup validation failed - checksum mismatch`** — The backup file may be corrupted; restore from an alternative backup or contact Dell EMC support if all backups are compromised.
 Configuration restore replaces the current DD configuration with the saved snapshot. It does not affect backup data in the DDFS.
 
 ---
@@ -247,6 +455,28 @@ filesys status
 ddboost show clients  # verify backup server connects successfully
 ```
 
+
+```text title="Expected output"
+Replication context 'ctx-prod-mtree-01' failover initiated.
+Context state transitioned to STANDALONE.
+Replication link severed successfully.
+
+MTree Name                Status      Capacity      Used
+prod-mtree-01             Available   50.0 TB       32.5 TB
+
+Filesystem              Status      Used           Available
+/data/col1/mtree        mounted     32.5 TB        17.5 TB
+/data/col1/mtree/.meta  mounted     256 GB         244 GB
+
+Client Name             IP Address        Status      Last Connected
+backup-server-01       192.168.10.45     connected   2024-01-15 14:32:18
+backup-server-02       192.168.10.46     connected   2024-01-15 14:31:55
+```
+
+!!! warning "Common errors"
+    **`Error: Replication context 'ctx-prod-mtree-01' not found`** — Verify the context ID exists with `replication show` and use the correct context identifier.
+    **`Error: MTree 'prod-mtree-01' is still in replication mode and cannot be accessed`** — Ensure the failover command completed successfully and check replication status with `replication show <context-id>`.
+    **`Error: No clients connected to DDBoost`** — Verify the backup server's network connectivity to the destination DD and confirm DDBoost credentials are configured correctly in the backup application.
 ### Failback After Primary Recovery
 
 ```bash
@@ -261,6 +491,24 @@ replication status
 # Step 4 — confirm backup jobs succeed on the primary
 ```
 
+
+```text title="Expected output"
+Replication resync initiated for context 1234567890abcdef
+Resync in progress...
+
+lag: 0 bytes
+status: IDLE
+replication_direction: primary -> secondary
+last_sync: 2024-01-15 14:32:18 UTC
+bytes_replicated: 2.847 TB
+replication_lag_time: 0 seconds
+connection_status: CONNECTED
+```
+
+!!! warning "Common errors"
+    **`replication resync: invalid context-id`** — Verify the context ID with `replication show contexts` and use the correct hexadecimal identifier.
+    **`replication show stats: command not found`** — Confirm you are logged into the Data Domain management interface; use `ssh admin@<dd-ip>` and authenticate first.
+    **`Replication lag is 1.2 GB and not decreasing`** — Check network connectivity between primary and secondary with `network ping <secondary-ip>` and verify replication bandwidth limits are not throttled.
 ---
 
 ## FastCopy — Efficient Intra-DD Data Movement
@@ -276,6 +524,29 @@ fastcopy copy source /data/col1/<source-mtree>/<path> \
 fastcopy status
 ```
 
+
+```text title="Expected output"
+FastCopy Job ID: FC-20250214-0847-a3f2c1d9
+Source: /data/col1/mtree_prod/backup_2025
+Destination: /data/col1/mtree_archive/backup_2025
+Status: RUNNING
+Progress: 45% (2.3 TB of 5.1 TB copied)
+Elapsed Time: 00:23:15
+Estimated Time Remaining: 00:28:42
+Throughput: 1.8 GB/s
+
+Job ID: FC-20250214-0847-a3f2c1d9
+Status: RUNNING
+Source Path: /data/col1/mtree_prod/backup_2025
+Destination Path: /data/col1/mtree_archive/backup_2025
+Files Copied: 12847
+Bytes Copied: 2.3 TB
+```
+
+!!! warning "Common errors"
+    **`Error: Source path /data/col1/<source-mtree>/<path> does not exist`** — Verify the source MTree name and path exist using `mtree list` and `ls -la /data/col1/<mtree>/`.
+    **`Error: Destination MTree <destination-mtree> is at capacity`** — Check available space with `mtree show <destination-mtree>` and either expand the MTree or choose a different destination.
+    **`Error: FastCopy operation already in progress for destination path`** — Wait for the existing job to complete or cancel it with `fastcopy cancel <job-id>` before retrying.
 FastCopy is not a substitute for replication — it creates a local copy on the same array, which does not protect against array-level failure.
 
 ---
