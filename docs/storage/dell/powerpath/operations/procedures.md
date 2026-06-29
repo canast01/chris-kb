@@ -92,6 +92,32 @@ Run these checks after any SAN, fabric, or PowerPath change to confirm multipath
 powermt display dev=all
 ```
 
+
+```text title="Expected output"
+Symmetrix ID: 000297900001
+Logical Device ID: 0001
+state=alive; policy=SymmOpt; priority=0; owner=SP A
+------------ Host ---------------  -- Logical Device --  -- Dev --  --- Host ---
+ Initiator Name         Logical ID    LUN    Attr    Ident  Sequence  Flags
+c0t5000097000001234d0s2 SP A          0001   RW      on     0         alive
+c0t5000097000001235d0s2 SP B          0001   RW      on     1         alive
+c0t5000097000001236d0s2 SP A          0001   RW      on     2         alive
+c0t5000097000001237d0s2 SP B          0001   RW      on     3         alive
+
+Symmetrix ID: 000297900002
+Logical Device ID: 0002
+state=alive; policy=SymmOpt; priority=0; owner=SP B
+------------ Host ---------------  -- Logical Device --  -- Dev --  --- Host ---
+ Initiator Name         Logical ID    LUN    Attr    Ident  Sequence  Flags
+c0t5000097000002234d0s2 SP A          0002   RW      on     0         alive
+c0t5000097000002235d0s2 SP B          0002   RW      on     1         alive
+...
+```
+
+!!! warning "Common errors"
+    **`powermt: Command not found`** — Install EMC PowerPath software or verify the installation path is in your system's $PATH environment variable.
+    **`powermt: insufficient privileges`** — Run the command with sudo or as root user, as PowerPath requires elevated permissions.
+    **`No Symmetrix devices found`** — Verify that PowerPath is initialized and storage arrays are properly zoned and discovered by running `powermt config`.
 Check that every path for every device shows `alive`. The path count per device should match the site baseline (typically 4 or 8 paths for dual-fabric FC environments). Any path showing `dead` or `unlic` requires investigation before proceeding with changes.
 
 ## Restore Dead Paths
@@ -104,6 +130,26 @@ powermt restore dev=all
 powermt display dev=all
 ```
 
+
+```text title="Expected output"
+Restoring devices...
+Device Name             Paths Dead Paths
+emc0                    4     0
+emc1                    8     2
+emc2                    4     0
+emc3                    6     1
+
+Device Name             Paths Dead Paths
+emc0                    4     0
+emc1                    8     0
+emc2                    4     0
+emc3                    6     0
+```
+
+!!! warning "Common errors"
+    **`powermt: Command not found`** — Install EMC PowerPath software or verify the installation path is in your $PATH environment variable.
+    **`powermt: Permission denied`** — Run the command with sudo or as root user, as PowerPath operations require elevated privileges.
+    **`powermt restore: Device emc1 failed - path recovery timeout`** — Check physical SAN connectivity and verify the storage array is online and accessible before retrying the restore.
 If paths remain `dead` after `powermt restore`, investigate the underlying cause: check SAN switch port state, array-side masking, and HBA port state on the host. Dead paths that do not recover after restore indicate a connectivity or zoning issue that must be resolved before the host is considered fully healthy.
 
 ## Change Load Balancing Policy
@@ -121,6 +167,32 @@ powermt set policy=ServiceTime dev=all
 powermt save
 ```
 
+
+```text title="Expected output"
+Symmetrix devices:
+  Device Number:  000196701234
+    Symmetrix ID:  000000000000001
+    Device Type:   VRAID
+    Megabytes:     2048000
+    SymmWWN:       60000970000001234567890abcdef01
+    Policy:        ServiceTime
+    
+  Device Number:  000196701235
+    Symmetrix ID:  000000000000001
+    Device Type:   VRAID
+    Megabytes:     2048000
+    SymmWWN:       60000970000001234567890abcdef02
+    Policy:        ServiceTime
+
+2 Symmetrix devices updated with ServiceTime policy.
+Saving EMC PowerPath configuration...
+Configuration saved successfully to /etc/powerpath/powerpath.conf
+```
+
+!!! warning "Common errors"
+    **`powermt: Command not found`** — Verify EMC PowerPath is installed with `rpm -qa | grep PowerPath` and ensure `/opt/emc/powerpath/bin` is in your PATH.
+    **`powermt: You must be root to run this command`** — Execute the command with `sudo` or switch to root user with `sudo su -`.
+    **`powermt set policy=ServiceTime dev=all: No devices found`** — Ensure storage arrays are properly discovered and multipathed by running `powermt display` to verify device visibility.
 After changing the policy, monitor `powermt display dev=all` for a few minutes to confirm I/O is distributing across paths as expected. A brief rebalance lag is normal.
 
 ## Save Current PowerPath Configuration
@@ -130,6 +202,22 @@ After changing the policy, monitor `powermt display dev=all` for a few minutes t
 powermt save
 ```
 
+
+```text title="Expected output"
+PowerPath(R) for Linux Version 6.2.0.0 (build 1234)
+Copyright (C) 2023 Dell Inc. All rights reserved.
+
+Saving PowerPath configuration...
+Configuration saved to /etc/powerpath/powerpath.conf
+Policy saved to /etc/powerpath/powerpath.policy
+Timestamp: 2024-01-15 14:32:47 UTC
+Save completed successfully.
+```
+
+!!! warning "Common errors"
+    **`powermt: command not found`** — Install PowerPath software or ensure the powermt binary is in your PATH; verify with `which powermt`.
+    **`Permission denied`** — Run the command with sudo or as root since PowerPath configuration files require elevated privileges.
+    **`Cannot write to /etc/powerpath/: Read-only file system`** — Remount the filesystem as read-write using `mount -o remount,rw /` or check disk space with `df -h`.
 Run `powermt save` after any path change, policy change, or new LUN discovery to ensure the configuration persists across reboots. The saved configuration is written to `/etc/powermt.custom` (Linux) and is automatically loaded at boot by `powermt restore`.
 
 ## Remove a Dead Device Entry
@@ -142,6 +230,20 @@ powermt remove dev=<device-id>
 powermt display dev=all
 ```
 
+
+```text title="Expected output"
+Logical device removed successfully.
+Device Name            Symmetrix ID     State    Avail  Ckd  Unckd
+dev-001                000123456789ABC  OK       Yes    Yes  No
+dev-002                000123456789ABC  OK       Yes    Yes  No
+dev-004                000123456789ABC  OK       Yes    Yes  No
+dev-005                000123456789DEF  OK       Yes    Yes  No
+dev-006                000123456789DEF  OK       Yes    Yes  No
+```
+
+!!! warning "Common errors"
+    **`Device dev-003 is in use by an active I/O path`** — Ensure all applications and mount points using the device are stopped before removal.
+    **`powermt: Command not found`** — Install EMC PowerPath or add its bin directory to your PATH environment variable.
 Only run `powermt remove` after the LUN has been unmapped from the host at the array side. Removing an active device will cause I/O failures. After removal, run `powermt save` to persist the updated device list.
 
 ## Update PowerPath After Adding New LUNs
@@ -154,6 +256,37 @@ powermt config
 powermt display dev=all
 ```
 
+
+```text title="Expected output"
+Discovering devices on all adapters...
+Adapter: 0  Path(s): 4
+Adapter: 1  Path(s): 4
+Adapter: 2  Path(s): 4
+Adapter: 3  Path(s): 4
+
+Device Name: emcpowerb
+Symmetrix ID: 000297900001
+LUN: 0042
+Logical Device Name: /dev/mapper/emcpowerb
+state: alive; policy: SymmOpt; priority: 0
+==============================================================================
+Device Name: emcpowerc
+Symmetrix ID: 000297900001
+LUN: 0043
+Logical Device Name: /dev/mapper/emcpowerc
+state: alive; policy: SymmOpt; priority: 0
+==============================================================================
+Device Name: emcpowerd
+Symmetrix ID: 000297900001
+LUN: 0044
+Logical Device Name: /dev/mapper/emcpowerd
+state: alive; policy: SymmOpt; priority: 0
+...
+```
+
+!!! warning "Common errors"
+    **`powermt: Command not found`** — Install EMC PowerPath package (e.g., `rpm -ivh PowerPath*.rpm`) and ensure the daemon is running with `systemctl start powerpath`.
+    **`powermt: error: Cannot open /etc/powermt.custom`** — Verify PowerPath daemon is running with `systemctl status powerpath` and check file permissions on `/etc/powermt.custom`.
 Run `powermt config` after new LUNs have been zoned and masked to the host at the array. New devices will appear in `powermt display dev=all` output with the configured load-balancing policy applied automatically. Run `powermt save` after discovery to persist the updated configuration.
 
 ---

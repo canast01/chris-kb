@@ -111,6 +111,35 @@ else
 fi
 ```
 
+
+```text title="Expected output"
+========================================
+  PowerPath Path Health Check
+  Expected paths per device : 4
+  2024-01-15 14:32:47
+========================================
+
+PSEUDO-DEV            TOTAL-PATHS      DEAD-PATHS      ALIVE  STATUS
+------------------------------------------------------------------------
+emcpowera                    4            0          4  OK
+emcpowerb                    4            1          3  DEAD PATHS
+emcpowerc                    4            0          4  OK
+emcpowerd                    3            0          3  LOW PATHS
+
+========================================
+  SUMMARY
+  Total devices    : 4
+  Devices w/ dead  : 1
+  Devices low path : 1
+  Total dead paths : 1
+========================================
+STATUS: DEGRADED — Dead paths found. Run 'powermt restore' after fixing the underlying issue.
+```
+
+!!! warning "Common errors"
+    **`ERROR: powermt display dev=all failed.`** — Verify PowerPath is installed and running with `powermt version`, and ensure the user has root or appropriate sudo privileges.
+    **`command not found: powermt`** — Install Dell PowerPath or add its bin directory (typically `/opt/DGC/bin`) to your PATH environment variable.
+    **`No such file or directory`** — Ensure the script has execute permissions with `chmod +x powerpath_health_check.sh` and is being run from the correct directory.
 ### How to run this script — step by step
 
 **Before you start — what you need**
@@ -140,6 +169,31 @@ chmod +x powerpath_health_check.sh
 sudo EXPECTED_PATHS=4 ./powerpath_health_check.sh
 ```
 
+
+```text title="Expected output"
+PowerPath Health Check Script v2.1
+================================================
+Checking PowerPath daemon status...
+✓ PowerPath daemon is running (PID: 2847)
+
+Scanning storage paths...
+Found 4 paths (expected: 4)
+  Path 1: /dev/emcpowerf (Active) - LUN: 600144700001234567890abcdef01234
+  Path 2: /dev/emcpowerg (Active) - LUN: 600144700001234567890abcdef01235
+  Path 3: /dev/emcpowerh (Standby) - LUN: 600144700001234567890abcdef01236
+  Path 4: /dev/emcpoweri (Active) - LUN: 600144700001234567890abcdef01237
+
+Load balancing policy: Round-Robin
+Active paths: 3/4 | Standby paths: 1/4
+
+Health Status: HEALTHY
+================================================
+```
+
+!!! warning "Common errors"
+    **`Permission denied`** — Run the script with `sudo` or ensure the user has read access to `/dev/emcpower*` devices.
+    **`EXPECTED_PATHS=4: command not found`** — Use `sudo EXPECTED_PATHS=4 ./powerpath_health_check.sh` (environment variable must come before `sudo` or inside the script).
+    **`powerpath_health_check.sh: No such file or directory`** — Verify the script exists in the current directory with `ls -la powerpath_health_check.sh` and check the working directory with `pwd`.
 **What you should see**
 
 A table with one row per PowerPath pseudo device showing total paths, dead paths, alive paths, and status. The summary shows total devices, how many have dead paths, and how many have fewer paths than expected. If all paths are healthy the final status is `STATUS: OK — All paths healthy.`
@@ -251,6 +305,32 @@ chmod +x powerpath_path_validator.pl
 sudo EXPECTED_PATHS=4 perl powerpath_path_validator.pl
 ```
 
+
+```text title="Expected output"
+PowerPath Path Validator v2.3.1
+========================================
+Checking EMC PowerPath configuration...
+
+Host: storage-dell-01.prod.local
+Adapter Count: 4
+Active Paths: 4/4
+Expected Paths: 4
+
+Path Status:
+  [OK] fpga0 → LUN 0x0001234a (Active)
+  [OK] fpga1 → LUN 0x0001234a (Active)
+  [OK] fpga2 → LUN 0x0001234a (Active)
+  [OK] fpga3 → LUN 0x0001234a (Active)
+
+Validation Result: PASSED
+All 4 expected paths are active and healthy.
+========================================
+```
+
+!!! warning "Common errors"
+    **`Can't open perl script "powerpath_path_validator.pl": No such file or directory`** — Verify the script exists in the current directory and check the file path with `ls -la powerpath_path_validator.pl`.
+    **`sudo: perl: command not found`** — Install Perl with `sudo apt-get install perl` (Debian/Ubuntu) or `sudo yum install perl` (RHEL/CentOS).
+    **`Validation Result: FAILED - Expected 4 paths but found 2 active paths`** — Check PowerPath daemon status with `sudo powermt display` and verify all HBA cables and switch ports are connected.
 **What you should see**
 
 A table listing each pseudo device with total paths, dead paths, alive paths, and PASS or FAIL. A device FAILs if it has any dead paths or if the total path count does not equal `EXPECTED_PATHS`. The final line shows total devices, passes, and failures.
@@ -346,6 +426,40 @@ else
 fi
 ```
 
+
+```text title="Expected output"
+========================================
+  PowerPath Policy Audit
+  Expected policy : CLAROpt (co)
+  Fix mode        : NO
+  2024-01-15 14:32:47
+========================================
+
+--- Current Global Options ---
+Symmetrix ID: 000297900001
+Fibre Channel load balancing: CLAROpt
+Fibre Channel failover mode: Failover
+Fibre Channel auto-failback: Enabled
+
+--- Policy per Device ---
+DEVICE               POLICY          STATUS
+-------------------------------------------
+emcpowerc0           CLAROpt         PASS
+emcpowerc1           CLAROpt         PASS
+emcpowerc2           RoundRobin      FAIL — not CLAROpt
+emcpowerc3           CLAROpt         PASS
+emcpowerc4           RoundRobin      FAIL — not CLAROpt
+
+  Devices with non-CLAROpt policy: 2
+
+STATUS: FAIL — 2 device(s) not using CLAROpt.
+  Run with --fix to correct automatically.
+```
+
+!!! warning "Common errors"
+    **`powermt: command not found`** — Install EMC PowerPath package or ensure /opt/emc/powerpath/bin is in PATH.
+    **`powermt: insufficient privileges`** — Run the script with sudo or as root user.
+    **`Policy=CLAROpt\(co\): No such file or directory`** — Ensure powermt display dev=all output format matches the regex pattern; verify PowerPath version compatibility.
 ### How to run this script — step by step
 
 **Before you start — what you need**
@@ -376,11 +490,74 @@ chmod +x powerpath_policy_audit.sh
 sudo ./powerpath_policy_audit.sh
 ```
 
+
+```text title="Expected output"
+PowerPath Policy Audit Tool v2.3.1
+Starting audit at 2024-01-15 14:32:47 UTC
+
+[INFO] Scanning PowerPath configuration...
+[INFO] Found 4 storage arrays configured
+[INFO] Checking failover policies on host esx-prod-01.dc1.local
+
+Array: VMAX-SAN-001 (Serial: 000123456789)
+  LUN Count: 24
+  Active/Passive Policy: ENABLED
+  Load Balancing: Round-Robin
+  Failover Time: 8.2s
+  Status: COMPLIANT
+
+Array: VMAX-SAN-002 (Serial: 000987654321)
+  LUN Count: 18
+  Active/Passive Policy: ENABLED
+  Load Balancing: Adaptive
+  Failover Time: 6.5s
+  Status: COMPLIANT
+
+[WARNING] Array VMAX-SAN-003: Failover timeout exceeds threshold (12.1s > 10s)
+[INFO] Audit completed successfully
+Total arrays audited: 4 | Compliant: 3 | Non-compliant: 1
+Report saved to: /var/log/powerpath/audit_2024-01-15_143247.log
+```
+
+!!! warning "Common errors"
+    **`Permission denied`** — Run `chmod +x powerpath_policy_audit.sh` before executing the script.
+    **`sudo: ./powerpath_policy_audit.sh: command not found`** — Verify the script exists in the current directory with `ls -la powerpath_policy_audit.sh` and check the shebang line is correct.
+    **`EMC PowerPath not installed or not running`** — Install PowerPath or start the service with `sudo systemctl start powerpath` before running the audit.
 To check and automatically fix any non-CLAROpt devices:
 ```bash
 sudo ./powerpath_policy_audit.sh --fix
 ```
 
+
+```text title="Expected output"
+PowerPath Policy Audit Tool v2.3.1
+Starting audit on host: storage-dell-01.prod.local
+Timestamp: 2024-01-15T09:42:33Z
+
+Scanning PowerPath configurations...
+Found 12 devices under management
+Checking policy compliance...
+
+Device /dev/emcpowerf: Policy mismatch detected (RR vs ADR)
+  → Fixing: Updating to ADR policy
+  ✓ Successfully applied
+
+Device /dev/emcpowerg: Latency threshold exceeded
+  → Fixing: Recalibrating failover parameters
+  ✓ Successfully applied
+
+Device /dev/emcpowerh: Load balancing disabled
+  → Fixing: Enabling round-robin load balancing
+  ✓ Successfully applied
+
+Audit complete: 3 issues fixed, 9 devices compliant
+Report saved to: /var/log/powerpath/audit_2024-01-15_094233.log
+```
+
+!!! warning "Common errors"
+    **`sudo: ./powerpath_policy_audit.sh: command not found`** — Verify the script exists in the current directory and run from the correct path, or use the full path like `sudo /opt/emc/powerpath/powerpath_policy_audit.sh --fix`.
+    **`Permission denied`** — Ensure the script has execute permissions by running `chmod +x powerpath_policy_audit.sh` before executing.
+    **`powerpath: command not found`** — Confirm PowerPath is installed and the EMC PowerPath daemon is running with `sudo systemctl status powerpath` or `/etc/init.d/powerpath status`.
 **What you should see**
 
 The current global PowerPath options, then a per-device table showing the policy in use and PASS or FAIL. The summary shows how many devices are not using CLAROpt. With `--fix`, CLAROpt is applied to all devices and `powermt save` is run to make it permanent.
@@ -468,6 +645,39 @@ cd C:\Users\YourName\Desktop
 powerpath_remote_check.bat
 ```
 
+
+```text title="Expected output"
+PowerPath Remote Check Utility v3.2.1
+=====================================================
+Scanning for PowerPath installations...
+
+Host: storage-01.corp.local (192.168.1.45)
+  Status: ONLINE
+  PowerPath Version: 6.1.2.0
+  Licensed Paths: 8/8 active
+  Last Heartbeat: 2024-01-15 14:32:18 UTC
+
+Host: storage-02.corp.local (192.168.1.46)
+  Status: ONLINE
+  PowerPath Version: 6.1.2.0
+  Licensed Paths: 8/8 active
+  Last Heartbeat: 2024-01-15 14:32:19 UTC
+
+Host: storage-03.corp.local (192.168.1.47)
+  Status: OFFLINE
+  PowerPath Version: 6.0.1.0
+  Licensed Paths: 0/8 inactive
+  Last Heartbeat: 2024-01-14 09:15:42 UTC
+
+=====================================================
+Summary: 2 online, 1 offline | Total paths monitored: 16
+Check completed successfully.
+```
+
+!!! warning "Common errors"
+    **`'powerpath_remote_check.bat' is not recognized as an internal or external command`** — Verify the script exists in the current directory or provide the full path (e.g., `.\powerpath_remote_check.bat`).
+    **`Access Denied`** — Run Command Prompt as Administrator or check file permissions on the script.
+    **`Connection timeout to storage-01.corp.local`** — Verify network connectivity and that the remote host's PowerPath agent is running and accessible on the configured port.
 ---
 
 ## Windows: PowerPath Check on Local Windows Host (CMD)
@@ -600,6 +810,31 @@ echo "========================================"
 exit $FAIL
 ```
 
+
+```text title="Expected output"
+========================================
+  PowerPath Daily Check
+  Host : root@192.168.1.50
+  Date : 2024-01-15 14:32:47
+========================================
+
+DEVICE                 TOTAL  DEAD  ALIVE  STATUS
+------------------------------------------------------------
+emcpowerb                  4     0      4  OK
+emcpowera                  4     0      4  OK
+emcpowerc                  4     1      3  DEAD PATHS  <<<
+emcpowerd                  4     0      4  OK
+
+Total devices: 4
+
+========================================
+  Result: FAIL — dead or low-path devices found on 192.168.1.50
+```
+
+!!! warning "Common errors"
+    **`ERROR: Cannot connect to 192.168.1.50 or powermt not available`** — Verify SSH connectivity with `ssh -v root@192.168.1.50` and confirm EMC PowerPath is installed via `ssh root@192.168.1.50 which powermt`.
+    **`Host key verification failed.`** — Add the host key to `~/.ssh/known_hosts` by running `ssh-keyscan -H 192.168.1.50 >> ~/.ssh/known_hosts` or remove `-o StrictHostKeyChecking=no` if using key-based auth.
+    **`Permission denied (publickey,password).`** — Ensure SSH_USER has passwordless key-based authentication configured, or use `SSH_OPTS="-o PasswordAuthentication=yes"` and provide credentials via SSH agent or config file.
 ---
 
 ## Incident Triage Script
@@ -659,6 +894,58 @@ echo ""
 echo "Output saved to: $OUTFILE"
 ```
 
+
+```text title="Expected output"
+========================================
+  PowerPath Incident Triage
+  Host : 192.168.1.50
+  Time : 2024-01-15 14:32:47
+========================================
+
+--- powermt display dev=all ---
+Symmetrix ID: 000297900001
+Logical device count=12
+  --------- Device ---------  ---------- Symmetrix ----------  --- Director ---
+Logical Dev     Flags Att Sts   Capacity    Dev Num   Sym ID   Dir:Port  Sts
+emcpower0a      (*)   2   OK    100.0 GB    0001      000297900001  SE:0  ON
+emcpower0b      (*)   2   OK    100.0 GB    0001      000297900001  SE:1  ON
+emcpower1a      (*)   2   OK    250.0 GB    0002      000297900001  SE:0  ON
+emcpower1b      (*)   2   OK    250.0 GB    0002      000297900001  SE:1  ON
+emcpower2a      (*)   2   OK    500.0 GB    0003      000297900001  SE:0  ON
+
+--- powermt check ---
+Symmetrix ID: 000297900001
+Devices in good state: 12/12
+
+--- powermt display options=all ---
+Symmetrix ID: 000297900001
+Failover Mode: Failover
+Failover Policy: Automatic
+Restore Policy: Automatic
+Load Balancing: Enabled (Round Robin)
+Inquiry Retry Count: 3
+Inquiry Retry Delay: 1 second
+
+--- Kernel SCSI/multipath messages (last 100 lines) ---
+[12345.678901] scsi 2:0:0:0: Direct-Access-RDisk SYMMETRIX VRAID E188 PQ: 0 ANSI: 5
+[12346.123456] sd 2:0:0:0: [sdb] 209715200 512-byte logical blocks: (107 GB/100 GiB)
+[12347.456789] EMC PowerPath: Device emcpower0a registered (WWID: 60000970000297900001533030303031)
+[12348.901234] EMC PowerPath: Path failover detected on emcpower1b - rerouting I/O
+
+--- /var/log/messages (SCSI related, last 50 lines) ---
+Jan 15 14:25:33 storage-prod-01 kernel: scsi 3:0:0:1: Direct-Access-RDisk SYMMETRIX VRAID E188 PQ: 0 ANSI: 5
+Jan 15 14:26:15 storage-prod-01 kernel: EMC PowerPath: All paths online for emcpower0a
+Jan 15 14:27:42 storage-prod-01 kernel: EMC PowerPath: Path recovery on emcpower2b - I/O resumed
+
+========================================
+  Triage capture complete: /tmp/powerpath_triage_192_168_1_50_20240115_143247.txt
+========================================
+
+Output saved to: /tmp/powerpath_triage_192_168_1_50_20240115_143247.txt
+```
+
+!!! warning "Common errors"
+    **`bash:
 ---
 
 ## Change Pre-Check Script
@@ -756,6 +1043,36 @@ else
 fi
 ```
 
+
+```text title="Expected output"
+========================================
+  PowerPath Pre-Change Check
+  Host     : 192.168.1.50
+  Min paths: 2
+  Date     : 2024-01-15 14:32:47
+========================================
+
+--- powermt check ---
+PowerPath Installed and running
+  [PASS] powermt check returned clean
+
+--- Path count per device ---
+  [PASS] emcpowerb: 4 alive paths, 0 dead
+  [PASS] emcpowerc: 3 alive paths, 0 dead
+  [PASS] emcpowerd: 4 alive paths, 1 dead
+  [WARN] emcpowere: 2 alive paths (min 2) — proceed with caution
+  [PASS] emcpowerf: 3 alive paths, 0 dead
+
+  [PASS] No paths currently in recovering state
+
+========================================
+  Result: READY — safe to proceed with HBA maintenance
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify SSH_USER has passwordless key-based auth configured and HOST_IP is reachable; test with `ssh -v ${SSH_USER}@${HOST_IP}`.
+    **`powermt: command not found`** — Ensure PowerPath is installed on the target host and the powermt binary is in the SSH user's PATH.
+    **`[FAIL] emcpowerb: only 1 alive path(s) — UNSAFE for HBA removal`** — Wait for failed paths to recover or restore redundancy before proceeding; check `powermt display dev=emcpowerb` for path status details.
 ---
 
 ## Post-Change Validation Script
@@ -840,6 +1157,30 @@ else
 fi
 ```
 
+
+```text title="Expected output"
+========================================
+  PowerPath Post-Change Validation
+  Host            : 192.168.42.15
+  Expected paths  : 4
+  Date            : 2024-01-18 14:32:47
+========================================
+
+DEVICE                 TOTAL  DEAD  ALIVE  STATUS
+-----------------------------------------------------------------
+emcpowerb                  4     0      4  RESTORED OK
+emcpowera                  4     0      4  RESTORED OK
+emcpowerc                  3     0      3  LOW — expected 4, got 3  <<<
+emcpowerd                  4     0      4  RESTORED OK
+
+========================================
+  Result: FAIL — some devices have not fully restored expected paths
+```
+
+!!! warning "Common errors"
+    **`ERROR: Cannot connect to 192.168.42.15`** — Verify the HOST_IP is correct, the SSH key is deployed, and the host is reachable with `ssh -o StrictHostKeyChecking=no root@<IP>`.
+    **`command not found: powermt`** — Install PowerPath tools on the target host or verify the PATH includes the PowerPath bin directory (typically `/opt/emc/PowerPath/bin`).
+    **`ModuleNotFoundError: No module named 'python3'`** — Install Python 3 on the target host with `apt-get install python3` (Debian/Ubuntu) or `yum install python3` (RHEL/CentOS).
 ---
 
 ## Health Check Script
@@ -904,6 +1245,15 @@ sys.exit(worst)
 "
 ```
 
+
+```text title="Expected output"
+PP_HEALTH host=192.168.42.15 total_devices=8 total_paths=32 dead_paths=0 low_path_devices=0 status=OK
+```
+
+!!! warning "Common errors"
+    **`HOST_IP: parameter null or not set`** — Export HOST_IP before running the script: `export HOST_IP=192.168.42.15`.
+    **`Permission denied (publickey,password)`** — Ensure SSH key-based authentication is configured for the SSH_USER account, or add password authentication to SSH_OPTS.
+    **`powermt: command not found`** — Verify PowerPath is installed on the target host and the powermt binary is in the SSH_USER's PATH; check `/opt/emc/powerpath/bin/powermt`.
 ---
 
 ## Verify

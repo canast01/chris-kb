@@ -68,6 +68,28 @@ isi auth ldap create --name ldap-prod --server ldap://ldap.example.com \
 isi auth providers list --zone <zone-name>
 ```
 
+
+```text title="Expected output"
+Creating Active Directory domain EXAMPLE.COM for zone System...
+Successfully joined domain EXAMPLE.COM
+ID                  Name            Status      Domain Controller
+--                  ----            ------      -----------------
+1                   EXAMPLE.COM     online      dc01.example.com (192.168.1.50)
+
+Name            Type    Server                          Status
+----            ----    ------                          ------
+EXAMPLE.COM     ads     dc01.example.com                online
+ldap-prod       ldap    ldap.example.com                online
+
+ID    Name            Type      Server                    Zone
+--    ----            ----      ------                    ----
+1     EXAMPLE.COM     ads       dc01.example.com          System
+2     ldap-prod       ldap      ldap.example.com          System
+```
+
+!!! warning "Common errors"
+    **`Error: Failed to join domain EXAMPLE.COM: Authentication failed`** — Verify the Administrator credentials are correct and the account has sufficient permissions to join computers to the domain.
+    **`Error: LDAP server ldap://ldap.example.com is unreachable`** — Confirm network connectivity to the LDAP server and that the URI scheme and port are correct (typically ldap:// on port 389 or ldaps:// on port 636).
 - Use a dedicated service account for AD join; avoid domain admin credentials.
 - For multi-protocol (NFS + SMB) environments, configure both AD (for Windows SIDs) and LDAP/NIS (for Unix UIDs/GIDs) on the same zone, and enable identity mapping.
 
@@ -98,6 +120,78 @@ curl -k -u admin:password \
   https://<cluster-node>:8080/platform/3/sync/policies
 ```
 
+
+```text title="Expected output"
+{
+  "nodes": [
+    {
+      "id": 1,
+      "hostname": "isilon-node-01.corp.local",
+      "ip_address": "192.168.1.10",
+      "status": "online",
+      "lnn": 1
+    },
+    {
+      "id": 2,
+      "hostname": "isilon-node-02.corp.local",
+      "ip_address": "192.168.1.11",
+      "status": "online",
+      "lnn": 2
+    },
+    {
+      "id": 3,
+      "hostname": "isilon-node-03.corp.local",
+      "ip_address": "192.168.1.12",
+      "status": "online",
+      "lnn": 3
+    }
+  ]
+}
+{
+  "quotas": [
+    {
+      "id": "quota-12345abc",
+      "path": "/ifs/data/project",
+      "hard_threshold": 1099511627776,
+      "soft_threshold": 966367641600,
+      "usage": 549755813888,
+      "container": true
+    }
+  ]
+}
+{
+  "id": "export-98765def",
+  "paths": ["/ifs/data/newproject"],
+  "clients": ["10.0.0.0/24"],
+  "map_root": {"user": "nobody"},
+  "protocol": "nfs",
+  "security_flavors": ["sys"]
+}
+{
+  "policies": [
+    {
+      "id": "SyncIQ-policy-001",
+      "name": "daily-backup-to-dr",
+      "source_cluster": "prod-cluster-01",
+      "target_cluster": "dr-cluster-02",
+      "schedule": "0 2 * * *",
+      "enabled": true,
+      "last_job_status": "succeeded"
+    },
+    {
+      "id": "SyncIQ-policy-002",
+      "name": "hourly-sync-remote",
+      "enabled": true,
+      "last_job_status": "running"
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification, or import the cluster's CA certificate into your system trust store.
+    **`curl: (7) Failed to connect to <cluster-node>:8080: Connection refused`** — Verify the cluster node hostname/IP is correct, the management interface is listening on port 8080, and network connectivity exists from your client.
+    **`{"errors":[{"code":"EACCES","message":"Access denied"}]}`** — Ensure the admin credentials are correct and the user has sufficient role-based permissions for the requested API endpoint.
 Use the `isilon_sdk` Python package for scripted automation: `pip install isilon-sdk`.
 API documentation is available at `https://<cluster-node>:8080/platform/latest/`.
 

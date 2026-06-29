@@ -59,6 +59,35 @@ powermt check_registration
 powermt display dev=all
 ```
 
+
+```text title="Expected output"
+EMC PowerPath Version 6.1.0.0 (build 247)
+Copyright (c) 2023 Dell Inc. All rights reserved.
+
+Preparing...                          ################################# [100%]
+Updating / installing...
+   1:PowerPath-6.1.0.0-247.x86_64     ################################# [100%]
+
+Registration Status: VALID
+License expires: 2025-12-31
+Symmetrix ID: 000297900123
+
+Pseudo name=emcpowerp, Symmetrix ID=000297900123, Server=symm-prod-01
+    Logical device ID=0001234567890ABC
+    state=alive; policy=SymmOpt; priority=0
+    :
+    Logical device ID=0001234567890ABD
+    state=alive; policy=SymmOpt; priority=0
+
+Pseudo name=emcpowerq, Symmetrix ID=000297900124, Server=symm-prod-02
+    Logical device ID=0001234567890ABE
+    state=alive; policy=SymmOpt; priority=0
+```
+
+!!! warning "Common errors"
+    **`error: Failed dependencies: kernel-devel is needed by PowerPath-6.1.0.0-247.x86_64`** — Install the matching kernel-devel package with `yum install kernel-devel` before attempting the RPM upgrade.
+    **`Registration Status: INVALID - License Expired`** — Contact Dell support to renew the PowerPath license or restore a valid license file to `/etc/powerpath/license.txt`.
+    **`powermt: command not found`** — Verify PowerPath is installed with `rpm -qa | grep PowerPath` and ensure `/opt/emc/powerpath/bin` is in your PATH.
 **Post-upgrade validation:** Compare path count and policy output against pre-upgrade baseline; run `powermt restore` if any paths show `dead`.
 
 ## EOL and Renewal Tracking

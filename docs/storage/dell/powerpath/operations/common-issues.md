@@ -107,6 +107,32 @@ switchshow
 powermt save
 ```
 
+
+```text title="Expected output"
+2
+(no output — command completes silently)
+0
+Class = "fc_host"
+  Class Device = "host0"
+    port_name                      = "0x500143800000001a"
+    port_state                     = "Online"
+    speed                          = "16 Gbit"
+  Class Device = "host1"
+    port_name                      = "0x500143800000001b"
+    port_state                     = "Online"
+    speed                          = "16 Gbit"
+switchName:	"SAN-FABRIC-01"
+switchType:	0x11d
+switchState:	OK
+FC_Switch_State:	Online
+zoneName:	"PROD-ZONE-001"
+memberIndex:	0x00000001
+```
+
+!!! warning "Common errors"
+    **`powermt: Command not found`** — Verify EMC PowerPath is installed with `rpm -qa | grep PowerPath` and install from Dell support portal if missing.
+    **`systool: command not found`** — Install sysfsutils package with `yum install sysfsutils` or `apt-get install sysfsutils` depending on your distribution.
+    **`switchshow: command not found`** — Run this command directly on the Brocade switch via SSH or console, not from the host; alternatively verify Brocade CLI tools are installed locally with `rpm -qa | grep brocade`.
 **Prevention:** Add a post-boot `powermt restore` to the startup sequence via a systemd oneshot service or rc.local equivalent, executed after the PowerPath service is confirmed running.
 
 ---
@@ -140,6 +166,41 @@ powermt restore
 powermt display dev=all
 ```
 
+
+```text title="Expected output"
+Restoring all paths...
+Restore complete.
+
+dead
+dead
+
+(no output — command completes silently)
+(no output — command completes silently)
+
+Restoring all paths...
+Restore complete.
+
+Symmetrix ID: 000123456789ABCD
+Logical device name: /dev/mapper/mpatha
+state=alive; policy=SymmOpt; priority=50; queued-IOs=0
+------------ Host ------------------- Dev ---------- State ----------
+host0 c0t0d0s0 alive alive alive alive
+host1 c1t0d0s0 alive alive alive alive
+host0 c0t1d0s0 alive alive alive alive
+host1 c1t1d0s0 alive alive alive alive
+------------ Host ------------------- Dev ---------- State ----------
+host0 c0t2d0s0 alive alive alive alive
+host1 c1t2d0s0 alive alive alive alive
+host0 c0t3d0s0 alive alive alive alive
+host1 c1t3d0s0 alive alive alive alive
+
+Total paths: 8, Dead paths: 0
+```
+
+!!! warning "Common errors"
+    **`powermt: command not found`** — Install EMC PowerPath package (e.g., `apt-get install emc-powerpath` or equivalent for your distribution) and ensure the PowerPath daemon is running with `systemctl start powerpath`.
+    **`No such file or directory: /sys/class/fc_host/host0/issue_lip`** — Verify HBA is present and loaded with `lspci | grep -i fibre` and check actual host numbers with `ls /sys/class/fc_host/` before issuing LIP commands.
+    **`dead` still appears after restore and LIP`** — Check SAN fabric connectivity and zoning with `fcstat` or vendor tools, and verify HBA firmware is current before attempting further recovery steps.
 If paths still do not recover after the above steps, escalate to the SAN team to confirm the switch port and array FA port are fully online and zoned correctly.
 
 ---
@@ -174,6 +235,37 @@ powermt set policy=CLAROpt class=all
 powermt save
 ```
 
+
+```text title="Expected output"
+scsi 2:0:0:0: Direct-Access-RW device
+scsi 2:0:1:0: Direct-Access-RW device
+scsi 2:0:2:0: Direct-Access-RW device
+Rescan started for host 0
+Rescan started for host 1
+Rescan started for host 2
+
+Discovering devices
+CLARiiON_SYMMETRIX_VRAID: 4 devices
+SYMMETRIX: 8 devices
+VMAX: 12 devices
+
+Pseudo name=emcpowerf
+CLARiiON_SYMMETRIX_VRAID [CX480-FA0F]: 4 active paths
+SYMMETRIX [000195701234]: 8 active paths
+VMAX [000296701567]: 12 active paths
+
+Setting policy CLAROpt for class all
+CLARiiON_SYMMETRIX_VRAID: policy set to CLAROpt
+SYMMETRIX: policy set to CLAROpt
+VMAX: policy set to CLAROpt
+
+Configuration saved to /etc/powermt.custom
+```
+
+!!! warning "Common errors"
+    **`bash: /usr/bin/rescan-scsi-bus.sh: No such file or directory`** — Install sg3-utils package with `yum install sg3-utils` or remove the line if using newer kernel auto-discovery.
+    **`powermt: command not found`** — Verify EMC PowerPath is installed with `rpm -qa | grep PowerPath` and source the environment with `source /etc/profile.d/emc_powerpaths.sh`.
+    **`Permission denied`** — Run the entire script with `sudo` or as root user since `/sys/class/scsi_host` writes require elevated privileges.
 If the device still does not appear after the above, verify at the array that:
 - The LUN is fully created and not in a provisioning or error state
 - The host initiator (HBA WWN or iSCSI IQN) is correctly registered in the host group
@@ -213,6 +305,27 @@ powermt set policy=CLAROpt class=all
 powermt save
 ```
 
+
+```text title="Expected output"
+PowerPath Registration: Licensed
+Expiration date: 2026-12-31
+
+(no output — command completes silently)
+
+Reconfiguring all paths...
+Configuration complete. 27 devices configured.
+
+(no output — command returns empty when no unlicensed paths exist)
+
+Setting policy CLAROpt for all device classes...
+Policy updated successfully.
+Configuration saved to /etc/powerpath/powerpath.conf
+```
+
+!!! warning "Common errors"
+    **`powermt: command not found`** — Ensure PowerPath is installed and `/opt/powerpath/bin` is in your PATH, or use the full path `/opt/powerpath/bin/powermt`.
+    **`Registration key invalid or expired`** — Verify the registration key format matches Dell's requirements and obtain a fresh key from the Dell support portal if it has expired.
+    **`powermt: insufficient privileges`** — Run the command with `sudo` or as root, as PowerPath operations require administrative access.
 **Note:** Paths in `unlic` state are not managed by PowerPath — I/O may still flow over them via native OS multipath if DM-Multipath is active, but PowerPath provides no failover or load balancing for these paths.
 
 ---
@@ -245,6 +358,41 @@ powermt display options
 powermt save
 ```
 
+
+```text title="Expected output"
+PowerPath Release: 6.1.0 (build 234)
+Symmetrix Device Count: 12
+VRAID Device Count: 0
+Fibre Channel Device Count: 12
+Current policy: SymmOpt
+Latency Monitor: Enabled
+Alua Mode: Disabled
+
+Device Name       Symmetrix ID      Policy
+emcpowerb         000297900123      SymmOpt
+emcpowerc         000297900123      SymmOpt
+emcpowerd         000297900124      SymmOpt
+emcpowere         000297900124      SymmOpt
+...
+
+Policy set to CLAROpt for class all
+Policy set to CLAROpt for class symmetrix
+
+PowerPath Release: 6.1.0 (build 234)
+Symmetrix Device Count: 12
+VRAID Device Count: 0
+Fibre Channel Device Count: 12
+Current policy: CLAROpt
+Latency Monitor: Enabled
+Alua Mode: Disabled
+
+Saved PowerPath configuration to /etc/powerpath/powerpath.conf
+```
+
+!!! warning "Common errors"
+    **`powermt: command not found`** — Verify PowerPath is installed with `rpm -qa | grep EMCpower` and add `/opt/emc/powerpath/bin` to PATH if needed.
+    **`Error: Cannot set policy — devices in use`** — Stop I/O to affected devices or use `powermt set policy=CLAROpt class=all -force` to override (use with caution in production).
+    **`Error: Configuration not saved — permission denied`** — Run `powermt save` with root privileges using `sudo` or switch to root user.
 **Impact of wrong policy:** `RoundRobin` sends I/O over all paths regardless of ALUA state. On active/passive arrays, this causes I/O to be sent over non-optimised paths (the standby storage processor), which the array then re-routes internally — causing latency and additional array-side CPU overhead.
 
 ---
@@ -280,6 +428,43 @@ cat /sys/class/fc_host/host0/statistics/link_failure_count
 cat /sys/class/fc_host/host0/statistics/loss_of_signal_count
 ```
 
+
+```text title="Expected output"
+Dec 15 10:23:47 host-prod-01 kernel: emcp: (Class:2 Code:051801): Host: host-prod-01 - ALUA state change detected on device emc0
+Dec 15 10:24:12 host-prod-01 kernel: emcp: (Class:2 Code:051801): Path restored to emc0 via HBA port 2
+Dec 15 10:25:33 host-prod-01 kernel: emcp: (Class:2 Code:051801): Path dead to emc0 via HBA port 2
+Dec 15 10:26:01 host-prod-01 kernel: emcp: (Class:2 Code:051801): Path restored to emc0 via HBA port 2
+Dec 15 10:27:15 host-prod-01 kernel: emcp: (Class:2 Code:051801): Path dead to emc0 via HBA port 2
+
+Pseudo-name  State   Paths  Enabled  Optimization  Current-Optimizer
+emc0         ALIVE   4      4        SymmOpt       host-prod-01
+emc1         ALIVE   4      4        SymmOpt       host-prod-01
+emc2         ALIVE   4      4        SymmOpt       host-prod-01
+
+HBA Port ID: host0:0:0:0  Target Port: 50:00:14:40:5d:b2:c1:a0  Status: DEAD
+HBA Port ID: host1:0:0:0  Target Port: 50:00:14:40:5d:b2:c1:a1  Status: ALIVE
+
+portshow 12
+portName:        12
+portType:        F-Port
+portState:       Online
+LIP:             127
+Loss of Signal:  8
+Loss of Sync:    3
+CRC errors:      0
+
+cat /sys/class/fc_host/host0/statistics/error_frames
+42
+cat /sys/class/fc_host/host0/statistics/link_failure_count
+15
+cat /sys/class/fc_host/host0/statistics/loss_of_signal_count
+8
+```
+
+!!! warning "Common errors"
+    **`grep: /var/log/messages: No such file or directory`** — Check the correct syslog location with `ls /var/log/syslog /var/log/messages /var/log/audit/audit.log` and adjust the path accordingly.
+    **`powermt: command not found`** — Verify PowerPath is installed with `rpm -qa | grep powerpath` and ensure `/opt/emc/powerpath/bin` is in your PATH.
+    **`portshow: command not found`** — SSH to the Brocade switch directly or use the switch's web interface; this command runs on the switch, not the host.
 **Resolution:** Replace the suspect SFP or cable. Clean dirty connectors. If the switch port is oversubscribed or showing persistent CRC errors, relocate the connection to a clean port. After physical repair, run `powermt restore` and monitor for 30 minutes to confirm the path has stabilised.
 
 ---
@@ -326,6 +511,40 @@ systemctl disable --now multipathd
 powermt display dev=all
 ```
 
+
+```text title="Expected output"
+● multipathd.service - Device-Mapper Multipath Daemon
+     Loaded: loaded (/usr/lib/systemd/system/multipathd.service; enabled; vendor preset: enabled)
+     Active: active (running) since Thu 2024-01-18 14:32:15 UTC; 2h 14min ago
+       Main PID: 2847 (multipathd)
+        Tasks: 7 (limit: 4915)
+       Memory: 12.3M
+       CGroup: /system.slice/multipathd.service
+               └─2847 /sbin/multipathd -d -s
+
+360060e8005a4200002a4200000a1b2c DGC,VRAID
+size=500G features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
+|-+- policy='service-time 0' prio=50 status=active
+| |- 2:0:0:1 sdb 8:16 active ready running
+| `- 3:0:0:1 sdc 8:32 active ready running
+`-+- policy='service-time 0' prio=10 status=enabled
+  |- 4:0:0:1 sdd 8:48 active ready running
+  `- 5:0:0:1 sde 8:64 active ready running
+
+(no output — command completes silently)
+
+(no output — command completes silently)
+
+Removed /etc/systemd/system/multi-user.target.wants/multipathd.service.
+
+Symmetrix ID: 000296701234
+Logical device name(s): dev_000, dev_001, dev_002
+```
+
+!!! warning "Common errors"
+    **`multipathd.service is not running.`** — Run `systemctl start multipathd` to start the service before attempting to reload configuration.
+    **`Cannot open /etc/multipath.conf: Permission denied`** — Edit the multipath.conf file with elevated privileges using `sudo nano /etc/multipath.conf` or ensure your user has write permissions.
+    **`powermt: command not found`** — Install the PowerPath package using `apt-get install powerpath` or `yum install powerpath` depending on your distribution.
 ---
 
 ## PowerPath Service Not Starting After Reboot
@@ -360,6 +579,23 @@ powermt version
 # for the current kernel
 ```
 
+
+```text title="Expected output"
+● PowerPath.service - Dell EMC PowerPath
+     Loaded: loaded (/usr/lib/systemd/system/PowerPath.service; enabled; vendor preset: enabled)
+     Active: inactive (dead) since Wed 2024-01-10 14:32:18 UTC; 2min 45s ago
+emcp                  245760  0
+Dec 10 14:35:22 host-db-01 kernel: emcp: loading out-of-tree module taints kernel.
+Dec 10 14:35:22 host-db-01 systemd[1]: Started Dell EMC PowerPath.
+Dec 10 14:35:23 host-db-01 PowerPath[2847]: PowerPath daemon started successfully
+filename:   /lib/modules/5.15.0-91-generic/kernel/drivers/emcp.ko
+version:    6.1.0.0
+PowerPath Version: 6.1.0 Build 0247
+```
+
+!!! warning "Common errors"
+    **`modprobe: FATAL: Module emcp not found in directory /lib/modules/5.15.0-91-generic/kernel`** — Reinstall PowerPath with `powermt install` or run the PowerPath installer with the `--repair` flag to rebuild the kernel module for the current kernel version.
+    **`Job for PowerPath.service failed because the control process exited with error code.`** — Check `journalctl -u PowerPath -n 20` for the specific startup error; common causes are missing dependencies or incompatible kernel module versions.
 **Common cause after OS/kernel update:** A kernel update replaces the running kernel but does not rebuild the PowerPath kernel module for the new kernel. The PowerPath DKMS package should rebuild automatically, but if DKMS is not configured or fails, the module will be missing after reboot. Check `dmesg` for module load errors.
 
 ---

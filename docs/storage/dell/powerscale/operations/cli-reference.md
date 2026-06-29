@@ -41,6 +41,37 @@ isi cluster identity view
 isi cluster config view
 ```
 
+
+```text title="Expected output"
+OneFS version
+OneFS Release: 9.4.0.0 (Build 9.4.0.0-123456)
+
+Cluster Status
+Nodes: 6
+Total Capacity: 432 TB
+Available Capacity: 287 TB
+Used Capacity: 145 TB
+Health Status: HEALTHY
+Node Status: All nodes online
+
+Cluster Identity
+Cluster Name: prod-powerscale-01
+Contact: storage-admin@company.com
+Timezone: America/New_York
+Description: Production NAS cluster
+
+Cluster Configuration
+Join Mode: Standard
+IFS Mount Point: /ifs
+Encoding: UTF-8
+Timezone: America/New_York
+Antivirus Mode: Disabled
+```
+
+!!! warning "Common errors"
+    **`isi: command not found`** — Ensure you are logged into the OneFS cluster via SSH or install the OneFS CLI tools on your local machine.
+    **`Error: Permission denied`** — Verify your user account has cluster administrator privileges or use `sudo isi` if available.
+    **`Connection refused`** — Confirm the cluster management IP is reachable and OneFS services are running with `systemctl status isilon-services`.
 ### Node Status
 
 ```bash

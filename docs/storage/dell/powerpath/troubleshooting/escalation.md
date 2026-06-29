@@ -109,6 +109,48 @@ powermt display options >> /tmp/pp-dev-all-$(date +%Y%m%d%H%M).txt
 powermt save
 ```
 
+
+```text title="Expected output"
+Symmetrix ID: 000123456789ABCD
+Logical device name: emcpowera
+Symmetrix device ID: 00123
+Device wwn: 60000970000123456789abcdef012345
+--------- Host --------- - Stor - -- I/O Path Optimization --
+ # H/W Path         I/O Paths Interf. Mode    Algo Lun-0 Lun-1 Lun-2
+ 0 pci@0,0/pci@0/SUNW,qlc@0,0 Open   Optimized Round-Robin  On    On    On
+ 1 pci@0,0/pci@0/SUNW,qlc@0,1 Open   Optimized Round-Robin  On    On    On
+ 2 pci@0,0/pci@0/SUNW,qlc@0,2 Open   Optimized Round-Robin  On    On    On
+ 3 pci@0,0/pci@0/SUNW,qlc@0,3 Open   Optimized Round-Robin  On    On    On
+
+HBA Port Information:
+ # HBA Name         State   Avail  Interf.  Speed  WWN
+ 0 qla0             ON      Yes    Fibre    16Gb  50:00:09:73:00:12:34:56
+ 1 qla1             ON      Yes    Fibre    16Gb  50:00:09:73:00:12:34:57
+ 2 qla2             ON      Yes    Fibre    16Gb  50:00:09:73:00:12:34:58
+ 3 qla3             ON      Yes    Fibre    16Gb  50:00:09:73:00:12:34:59
+
+Target Port Information:
+ # Target Port      State   Avail  Interf.  Speed  WWN
+ 0 FA-1D            ON      Yes    Fibre    16Gb  50:00:14:40:12:34:56:78
+ 1 FA-2D            ON      Yes    Fibre    16Gb  50:00:14:40:12:34:56:79
+ 2 FA-3D            ON      Yes    Fibre    16Gb  50:00:14:40:12:34:56:7a
+ 3 FA-4D            ON      Yes    Fibre    16Gb  50:00:14:40:12:34:56:7b
+
+PowerPath Options:
+ Option Name                    Current Value
+ load_balance_policy            round_robin
+ failover_mode                  auto
+ auto_failback                  enabled
+ path_health_check_interval     60
+ ...
+
+Configuration saved successfully to /etc/powerpath/powerpath.cfg
+```
+
+!!! warning "Common errors"
+    **`powermt: command not found`** — Verify PowerPath is installed with `rpm -qa | grep EMCpower` and ensure `/opt/EMCpower/powerpath/bin` is in your PATH.
+    **`Permission denied`** — Run the command with `sudo` or as root; PowerPath requires elevated privileges to display device and port states.
+    **`Cannot open /etc/powerpath/powerpath.cfg for writing`** — Ensure `/etc
 ### 3. Capture kernel and system log messages
 
 ```bash
@@ -143,6 +185,32 @@ cat /etc/iscsi/initiatorname.iscsi
 iscsiadm -m session 2>/dev/null
 ```
 
+
+```text title="Expected output"
+driver_version = "12.0.0.37"
+firmware_version = "8.10.04"
+port_name = "0x500143800000abcd"
+port_state = "Online"
+driver_version = "12.0.0.37"
+firmware_version = "8.10.04"
+port_name = "0x500143800000ef01"
+port_state = "Online"
+
+Emulex LPe16002B-M6 Fibre Channel Adapter
+Online
+12.0.0.37
+
+## DO NOT EDIT OR REMOVE THE FOLLOWING LINE: InitiatorName=iqn.1993-08.org.debian:01.a1b2c3d4e5f6
+InitiatorName=iqn.1993-08.org.debian:01.a1b2c3d4e5f6
+
+tcp: [1] 192.168.1.50:3260,1 iqn.1991-05.com.dell:storage.array1 (non-flash)
+tcp: [2] 192.168.1.51:3260,2 iqn.1991-05.com.dell:storage.array1 (non-flash)
+```
+
+!!! warning "Common errors"
+    **`bash: systool: command not found`** — Install `sysfsutils` package with `apt-get install sysfsutils` or `yum install sysfsutils`.
+    **`cat: /sys/class/fc_host/host*/driver_version: No such file or directory`** — Verify Fibre Channel HBA is installed and loaded with `lspci | grep -i fibre` and `lsmod | grep lpfc`.
+    **`iscsiadm: No iSCSI sessions active`** — This is informational output when no iSCSI targets are connected; confirm with `iscsiadm -m discoverydb -t sendtargets -p <target_ip> --discover` if discovery is needed.
 ### 5. Write the timeline
 
 ```text
@@ -244,6 +312,42 @@ powermt display ports class=all
 dmesg | grep -i "emcp\|powerpath" | tail -20
 ```
 
+
+```text title="Expected output"
+PowerPath version 6.1.0.0 (build 1234)
+Symmetrix ID: 000296900001
+Logical device count: 24
+
+Name           Symmetrix ID     State    Paths    Grp  Prio/Algo
+emcp0          000296900001     Open     4        0    Opt/Alua
+emcp1          000296900001     Open     4        1    Opt/Alua
+emcp2          000296900001     Open     4        0    Opt/Alua
+emcp3          000296900001     Open     2        0    Opt/Alua
+emcp4          000296900001     Dead     0        0    Opt/Alua
+emcp5          000296900001     Open     4        1    Opt/Alua
+...
+
+Dead Paths Count:
+emcp4          000296900001     Dead     0        0    Opt/Alua
+
+HBA Port Information:
+Port  Name           State  Q-Full  Total-IOs  KB-Read
+c0    qla2xxx_0-0    ON     No      1847293    524288
+c1    qla2xxx_1-0    ON     No      1923847    589824
+c2    qla2xxx_2-0    OFF    No      0          0
+c3    qla2xxx_3-0    ON     No      1756392    458752
+c4    qla2xxx_4-0    ON     No      1834756    512000
+
+[12847.293847] qla2xxx [0000:0c:00.0]-500a: LOOP UP detected (8 ALPA)
+[12851.847293] qla2xxx [0000:0d:00.0]-500a: LOOP UP detected (8 ALPA)
+[13045.293847] emcp: Device emcp4 path c2 failed: I/O timeout
+[13046.102938] qla2xxx [0000:0e:00.0]-5008: Link Down detected
+```
+
+!!! warning "Common errors"
+    **`powermt: command not found`** — Verify PowerPath is installed with `rpm -qa | grep PowerPath` and ensure /opt/emc/powerpath/bin is in PATH.
+    **`emcp4          000296900001     Dead     0        0    Opt/Alua`** — Check SAN fabric connectivity and zoning for the affected HBA port; rescan with `powermt config` after restoring the path.
+    **`[13046.102938] qla2xxx [0000:0e:00.0]-5008: Link Down detected`** — Verify SFP cable and switch port status on the fabric side, then restart the HBA driver with `modprobe -r qla2xxx && modprobe qla2xxx`.
 ---
 
 ## Support SLA Reference

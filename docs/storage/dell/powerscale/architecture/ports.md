@@ -115,6 +115,24 @@ curl -sk -o /dev/null -w "%{http_code}" http://<zone-ip>:9020/
 isi sync target list
 ```
 
+
+```text title="Expected output"
+200
+Export list for <smartconnect-zone-ip>:
+/ifs/data/prod-bucket       <client-subnet>/24
+/ifs/data/archive           <client-subnet>/24
+/ifs/shared                 *
+200
+SyncIQ Target List:
+ID                                   Hostname                Address            Port  Enabled
+1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p  dr-cluster-01.corp.local  192.168.50.10     8080  Yes
+2b3c4d5e-6f7g-8h9i-0j1k-2l3m4n5o6p7q  dr-cluster-02.corp.local  192.168.51.10     8080  Yes
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the cluster's CA certificate into your trust store.
+    **`showmount: clnt_create: RPC: Port mapper failure - Unable to receive: errno 113 (No route to host)`** — Verify network connectivity to the SmartConnect zone IP and confirm NFS ports (111, 2049) are not blocked by firewall rules.
+    **`isi: command not found`** — Run these commands from the PowerScale cluster CLI (SSH to the cluster management IP), not from an external admin workstation.
 ## See also
 
 - [Dell PowerScale — Architecture](../how-it-works/)

@@ -150,6 +150,43 @@ isi network pools list        # SmartConnect zone config
 isi job list                  # background jobs (Restripe, FlexProtect)
 ```
 
+
+```text title="Expected output"
+Cluster Status:
+  Nodes: 6 (all online)
+  Drives: 48 (47 healthy, 1 rebuilding)
+  CPU: 45% | Memory: 62% | Network: 12%
+
+Events (Last 24h):
+  WARNING: Node-3 disk temperature elevated (52°C)
+  INFO: SyncIQ policy 'DR-Chicago' completed 2.3TB in 4h 22m
+
+Storage Pools:
+  Tier: SSD-NVMe    Capacity: 12.4TB / 15TB (82%)
+  Tier: SAS-7.2k    Capacity: 287TB / 320TB (89%)
+  Tier: NL-SAS      Capacity: 1.2PB / 1.4PB (86%)
+
+SyncIQ Policies:
+  dr-chicago       RUNNING    Last: 2024-01-15 03:22:14    Next: 2024-01-16 03:00:00
+  backup-denver    IDLE       Last: 2024-01-14 22:15:03    Next: 2024-01-15 22:00:00
+
+Quotas:
+  /ifs/projects/media    EXCEEDED (1.2TB / 1TB)
+  /ifs/home/jsmith       WARNING (890GB / 1TB)
+
+Network Pools:
+  zone-prod-east    10.42.1.0/24    SmartConnect: enabled
+  zone-prod-west    10.42.2.0/24    SmartConnect: enabled
+
+Jobs:
+  FlexProtect-Node2    RUNNING    45% complete    ETA: 2h 18m
+  Restripe-Tier2       IDLE       Last: 2024-01-14 18:30:00
+```
+
+!!! warning "Common errors"
+    **`isi: command not found`** — Ensure you are logged into the PowerScale cluster via SSH or the OneFS CLI is installed in your PATH.
+    **`Error: Permission denied`** — Verify your user account has cluster administrator or read-only admin privileges via `isi auth roles view`.
+    **`Connection refused on port 8080`** — Confirm the cluster management interface is accessible and OneFS services are running with `isi_services_status`.
 ---
 
 ## See also
