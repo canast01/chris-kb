@@ -194,14 +194,14 @@ esxtop   # press 'm'
 
 ```text title="Expected output"
 │ ESXTOP │ Press 'h' for help
-│ World │ GID │ NWLD │ VMID │ NAME │ MCTLSZ │ SWPRD/s │ SWPWT/s │ %SWPFD │
+│ World │ GID │ NWLD │ VMID │ NAME │ MCTLSZ │ SWPRD/s │ SWPWT/s │ %SWPFD                                │
 ├─────────────────────────────────────────────────────────────────────────────┤
-│ 2048 │ 2048 │ 1 │ 4 │ vm-prod-web-01 │ 512 MB │ 0 │ 2.4 │ 8.2% │
-│ 2049 │ 2049 │ 1 │ 5 │ vm-prod-db-02 │ 1.2 GB │ 12.8 │ 45.6 │ 34.7% │
-│ 2050 │ 2050 │ 1 │ 6 │ vm-dev-test-03 │ 256 MB │ 0 │ 0 │ 0.0% │
-│ 2051 │ 2051 │ 1 │ 7 │ vm-prod-app-04 │ 768 MB │ 3.2 │ 18.9 │ 12.1% │
-│ 2052 │ 2052 │ 1 │ 8 │ vm-prod-cache-05 │ 2.1 GB │ 28.4 │ 156.2 │ 67.3% │
-│ 2053 │ 2053 │ 1 │ 9 │ vm-backup-srv-06 │ 0 MB │ 0 │ 0 │ 0.0% │
+│ 2048 │ 2048 │ 1 │ 4 │ vm-prod-web-01 │ 512 MB │ 0 │ 2.4 │ 8.2%                                        │
+│ 2049 │ 2049 │ 1 │ 5 │ vm-prod-db-02 │ 1.2 GB │ 12.8 │ 45.6 │ 34.7%                                    │
+│ 2050 │ 2050 │ 1 │ 6 │ vm-dev-test-03 │ 256 MB │ 0 │ 0 │ 0.0%                                          │
+│ 2051 │ 2051 │ 1 │ 7 │ vm-prod-app-04 │ 768 MB │ 3.2 │ 18.9 │ 12.1%                                    │
+│ 2052 │ 2052 │ 1 │ 8 │ vm-prod-cache-05 │ 2.1 GB │ 28.4 │ 156.2 │ 67.3%                                │
+│ 2053 │ 2053 │ 1 │ 9 │ vm-backup-srv-06 │ 0 MB │ 0 │ 0 │ 0.0%                                          │
 ...
 (Press 'q' to quit, 'h' for help)
 ```

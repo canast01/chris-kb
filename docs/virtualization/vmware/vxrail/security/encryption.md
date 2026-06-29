@@ -263,7 +263,7 @@ racadm jobqueue create BIOS.Setup.1-1 -r pwrcycle -s TIME_NOW
 BIOS.SysProfileSettings.SecureBoot set to Enabled
 Job queued with Job ID = JID_123456789012
 ```
-```
+```text
 
 !!! warning "Common errors"
     **`RACADM.1.0.GEN1.CRAC382 : A user with sufficient privileges is required to execute this command`** — Ensure you are running racadm with root/administrator privileges or use `sudo racadm`.

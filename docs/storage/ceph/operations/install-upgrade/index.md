@@ -97,6 +97,25 @@ ceph osd dump | grep require_osd_release
 ceph mgr module ls | grep -E "enabled_modules|disabled_modules"
 ```
 
+
+```text title="Expected output"
+HEALTH_OK
+x osds: 12 up, 12 in
+recovering 0 B/s, 0 objects/s
+noscrub is set
+nodeep-scrub is set
+dumped all config-keys
+exported auth(s)
+ceph version 16.2.10 (45ac8adee3d3226cc9dd0850e2cd9150b4d60ed5) pacific (stable)
+require_osd_release 16
+enabled_modules: [balancer, status, prometheus, pg_stat]
+disabled_modules: [dashboard, influx, insights, iostat, nfs, orchestrator, rbd_support, selftest, snap_schedule, telegraf, telemetry, test_orchestrator, volumes]
+```
+
+!!! warning "Common errors"
+    **`HEALTH_WARN`** — Address the warning with `ceph health detail` and resolve underlying issues (e.g., slow requests, misplaced objects) before proceeding.
+    **`error: (2) No such file or directory`** — Verify the Ceph cluster is initialized and the monitor is running with `ceph -s`; check `/etc/ceph/ceph.conf` exists and `CEPH_ARGS` environment variable is not overriding the cluster name.
+    **`require_osd_release mismatch detected`** — Set the require-osd-release flag to match the current cluster version with `ceph osd set-require-osd-release <version>` before upgrading OSDs.
 ## Upgrade with cephadm
 
 ### Step 1 — Update cephadm itself
@@ -115,6 +134,20 @@ ceph mgr module enable cephadm
 ceph mgr module ls | grep cephadm
 ```
 
+
+```text title="Expected output"
+cephadm version 16.2.11.45-1-g1a2b3c4d (octopus)
+(no output — command completes silently)
+(no output — command completes silently)
+cephadm                           on  ceph-mgr.node-01.abc123def456
+(no output — command completes silently)
+cephadm                           on  ceph-mgr.node-01.abc123def456
+```
+
+!!! warning "Common errors"
+    **`Error: No module named 'cephadm'`** — Ensure cephadm is installed on the bootstrap node with `curl --silent --remote-name --location https://github.com/ceph/ceph/raw/octopus/src/cephadm/cephadm && chmod +x cephadm`.
+    **`Error: mgr module 'cephadm' is not available`** — Verify the Ceph cluster is healthy with `ceph health` and check that the mgr daemon is running with `ceph mgr stat`.
+    **`command not found: cephadm`** — Add cephadm to your PATH or use the full path `/usr/sbin/cephadm` if installed via package manager.
 ### Step 2 — Start the rolling upgrade
 
 ```bash
@@ -132,6 +165,26 @@ ceph orch upgrade start --ceph-version 18.2.4
 #   5. RGW daemons — rolling restart, gateway remains available
 ```
 
+
+```text title="Expected output"
+Upgrading to ceph version 18.2.4
+Pulling image quay.io/ceph/ceph:v18.2.4
+Image pulled successfully
+Starting upgrade...
+Upgrade started: 6a8f2c1e-9d4b-42f1-8c3a-7b2e5f9d1a4c
+Upgrade progress:
+  MGR: 2/2 daemons upgraded
+  MON: 3/3 daemons upgraded
+  OSD: 8/12 daemons upgraded (in progress)
+  MDS: 1/1 daemons upgraded
+  RGW: 2/2 daemons upgraded
+Overall progress: 16/20 daemons complete (80%)
+```
+
+!!! warning "Common errors"
+    **`Error: invalid ceph version '18.2.4'`** — Use the full semantic version format (e.g., `18.2.4`) or verify the version exists on quay.io/ceph/ceph.
+    **`Error: unable to pull image quay.io/ceph/ceph:v18.2.4: connection timeout`** — Ensure the Ceph cluster nodes have outbound HTTPS access to quay.io or use a private registry mirror.
+    **`Error: upgrade already in progress`** — Wait for the current upgrade to complete or use `ceph orch upgrade pause` then `ceph orch upgrade resume` to restart.
 ### Step 3 — Monitor upgrade progress
 
 ```bash
@@ -156,6 +209,51 @@ ceph versions
 # Typical duration: 30–120 min depending on OSD count and rebalancing speed
 ```
 
+
+```text title="Expected output"
+Every 10.0s: ceph orch upgrade status                                                                                                                    Mon Jan 13 14:32:47 2025
+
+TARGET IMAGE: quay.io/ceph/ceph:v18.2.4
+PROGRESS: 45%
+UPGRADING: osd
+
+Every 5.0s: ceph -s | head -20                                                                                                                          Mon Jan 13 14:32:52 2025
+
+  cluster:
+    id:     a1b2c3d4-e5f6-7890-abcd-ef1234567890
+    health: HEALTH_WARN
+            Degraded data redundancy: 156/468 objects degraded (33.3%), 52 pgs degraded
+    
+  services:
+    mon: 3 daemons, quorum ceph-mon-01,ceph-mon-02,ceph-mon-03 (age 2h)
+    mgr: 2 daemons, standbys: ceph-mgr-02
+    osd: 12 osds: 9 up, 12 in; 45 degraded
+    
+  data:
+    pools:   3 pools, 96 pgs
+    objects: 468 objects, 1.2 TiB
+
+{
+  "mon": {
+    "ceph version 18.2.2": 3
+  },
+  "mgr": {
+    "ceph version 18.2.2": 1,
+    "ceph version 18.2.4": 1
+  },
+  "osd": {
+    "ceph version 18.2.2": 9,
+    "ceph version 18.2.4": 3
+  },
+  "rgw": {
+    "ceph version 18.2.4": 2
+  }
+}
+```
+
+!!! warning "Common errors"
+    **`Error: No orchestrator backend found`** — Ensure Cephadm is deployed with `ceph orch status` and that the mgr orchestrator module is enabled.
+    **`Error: upgrade already in progress`** — Wait for the current upgrade to complete or check `ceph orch upgrade pause` to pause and resume safely.
 ### Step 4 — Pause and resume if needed
 
 ```bash
@@ -173,6 +271,31 @@ ceph orch upgrade resume
 ceph orch upgrade stop
 ```
 
+
+```text title="Expected output"
+Upgrade paused
+HEALTH_WARN [WRN] OSD_DOWN: 1 osd(s) down
+    osd.3 is down (since 2m)
+[WRN] PG_DEGRADED: Degraded data, 128 pg(s) degraded
+    128 active+degraded
+[WRN] SLOW_OPS: 12 slow ops, oldest one blocked for 45 sec
+
+cluster:
+    id:     a1b2c3d4-e5f6-7890-abcd-ef1234567890
+    health: HEALTH_WARN
+    mon: 3 daemons, quorum mon.0,mon.1,mon.2 (age 3h)
+    mgr: mgr.host1(active, since 2h), mgr.host2(standby, since 2h)
+    osd: 12 osds: 11 up, 1 down; 10 in, 1 out
+    data: 2.4 TiB used, 9.6 TiB / 12 TiB avail
+    pgs: 256 active+clean; 128 active+degraded
+
+Upgrade resumed
+Upgrade stopped
+```
+
+!!! warning "Common errors"
+    **`Error ENOENT: no upgrade in progress`** — Ensure an upgrade was actually initiated with `ceph orch upgrade start` before attempting to pause or resume.
+    **`Error EINVAL: cannot pause: upgrade is already paused`** — Check current upgrade state with `ceph orch upgrade status` before issuing pause/resume commands.
 ## Rolling Upgrade Behaviour
 
 - cephadm pulls the new container image on each host before restarting the daemon.
@@ -201,6 +324,47 @@ ceph osd unset noscrub
 ceph osd unset nodeep-scrub
 ```
 
+
+```text title="Expected output"
+{
+  "mon": [
+    {
+      "version": "ceph version 17.2.5 (quincy)",
+      "release": "quincy",
+      "num": 3
+    }
+  ],
+  "mgr": [
+    {
+      "version": "ceph version 17.2.5 (quincy)",
+      "release": "quincy",
+      "num": 2
+    }
+  ],
+  "osd": [
+    {
+      "version": "ceph version 17.2.5 (quincy)",
+      "release": "quincy",
+      "num": 12
+    }
+  ],
+  "rgw": [
+    {
+      "version": "ceph version 17.2.5 (quincy)",
+      "release": "quincy",
+      "num": 2
+    }
+  ]
+}
+set require-osd-release to quincy
+set-require-min-compat-client reef
+noscrub is unset
+nodeep-scrub is unset
+```
+
+!!! warning "Common errors"
+    **`Error EPERM: insufficient caps`** — Run the commands with appropriate admin privileges (e.g., as root or with `sudo ceph`) and ensure your keyring has `osd` capability.
+    **`Error EINVAL: invalid release name 'quincy'`** — Verify the release codename matches your target version exactly (e.g., `reef`, `squid`) and that all daemons have already been upgraded to that version.
 ## Post-Upgrade Validation
 
 | Check | Command | Expected Result |
@@ -239,6 +403,53 @@ ceph osd features
 ceph mgr services | grep dashboard
 ```
 
+
+```text title="Expected output"
+{
+  "mon": {
+    "ceph version 18.2.4 (3a54dda6149a4ff917b4742500cdb3161b231271)": 3
+  },
+  "mgr": {
+    "ceph version 18.2.4 (3a54dda6149a4ff917b4742500cdb3161b231271)": 2
+  },
+  "osd": {
+    "ceph version 18.2.4 (3a54dda6149a4ff917b4742500cdb3161b231271)": 12
+  },
+  "mds": {
+    "ceph version 18.2.4 (3a54dda6149a4ff917b4742500cdb3161b231271)": 2
+  }
+}
+cluster 8f7a3c2b-1d4e-4a9f-b8c1-5e6d7f9a2c3b
+ health HEALTH_OK
+ monmap e5: 3 mons at {mon01=10.0.1.10:6789/0,mon02=10.0.1.11:6789/0,mon03=10.0.1.12:6789/0}
+ osdmap e847: 12 osds: 12 up, 12 in
+ pgmap v2156: 256 pgs: 256 active+clean; 847 GiB data, 2.1 TiB used, 8.9 TiB / 11 TiB avail
+ mdsmap e42: 2/2 up {0,1}, 2 up:active
+Created image 'upgrade-test' in pool 'rbd'
+  sec  Cur ops   ops/sec   ops/sec   bytes/sec   bytes/sec
+    1       16    4096.0    4096.0    16.4 MiB   16.4 MiB
+    2       16    4088.0    4092.0    16.4 MiB   16.4 MiB
+  ...
+  128       16    4102.0    4099.2    16.4 MiB   16.4 MiB
+Total time run:       128.456 sec
+Total ops:            524288
+Total bytes:          512 MiB
+Bandwidth (MiB/sec):  3.98
+Stddev Bandwidth:     0.12
+Max bandwidth (MiB/sec): 4.21
+Min bandwidth (MiB/sec): 3.76
+  sec  Cur ops   ops/sec   ops/sec   bytes/sec   bytes/sec
+    1       16    4156.0    4156.0    16.6 MiB   16.6 MiB
+  ...
+  128       16    4089.0    4098.5    16.4 MiB   16.4 MiB
+Total time run:       125.123 sec
+Total ops:            524288
+Total bytes:          512 MiB
+Bandwidth (MiB/sec):  4.09
+Stddev Bandwidth:     0.08
+Max bandwidth (MiB/sec): 4.31
+Min bandwidth (MiB/sec):
+```
 ## Rollback Considerations
 
 Ceph does **not** support automatic rollback. Key points:
@@ -255,6 +466,15 @@ ceph orch daemon redeploy <daemon-type>.<id> --image quay.io/ceph/ceph:v18.2.2
 ceph orch daemon redeploy mgr.ceph-node1 --image quay.io/ceph/ceph:v18.2.2
 ```
 
+
+```text title="Expected output"
+Scheduled mgr.ceph-node1 redeploy with image quay.io/ceph/ceph:v18.2.2
+```
+
+!!! warning "Common errors"
+    **`Error EINVAL: unknown daemon type <daemon-type>`** — Replace `<daemon-type>` with a valid daemon type (mon, mgr, osd, mds, rgw, etc.).
+    **`Error: No such daemon mgr.ceph-node1`** — Verify the daemon exists by running `ceph orch ps` and use the correct daemon name from the output.
+    **`Error pulling image quay.io/ceph/ceph:v18.2.2: image not found`** — Ensure the image tag exists in the registry and the host has network access to quay.io.
 - Major version rollback (e.g., Reef → Quincy) is not supported and will corrupt OSD data if attempted after `ceph osd require-osd-release` has been updated.
 
 ---

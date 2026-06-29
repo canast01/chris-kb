@@ -161,6 +161,41 @@ curl -s http://<mgr-ip>:9283/metrics | head -20
 ceph osd find 0
 ```
 
+
+```text title="Expected output"
+Connection to 10.20.30.45 3300 [tcp/*] succeeded!
+Connection to 10.20.30.45 6789 [tcp/*] succeeded!
+200
+200
+NAME                                 HOST           ADDR           PORT        DAEMON TYPE   VERSION   STATUS   REFRESHED   AGE   MEM USE   MEM LIM   CPU USE
+osd.0                                ceph-osd-01    10.20.31.10    6800/1234   osd           17.2.5    running   2m ago     3d    512.0M   4.0G     1.2
+osd.1                                ceph-osd-02    10.20.31.11    6801/1235   osd           17.2.5    running   2m ago     3d    498.0M   4.0G     0.8
+mon.a                                ceph-mon-01    10.20.30.45    6789        mon           17.2.5    running   1m ago     5d    256.0M   2.0G     0.3
+mgr.ceph-mgr-01.abcdef               ceph-mgr-01    10.20.30.46    6800        mgr           17.2.5    running   1m ago     5d    384.0M   3.0G     0.5
+...
+LISTEN     0      128                 10.20.31.10:6800            0.0.0.0:*        users:(("ceph-osd",pid=4521,fd=45))
+LISTEN     0      128                 10.20.31.11:6801            0.0.0.0:*        users:(("ceph-osd",pid=4522,fd=46))
+LISTEN     0      128                 10.20.30.45:6789            0.0.0.0:*        users:(("ceph-mon",pid=3210,fd=32))
+LISTEN     0      128                 10.20.30.46:6800            0.0.0.0:*        users:(("ceph-mgr",pid=3890,fd=28))
+# HELP ceph_cluster_total_bytes Ceph cluster total bytes
+# TYPE ceph_cluster_total_bytes gauge
+ceph_cluster_total_bytes 1099511627776
+# HELP ceph_cluster_used_bytes Ceph cluster used bytes
+# TYPE ceph_cluster_used_bytes gauge
+ceph_cluster_used_bytes 274877906944
+# HELP ceph_osd_up OSD up status
+# TYPE ceph_osd_up gauge
+ceph_osd_up{ceph_daemon="osd.0"} 1
+{
+  "osd": 0,
+  "ip": "10.20.31.10:6800/1234",
+  "host": "ceph-osd-01"
+}
+```
+
+!!! warning "Common errors"
+    **`nc: connect to 10.20.30.45 port 3300 (tcp) failed: Connection refused`** — Verify the MON daemon is running with `ceph orch ps` and check firewall rules allow port 3300 inbound.
+    **`curl: (7) Failed to connect to 10.20.30.46 port 8443: Connection refused`**
 ---
 
 ## See also

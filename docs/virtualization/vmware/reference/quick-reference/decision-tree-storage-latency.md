@@ -130,26 +130,26 @@ purearray get   # Throughput and latency summary
 
 
 ```text title="Expected output"
-┌─────────────────────────────────────────────────────────────────┐
-│                    PURE STORAGE ARRAY STATUS                    │
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│                    PURE STORAGE ARRAY STATUS                                                          │
 ├─────────────────────────────────────────────────────────────────┤
-│ Array Name: FA-405-1a2b3c4d                                     │
-│ Model: FlashArray//X70-R2                                        │
-│ Version: 6.4.2.0                                                │
-│ Status: Optimal                                                 │
+│ Array Name: FA-405-1a2b3c4d                                                                           │
+│ Model: FlashArray//X70-R2                                                                             │
+│ Version: 6.4.2.0                                                                                      │
+│ Status: Optimal                                                                                       │
 ├─────────────────────────────────────────────────────────────────┤
-│ PERFORMANCE METRICS                                             │
-│ Read Throughput:  45,230 MB/s                                   │
-│ Write Throughput: 38,950 MB/s                                   │
-│ Read Latency:     0.42 ms                                        │
-│ Write Latency:    0.58 ms                                        │
-│ IOPS:             287,450                                        │
+│ PERFORMANCE METRICS                                                                                   │
+│ Read Throughput:  45,230 MB/s                                                                         │
+│ Write Throughput: 38,950 MB/s                                                                         │
+│ Read Latency:     0.42 ms                                                                             │
+│ Write Latency:    0.58 ms                                                                             │
+│ IOPS:             287,450                                                                             │
 ├─────────────────────────────────────────────────────────────────┤
-│ CAPACITY METRICS                                                │
-│ Total Capacity:   50.0 TB                                        │
-│ Used Capacity:    34.2 TB (68.4%)                                │
-│ Available:        15.8 TB                                        │
-└─────────────────────────────────────────────────────────────────┘
+│ CAPACITY METRICS                                                                                      │
+│ Total Capacity:   50.0 TB                                                                             │
+│ Used Capacity:    34.2 TB (68.4%)                                                                     │
+│ Available:        15.8 TB                                                                             │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────┘
 ```
 
 !!! warning "Common errors"

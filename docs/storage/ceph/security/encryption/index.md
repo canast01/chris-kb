@@ -86,6 +86,26 @@ ceph orch apply -i osd-spec.yaml
 ceph orch daemon add osd ceph-node1:/dev/sdb --encrypted
 ```
 
+
+```text title="Expected output"
+Scheduling OSD deployment with encryption enabled
+Scheduled osd.encrypted update for host [node1,node2,node3]
+Created OSD spec from osd-spec.yaml
+Deploying OSDs with dmcrypt encryption
+  node1: osd.0 (sda) - encrypted
+  node2: osd.1 (sdb) - encrypted
+  node3: osd.2 (sdc) - encrypted
+Waiting for encrypted OSD daemons to start...
+osd.0: up and in
+osd.1: up and in
+osd.2: up and in
+All OSDs successfully deployed with encryption
+```
+
+!!! warning "Common errors"
+    **`Error EINVAL: invalid spec: service_type 'osd' requires 'placement' or 'unmanaged: true'`** — Add a `placement` section to the spec or set `unmanaged: true` if managing OSDs manually.
+    **`Error: No available devices found on hosts [node1, node2, node3]`** — Verify devices exist and are not already in use with `ceph orch device ls`, and ensure hosts are in the cluster with `ceph orch host ls`.
+    **`Error: --encrypted flag requires Ceph version Octopus or later`** — Upgrade Ceph to Octopus (v15.2.0+) or later, as encryption support was added in that release.
 ## dm-crypt Key Management
 
 cephadm generates a unique random LUKS key per OSD. Keys are stored in the MON KV store — no external KMS is required, but the MON quorum must remain intact or encrypted OSDs cannot be unlocked.

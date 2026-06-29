@@ -92,6 +92,24 @@ echo "=== PASS=$PASS  WARN=$WARN  FAIL=$FAIL ==="
 [[ "$FAIL" -eq 0 ]] && exit 0 || exit 1
 ```
 
+
+```text title="Expected output"
+=== Ceph Health Check 2024-01-15-1447 ===
+  [OK]   Overall: HEALTH_OK
+  [OK]   OSDs up: 12/12
+  [OK]   OSDs in: 12/12
+  [OK]   PGs: no unclean
+  [OK]   PGs: no inactive
+  [WARN] Capacity: 78% warning
+  [OK]   MON quorum: 3 mons
+
+=== PASS=6  WARN=1  FAIL=0 ===
+```
+
+!!! warning "Common errors"
+    **`command not found: ceph`** — Ensure Ceph CLI tools are installed and the ceph-common package is available on the monitoring host.
+    **`Error initializing cluster client: ('error connecting to the cluster', -2)`** — Verify the Ceph cluster is running, the monitor nodes are reachable, and /etc/ceph/ceph.conf is properly configured.
+    **`grep: invalid option -- 'P'`** — Replace `grep -oP` with `grep -oE` if using a system without PCRE support in grep (e.g., macOS or older Linux distributions).
 ## osd-replace.sh
 
 ```bash
@@ -132,6 +150,32 @@ ceph osd tree | grep "$HOST"
 echo "Done. Monitor: ceph -s"
 ```
 
+
+```text title="Expected output"
+Replacing OSD 3 on ceph-node-02 device /dev/sdd
+[1] Marking OSD out
+marked out osd.3
+[2] Waiting for PGs to recover...
+  Still recovering — waiting 30s...
+  Still recovering — waiting 30s...
+  Recovery complete.
+[3] Removing daemon
+Removed osd.3
+[4] Purging OSD from cluster
+purged osd.3
+[5] (Replace physical disk now — press Enter when done)
+
+[6] Adding new OSD
+Created osd(s) 3 on host ceph-node-02
+[7] Verifying new OSD is up+in
+ 3   hdd   10.0  1.00000  10.0G  9.8G  200M  1 up
+Done. Monitor: ceph -s
+```
+
+!!! warning "Common errors"
+    **`Error EINVAL: invalid osd id 3`** — Verify the OSD ID exists with `ceph osd ls` before running the script.
+    **`Error: No orchestrator backend configured`** — Ensure Ceph Orchestrator (cephadm) is deployed with `ceph orch status`.
+    **`Error: device /dev/sdd is already in use`** — Wipe the disk with `ceph-volume lvm zap /dev/sdd --destroy` before re-adding the OSD.
 ## capacity-report.sh
 
 ```bash
@@ -152,6 +196,36 @@ echo "[OSD Utilization]"
 ceph osd df | awk 'NR>1 && NF>0 {printf "  OSD %-3s  %5s/%5s  (%s%%)\n", $1, $7, $8, $9}' | head -20
 ```
 
+
+```text title="Expected output"
+=== Ceph Capacity Report 2024-01-15 ===
+
+[Cluster Summary]
+GLOBAL:
+    SIZE       AVAIL      RAW USED     %RAW USED
+    450 GiB    312 GiB     138 GiB         30.67
+POOLS:
+    NAME                 ID     USED       %USED     MAX AVAIL     OBJECTS
+    rbd                  1      45 GiB     10.00      156 GiB      11523
+    cephfs_data          2      67 GiB     14.89      156 GiB      234891
+    cephfs_metadata      3      2.1 GiB    0.47       156 GiB      1847392
+
+[Pool Detail]
+  rbd                            45 GiB /      450 GiB (10.00%)
+  cephfs_data                    67 GiB /      450 GiB (14.89%)
+  cephfs_metadata                2.1 GiB /     450 GiB (0.47%)
+
+[OSD Utilization]
+  OSD 0     156/450  (34.67%)
+  OSD 1     142/450  (31.56%)
+  OSD 2     138/450  (30.67%)
+  OSD 3     151/450  (33.56%)
+  OSD 4     145/450  (32.22%)
+```
+
+!!! warning "Common errors"
+    **`Error: error connecting to the cluster`** — Verify the Ceph cluster is running with `ceph status` and check `/etc/ceph/ceph.conf` connectivity settings.
+    **`awk: syntax error in pattern near line 1`** — Ensure the Ceph output format hasn't changed; run `ceph df` manually to verify column alignment matches the awk field references.
 ## ceph-health-snapshot.sh
 
 ```bash
@@ -192,6 +266,59 @@ OUTFILE="/tmp/ceph-snapshot-$(date +%F-%H%M).txt"
 echo "Snapshot written to: $OUTFILE"
 ```
 
+
+```text title="Expected output"
+=== Ceph Health Snapshot 2024-01-15-1430 ===
+
+--- ceph -s ---
+  cluster:
+    id:     a1b2c3d4-e5f6-7890-abcd-ef1234567890
+    health: HEALTH_OK
+  services:
+    mon: 3 daemons, quorum ceph-mon01,ceph-mon02,ceph-mon03 (age 2d)
+    mgr: ceph-mgr01(active, since 8d), standbys: ceph-mgr02
+    osd: 12 osds: 12 up (since 2d), 12 in (since 2d)
+    rgw: 2 daemons active (ceph-rgw01, ceph-rgw02)
+  data:
+    pools:   8 pools, 256 pgs
+    objects: 1.24M objects, 4.5 TiB
+    usage:   9.2 TiB used, 18.8 TiB / 28 TiB avail
+    pgs:     256 active+clean
+
+--- ceph health detail ---
+HEALTH_OK
+
+--- ceph osd tree ---
+ID  CLASS WEIGHT   TYPE NAME          STATUS REWEIGHT PRI-AFF
+-1       28.00000 root default
+-3       14.00000   host ceph-osd01
+ 0   ssd  1.75000     osd.0              up  1.00000 1.00000
+ 1   ssd  1.75000     osd.1              up  1.00000 1.00000
+ 2   ssd  1.75000     osd.2              up  1.00000 1.00000
+ 3   ssd  1.75000     osd.3              up  1.00000 1.00000
+...
+
+--- ceph df ---
+RAW STORAGE USAGE:
+    CLASS     SIZE       AVAIL      USED       RAW USED %RAW USED
+    ssd       28 TiB     18.8 TiB   9.2 TiB    9.2 TiB     32.86
+    TOTAL     28 TiB     18.8 TiB   9.2 TiB    9.2 TiB     32.86
+
+--- ceph pg stat ---
+256 pgs: 256 active+clean; 0 B data, 9.2 TiB used, 18.8 TiB / 28 TiB avail
+
+--- ceph osd perf ---
+osd.0: commit_latency_ms: 2.341, apply_latency_ms: 3.127
+osd.1: commit_latency_ms: 2.156, apply_latency_ms: 2.998
+osd.2: commit_latency_ms: 2.489, apply_latency_ms: 3.245
+osd.3: commit_latency_ms: 2.203, apply_latency_ms: 3.089
+...
+
+Snapshot written to: /tmp/ceph-snapshot-2024-01-15-1430.txt
+```
+
+!!! warning "Common errors"
+    **`Error: error connecting to the cluster`** — Verify C
 ## osd-utilization-report.sh
 
 ```bash
@@ -227,6 +354,23 @@ else
 fi
 ```
 
+
+```text title="Expected output"
+=== OSD Utilization Report 2024-01-15 — threshold: 80% ===
+
+  HOST         OSD      USE%     STATUS
+  --------------------------------------------------
+  ceph-node-03 osd.7     82%  [OVER THRESHOLD]
+  ceph-node-01 osd.12    85%  [OVER THRESHOLD]
+  ceph-node-02 osd.19    81%  [OVER THRESHOLD]
+
+RESULT: 3 OSD(s) above 80% utilization
+```
+
+!!! warning "Common errors"
+    **`command not found: ceph`** — Ensure the Ceph CLI tools are installed and the user has access to the Ceph cluster configuration files in /etc/ceph/.
+    **`jq: command not found`** — Replace the `python3 -m json.tool` pipeline with `jq -r '.host'` or install python3 if JSON parsing is required.
+    **`error: osd.X does not exist`** — Verify the OSD IDs in `ceph osd df` output are valid; if OSDs have been removed, run `ceph osd purge-new` to clean up stale entries.
 ## rbd-snapshot-rotate.sh
 
 ```bash
@@ -259,6 +403,26 @@ echo "Done. Current snapshots:"
 rbd snap ls "${POOL}/${IMAGE}"
 ```
 
+
+```text title="Expected output"
+=== RBD Snapshot Rotate: backups/vm-disk-01 ===
+Creating snapshot: @daily-2024-01-15
+  Created: backups/vm-disk-01@daily-2024-01-15
+Checking for snapshots older than 7 days (before 2024-01-08)...
+  Removing: backups/vm-disk-01@daily-2024-01-07
+  Removing: backups/vm-disk-01@daily-2024-01-06
+Done. Current snapshots:
+SNAPID                                 NAME                 SIZE   PROTECTED TIMESTAMP
+     4 daily-2024-01-15                 2048 MB        false      Mon Jan 15 09:42:31 2024
+     3 daily-2024-01-14                 2048 MB        false      Sun Jan 14 09:41:22 2024
+     2 daily-2024-01-13                 2048 MB        false      Sat Jan 13 09:40:15 2024
+     1 daily-2024-01-12                 2048 MB        false      Fri Jan 12 09:39:08 2024
+```
+
+!!! warning "Common errors"
+    **`error: image not found`** — Verify the pool and image name exist with `rbd ls <pool>` and check for typos.
+    **`error: snapshot already exists`** — The script ran twice on the same day; either wait until tomorrow or manually remove the duplicate snapshot with `rbd snap rm`.
+    **`date: invalid date 'now'`** — Use GNU date syntax (`date -d`) on Linux or BSD date syntax (`date -v`) on macOS; the script attempts both but may fail if neither is available.
 ---
 
 ## See also

@@ -111,6 +111,35 @@ ceph osd crush tree --show-shadow
 ceph osd df tree
 ```
 
+
+```text title="Expected output"
+created rule rack_replicated at (2)
+set pool 0 crush_rule to rack_replicated
+added bucket ssd-root of type root to crush tree
+set item ssd-root weight to 1 in bucket default
+created rule ssd_rule at (3)
+reweighted item osd.5 to 3.64 in crush tree
+ID  CLASS WEIGHT   TYPE NAME
+-13       10.92    root ssd-root
+-12        3.64     host ssd-host1
+  5   hdd  3.64      osd.5
+ -1       36.48    root default
+ -2        7.28     rack rack1
+  0   hdd  3.64      osd.0
+  1   hdd  3.64      osd.1
+ -3        7.28     rack rack2
+  2   hdd  3.64      osd.2
+  3   hdd  3.64      osd.3
+
+HOST WEIGHT REWEIGHT SIZE   USE    AVAIL   %USE PGS STATUS
+ssd-host1 3.64  1.00    4.0T  1.2T   2.8T  30.0  128 up
+rack1     7.28  1.00    8.0T  2.4T   5.6T  30.0  256 up
+rack2     7.28  1.00    8.0T  2.4T   5.6T  30.0  256 up
+```
+
+!!! warning "Common errors"
+    **`Error ENOENT: crush rule 'rack_replicated' does not exist`** — Ensure the rule was created successfully before assigning it to a pool; check with `ceph osd crush rule ls`.
+    **`Error EINVAL: invalid crush rule name 'ssd_rule'`** — Verify the ssd_rule was created with the correct root bucket name using `ceph osd crush rule dump ssd_rule`.
 ## PG Count Formula
 
 ```text
@@ -142,6 +171,21 @@ ceph osd pool set rbd-pool target_size_ratio 0.4   # 40% of cluster capacity
 ceph config set global osd_pool_default_pg_autoscale_mode off
 ```
 
+
+```text title="Expected output"
+POOL                 SIZE  TARGET SIZE  RATIO  EFFECTIVE RATIO  BIAS  PG_NUM  NEW PG_NUM  AUTOSCALE
+rbd-pool            12.4G       50.0G  0.248        0.248        1.0    128       256       on
+metadata             2.1G        8.0G  0.263        0.263        4.0     32        32       on
+.rgw.root           512M        2.0G  0.256        0.256        1.0      8         8       on
+
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error ENOENT: pool 'rbd-pool' does not exist`** — Verify the pool name with `ceph osd pool ls` and use the correct pool identifier.
+    **`Error EINVAL: invalid pg_autoscale_mode 'on'`** — Use valid values `off`, `warn`, or `on` (ensure no typos in the mode string).
 ## Network Design
 
 ```text
@@ -175,6 +219,17 @@ ceph config set global public_network 10.0.1.0/24
 ceph config set global cluster_network 10.0.2.0/24
 ```
 
+
+```text title="Expected output"
+10.0.1.0/24
+10.0.2.0/24
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error EINVAL: invalid value '10.0.1.0/24' for option 'public_network'`** — Ensure the CIDR notation is valid and the network actually exists in your infrastructure.
+    **`Error: failed to set config option 'cluster_network': Permission denied`** — Run the command with appropriate ceph admin privileges or use `sudo ceph config set`.
 ## Capacity Planning
 
 ```text
@@ -210,6 +265,34 @@ ceph config set global mon_osd_full_ratio 0.90
 ceph config set global mon_osd_backfillfull_ratio 0.85
 ```
 
+
+```text title="Expected output"
+RAW STORAGE:
+    CLASS     SIZE        AVAIL       USED        RAW USED     %RAW USED
+    ssd       1.099 TiB   892.3 GiB   206.7 GiB   206.7 GiB       18.81
+    TOTAL     1.099 TiB   892.3 GiB   206.7 GiB   206.7 GiB       18.81
+
+POOLS:
+    POOL                     ID     STORED      OBJECTS     USED        %USED     MAX AVAIL
+    device_health_metrics     1     1.2 MiB        256      3.6 MiB      0.00      297.4 GiB
+    rbd-pool                  2     142.5 GiB   36521      427.5 GiB    47.89      297.4 GiB
+    cephfs_data               3     58.3 GiB    14892      174.9 GiB    19.60      297.4 GiB
+    cephfs_metadata           4     512 MiB      8124      1.5 GiB      0.17      297.4 GiB
+
+OSD     CLASS  WEIGHT   REWEIGHT   SIZE        RAW USE     %USE     VAR      PGS   STATUS
+0       ssd    1.00000  1.00000    366.4 GiB   68.9 GiB    18.81    1.00     256   up
+1       ssd    1.00000  1.00000    366.4 GiB   68.9 GiB    18.81    1.00     256   up
+2       ssd    1.00000  1.00000    366.4 GiB   68.9 GiB    18.81    1.00     256   up
+
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error EACCES: access denied`** — Ensure the user running the command has appropriate Ceph admin capabilities or is part of the ceph group.
+    **`Error: unknown command`** — Verify the Ceph version supports the `ceph config set` syntax; older versions may require `ceph tell mon.\* config set` instead.
 ## CRUSH Hierarchy Design
 
 ```bash
@@ -230,6 +313,34 @@ ceph osd crush tree
 ceph osd df tree
 ```
 
+
+```text title="Expected output"
+created rule replicated_rule
+created rule rack_rule
+set pool 'rbd-pool' crush_rule to rack_rule
+ID CLASS WEIGHT  TYPE NAME                                    UP/DOWN REWEIGHT PRIMARY-AFFINITY
+-1       270.00 root default
+-3       90.00     datacenter dc1
+-5       45.00         room room-a
+-7       15.00             rack rack-01
+ 0   ssd  5.00                 host osd-node-01
+ 1   ssd  5.00                 host osd-node-02
+ 2   ssd  5.00                 host osd-node-03
+-9       30.00             rack rack-02
+ 3   ssd  5.00                 host osd-node-04
+ 4   ssd  5.00                 host osd-node-05
+ 5   ssd  5.00                 host osd-node-06
+
+ID CLASS WEIGHT  REWEIGHT SIZE    RAW USE %USE  VAR  PGS STATUS
+ 0   ssd  5.00   1.00000 5.0G  2.1G 42.00 0.98  156    up
+ 1   ssd  5.00   1.00000 5.0G  2.0G 40.00 0.93  154    up
+ 2   ssd  5.00   1.00000 5.0G  2.2G 44.00 1.02  158    up
+...
+```
+
+!!! warning "Common errors"
+    **`Error EINVAL: invalid crush rule name 'rack_rule'`** — Verify the rule was created successfully with `ceph osd crush rule ls` and check for typos in the pool set command.
+    **`Error ENOENT: pool 'rbd-pool' does not exist`** — Create the pool first with `ceph osd pool create rbd-pool <pg_num> <pgp_num>` before assigning a crush rule.
 ## Upgrade and Maintenance Standards
 
 ```bash
@@ -251,6 +362,35 @@ ceph osd unset norebalance
 ceph osd unset nobackfill
 ```
 
+
+```text title="Expected output"
+{
+  "mon": {
+    "ceph version 17.2.6 (quincy)": 2
+  },
+  "mgr": {
+    "ceph version 17.2.6 (quincy)": 2
+  },
+  "osd": {
+    "ceph version 17.2.6 (quincy)": 24,
+    "ceph version 17.2.5 (quincy)": 2
+  },
+  "mds": {}
+}
+set require_osd_release = quincy
+noout is set
+(no output — command completes silently)
+norecover is set
+norebalance is set
+nobackfill is set
+norecover is unset
+norebalance is unset
+nobackfill is unset
+```
+
+!!! warning "Common errors"
+    **`Error EACCES: access denied`** — Ensure you have admin-level Ceph credentials or run with appropriate `ceph` keyring permissions.
+    **`Error EINVAL: invalid value`** — Verify the release name matches a supported Ceph version (e.g., quincy, reef) and check cluster status with `ceph status` first.
 | Flag | Effect | When to use |
 |---|---|---|
 | `noout` | Prevents OSDs from being marked out | Node maintenance, short outages |
@@ -279,6 +419,46 @@ ceph orch status
 ceph orch ls
 ```
 
+
+```text title="Expected output"
+NAME                 HOST      STATUS        REFRESHED  AGE  VERSION   IMAGE ID      CONTAINER ID
+mon.a                host1     running (15h)  2m ago     8d   17.2.5    abc123def456  pod-mon-a-xyz
+mon.b                host2     running (15h)  2m ago     8d   17.2.5    abc123def456  pod-mon-b-xyz
+mon.c                host3     running (15h)  2m ago     8d   17.2.5    abc123def456  pod-mon-c-xyz
+osd.0                host1     running (12h)  1m ago     45d  17.2.5    abc123def456  pod-osd-0-abc
+osd.1                host2     running (12h)  1m ago     45d  17.2.5    abc123def456  pod-osd-1-def
+osd.2                host3     running (12h)  1m ago     45d  17.2.5    abc123def456  pod-osd-2-ghi
+mgr.host1.abcd12     host1     running (8h)   3m ago     8d   17.2.5    abc123def456  pod-mgr-xyz
+
+Scheduled to deploy mon on hosts: host1, host2, host3
+(no output — command completes silently)
+
+Created osd.13 on host1 device /dev/sdb
+(no output — command completes silently)
+
+Removing osd.12 (marked out, waiting for rebalance to complete)
+osd.12 marked out. Waiting for PGs to rebalance...
+osd.12 removed successfully
+
+Orchestrator: ceph-rook
+Backend: rook
+Available: Yes
+
+SERVICE         PORTS   RUNNING  REFRESHED  AGE  PLACEMENT
+alertmanager            1        2m ago     8d   count:1
+crash                   6        2m ago     8d   *
+grafana         3000    1        2m ago     8d   count:1
+mds.cephfs      -       2        2m ago     8d   label:mds=true
+mon             3300    3        2m ago     8d   host1,host2,host3
+mgr             8443    2        2m ago     8d   label:mgr=true
+osd             -       3        2m ago     8d   *
+prometheus      9095    1        2m ago     8d   count:1
+```
+
+!!! warning "Common errors"
+    **`Error: osd.12 is still rebalancing, cannot remove yet`** — Wait for the cluster to reach a healthy state (ceph health) before attempting removal.
+    **`Error: host1 is not in the orchestrator inventory`** — Verify the host is added to the cluster with `ceph orch host ls` and ensure it has a valid IP and SSH connectivity.
+    **`Error: /dev/sdb does not exist or is already in use on host1`** — Confirm the device path with `lsblk` on the target host and ensure it is not already part of another OSD.
 ## See also
 
 - [Ceph — How It Works](../how-it-works/)
