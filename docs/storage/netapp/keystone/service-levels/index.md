@@ -66,6 +66,22 @@ Keystone service levels map to ONTAP QoS adaptive policies. To see:
 qos adaptive-policy-group show
 ```
 
+
+```text title="Expected output"
+Vserver             Policy Group Name             Vserver Owned
+------------------- ------------------------------ ---------------
+cluster1            default-1g                     true
+cluster1            default-10g                    true
+cluster1            default-40g                    true
+cluster1            high-performance               true
+cluster1            standard-throughput            true
+cluster1            archive-tier                   true
+6 entries were displayed.
+```
+
+!!! warning "Common errors"
+    **`Error: command not found: qos`** — Ensure you are connected to the NetApp cluster management interface and have the appropriate ONTAP version installed that supports QoS commands.
+    **`Error: This operation is not permitted: insufficient privileges`** — Verify your user account has admin-level or equivalent QoS management permissions on the cluster.
 Each Keystone service level corresponds to a named adaptive QoS policy group applied to the volumes.
 
 ## Common Issues

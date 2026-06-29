@@ -64,6 +64,26 @@ curl -sk -o /dev/null -w "%{http_code}" https://<ontap-mgmt-lif>/api/cluster
 systemctl status keystone-collector
 ```
 
+
+```text title="Expected output"
+200
+200
+● keystone-collector.service - NetApp Keystone Collector
+     Loaded: loaded (/etc/systemd/system/keystone-collector.service; enabled; vendor preset: disabled)
+     Active: active (running) since Wed 2024-01-17 14:32:18 UTC; 2 days ago
+       Docs: https://docs.netapp.com/keystone/
+    Process: 8847 ExecStart=/opt/keystone/bin/collector --config=/etc/keystone/collector.conf (code=exited, status=0/SUCCESS)
+   Main PID: 8848 (collector)
+      Tasks: 12 (limit: 4096)
+     Memory: 287.4M
+     CGroup: /systemd/system.slice/keystone-collector.service
+             └─8848 /opt/keystone/bin/collector --config=/etc/keystone/collector.conf
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the ONTAP cluster's CA certificate into the system trust store.
+    **`curl: (7) Failed to connect to keystone.netapp.com port 443: Connection timed out`** — Verify the Collector VM has outbound HTTPS access to keystone.netapp.com and check firewall/proxy rules.
+    **`Unit keystone-collector.service could not be found.`** — Ensure the Keystone Collector package is installed with `rpm -i keystone-collector-*.rpm` and systemd daemon is reloaded with `systemctl daemon-reload`.
 ## See also
 
 - [NetApp Keystone — Architecture](../how-it-works/)

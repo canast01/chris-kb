@@ -162,6 +162,35 @@ cluster peer health show
 system node autosupport invoke -node * -type test
 ```
 
+
+```text title="Expected output"
+200
+NetApp Release 9.13.1: Mon Jan 15 12:34:56 UTC 2024
+Exports list on 192.168.1.50:
+/vol/data_01           10.0.0.0/8
+/vol/data_02           10.0.0.0/8
+/vol/backup            192.168.0.0/16
+
+Discovering targets for: 192.168.1.51:3260
+192.168.1.51:3260,-1 iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6
+
+  Vserver Name: cluster1
+  Role: intercluster
+  Status: up
+  Address: 192.168.100.10
+
+Cluster Peer Health Status:
+Cluster Name          Availability  Connectivity  Status
+cluster2              Available     Connected     Healthy
+
+AutoSupport invoke successful for node cluster1-01
+AutoSupport invoke successful for node cluster1-02
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to 192.168.1.100 port 443: Connection refused`** — Verify the cluster management IP is correct and the ONTAP cluster is online and accessible from your workstation network.
+    **`ssh: connect to host 192.168.1.100 port 22: No route to host`** — Confirm the management network routing and firewall rules allow SSH (port 22) from your admin workstation to the cluster management LIF.
+    **`iscsiadm: No records found`** — Ensure the iSCSI data LIF IP is correct, the iSCSI service is enabled on the SVM, and the portal is listening on port 3260.
 ---
 
 ## See also

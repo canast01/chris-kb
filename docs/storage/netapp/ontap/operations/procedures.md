@@ -155,6 +155,28 @@ vserver show
 vserver show -fields type,state,admin-state
 ```
 
+
+```text title="Expected output"
+Vserver     Type       Subtype    State    Admin-State
+----------- ---------- ---------- -------- -----------
+cluster1    admin                 running  up
+svm-prod-01 data                  running  up
+svm-prod-02 data                  running  up
+svm-dev-01  data                  running  up
+svm-nfs-01  data                  running  up
+
+Vserver     Type       State    Admin-State
+----------- ---------- -------- -----------
+cluster1    admin      running  up
+svm-prod-01 data       running  up
+svm-prod-02 data       running  up
+svm-dev-01  data       running  up
+svm-nfs-01  data       running  up
+```
+
+!!! warning "Common errors"
+    **`Error: "vserver show" is not a recognized command.`** — Ensure you are connected to the ONTAP cluster management interface via SSH or console, not the node shell.
+    **`Error: This operation is not permitted: Insufficient privileges to run command "vserver show".`** — Verify your user role has the "admin" or equivalent privilege level assigned in ONTAP.
 ### SVM Health
 
 ![SVM Health](../../../../assets/ontap-proc-svm-health.svg)
@@ -167,6 +189,20 @@ vserver show -state !running
 volume show -vserver <svm_name> -volume <svm_name>_root
 ```
 
+
+```text title="Expected output"
+Vserver     State    Subtype
+----------- -------- ---------
+(no entries)
+
+Vserver       Volume                       State      Status
+------------- ---------------------------- ---------- ----------
+prod-svm-01   prod-svm-01_root             online     healthy
+```
+
+!!! warning "Common errors"
+    **`Error: command not found: vserver`** — Ensure you are connected to the ONTAP cluster management interface via SSH or the ONTAP CLI, not a local shell.
+    **`Error: invalid vserver name "prod-svm-01"`** — Replace `<svm_name>` with an actual SVM name from your cluster; use `vserver show` to list all available SVMs.
 ### Create an SVM
 
 ![Create an SVM](../../../../assets/ontap-proc-create-an-svm.svg)
@@ -179,6 +215,15 @@ vserver create \
     -rootvolume-security-style unix
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: command failed: Aggregate "<aggr_name>" does not exist.`** — Verify the aggregate name with `storage aggregate show` and use the correct name in the `-aggregate` parameter.
+    **`Error: command failed: Vserver "<svm_name>" already exists.`** — Choose a unique SVM name or delete the existing SVM with `vserver delete` before recreating it.
+    **`Error: command failed: Security style "unix" is not valid for root volume.`** — Use `mixed`, `ntfs`, or `unix` (ensure UNIX is capitalized); verify ONTAP version supports the chosen style for root volumes.
 ### LIF Management
 
 ![LIF Management](../../../../assets/ontap-proc-lif-management.svg)
@@ -202,6 +247,23 @@ network interface create \
 network interface migrate -vserver <svm_name> -lif <lif_name> -dest-node <node> -dest-port <port>
 ```
 
+
+```text title="Expected output"
+Vserver          Interface      IP Address      Status   Home Node/Port    Current Node/Port
+--------         ---------      ----------      ------   ---------------   -----------------
+prod-svm         nfs_lif_01     192.168.1.50    up       node1/e0c         node1/e0c
+prod-svm         cifs_lif_01    192.168.1.51    up       node2/e0d         node2/e0d
+prod-svm         mgmt_lif       192.168.1.10    up       node1/e0a         node1/e0a
+prod-svm         iscsi_lif_01   192.168.1.60    up       node2/e0e         node2/e0e
+
+(no output — command completes silently)
+
+[Job 123] Job succeeded: network interface migrate completed successfully.
+```
+
+!!! warning "Common errors"
+    **`Error: command failed: The specified home-port "e0c" does not exist on node "node1".`** — Verify the port exists on the target node using `network port show -node <node_name>`.
+    **`Error: command failed: Cannot migrate LIF "nfs_lif_01" because it is currently hosting an active connection.`** — Migrate during a maintenance window or use `network interface migrate -force-administrative-vlan true` if necessary.
 ### DNS Configuration per SVM
 
 ![DNS Configuration per SVM](../../../../assets/ontap-proc-dns-configuration-per-svm.svg)
@@ -215,6 +277,20 @@ vserver services name-service dns create \
     -name-servers <dns_ip1>,<dns_ip2>
 ```
 
+
+```text title="Expected output"
+Vserver: svm-prod-01
+Domains: corp.example.com, example.com
+Name Servers: 8.8.8.8, 8.8.4.4
+Timeout (secs): 2
+Attempts: 1
+
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: "svm-prod-01" is not a valid vserver name`** — Verify the SVM name exists with `vserver show` and use the exact name from the Vserver column.
+    **`Error: DNS create failed: Name servers already configured`** — Delete the existing DNS configuration first using `vserver services name-service dns delete -vserver <svm_name>` before creating a new one.
 ### NIS / LDAP Lookup
 
 ![NIS / LDAP Lookup](../../../../assets/ontap-proc-nis-ldap-lookup.svg)

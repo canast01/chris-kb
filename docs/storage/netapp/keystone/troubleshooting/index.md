@@ -80,6 +80,51 @@ qos statistics performance show
 volume show -fields size,used,percent-used
 ```
 
+
+```text title="Expected output"
+● keystone-collector.service - NetApp Keystone Collector
+     Loaded: loaded (/etc/systemd/system/keystone-collector.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2024-01-15 14:32:18 UTC; 2 days ago
+   Main PID: 8742 (keystone-collec)
+      Tasks: 12 (limit: 4915)
+     Memory: 287.4M
+        CPU: 2h 14m 32s
+     CGroup: /system.slice/keystone-collector.service
+             └─8742 /opt/keystone/bin/keystone-collector --config /etc/keystone/collector.conf
+
+Jan 15 14:32:18 ks-collector-01 systemd[1]: Started NetApp Keystone Collector.
+Jan 15 14:32:25 ks-collector-01 keystone-collector[8742]: INFO: Collector initialized, version 5.2.1
+Jan 15 14:32:26 ks-collector-01 keystone-collector[8742]: INFO: Connected to ONTAP cluster prod-cluster-01
+Jan 15 14:33:01 ks-collector-01 keystone-collector[8742]: INFO: Metrics collected: 1247 datapoints
+Jan 15 14:45:12 ks-collector-01 keystone-collector[8742]: WARNING: API response time 2847ms (threshold: 2000ms)
+
+*   Trying 192.0.2.45:443...
+* Connected to keystone.netapp.com (192.0.2.45) port 443 (#0)
+* TLSv1.3 (OUT), TLS handshake, Client hello (1)
+* TLSv1.3 (IN), TLS handshake, Server hello (1)
+* TLSv1.3 (IN), TLS handshake, Certificate (4)
+* TLSv1.3 (IN), TLS handshake, Finished (5)
+* TLSv1.3 (OUT), TLS handshake, Finished (5)
+* SSL connection using TLSv1.3 / TLS_AES_256_GCM_SHA384
+* Server certificate: CN=keystone.netapp.com, O=NetApp Inc., C=US
+< HTTP/1.1 200 OK
+
+Vserver   Volume                QoS Policy Group
+--------- -------------------- --------------------
+prod-svm  keystone_vol_01       ks-gold-tier
+prod-svm  keystone_vol_02       ks-silver-tier
+prod-svm  keystone_vol_03       ks-gold-tier
+prod-svm  keystone_vol_04       ks-bronze-tier
+
+Policy Group          Workload Type    Throughput (ops/s)    Latency (ms)
+------------------- --------------- -------------------- --------------------
+ks-gold-tier        Mixed            8742                 1.2
+ks-silver-tier      Mixed            4521                 2.8
+ks-bronze-tier      Mixed            1203                 5.4
+
+Vserver   Volume                Size       Used        Percent Used
+--------- -------------------- ---------- ----------- -----------
+```
 Review the BlueXP Keystone dashboard for capacity consumption, burst status, and SLA compliance — most customer-visible issues are diagnosable from the dashboard without ONTAP CLI access.
 
 ## Log Locations

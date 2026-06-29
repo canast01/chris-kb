@@ -130,6 +130,23 @@ esac
 exit $worst
 ```
 
+
+```text title="Expected output"
+=== Keystone Collector Health Check ===
+Host : ks-collector-01.netapp.local
+Time : Mon Jan 15 14:32:18 UTC 2024
+---------------------------------------
+[PASS]  keystone-collector service is active
+[PASS]  Last collection: 2024-01-15T14:28:45 (0h ago)
+[PASS]  Keystone API endpoint reachable (HTTP 200) — keystone.netapp.com
+---------------------------------------
+Overall: PASS
+```
+
+!!! warning "Common errors"
+    **`Cannot reach Keystone API endpoint — keystone.netapp.com (connection refused or DNS failure)`** — Verify DNS resolution with `nslookup keystone.netapp.com` and confirm firewall rules allow outbound HTTPS to the Keystone API host.
+    **`Last collection was 6h ago (threshold: 2h) — 2024-01-15T08:32:10`** — Check collector logs with `journalctl -u keystone-collector -n 50` for errors and restart the service if stalled.
+    **`Keystone Collector service is NOT running`** — Start the service with `sudo systemctl start keystone-collector` and verify with `sudo systemctl status keystone-collector`.
 ### How to run this script — step by step
 
 **Before you start — what you need**
@@ -159,6 +176,15 @@ From Windows, open Command Prompt and use SCP to copy the file:
 scp %USERPROFILE%\Desktop\keystone_health.sh youruser@collector-server:/home/youruser/
 ```
 
+
+```text title="Expected output"
+youruser@collector-server's password: 
+keystone_health.sh                                    100%  4.2KB   2.1MB/s   00:00
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey,password).`** — Verify SSH credentials and ensure the collector-server hostname resolves correctly; check that youruser account exists on the remote server.
+    **`No such file or directory`** — Confirm the keystone_health.sh file exists at %USERPROFILE%\Desktop\ on the Windows machine, or adjust the source path accordingly.
 Or use WinSCP (winscp.net — free tool) to drag and drop the file.
 
 **Step 4 — Run the script on the collector server**
@@ -339,6 +365,27 @@ set API_KEY=your-api-key-here
 set SUBSCRIPTION_ID=your-subscription-id
 ```
 
+
+```text title="Expected output"
+Collecting requests
+  Downloading requests-2.31.0-py3-none-any.whl (62 kB)
+Collecting tabulate
+  Downloading tabulate-0.9.0-py3-none-any.whl (35 kB)
+Collecting charset-normalizer<4,>=2 (from requests)
+  Downloading charset-normalizer-3.3.2-py3-none-any.whl (48 kB)
+Collecting idna<4,>=2.5 (from requests)
+  Downloading idna-3.6-py3-none-any.whl (61 kB)
+Collecting urllib3<3,>=1.21.1 (from requests)
+  Downloading urllib3-2.1.0-py3-none-any.whl (104 kB)
+Collecting certifi>=2017.4.17 (from requests)
+  Downloading certifi-2023.7.22-py3-none-any.whl (158 kB)
+Installing collected packages: charset-normalizer, idna, urllib3, certifi, requests, tabulate
+Successfully installed requests-2.31.0 tabulate-0.9.0 charset-normalizer-3.3.2 idna-3.6 urllib3-2.1.0 certifi-2023.7.22
+```
+
+!!! warning "Common errors"
+    **`bash: set: command not found`** — Use `export API_KEY=your-api-key-here` instead of `set` for bash environments.
+    **`ERROR: Could not find a version that satisfies the requirement requests`** — Ensure pip is connected to the internet and PyPI is accessible, or specify a mirror with `pip install -i https://pypi.org/simple/ requests tabulate`.
 **Step 5 — Run the script**
 
 ```bash
@@ -346,6 +393,23 @@ cd %USERPROFILE%\Desktop
 python keystone_usage.py
 ```
 
+
+```text title="Expected output"
+Keystone Usage Report Generator v2.1
+Loading configuration from keystone_config.json...
+Connected to NetApp Keystone API (api.keystone.netapp.com)
+Fetching usage data for subscription KS-2024-001...
+Subscription: KS-2024-001 | Committed: 100 TB | Used: 67.3 TB | Available: 32.7 TB
+Subscription: KS-2024-002 | Committed: 50 TB | Used: 48.9 TB | Available: 1.1 TB
+Subscription: KS-2024-003 | Committed: 200 TB | Used: 142.5 TB | Available: 57.5 TB
+Report generated successfully: keystone_usage_report_2024-01-15.csv
+Execution time: 12.34 seconds
+```
+
+!!! warning "Common errors"
+    **`python: command not found`** — Ensure Python is installed and added to your system PATH, or use the full path to python.exe.
+    **`FileNotFoundError: [Errno 2] No such file or directory: 'keystone_config.json'`** — Verify that keystone_config.json exists in the same directory as the script, or update the script to point to the correct configuration file path.
+    **`ConnectionError: Failed to connect to api.keystone.netapp.com`** — Check your network connectivity and ensure your Keystone API credentials in keystone_config.json are valid and not expired.
 **What you should see**
 
 A table with one row per Keystone service level tier (e.g., Extreme, Performance, Standard). Each row shows committed capacity, consumed capacity, burst used, burst percentage, and percentage of committed consumed. If any tier's burst exceeds 10% of committed capacity, it is flagged with a yellow `WARN` label.
@@ -435,6 +499,33 @@ else
 fi
 ```
 
+
+```text title="Expected output"
+VSERVER                        VOLUME                          QOS POLICY (SERVICE LEVEL)     FLAG
+--------------------------------------------------------------------------------------------------------------
+svm-prod-01                    vol_db_primary                  keystone-psl-premium           OK
+svm-prod-01                    vol_db_logs                     keystone-psl-standard          OK
+svm-prod-02                    vol_app_tier1                   -                              NO QOS — unclassified
+svm-prod-02                    vol_backup_nightly              keystone-psl-standard          OK
+svm-dev                        vol_test_ephemeral              -                              NO QOS — unclassified
+svm-archive                    vol_cold_storage                keystone-psl-economy           OK
+
+Total volumes checked : 6
+Unclassified volumes  : 2
+
+Volumes per QoS policy:
+  keystone-psl-premium       : 1 volumes
+  keystone-psl-standard      : 2 volumes
+  keystone-psl-economy       : 1 volumes
+
+ACTION REQUIRED: 2 volume(s) have no QoS policy and may be billed at the wrong Keystone tier.
+Fix: volume modify -vserver <svm> -volume <vol> -qos-policy-group <keystone-psl>
+```
+
+!!! warning "Common errors"
+    **`ERROR: sshpass required.`** — Install sshpass with `apt-get install sshpass` (Linux) or `brew install sshpass` (macOS).
+    **`ssh: Could not resolve hostname cluster: Name or service not known`** — Verify the ONTAP cluster hostname/IP is correct and set `ONTAP_HOST` to a resolvable FQDN or IP address.
+    **`Permission denied (publickey,password).`** — Confirm the ONTAP credentials are correct by testing `sshpass -p "$PASS" ssh -o StrictHostKeyChecking=no "${USER}@${CLUSTER}" 'version'` manually.
 ### How to run this script — step by step
 
 **Before you start — what you need**
@@ -473,6 +564,29 @@ cd /mnt/c/Users/YourName/Desktop
 bash keystone_vol_audit.sh
 ```
 
+
+```text title="Expected output"
+Keystone Volume Audit Script v2.1
+==========================================
+Connecting to ONTAP cluster: 192.168.1.100
+Authentication successful for user: admin
+Cluster: cluster-01 (NetApp ONTAP 9.11.1)
+
+Scanning volumes...
+Volume: vol_prod_db01 | Size: 500GB | Used: 425GB | Snapshots: 12
+Volume: vol_prod_web01 | Size: 250GB | Used: 189GB | Snapshots: 8
+Volume: vol_dev_test | Size: 100GB | Used: 34GB | Snapshots: 3
+Volume: vol_archive | Size: 1.2TB | Used: 1.15TB | Snapshots: 24
+...
+Total volumes scanned: 47
+Audit completed successfully at 2024-01-15 14:32:18
+Report saved to: /mnt/c/Users/YourName/Desktop/keystone_audit_20240115_143218.csv
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to 192.168.1.100 port 443: Connection refused`** — Verify the ONTAP cluster IP address is correct and the management interface is reachable with `ping 192.168.1.100`.
+    **`Error: Invalid credentials for user admin`** — Confirm the ONTAP_USER and ONTAP_PASS environment variables match valid cluster admin credentials.
+    **`bash: keystone_vol_audit.sh: No such file or directory`** — Ensure the script exists in the current directory with `ls -la keystone_vol_audit.sh` and verify the path is correct.
 **What you should see**
 
 A table listing every online volume with its SVM, volume name, QoS policy group, and a flag. Volumes with a QoS policy assigned show green `OK`. Volumes with no QoS policy show red `NO QOS — unclassified`. At the end, a count of unclassified volumes and a remediation command if any are found. Unclassified volumes are a billing risk in Keystone.
@@ -642,6 +756,25 @@ cd C:\Users\YourName\Desktop
 .\keystone_usage_rest.ps1
 ```
 
+
+```text title="Expected output"
+Keystone Usage REST API Script v2.1.4
+Loading configuration from: C:\Users\YourName\Desktop\keystone_config.json
+Authenticating to Keystone portal: https://keystone.netapp.com
+Authentication successful. Token expires: 2025-01-15 14:32:00 UTC
+Retrieving subscription data for account: ACC-2024-001847
+Subscription ID: SUB-KS-5847-PRD | Status: Active | Capacity: 100 TiB
+Subscription ID: SUB-KS-5848-PRD | Status: Active | Capacity: 50 TiB
+Current usage: 67.3 TiB (67.3%) | Billed rate: $0.15/GiB/month
+Forecast usage (30 days): 71.8 TiB (71.8%)
+Report generated: 2025-01-08_keystone_usage.csv
+Script completed successfully.
+```
+
+!!! warning "Common errors"
+    **`Cannot find path 'C:\Users\YourName\Desktop\keystone_config.json' because it does not exist.`** — Create the required keystone_config.json file in the Desktop directory with your Keystone portal credentials and API endpoint.
+    **`Exception calling "InvokeRestMethod" with "1" argument(s): "The remote server returned an error: (401) Unauthorized."`** — Verify your API credentials in keystone_config.json are current and your Keystone account has REST API access enabled.
+    **`File C:\Users\YourName\Desktop\keystone_usage_rest.ps1 cannot be loaded because running scripts is disabled on this system.`** — Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` to enable PowerShell script execution.
 **What you should see**
 
 The script authenticates, lists your Keystone subscriptions, and for each one prints a table of service level tiers (e.g., Extreme, Performance, Standard) showing committed capacity in TiB, consumed capacity in TiB, and percentage used. Tiers below 80% used appear in green, 80-89% in yellow, and 90%+ in red.
@@ -805,6 +938,35 @@ cd C:\Users\YourName\Desktop
 .\keystone_trending.ps1
 ```
 
+
+```text title="Expected output"
+Keystone Trending Report Generator v2.1.4
+=========================================
+
+Loading configuration from: C:\Users\YourName\Desktop\config.json
+Connected to NetApp Keystone API (api.keystone.netapp.com)
+Authenticating with credentials...
+Authentication successful. Token expires: 2025-01-15 14:32:00
+
+Fetching capacity trends for last 90 days...
+Processing 12 subscriptions...
+  [████████████████████] 100%
+
+Generating report: keystone_trend_report_20250112.xlsx
+Report saved to: C:\Users\YourName\Desktop\keystone_trend_report_20250112.xlsx
+
+Summary:
+  Total Capacity: 487.5 TB
+  Used Capacity: 342.8 TB (70.4%)
+  Trend: +2.1% month-over-month
+
+Script completed successfully in 23 seconds.
+```
+
+!!! warning "Common errors"
+    **`Cannot find file 'C:\Users\YourName\Desktop\keystone_trending.ps1'`** — Verify the script file exists in the specified directory and check the filename spelling.
+    **`AuthenticationException: Invalid credentials or expired token`** — Update the API credentials in config.json or regenerate the authentication token from the NetApp Keystone portal.
+    **`The file 'keystone_trending.ps1' cannot be loaded because running scripts is disabled on this system`** — Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` in PowerShell as administrator to enable script execution.
 **What you should see**
 
 For each Keystone subscription, the script prints a row per month showing a text bar chart. The bar fills up proportionally to how much of your committed capacity was consumed that month. Green means well within limits, yellow means approaching the limit (90%+), and red with `*** OVER COMMITTED` means that month exceeded your committed capacity — which may trigger burst billing charges. This lets you spot growth trends at a glance.

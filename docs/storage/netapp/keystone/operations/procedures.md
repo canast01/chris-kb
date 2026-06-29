@@ -64,6 +64,49 @@ volume show -fields volume,svm,qos-policy-group
 curl -sk https://<cluster-mgmt-lif>/api/cluster | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+● keystone-collector.service - NetApp Keystone Collector Service
+     Loaded: loaded (/etc/systemd/system/keystone-collector.service; enabled; vendor preset: enabled)
+     Active: active (running) since Thu 2024-01-18 14:32:15 UTC; 2 days ago
+   Main PID: 2847 (python3)
+     CGroup: /system.slice/keystone-collector.service
+             └─2847 /usr/bin/python3 /opt/keystone-collector/collector.py
+
+Jan 18 14:35:42 keystone-collector-01 keystone-collector[2847]: Collection cycle started for tenant_id=a7f3c9e1-2b4d-11ee-be56-0242ac120002
+Jan 18 14:36:18 keystone-collector-01 keystone-collector[2847]: Successfully collected metrics from cluster prod-cluster-01
+Jan 18 14:37:05 keystone-collector-01 keystone-collector[2847]: Uploaded 1247 capacity records to Keystone portal
+Jan 18 14:38:12 keystone-collector-01 keystone-collector[2847]: Collection cycle completed in 156 seconds
+
+Policy Group          VSERVER  Workload Type  Max Throughput
+ks-gold              svm-prod  User Defined   10000 IOPS
+ks-silver            svm-prod  User Defined   5000 IOPS
+ks-bronze            svm-prod  User Defined   2000 IOPS
+ks-standard          svm-dr    User Defined   3000 IOPS
+
+Volume              SVM         QoS Policy Group
+vol_prod_db01       svm-prod    ks-gold
+vol_prod_app02      svm-prod    ks-silver
+vol_prod_backup     svm-prod    ks-bronze
+vol_dr_replica      svm-dr      ks-standard
+...
+
+{
+  "version": {
+    "full": "NetApp Release 9.13.1: 2e69f755"
+  },
+  "generation": 20230815,
+  "cluster": {
+    "uuid": "1cd8a442-86d1-11ee-ab7e-005056b34711",
+    "name": "prod-cluster-01"
+  }
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag (already in the command) or import the cluster's CA certificate into the collector VM's trust store.
+    **`qos policy-group show: command not found`** — Ensure you are logged into the ONTAP cluster CLI via SSH, not running the command on the collector VM.
+    **`Connection refused` or `No route to host`** — Verify the cluster management LIF IP is correct and reachable from the collector VM using `ping` or `nc -zv <cluster-mgmt-lif> 443`.
 ## Change Readiness
 
 - [ ] Keystone Collector is running and last reported telemetry within the expected interval
@@ -141,6 +184,29 @@ volume show -vserver * -fields size,used,percent-used | sort -k4 -nr
 qos statistics volume show
 ```
 
+
+```text title="Expected output"
+Vserver         Volume                Size       Used        Percent-Used
+-------         ------                ----       ---         ------------
+svm-prod-01     vol_data_tier1        2.0TB      1.8TB       90%
+svm-prod-01     vol_logs_archive      500GB      475GB       95%
+svm-prod-02     vol_backup_secondary  1.5TB      1.2TB       80%
+svm-dev-01      vol_test_workspace    750GB      620GB       83%
+svm-prod-03     vol_snapshot_reserve  1.0TB      450GB       45%
+...
+
+Policy Group                 Volume              Throughput (MB/s)  Latency (ms)  Service Level
+-----------                 ------              -----------------  -----------   -------------
+qos_burst_premium            vol_data_tier1      850                 2.1          Burst
+qos_standard                 vol_logs_archive    120                 5.3          Standard
+qos_burst_standard           vol_backup_secondary 650               3.8          Burst
+qos_standard                 vol_test_workspace  95                  6.2          Standard
+qos_burst_premium            vol_snapshot_reserve 720               2.4          Burst
+```
+
+!!! warning "Common errors"
+    **`Error: command not found: volume show`** — Ensure you are connected to the NetApp cluster management interface (SSH to the cluster IP) and not a local shell.
+    **`Error: No matching Vserver found`** — Verify that Vservers exist on the cluster using `vserver show` and confirm the cluster is in healthy state.
 ### Reporting Discrepancies
 
 ![Reporting Discrepancies](../../../../assets/keystone-proc-reporting-discrepancies.svg)

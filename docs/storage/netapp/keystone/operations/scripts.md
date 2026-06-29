@@ -101,6 +101,24 @@ jq -r '.records[] | [
 awk -F'\t' '{ printf "%-40s %-20s %12s %12s %7s%%\n", $1, $2, $3, $4, $5 }' | sort
 ```
 
+
+```text title="Expected output"
+=== Volume Usage Report: 192.168.1.50 Wed Jan 15 14:32:18 UTC 2025 ===
+Volume                                   SVM                      UsedGiB     TotalGiB   Used%
+------------------------------------------------------------------------------------------------
+vol_data_prod                            svm_prod                    2048       5120     40%
+vol_logs_archive                         svm_prod                     512       2048     25%
+vol_backup_dr                            svm_dr                      3584       8192     44%
+vol_home_users                           svm_corp                     768       1024     75%
+vol_temp_scratch                         svm_corp                      64        512      12%
+vol_analytics_raw                        svm_analytics               4096      10240     40%
+vol_snapshots_reserve                    svm_prod                     256       1024     25%
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl (already present) or import the ONTAP certificate into your system's CA bundle.
+    **`jq: parse error: Cannot index number with string "name"`** — Verify the ONTAP API version supports the `/storage/volumes` endpoint and that `fields=name,svm,space` returns valid JSON with `.svm.name` structure.
+    **`ONTAP_IP required`** — Set the ONTAP_IP environment variable before running the script: `export ONTAP_IP=192.168.1.50`.
 ## Keystone Collector Health Monitor
 
 Runs from cron on the Collector VM. Sends an alert if Collector has not collected within the last 2 hours.
@@ -135,6 +153,14 @@ fi
 echo "Keystone Collector OK - last collection ${AGE_HOURS}h ago"
 ```
 
+
+```text title="Expected output"
+Keystone Collector OK - last collection 0h ago
+```
+
+!!! warning "Common errors"
+    **`keystone-collector: command not found`** — Ensure the NetApp Keystone Collector package is installed and `/opt/keystone/bin` is in your PATH, or use the full path to the binary.
+    **`date: invalid date 'YYYY-MM-DDTHH:MM:SS'`** — The `show-last-collection` output format differs from expected; verify the actual output format with `keystone-collector show-last-collection` and adjust the grep pattern accordingly.
 ---
 
 ## Verify

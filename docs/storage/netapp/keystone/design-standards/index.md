@@ -15,6 +15,18 @@ volume modify \
 volume show -fields vserver,volume,comment | grep keystone
 ```
 
+
+```text title="Expected output"
+vserver     volume              comment
+-------     ------              -------
+svm_prod    vol_oradb01_data    app=oradb01 owner=finance tier=extreme keystone=true
+svm_prod    vol_oradb02_data    app=oradb02 owner=finance tier=premium keystone=true
+svm_prod    vol_mysqldb_logs    app=mysqldb owner=ops tier=standard keystone=true
+```
+
+!!! warning "Common errors"
+    **`Error: command failed: cannot modify volume vol_oradb01_data: volume is offline`** — Bring the volume online with `volume online -vserver svm_prod -volume vol_oradb01_data` before modifying it.
+    **`Error: command failed: cannot modify volume vol_oradb01_data: insufficient privileges for user "admin"`** — Ensure your user role has "volume_modify" capability or use an account with cluster admin privileges.
 ```bash
 # Set a volume-level space threshold alert at 80% utilisation
 # (Keystone billing is based on logical used, but physical capacity matters for planning)
@@ -34,6 +46,30 @@ set admin
 volume show -vserver svm_prod -volume vol_oradb01_data \
     -fields space-nearly-full-threshold-percent,space-full-threshold-percent
 ```
+
+```text title="Expected output"
+event config modify -threshold-alerts-enabled true
+(no output — command completes silently)
+
+set advanced
+(no output — command completes silently)
+
+volume modify -vserver svm_prod -volume vol_oradb01_data -space-nearly-full-threshold-percent 80 -space-full-threshold-percent 95
+(no output — command completes silently)
+
+set admin
+(no output — command completes silently)
+
+Vserver         Volume                Space Nearly Full   Space Full
+                                      Threshold Percent   Threshold Percent
+--------------- --------------------- ------------------- -------------------
+svm_prod        vol_oradb01_data      80                  95
+```
+
+!!! warning "Common errors"
+    **`Error: command failed: There is no entry in the event config table.`** — Run `event config create -threshold-alerts-enabled true` instead of modify if the event config does not yet exist.
+    **`Error: volume modify: invalid field "space-nearly-full-threshold-percent"`** — Verify the exact field name with `volume modify -help` as the parameter name may differ by ONTAP version (e.g., use `nearly-full-threshold-percent` without "space-" prefix).
+    **`Error: This command can only be run in the advanced privilege level.`** — Ensure you have executed `set advanced` before running the volume modify command, or use the full path `set -privilege advanced`.
 ```bash
 # Step 1: Confirm the volume is no longer in use (no active client mounts)
 nfs show -vserver svm_prod | grep vol_oldapp

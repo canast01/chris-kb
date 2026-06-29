@@ -728,6 +728,24 @@ lsblk | grep sd
 dd if=/dev/zero of=/dev/sdb bs=1M count=100 oflag=direct
 ```
 
+
+```text title="Expected output"
+10.10.20.20:3260,1 iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6
+10.10.20.21:3260,1 iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6
+Logging in to [iface: default, target: iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6, portal: 10.10.20.10,3260] (multiple)
+Login to [iface: default, target: iqn.1992-08.com.netapp:sn.a1b2c3d4e5f6, portal: 10.10.20.10,3260] successful.
+sda                 8:0    0 100G  0 disk 
+sdb                 8:16   0 500G  0 disk 
+sdc                 8:32   0 500G  0 disk 
+100+0 records in
+100+0 records out
+104857600 bytes (105 MB, 100 MiB) copied, 2.847 s, 36.8 MB/s
+```
+
+!!! warning "Common errors"
+    **`iscsiadm: No records found`** — Verify the NetApp iSCSI service is running on 10.10.20.10 and the portal IP is correct.
+    **`iscsiadm: Cannot login to portal`** — Check network connectivity to the target portal and ensure iSCSI initiator name is registered on the NetApp array.
+    **`dd: failed to open '/dev/sdb': No such file or device`** — Confirm the iSCSI login succeeded and the block device appeared with `lsblk` before attempting the write test.
 ### NFS Mount Test
 
 From a Linux host:
@@ -744,6 +762,23 @@ dd if=/dev/urandom of=/mnt/test/testfile bs=1M count=100
 md5sum /mnt/test/testfile
 ```
 
+
+```text title="Expected output"
+Export list for 10.10.20.10:
+/data01                                    10.0.0.0/8
+/data02                                    10.0.0.0/8
+/backup                                    10.0.0.0/8
+
+100+0 records in
+100+0 records out
+104857600 bytes (105 MB, 100 MiB) copied, 2.847 s, 36.8 MB/s
+5d41402abc4b2a76b9719d911017c592  /mnt/test/testfile
+```
+
+!!! warning "Common errors"
+    **`mount.nfs: access denied by server while mounting 10.10.20.10:/data01`** — Verify the client IP is in the NFS export policy on the NetApp filer and check firewall rules between client and storage.
+    **`showmount: RPC: Unable to receive; errno = No route to host`** — Confirm network connectivity to 10.10.20.10 and that the NFS service is running on the NetApp controller.
+    **`dd: failed to open '/mnt/test/testfile' for writing: Read-only file system`** — Remount the NFS export without the `ro` option or check NetApp volume permissions and export policy write settings.
 ### SnapMirror Lag Check
 
 ```text

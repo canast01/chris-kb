@@ -39,6 +39,33 @@ vserver cifs domain info -vserver <svm>
 vserver services name-service ldap create -vserver <svm> -client-config <ldap-config>
 ```
 
+
+```text title="Expected output"
+cluster1::> vserver cifs create -vserver svm1 -cifs-server NAS-SVM01 -domain domain.corp -ou "OU=Servers,DC=domain,DC=corp"
+(no output — command completes silently)
+
+cluster1::> vserver cifs domain info -vserver svm1
+         Vserver: svm1
+      CIFS Server: NAS-SVM01
+        Domain/Workgroup: domain.corp
+           Trusted Domains:
+        Default Site: Default-First-Site-Name
+             Preferred DCs:
+                  dc1.domain.corp (192.168.1.50)
+                  dc2.domain.corp (192.168.1.51)
+    Authentication Style: domain
+LDAP Signing Required: false
+LDAP Sealing Required: false
+Use Start TLS: false
+Encryption Required: false
+
+cluster1::> vserver services name-service ldap create -vserver svm1 -client-config ldap-default
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: command failed: CIFS server creation failed. Reason: Failed to join domain "domain.corp". Check network connectivity to domain controllers.`** — Verify network connectivity to domain controllers and ensure the ONTAP cluster can resolve the domain name via DNS.
+    **`Error: LDAP configuration "ldap-config" does not exist.`** — Create the LDAP client configuration first using `vserver services name-service ldap client-config create` before referencing it in the ldap create command.
 ## Veeam Storage Integration (VeeamON / Direct Storage Access)
 
 Veeam Backup & Replication integrates with ONTAP via the Veeam Backup & Replication storage plugin, enabling:
@@ -68,6 +95,51 @@ curl -sk -u admin:<password> https://<cluster>/api/svm/svms | python3 -m json.to
 curl -sk -u admin:<password> "https://<cluster>/api/storage/volumes?fields=name,used,size" | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "records": [
+    {
+      "uuid": "550e8400-e29b-41d4-a716-446655440000",
+      "name": "svm-prod-01",
+      "state": "running",
+      "subtype": "default"
+    },
+    {
+      "uuid": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+      "name": "svm-dr-02",
+      "state": "running",
+      "subtype": "default"
+    }
+  ],
+  "num_records": 2
+}
+{
+  "records": [
+    {
+      "name": "vol_data_01",
+      "used": 847288320,
+      "size": 1099511627776
+    },
+    {
+      "name": "vol_logs_02",
+      "used": 214748365,
+      "size": 549755813888
+    },
+    {
+      "name": "vol_backup_03",
+      "used": 0,
+      "size": 2199023255552
+    }
+  ],
+  "num_records": 3
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example; ensure both `-s` and `-k` flags are used together).
+    **`curl: (7) Failed to connect to <cluster>: Name or service not known`** — Verify the cluster hostname or IP is correct and reachable from your network; check DNS resolution with `nslookup <cluster>`.
+    **`jq: parse error: Invalid JSON text at line 1`** — Ensure the API endpoint is correct and the cluster is responding with valid JSON; test connectivity with `curl -sk -u admin:<password> https://<cluster>/api/cluster` first.
 Python SDK (`netapp-ontap` package) and Ansible (`netapp.ontap` collection) provide higher-level abstractions for automation.
 
 ## Cloud Volumes ONTAP Integration

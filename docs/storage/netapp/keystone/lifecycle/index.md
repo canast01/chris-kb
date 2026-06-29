@@ -65,6 +65,42 @@ sudo systemctl status keystone-collector
 curl -sk -o /dev/null -w "%{http_code}" https://keystone.netapp.com
 ```
 
+
+```text title="Expected output"
+Loaded plugins: fastestmirror, security
+Loading mirror speeds from cached hostfile
+Resolving Dependencies
+--> Running transaction check
+---> Package openssl.x86_64 0:1.0.2k-19.el7 will be updated
+---> Package openssl.x86_64 0:1.0.2k-21.el7_9 will be updated
+--> Finished Dependency Resolution
+Dependencies Resolved
+===============================================================================
+ Package                 Arch       Version              Repository      Size
+===============================================================================
+Installing:
+ openssl                 x86_64     1.0.2k-21.el7_9      updates        493 k
+ kernel                  x86_64     3.10.0-1160.99.1.el7 updates        52 M
+
+Transaction Summary
+===============================================================================
+Install  2 Package(s)
+Complete!
+
+● keystone-collector.service - NetApp Keystone Collector
+   Loaded: loaded (/etc/systemd/system/keystone-collector.service; enabled; vendor preset: enabled)
+   Active: active (running) since Wed 2024-01-17 14:32:18 UTC; 2min 45s ago
+   Main PID: 8742 (collector)
+   CGroup: /system.slice/keystone-collector.service
+           └─8742 /opt/netapp/keystone/collector -c /etc/keystone/collector.conf
+
+200
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or install the NetApp root CA certificate in your system trust store.
+    **`Unit keystone-collector.service not found.`** — Verify the Keystone Collector package is installed with `sudo rpm -qa | grep keystone` and reinstall if missing.
+    **`curl: (7) Failed to connect to keystone.netapp.com port 443: Connection refused`** — Check firewall rules with `sudo firewall-cmd --list-all` and ensure outbound HTTPS to keystone.netapp.com is permitted.
 ---
 
 ## Subscription Exit and Migration
@@ -112,6 +148,45 @@ rsync -avz --progress --checksum \
     /mnt/target-destination/
 ```
 
+
+```text title="Expected output"
+cluster peer create -generate-passphrase \
+    -peer-addrs 192.168.100.45
+Passphrase: "EsecureP@ssw0rd123XyZ9"
+Cluster peering relationship created successfully.
+
+snapmirror create \
+    -source-path svm_prod:vol_data \
+    -destination-path svm_target:vol_data \
+    -type XDP \
+    -policy MirrorAllSnapshots
+Operation succeeded: SnapMirror relationship created.
+
+snapmirror initialize -destination-path svm_target:vol_data
+Operation is queued: SnapMirror transfer "svm_target:vol_data" started.
+
+snapmirror quiesce -destination-path svm_target:vol_data
+Operation succeeded: SnapMirror relationship quiesced.
+
+snapmirror update -destination-path svm_target:vol_data
+Operation is queued: SnapMirror transfer "svm_target:vol_data" started.
+
+snapmirror break -destination-path svm_target:vol_data
+Operation succeeded: SnapMirror relationship broken.
+
+sending incremental file list
+keystone-source/
+keystone-source/data/file1.dat
+keystone-source/data/file2.dat
+keystone-source/logs/app.log
+sent 2,847,392,156 bytes  received 45,821 bytes  speed: 18.5MB/s
+total size is 2,847,392,156  speedup is 1.00
+```
+
+!!! warning "Common errors"
+    **`Error: cluster peer create: command failed: Cluster peer relationship already exists`** — Verify the peer relationship does not already exist with `cluster peer show` before attempting creation.
+    **`Error: snapmirror create: command failed: Source volume does not exist`** — Confirm the source volume path `svm_prod:vol_data` exists and is accessible using `volume show -vserver svm_prod`.
+    **`rsync: [Receiver] write failed on "/mnt/target-destination/file1.dat": No space left on device`** — Verify the target mount has sufficient free space using `df -h /mnt/target-destination/` before starting the rsync operation.
 ### Pre-Decommission Validation
 
 Before confirming hardware removal with NetApp:
