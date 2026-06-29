@@ -49,6 +49,61 @@ ollama show llama3.1:8b
 ollama show llama3.1:8b --modelfile
 ```
 
+
+```text title="Expected output"
+pulling manifest
+pulling 4f0e4312f8e1
+pulling 8de71801ce48
+pulling 2e0493f59d13
+pulling 5236e8387e1f
+pulling 6a0746a1ec1a
+verifying sha256 digest
+writing manifest
+success
+
+pulling manifest
+pulling 7b4e8c2f9d1a
+pulling 3c5f1a8e2b9d
+pulling 9e2d4c7f1b3a
+pulling 1a8f5c3e9b2d
+pulling 4d7e2f9c1a5b
+verifying sha256 digest
+writing manifest
+success
+
+>>> Send a message (/? for help)
+>>> Hello
+
+The Mistral model is now running. Type your message or /bye to exit.
+
+NAME                    ID              SIZE    MODIFIED
+llama3.1:8b             a1b2c3d4e5f6    4.7GB   2 minutes ago
+llama3.1:70b-instruct   f6e5d4c3b2a1    43GB    5 minutes ago
+mistral:7b              9z8y7x6w5v4u    4.1GB   1 minute ago
+
+# Model info for llama3.1:8b
+Model
+	arch                    llama
+	parameters              8.0B
+	quantization            Q4_K_M
+	context length          8192
+	embedding length        4096
+
+Parameters
+	stop                    "<|start_header_id|>"
+	stop                    "<|end_header_id|>"
+	stop                    "<|eot_id|>"
+
+License
+	LLAMA 2 COMMUNITY LICENSE AGREEMENT
+
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: model not found`** — Verify the model name and tag exist on ollama.com, then retry the pull command.
+    **`Error: insufficient disk space`** — Check available disk space with `df -h` and ensure at least 50GB free for large models like 70b variants.
+    **`Error: connection refused`** — Start the Ollama daemon with `ollama serve` in another terminal or ensure the service is running.
 ## Popular Models and Tags
 
 | Model | Tags | Notes |
@@ -115,6 +170,27 @@ ollama create code-reviewer -f ./Modelfile
 ollama run code-reviewer "Review this Python function: ..."
 ```
 
+
+```text title="Expected output"
+pulling manifest
+pulling 3c2fbf5da27e
+pulling 5c40d17bd924
+pulling e994b72fc1f3
+pulling 2e0773155812
+pulling 8f025a1e9c4a
+digest: sha256:8c156b8f9e2a3d4c5b6a7f8e9d0c1b2a3f4e5d6c7b8a9f0e1d2c3b4a5f6e7d
+status: success
+
+code-reviewer: created successfully
+
+Review this Python function: ...
+
+The function appears to be a utility for data validation. Consider adding type hints for better IDE support and documentation. The error handling could be more specific—currently catching all exceptions broadly.
+```
+
+!!! warning "Common errors"
+    **`Error: could not find Modelfile`** — Ensure the Modelfile exists in the current directory and the path `./Modelfile` is correct.
+    **`Error: model not found`** — Run `ollama create code-reviewer -f ./Modelfile` successfully before attempting to run the model.
 ## GGUF Models from HuggingFace
 
 ```bash
@@ -129,6 +205,31 @@ ollama create my-custom-model -f Modelfile
 ollama run my-custom-model
 ```
 
+
+```text title="Expected output"
+# Modelfile created successfully
+(no output — command completes silently)
+
+pulling manifest
+pulling 3c20f7190570
+pulling 5046e3b89b12
+pulling e290ff4c5c22
+pulling 2e0513e4a477
+pulling 2bea3b022b21
+verifying sha256 digest
+writing manifest
+removing any unused layers
+success
+
+>>> Hello! How can I help you today?
+>>> What's the weather like?
+I don't have access to real-time weather data, but I'd be happy to help you find weather information if you tell me your location.
+>>> /bye
+```
+
+!!! warning "Common errors"
+    **`Error: model not found`** — Verify the path to model.gguf is absolute and the file exists with `ls -lh /path/to/model.gguf`.
+    **`Error: failed to create model: invalid modelfile`** — Check that the Modelfile syntax is correct and the FROM path points to a valid GGUF file, not a directory.
 ## Managing the Model Library
 
 ```bash
@@ -145,3 +246,19 @@ ollama push username/my-custom-model
 du -sh ~/.ollama/models/manifests/
 du -sh ~/.ollama/models/blobs/
 ```
+
+
+```text title="Expected output"
+copying llama3.1:8b to my-base-model... 100% ▕████████████████████▏
+deleted llama2:7b
+pushing username/my-custom-model... 100% ▕████████████████████▏
+pushing manifest... 100% ▕████████████████████▏
+pushing config... 100% ▕████████████████████▏
+4.2G	/home/user/.ollama/models/manifests/
+18G	/home/user/.ollama/models/blobs/
+```
+
+!!! warning "Common errors"
+    **`Error: model 'llama3.1:8b' not found`** — Verify the model exists locally with `ollama list` before copying.
+    **`Error: push failed: unauthorized: authentication required`** — Log in with `ollama login` or ensure your ollama.com credentials are valid.
+    **`Error: model 'llama2:7b' is in use`** — Stop any running Ollama processes using the model with `ollama stop` before removing it.

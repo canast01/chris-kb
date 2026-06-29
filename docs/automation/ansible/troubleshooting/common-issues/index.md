@@ -141,6 +141,57 @@ ansible-playbook site.yml --check --diff
     var: svc_result
 ```
 
+
+```text title="Expected output"
+Starting galaxy collection install process
+Process install dependency map
+Starting collection download of 'community.general:5.8.1' from https://galaxy.ansible.com/download/community-general-5.8.1.tar.gz
+Downloading community.general from https://galaxy.ansible.com/download/community-general-5.8.1.tar.gz (8.92 MB)
+Installing 'community.general:5.8.1' to '/home/ansible/.ansible/collections/ansible_collections/community/general'
+community.general:5.8.1 was installed successfully
+
+# Collection list output
+Collection                    Version
+----------------------------- -------
+community.general            5.8.1
+ansible.posix                1.4.0
+community.aws                4.2.1
+
+# DNS test output
+Server:		10.0.2.3
+Address:	10.0.2.3#53
+
+Name:	archive.ubuntu.com
+Address: 91.189.89.198
+
+# Playbook check mode output
+PLAY [all] *********************************************************************
+TASK [Install nginx] ************************************************************
+ok: [webserver01] => {
+    "changed": false,
+    "msg": "Condition already satisfied"
+}
+
+PLAY RECAP **********************************************************************
+webserver01                : ok=1 changed=0 unreachable=0 failed=0
+
+# Debug output for registered variable
+TASK [Show result] **************************************************************
+ok: [webserver01] => {
+    "svc_result": {
+        "changed": false,
+        "cmd": "systemctl is-active nginx",
+        "rc": 0,
+        "stderr": "",
+        "stdout": "active"
+    }
+}
+```
+
+!!! warning "Common errors"
+    **`ERROR! couldn't resolve module/action 'community.general.xxx'. This often means this role or collection does not support this ansible_version`** — Run `ansible-galaxy collection install community.general --upgrade` to ensure the latest compatible version is installed.
+    **`fatal: [webserver01]: FAILED! => {"msg": "Temporary failure in name resolution"}`** — Verify DNS resolution on the managed host with `ansible webservers -m shell -a "cat /etc/resolv.conf"` and ensure nameservers are correctly configured.
+    **`fatal: [webserver01]: FAILED! => {"msg": "Unable to start action, could not load plugin"}`** — Verify the collection is installed in the correct location with `ansible-galaxy collection list | grep community.general` and reinstall if missing.
 ## Fact Gathering Issues
 
 ```bash
@@ -155,6 +206,49 @@ ansible -i inventory/ web01 -m setup -a "filter=ansible_distribution*"
   gather_facts: false
 ```
 
+
+```text title="Expected output"
+web01 | SUCCESS => {
+    "ansible_facts": {
+        "ansible_all_ipv4_addresses": [
+            "192.168.1.45",
+            "10.0.0.12"
+        ],
+        "ansible_architecture": "x86_64",
+        "ansible_bios_version": "1.2.3",
+        "ansible_date_time": {
+            "iso8601": "2024-01-15T14:32:18Z",
+            "year": "2024"
+        },
+        "ansible_distribution": "Ubuntu",
+        "ansible_distribution_release": "22.04",
+        "ansible_distribution_version": "22.04",
+        "ansible_fqdn": "web01.internal.corp",
+        "ansible_hostname": "web01",
+        "ansible_kernel": "5.15.0-91-generic",
+        "ansible_memtotal_mb": 8192,
+        "ansible_processor_vcpus": 4,
+        "ansible_selinux": {
+            "status": "disabled"
+        }
+    },
+    "changed": false
+}
+
+web01 | SUCCESS => {
+    "ansible_facts": {
+        "ansible_distribution": "Ubuntu",
+        "ansible_distribution_release": "22.04",
+        "ansible_distribution_version": "22.04"
+    },
+    "changed": false
+}
+```
+
+!!! warning "Common errors"
+    **`fatal: [web01]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}`** — Verify SSH key permissions (chmod 600 on private key) and that the key is added to the remote host's authorized_keys.
+    **`[WARNING]: Unable to parse /etc/ansible/inventory as an inventory source`** — Check that the inventory/ directory exists and contains valid inventory files (hosts, hosts.yml, or hosts.yaml).
+    **`fatal: [web01]: FAILED! => {"msg": "The following modules failed to load: ansible.builtin.setup"}`** — Ensure Python is installed on the target host and the ansible_python_interpreter variable is correctly configured if using a non-standard Python path.
 ---
 
 ## Verify resolution

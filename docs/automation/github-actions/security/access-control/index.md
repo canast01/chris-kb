@@ -103,6 +103,17 @@ useradd -r -s /sbin/nologin -m -d /home/github-runner github-runner
 ## Restrict runner network access (only allow required endpoints)
 ## github.com, api.github.com, objects.githubusercontent.com, *.actions.githubusercontent.com
 ```
+
+```text title="Expected output"
+useradd: warning: home directory '/home/github-runner' already exists and is not empty
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`useradd: user 'github-runner' already exists`** — Check existing users with `getent passwd github-runner` and either remove the user with `userdel -r github-runner` or skip user creation if already present.
+    **`./config.sh: command not found`** — Ensure you are in the GitHub Actions runner directory (typically `/opt/actions-runner` or similar) where `config.sh` is located, or provide the full path to the script.
 ```bash
 ## Enable secret scanning and push protection via API
 gh api --method PATCH repos/ORG/REPO \
@@ -112,6 +123,34 @@ gh api --method PATCH repos/ORG/REPO \
 ## List alerts
 gh api repos/ORG/REPO/secret-scanning/alerts | jq '.[] | {state, secret_type, html_url}'
 ```
+
+```text title="Expected output"
+{
+  "state": "open",
+  "secret_type": "github_pat",
+  "html_url": "https://github.com/ORG/REPO/security/secret-scanning/1"
+}
+{
+  "state": "open",
+  "secret_type": "slack_bot_token",
+  "html_url": "https://github.com/ORG/REPO/security/secret-scanning/2"
+}
+{
+  "state": "resolved",
+  "secret_type": "aws_access_key",
+  "html_url": "https://github.com/ORG/REPO/security/secret-scanning/3"
+}
+{
+  "state": "open",
+  "secret_type": "private_key",
+  "html_url": "https://github.com/ORG/REPO/security/secret-scanning/4"
+}
+```
+
+!!! warning "Common errors"
+    **`HTTP 403: Resource not accessible by integration`** — Ensure the GitHub token has `repo` and `security_events:read` scopes, or use a PAT with appropriate permissions.
+    **`jq: parse error: Cannot index string with string "state"`** — The API returned an error response instead of JSON array; verify the repository exists and secret scanning is enabled with `gh api repos/ORG/REPO | jq '.security_and_analysis'`.
+    **`HTTP 404: Not Found`** — Replace `ORG/REPO` with actual organization and repository names, or verify the repository is accessible to the authenticated user.
 ```bash
 ## Org audit log — all Actions-related events
 gh api orgs/ORG/audit-log \

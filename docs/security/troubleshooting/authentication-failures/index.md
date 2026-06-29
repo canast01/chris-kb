@@ -174,6 +174,43 @@ ldapsearch -x -H ldaps://dc01.corp.example.com:636 \
   -W -b "DC=corp,DC=example,DC=com" "(sAMAccountName=jsmith)"
 ```
 
+
+```text title="Expected output"
+# dn: CN=John Smith,OU=Users,DC=corp,DC=example,DC=com
+# objectClass: person
+# objectClass: user
+# sAMAccountName: jsmith
+# mail: jsmith@corp.example.com
+# memberOf: CN=Engineering,OU=Groups,DC=corp,DC=example,DC=com
+# search result
+# search: 2
+# result: 0 Success
+
+Enter LDAP Password: 
+# dn: CN=John Smith,OU=Users,DC=corp,DC=example,DC=com
+# objectClass: person
+# objectClass: user
+# sAMAccountName: jsmith
+# mail: jsmith@corp.example.com
+# memberOf: CN=Engineering,OU=Groups,DC=corp,DC=example,DC=com
+# search result
+# result: 0 Success
+
+Enter LDAP Password: 
+# dn: CN=John Smith,OU=Users,DC=corp,DC=example,DC=com
+# objectClass: person
+# objectClass: user
+# sAMAccountName: jsmith
+# mail: jsmith@corp.example.com
+# memberOf: CN=Engineering,OU=Groups,DC=corp,DC=example,DC=com
+# search result
+# result: 0 Success
+```
+
+!!! warning "Common errors"
+    **`ldap_bind: Invalid credentials (49)`** — Verify the service account password is correct and the account is not locked or expired in Active Directory.
+    **`Can't contact LDAP server (-1)`** — Confirm the DC hostname resolves correctly with `nslookup dc01.corp.example.com` and that port 389 (or 636 for LDAPS) is accessible via firewall rules.
+    **`TLS: peer certificate cannot be authenticated with known CA certificates`** — Import the DC's SSL certificate into the system CA store with `update-ca-certificates` or disable certificate validation with `LDAPTLS_REQCERT=never`.
 ### LDAP Result Codes
 
 | Code | Meaning | Fix |

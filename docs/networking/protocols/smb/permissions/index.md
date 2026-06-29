@@ -70,6 +70,39 @@ net share Finance /DELETE
 net share
 ```
 
+
+```text title="Expected output"
+Finance was shared successfully.
+Finance$ was shared successfully.
+Finance was deleted successfully.
+
+Share name        C$
+Remote path       C:\
+Remark            Default share
+Path              C:\
+
+Share name        IPC$
+Remote path       IPC
+Remark            Remote IPC
+Path              
+
+Share name        Finance$
+Remote path       C:\Shares\Finance
+Remark            
+Path              C:\Shares\Finance
+
+Share name        ADMIN$
+Remote path       C:\Windows
+Remark            Remote Admin
+Path              C:\Windows
+
+The command completed successfully.
+```
+
+!!! warning "Common errors"
+    **`System error 5 has occurred. Access is denied.`** — Run the command prompt as Administrator.
+    **`System error 67 has occurred. The network name cannot be found.`** — Verify the path C:\Shares\Finance exists and is accessible before creating the share.
+    **`The syntax of this command is not correct.`** — Ensure the domain\username format is correct and use commas without spaces in the /GRANT parameter (e.g., `DOMAIN\Finance_Users,CHANGE`).
 ## Combining NTFS and Share Permissions
 
 Effective access for a network user equals the intersection (most restrictive) of share and NTFS permissions.

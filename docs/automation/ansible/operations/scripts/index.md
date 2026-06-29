@@ -194,6 +194,50 @@ ansible-playbook rolling-update.yml -i inventory/hosts.yml \
   -e "app_package=myapp app_version=2.3.1 lb_api_url=http://lb.example.com/api lb_token=YOUR_TOKEN"
 ```
 
+
+```text title="Expected output"
+PLAY [web_servers] *************************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [web-prod-01.example.com]
+ok: [web-prod-02.example.com]
+ok: [web-prod-03.example.com]
+
+TASK [Check current app version] ***********************************************
+ok: [web-prod-01.example.com] => {"version": "2.2.5"}
+ok: [web-prod-02.example.com] => {"version": "2.2.5"}
+ok: [web-prod-03.example.com] => {"version": "2.2.5"}
+
+TASK [Drain connections from load balancer] ************************************
+ok: [web-prod-01.example.com]
+ok: [web-prod-02.example.com]
+ok: [web-prod-03.example.com]
+
+TASK [Install myapp version 2.3.1] *********************************************
+changed: [web-prod-01.example.com]
+changed: [web-prod-02.example.com]
+changed: [web-prod-03.example.com]
+
+TASK [Verify service health] ***************************************************
+ok: [web-prod-01.example.com]
+ok: [web-prod-02.example.com]
+ok: [web-prod-03.example.com]
+
+TASK [Re-enable in load balancer] **********************************************
+ok: [web-prod-01.example.com]
+ok: [web-prod-02.example.com]
+ok: [web-prod-03.example.com]
+
+PLAY RECAP *********************************************************************
+web-prod-01.example.com : ok=6 changed=1 unreachable=0 failed=0
+web-prod-02.example.com : ok=6 changed=1 unreachable=0 failed=0
+web-prod-03.example.com : ok=6 changed=1 unreachable=0 failed=0
+```
+
+!!! warning "Common errors"
+    **`fatal: [web-prod-02.example.com]: FAILED! => {"msg": "The conditional check 'lb_token is defined' failed because one of the variables is undefined: lb_token"}`** — Replace `YOUR_TOKEN` with an actual token value or pass it via `-e "lb_token=<actual_token>"`.
+    **`[WARNING]: Unable to parse inventory/hosts.yml as an inventory source`** — Verify the inventory file path is correct relative to the current directory and the YAML syntax is valid.
+    **`fatal: [web-prod-01.example.com]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}`** — Ensure SSH keys are configured correctly and the ansible user has passwordless SSH access to all target hosts.
 **What you should see**
 
 Ansible processes one server at a time. For each server you see: drain request, wait for connections to drop, service stop, package update, service start, health check (retries until 200 OK), then re-add to LB. If any step fails the playbook stops completely — no other servers are touched.
@@ -361,6 +405,38 @@ cd ~
 ansible-playbook inventory-validate.yml -i inventory/hosts.yml
 ```
 
+
+```text title="Expected output"
+PLAY [Validating Ansible Inventory] ****************************
+
+TASK [Gathering Facts] *****************************************
+ok: [web-prod-01.internal]
+ok: [web-prod-02.internal]
+ok: [db-primary.internal]
+ok: [db-replica.internal]
+
+TASK [Check inventory syntax] **********************************
+ok: [web-prod-01.internal] => {
+    "msg": "Inventory validation passed"
+}
+
+TASK [Validate host connectivity] ******************************
+ok: [web-prod-01.internal]
+ok: [web-prod-02.internal]
+ok: [db-primary.internal]
+ok: [db-replica.internal]
+
+PLAY RECAP *****************************************************
+web-prod-01.internal       : ok=3    changed=0    unreachable=0    failed=0
+web-prod-02.internal       : ok=3    changed=0    unreachable=0    failed=0
+db-primary.internal        : ok=3    changed=0    unreachable=0    failed=0
+db-replica.internal        : ok=3    changed=0    unreachable=0    failed=0
+```
+
+!!! warning "Common errors"
+    **`[Errno 2] No such file or directory: 'inventory/hosts.yml'`** — Verify the inventory file path is correct relative to your current working directory or use an absolute path with `-i`.
+    **`ERROR! Syntax Error while loading YAML from 'inventory-validate.yml'`** — Check the playbook YAML syntax for indentation errors or invalid key-value pairs using `ansible-playbook --syntax-check inventory-validate.yml`.
+    **`fatal: [web-prod-01.internal]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh"}`** — Ensure SSH keys are configured correctly and the target hosts are reachable; verify with `ssh -v <hostname>` first.
 **What you should see**
 
 For each host in your inventory, a table is printed showing PASS or FAIL for each check: SSH, Python, sudo, required packages, hostname, NTP, and DNS. At the end, a list of non-compliant hosts is shown. The playbook fails (exits non-zero) if any hosts fail the SSH check.
@@ -456,6 +532,33 @@ else
 fi
 ```
 
+
+```text title="Expected output"
+[2024-01-15 14:32:18] === Database Secret Rotation ===
+[2024-01-15 14:32:18] Vars file : vars/db_secrets.yml
+[2024-01-15 14:32:18] Playbook  : playbooks/push-db-secret.yml
+[2024-01-15 14:32:18] Step 1: Backing up current vars file to /tmp/db_secrets_backup_20240115143218.yml...
+[2024-01-15 14:32:18] Step 2: Generating new database password...
+[2024-01-15 14:32:18] New password generated (not logged).
+[2024-01-15 14:32:18] Step 3: Encrypting new password with Ansible Vault...
+[2024-01-15 14:32:19] Vars file updated.
+[2024-01-15 14:32:19] Vars file updated with new encrypted password.
+[2024-01-15 14:32:19] Step 4: Running Ansible playbook to push new password...
+[2024-01-15 14:32:22] PLAY [all] *********************************************************************
+[2024-01-15 14:32:23] TASK [Update database password on primary] *************************************
+[2024-01-15 14:32:25] changed: [db-primary-01.prod.local]
+[2024-01-15 14:32:26] changed: [db-replica-01.prod.local]
+[2024-01-15 14:32:27] PLAY RECAP *********************************************************************
+[2024-01-15 14:32:27] db-primary-01.prod.local : ok=1 changed=1 unreachable=0 failed=0
+[2024-01-15 14:32:27] db-replica-01.prod.local : ok=1 changed=1 unreachable=0 failed=0
+[2024-01-15 14:32:27] Playbook succeeded. Secret rotation complete.
+[2024-01-15 14:32:27] Backup of old vars: /tmp/db_secrets_backup_20240115143218.yml
+```
+
+!!! warning "Common errors"
+    **`VAULT_PASSWORD_FILE is required`** — Set the environment variable before running: `export VAULT_PASSWORD_FILE=/path/to/vault/password`
+    **`No such file or directory: vars/db_secrets.yml`** — Verify the DB_VARS_FILE path exists or set it explicitly: `DB_VARS_FILE=path/to/file ./rotate-db-secret.sh`
+    **`ERROR! the playbook: playbooks/push-db-secret.yml could not be found`** — Confirm the PLAYBOOK path is correct and relative to your working directory, or set it explicitly: `PLAYBOOK=correct/path.yml ./rotate-db-secret.sh`
 ### How to run this script — step by step
 
 **Before you start — what you need**
@@ -494,6 +597,28 @@ export PLAYBOOK=playbooks/push-db-secret.yml
 bash rotate-db-secret.sh
 ```
 
+
+```text title="Expected output"
+Vault password file found at /path/to/vault-password.txt
+Loading database variables from vars/db_secrets.yml
+Executing playbook: playbooks/push-db-secret.yml
+PLAY [all] *********************************************************************
+TASK [Gathering Facts] *********************************************************
+ok: [db-prod-01.internal]
+ok: [db-prod-02.internal]
+TASK [Rotate database credentials] *********************************************
+changed: [db-prod-01.internal]
+changed: [db-prod-02.internal]
+PLAY RECAP *********************************************************************
+db-prod-01.internal        : ok=2    changed=1    unreachable=0    failed=0
+db-prod-02.internal        : ok=2    changed=1    unreachable=0    failed=0
+Secret rotation completed successfully at 2024-01-15T09:42:17Z
+```
+
+!!! warning "Common errors"
+    **`No such file or directory`** — Verify the vault password file path exists and is readable with `ls -l /path/to/vault-password.txt`.
+    **`vars/db_secrets.yml: No such file or directory`** — Ensure you are running the script from the correct working directory (typically the Ansible project root) where the vars/ subdirectory exists.
+    **`ERROR! Decryption failed`** — Check that the vault password file contains the correct decryption key and matches the vault ID used to encrypt the secrets file.
 **What you should see**
 
 Step-by-step log messages showing: backup created, new password generated, password encrypted with Ansible Vault, vars file updated, playbook running. If the playbook succeeds you see a success message. If the playbook fails, the old vars file is automatically restored from backup and the script exits with an error so you can investigate.
@@ -629,6 +754,23 @@ echo ""; echo "Daily check: $FAIL failure(s)"
 [[ $FAIL -gt 0 ]] && exit 2 || exit 0
 ```
 
+
+```text title="Expected output"
+=== Ansible Daily Check — Wed Jan 15 09:42:17 UTC 2025 ===
+[OK] Ansible installed
+[OK] Inventory valid
+Pinging inventory hosts...
+  Reachable: 12  |  Unreachable: 2
+[FAIL] 2 host(s) unreachable
+[WARN] 3 FAILED task(s) in recent log
+
+Daily check: 1 failure(s)
+```
+
+!!! warning "Common errors"
+    **`[FAIL] Inventory valid`** — Verify the inventory file path in `INVENTORY_FILE` environment variable or `/etc/ansible/hosts` exists and has correct syntax.
+    **`ansible: command not found`** — Install Ansible with `pip install ansible` or `apt-get install ansible` depending on your package manager.
+    **`Permission denied: '/var/log/ansible.log'`** — Ensure the script runs with sufficient privileges or adjust `ANSIBLE_LOG_PATH` to a readable log location.
 ---
 
 ## Incident Triage Script
@@ -682,6 +824,60 @@ echo ""
 echo "Triage output saved to: $OUTFILE"
 ```
 
+
+```text title="Expected output"
+=== Ansible Incident Triage — Thu Jan 16 14:32:45 UTC 2025 ===
+
+--- Ansible Version ---
+ansible [core 2.15.3]
+  config file = /etc/ansible/ansible.cfg
+  configured module search path = ['/root/.ansible/plugins/modules']
+  ansible python module location = /usr/lib/python3.11/site-packages/ansible
+  executable location = /usr/bin/ansible
+  python version = 3.11.7 (main, Dec 19 2024, 20:14:01) [GCC 11.4.0]
+
+--- Inventory Host List ---
+{
+  "all": {
+    "hosts": ["web-prod-01", "web-prod-02", "db-primary", "db-replica", "cache-01"],
+    "vars": {}
+  }
+}
+
+--- Last 100 Lines of Ansible Log (/var/log/ansible.log) ---
+2025-01-16 14:28:12,456 p=18742 u=ansible | TASK [common : Install base packages] ***
+2025-01-16 14:28:45,123 p=18742 u=ansible | FAILED - RETRYING: Wait for port 5432 (attempt 2 of 3)
+2025-01-16 14:29:03,891 p=18742 u=ansible | ok: [db-primary] => (item=postgresql-client)
+2025-01-16 14:29:15,234 p=18742 u=ansible | PLAY RECAP *****
+2025-01-16 14:29:15,234 p=18742 u=ansible | db-primary : ok=24 changed=3 unreachable=0 failed=0
+
+--- Host Connectivity (ansible ping) ---
+web-prod-01 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"}, "changed": false, "ping": "pong"}
+web-prod-02 | SUCCESS => {"ansible_facts": {"discovered_interpreter_python": "/usr/bin/python3"}, "changed": false, "ping": "pong"}
+db-primary | SUCCESS => {"ping": "pong"}
+db-replica | UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: ssh: connect to host db-replica (10.42.8.15) port 22: Connection timed out", "unreachable": true}
+cache-01 | SUCCESS => {"ping": "pong"}
+
+--- Playbooks in $PLAYBOOK_DIR (/etc/ansible/playbooks) ---
+/etc/ansible/playbooks/deploy-app.yml
+/etc/ansible/playbooks/maintenance/backup.yaml
+/etc/ansible/playbooks/maintenance/patch-os.yml
+/etc/ansible/playbooks/site.yml
+
+--- Installed Collections ---
+Collection        Version
+ansible.posix     1.5.4
+community.general 7.2.1
+community.postgresql 3.1.0
+
+--- Installed Roles ---
+geerlingguy.java 3.2.0
+geerlingguy.postgresql 5.1.0
+
+=== Triage complete ===
+
+Triage output saved to: /tmp/ansible_triage_20250116_143245
+```
 ---
 
 ## Change Pre-Check Script
@@ -751,6 +947,52 @@ echo "Pre-check complete: $FAIL failure(s)"
 [[ $FAIL -gt 0 ]] && exit 2 || exit 0
 ```
 
+
+```text title="Expected output"
+=== Ansible Change Pre-Check — Wed Jan 15 14:32:47 UTC 2025 ===
+Playbook : /opt/ansible/playbooks/deploy-webservers.yml
+Inventory: /etc/ansible/hosts
+
+--- Syntax Check ---
+[OK]   Syntax check passed
+
+--- Host Connectivity ---
+[OK]   All hosts reachable
+
+--- Required Collections ---
+[OK]   Collection installed: ansible.builtin
+[OK]   Collection installed: community.general
+
+--- Vault Password ---
+[OK]   No vault usage detected in playbook
+
+--- Dry-Run (--check mode) ---
+PLAY [Deploy Web Servers] *****************************************************
+
+TASK [Gather Facts] ***********************************************************
+ok: [web-prod-01.internal]
+ok: [web-prod-02.internal]
+ok: [web-prod-03.internal]
+
+TASK [Install nginx] **********************************************************
+changed: [web-prod-01.internal]
+changed: [web-prod-02.internal]
+changed: [web-prod-03.internal]
+
+PLAY RECAP ********************************************************************
+web-prod-01.internal       : ok=2    changed=1    unreachable=0    failed=0
+web-prod-02.internal       : ok=2    changed=1    unreachable=0    failed=0
+web-prod-03.internal       : ok=2    changed=1    unreachable=0    failed=0
+
+[OK]   Dry-run completed without errors
+
+Pre-check complete: 0 failure(s)
+```
+
+!!! warning "Common errors"
+    **`ERROR! the playbook: /opt/ansible/playbooks/deploy-webservers.yml could not be found`** — Verify the PLAYBOOK variable is set to an absolute path and the file exists.
+    **`fatal: [web-prod-02.internal]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Connection refused"}`** — Ensure SSH is running on the target host, firewall rules allow port 22, and the ansible user has valid credentials configured.
+    **`[FAIL] Collection missing: community.general (run: ansible-galaxy collection install community.general)`** — Run `ansible-galaxy collection install community.general` on the control node before executing the playbook.
 ---
 
 ## Post-Change Validation Script
@@ -812,6 +1054,41 @@ echo "Post-change validation: $PASS PASS  |  $FAIL FAIL"
 [[ $FAIL -gt 0 ]] && exit 2 || exit 0
 ```
 
+
+```text title="Expected output"
+=== Ansible Post-Change Validation — Wed Jan 15 14:32:18 UTC 2025 ===
+
+--- File Exists: /etc/ansible/ansible.cfg ---
+web-01.prod | SUCCESS => {"stat": {"exists": true, "isdir": false, "size": 2847}}
+web-02.prod | SUCCESS => {"stat": {"exists": true, "isdir": false, "size": 2847}}
+db-01.prod | SUCCESS => {"stat": {"exists": true, "isdir": false, "size": 2847}}
+[PASS] Config file /etc/ansible/ansible.cfg exists on all hosts
+
+--- Service Running: sshd ---
+web-01.prod | SUCCESS => {"changed": false, "status": {"ActiveState": "active"}}
+web-02.prod | SUCCESS => {"changed": false, "status": {"ActiveState": "active"}}
+db-01.prod | SUCCESS => {"changed": false, "status": {"ActiveState": "active"}}
+[PASS] sshd running on all hosts
+
+--- Python3 Available ---
+web-01.prod | SUCCESS | rc=0 >> Python 3.9.18
+web-02.prod | SUCCESS | rc=0 >> Python 3.9.18
+db-01.prod | SUCCESS | rc=0 >> Python 3.9.18
+[PASS] python3 available on all hosts
+
+--- No Failed Systemd Services ---
+web-01.prod | SUCCESS | rc=0 >>
+web-02.prod | SUCCESS | rc=0 >>
+db-01.prod | SUCCESS | rc=0 >>
+[PASS] No failed systemd units (0 host(s) reported failures)
+
+Post-change validation: 4 PASS  |  0 FAIL
+```
+
+!!! warning "Common errors"
+    **`[Errno 2] No such file or directory: '/etc/ansible/hosts'`** — Set the INVENTORY_FILE environment variable or verify the inventory path exists with `ls -la /etc/ansible/hosts`.
+    **`fatal: [web-01.prod]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}`** — Ensure SSH keys are properly configured and the ansible_user has passwordless SSH access to all inventory hosts.
+    **`ERROR! Unexpected Exception: No inventory was parsed`** — Verify the inventory file format is valid YAML/INI and contains at least one host or group definition.
 ---
 
 ## Health Check Script
@@ -867,6 +1144,20 @@ esac
 exit $STATUS
 ```
 
+
+```text title="Expected output"
+=== Ansible Health Check — 2024-01-15 14:32:47 ===
+Ansible version : ansible 2.10.7
+Hosts reachable : 12  |  unreachable: 0
+Collections installed: 8
+Log errors (24h): 2
+Status: WARNING
+```
+
+!!! warning "Common errors"
+    **`ansible: command not found`** — Install Ansible via `pip install ansible` or your system package manager.
+    **`[Errno 2] No such file or directory: '/etc/ansible/hosts'`** — Set the `INVENTORY_FILE` environment variable or create the default inventory file at `/etc/ansible/hosts`.
+    **`awk: fatal: cannot open file /var/log/ansible.log for reading (No such file or directory)`** — Create the log directory with `mkdir -p /var/log && touch /var/log/ansible.log` or set `ANSIBLE_LOG_PATH` to an existing file.
 ---
 
 ## Verify

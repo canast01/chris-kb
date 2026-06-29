@@ -58,6 +58,41 @@ chronyc sources -v | grep "^*"        # confirm preferred source
 ntpdate -q ntp.example.com
 ```
 
+
+```text title="Expected output"
+VLAN ID 2048 Status: active
+  Name: PROD-APP-TIER
+  Ports: Gi0/1, Gi0/2, Gi0/3, Gi0/48
+  Type: enet
+
+Name                           Num Portgroups Used Ports Configured Ports
+vDS-Prod                       47  128              256
+
+IP IN USE
+Nmap scan report for 10.42.15.87
+Host is up (0.0032s latency).
+
+10.42.15.87 (prod-app-01.example.com) is up
+
+;; ANSWER SECTION:
+prod-app-01.example.com. 300 IN A 10.42.15.87
+
+prod-app-01.example.com. 300 IN A 10.42.15.87
+
+Connection to 10.42.15.87 port 443 [tcp/https] succeeded!
+HTTP/1.1 200 OK
+Server: nginx/1.24.0
+Content-Length: 4521
+
+     Remote refid      St t When Poll Reach   Delay   Offset   Jitter
+^*    ntp.example.com  .POOL. 16 p    -   64    0    0.000    0.000    0.000
+     ntpdate[12847]: adjust time server 10.20.5.10 offset 0.002345 sec
+```
+
+!!! warning "Common errors"
+    **`VLAN <vlan_id> does not exist`** — Verify the VLAN ID is correct and exists on the target switch using `show vlan brief`.
+    **`nslookup: can't resolve '<planned-hostname>.example.com': No address associated with hostname`** — Create the DNS A record in your DNS management system before proceeding with environment readiness.
+    **`Connection refused`** — Confirm the firewall rule exists in your security policy and the destination service is listening on the specified port using `netstat -tlnp` on the target host.
 | Network Check | Status |
 |---|---|
 | VLAN provisioned | ☐ |
@@ -89,6 +124,29 @@ oscap xccdf eval \
   /usr/share/xml/scap/ssg/content/ssg-rhel9-ds.xml
 ```
 
+
+```text title="Expected output"
+PermitRootLogin no
+PasswordAuthentication no
+MaxAuthTries 3
+Protocol 2
+Enforcing
+   profiles in enforce mode.
+       /etc/apparmor.d/usr.sbin.rsyslogd
+       /etc/apparmor.d/usr.lib.snapd.snap-confine.classic
+       /etc/apparmor.d/usr.sbin.cupsd
+Benchmarks:
+  xccdf_org.ssgproject.content_profile_cis_server_l1: 142/156 rules passed
+Rule xccdf_org.ssgproject.content_rule_service_auditd_enabled: pass
+Rule xccdf_org.ssgproject.content_rule_kernel_module_dccp_disabled: fail
+Rule xccdf_org.ssgproject.content_rule_file_permissions_etc_shadow: pass
+Results written to /tmp/oscap-results.xml
+```
+
+!!! warning "Common errors"
+    **`command not found: oscap`** — Install openscap-scanner package with `sudo yum install openscap-scanner` or `sudo apt install libopenscap8`.
+    **`No such file or directory: /usr/share/xml/scap/ssg/content/ssg-rhel9-ds.xml`** — Install scap-security-guide package with `sudo yum install scap-security-guide` to populate SCAP content files.
+    **`aa-status: command not found`** — Install apparmor-utils with `sudo apt install apparmor-utils` on Debian/Ubuntu systems, or use `getenforce` alone on SELinux-only systems.
 | Security Check | Status |
 |---|---|
 | PAM / CyberArk account created | ☐ |
@@ -116,6 +174,20 @@ Get-Service "Prometheus Windows Exporter" | Select-Object Status
 Get-Service "Zabbix Agent" | Select-Object Status
 ```
 
+
+```text title="Expected output"
+active
+node_uname_info{domainname="corp.local",machine="x86_64",nodename="app-srv-prod-01",release="5.10.0-28-generic",sysname="Linux",version="#1 SMP Debian 5.10.209-2 (2024-01-31)"} 1.0
+[{'metric': {'__name__': 'up', 'instance': 'app-srv-prod-01:9100', 'job': 'node'}, 'value': [1707312845.123, '1']}]
+Status
+------
+Running
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to localhost port 9100: Connection refused`** — Verify node_exporter is installed and running with `systemctl start node_exporter && systemctl enable node_exporter`.
+    **`'data' KeyError`** — Confirm the Prometheus instance is accessible and the target host has been scraped at least once by checking `http://prometheus:9090/targets` in the UI.
+    **`Get-Service : Cannot find any service with service name 'Prometheus Windows Exporter'`** — Install the Windows exporter MSI or verify the exact service name with `Get-Service | findstr -i prometheus`.
 | Monitoring Check | Status |
 |---|---|
 | Monitoring agent installed and running | ☐ |
@@ -139,6 +211,29 @@ Start-VBRJob -Job "Production VMs"
 Get-VBRSession | Where-Object JobName -like "*Production VMs*" | Select-Object -Last 1
 ```
 
+
+```text title="Expected output"
+Name                           Type            TargetRepository
+----                           ----            ----------------
+HOSTNAME-Daily-Backup          Backup          RepoA-LUN02
+HOSTNAME-Weekly-Full           Backup          RepoB-LUN03
+
+Client Name                    OS              Status
+-----------                    --              ------
+HOSTNAME                       Windows 2019    Active
+
+Backup job started successfully.
+JobId                 : 00000000-1111-2222-3333-444444444444
+JobName               : Production VMs
+State                 : Working
+Progress              : 45%
+StartTime             : 2024-01-15 14:32:18
+```
+
+!!! warning "Common errors"
+    **`Get-VBRJob : The term 'Get-VBRJob' is not recognized`** — Import the Veeam PowerShell snapin with `Add-PSSnapin VeeamPSSnapin` before running the command.
+    **`qlist: command not found`** — Ensure the Commvault client is installed and the `qlogin` command has been executed to authenticate the session.
+    **`Get-VBRSession : No matching jobs found for filter`** — Verify the job name matches exactly (case-sensitive) and wait 10-15 seconds after `Start-VBRJob` for the session to appear in the list.
 | Backup Check | Status |
 |---|---|
 | Backup job includes new system | ☐ |

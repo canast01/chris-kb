@@ -46,6 +46,10 @@ auth -> or_via_api: grants
 or_via_api -> resources: access
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems
@@ -100,6 +104,15 @@ curl -u admin:password -X PUT \
   "https://confluence.example.local/rest/api/user-directory/1/sync" \
   -H "Content-Type: application/json"
 ```
+
+```text title="Expected output"
+{"status":"SYNC_IN_PROGRESS","directory_id":1,"sync_started_at":"2024-01-15T09:42:33.521Z","estimated_completion":"2024-01-15T09:47:33.521Z","users_processed":0,"groups_processed":0}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification, or configure proper certificates on confluence.example.local.
+    **`{"errorMessages":["User is not authenticated"],"statusCode":401}`** — Verify admin credentials are correct and base64-encoded properly; use `curl -u admin:password` with actual credentials or `-H "Authorization: Basic $(echo -n 'admin:password' | base64)"`.
+    **`{"errorMessages":["Directory with id 1 not found"],"statusCode":404}`** — Check the correct directory ID by querying `GET /rest/api/user-directory` first to list all configured directories.
 ```bash
 ## List System Administrators
 curl -u admin:password \
@@ -111,6 +124,23 @@ curl -u admin:password \
   "https://confluence.example.local/rest/api/group/confluence-space-creators/member?limit=200" \
   | python3 -m json.tool | grep "username"
 ```
+
+```text title="Expected output"
+"username": "admin",
+"username": "jsmith",
+"username": "kchen",
+"username": "mrodriguez",
+"username": "admin",
+"username": "jsmith",
+"username": "kchen",
+"username": "agarcia",
+"username": "bwilson",
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl to skip SSL verification, or import the self-signed certificate into your system's CA bundle.
+    **`jq: command not found`** — Install `jq` package (`apt-get install jq` or `yum install jq`) and pipe to `jq '.members[].username'` instead of using `python3 -m json.tool | grep`.
+    **`401 Unauthorized`** — Verify the admin credentials are correct and the user has API access enabled in Confluence user permissions.
 ```bash
 ## Confluence audit log records permission changes, space creation, and admin actions
 ## Administration > Audit Log > Filter by category: Permissions
@@ -125,6 +155,47 @@ grep -i "403\|permission denied\|access denied" \
   /var/atlassian/application-data/confluence/logs/atlassian-confluence.log | tail -20
 ```
 
+
+```text title="Expected output"
+{
+  "results": [
+    {
+      "timestamp": 1699564821000,
+      "summary": "User permission changed",
+      "category": "Permissions",
+      "affectedObject": {
+        "name": "Engineering Docs",
+        "objectType": "Space"
+      },
+      "changedValues": {
+        "permission": "View",
+        "user": "jsmith@example.com",
+        "granted": true
+      }
+    },
+    {
+      "timestamp": 1699551403000,
+      "summary": "Space created",
+      "category": "Permissions",
+      "author": "admin",
+      "affectedObject": {
+        "name": "Q4-Planning",
+        "objectType": "Space"
+      }
+    }
+  ],
+  "limit": 100,
+  "start": 0
+}
+2024-11-10 14:32:15,423 ERROR [http-nio-8090-exec-12] [confluence.security.PermissionManager] 403 Permission denied: User 'dchen' lacks VIEW permission on space 'RESTRICTED'
+2024-11-10 14:28:42,891 WARN [http-nio-8090-exec-8] [confluence.auth.AccessDenied] Access denied for user 'guest' attempting to edit page 'Security-Policy'
+2024-11-10 14:15:09,556 ERROR [http-nio-8090-exec-3] [confluence.security.SpacePermission] 403 Permission denied: Anonymous access blocked for space 'INTERNAL'
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl or import the self-signed certificate into your system's CA bundle.
+    **`jq: parse error: Invalid JSON at line 1`** — Verify the Confluence REST API endpoint is accessible and the credentials are correct; check that `python3 -m json.tool` receives valid JSON from curl.
+    **`grep: /var/atlassian/application-data/confluence/logs/atlassian-confluence.log: No such file or directory`** — Confirm the Confluence logs directory path matches your installation (may be `/opt/atlassian/confluence/logs/` or check `$CONFLUENCE_HOME`).
 ---
 
 ## See also

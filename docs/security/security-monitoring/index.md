@@ -70,6 +70,33 @@ grep "sudo:" /var/log/auth.log | grep -v "pam_unix" | tail -30
 auditctl -l
 ```
 
+
+```text title="Expected output"
+5 192.168.1.45
+      3 203.0.113.22
+      2 10.0.2.18
+      2 198.51.100.9
+      1 172.16.0.55
+      1 203.0.113.88
+      1 192.168.50.12
+
+Nov 15 14:32:18 prod-db01 sshd[8924]: session opened for user root by (uid=0)
+Nov 15 13:47:02 prod-db01 sshd[7651]: session opened for user root by (uid=0)
+Nov 15 12:15:44 prod-db01 sshd[6289]: session opened for user root by (uid=0)
+
+Nov 15 09:22:15 prod-db01 useradd[4521]: new user: name=appuser, UID=1001, GID=1001, home=/home/appuser, shell=/bin/bash
+Nov 15 08:45:33 prod-db01 useradd[4398]: new user: name=svcacct, UID=1002, GID=1002, home=/home/svcacct, shell=/bin/false
+
+Nov 15 14:28:09 prod-db01 sudo: admin on pts/2 ; USER=root ; COMMAND=/usr/bin/systemctl restart nginx
+Nov 15 14:15:44 prod-db01 sudo: deploy on pts/5 ; USER=root ; COMMAND=/bin/bash
+Nov 15 13:52:17 prod-db01 sudo: admin on pts/2 ; USER=root ; COMMAND=/usr/bin/apt update
+
+No rules
+```
+
+!!! warning "Common errors"
+    **`grep: /var/log/auth.log: No such file or directory`** — Check the correct log path with `ls -la /var/log/` and adjust for your system (may be `/var/log/secure` on RHEL or in journalctl on systemd systems).
+    **`No rules`** — Install and enable auditd with `sudo systemctl enable auditd && sudo systemctl start auditd`, then load rules from `/etc/audit/rules.d/`.
 ## Correlation Rules (SIEM Examples)
 
 **Brute force detection:**
@@ -80,6 +107,18 @@ index=security EventCode=4625
 | where count > 10
 ```
 
+
+```text title="Expected output"
+src_ip          user              count
+192.168.1.45    administrator     14
+10.0.2.89       jsmith            12
+172.16.50.201   guest             11
+203.0.113.78    root              15
+```
+
+!!! warning "Common errors"
+    **`Error in 'where' command: Unknown field 'count'`** — Ensure the stats command completes successfully and verify field names match exactly in the where clause.
+    **`index=security: Unknown index 'security'`** — Confirm the index name exists in your Splunk instance; use `| rest /services/data/indexes` to list available indexes.
 **Lateral movement — new admin account:**
 ```bash
 # Account created then added to privileged group within 60 minutes
@@ -88,6 +127,21 @@ index=security (EventCode=4720 OR EventCode=4728)
 | where eventcount > 1
 ```
 
+
+```text title="Expected output"
+index=security (EventCode=4720 OR EventCode=4728)
+| transaction user maxspan=60m
+| where eventcount > 1
+
+user=Administrator eventcount=2 duration=45m earliest=2024-01-15T09:23:14 latest=2024-01-15T10:08:47
+user=svc_deploy eventcount=2 duration=18m earliest=2024-01-15T11:42:31 latest=2024-01-15T12:00:49
+user=jsmith eventcount=2 duration=52m earliest=2024-01-15T14:15:22 latest=2024-01-15T15:07:14
+user=automation_acct eventcount=2 duration=31m earliest=2024-01-15T16:33:05 latest=2024-01-15T17:04:18
+```
+
+!!! warning "Common errors"
+    **`Error in 'where' command: The expression is malformed. An unexpected character has occurred.`** — Verify the Splunk version supports the `where` command syntax; use `stats count as eventcount` with `by user` instead if on older versions.
+    **`No results found`** — Confirm the index name is correct and contains Windows Security event logs (EventCode 4720 and 4728); check index permissions with `| rest /services/data/indexes`.
 **Off-hours privileged access:**
 ```text
 index=security EventCode=4648

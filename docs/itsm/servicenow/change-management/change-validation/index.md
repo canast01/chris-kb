@@ -21,6 +21,34 @@ journalctl -u <service-name> --since "10 minutes ago" | grep -i error
 curl -sf http://localhost:<port>/health && echo "OK"
 ```
 
+
+```text title="Expected output"
+● nginx.service - The NGINX HTTP and reverse proxy server
+     Loaded: loaded (/usr/lib/systemd/system/nginx.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2024-01-15 14:32:18 UTC; 2h 45min ago
+   Main PID: 8742 (nginx)
+     CGroup: /system.slice/nginx.service
+             ├─8742 nginx: master process /usr/sbin/nginx -g daemon off;
+             └─8751 nginx: worker process
+
+8742 /usr/sbin/nginx -g daemon off;
+
+LISTEN    0.0.0.0:80                 0.0.0.0:*                users:(("nginx",pid=8751,fd=6))
+LISTEN    [::]:80                    [::]:*                   users:(("nginx",pid=8751,fd=7))
+
+Jan 15 14:35:42 prod-web-01 nginx[8751]: 2024/01/15 14:35:42 [error] 8751#8751: *1024 connect() failed (111: Connection refused)
+Jan 15 14:36:15 prod-web-01 nginx[8751]: 2024/01/15 14:36:15 [error] 8751#8751: *1025 upstream timed out (110: Connection timed out)
+
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100    15  100    15    0     0   1523      0 --:--:-- --:--:--:-- --:--:--
+OK
+```
+
+!!! warning "Common errors"
+    **`systemctl status <service-name>: Unit <service-name>.service could not be found.`** — Replace `<service-name>` with the actual service name (e.g., `nginx`, `postgresql`, `apache2`).
+    **`curl: (7) Failed to connect to localhost port <port>: Connection refused`** — Verify the service is running with `systemctl status` and confirm the correct port number is specified.
+    **`grep: (standard input): No such file or device`** — Ensure the service name in `journalctl -u <service-name>` matches an active systemd unit; check available units with `systemctl list-units --type=service`.
 ```bash
 # Check no active alerts after change
 # In Prometheus / Alertmanager:

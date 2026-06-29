@@ -111,6 +111,52 @@ az security jit-policy create \
   }]'
 ```
 
+
+```text title="Expected output"
+Name                                          ResourceId                                                                                                                    DisplayName                                    State
+----------------------------------------------  ----------------------------------------------------------------------------------------------------------------------------------  ------------------------------------------  ---------
+4fb6c0a0-1fb0-45fd-b4af-38e8b9e1b88a          /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachines/web-vm-01  Enable just-in-time VM access                 Healthy
+550e8400-e29b-41d4-a716-446655440000          /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/prod-rg/providers/Microsoft.Sql/servers/db-server-prod      Enable Transparent Data Encryption on SQL DB  Unhealthy
+6ba7b810-9dad-11d1-80b4-00c04fd430c8          /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/prod-rg/providers/Microsoft.Storage/storageAccounts/logs2024  Require secure transfer for storage account    Unhealthy
+...
+
+Assessment Name: 4fb6c0a0-1fb0-45fd-b4af-38e8b9e1b88a
+Display Name: Enable just-in-time VM access
+Resource Id: /subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachines/web-vm-01
+Status: Healthy
+Description: Just-in-time VM access reduces exposure to attacks by limiting access to VMs
+
+{
+  "id": "/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/prod-rg/providers/Microsoft.Security/jitNetworkAccessPolicies/default",
+  "name": "default",
+  "type": "Microsoft.Security/jitNetworkAccessPolicies",
+  "location": "eastus",
+  "kind": "Basic",
+  "virtualMachines": [
+    {
+      "id": "/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachines/web-vm-01",
+      "ports": [
+        {
+          "number": 22,
+          "protocol": "TCP",
+          "allowedSourceAddressPrefix": "*",
+          "maxRequestAccessDuration": "PT3H"
+        },
+        {
+          "number": 3389,
+          "protocol": "TCP",
+          "allowedSourceAddressPrefix": "*",
+          "maxRequestAccessDuration": "PT3H"
+        }
+      ]
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`ResourceNotFound : The resource '/subscriptions/<sub-id>/resourceGroups/<rg>/providers/Microsoft.Compute/virtualMachines/<vm-name>' could not be found.`** — Verify the subscription ID, resource group name, and VM name are correct and exist in your current Azure context.
+    **`InvalidParameter : The value of parameter 'virtual-machines' is invalid.`** — Ensure the
 ## Exemptions
 
 Mark a resource as exempt when a recommendation doesn't apply (e.g., a VM has a third-party endpoint agent that satisfies the requirement).
@@ -124,6 +170,29 @@ az security assessment create \
   --status-description "Third-party EDR solution in use"
 ```
 
+
+```text title="Expected output"
+{
+  "id": "/subscriptions/a1b2c3d4-e5f6-4g7h-8i9j-0k1l2m3n4o5p/resourceGroups/prod-rg/providers/Microsoft.Security/assessments/assessment-edr-001",
+  "name": "assessment-edr-001",
+  "properties": {
+    "displayName": "assessment-edr-001",
+    "resourceDetails": {
+      "id": "/subscriptions/a1b2c3d4-e5f6-4g7h-8i9j-0k1l2m3n4o5p/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachines/web-vm-01"
+    },
+    "statusCode": "NotApplicable",
+    "statusCause": "Exempt",
+    "statusDescription": "Third-party EDR solution in use",
+    "timeGenerated": "2024-01-15T14:32:18.5432109Z"
+  },
+  "type": "Microsoft.Security/assessments"
+}
+```
+
+!!! warning "Common errors"
+    **`The provided resource ID is invalid or the resource does not exist.`** — Verify the subscription ID, resource group name, and VM name are correct and the VM exists in that resource group.
+    **`The user does not have permission to perform action 'Microsoft.Security/assessments/write' on resource.`** — Ensure your Azure account has the Security Admin or Contributor role assigned at the subscription or resource group scope.
+    **`Invalid value 'NotApplicable' for status-code. Allowed values are: Healthy, Unhealthy, NotApplicable.`** — Use one of the three valid status codes: Healthy, Unhealthy, or NotApplicable (check exact casing).
 ## Regulatory Compliance
 
 Defender for Cloud maps recommendations to compliance standards (CIS, NIST SP 800-53, ISO 27001, PCI DSS).

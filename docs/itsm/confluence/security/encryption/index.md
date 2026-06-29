@@ -89,6 +89,14 @@ jdbc:postgresql://dbserver.example.local:5432/confluence?ssl=true&sslmode=requir
 ## For MySQL:
 jdbc:mysql://dbserver.example.local:3306/confluence?useSSL=true&requireSSL=true
 ```
+
+```text title="Expected output"
+(no output — these are configuration file examples and reference documentation)
+```
+
+!!! warning "Common errors"
+    **`psql: error: FATAL: SSL connection error: certificate verify failed`** — Add `sslmode=require` to the JDBC URL and ensure the database server's SSL certificate is trusted by the JVM keystore.
+    **`Communications link failure: The last packet sent successfully to the server was 0 milliseconds ago`** — Verify the database server is listening on the specified port (5432 for PostgreSQL, 3306 for MySQL) and that firewall rules permit encrypted connections from the Confluence host.
 ```bash
 ## Store the database password encrypted in confluence.cfg.xml
 ## Use Confluence's built-in password encoding tool
@@ -188,6 +196,36 @@ mount | grep "/secure\|/encrypted"
 file /backups/confluence-backup-*.zip* | grep -v "Zip archive"
 ```
 
+
+```text title="Expected output"
+Location: https://confluence.example.local/
+
+  TLS 1.2 (0x0303)
+  TLS 1.3 (0x0304)
+issuer=C = US, O = DigiCert Inc, CN = DigiCert Global G2 TLS RSA SHA256 2021 CA1
+subject=C = US, ST = California, L = San Francisco, O = Example Corp, CN = confluence.example.local
+notBefore=Jan 15 10:22:33 2023 GMT
+notAfter=Jan 15 10:22:33 2025 GMT
+
+<property name="hibernate.connection.url">jdbc:postgresql://db.internal:5432/confluence?sslmode=require</property>
+<property name="hibernate.connection.ssl">true</property>
+
+NAME                                          TYPE MOUNTPOINT
+├─ sda1                                       part /
+├─ sdb                                        crypt /secure
+└─ sdc                                        crypt /var/atlassian/application-data/confluence
+
+/secure on /dev/mapper/secure-crypt type ext4 (rw,relatime)
+/encrypted on /dev/mapper/backup-crypt type ext4 (rw,relatime)
+
+/backups/confluence-backup-20240115.zip.gpg: GPG symmetrically encrypted data, AES256 cipher
+/backups/confluence-backup-20240108.zip.gpg: GPG symmetrically encrypted data, AES256 cipher
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to confluence.example.local port 80: Connection refused`** — Verify the Confluence server is running and HTTP port 80 is accessible, or check firewall rules if this is expected to be blocked.
+    **`unable to load certificate`** — Ensure the certificate file exists at the configured path in Confluence's server.xml and has proper read permissions for the Confluence process user.
+    **`grep: /var/atlassian/application-data/confluence/confluence.cfg.xml: No such file or directory`** — Verify the Confluence installation path is correct; use `find / -name confluence.cfg.xml 2>/dev/null` to locate the actual config file.
 ---
 
 ## See also

@@ -90,6 +90,17 @@ openssl x509 -in server.crt -noout -enddate \
     | cut -d= -f2 | date -f - +%s
 ```
 
+
+```text title="Expected output"
+notBefore=Jan 15 09:22:14 2023 GMT
+notAfter=Jan 15 09:22:14 2025 GMT
+notAfter=Jan 15 09:22:14 2025 GMT
+1739558534
+```
+
+!!! warning "Common errors"
+    **`unable to load certificate`** — Verify the certificate file path is correct and the file exists with `ls -la server.crt`.
+    **`date: invalid date 'Jan 15 09:22:14 2025 GMT'`** — Use `date -j -f "%b %d %H:%M:%S %Y %Z" "Jan 15 09:22:14 2025 GMT" +%s` on macOS, or ensure GNU date is installed on Linux.
 ### Alert Thresholds
 
 | Threshold | Action |
@@ -126,6 +137,17 @@ for HOST in "${HOSTS[@]}"; do
 done
 ```
 
+
+```text title="Expected output"
+OK: example.com:443 expires in 187 days (Dec 15 10:23:45 2025 GMT)
+OK: api.example.com:443 expires in 245 days (Feb 11 14:07:22 2026 GMT)
+WARNING: intranet.corp.example.com:8443 expires in 18 days (Jan  8 09:15:33 2025 GMT)
+```
+
+!!! warning "Common errors"
+    **`UNREACHABLE: <host>`** — Verify the host is reachable with `nc -zv <host> <port>` and that firewall rules allow outbound connections on the specified port.
+    **`date: invalid date '<date_string>'`** — The date format from the certificate doesn't match your system's locale; add `export LC_TIME=C` before the script or use `TZ=UTC` with the date command.
+    **`command not found: openssl`** — Install OpenSSL with `apt-get install openssl` (Debian/Ubuntu) or `brew install openssl` (macOS).
 ### Windows Certificate Expiry Checks
 
 ```powershell
@@ -160,6 +182,15 @@ echo "ssl_cert_expiry_seconds{host=\"example.com\"} $EPOCH" \
     > /var/lib/node_exporter/textfile_collector/ssl.prom
 ```
 
+
+```text title="Expected output"
+Exit: 0
+ssl_cert_expiry_seconds{host="example.com"} 1745923200
+```
+
+!!! warning "Common errors"
+    **`unable to load certificate`** — Verify the hostname and port are correct, and the server is responding to TLS connections on that port.
+    **`Permission denied`** — Ensure the user running the script has write access to `/var/lib/node_exporter/textfile_collector/` directory.
 ---
 
 ## Verify

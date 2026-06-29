@@ -19,6 +19,21 @@ for p in plugins:
 cat /tmp/jira-plugins-before.txt
 ```
 
+
+```text title="Expected output"
+com.atlassian.jira.plugins.jira-development-panel	1.4.8	Jira Development Panel
+com.atlassian.servicedesk.servicedesk-plugin	5.11.2	Atlassian Service Desk
+com.atlassian.plugins.atlassian-nav-links-plugin	5.9.14	Atlassian Navigation Links
+com.atlassian.jira.plugins.jira-agile-ob	8.22.5	Jira Software
+com.onresolve.jira.groovy.groovyrunner	3.3.14	ScriptRunner for Jira
+com.atlassian.jira.plugins.automation	6.8.1	Automation for Jira
+com.atlassian.plugins.atlassian-whitelist-api	1.2.3	Atlassian Whitelist API
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to jira.example.com port 443: Connection refused`** — Verify JIRA_URL is correct and the Jira instance is running and accessible from this host.
+    **`jq: parse error: Invalid JSON at line 1`** — Confirm JIRA_USER and JIRA_TOKEN are valid; invalid credentials may return an HTML error page instead of JSON.
+    **`python3: No module named 'json'`** — Install python3-minimal or ensure python3 is properly configured on the system.
 ```bash
 # Download installer (replace version as appropriate)
 JIRA_VERSION="9.12.0"
@@ -105,12 +120,57 @@ PGPASSWORD="${JIRA_DB_PASSWORD}" pg_dump \
 rsync -av /var/atlassian/application-data/jira/shared/ \
   /backup/jira/shared-pre-upgrade-$(date +%Y%m%d)/
 ```
+
+```text title="Expected output"
+pg_dump: [client_min_messages=warning] 
+pg_dump: dumping database "jiradb" schema public
+pg_dump: dumping database "jiradb" schema public table "cwd_user"
+pg_dump: dumping database "jiradb" schema public table "jira_issue"
+pg_dump: dumping database "jiradb" schema public table "jira_worklog"
+pg_dump: dumping database "jiradb" schema public table "ao_60db71_board"
+pg_dump: dumping database "jiradb" schema public table "ao_60db71_sprint"
+sending incremental file list
+shared/
+shared/plugins/
+shared/plugins/installed-plugins/
+shared/plugins/installed-plugins/jira-misc-workflow-extensions-6.4.3.jar
+shared/plugins/installed-plugins/tempo-timesheets-17.8.0.jar
+shared/plugins/plugins-osgi-container/
+shared/caches/
+shared/caches/indexing/
+shared/caches/indexing/current/
+shared/caches/indexing/current/segments_1
+shared/caches/indexing/current/segments.gen
+sent 2,847,392,156 bytes  received 45,821 bytes  speed 18.5M/s
+total size is 2,847,392,156  speedup is 1.00
+```
+
+!!! warning "Common errors"
+    **`pg_dump: error: connection to server at "db.example.com" (10.45.12.8), port 5432 failed: Connection refused`** — Verify the PostgreSQL server is running and accessible from the Jira host using `psql -h db.example.com -U jira -d jiradb -c "SELECT 1"`.
+    **`rsync: change_dir "/var/atlassian/application-data/jira/shared" failed: No such file or directory (2)`** — Confirm the Jira shared home path is correct and mounted; check with `ls -ld /var/atlassian/application-data/jira/shared`.
+    **`FATAL: password authentication failed for user "jira"`** — Verify the JIRA_DB_PASSWORD environment variable is set correctly and matches the database user credentials.
 ```bash
 NEW_VERSION="9.12.3"
 wget "https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-${NEW_VERSION}-x64.bin" \
   -O /tmp/jira-upgrade-${NEW_VERSION}.bin
 chmod +x /tmp/jira-upgrade-${NEW_VERSION}.bin
 ```
+
+```text title="Expected output"
+--2024-01-15 14:32:18--  https://www.atlassian.com/software/jira/downloads/binary/atlassian-jira-software-9.12.3-x64.bin
+Resolving www.atlassian.com (www.atlassian.com)... 104.16.132.229, 104.16.133.229
+Connecting to www.atlassian.com (www.atlassian.com)|104.16.132.229|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 892547821 (851M) [application/octet-stream]
+Saving to: '/tmp/jira-upgrade-9.12.3.bin'
+
+jira-upgrade-9.12.3.bin    45%[=========>          ] 382.4M  8.92MB/s  eta 52s
+```
+
+!!! warning "Common errors"
+    **`wget: unable to resolve host address 'www.atlassian.com'`** — Verify network connectivity and DNS resolution; check firewall rules blocking outbound HTTPS traffic.
+    **`Permission denied`** — Ensure the user running the script has write permissions to `/tmp` directory; check disk space with `df -h /tmp`.
+    **`HTTP Error 404 Not Found`** — Verify the exact version number exists on Atlassian's download page and the URL format matches the current release structure.
 ```bash
 # HAProxy — mark backend server as drain
 echo "set server jira_backend/jira-app-01 state drain" \
@@ -119,22 +179,108 @@ echo "set server jira_backend/jira-app-01 state drain" \
 # Wait for active connections to complete (check count)
 watch -n5 "echo 'show stat' | socat stdio /var/run/haproxy/admin.sock | cut -d',' -f1,2,8"
 ```
+
+```text title="Expected output"
+# First command (no output — command completes silently)
+
+# Second command output (watch refreshes every 5 seconds):
+Every 5.0s: echo 'show stat' | socat stdio /var/run/haproxy/admin.sock | cut -d',' -f1,2,8
+
+pxname,svname,scur
+jira_backend,jira-app-01,12
+jira_backend,jira-app-02,8
+jira_backend,jira-app-03,15
+jira_backend,BACKEND,35
+
+Every 5.0s: echo 'show stat' | socat stdio /var/run/haproxy/admin.sock | cut -d',' -f1,2,8
+
+pxname,svname,scur
+jira_backend,jira-app-01,8
+jira_backend,jira-app-02,8
+jira_backend,jira-app-03,15
+jira_backend,BACKEND,31
+
+Every 5.0s: echo 'show stat' | socat stdio /var/run/haproxy/admin.sock | cut -d',' -f1,2,8
+
+pxname,svname,scur
+jira_backend,jira-app-01,0
+jira_backend,jira-app-02,8
+jira_backend,jira-app-03,15
+jira_backend,BACKEND,23
+```
+
+!!! warning "Common errors"
+    **`socat: E Connection refused`** — Verify HAProxy is running with `systemctl status haproxy` and the admin socket exists at `/var/run/haproxy/admin.sock`.
+    **`socat: E Cannot open file "/var/run/haproxy/admin.sock"`** — Ensure HAProxy is configured with `stats socket /var/run/haproxy/admin.sock mode 660 level admin` in the global section and the socket has read permissions.
 ```bash
 systemctl stop jira
 # Verify stopped
 systemctl status jira
 ```
+
+```text title="Expected output"
+● jira.service - Atlassian JIRA
+     Loaded: loaded (/etc/systemd/system/jira.service; enabled; vendor preset: disabled)
+     Active: inactive (dead) since Thu 2024-01-18 14:32:15 UTC; 2s ago
+    Process: 8847 ExecStart=/opt/jira/bin/start-jira.sh (code=exited, status=0/SUCCESS)
+   Main PID: 8847 (code=exited, status=0/SUCCESS)
+      Tasks: 0 (limit: 4915)
+     Memory: 0B
+        CPU: 0s
+   CGroup: /system.slice/jira.service
+
+Jan 18 14:31:22 jira-prod-01 systemd[1]: Started Atlassian JIRA.
+Jan 18 14:32:15 jira-prod-01 systemd[1]: Stopping Atlassian JIRA...
+Jan 18 14:32:15 jira-prod-01 systemd[1]: Stopped Atlassian JIRA.
+```
+
+!!! warning "Common errors"
+    **`Failed to stop jira.service: Unit jira.service not loaded.`** — Verify the service file exists at `/etc/systemd/system/jira.service` and run `systemctl daemon-reload`.
+    **`Failed to stop jira.service: Access denied`** — Run the command with `sudo` or as a user with systemctl privileges.
 ```bash
 /tmp/jira-upgrade-${NEW_VERSION}.bin -q
 
 # Monitor installer output
 tail -f /opt/atlassian/jira/logs/atlassian-jira-software-upgrade-*.log
 ```
+
+```text title="Expected output"
+Unpacking JARs
+Verifying checksums
+Installing JIRA 8.20.6 to /opt/atlassian/jira
+Stopping JIRA service
+Backing up database to /var/backups/jira-8.20.5.sql
+Running database migrations
+Migration 1: Adding new columns to issue table... OK
+Migration 2: Updating workflow schemes... OK
+Migration 3: Indexing custom fields... OK
+Starting JIRA service
+Installation complete. JIRA 8.20.6 ready at http://localhost:8080
+2024-01-15 14:32:18,445 INFO [main] Upgrade finished successfully in 287 seconds
+```
+
+!!! warning "Common errors"
+    **`Permission denied`** — Run the installer with `sudo` or as the `jira` system user who owns the installation directory.
+    **`No space left on device`** — Ensure at least 5GB free disk space in `/opt/atlassian/jira` and `/var/backups` before running the upgrade.
+    **`Database connection refused`** — Verify the database service is running and accessible with `systemctl status postgresql` (or your DB engine) before starting the upgrade.
 ```bash
 # Schema upgrade progress (during startup)
 tail -f /opt/atlassian/jira/logs/atlassian-jira.log \
   | grep -E "schema|migration|upgrade"
 ```
+
+```text title="Expected output"
+2024-01-15 09:42:17,234 INFO [main] [com.atlassian.jira.upgrade.UpgradeManager] Starting schema upgrade from version 8.19.0 to 8.20.1
+2024-01-15 09:42:18,567 INFO [main] [com.atlassian.jira.upgrade.SchemaUpgradeTask] Executing migration: AddColumnToIssueTable
+2024-01-15 09:42:22,891 INFO [main] [com.atlassian.jira.upgrade.SchemaUpgradeTask] Migration AddColumnToIssueTable completed in 4324ms
+2024-01-15 09:42:23,145 INFO [main] [com.atlassian.jira.upgrade.SchemaUpgradeTask] Executing migration: CreateIndexOnWorkflow
+2024-01-15 09:42:31,456 INFO [main] [com.atlassian.jira.upgrade.SchemaUpgradeTask] Migration CreateIndexOnWorkflow completed in 8311ms
+2024-01-15 09:42:31,678 INFO [main] [com.atlassian.jira.upgrade.UpgradeManager] Schema upgrade completed successfully in 14442ms
+```
+
+!!! warning "Common errors"
+    **`tail: cannot open '/opt/atlassian/jira/logs/atlassian-jira.log' for reading: No such file or directory`** — Verify JIRA is installed at `/opt/atlassian/jira` and the logs directory exists, or adjust the path to match your installation.
+    **`grep: (standard input): Permission denied`** — Run the command with `sudo` or ensure your user has read permissions on the log file.
 ```bash
 systemctl start jira
 
@@ -150,10 +296,42 @@ curl -s https://jira.example.com/status
 curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
   "${JIRA_URL}/rest/api/2/serverInfo" | python3 -m json.tool
 ```
+
+```text title="Expected output"
+[1] 12345
+tail: cannot open '/opt/atlassian/jira/logs/catalina.out' for reading: No such file or directory
+2024-01-15 09:42:23,156 INFO [main] atlassian.jira.startup.JiraStartupListener - JIRA started successfully in 45 seconds
+2024-01-15 09:42:24,203 INFO [main] atlassian.jira.startup.JiraStartupListener - Jira 8.20.6 started
+2024-01-15 09:42:25,891 WARN [main] com.atlassian.jira.upgrade - Running upgrade tasks
+2024-01-15 09:42:31,445 INFO [main] atlassian.jira.upgrade - Upgrade completed
+{"state":"RUNNING"}
+{
+  "baseUrl": "https://jira.example.com",
+  "version": "8.20.6",
+  "versionNumbers": [8, 20, 6, 0],
+  "buildNumber": 820061,
+  "buildDate": "2023-11-22T00:00:00.000+0000",
+  "serverTitle": "JIRA Production",
+  "scmInfo": "abc1d2e3f4g5h6i7j8k9l0m1n2o3p4q5r6s7t8u9"
+}
+```
+
+!!! warning "Common errors"
+    **`tail: cannot open '/opt/atlassian/jira/logs/catalina.out' for reading: No such file or directory`** — Check the actual JIRA_HOME location with `find / -name catalina.out 2>/dev/null` and adjust the path accordingly.
+    **`curl: (7) Failed to connect to jira.example.com port 443: Connection refused`** — Verify JIRA is fully started with `systemctl status jira` and that the hostname/port in the URL matches your deployment.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl to skip certificate verification, or configure proper SSL certificates in your JIRA server.xml.
 ```bash
 echo "set server jira_backend/jira-app-01 state ready" \
   | socat stdio /var/run/haproxy/admin.sock
 ```
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`socat: E connect() failed: No such file or directory`** — Verify HAProxy is running with `systemctl status haproxy` and the admin socket path is correct in `/etc/haproxy/haproxy.cfg`.
+    **`socat: E open() failed: Permission denied`** — Run the command with `sudo` or ensure your user is in the `haproxy` group with `usermod -a -G haproxy $USER`.
 ```bash
 # Verify all apps (plugins) re-enabled
 curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
@@ -171,6 +349,16 @@ for p in disabled:
 curl -u "${JIRA_USER}:${JIRA_TOKEN}" -X POST \
   "${JIRA_URL}/rest/api/2/reindex?type=BACKGROUND_PREFERRED"
 ```
+
+```text title="Expected output"
+0 plugin(s) disabled:
+{"taskId": "AO_12345678_REINDEX_001"}
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to jira.example.com port 443: Connection refused`** — Verify JIRA_URL is correct and the Jira instance is running with `systemctl status jira` or equivalent.
+    **`{"errorMessages":["Authentication failed"]}`** — Confirm JIRA_USER and JIRA_TOKEN are valid and have API access permissions in Jira.
+    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Ensure the Jira REST API endpoint is accessible; check firewall rules and that the `/rest/api/2/plugins/1.0/plugin` path exists in your Jira version.
 ```bash
 # 1. Stop Jira
 systemctl stop jira
@@ -196,6 +384,28 @@ systemctl start jira
 curl -s https://jira.example.com/status
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+(no output — command completes silently)
+WARNING:  terminating connection for user "postgres" auth method md5
+       pg_terminate_backend
+------------------------
+                       t
+                       t
+                       t
+(3 rows)
+NOTICE:  database "jiradb" does not exist, skipping
+CREATE DATABASE
+pg_restore: error: could not execute query: ERROR:  role "jira" does not exist
+(no output — command completes silently)
+{"state":"RUNNING","buildNumber":8503,"version":"8.20.11","type":"Cloud"}
+```
+
+!!! warning "Common errors"
+    **`pg_restore: error: could not execute query: ERROR:  role "jira" does not exist`** — Create the jira database role with `psql -h db.example.com -U postgres -c "CREATE ROLE jira WITH LOGIN PASSWORD 'password';"` before restoring.
+    **`psql: error: connection to server at "db.example.com" (10.45.12.8), port 5432 failed`** — Verify database connectivity and that `db.example.com` is resolvable; check firewall rules and PostgreSQL service status on the remote host.
+    **`curl: (7) Failed to connect to jira.example.com port 443: Connection refused`** — Wait 30–60 seconds for Jira to fully start, then retry the curl command; check `systemctl status jira` and `/opt/atlassian/jira/logs/catalina.out` for startup errors.
 ## Before you begin
 
 - **Access:** Admin credentials on all affected systems

@@ -55,6 +55,58 @@ ldapsearch -H ldaps://dc01.corp.example.com:636 \
            "(sAMAccountName=jsmith)" cn mail
 ```
 
+
+```text title="Expected output"
+# LDAP_CONOPT_TIMEOUT=30000
+# extended LDIF
+#
+# LDAPv3
+# base <DC=corp,DC=example,DC=com> with scope subtree
+# filter: (objectClass=user)
+# requesting: cn
+#
+
+# search result
+search: 2
+result: 0 Success
+
+# numResponses: 127
+# numEntries: 126
+
+dn: CN=jsmith,OU=Users,DC=corp,DC=example,DC=com
+cn: John Smith
+
+dn: CN=mchen,OU=Users,DC=corp,DC=example,DC=com
+cn: Michelle Chen
+
+dn: CN=agarcia,OU=Users,DC=corp,DC=example,DC=com
+cn: Angela Garcia
+
+# LDAPS bind successful
+# extended LDIF
+#
+# LDAPv3
+# base <DC=corp,DC=example,DC=com> with scope subtree
+# filter: (sAMAccountName=jsmith)
+# requesting: cn mail
+#
+
+dn: CN=jsmith,OU=Users,DC=corp,DC=example,DC=com
+cn: John Smith
+mail: jsmith@corp.example.com
+
+# search result
+search: 2
+result: 0 Success
+
+# numResponses: 2
+# numEntries: 1
+```
+
+!!! warning "Common errors"
+    **`ldap_bind: Invalid credentials (49)`** — Verify the service account password is correct and the account is not locked; check DC logs with `Get-EventLog -LogName Security -InstanceId 4771 -Newest 10` on the domain controller.
+    **`Can't contact LDAP server (-1)`** — Ensure the DC hostname resolves with `nslookup dc01.corp.example.com` and port 389/636 is reachable via `nc -zv dc01.corp.example.com 636`.
+    **`TLS/SSL error: certificate verify failed`** — Add the DC's CA certificate to the system trust store with `sudo cp ca.crt /etc/ssl/certs/ && sudo update-ca-certificates` or disable verification temporarily with `-o LDAPTLS_REQCERT=never`.
 ## SASL / Kerberos Bind
 
 SASL with GSSAPI uses a Kerberos ticket, avoiding password exposure. This is the preferred method for Active Directory.
@@ -73,6 +125,46 @@ ldapsearch -H ldap://dc01.corp.example.com \
 klist
 ```
 
+
+```text title="Expected output"
+Password for svc-ldap@CORP.EXAMPLE.COM: 
+# extended LDIF
+# LDAPv3
+# base <DC=corp,DC=example,DC=com> with scope subtree
+# filter: (objectClass=organizationalUnit)
+# requesting: ou
+
+# Users, corp.example.com
+dn: OU=Users,DC=corp,DC=example,DC=com
+ou: Users
+
+# Computers, corp.example.com
+dn: OU=Computers,DC=corp,DC=example,DC=com
+ou: Computers
+
+# Groups, corp.example.com
+dn: OU=Groups,DC=corp,DC=example,DC=com
+ou: Groups
+
+# search result
+search: 2
+result: 0 Success
+
+# numResponses: 4
+# numEntries: 3
+
+Ticket cache: FILE:/tmp/krb5cc_0
+Default principal: svc-ldap@CORP.EXAMPLE.COM
+
+Valid starting       Expires              Service principal
+01/15/2025 09:22:13  01/15/2025 19:22:13  krbtgt/CORP.EXAMPLE.COM@CORP.EXAMPLE.COM
+01/15/2025 09:22:45  01/15/2025 19:22:13  ldap/dc01.corp.example.com@CORP.EXAMPLE.COM
+```
+
+!!! warning "Common errors"
+    **`ldap_sasl_bind(SIMPLE): Can't contact LDAP server (-1)`** — Verify the DC hostname resolves and is reachable on port 389 with `nslookup dc01.corp.example.com` and `nc -zv dc01.corp.example.com 389`.
+    **`GSSAPI Error: Unspecified GSS failure. Minor code may provide more information`** — Ensure a valid Kerberos ticket exists with `klist` and the service principal `ldap/dc01.corp.example.com@CORP.EXAMPLE.COM` is registered in Active Directory.
+    **`kinit: Client not found in Kerberos database while getting initial credentials`** — Confirm the service account `svc-ldap@CORP.EXAMPLE.COM` exists in the KDC and the realm name matches your domain exactly.
 ## Service Account Bind Configuration
 
 Service accounts used for LDAP bind should be dedicated, low-privilege accounts.
@@ -107,6 +199,26 @@ ldapsearch -H ldap://dc01.corp.example.com \
 # "DSHeuristics" value — see KB 326690
 ```
 
+
+```text title="Expected output"
+# LDAP anonymous bind test
+dn: DC=corp,DC=example,DC=com
+dn: CN=Users,DC=corp,DC=example,DC=com
+dn: CN=Computers,DC=corp,DC=example,DC=com
+dn: CN=Domain Controllers,DC=corp,DC=example,DC=com
+dn: CN=Administrator,CN=Users,DC=corp,DC=example,DC=com
+dn: CN=Guest,CN=Users,DC=corp,DC=example,DC=com
+dn: CN=KRBTGT,CN=Users,DC=corp,DC=example,DC=com
+dn: CN=Domain Admins,CN=Users,DC=corp,DC=example,DC=com
+dn: CN=Domain Users,CN=Users,DC=corp,DC=example,DC=com
+dn: CN=Domain Guests,CN=Users,DC=corp,DC=example,DC=com
+...
+```
+
+!!! warning "Common errors"
+    **`ldap_bind: Invalid credentials (49)`** — Verify the DC hostname is reachable and anonymous binds are not already restricted; test with `-D "CN=admin,CN=Users,DC=corp,DC=example,DC=com" -W` to confirm the server is responding.
+    **`Can't contact LDAP server (-1)`** — Ensure the DC hostname resolves correctly and port 389 is accessible from your client; test with `ping dc01.corp.example.com` and `nc -zv dc01.corp.example.com 389`.
+    **`ldapsearch: command not found`** — Install the ldap-utils package with `apt-get install ldap-utils` (Debian/Ubuntu) or `yum install openldap-clients` (RHEL/CentOS).
 ## Bind Test Checklist
 
 ```bash
@@ -126,3 +238,43 @@ ldapsearch -H ldap://dc01.corp.example.com -x \
 ldapsearch -H ldap://dc01.corp.example.com -x \
            -b "" -s base "(objectClass=*)" supportedSASLMechanisms
 ```
+
+
+```text title="Expected output"
+Server:		10.0.1.50
+Address:	10.0.1.50#53
+
+Name:	dc01.corp.example.com
+Address: 10.0.1.100
+
+Connection to dc01.corp.example.com 389 port [tcp/ldap] succeeded!
+Connection to dc01.corp.example.com 636 port [tcp/ldaps] succeeded!
+
+# extended LDIF
+#
+# LDAPv3
+# base <> with scope baseObject
+# filter: (objectClass=*)
+# requesting: supportedSASLMechanisms
+#
+
+#
+dn:
+supportedSASLMechanisms: GSSAPI
+supportedSASLMechanisms: GSS-SPNEGO
+supportedSASLMechanisms: EXTERNAL
+supportedSASLMechanisms: DIGEST-MD5
+supportedSASLMechanisms: CRAM-MD5
+
+# search result
+search: 2
+result: 0 Success
+
+# numResponses: 2
+# numEntries: 1
+```
+
+!!! warning "Common errors"
+    **`ldap_bind: Invalid credentials (49)`** — Verify the service account password is correct and the account is not locked; check DC event logs for failed bind attempts.
+    **`Can't contact LDAP server (-1)`** — Confirm DNS resolution works, firewall allows ports 389/636 to the DC, and the DC hostname is reachable via `ping dc01.corp.example.com`.
+    **`Connection refused`** — Verify LDAP service is running on the DC with `systemctl status slapd` (Linux) or check Active Directory is operational on Windows DC.

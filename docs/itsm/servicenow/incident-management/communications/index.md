@@ -84,6 +84,14 @@ Root cause summary: <1-2 sentences — only if confirmed>
 Full RCA/PIR: To follow within <X days>
 ```
 
+
+```text title="Expected output"
+[P1 RESOLVED] Payment Processing API — 14:32 UTC
+Service restored at: 14:32 UTC
+Duration: 2 hours 47 minutes
+Root cause summary: Database connection pool exhaustion due to misconfigured retry logic in v2.3.1 deployment. Rolled back to v2.3.0 and implemented circuit breaker limits.
+Full RCA/PIR: To follow within 2 days
+```
 ---
 
 ## Stakeholder Distribution

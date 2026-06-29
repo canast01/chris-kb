@@ -10,6 +10,26 @@ ansible-galaxy collection install community.vmware
 pip install PyVmomi vsphere-automation-sdk-python
 ```
 
+
+```text title="Expected output"
+Starting galaxy collection install process
+Process install dependency map
+Starting collection download of 'community.vmware:3.9.0' from https://galaxy.ansible.com/download/community-vmware-3.9.0.tar.gz
+Downloading community.vmware to /home/ansible/.ansible/collections/ansible_collections/community/vmware
+community.vmware (3.9.0) was installed successfully
+Collecting PyVmomi
+  Downloading PyVmomi-8.0.1.0-py3-none-any.whl (2.4 MB)
+     |████████████████████████████████| 2.4 MB 1.2 MB/s
+Collecting vsphere-automation-sdk-python
+  Downloading vsphere-automation-sdk-python-1.28.0.tar.gz (1.8 MB)
+Installing collected packages: PyVmomi, vsphere-automation-sdk-python
+Successfully installed PyVmomi-8.0.1.0 vsphere-automation-sdk-python-1.28.0
+```
+
+!!! warning "Common errors"
+    **`ERROR! the specified collections path '/home/ansible/.ansible/collections' is not writeable`** — Ensure the Ansible collections directory is owned by the current user or run with appropriate sudo privileges.
+    **`ERROR: Could not find a version that satisfies the requirement PyVmomi (from versions: none)`** — Verify pip is configured to access PyPI and that your Python version (3.6+) is compatible with the package.
+    **`error: Microsoft Visual C++ 14.0 or greater is required`** — Install the Microsoft C++ Build Tools or use a pre-built wheel distribution on Windows systems.
 ```bash
 ansible-galaxy collection install community.hashi_vault
 pip install hvac

@@ -56,6 +56,46 @@ curl -X POST \
   -d "client_secret=<CLIENT_SECRET>" \
   -d "refresh_token=<REFRESH_TOKEN>"
 ```
+
+```text title="Expected output"
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJvYXV0aF9jbGllbnQiLCJpYXQiOjE3MDk4MTIzNDUsImV4cCI6MTcwOTgxNTk0NX0.a2F0dGFjYXQxMjM0NTY3ODk",
+  "refresh_token": "refresh_token_9f8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c",
+  "scope": "useragent",
+  "token_type": "Bearer",
+  "expires_in": 3600
+}
+{
+  "result": [
+    {
+      "number": "INC0010234",
+      "short_description": "Network connectivity issue",
+      "state": "2",
+      "priority": "3",
+      "created_on": "2024-03-06 14:22:15"
+    },
+    {
+      "number": "INC0010233",
+      "short_description": "Password reset request",
+      "state": "1",
+      "priority": "4",
+      "created_on": "2024-03-06 13:45:22"
+    }
+  ]
+}
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJvYXV0aF9jbGllbnQiLCJpYXQiOjE3MDk4MTI2NDUsImV4cCI6MTcwOTgxNjI0NX0.b3F1dGRhdGExMjM0NTY3ODk",
+  "refresh_token": "refresh_token_8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c3b",
+  "scope": "useragent",
+  "token_type": "Bearer",
+  "expires_in": 3600
+}
+```
+
+!!! warning "Common errors"
+    **`{"error":"invalid_client","error_description":"Client authentication failed"}`** — Verify that `<CLIENT_ID>` and `<CLIENT_SECRET>` are correct and match the OAuth application registered in ServiceNow.
+    **`{"error":"invalid_grant","error_description":"Refresh token has expired"}`** — Request a new access token using the client credentials flow instead, as refresh tokens expire after a configured period (typically 30–90 days).
+    **`{"error":"invalid_request","error_description":"Missing required parameter: grant_type"}`** — Ensure all `-d` parameters are included and properly formatted; check that the Content-Type header is set to `application/x-www-form-urlencoded`.
 ```bash
 # Configure client certificate on ServiceNow integration endpoint
 # System Web Services → REST Message → (your integration)

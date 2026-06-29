@@ -80,6 +80,26 @@ curl -sk -o /dev/null -w "%{http_code}" https://<gitlab-host>/api/v4/projects
 nc -zv <gitaly-host> 8075
 ```
 
+
+```text title="Expected output"
+Cloning into '/tmp/test-clone'...
+remote: Enumerating objects: 1247, done.
+remote: Counting objects: 100% (1247/1247), done.
+remote: Compressing objects: 100% (892/892), done.
+Receiving objects: 100% (1247/1247), 3.2 MiB | 8.4 MiB/s, done.
+Resolving deltas: 100% (445/445), done.
+
+Welcome to GitLab, @developer!
+
+200
+
+Connection to gitaly-prod-01.internal 8075 port [tcp/*] succeeded!
+```
+
+!!! warning "Common errors"
+    **`fatal: unable to access 'https://<gitlab-host>/test/repo.git/': SSL certificate problem: self signed certificate`** — Add `git config --global http.sslVerify false` or use a valid CA-signed certificate on the GitLab host.
+    **`Permission denied (publickey). fatal: Could not read from remote repository.`** — Verify the SSH public key is added to the GitLab user account and the runner's SSH private key has correct permissions (`chmod 600 ~/.ssh/id_rsa`).
+    **`Connection refused`** — Confirm Gitaly service is running on the target host with `systemctl status gitaly` and verify the firewall allows port 8075 from the GitLab app server.
 ## See also
 
 - [Git — Architecture](../how-it-works/)

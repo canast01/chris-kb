@@ -80,6 +80,39 @@ chronyc sourcestats -v
 chronyc tracking
 ```
 
+
+```text title="Expected output"
+210 Number of sources = 4
+                                      .- Number of sample points in measurement set.
+                                     /    .- Number of residual runs.
+                                    |    /    .- Length of measurement set (time).
+                                    |   |    /      .- Estimated skew on measurement.
+                                    |   |   |      /     .- Estimated frequency offset of source.
+                                    |   |   |     |      /    .- Estimated offset of source.
+                                    |   |   |     |     |    /  .- Estimate of source standard deviation.
+                                    |   |   |     |     |   |   /
+Name/IP Address            NP  NR  Span Frequency Freq Skew Offset Std Dev
+===============================================================================
+ntp.ubuntu.com              8   4   127     +0.000ppm  +0.000ppm  0.000us    1.234ms
+time.google.com             6   3    63     -0.015ppm  +0.005ppm  0.001us    2.456ms
+pool.ntp.org                7   5    95     +0.008ppm  -0.002ppm  0.002us    1.890ms
+169.254.169.123             5   2    31     +0.100ppm  +0.050ppm  0.005us    5.678ms
+
+Reference ID    : C0248F97 (169.254.169.123)
+Leap status     : Normal
+RMS offset      : 0.001234 seconds
+Frequency       : 0.015 ppm fast
+Residual freq   : +0.000 ppm
+Skew            : 0.012 ppm
+Root delay      : 0.015432 seconds
+Root dispersion : 0.003456 seconds
+Update interval : 1024.0 seconds
+Leap second     : 0
+```
+
+!!! warning "Common errors"
+    **`506 Cannot talk to daemon`** — Ensure chronyd is running with `sudo systemctl start chronyd` and listening on localhost.
+    **`No sources present in sourcestats output`** — Wait 30+ seconds after chronyd startup for sources to be polled and added to the measurement set.
 ## Configuring Sources (chrony)
 
 ```bash
@@ -97,6 +130,18 @@ server ntp1.example.com iburst minpoll 4 maxpoll 8
 chronyc reload sources
 ```
 
+
+```text title="Expected output"
+200 OK
+Reloading sources.
+  .d/m/y h:m:s     *.ntp1.example.com  8 -1024   377   100   9.123ms[  9.123ms] +/-  12.456ms
+  .d/m/y h:m:s     + ntp2.example.com  8  -512   289    99   4.567ms[  4.567ms] +/-   8.234ms
+  .d/m/y h:m:s     + ntp3.example.com  8  -256   156    98  15.892ms[ 15.892ms] +/-  18.901ms
+```
+
+!!! warning "Common errors"
+    **`506 Cannot talk to daemon`** — Ensure chronyd is running with `systemctl start chronyd` and listening on the socket.
+    **`Invalid minpoll/maxpoll value`** — Use values between 3 and 17 (representing 2³ to 2¹⁷ seconds); minpoll must be less than maxpoll.
 ## Windows — w32tm Source Config
 
 ```powershell
@@ -129,6 +174,50 @@ show ntp status
 show ntp associations
 ```
 
+
+```text title="Expected output"
+# Cisco IOS output:
+ntp1.example.com configured as preferred peer
+ntp2.example.com configured as peer
+
+     remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
+*ntp1.example.com 10.0.0.1     2 u   64 1024  377   12.543    2.156   1.234
++ntp2.example.com 10.0.0.2     2 u   32 1024  377   15.821   -1.043   2.891
+
+     remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
+*ntp1.example.com 10.0.0.1     2 u   64 1024  377   12.543    2.156   1.234
+
+Clock is synchronized
+Stratum is 3
+Reference ID is 10.0.0.1
+Precision is 2^-24
+Root delay is 28.364 msec
+Root dispersion is 45.291 msec
+RTC is synchronized
+System poll interval is 1024 seconds
+
+# Arista EOS output:
+Clock is synchronized
+Stratum: 3
+Reference ID: 10.0.0.1
+Precision: 2^-24
+Root delay: 28.364 ms
+Root dispersion: 45.291 ms
+Update interval: 1024 seconds
+Leap indicator: 0
+
+     remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
+*ntp1.example.com 10.0.0.1     2 u   64 1024  377   12.543    2.156   1.234
++ntp2.example.com 10.0.0.2     2 u   32 1024  377   15.821   -1.043   2.891
+```
+
+!!! warning "Common errors"
+    **`% Invalid input detected at '^' marker.`** — Verify the NTP server hostname is resolvable; if DNS fails, use the IP address directly instead.
+    **`NTP is not enabled`** — Enable NTP globally with `ntp enable` (Arista) or ensure `ntp enable` is configured before adding servers on Cisco.
+    **`reach value is 0 and associations show no asterisk or plus sign`** — Check network connectivity to the NTP server and verify firewall rules allow UDP port 123 bidirectionally.
 ## Common Source Issues
 
 | Symptom | Cause | Check |

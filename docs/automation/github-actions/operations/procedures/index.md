@@ -55,6 +55,14 @@ jobs:
       deploy_key: ${{ secrets.STAGING_DEPLOY_KEY }}
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: Workflow file is invalid`** — Ensure the reusable workflow path `./.github/workflows/reusable-deploy.yml` exists and the calling workflow is in `.github/workflows/` directory.
+    **`Error: Secret 'STAGING_DEPLOY_KEY' is not available`** — Add the `STAGING_DEPLOY_KEY` secret to the repository settings under Settings > Secrets and variables > Actions.
 ### Concurrency Control
 
 Prevent duplicate workflow runs for the same branch or PR.
@@ -111,6 +119,17 @@ gh workflow run deploy.yml \
   --field dry_run=false
 ```
 
+
+```text title="Expected output"
+✓ Created workflow_dispatch event for deploy.yml on main
+Run ID: 8547291634
+https://github.com/acme-corp/infrastructure/actions/runs/8547291634
+```
+
+!!! warning "Common errors"
+    **`gh: the specified workflow file was not found in the repository`** — Verify the workflow file exists at `.github/workflows/deploy.yml` and the path is correct.
+    **`Error: input 'version' is not defined for this workflow`** — Check that the workflow file has `on: workflow_dispatch:` with matching input names defined in the `inputs:` section.
+    **`fatal: not a git repository`** — Run the command from within a cloned Git repository directory where the `.github/workflows/` folder exists.
 ### Workflow Feature Reference
 
 | Feature | Syntax | Purpose |
@@ -490,6 +509,44 @@ docker run --rm -v "$(pwd):/repo" --workdir /repo \
   rhysd/actionlint:latest
 ```
 
+
+```text title="Expected output"
+==> Downloading https://ghcr.io/rhysd/actionlint/actionlint/latest
+==> Installing actionlint
+==> Caveats
+bash completion has been installed to:
+  /usr/local/etc/bash_completion.d
+==> Summary
+🍺  /usr/local/Cellar/actionlint/1.6.26/bin/actionlint installed
+
+.github/workflows/ci.yml:12:5: expression syntax error: unexpected token "}"
+.github/workflows/deploy.yml:8:3: shellcheck reported issue SC2086: Double quote to prevent globbing and word splitting.
+.github/workflows/test.yml:25:10: "ubuntu-latest" is deprecated. Use "ubuntu-22.04" or later instead.
+
+{
+  "errors": [
+    {
+      "message": "expression syntax error: unexpected token \"}\"",
+      "line": 12,
+      "column": 5,
+      "file": ".github/workflows/ci.yml"
+    }
+  ]
+}
+
+Unable to find image 'rhysd/actionlint:latest' locally
+latest: Pulling from rhysd/actionlint
+e692418e3537: Pull complete
+Digest: sha256:a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0
+Status: Downloaded newer image for rhysd/actionlint:latest
+
+.github/workflows/ci.yml:12:5: expression syntax error: unexpected token "}"
+```
+
+!!! warning "Common errors"
+    **`actionlint: command not found`** — Run `brew install actionlint` on macOS or download the binary from the GitHub releases page for your OS.
+    **`.github/workflows/ci.yml:12:5: expression syntax error: unexpected token "}"`** — Check the GitHub Actions expression syntax in that workflow file; common causes are mismatched braces or incorrect variable interpolation.
+    **`Unable to find image 'rhysd/actionlint:latest' locally`** — Ensure Docker is running and you have internet connectivity to pull the image, or pre-pull it with `docker pull rhysd/actionlint:latest`.
 ### Schema Validation
 
 VS Code and JetBrains IDEs provide schema-based validation when the schema URL is declared.
@@ -515,6 +572,18 @@ ajv validate \
   -d .github/workflows/ci.yml
 ```
 
+
+```text title="Expected output"
+npm notice created a lockfile as package-lock.json
+npm notice found 0 vulnerabilities
+added 47 packages, and audited 48 packages in 2.3s
+.github/workflows/ci.yml valid
+```
+
+!!! warning "Common errors"
+    **`ajv: command not found`** — Ensure npm install completed successfully and /usr/local/lib/node_modules/.bin is in your $PATH, or use `npx ajv` instead.
+    **`Error: ENOENT: no such file or directory, open '.github/workflows/ci.yml'`** — Verify the workflow file exists at the correct path relative to your current working directory.
+    **`Error: Failed to compile schema`** — Check that the schema URL is accessible and valid; try downloading it manually with `curl` to confirm network connectivity.
 ### Required Status Checks
 
 Configure branch protection to require workflow jobs to pass before merging.
@@ -537,6 +606,32 @@ gh api --method PUT /repos/OWNER/REPO/branches/main/protection \
 EOF
 ```
 
+
+```text title="Expected output"
+{
+  "url": "https://api.github.com/repos/OWNER/REPO/branches/main/protection",
+  "required_status_checks": {
+    "url": "https://api.github.com/repos/OWNER/REPO/branches/main/protection/required_status_checks",
+    "strict": true,
+    "contexts": [
+      "build",
+      "test (3.11)",
+      "test (3.12)"
+    ]
+  },
+  "enforce_admins": true,
+  "required_pull_request_reviews": {
+    "url": "https://api.github.com/repos/OWNER/REPO/branches/main/protection/required_pull_request_reviews",
+    "required_approving_review_count": 1
+  },
+  "restrictions": null
+}
+```
+
+!!! warning "Common errors"
+    **`HTTP 404: Not Found`** — Verify the repository exists and OWNER/REPO values are correct.
+    **`HTTP 403: Forbidden`** — Ensure your GitHub token has `admin:repo_hook` and `repo` scopes, or use a PAT with full repo access.
+    **`HTTP 422: Unprocessable Entity`** — Confirm all status check contexts in the `contexts` array match exactly the names configured in your CI/CD workflows.
 ### Validating Workflows in CI
 
 Run actionlint automatically as part of the CI pipeline.
@@ -618,6 +713,36 @@ sudo ./svc.sh start
 # Verify runner status in Settings → Actions → Runners (should show Online)
 ```
 
+
+```text title="Expected output"
+% mkdir actions-runner && cd actions-runner
+% curl -o actions-runner-linux-x64-2.x.x.tar.gz -L https://github.com/actions/runner/releases/download/v2.x.x/actions-runner-linux-x64-2.x.x.tar.gz
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100   622  100   622    0     0   1205      0 --:--:-- --:--:-- --:--:--:--:--:--
+100 95.2M  100 95.2M    0     0  2847k      0 --:--:-- --:--:-- --:--:-- --:--:-- --:--:--
+% tar xzf ./actions-runner-linux-x64-2.x.x.tar.gz
+% ./config.sh --url https://github.com/OWNER/REPO --token ghr_1234567890abcdefghijklmnopqrstuvwxyz
+√ Connected to GitHub
+√ Runner registration is complete
+Runner name: 'runner-ubuntu-001'
+Runner version 2.314.1
+Runner OS: linux
+Runner Architecture: x64
+% sudo ./svc.sh install
+√ Created symlink /etc/systemd/system/multi-user.target.wants/actions.runner-OWNER-REPO-1.service → /etc/systemd/system/actions.runner-OWNER-REPO-1.service.
+% sudo ./svc.sh start
+√ Started GitHub Actions Runner service
+% systemctl status actions.runner-OWNER-REPO-1.service
+● actions.runner-OWNER-REPO-1.service - GitHub Actions Runner
+     Loaded: loaded (/etc/systemd/system/actions.runner-OWNER-REPO-1.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2024-01-15 14:32:18 UTC; 2s ago
+```
+
+!!! warning "Common errors"
+    **`./config.sh: line 1: ./bin/Runner.Listener: cannot execute binary file`** — Verify the downloaded runner matches your system architecture (x64 vs arm64) and OS (linux vs macos vs win).
+    **`Error: Not Found`** — Confirm the registration token is valid and hasn't expired; generate a fresh token from Settings → Actions → Runners → New runner.
+    **`sudo: ./svc.sh: command not found`** — Ensure you are in the actions-runner directory and have run `tar xzf` to extract all files before attempting service installation.
 | Step | Command / Location |
 |---|---|
 | Get registration token | Settings → Actions → Runners → New self-hosted runner |
@@ -777,6 +902,27 @@ gh workflow list --all
 gh run list --workflow=scheduled-report.yml --limit 10
 ```
 
+
+```text title="Expected output"
+✓ Created request ID: 1234567890
+To see runs for this workflow, try: gh run list --workflow=scheduled-report.yml
+
+NAME                           STATE      CREATED AT             UPDATED AT
+scheduled-report.yml           active     2024-01-15T09:22:14Z   2024-01-15T09:22:14Z
+daily-backup.yml               active     2024-01-10T14:33:22Z   2024-01-10T14:33:22Z
+weekly-audit.yml               active     2024-01-08T11:05:18Z   2024-01-08T11:05:18Z
+
+STATUS      CONCLUSION   NAME                 NUMBER   WORKFLOW              CREATED AT             UPDATED AT
+completed   success      scheduled-report.yml 4521     scheduled-report.yml  2024-01-15T08:00:12Z   2024-01-15T08:15:33Z
+completed   success      scheduled-report.yml 4520     scheduled-report.yml  2024-01-14T08:00:08Z   2024-01-14T08:14:22Z
+completed   failure      scheduled-report.yml 4519     scheduled-report.yml  2024-01-13T08:00:05Z   2024-01-13T08:22:11Z
+completed   success      scheduled-report.yml 4518     scheduled-report.yml  2024-01-12T08:00:09Z   2024-01-12T08:16:45Z
+...
+```
+
+!!! warning "Common errors"
+    **`Error: workflow not found`** — Verify the workflow file exists in `.github/workflows/` and use the exact filename with `.yml` extension.
+    **`Error: authentication failed`** — Ensure you are authenticated with `gh auth login` and have `workflow` scope permissions on your GitHub token.
 | Cron field order | `minute hour day-of-month month day-of-week` |
 |---|---|
 | `0 6 * * 1` | Every Monday at 06:00 UTC |

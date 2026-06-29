@@ -73,6 +73,17 @@ sudo shutdown -r +1 "Rebooting for maintenance — <reason>"
 sudo reboot
 ```
 
+
+```text title="Expected output"
+Broadcast message from root@prod-web-01 (pts/0) (Mon Dec 18 10:45:23 2023):
+
+Rebooting for maintenance — kernel security patch
+The system will reboot in 1 minute.
+```
+
+!!! warning "Common errors"
+    **`sudo: shutdown: command not found`** — Install the `util-linux` package with `sudo apt-get install util-linux` or `sudo yum install util-linux`.
+    **`Shutdown scheduled for Mon 2023-12-18 10:46:23 UTC, use 'shutdown -c' to cancel`** — Run `sudo shutdown -c` immediately if you need to abort the reboot before the timer expires.
 **Windows:**
 ```powershell
 Restart-Computer -Force
@@ -105,6 +116,32 @@ systemctl status <service1> <service2>
 journalctl -b -p err
 ```
 
+
+```text title="Expected output"
+PING 192.168.45.87 (192.168.45.87) 56(84) bytes of data.
+64 bytes from 192.168.45.87: icmp_seq=1 ttl=64 time=2.34 ms
+64 bytes from 192.168.45.87: icmp_seq=2 ttl=64 time=2.41 ms
+64 bytes from 192.168.45.87: icmp_seq=3 ttl=64 time=2.38 ms
+64 bytes from 192.168.45.87: icmp_seq=4 ttl=64 time=2.45 ms
+--- 192.168.45.87 statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3004ms
+rtt min/avg/max/stddev = 2.34/2.39/2.45/0.04 ms
+ 14:32:18 up 47 days, 3:21, 2 users, load average: 0.84, 0.91, 0.78
+ system boot  2024-10-08 11:11 - 11:11, 1 user, runtime 47 days
+● docker.service — Docker Application Container Engine
+     Loaded: loaded (/usr/lib/systemd/system/docker.service; enabled; vendor preset: disabled)
+     Active: active (running) since Mon 2024-10-08 11:15:22 UTC; 47 days ago
+● kubelet.service — Kubernetes Node Agent
+     Loaded: loaded (/usr/lib/systemd/system/kubelet.service; enabled; vendor preset: disabled)
+     Active: active (running) since Mon 2024-10-08 11:16:05 UTC; 47 days ago
+Oct 08 11:15:18 prod-node-04 kernel: audit: type=1130 audit(1728390918.234:156): pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-tmpfiles-setup-dev comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+Oct 08 11:15:22 prod-node-04 kernel: audit: type=1131 audit(1728390922.567:189): pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=docker comm="systemd" exe="/usr/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+```
+
+!!! warning "Common errors"
+    **`ping: unknown host <server_ip>`** — Replace `<server_ip>` with an actual IP address or resolvable hostname.
+    **`Unit <service1> could not be found.`** — Verify the exact service name with `systemctl list-units --type=service` and correct any typos.
+    **`Failed to get bus: No such file or directory`** — Run the command with `sudo` or as root to access systemd bus.
 **Windows:**
 ```powershell
 # Services set to Automatic but not running
@@ -122,6 +159,15 @@ Confirm with the application owner or run the service's own health check before 
 curl -sf https://<app-host>/health && echo OK
 ```
 
+
+```text title="Expected output"
+OK
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to <app-host> port 443: Connection refused`** — Verify the application is running and listening on the correct port with `netstat -tlnp | grep <port>`.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip SSL verification (`curl -sfk https://<app-host>/health`) or install the CA certificate in your system trust store.
+    **`curl: (28) Operation timeout. The timeout specified operation was not completed in time.`** — Increase the timeout with `curl -sf --max-time 10 https://<app-host>/health` or check network connectivity to the host.
 ## Rollback
 
 A reboot is inherently non-reversible. If a service fails to start post-reboot:

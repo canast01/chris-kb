@@ -89,6 +89,36 @@ python3 -c "import ssl; print(ssl.OPENSSL_VERSION)"
 openssl version
 ```
 
+
+```text title="Expected output"
+Python 3.11.7
+Package    Version
+---------- -------
+pip        24.0
+requests   2.31.0
+urllib3    2.1.0
+certifi    2023.7.22
+setuptools 69.0.2
+wheel      0.42.0
+...
+certifi==2023.7.22
+charset-normalizer==3.3.2
+idna==3.6
+requests==2.31.0
+urllib3==2.1.0
+/usr/local/bin/python3
+/home/admin/venv-prod
+/home/admin/venv-prod
+['/home/admin/venv-prod/lib/python3.11/site-packages', '/usr/lib/python3.11', '/usr/lib/python3.11/lib-dynload']
+Linux ip-10-42-8-15 5.15.0-1234-aws #1234-Ubuntu SMP x86_64 GNU/Linux
+OpenSSL 3.0.11 19 Sep 2023
+OpenSSL 3.0.11 19 Sep 2023
+```
+
+!!! warning "Common errors"
+    **`which: python3: not found`** — Ensure Python 3 is installed and in PATH, or use the full path to the interpreter (e.g., `/usr/bin/python3`).
+    **`$VIRTUAL_ENV: command not found`** — The virtual environment is not activated; run `source /path/to/venv/bin/activate` before executing the script.
+    **`ModuleNotFoundError: No module named 'ssl'`** — Reinstall Python with OpenSSL support using your package manager (e.g., `apt-get install python3-dev libssl-dev && python3 -m pip install --upgrade pip`).
 ### 2. Capture the full traceback
 
 ```python
@@ -114,6 +144,25 @@ except Exception as e:
 python3 -u /path/to/script.py 2>&1 | tee /tmp/script-output-$(date +%F-%H%M%S).log
 ```
 
+
+```text title="Expected output"
+Starting script execution at 2024-01-15 14:32:18...
+Processing configuration from /etc/app/config.yaml
+Connected to database: postgres://db-prod-01.internal:5432/maindb
+Initializing worker pool with 8 threads
+[INFO] Task 1: Completed in 2.341s
+[INFO] Task 2: Completed in 1.892s
+[INFO] Task 3: Completed in 3.127s
+[WARNING] Task 4: Retrying connection (attempt 2/3)
+[INFO] Task 4: Completed in 5.614s
+Script execution completed successfully
+Output saved to /tmp/script-output-2024-01-15-143218.log
+```
+
+!!! warning "Common errors"
+    **`python3: command not found`** — Install Python 3 or verify it's in your PATH with `which python3`.
+    **`/path/to/script.py: No such file or directory`** — Replace `/path/to/script.py` with the actual script path and verify it exists with `ls -la`.
+    **`Permission denied`** — Make the script executable with `chmod +x /path/to/script.py` or run with `python3` directly.
 ### 3. Identify the failing dependency
 
 ```bash
@@ -135,6 +184,31 @@ pip install pip-audit
 pip-audit -r /tmp/requirements-current.txt
 ```
 
+
+```text title="Expected output"
+Name: requests
+Version: 2.28.1
+Summary: Python HTTP for Humans.
+Home-page: https://requests.readthedocs.io
+Author: Kenneth Reitz
+Location: /usr/local/lib/python3.9/site-packages
+Requires: charset-normalizer, idna, urllib3, certifi
+Required-by: boto3, kubernetes
+
+Available versions: 2.28.2, 2.29.0, 2.31.0
+
+2.31.0
+Vulnerability found in certifi (2022.12.7):
+  ID: GHSA-35m3-r9hj-r8mm
+  Fix: Update certifi to 2023.7.22 or later
+  Severity: HIGH
+
+1 vulnerability found in /tmp/requirements-current.txt
+```
+
+!!! warning "Common errors"
+    **`ERROR: No matching distribution found for <package-name>`** — Verify the package name spelling and ensure PyPI is accessible; try `pip search <package-name>` or check https://pypi.org directly.
+    **`ModuleNotFoundError: No module named '<package>'`** — Install the package with `pip install <package>` or check that the import name matches the distribution name (they sometimes differ, e.g., `pip install pillow` but `import PIL`).
 ### 4. For API errors — capture request/response detail
 
 ```python
@@ -234,6 +308,44 @@ python3 -m venv /tmp/test-venv
 pip-audit -r /tmp/requirements-current.txt --format markdown
 ```
 
+
+```text title="Expected output"
+Python 3.11.8
+Package            Version
+------------------ -----------
+requests           2.31.0
+urllib3            2.1.0
+certifi            2023.7.22
+charset-normalizer 3.3.2
+idna                3.6
+pip                23.3.1
+setuptools         68.2.2
+...
+OpenSSL: OpenSSL 3.0.12 26 Jan 2024
+
+Verbose output saved to /tmp/repro-2024-01-15-143022.log
+Status: 200
+TLS version: 12
+
+created virtual environment with 3.11.8 at /tmp/test-venv
+Collecting requests==2.28.2
+  Downloading requests-2.28.2-py3-none-any.whl (62 kB)
+Installing collected packages: requests, urllib3, certifi, charset-normalizer, idna
+Successfully installed requests-2.28.2 urllib3-1.26.13 certifi-2022.12.7 charset-normalizer-3.3.2 idna-3.4
+Script completed successfully in 2.341s
+
+Auditing dependencies from /tmp/requirements-current.txt
+Found 2 vulnerabilities:
+| Package | Version | Vulnerability | Severity |
+|---------|---------|---|---|
+| urllib3 | 2.1.0 | CVE-2023-45803 | Medium |
+| certifi | 2023.7.22 | CVE-2023-37920 | Low |
+```
+
+!!! warning "Common errors"
+    **`ModuleNotFoundError: No module named 'requests'`** — Run `pip install requests` in the active Python environment before executing the script.
+    **`requests.exceptions.SSLError: HTTPSConnectionPool(host='api.example.com', port=443): Max retries exceeded`** — Verify SSL certificates are valid with `python3 -c "import certifi; print(certifi.where())"` and check firewall/proxy rules blocking HTTPS.
+    **`venv: error: command not found`** — Install the venv module with `apt install python3-venv` (Debian/Ubuntu) or `yum install python3-venv` (RHEL/CentOS).
 ---
 
 ## See also

@@ -103,6 +103,59 @@ esxcli storage core path list
 esxcli storage core adapter list
 ```
 
+
+```text title="Expected output"
+Brocade FOS v9.1.0
+Fabric ID: 0x100001
+Fabric Name: prod-fc-fabric-01
+Switch Name: switch-core-01
+Switch State: Online
+Fabric Role: Principal
+Fabric Mode: Native
+
+Switch: switch-core-01 (0x620d74)
+  Ports: 48
+  PortState: Online
+  FabricWWN: 50:00:14:40:5d:8c:a1:00
+  ModelName: Brocade 6510
+
+Port  0: Online    Speed: 16Gb   SFP: Present   Signal: Good
+Port  1: Online    Speed: 16Gb   SFP: Present   Signal: Good
+Port 10: Offline   Speed: Unknown SFP: Absent    Signal: N/A
+Port 24: Online    Speed: 8Gb    SFP: Present   Signal: Marginal
+
+Active Zone Configuration: prod-zones-v3
+Number of Zones: 12
+Number of Members: 48
+
+VSAN 10:
+  FLOGI Database:
+    FCID 0x010100 | PWWN 50:00:14:40:5d:8c:a1:01 | Node: esx-host-03
+    FCID 0x010200 | PWWN 50:00:14:40:5d:8c:a1:02 | Node: esx-host-04
+    FCID 0x010300 | PWWN 50:00:14:40:5d:8c:a1:03 | Node: storage-array-01
+
+mpatha (dm-0) [size=2.0T][features=1 queue_if_no_path][hwhandler=1 alua][rw]
+  size=2.0T features='1 queue_if_no_path' hwhandler='1 alua' wp=rw
+  |-+- policy='service-time 0' prio=50 status=active
+  | `- 4:0:0:0 sdb 8:16 [active][ready]
+  `-+- policy='service-time 0' prio=10 status=enabled
+    `- 5:0:0:0 sdc 8:32 [enabled][ready]
+
+Host: scsi0 Channel: 00 Id: 00 Lun: 00
+  Vendor: NETAPP   Model: LUN Rev: 8.30
+  Type:   Direct-Access-RDisk ANSI SCSI revision: 05
+
+Path vmhba4:C0:T0:L0 State: active
+Path vmhba5:C0:T0:L0 State: active
+Path vmhba4:C0:T1:L0 State: disabled
+Path vmhba5:C0:T1:L0 State: enabled
+
+Adapter vmhba4 Driver: lpfc Model: Emulex LPe16000 State: online
+Adapter vmhba5 Driver: lpfc Model: Emulex LPe16000 State: online
+```
+
+!!! warning "Common errors"
+    **`Error: Fabric login failed`** — Verify switch connectivity and ensure the initiator PWWN is zoned correctly in the active
 ## Common Issues Reference
 
 | Symptom | Likely cause | First check |
@@ -122,6 +175,25 @@ esxcli storage core adapter list
 porterrshow
 ```
 
+
+```text title="Expected output"
+Port b, "FC1/1": Link failure
+Port c, "FC1/2": OK
+Port d, "FC1/3": OK
+Port e, "FC1/4": Link failure
+Port f, "FC2/1": OK
+Port g, "FC2/2": OK
+Port h, "FC2/3": Sync loss
+Port i, "FC2/4": OK
+Port j, "FC3/1": CRC error (5 errors)
+Port k, "FC3/2": OK
+Port l, "FC3/3": Encoding error (2 errors)
+Port m, "FC3/4": OK
+```
+
+!!! warning "Common errors"
+    **`porterrshow: command not found`** — Verify you are logged into the fabric switch CLI (not the host) and that the switch OS is loaded.
+    **`Error: No such command`** — Confirm the switch model supports porterrshow (some older models use portshow with error flags instead).
 | Counter | Acceptable | Investigate if |
 |---|---|---|
 | CRC | 0 | > 0 in last hour |

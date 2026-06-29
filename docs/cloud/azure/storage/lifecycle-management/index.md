@@ -54,6 +54,47 @@ az storage account management-policy delete \
   --account-name stprodblobs01
 ```
 
+
+```text title="Expected output"
+{
+  "id": "/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/resourceGroups/rg-storage-prod/providers/Microsoft.Storage/storageAccounts/stprodblobs01/managementPolicies/default",
+  "name": "default",
+  "properties": {
+    "policy": {
+      "rules": [
+        {
+          "enabled": true,
+          "name": "archive-old-blobs",
+          "type": "Lifecycle",
+          "definition": {
+            "actions": {
+              "baseBlob": {
+                "tierToArchive": {
+                  "daysAfterModificationGreaterThan": 90
+                }
+              }
+            },
+            "filters": {
+              "blobTypes": ["blockBlob"],
+              "prefixMatch": ["logs/"]
+            }
+          }
+        }
+      ]
+    }
+  },
+  "resourceGroup": "rg-storage-prod",
+  "type": "Microsoft.Storage/storageAccounts/managementPolicies"
+}
+(no output — command completes silently)
+Are you sure you want to perform this operation? (y/n): y
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`ResourceNotFound: The Resource 'Microsoft.Storage/storageAccounts/stprodblobs01' under resource group 'rg-storage-prod' was not found.`** — Verify the storage account name and resource group name are correct using `az storage account list --resource-group rg-storage-prod`.
+    **`FileNotFoundError: [Errno 2] No such file or directory: 'lifecycle-policy.json'`** — Ensure the JSON policy file exists in the current directory or provide the full path with `@/path/to/lifecycle-policy.json`.
+    **`InvalidJsonInput: The provided JSON is invalid.`** — Validate the JSON syntax in your policy file using `jq . < lifecycle-policy.json` or an online JSON validator before applying.
 ## Tier Transitions
 
 Example policy with full tier transition and deletion chain:
@@ -137,6 +178,51 @@ az storage account management-policy create \
   }'
 ```
 
+
+```text title="Expected output"
+{
+  "id": "/subscriptions/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d/resourceGroups/rg-storage-prod/providers/Microsoft.Storage/storageAccounts/stprodblobs01/managementPolicies/default",
+  "name": "default",
+  "type": "Microsoft.Storage/storageAccounts/managementPolicies",
+  "properties": {
+    "policy": {
+      "rules": [
+        {
+          "name": "archive-archived-tagged",
+          "enabled": true,
+          "type": "Lifecycle",
+          "definition": {
+            "filters": {
+              "blobTypes": [
+                "blockBlob"
+              ],
+              "blobIndexMatch": [
+                {
+                  "name": "lifecycle",
+                  "op": "==",
+                  "value": "archive"
+                }
+              ]
+            },
+            "actions": {
+              "baseBlob": {
+                "tierToArchive": {
+                  "daysAfterModificationGreaterThan": 1
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+```
+
+!!! warning "Common errors"
+    **`(ResourceNotFound) The Resource 'Microsoft.Storage/storageAccounts/stprodblobs01' under resource group 'rg-storage-prod' was not found.`** — Verify the storage account name and resource group name are correct using `az storage account list --resource-group rg-storage-prod`.
+    **`Invalid JSON in policy definition`** — Ensure the JSON policy is properly formatted by validating it with a JSON linter before passing to the command.
+    **`(AuthorizationFailed) The client does not have permission to perform action 'Microsoft.Storage/storageAccounts/managementPolicies/write'`** — Confirm your Azure account has the Storage Account Contributor role or higher on the storage account using `az role assignment list --scope /subscriptions/{subscriptionId}/resourceGroups/rg-storage-prod/providers/Microsoft.Storage/storageAccounts/stprodblobs01`.
 ## Deletion Rules
 
 ```json
@@ -186,3 +272,18 @@ az storage logging update \
   --services b \
   --retention 7
 ```
+
+
+```text title="Expected output"
+EventTimestamp            ResourceGroup      ResourceProvider                 OperationName                                                    Status
+-----------------------  -----------------  ------------------------------   ---------------------------------------------------------------  --------
+2024-01-15T14:32:18.456Z rg-storage-prod    Microsoft.Storage               Microsoft.Storage/storageAccounts/managementPolicies/write      Succeeded
+2024-01-15T09:47:02.123Z rg-storage-prod    Microsoft.Storage               Microsoft.Storage/storageAccounts/managementPolicies/write      Succeeded
+2024-01-14T22:15:44.789Z rg-storage-prod    Microsoft.Storage               Microsoft.Storage/storageAccounts/managementPolicies/write      Succeeded
+
+Storage logging properties updated for account stprodblobs01.
+```
+
+!!! warning "Common errors"
+    **`ResourceNotFound : The resource 'Microsoft.Storage/storageAccounts/stprodblobs01' under resource group 'rg-storage-prod' was not found.`** — Verify the storage account name and resource group name are correct using `az storage account list --resource-group rg-storage-prod`.
+    **`AuthorizationFailed : The client 'user@contoso.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Storage/storageAccounts/write' over scope '/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/rg-storage-prod/providers/Microsoft.Storage/storageAccounts/stprodblobs01'.`** — Ensure your Azure account has Storage Account Contributor or Owner role on the storage account using `az role assignment list --scope /subscriptions/{subscriptionId}/resourceGroups/rg-storage-prod`.

@@ -134,6 +134,72 @@ curl -H "Authorization: Bearer $AWX_TOKEN" \
   "https://awx.example.com/api/v2/jobs/?launched_by__username=jsmith&page_size=20"
 ```
 
+
+```text title="Expected output"
+{
+  "count": 247,
+  "next": "https://awx.example.com/api/v2/activity_stream/?page=2&page_size=50",
+  "previous": null,
+  "results": [
+    {
+      "id": 1024,
+      "timestamp": "2024-01-15T14:32:18.456789Z",
+      "actor": {
+        "id": 12,
+        "username": "jsmith",
+        "first_name": "John",
+        "last_name": "Smith"
+      },
+      "action": "create",
+      "object1_type": "job",
+      "object1_id": 5847,
+      "summary_fields": {
+        "job": {
+          "id": 5847,
+          "name": "Deploy-Prod-Web",
+          "status": "successful"
+        }
+      }
+    },
+    {
+      "id": 1023,
+      "timestamp": "2024-01-15T13:18:42.123456Z",
+      "actor": {"id": 12, "username": "jsmith"},
+      "action": "update",
+      "object1_type": "credential",
+      "object1_id": 89
+    }
+  ]
+}
+{
+  "count": 18,
+  "results": [
+    {
+      "id": 5847,
+      "name": "Deploy-Prod-Web",
+      "launched_by": "jsmith",
+      "created": "2024-01-15T14:32:18.456789Z",
+      "status": "successful",
+      "hosts_processed": 12,
+      "hosts_failed": 0
+    },
+    {
+      "id": 5821,
+      "name": "Deploy-Prod-Web",
+      "launched_by": "jsmith",
+      "created": "2024-01-14T09:15:33.789012Z",
+      "status": "successful",
+      "hosts_processed": 12,
+      "hosts_failed": 0
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl or configure proper CA certificates in your AWX instance.
+    **`{"detail":"Invalid token","status":401}`** — Verify `$AWX_TOKEN` is set correctly with `echo $AWX_TOKEN` and regenerate it from AWX Settings > Users if expired.
+    **`curl: (7) Failed to connect to awx.example.com port 443: Connection refused`** — Confirm AWX service is running with `systemctl status awx` and verify the hostname/port in your curl command.
 | Audit Event | AWX Log Location |
 |---|---|
 | Job launch | Activity stream + job events |

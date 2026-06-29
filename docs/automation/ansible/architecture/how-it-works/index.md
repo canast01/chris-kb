@@ -147,6 +147,38 @@ ansible-builder build \
   --tag my-org/custom-ee:1.0
 ```
 
+
+```text title="Expected output"
+PLAY [all] *********************************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Install packages] ********************************************************
+changed: [localhost]
+
+TASK [Configure services] ******************************************************
+ok: [localhost]
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=3    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+Running command: podman build -t my-org/custom-ee:1.0 -f Containerfile.base .
+STEP 1/8: FROM quay.io/ansible/creator-base:v0.1.0
+STEP 2/8: ADD _build /tmp/_build
+STEP 3/8: RUN /tmp/_build/install-pip-packages.sh
+Collecting ansible-core==2.14.3
+Successfully installed ansible-core-2.14.3
+STEP 4/8: RUN /tmp/_build/install-galaxy-collections.sh
+Installing collection community.general
+STEP 8/8: COMMIT my-org/custom-ee:1.0
+Successfully tagged my-org/custom-ee:1.0
+```
+
+!!! warning "Common errors"
+    **`ERROR! the role 'common' was not found on 'localhost'`** — Verify the role exists in your roles/ directory or install it via ansible-galaxy install.
+    **`podman: command not found`** — Install podman or docker and ensure it is in your PATH; ansible-builder requires a container runtime.
+    **`Error validating execution-environment.yml: 'version' is a required property`** — Add a `version:` field to your execution-environment.yml file (e.g., `version: 1`).
 ---
 
 ## See also

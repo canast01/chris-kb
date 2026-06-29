@@ -158,6 +158,29 @@ export TF_VAR_db_password="$(vault kv get -field=password secret/rds/prod)"
 terraform apply -var-file="prod.tfvars"
 ```
 
+
+```text title="Expected output"
+var.environment
+  Environment name
+  Enter a value: prod
+
+var.instance_count
+  Number of instances to deploy
+  Enter a value: 3
+
+Plan: 12 to add, 0 to change, 0 to destroy.
+
+Do you want to perform these actions in workspace "prod"?
+  Terraform will perform the actions described above.
+  Apply complete! Resources: 12 added, 0 changed, 0 destroyed.
+
+Apply duration: 45s
+```
+
+!!! warning "Common errors"
+    **`Error: Unsupported argument on module "rds" line 42, in module "rds": on_failure is not a valid argument`** — Verify prod.tfvars variable names match the variable declarations in your Terraform configuration files.
+    **`Error: error reading secret/rds/prod: permission denied`** — Ensure your Vault authentication token has read permissions for the secret/rds/prod path.
+    **`Error: Invalid value for variable "db_password": value must be a string`** — Confirm the Vault field extraction syntax is correct and returns a non-empty string value.
 ### `.tfvars` file rules
 
 | File | Contains | Committed to Git? |
@@ -244,6 +267,22 @@ terraform force-unlock LOCK-ID-HERE
 aws dynamodb scan --table-name terraform-state-lock --region eu-west-1
 ```
 
+
+```text title="Expected output"
+Unlock ID: LOCK-ID-HERE
+Path: prod/vpc/terraform.tfstate
+Created: 2024-01-15T09:47:23Z
+Info: Forced unlock by admin@example.com
+{
+    "Items": [],
+    "Count": 0,
+    "ScannedCount": 0
+}
+```
+
+!!! warning "Common errors"
+    **`Error acquiring the state lock: ConditionalCheckFailedException: The conditional request failed`** — Verify the lock ID matches exactly from the error message and the DynamoDB table name matches your backend configuration.
+    **`Error: error reading dynamodb table: ResourceNotFoundException: Requested resource not found`** — Confirm the DynamoDB table exists in the specified region (eu-west-1) and matches the table name in your Terraform backend configuration.
 Best practices:
 
 - Never run `terraform apply` from multiple terminals/CI jobs simultaneously against the same workspace
@@ -306,6 +345,49 @@ checkov -d . --framework terraform
 terraform-docs markdown table --output-file README.md --output-mode inject .
 ```
 
+
+```text title="Expected output"
+tfsec 1.28.1 by Aqua Security (https://www.aquasecurity.com)
+
+Passed checks: 47, Failed checks: 3, Skipped checks: 0
+
+Check: CUS001
+  Description: Ensure S3 bucket has versioning enabled
+  File: ./modules/storage/main.tf:12-18
+  Severity: MEDIUM
+
+Check: AVD-AWS-0001
+  Description: Root account should not have active access keys
+  File: ./variables.tf:45
+  Severity: HIGH
+
+Check: CUS002
+  Description: CloudTrail logging not enabled
+  File: ./modules/logging/main.tf:8
+  Severity: MEDIUM
+
+Passed checks: 47, Failed checks: 3, Skipped checks: 0
+
+Passed checks: 156, Failed checks: 2, Skipped checks: 8
+
+Check: CKV_AWS_21
+  Description: Ensure all data stored in the S3 is securely encrypted at rest
+  File: ./modules/storage/main.tf:12
+  Severity: MEDIUM
+
+Check: CKV_AWS_1
+  Description: Ensure CloudTrail log file validation is enabled
+  File: ./modules/logging/main.tf:8
+  Severity: HIGH
+
+Updating module documentation...
+Module documentation updated successfully in README.md
+```
+
+!!! warning "Common errors"
+    **`Error: No valid credentials found`** — Configure AWS credentials via `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables before running security scanners.
+    **`Error: Failed to read file: permission denied`** — Ensure the Terraform working directory and all subdirectories have read permissions with `chmod -R u+r .`.
+    **`Error: No such file or directory: README.md template not found`** — Add a `<!-- BEGIN_TF_DOCS -->` comment block to your README.md or create the file with `touch README.md` before running terraform-docs.
 ---
 
 ## See also

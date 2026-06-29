@@ -394,6 +394,31 @@ pip install -r requirements.txt
 deactivate
 ```
 
+
+```text title="Expected output"
+(.venv) user@workstation:~/project$ which python
+/home/user/project/.venv/bin/python
+(.venv) user@workstation:~/project$ python --version
+Python 3.11.7
+(.venv) user@workstation:~/project$ pip install requests pandas
+Collecting requests
+  Downloading requests-2.31.0-py3-none-any.whl (62 kB)
+Collecting pandas
+  Downloading pandas-2.1.3-cp311-cp311-linux_x86_64.whl (11.7 MB)
+Installing collected packages: requests, pandas
+Successfully installed requests-2.31.0 pandas-2.1.3
+(.venv) user@workstation:~/project$ pip freeze > requirements.txt
+(.venv) user@workstation:~/project$ pip install -r requirements.txt
+Requirement already satisfied: requests in ./.venv/lib/python3.11/site-packages (2.31.0)
+Requirement already satisfied: pandas in ./.venv/lib/python3.11/site-packages (2.1.3)
+(.venv) user@workstation:~/project$ deactivate
+user@workstation:~/project$
+```
+
+!!! warning "Common errors"
+    **`Error: python3: command not found`** — Install Python 3 via your system package manager (apt install python3, brew install python3, etc.).
+    **`PermissionError: [Errno 13] Permission denied: '.venv/bin/activate'`** — Run `chmod +x .venv/bin/activate` to make the activation script executable.
+    **`ModuleNotFoundError: No module named 'pip'`** — Recreate the venv with `python3 -m venv --upgrade-deps .venv` to ensure pip is installed.
 | Practice | Reason |
 |---|---|
 | One venv per project | Prevents dependency conflicts between projects |
@@ -433,6 +458,46 @@ twine upload dist/*
 # password = pypi-<your-api-token>
 ```
 
+
+```text title="Expected output"
+Collecting build
+  Downloading build-1.0.0-py3-none-any.whl (18.5 kB)
+Collecting twine
+  Downloading twine-4.0.2-py3-none-any.whl (37.2 kB)
+Installing collected packages: build, twine
+Successfully installed build-1.0.0 twine-4.0.2
+
+* Creating wheel...
+* Adding mypackage-1.0.0.dist-info/WHEEL
+* Adding mypackage-1.0.0.dist-info/METADATA
+Successfully built mypackage-1.0.0.tar.gz and mypackage-1.0.0-py3-none-any.whl
+
+Checking dist/mypackage-1.0.0.tar.gz: PASSED
+Checking dist/mypackage-1.0.0-py3-none-any.whl: PASSED
+
+Uploading distributions to https://test.pypi.org/legacy/
+Uploading mypackage-1.0.0.tar.gz
+100%|████████████| 12.3k/12.3k [00:02<00:00, 5.2kB/s]
+Uploading mypackage-1.0.0-py3-none-any.whl
+100%|████████████| 8.7k/8.7k [00:01<00:00, 7.1kB/s]
+
+View at: https://test.pypi.org/project/mypackage/1.0.0/
+
+Uploading distributions to https://upload.pypi.org/legacy/
+Username: __token__
+Password: 
+Uploading mypackage-1.0.0.tar.gz
+100%|████████████| 12.3k/12.3k [00:03<00:00, 4.1kB/s]
+Uploading mypackage-1.0.0-py3-none-any.whl
+100%|████████████| 8.7k/8.7k [00:02<00:00, 6.3kB/s]
+
+View at: https://pypi.org/project/mypackage/1.0.0/
+```
+
+!!! warning "Common errors"
+    **`error: invalid value for 'classifiers': [line 5] 'License :: OSI Approved :: MIT License' is not a valid classifier`** — Verify all classifiers in pyproject.toml match the official PyPI classifier list at https://pypi.org/pypi?%3Aaction=list_classifiers.
+    **`HTTPError: 403 Forbidden`** — Confirm your PyPI API token is valid and has upload permissions; regenerate the token in your PyPI account settings if needed.
+    **`FileNotFoundError: [Errno 2] No such file or directory: 'dist/mypackage-1.0.0.tar.gz'`** — Run `python -m build` first to generate the distribution files in the dist/ directory.
 | Step | Command |
 |---|---|
 | Build | `python -m build` |
@@ -490,6 +555,37 @@ pytest --cov=mymodule --cov-report=html
 # Open htmlcov/index.html in a browser
 ```
 
+
+```text title="Expected output"
+tests/test_utils.py::test_add_numbers_positive PASSED                    [ 10%]
+tests/test_utils.py::test_add_numbers_negative PASSED                    [ 20%]
+tests/test_utils.py::test_add_numbers_zero PASSED                        [ 30%]
+tests/test_validators.py::test_email_valid PASSED                        [ 40%]
+tests/test_validators.py::test_email_invalid PASSED                      [ 50%]
+tests/test_helpers.py::test_parse_config PASSED                          [ 60%]
+tests/test_helpers.py::test_parse_config_missing_key PASSED              [ 70%]
+tests/test_helpers.py::test_parse_config_malformed PASSED                [ 80%]
+tests/integration/test_api.py::test_api_health_check PASSED              [ 90%]
+tests/integration/test_api.py::test_api_response_format PASSED           [100%]
+
+======================== 10 passed in 2.34s ========================
+
+Name                    Stmts   Miss  Cover   Missing
+------------------------------------------------------
+mymodule/__init__.py       12      0   100%
+mymodule/utils.py          45      3    93%   67-69, 102
+mymodule/validators.py     38      2    95%   41, 88
+mymodule/helpers.py        52      8    85%   15-22, 91-95
+------------------------------------------------------
+TOTAL                     147     13    91%
+
+Coverage HTML written to htmlcov/index.html
+```
+
+!!! warning "Common errors"
+    **`ERROR: file not found: tests/test_utils.py`** — Verify the test file path matches your project structure and run from the repository root directory.
+    **`ModuleNotFoundError: No module named 'mymodule'`** — Install the package in development mode with `pip install -e .` or ensure the module is in PYTHONPATH.
+    **`FAILED tests/test_utils.py::test_add_numbers_positive - AssertionError: assert 3 == 4`** — Review the test assertion logic and verify the function implementation matches expected behavior.
 | Pytest feature | Usage |
 |---|---|
 | `-v` | Verbose output — show each test name and pass/fail |
@@ -525,6 +621,14 @@ export API_KEY=my-secret-token
 DB_HOST=db.staging.example.com python3 my_script.py
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`python3: command not found`** — Install Python 3 with your package manager (e.g., `apt install python3` on Ubuntu or `brew install python3` on macOS).
+    **`my_script.py: No such file or directory`** — Verify the script exists in the current working directory or provide the full path to the script.
 ```bash
 # Install python-dotenv for .env file support
 pip install python-dotenv

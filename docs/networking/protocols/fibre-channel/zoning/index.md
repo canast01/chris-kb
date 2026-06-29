@@ -62,6 +62,33 @@ zoneshow "esxi01_pure01_ctA1"
 nsallshow | grep <wwn>
 ```
 
+
+```text title="Expected output"
+Defined configuration:
+ cfg:	PROD_CFG
+ zone:	esxi01_pure01_ctA1
+ zone:	esxi01_pure01_ctB2
+ zone:	storage_backup_zone
+
+Active configuration:
+ cfg:	PROD_CFG
+
+Zone esxi01_pure01_ctA1:
+  21:00:00:0a:1b:2c:3d:4e
+  50:00:99:ff:ee:dd:cc:bb
+
+Zone esxi01_pure01_ctB2:
+  21:00:00:5f:6g:7h:8i:9j
+  50:00:99:aa:bb:cc:dd:ee
+
+21:00:00:0a:1b:2c:3d:4e;esxi01_pure01_ctA1;PROD_CFG;Active
+50:00:99:ff:ee:dd:cc:bb;esxi01_pure01_ctA1;PROD_CFG;Active
+```
+
+!!! warning "Common errors"
+    **`Invalid WWN format`** — Ensure WWN is formatted as 16 hexadecimal characters separated by colons (e.g., `21:00:00:xx:xx:xx:xx:xx`).
+    **`Zone already exists`** — Use `zonedelete` to remove the existing zone before recreating it with `zonecreate`.
+    **`Configuration is already active`** — Deactivate the current config with `cfgdisable` before enabling a different one.
 ## Cisco MDS / NX-OS — Zone Commands
 
 ```bash
@@ -84,6 +111,35 @@ show zone name esxi01_pure01_ctA1 vsan 10
 show zoneset active vsan 10
 ```
 
+
+```text title="Expected output"
+VSAN: 10
+Zoneset Name: PROD_ZONESET
+Zoneset ID: 0x0100007b
+Number of zones: 3
+Zone Name: esxi01_pure01_ctA1
+  pwwn 21:00:00:0a:1b:2c:3d:4e
+  pwwn 50:00:99:ff:ee:dd:cc:bb
+Zone Name: esxi01_pure01_ctB1
+  pwwn 21:00:00:0a:1b:2c:3d:4f
+  pwwn 50:00:99:ff:ee:dd:cc:bc
+Zone Name: storage_array_zone
+  pwwn 50:00:14:40:12:34:56:78
+  pwwn 50:00:14:40:12:34:56:79
+
+VSAN: 10
+Zoneset Name: PROD_ZONESET
+Zoneset ID: 0x0100007b
+Number of zones: 3
+Zone Name: esxi01_pure01_ctA1
+  pwwn 21:00:00:0a:1b:2c:3d:4e
+  pwwn 50:00:99:ff:ee:dd:cc:bb
+```
+
+!!! warning "Common errors"
+    **`% Invalid command`** — Verify you are in the correct configuration mode (use `config t` for terminal configuration) and check VSAN number exists with `show vsan`.
+    **`% Zone member already exists`** — Remove the duplicate PWWN entry from the zone definition or use `no member pwwn <address>` before re-adding with correct syntax.
+    **`% Zoneset activation failed: conflicting zones detected`** — Run `show zone conflicts vsan 10` to identify overlapping zone members and resolve duplicate PWWN assignments across zones.
 ## Common Issues
 
 | Symptom | Likely cause | Check |

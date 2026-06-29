@@ -99,6 +99,56 @@ terraform state show aws_vpc.main
 terraform import aws_s3_bucket.assets my-existing-bucket-name
 ```
 
+
+```text title="Expected output"
+Initializing the backend...
+Initializing provider plugins...
+- Finding latest version of hashicorp/aws...
+- Installing hashicorp/aws v5.42.0...
+- Installed hashicorp/aws v5.42.0 (signed by HashiCorp)
+Terraform has been successfully initialized!
+
+(no output — command completes silently)
+
+Success! The configuration is valid.
+
+Terraform will perform the following actions:
+
+  # aws_vpc.main will be created
+  + resource "aws_vpc" "main" {
+      + cidr_block           = "10.0.0.0/16"
+      + enable_dns_hostnames = true
+      + id                   = (known after apply)
+    }
+
+Plan: 1 to add, 0 to change, 0 to destroy.
+
+Saved the plan to: tfplan
+
+Apply complete! Resources: 1 added, 0 changed, 0 destroyed.
+
+aws_vpc.main
+aws_subnet.primary
+aws_security_group.default
+aws_s3_bucket.assets
+
+# aws_vpc.main:
+resource "aws_vpc" "main" {
+  cidr_block           = "10.0.0.0/16"
+  enable_dns_hostnames = true
+  id                   = "vpc-0a8f3c2b1d9e4f6a7"
+  tags                 = {}
+}
+
+aws_s3_bucket.assets: Importing from ID "my-existing-bucket-name"...
+aws_s3_bucket.assets: Import complete!
+  Imported aws_s3_bucket (ID: my-existing-bucket-name)
+```
+
+!!! warning "Common errors"
+    **`Error: Backend initialization required: please run "terraform init"`** — Run `terraform init` in the working directory before executing other terraform commands.
+    **`Error: resource aws_s3_bucket.assets does not exist in the state`** — Ensure the resource identifier matches the actual AWS resource name and that the resource type is correct in your configuration.
+    **`Error: Error reading state file: stat .terraform/terraform.tfstate: no such file or directory`** — Verify the working directory contains a valid Terraform configuration and run `terraform init` to initialize the backend.
 ---
 
 ## See also

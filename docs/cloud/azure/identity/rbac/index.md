@@ -74,6 +74,34 @@ az role assignment delete \
 az role definition list --custom-role-only false --output table
 ```
 
+
+```text title="Expected output"
+PrincipalName                          RoleDefinitionName             Scope
+─────────────────────────────────────  ─────────────────────────────  ──────────────────────────────────────────────────────────
+alice@contoso.com                      Contributor                    /subscriptions/a1b2c3d4-e5f6-47a8-9b1c-2d3e4f5a6b7c/resourceGroups/prod-rg
+bob@contoso.com                        Reader                         /subscriptions/a1b2c3d4-e5f6-47a8-9b1c-2d3e4f5a6b7c
+msi-app-001                            Storage Blob Data Contributor  /subscriptions/a1b2c3d4-e5f6-47a8-9b1c-2d3e4f5a6b7c/resourceGroups/data-rg/providers/Microsoft.Storage/storageAccounts/prodstg001
+...
+
+[
+  {
+    "id": "/subscriptions/a1b2c3d4-e5f6-47a8-9b1c-2d3e4f5a6b7c/providers/Microsoft.Authorization/roleAssignments/12345678-1234-1234-1234-123456789012",
+    "principalId": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
+    "roleDefinitionId": "/subscriptions/a1b2c3d4-e5f6-47a8-9b1c-2d3e4f5a6b7c/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c",
+    "scope": "/subscriptions/a1b2c3d4-e5f6-47a8-9b1c-2d3e4f5a6b7c"
+  }
+]
+
+{
+  "id": "/subscriptions/a1b2c3d4-e5f6-47a8-9b1c-2d3e4f5a6b7c/providers/Microsoft.Authorization/roleAssignments/87654321-4321-4321-4321-210987654321",
+  "principalId": "a1b2c3d4-e5f6-47a8-9b1c-2d3e4f5a6b7c",
+  "roleDefinitionId": "/subscriptions/a1b2c3d4-e5f6-47a8-9b1c-2d3e4f5a6b7c/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c",
+  "scope": "/subscriptions/a1b2c3d4-e5f6-47a8-9b1c-2d3e4f5a6b7c/resourceGroups/prod-rg"
+}
+
+Name                                  Type                                      Description
+────────────────────────────────────  ──────────────────────────────────────    ──────────────────────────────────────────────────────
+```
 ### PowerShell
 
 ```powershell
@@ -120,6 +148,37 @@ az role definition update --role-definition @custom-role.json
 az role definition delete --name "VM Operator (Read + Start/Stop)"
 ```
 
+
+```text title="Expected output"
+{
+  "assignableScopes": [
+    "/subscriptions/12345678-1234-1234-1234-123456789012"
+  ],
+  "description": "Can read VM properties and perform start/stop operations",
+  "id": "/subscriptions/12345678-1234-1234-1234-123456789012/providers/Microsoft.Authorization/roleDefinitions/a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "name": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "permissions": [
+    {
+      "actions": [
+        "Microsoft.Compute/virtualMachines/read",
+        "Microsoft.Compute/virtualMachines/start/action",
+        "Microsoft.Compute/virtualMachines/powerOff/action"
+      ],
+      "dataActions": [],
+      "notActions": [],
+      "notDataActions": []
+    }
+  ],
+  "roleName": "VM Operator (Read + Start/Stop)",
+  "type": "CustomRole"
+}
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`File not found: custom-role.json`** — Verify the JSON definition file exists in the current directory and use the correct relative or absolute path.
+    **`Invalid role definition schema`** — Ensure the JSON file contains required fields (roleName, description, type, assignableScopes, permissions) with valid syntax.
+    **`Role definition not found`** — Confirm the exact role name exists by running `az role definition list --custom-role-only` to view all custom roles.
 ## Data Plane vs Control Plane
 
 Control plane (management) and data plane (data) are separate in Azure RBAC.

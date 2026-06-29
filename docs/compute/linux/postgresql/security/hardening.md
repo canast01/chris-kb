@@ -64,6 +64,23 @@ sudo chmod 600 /var/lib/pgsql/16/data/postgresql.conf
 sudo chmod 600 /var/lib/pgsql/16/data/pg_hba.conf
 ```
 
+
+```text title="Expected output"
+total 112
+drwx------ 19 postgres postgres  4096 Nov 14 10:23 .
+drwxr-xr-x  3 root     root      4096 Nov 14 09:15 ..
+-rw-------  1 postgres postgres  1234 Nov 14 10:22 postgresql.conf
+-rw-------  1 postgres postgres   892 Nov 14 10:22 pg_hba.conf
+drwx------  5 postgres postgres  4096 Nov 14 10:20 base
+drwx------  2 postgres postgres  4096 Nov 14 10:20 global
+drwx------  2 postgres postgres  4096 Nov 14 10:20 pg_wal
+-rw-------  1 postgres postgres    48 Nov 14 10:22 postgresql.auto.conf
+-rw-------  1 postgres postgres   256 Nov 14 10:22 pg_ident.conf
+```
+
+!!! warning "Common errors"
+    **`chmod: changing permissions of '/var/lib/pgsql/16/data/postgresql.conf': Operation not permitted`** — Run the chmod commands with `sudo` or as the postgres user, and verify the file is not immutable with `lsattr`.
+    **`ls: cannot open directory '/var/lib/pgsql/16/data': Permission denied`** — Ensure your user is in the postgres group (`usermod -a -G postgres $USER`) or run the ls command with `sudo`.
 ## Disable Unnecessary Features
 
 ```sql

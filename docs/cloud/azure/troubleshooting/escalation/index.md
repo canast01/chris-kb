@@ -101,6 +101,47 @@ az support tickets create \
   --contact-email "<email>"
 ```
 
+
+```text title="Expected output"
+{
+  "SubscriptionId": "a1b2c3d4-e5f6-4789-a012-b3c4d5e6f7a8",
+  "Name": "Production-Subscription",
+  "TenantId": "f7e6d5c4-b3a2-1098-7654-fedcba987654"
+}
+(no output — command completes silently)
+{
+  "id": "/subscriptions/a1b2c3d4-e5f6-4789-a012-b3c4d5e6f7a8/providers/microsoft.insights/eventTypes/management/values/Administrative",
+  "operationName": {
+    "value": "Microsoft.Compute/virtualMachines/write",
+    "localizedValue": "Create or Update Virtual Machine"
+  },
+  "resourceId": "/subscriptions/a1b2c3d4-e5f6-4789-a012-b3c4d5e6f7a8/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachines/vm-prod-01",
+  "resourceGroupName": "prod-rg",
+  "eventTimestamp": "2024-01-15T14:32:18.123456Z",
+  "status": {
+    "value": "Succeeded",
+    "localizedValue": "Succeeded"
+  }
+}
+{
+  "id": "/subscriptions/a1b2c3d4-e5f6-4789-a012-b3c4d5e6f7a8/providers/microsoft.support/supportTickets/2024011501",
+  "name": "2024011501",
+  "type": "Microsoft.Support/supportTickets",
+  "properties": {
+    "supportTicketId": "2024011501",
+    "title": "Description of issue",
+    "description": "Detailed description",
+    "severity": "critical",
+    "status": "Open",
+    "createdDate": "2024-01-15T14:35:22Z"
+  }
+}
+```
+
+!!! warning "Common errors"
+    **`The subscription 'a1b2c3d4-e5f6-4789-a012-b3c4d5e6f7a8' could not be found.`** — Verify the subscription ID with `az account list` and set the correct subscription using `az account set --subscription <id>`.
+    **`This operation requires a support plan. Please contact support or upgrade your support plan.`** — Ensure your Azure subscription has an active support plan (Standard, Professional Direct, or Premier) before creating tickets via CLI.
+    **`Invalid problem classification ID provided.`** — Retrieve valid problem classification IDs using `az support services problem-classifications list --service-name <service-name>` and use the correct format.
 ---
 
 ## Verify resolution

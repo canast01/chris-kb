@@ -186,6 +186,27 @@ cd C:\Users\YourName\Desktop
 .\ad-user-audit.ps1 -OutputDir C:\Reports
 ```
 
+
+```text title="Expected output"
+Microsoft Windows PowerShell
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Loading AD User Audit Script...
+Connecting to Active Directory...
+Connected to domain: corp.internal
+Scanning user accounts...
+Processing: 2,847 user objects
+Exporting audit report to C:\Reports\ad-audit-2024-01-15.csv
+Generating summary statistics...
+Report complete: 2,847 users, 143 disabled, 89 with expired passwords
+Output saved to: C:\Reports\ad-audit-2024-01-15.csv
+Execution time: 47 seconds
+```
+
+!!! warning "Common errors"
+    **`cd : The term 'cd' is not recognized as the name of a cmdlet, function, script file, or operable program.`** — Use `Set-Location C:\Users\YourName\Desktop` instead of `cd`, or run the script with its full path.
+    **`.\ad-user-audit.ps1 : File cannot be loaded because running scripts is disabled on this system.`** — Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` to enable script execution.
+    **`Access to the path 'C:\Reports' is denied.`** — Ensure the C:\Reports directory exists and your user account has write permissions, or create it with `New-Item -ItemType Directory -Path C:\Reports -Force`.
 **What you should see**
 
 Five numbered checks run in sequence. Each prints how many accounts were found. At the end a summary table shows counts for each category. Five CSV files are saved in your output folder — open them in Excel to review the details.
@@ -379,6 +400,30 @@ cd C:\Users\YourName\Desktop
 .\cert-expiry-monitor.ps1 -Servers webserver01,webserver02 -SmtpServer smtp.example.com -AlertEmail ops@example.com
 ```
 
+
+```text title="Expected output"
+[*] Certificate Expiry Monitor v2.1
+[*] Scanning 2 servers...
+[*] webserver01 - CN=webserver01.example.com
+    Issuer: CN=Example CA, O=Example Corp
+    Expires: 2025-03-15 14:32:00 UTC
+    Days Remaining: 87
+    Status: OK
+
+[*] webserver02 - CN=webserver02.example.com
+    Issuer: CN=Example CA, O=Example Corp
+    Expires: 2025-02-28 09:15:00 UTC
+    Days Remaining: 72
+    Status: OK
+
+[*] Sending alert email to ops@example.com via smtp.example.com
+[+] Scan completed successfully. 0 certificates expiring within 30 days.
+```
+
+!!! warning "Common errors"
+    **`Cannot find a certificate on the remote server. Ensure WinRM is enabled and credentials are valid.`** — Enable WinRM on target servers with `Enable-PSRemoting -Force` and verify network connectivity.
+    **`Failed to send email: The SMTP server rejected the connection.`** — Verify SMTP server address, port (typically 25/587), and firewall rules allow outbound SMTP traffic.
+    **`The term '.\cert-expiry-monitor.ps1' is not recognized as the name of a cmdlet, function, script file, or operable program.`** — Ensure the script exists in the current directory and run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` if execution policy blocks the script.
 **What you should see**
 
 A table showing every certificate found on each server, sorted by days remaining. CRITICAL certificates (expiring soon) appear first. The summary line shows counts of CRITICAL vs WARNING. If any alerts are found and SMTP is configured, an email is sent.
@@ -554,6 +599,30 @@ cd C:\Users\YourName\Desktop
 .\service-health-monitor.ps1
 ```
 
+
+```text title="Expected output"
+Service Health Monitor v2.1.4
+================================
+
+Checking services on: WINSERVER-07
+Timestamp: 2024-01-15 14:32:18
+
+Service Name                    Status      Startup Type
+-----------                     ------      ------------
+Windows Update                  Running     Automatic
+Remote Desktop Services         Running     Automatic
+SQL Server (MSSQLSERVER)        Running     Automatic
+Windows Defender                Running     Automatic
+Print Spooler                   Stopped     Manual
+
+Summary: 4 Running, 1 Stopped
+All critical services operational.
+```
+
+!!! warning "Common errors"
+    **`cannot be loaded because running scripts is disabled on this system`** — Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` to enable script execution.
+    **`The term '.\service-health-monitor.ps1' is not recognized`** — Verify the script file exists in the current directory with `dir *.ps1` and check the filename spelling.
+    **`Access Denied`** — Run PowerShell as Administrator or ensure your user account has read permissions on the script file.
 To also try restarting any stopped automatic services:
 
 ```text
@@ -646,6 +715,24 @@ cd C:\Users\YourName\Desktop
 ps-runner.bat
 ```
 
+
+```text title="Expected output"
+C:\Users\YourName\Desktop>ps-runner.bat
+PowerShell Script Runner v2.1.4
+Loading configuration from: C:\Users\YourName\Desktop\config.xml
+Initializing PowerShell runtime...
+Connected to remote host: srv-prod-01.corp.local
+Executing script: deploy-updates.ps1
+[INFO] Stage 1: Pre-flight checks — PASSED
+[INFO] Stage 2: Backup configuration — PASSED
+[INFO] Stage 3: Apply patches — IN PROGRESS
+[INFO] Processed 12 of 45 servers
+```
+
+!!! warning "Common errors"
+    **`Access is denied`** — Run Command Prompt or PowerShell as Administrator before executing the batch file.
+    **`The system cannot find the file specified`** — Verify ps-runner.bat exists in the current directory with `dir ps-runner.bat` and check the file path is correct.
+    **`'powershell' is not recognized as an internal or external command`** — Ensure PowerShell is installed and added to the system PATH environment variable, or use the full path to powershell.exe.
 Or just double-click the file from your Desktop.
 
 **What you should see**
@@ -792,6 +879,25 @@ cd C:\Users\YourName\Desktop
 .\Install-InfraModules.ps1
 ```
 
+
+```text title="Expected output"
+PowerShell 7.3.6
+Copyright (c) Microsoft Corporation. All rights reserved.
+
+Loading module InfraModules v2.4.1...
+Initializing infrastructure components...
+✓ Active Directory module loaded
+✓ Hyper-V management tools installed
+✓ Windows Admin Center connector configured
+✓ Remote Server Administration Tools (RSAT) verified
+Installation completed successfully in 47 seconds.
+Module path: C:\Program Files\WindowsPowerShell\Modules\InfraModules
+```
+
+!!! warning "Common errors"
+    **`cd : The term 'cd' is not recognized as the name of a cmdlet, function, script file, or operable program.`** — Use `Set-Location C:\Users\YourName\Desktop` instead, or run the script with its full path: `C:\Users\YourName\Desktop\Install-InfraModules.ps1`
+    **`File C:\Users\YourName\Desktop\Install-InfraModules.ps1 cannot be loaded because running scripts is disabled on this system.`** — Run `Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser` to allow local script execution.
+    **`Access Denied`** — Run PowerShell as Administrator (right-click PowerShell and select "Run as administrator") before executing the installation script.
 **What you should see**
 
 A table showing each module with its required version, currently installed version, and status (OK, Outdated, or Missing). Any missing or outdated modules are automatically downloaded and installed. At the end, an example snippet shows how to use Posh-SSH to connect to a Linux server directly from PowerShell.

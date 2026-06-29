@@ -101,6 +101,23 @@ Verify connectivity from a connected VM:
 ping <gateway-ip>
 ```
 
+
+```text title="Expected output"
+PING 192.168.1.1 (192.168.1.1) 56(84) bytes of data.
+64 bytes from 192.168.1.1: icmp_seq=1 ttl=64 time=2.34 ms
+64 bytes from 192.168.1.1: icmp_seq=2 ttl=64 time=1.89 ms
+64 bytes from 192.168.1.1: icmp_seq=3 ttl=64 time=2.12 ms
+64 bytes from 192.168.1.1: icmp_seq=4 ttl=64 time=1.95 ms
+^C
+--- 192.168.1.1 statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3005ms
+rtt min/avg/max/stddev = 1.89/2.07/2.34/0.18 ms
+```
+
+!!! warning "Common errors"
+    **`ping: <gateway-ip>: Name or service not known`** — Replace `<gateway-ip>` with the actual gateway IP address (e.g., `192.168.1.1`).
+    **`From <host-ip> icmp_seq=1 Destination Host Unreachable`** — Verify the gateway IP is correct and reachable on your network, and check that your network interface is up with `ip link show`.
+    **`ping: socket: Operation not permitted`** — Run the command with appropriate privileges or check if ICMP is blocked by a firewall rule.
 ### Add a Firewall Rule
 
 1. Navigate to **Security** → **Distributed Firewall**

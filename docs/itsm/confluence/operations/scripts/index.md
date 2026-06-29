@@ -18,6 +18,14 @@ export SHARED_HOME="/mnt/confluence-shared"
 export BACKUP_DIR="/backup/confluence"
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`bash: CF_TOKEN: command not found`** — Ensure you're using `export` syntax correctly and that the token value is quoted if it contains special characters.
+    **`bash: PGPASSWORD: Syntax error near unexpected token '<'`** — Replace `<db-password>` and `<personal-access-token>` with actual values; literal angle brackets are not valid in variable assignments.
 ```bash
 #!/bin/bash
 # stale-page-cleanup.sh
@@ -62,6 +70,22 @@ done
 echo "Report: $REPORT"
 [ "$EXECUTE" == "false" ] && echo "DRY RUN — use --execute to trash pages"
 ```
+
+```text title="Expected output"
+page_id,title,space,last_modified,url
+123456,"Legacy Q1 2022 Meeting Notes",ARCHIVE,"2022-03-15T09:42:31.000Z","/wiki/spaces/ARCHIVE/pages/123456"
+123457,"Deprecated Build Process v3",ARCHIVE,"2022-01-22T14:18:05.000Z","/wiki/spaces/ARCHIVE/pages/123457"
+123458,"Old Vendor Integration Docs",ARCHIVE,"2021-11-08T11:33:22.000Z","/wiki/spaces/ARCHIVE/pages/123458"
+123459,"2021 Infrastructure Runbooks",ARCHIVE,"2021-09-30T16:45:10.000Z","/wiki/spaces/ARCHIVE/pages/123459"
+123460,"Retired API v2 Reference",ARCHIVE,"2021-07-14T08:12:44.000Z","/wiki/spaces/ARCHIVE/pages/123460"
+Report: stale_pages_20250117.csv
+DRY RUN — use --execute to trash pages
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to host`** — Verify `$CF_URL` is set correctly and Confluence server is reachable (e.g., `echo $CF_URL`).
+    **`jq: parse error: Invalid JSON text at line 1`** — Confirm `$CF_TOKEN` is valid and has API access; an auth failure returns HTML instead of JSON.
+    **`curl: (22) HTTP 403`** — Ensure the bearer token has `delete:content` permission in Confluence; request elevated access if needed.
 ```bash
 #!/bin/bash
 # audit-log-export.sh
@@ -97,6 +121,15 @@ done
 
 echo "Audit log exported: $OUTPUT ($(wc -l < "$OUTPUT") records)"
 ```
+
+```text title="Expected output"
+Audit log exported: confluence_audit_20240115.csv (1247 records)
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to confluence.example.com port 443: Connection refused`** — Verify the CF_URL environment variable is set correctly and the Confluence instance is running and accessible.
+    **`jq: parse error: Invalid JSON text at line 1`** — Ensure CF_TOKEN is valid and has audit API permissions; an authentication error returns HTML instead of JSON.
+    **`wc: confluence_audit_20240115.csv: No such file or directory`** — Check that the script has write permissions in the current directory and sufficient disk space.
 ```bash
 #!/bin/bash
 # disk-usage-report.sh

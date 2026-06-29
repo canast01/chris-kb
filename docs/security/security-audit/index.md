@@ -56,6 +56,37 @@ systemctl is-active auditd
 find / -perm /6000 -type f -not -path "/proc/*" 2>/dev/null | sort
 ```
 
+
+```text title="Expected output"
+PermitRootLogin no
+PasswordAuthentication no
+Protocol 2
+MaxAuthTries 3
+# /etc/security/pwquality.conf
+minlen = 14
+dcredit = -1
+ucredit = -1
+ocredit = -1
+lcredit = -1
+PASS_MAX_DAYS   90
+PASS_MIN_DAYS   1
+PASS_MIN_LEN    14
+active
+active
+/usr/bin/sudo
+/usr/bin/passwd
+/usr/bin/chsh
+/usr/bin/chfn
+/usr/sbin/usernetctl
+/usr/sbin/netreport
+/usr/bin/at
+...
+```
+
+!!! warning "Common errors"
+    **`grep: /etc/ssh/sshd_config: No such file or directory`** — Verify SSH is installed with `apt install openssh-server` or `yum install openssh-server` and the sshd_config file exists.
+    **`cat: /etc/security/pwquality.conf: No such file or directory`** — Install libpam-pwquality with `apt install libpam-pwquality` or `yum install libpam-pwquality`.
+    **`find: '/proc/sys/kernel/debug': Permission denied`** — Run the command with `sudo` to avoid permission errors on restricted directories.
 **Windows server hardening:**
 ```powershell
 # Audit policy settings
@@ -101,6 +132,38 @@ curl -k -X GET "https://<scanner>/scans/<scan_id>/hosts" \
   -H "X-ApiKey: accessKey=<ak>;secretKey=<sk>" | jq '.hosts[] | {hostname,score,critical,high}'
 ```
 
+
+```text title="Expected output"
+{
+  "hostname": "web-prod-01.internal",
+  "score": 8.9,
+  "critical": 2,
+  "high": 5
+}
+{
+  "hostname": "db-primary-02.internal",
+  "score": 7.2,
+  "critical": 0,
+  "high": 3
+}
+{
+  "hostname": "app-cache-03.internal",
+  "score": 9.1,
+  "critical": 3,
+  "high": 8
+}
+{
+  "hostname": "lb-edge-01.internal",
+  "score": 5.4,
+  "critical": 0,
+  "high": 1
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present in example, but ensure it's not removed in production variants).
+    **`jq: parse error: Invalid JSON`** — Verify the API key credentials are correct and the scan_id exists by testing with `curl -k -H "X-ApiKey: ..." https://<scanner>/scans` first.
+    **`curl: (401) Unauthorized`** — Confirm the accessKey and secretKey values are URL-encoded and match the active API credentials in the Tenable console.
 Review cadence:
 - **Critical findings** — remediate within 15 days
 - **High findings** — remediate within 30 days

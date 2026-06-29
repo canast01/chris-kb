@@ -61,18 +61,88 @@ Alternatively, download the `.msi` installer from the
 sudo apt install powershell
 ```
 
+
+```text title="Expected output"
+Reading package lists... Done
+Building dependency tree... Done
+Reading state information... Done
+The following NEW packages will be installed:
+  powershell
+0 upgraded, 1 newly installed, 0 removed
+Need to get 89.2 MB of archives.
+After this operation, 312 MB of additional disk space will be used.
+Get:1 https://packages.microsoft.com/ubuntu/22.04/prod jammy/main amd64 powershell amd64 7.4.1-1.ubuntu.22.04_amd64_deb [89.2 MB]
+Fetched 89.2 MB in 12s (7.4 MB/s)
+Selecting previously unselected package powershell.
+(Reading database ... 45821 files and directories currently installed.)
+Unpacking powershell (7.4.1-1.ubuntu.22.04_amd64_deb) ...
+Setting up powershell (7.4.1-1.ubuntu.22.04_amd64_deb) ...
+Processing triggers for man-db (2.10.2-1) ...
+```
+
+!!! warning "Common errors"
+    **`E: Unable to locate package powershell`** — Add the Microsoft PowerShell repository with `curl https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -` and `sudo add-apt-repository https://packages.microsoft.com/ubuntu/$(lsb_release -rs)/prod` before running apt install.
+    **`E: Could not open lock file /var/lib/apt/lists/lock - open (13: Permission denied)`** — Run the command with `sudo` or ensure your user has passwordless sudo configured.
 **Linux (RHEL/Fedora/Rocky)**
 
 ```bash
 sudo dnf install powershell
 ```
 
+
+```text title="Expected output"
+Last metadata expiration check: 0:12:34 ago on Thu 15 Feb 2024 14:22:18 UTC.
+Dependencies resolved.
+================================================================================
+ Package                    Architecture    Version              Repository
+================================================================================
+Installing:
+ powershell                 x86_64          7.4.1-1.fc39         updates
+Installing dependencies:
+ icu                        x86_64          73.2-1.fc39          fedora
+ krb5-libs                  x86_64          1.21.1-1.fc39        updates
+ openssl-libs               x86_64          3.1.4-1.fc39         updates
+
+Transaction Summary
+================================================================================
+Install  4 Packages
+
+Total download size: 187 M
+Installed size: 521 M
+Is this ok? [y/N]: y
+Downloading Packages:
+[============================] 100%
+Running transaction
+  Preparing        :                                                      1/1
+  Installing       : icu-73.2-1.fc39.x86_64                              1/4
+  Installing       : krb5-libs-1.21.1-1.fc39.x86_64                      2/4
+  Installing       : openssl-libs-3.1.4-1.fc39.x86_64                    3/4
+  Installing       : powershell-7.4.1-1.fc39.x86_64                      4/4
+  Verifying        : powershell-7.4.1-1.fc39.x86_64                      1/4
+
+Complete!
+```
+
+!!! warning "Common errors"
+    **`No match for argument: powershell`** — Enable the PowerShell repository with `sudo dnf copr enable petersen/powershell` before installation.
+    **`Error: Failed to download metadata for repo 'updates'`** — Check your network connectivity and ensure your DNF cache is fresh with `sudo dnf clean all && sudo dnf makecache`.
 **Verify**
 
 ```bash
 pwsh --version
 ```
 
+
+```text title="Expected output"
+PowerShell 7.4.1
+Copyright (c) Microsoft Corporation. All rights reserved.
+
+https://aka.ms/powershell
+```
+
+!!! warning "Common errors"
+    **`pwsh: command not found`** — Install PowerShell Core using your package manager (e.g., `apt install powershell` on Ubuntu or `brew install powershell` on macOS).
+    **`pwsh: No such file or directory`** — Verify PowerShell is in your PATH by running `which pwsh` and add the installation directory to PATH if needed.
 ---
 
 ## Install Required Modules

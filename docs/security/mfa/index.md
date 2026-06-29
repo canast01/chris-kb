@@ -42,6 +42,24 @@ Get-MsolUser
 Get-MsolCompanyInformation
 ```
 
+
+```text title="Expected output"
+UserPrincipalName                     DisplayName                    isLicensed
+john.smith@contoso.onmicrosoft.com    John Smith                     True
+sarah.jones@contoso.onmicrosoft.com   Sarah Jones                    True
+admin@contoso.onmicrosoft.com         Admin Account                  True
+guest_user@contoso.onmicrosoft.com    Guest User                     False
+
+CompanyName                 : Contoso Corporation
+CountryLetterCode           : US
+PreferredLanguage           : en
+MarketingNotificationEmails : {admin@contoso.onmicrosoft.com}
+TechnicalNotificationEmails : {admin@contoso.onmicrosoft.com}
+```
+
+!!! warning "Common errors"
+    **`Get-MsolUser : The term 'Get-MsolUser' is not recognized as the name of a cmdlet, function, script file, or operable program.`** — Install the MSOnline PowerShell module with `Install-Module MSOnline` and import it with `Import-Module MSOnline`.
+    **`Get-MsolUser : You must call the Connect-MsolService cmdlet before calling any other cmdlets.`** — Authenticate to Microsoft 365 first by running `Connect-MsolService` and entering your admin credentials.
 ## Upgrade Workflow
 
 1. Backup configuration

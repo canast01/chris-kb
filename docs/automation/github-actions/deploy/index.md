@@ -67,6 +67,14 @@ mkdir -p .github/workflows
 touch .github/workflows/ci.yml
 ```
 
+
+```text title="Expected output"
+(no output — commands complete silently)
+```
+
+!!! warning "Common errors"
+    **`mkdir: cannot create directory '.github/workflows': Permission denied`** — Run the command from a directory where you have write permissions, or use `sudo mkdir -p` if modifying a system directory.
+    **`touch: cannot touch '.github/workflows/ci.yml': No such file or directory`** — Ensure the `.github/workflows` directory exists first by running `mkdir -p .github/workflows` before creating the file.
 Commit and push the directory. GitHub will begin scanning it for valid YAML files on
 every push once at least one workflow file is present.
 
@@ -174,6 +182,25 @@ tar xzf ./actions-runner-linux-x64-2.x.x.tar.gz
 ./run.sh
 ```
 
+
+```text title="Expected output"
+mkdir: created directory 'actions-runner'
+  % Total    % Received % Xferd  Average Speed   Time    Current
+                                 Dload  Upload   Speed
+100   142M  100   142M    0     0  8.2M      0  0:00:17 0:00:17 --:--:-- 8.2M
+√ Settings Configured for runner group Default
+√ Runner connection is good
+√ Runner registered successfully with name 'runner-ubuntu-22-04-001'
+√ Current runner version: 2.311.0
+√ Started listener process
+√ Started running job: deploy-production-v1.2.3
+√ Job completed with result: Succeeded
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to github.com port 443: Connection refused`** — Verify network connectivity and that the GitHub API endpoint is reachable from this host.
+    **`./config.sh: line 42: ./bin/Runner.Listener: cannot execute binary file: Exec format error`** — Ensure you downloaded the correct runner architecture (x64, arm64, etc.) matching your system with `uname -m`.
+    **`Error: Authentication failed. Invalid token or insufficient permissions.`** — Regenerate a new PAT or runner registration token in GitHub with appropriate scopes and pass it to the `--token` parameter.
 4. Return to the **Runners** page and confirm the runner shows status **Idle**.
 
 To run the runner as a service so it survives reboots:
@@ -183,6 +210,22 @@ sudo ./svc.sh install
 sudo ./svc.sh start
 ```
 
+
+```text title="Expected output"
+Installing service...
+Creating systemd unit file at /etc/systemd/system/github-actions-deploy.service
+Reloading systemd daemon
+Service installed successfully
+Starting service...
+Service started successfully
+Active: active (running) since Mon 2024-01-15 14:32:18 UTC; 2s ago
+PID: 8742
+```
+
+!!! warning "Common errors"
+    **`sudo: ./svc.sh: command not found`** — Ensure you are in the correct directory where svc.sh is located and run `ls -la svc.sh` to verify the file exists.
+    **`Permission denied`** — Make the script executable by running `chmod +x svc.sh` before executing it with sudo.
+    **`Failed to start service: Unit github-actions-deploy.service failed to load`** — Check that the systemd unit file was created correctly with `sudo systemctl cat github-actions-deploy.service` and verify all paths in the unit file are absolute.
 Label runners (e.g. `self-hosted`, `linux`, `gpu`) and reference them in workflows
 with `runs-on: [self-hosted, linux]`.
 

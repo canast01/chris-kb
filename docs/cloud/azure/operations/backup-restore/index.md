@@ -79,6 +79,40 @@ az backup restore restore-disks \
   --storage-account <staging-sa>
 ```
 
+
+```text title="Expected output"
+Name                          Location    ResourceGroup
+-----------------------------  ----------  ---------------
+prod-recovery-vault-eastus    eastus      rg-backup-prod
+dr-recovery-vault-westus2     westus2     rg-backup-dr
+dev-recovery-vault-eastus     eastus      rg-backup-dev
+
+Name                          ProtectionState    HealthStatus
+-----------------------------  ------------------  ----------------
+web-server-01                 Protected           Healthy
+db-server-02                  Protected           Healthy
+app-vm-03                      Protected           Healthy
+
+JobType              Status      StartTime
+-------------------  ----------  -----------------------
+BackupJob            Completed   2026-01-15T08:30:22Z
+BackupJob            Completed   2026-01-14T08:15:45Z
+BackupJob            Completed   2026-01-13T08:22:10Z
+
+JobType              StartTime                ErrorDetails
+-------------------  -----------------------  -----------------------------------------------
+BackupJob            2026-01-12T06:45:30Z     Snapshot creation failed: insufficient disk space
+BackupJob            2026-01-10T07:12:15Z     VM agent not responding
+
+Backup job triggered with Job ID: 123e4567-e89b-12d3-a456-426614174000
+
+Restore job initiated. Job ID: 987f6543-a21c-45d6-b789-123456789abc
+```
+
+!!! warning "Common errors"
+    **`ResourceNotFound : The Resource 'Microsoft.RecoveryServices/vaults/<vault>' under resource group '<rg>' was not found.`** — Verify the vault name and resource group name are correct and the vault exists in the specified region.
+    **`InvalidParameterValue : The item name '<vm-name>' is not found in the vault.`** — Ensure the VM is registered and protected in the vault; check the exact item name using `az backup item list`.
+    **`InvalidParameterValue : The recovery point '<recovery-point-name>' does not exist for the item.`** — List available recovery points with `az backup recoverypoint list --vault-name <vault> -g <rg> --container-name <container> --item-name <vm-name>` and use a valid recovery point name.
 ---
 
 ## Verify

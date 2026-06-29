@@ -100,6 +100,27 @@ show ntp associations
 # Expected: system clock is synced to <ntp-server>, stratum 3
 ```
 
+
+```text title="Expected output"
+Clock is synchronized
+system peer 203.0.113.45, stratum 3
+ref time is e5a3c2f1.8b4d2a19  (13:42:33.545 UTC Mon Jan 15 2024)
+clock offset is 2.341 ms, root delay is 18.523 ms
+root dispersion is 45.821 ms, peer dispersion is 12.456 ms
+
+     remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
+*203.0.113.45    192.0.2.100      2 u   64 1024  377   18.523    2.341  11.234
++198.51.100.22   192.0.2.101      2 u  128 1024  377   22.145    5.678   9.876
+-192.0.2.50      .POOL.           16 p    -   64    0    0.000    0.000   0.000
+
+NTP is enabled
+```
+
+!!! warning "Common errors"
+    **`Clock is unsynchronized`** — Verify NTP server reachability with `ping <ntp-server>` and check that NTP is enabled with `ntp enable` on Arista or `ntp enable` on Cisco IOS.
+    **`stratum 16 (unsynchronized)`** — Confirm the NTP server is reachable and responding; check firewall rules allowing UDP port 123 bidirectionally.
+    **`reach 0`** — Verify the NTP server IP address is correct and the network path is not blocked; check `show ntp associations detail` for timeout or authentication errors.
 ## States and Meanings
 
 | State | Meaning | Action |
@@ -121,3 +142,14 @@ systemctl restart systemd-timesyncd
 # ntpd
 ntpdate -u <ntp-server>
 ```
+
+
+```text title="Expected output"
+200 OK
+(no output — command completes silently)
+ 4 Jan 2024 14:32:18 ntpdate[2847]: adjust time server 203.0.113.42 offset -0.127456 sec
+```
+
+!!! warning "Common errors"
+    **`506 Cannot talk to daemon`** — Ensure chronyd is running with `systemctl start chronyd` before executing makestep.
+    **`ntpdate[3124]: no server suitable for synchronization found`** — Verify the NTP server is reachable and responsive with `ntpdate -q <ntp-server>` first, and confirm network connectivity.

@@ -118,6 +118,27 @@ python -c "import tensorflow as tf; print(tf.__version__, tf.test.is_gpu_availab
 # TF 2.15 requires CUDA 12.2
 ```
 
+
+```text title="Expected output"
++-----------------------------------------------------------------------------+
+| NVIDIA-SMI 535.104.05    Driver Version: 535.104.05    CUDA Version: 12.2   |
+| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| 0  NVIDIA A100-PCIE-40GB  Off  | 00:1E.0     Off |                  0 |
++-----------------------------------------------------------------------------+
+
+nvcc: CUDA compilation tools, release 12.1, V12.1.105
+Build cuda_12.1.r12.1/compiler.33079141_0
+
+2.2.0+cu121
+2.15.0
+WARNING:tensorflow:From <stdin>: is_gpu_available (from tensorflow.python.framework.config) is deprecated and will be removed in a future version.
+True
+```
+
+!!! warning "Common errors"
+    **`command not found: nvidia-smi`** — Install NVIDIA GPU drivers using your system package manager (e.g., `apt install nvidia-driver-535` on Ubuntu).
+    **`ModuleNotFoundError: No module named 'torch'`** — Install PyTorch with CUDA support using `pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121`.
+    **`CUDA version mismatch: CUDA driver version 12.1 is insufficient for CUDA toolkit version 12.2`** — Upgrade your NVIDIA driver to version 550+ or downgrade TensorFlow to 2.14 which supports CUDA 12.1.
 If versions conflict:
 
 ```bash
@@ -128,6 +149,12 @@ pip install torch==2.2.0 --index-url https://download.pytorch.org/whl/cu121
 pip index versions torch
 ```
 
+
+```text title="Expected output"
+Collecting torch==2.2.0
+  Downloading https://download.pytorch.org/whl/cu121/torch-2.2.0%2Bcu121-cp311-cp311-linux_x86_64.whl (2547.3 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+```
 ## Multi-GPU Issues
 
 ```bash
@@ -173,6 +200,18 @@ mokutil --sb-state  # "SecureBoot enabled" may block NVIDIA modules
 # Solution: enroll the NVIDIA MOK key or disable Secure Boot
 ```
 
+
+```text title="Expected output"
+nvidia              49152  0
+nvidia_uvm          36864  0
+lspci: command not found
+SecureBoot enabled
+```
+
+!!! warning "Common errors"
+    **`modprobe: FATAL: Module nvidia not found in directory /lib/modules/5.15.0-86-generic/kernel`** — Install the NVIDIA driver package matching your kernel version with `apt install nvidia-driver-XXX` or use `nvidia-driver-installer`.
+    **`lspci: command not found`** — Install the `pciutils` package with `apt install pciutils` or `yum install pciutils`.
+    **`ERROR: could not insert 'nvidia': Operation not permitted`** — Disable Secure Boot in BIOS/UEFI or enroll the NVIDIA MOK key with `mokutil --import /var/lib/shim-signed/mok/MOK.der`.
 ## Temperature and Throttling
 
 ```bash
@@ -191,6 +230,25 @@ watch -n 2 nvidia-smi --query-gpu=temperature.gpu,clocks.sm,power.draw \
   --format=csv,noheader
 ```
 
+
+```text title="Expected output"
+clocks_throttle_reasons.active
+0x0000000000000020
+
+Every 2.0s: nvidia-smi --query-gpu=temperature.gpu,clocks.sm,power.draw --format=csv,noheader                                                                                                    Mon Dec 18 10:34:52 2023
+
+73, 1410, 245.00 W
+74, 1395, 248.50 W
+76, 1380, 251.25 W
+78, 1365, 254.75 W
+79, 1350, 257.00 W
+80, 1335, 259.50 W
+81, 1320, 261.00 W
+```
+
+!!! warning "Common errors"
+    **`NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver.`** — Verify the NVIDIA driver is installed with `nvidia-smi` (without arguments) and reinstall if needed with `sudo apt install nvidia-driver-XXX` (replacing XXX with your driver version).
+    **`command not found: watch`** — Install the procps-ng package with `sudo apt install procps-ng` or use `nvidia-smi --loop=2` as an alternative.
 If throttling occurs, check airflow, verify TDP power limits are set correctly, and confirm the cooling solution is adequate for sustained workloads.
 
 ---

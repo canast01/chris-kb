@@ -126,6 +126,35 @@ free -h
 top -b -n1 | grep java | head -5
 ```
 
+
+```text title="Expected output"
+{"state":"RUNNING"}
+2024-01-15 14:32:18,445 ERROR [http-nio-8090-exec-42] com.atlassian.confluence.pages.actions.ViewPageAction - Exception rendering page: Page ID 98765
+java.lang.NullPointerException: Cannot invoke method on null object
+	at com.atlassian.confluence.pages.PageManager.getPage(PageManager.java:287)
+2024-01-15 14:28:03,221 WARN [scheduler-7] com.atlassian.confluence.search.v2.SearchManager - Error indexing page 54321: timeout after 5000ms
+2024-01-15 13:55:42,109 ERROR [http-nio-8090-exec-18] com.atlassian.plugin.manager.DefaultPluginManager - Failed to start bundle: com.example.custom-plugin v2.1.4
+
+2024-01-15 15:01:22,334 WARN [http-nio-8090-exec-51] com.atlassian.confluence.pages.actions.ViewPageAction - Slow page render took 8234ms for page Dashboard
+2024-01-15 14:59:18,556 WARN [http-nio-8090-exec-33] com.atlassian.confluence.search.v2.SearchManager - Search query took 6891ms
+
+Filesystem     Size  Used Avail Use% Mounted on
+/dev/sda2      500G  387G  113G  78% /var/atlassian/application-data/confluence
+-rw-r--r-- 1 confluence confluence 2.3G Jan 15 15:02 page-98765-attachment.pdf
+-rw-r--r-- 1 confluence confluence 1.8G Jan 14 22:15 export-backup-20240114.zip
+-rw-r--r-- 1 confluence confluence 892M Jan 13 18:44 video-demo.mp4
+-rw-r--r-- 1 confluence confluence 567M Jan 12 10:33 archive-2024Q1.tar.gz
+-rw-r--r-- 1 confluence confluence 445M Jan 11 09:22 presentation-slides.pptx
+
+               total        used        free      shared  buff/cache   available
+Mem:            31Gi       18Gi       4.2Gi       256Mi       8.8Gi       12Gi
+java     1847  2.4 58.3 6234568 18234456   ?  Sl   14:22   2:47 /usr/lib/jvm/java-11-openjdk-amd64/bin/java -Xmx20g -Xms8g
+java     1923  0.1  2.1 1024567 678234     ?  Sl   14:25   0:12 /usr/lib/jvm/java-11-openjdk-amd64/bin/java -Xmx2g
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to localhost port 8090: Connection refused`** — Verify Confluence service is running with `systemctl status confluence` and check if the port binding changed in `confluence.cfg.xml`.
+    **`grep: /var/atlassian/application-
 ---
 
 ## Step 2 — JVM heap analysis
@@ -144,6 +173,26 @@ jstat -gcutil "$CONF_PID" 5000 5
 jstat -gc "$CONF_PID" 5000 3
 ```
 
+
+```text title="Expected output"
+12345
+  S0     S1     E      O      M     YGC     YGCT    FGC    FGCT     GCT
+  0.00  45.23  78.91  72.34  88.12   1247   156.32    18    45.67  201.99
+  0.00  45.23  82.15  72.34  88.12   1247   156.32    18    45.67  201.99
+  0.00  45.23  85.42  73.21  88.45   1248   156.89    18    45.67  202.56
+  0.00  45.23  12.08  73.21  88.45   1248   156.89    18    45.67  202.56
+  0.00  45.23  18.34  73.89  88.67   1249   157.45    18    45.67  203.12
+
+ S0C    S1C    S0U    S1U      EC       EU        OC         OU       MC     MU    CCSC   CCSU    YGC     YGCT    FGC    FGCT     GCT
+655360 655360      0 296576 5242880 4390912 11010048 8070144 176128 155648 20480 18432   1248  157.45     18   45.67  203.12
+655360 655360      0 296576 5242880 4521984 11010048 8070144 176128 155648 20480 18432   1248  157.45     18   45.67  203.12
+655360 655360      0 296576 5242880 4653056 11010048 8070144 176128 155648 20480 18432   1249  158.01     18   45.67  203.68
+```
+
+!!! warning "Common errors"
+    **`12345: No such process`** — Verify Confluence is running with `systemctl status confluence` and check the correct process name with `ps aux | grep confluence`.
+    **`jstat: command not found`** — Install the JDK (not just JRE) on the system, as jstat is part of the JDK tools package.
+    **`Permission denied`** — Run the command with `sudo` or as the confluence system user to access the JVM process statistics.
 ### Capture an on-demand heap dump
 
 ```bash
@@ -154,6 +203,15 @@ jmap -dump:format=b,file="$DUMP_FILE" "$CONF_PID"
 echo "Heap dump: $DUMP_FILE ($(du -sh $DUMP_FILE | cut -f1))"
 ```
 
+
+```text title="Expected output"
+Heap dump: /tmp/confluence-heap-202401151430.hprof (2.3G)
+```
+
+!!! warning "Common errors"
+    **`jmap: command not found`** — Install the JDK (not just JRE) on the system, as jmap is part of the JDK tools.
+    **`Error attaching to process: sun.jvm.hotspot.debugger.DebuggerException: Cannot open socket file`** — Ensure Confluence is running as the same user executing jmap, or run jmap with sudo.
+    **`No such file or directory`** — Verify the Confluence PID exists with `pgrep -f "atlassian-confluence"` before running jmap, as the process may have stopped.
 ### Analyse heap dump with Eclipse MAT
 
 1. Download [Eclipse Memory Analyzer (MAT)](https://www.eclipse.org/mat/)
@@ -195,6 +253,17 @@ done
 cat /tmp/threaddump_*.txt > /tmp/threaddump_merged.txt
 ```
 
+
+```text title="Expected output"
+Captured: /tmp/threaddump_1_143022.txt
+Captured: /tmp/threaddump_2_143032.txt
+Captured: /tmp/threaddump_3_143042.txt
+```
+
+!!! warning "Common errors"
+    **`jstack: command not found`** — Install the JDK (not just JRE) on the system, as jstack is only included in JDK distributions.
+    **`Could not attach to <PID>: Permission denied`** — Run the script with sudo or as the same user that started the Confluence process (typically the confluence system user).
+    **`pgrep: command not found`** — Install the procps package (`apt-get install procps` on Debian/Ubuntu or `yum install procps-ng` on RHEL/CentOS).
 ### Thread dump quick analysis
 
 ```bash
@@ -212,6 +281,41 @@ grep -B 5 "waiting to lock" /tmp/threaddump_1_*.txt | grep "\"" | head -20
 grep -A 20 "DEADLOCK" /tmp/threaddump_1_*.txt
 ```
 
+
+```text title="Expected output"
+245 RUNNABLE
+      87 TIMED_WAITING
+      42 WAITING
+      18 BLOCKED
+       3 NEW
+
+java.lang.Thread.State: BLOCKED (on object monitor)
+	at com.example.service.DatabasePool.getConnection(DatabasePool.java:156)
+	- waiting to lock <0x00007f8c4a2b9f80> (a java.lang.Object)
+	at com.example.api.RequestHandler.processQuery(RequestHandler.java:423)
+	at java.lang.Thread.run(Thread.java:834)
+
+java.lang.Thread.State: BLOCKED (on object monitor)
+	at com.example.cache.CacheManager.invalidate(CacheManager.java:89)
+	- waiting to lock <0x00007f8c4a2b9f80> (a java.lang.Object)
+	at com.example.service.DataService.refresh(DataService.java:201)
+	at java.lang.Thread.run(Thread.java:834)
+
+"http-nio-8080-exec-12" #47 daemon prio=5 os_prio=0 tid=0x00007f8c3e4a2000 nid=0x5f2a waiting to lock <0x00007f8c4a2b9f80> (a java.lang.Object)
+"http-nio-8080-exec-15" #50 daemon prio=5 os_prio=0 tid=0x00007f8c3e4a5800 nid=0x5f2d waiting to lock <0x00007f8c4a2b9f80> (a java.lang.Object)
+"http-nio-8080-exec-18" #53 daemon prio=5 os_prio=0 tid=0x00007f8c3e4a8c00 nid=0x5f30 waiting to lock <0x00007f8c4a2b9f80> (a java.lang.Object)
+"scheduler-pool-1" #61 daemon prio=5 os_prio=0 tid=0x00007f8c3e5b1000 nid=0x5f3e waiting to lock <0x00007f8c4a2b9f80> (a java.lang.Object)
+"background-worker-4" #78 daemon prio=5 os_prio=0 tid=0x00007f8c3e6c2400 nid=0x5f55 waiting to lock <0x00007f8c4a2b9f80> (a java.lang.Object)
+
+Found one Java-level deadlock:
+=============================
+"http-nio-8080-exec-9" #44:
+  waiting to lock monitor 0x00007f8c4a2b9f80 (object 0x00007f8c4a2b9f80, a java.lang.Object),
+  which is held by "scheduler-pool-2" #62
+"scheduler-pool-2" #62:
+  waiting to lock monitor 0x00007f8c4a2ba100 (object 0x00007f8c4a2ba100, a java.lang.Object),
+  which is held by "http
+```
 ### Thread states reference
 
 | State | Meaning | Normal? |
@@ -252,6 +356,27 @@ psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" \
       ORDER BY elapsed_s DESC;"
 ```
 
+
+```text title="Expected output"
+ALTER SYSTEM
+SELECT 1
+2024-01-15 14:23:47.891 UTC [8472] LOG:  duration: 2847.523 ms  statement: SELECT * FROM orders WHERE created_at > NOW() - INTERVAL '30 days';
+2024-01-15 14:25:12.445 UTC [8501] LOG:  duration: 1205.678 ms  statement: SELECT COUNT(*) FROM audit_logs WHERE timestamp > NOW() - INTERVAL '1 hour';
+2024-01-15 14:27:33.112 UTC [8534] LOG:  duration: 623.891 ms  statement: UPDATE inventory SET stock = stock - 1 WHERE product_id = $1;
+2024-01-15 14:29:01.667 UTC [8556] LOG:  duration: 512.234 ms  statement: SELECT * FROM users u JOIN orders o ON u.id = o.user_id LIMIT 1000;
+
+ pid  | elapsed_s |      state      | query_snippet
+------+-----------+----------------+----------------------------------------------
+ 9847 |    18.45  | active         | SELECT * FROM large_transactions WHERE status
+ 9823 |    12.67  | active         | UPDATE customer_profiles SET last_login = now()
+ 9801 |     8.34  | active         | INSERT INTO event_log (event_type, timestamp)
+(3 rows)
+```
+
+!!! warning "Common errors"
+    **`psql: error: could not translate host name "$DB_HOST" to address: Name or service not known`** — Replace `$DB_HOST` with the actual PostgreSQL server hostname or IP address, or ensure the environment variable is exported before running the script.
+    **`psql: error: FATAL:  Ident authentication failed for user "postgres"`** — Configure PostgreSQL to accept password authentication in `pg_hba.conf` or use a `.pgpass` file with credentials for the postgres user.
+    **`tail: cannot open '/var/log/postgresql/postgresql-*.log' for reading: No such file or directory`** — Verify the PostgreSQL log directory path matches your installation (check `log_directory` in `postgresql.conf`) and ensure the user running the command has read permissions.
 ### Table bloat check
 
 ```bash
@@ -265,6 +390,36 @@ psql -h "$DB_HOST" -U "$DB_USER" -d "$DB_NAME" \
       LIMIT 15;"
 ```
 
+
+```text title="Expected output"
+psql (14.8, server 14.9)
+SSL connection (protocol: TLSv1.3, cipher: TLS_AES_256_GCM_SHA384, compression: off)
+Type "help" for help.
+
+           tablename            | table_size | total_size | dead_tuples
+---------------------------------+------------+------------+-------------
+ audit_logs                      | 2847 MB    | 3156 MB    |      847293
+ user_sessions                   | 1203 MB    | 1456 MB    |      623841
+ event_queue                     | 892 MB     | 1087 MB    |      412756
+ page_revisions                  | 654 MB     | 891 MB     |      287654
+ attachment_metadata             | 423 MB     | 567 MB     |      156432
+ workflow_transitions            | 287 MB     | 401 MB     |       98765
+ comment_history                 | 156 MB     | 234 MB     |       67543
+ notification_log                | 89 MB      | 145 MB     |       34521
+ cache_entries                   | 45 MB      | 78 MB      |       12987
+ permission_grants               | 34 MB      | 52 MB      |        8234
+ label_assignments               | 28 MB      | 41 MB      |        5123
+ space_settings                  | 12 MB      | 18 MB      |        1456
+ user_preferences                | 8 MB       | 14 MB      |         892
+ api_tokens                      | 3 MB       | 5 MB       |         234
+ temp_imports                    | 1 MB       | 2 MB       |          45
+(15 rows)
+```
+
+!!! warning "Common errors"
+    **`psql: error: could not translate host name "$DB_HOST" to address: Name or service not known`** — Verify the `$DB_HOST` environment variable is set correctly with `echo $DB_HOST` and confirm the hostname resolves via `nslookup` or `ping`.
+    **`psql: error: FATAL: Ident authentication failed for user "$DB_USER"`** — Ensure the PostgreSQL `pg_hba.conf` file permits the connection method for your user and host, or use a `.pgpass` file with proper permissions (600).
+    **`ERROR: relation "pg_stat_user_tables" does not exist`** — Confirm you are connecting to the correct database with `-d "$DB_NAME"` and that the PostgreSQL server version supports this system catalog view (available in PostgreSQL 8.4+).
 High `dead_tuples` → run `VACUUM ANALYZE <tablename>;`
 
 ### EXPLAIN ANALYZE a suspicious query
@@ -322,6 +477,28 @@ zip -r "${SUPPORT_DIR}.zip" "$SUPPORT_DIR/"
 echo "Support zip: ${SUPPORT_DIR}.zip"
 ```
 
+
+```text title="Expected output"
+Creating support zip for Confluence...
+Gathering logs from /var/atlassian/application-data/confluence/logs/
+Collecting thread dumps (3 iterations, 10s apart)...
+2024-01-15 14:32:18 | Thread dump 1/3 captured (PID: 2847)
+2024-01-15 14:32:28 | Thread dump 2/3 captured (PID: 2847)
+2024-01-15 14:32:38 | Thread dump 3/3 captured (PID: 2847)
+Generating heap histogram (non-invasive)...
+Heap histogram written to /tmp/confluence-support-20240115/heap_histo.txt
+  adding: confluence-support-20240115/logs/ (stored 0%)
+  adding: confluence-support-20240115/threaddump_1.txt (deflated 87%)
+  adding: confluence-support-20240115/threaddump_2.txt (deflated 87%)
+  adding: confluence-support-20240115/threaddump_3.txt (deflated 87%)
+  adding: confluence-support-20240115/heap_histo.txt (deflated 92%)
+Support zip: /tmp/confluence-support-20240115.zip
+```
+
+!!! warning "Common errors"
+    **`pgrep: no process found`** — Ensure Confluence is running with `systemctl status confluence` before collecting diagnostics.
+    **`jstack: command not found`** — Install the JDK (not just JRE) with `apt-get install openjdk-11-jdk` or equivalent for your OS.
+    **`Permission denied`** — Run the script with `sudo` or as the confluence system user to access logs and process memory.
 ### What support will ask for
 
 | Artifact | Collected By |

@@ -128,6 +128,47 @@ nmap -p 443 --script ssl-cert example.com \
     | grep -E "Subject:|Not valid after"
 ```
 
+
+```text title="Expected output"
+Starting Nmap 7.92 ( https://nmap.org ) at 2024-01-15 10:23:45 UTC
+Nmap scan report for 192.168.1.50
+Host is up (0.042s latency).
+PORT     STATE  SERVICE
+443/tcp  open   https
+8443/tcp closed pcsync-https
+636/tcp  closed ldapssl
+993/tcp  open   imaps
+995/tcp  closed pop3s
+| ssl-cert: Subject: commonName=mail.internal.corp/organizationName=Acme Inc
+| Not valid before: 2023-06-14T08:22:11Z
+|_Not valid after: 2025-06-14T08:22:11Z
+
+Nmap scan report for 192.168.1.51
+Host is up (0.038s latency).
+PORT     STATE  SERVICE
+443/tcp  open   https
+...
+Nmap done at 2024-01-15 10:24:12 UTC; 256 IP addresses (8 hosts up) scanned in 27.34 seconds
+
+commonName=mail.internal.corp
+notAfter=2025-06-14T08:22:11Z
+commonName=api-gateway.internal.corp
+notAfter=2024-03-22T14:55:33Z
+
+Starting Nmap 7.92 ( https://nmap.org ) at 2024-01-15 10:25:01 UTC
+Nmap scan report for example.com (93.184.216.34)
+Host is up (0.028s latency).
+PORT    STATE SERVICE
+443/tcp open  https
+| Subject: CN=www.example.com, O=Example Inc, C=US
+|_Not valid after: 2025-12-31T23:59:59Z
+Nmap done at 2024-01-15 10:25:02 UTC; 1 IP address (1 host up) scanned in 1.34 seconds
+```
+
+!!! warning "Common errors"
+    **`Nmap done at ... ; 0 hosts up scanned`** — Verify network connectivity and that the target subnet is reachable; check firewall rules blocking ICMP or the specified ports.
+    **`grep: ssl-scan.xml: No such file or directory`** — Ensure the first nmap command completed successfully and the XML output file was written before attempting to parse it.
+    **`Host seems down. If it is really up, but blocking all ping probes, try -Pn`** — Add the `-Pn` flag to nmap to skip host discovery and scan ports directly on unresponsive hosts.
 ### openssl-Based Discovery
 
 ```bash
@@ -144,6 +185,27 @@ echo | openssl s_client -connect example.com:443 2>/dev/null \
     | openssl x509 > example-com.pem
 ```
 
+
+```text title="Expected output"
+subject=CN = example.com, O = Example Corp, C = US
+issuer=C = US, O = DigiCert Inc, CN = DigiCert Global G2 TLS RSA SHA256 2021 CA1
+notBefore=Jan 15 10:22:33 2023 GMT
+notAfter=Jan 15 10:22:32 2024 GMT
+sha1Fingerprint=A1:B2:C3:D4:E5:F6:07:18:29:3A:4B:5C:6D:7E:8F:90:A1:B2:C3:D4
+
+                X509v3 Subject Alternative Name: 
+                    DNS:example.com, DNS:www.example.com, DNS:api.example.com
+-----BEGIN CERTIFICATE-----
+MIIFWTCCBEGgAwIBAgIQD8Z4wyKd/N4OMwegHWLqRDANBgkqhkiG9w0BAQsFADBL
+MQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMSswKQYDVQQDEyJE
+...
+-----END CERTIFICATE-----
+```
+
+!!! warning "Common errors"
+    **`connect: Connection refused`** — Verify the hostname is correct and the server is listening on port 443 with `nc -zv example.com 443`.
+    **`unable to load certificate`** — Ensure the endpoint is returning a valid certificate; test connectivity with `curl -v https://example.com` first.
+    **`grep: (standard input): No such file or directory`** — The certificate text output may be empty if the connection fails; add error checking with `set -e` or verify the domain resolves with `nslookup example.com`.
 ### Windows Certificate Store Inventory
 
 ```powershell
@@ -195,6 +257,31 @@ curl -s https://tpp.corp.example.com/vedsdk/certificates \
     | jq '.Certificates[] | {CN: .Name, Expiry: .ValidTo}'
 ```
 
+
+```text title="Expected output"
+"62d4f8c9-7e3a-4b21-9f6e-8a2c1d5e9b3f"
+{
+  "CN": "api.prod.corp.example.com",
+  "Expiry": "2026-07-28T23:59:59.000Z"
+}
+{
+  "CN": "db-primary.internal.corp.example.com",
+  "Expiry": "2026-07-15T23:59:59.000Z"
+}
+{
+  "CN": "*.services.corp.example.com",
+  "Expiry": "2026-07-22T23:59:59.000Z"
+}
+{
+  "CN": "mail.corp.example.com",
+  "Expiry": "2026-07-31T23:59:59.000Z"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: unable to get local issuer certificate`** — Add the Venafi server's CA certificate to your system trust store or use `curl -k` to skip verification in non-production environments.
+    **`jq: error (at <stdin>:1): Cannot index null with string "APIKey"`** — Verify the service account credentials are correct and the `/vedauth/authorize` endpoint is accessible; check response with `curl -s ... | jq '.'` to see the actual error.
+    **`curl: (7) Failed to connect to tpp.corp.example.com port 443: Connection refused`** — Confirm the Venafi TPP hostname and port are correct and the server is running; test connectivity with `ping tpp.corp.example.com` or `nc -zv tpp.corp.example.com 443`.
 ---
 
 ## TLS Validation
@@ -217,6 +304,33 @@ openssl verify -CAfile ca-bundle.pem cert.pem
 openssl verify -CAfile root.pem -untrusted intermediate.pem cert.pem
 ```
 
+
+```text title="Expected output"
+CONNECTED(00000000)
+depth=0 /C=US/ST=California/L=San Francisco/O=Acme Corp/CN=api.example.com
+verify return:1
+subject=/C=US/ST=California/L=San Francisco/O=Acme Corp/CN=api.example.com
+issuer=/C=US/ST=California/O=DigiCert Inc/CN=DigiCert SHA2 Secure Server CA
+-----BEGIN CERTIFICATE-----
+MIIFWDCCBECgAwIBAgIQD8CSsj7+UL5vAwAAAAAA7TANBgkqhkiG9w0BAQsFADB1
+MQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYDVQQLExho
+...
+-----END CERTIFICATE-----
+---
+Certificate chain
+ 0 s:/C=US/ST=California/L=San Francisco/O=Acme Corp/CN=api.example.com
+   i:/C=US/ST=California/O=DigiCert Inc/CN=DigiCert SHA2 Secure Server CA
+ 1 s:/C=US/ST=California/O=DigiCert Inc/CN=DigiCert SHA2 Secure Server CA
+   i:/C=US/ST=Root CA/O=DigiCert/CN=DigiCert Global Root CA
+---
+cert.pem: OK
+intermediate.pem: OK
+```
+
+!!! warning "Common errors"
+    **`verify error:num=20:unable to get local issuer certificate`** — Add the issuer's CA certificate to your CA bundle or use the `-untrusted` flag to specify intermediate certificates.
+    **`connect:errno=111 Connection refused`** — Verify the hostname and port are correct, and that the target service is running and accessible from your network.
+    **`error:0906D06C:PEM routines:PEM_read_bio:no start line`** — Ensure the certificate file is in valid PEM format and not corrupted; check the file encoding with `file cert.pem`.
 ---
 
 ## Request a Certificate via Web Enrollment
@@ -348,6 +462,20 @@ certutil -URL <CRLDistributionPoint-URL>
 openssl crl -in crl.pem -text -noout | grep -A2 "Revoked"
 ```
 
+
+```text title="Expected output"
+Revoked Certificates:
+    Serial Number: 04D2A1F5E8C9B3
+        Revocation Date: Jan 15 10:23:45 2024 GMT
+    Serial Number: 07E8F2C1A9D4B6
+        Revocation Date: Jan 14 15:47:22 2024 GMT
+    Serial Number: 0A1B3C5D7E9F2A
+        Revocation Date: Jan 10 08:12:33 2024 GMT
+```
+
+!!! warning "Common errors"
+    **`No such file or directory`** — Verify the CRL file path is correct and the file exists in the current directory or provide the full path to crl.pem.
+    **`unable to load CRL`** — Ensure the CRL file is in valid PEM format; convert from DER format using `openssl crl -inform DER -in crl.der -out crl.pem` if needed.
 Notify service owners relying on the revoked certificate to install a replacement immediately.
 
 ---

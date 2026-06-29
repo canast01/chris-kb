@@ -35,6 +35,28 @@ curl -u "user@corp.example.com:API_TOKEN" \
 curl -u "user@corp.example.com:API_TOKEN" \
   "https://your-org.atlassian.net/rest/api/3/project/search" | jq '.values[].key'
 ```
+
+```text title="Expected output"
+{
+  "self": "https://your-org.atlassian.net/rest/api/3/user?accountId=557058%3A12a4c8f9-3e2b-41d0-9c7a-8f2e1b3d5c9a",
+  "accountId": "557058:12a4c8f9-3e2b-41d0-9c7a-8f2e1b3d5c9a",
+  "emailAddress": "user@corp.example.com",
+  "displayName": "John Smith",
+  "active": true,
+  "timeZone": "America/New_York",
+  "accountType": "atlassian"
+}
+PROJ
+INFRA
+SECOPS
+DEVOPS
+PLATFORM
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to your-org.atlassian.net port 443: Connection refused`** — Replace `your-org` with your actual Jira instance subdomain (e.g., `mycompany` in `mycompany.atlassian.net`).
+    **`{"errorMessages":["Authentication failed. Invalid username, password, or API token."]}`** — Verify the API token is valid and not expired by regenerating it at https://id.atlassian.com/manage-profile/security/api-tokens.
+    **`jq: command not found`** — Install jq with `apt-get install jq` (Debian/Ubuntu) or `brew install jq` (macOS), or pipe to `grep` instead.
 ```bash
 # Create a PAT via REST API
 curl -u "admin:password" \

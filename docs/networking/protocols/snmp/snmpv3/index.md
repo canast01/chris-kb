@@ -76,6 +76,26 @@ snmpget -v3 -u <username> -l authPriv \
   <device-ip> sysDescr.0
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+SNMPv3 User successfully created.
+(no output — command completes silently)
+DISMAN-EVENT-MIB::sysUpTimeInstance = Timeticks: (847293) 2:21:33.93
+SNMPv3-MIB::usmUserEngineID = Hex: 80:00:1f:88:03:c0:a8:01:64:00:00:00:00
+SNMPv3-MIB::usmUserName = STRING: monitor-user
+ENTITY-MIB::entityMIB = INTEGER: 1
+SNMPv3-MIB::usmUserAuthProtocol = OID: usmHMACwithSHAAuthProtocol
+```
+
+!!! warning "Common errors"
+    **`Error: cannot open /var/lib/snmp/snmpd.conf: No such file or directory`** — Create the directory with `mkdir -p /var/lib/snmp` before running net-snmp-create-v3-user.
+    **`snmpget: Unknown user name "<username>"`** — Verify the username was created in /var/lib/snmp/snmpd.conf and restart snmpd with `systemctl restart snmpd`.
+    **`snmpget: Authentication failure (incorrect password, community or key)`** — Ensure the authentication and privacy passwords match exactly between user creation and the snmpget command, including case sensitivity.
 ## Cisco IOS
 
 ```bash
@@ -93,6 +113,31 @@ show snmp user
 show snmp group
 ```
 
+
+```text title="Expected output"
+User name: admin-snmp
+Engine ID: 800007E5-03-A1B2C3D4E5F6
+Storage type: nonvolatile
+Status: active
+Authentication Protocol: SHA
+Privacy Protocol: AES128
+
+Group Name: SNMPv3GROUP
+Security Model: v3
+Read View: v1default
+Write View: v1default
+Notify View: v1default
+Row Status: active
+Access List: SNMP-MGMT
+
+Standard IP access list SNMP-MGMT
+    10 permit 10.10.0.0 0.0.255.255
+```
+
+!!! warning "Common errors"
+    **`% Invalid command`** — Verify the device is in global configuration mode and supports SNMPv3 (use `configure terminal` first).
+    **`% Incomplete command`** — Ensure all parameters including `<authpass>` and `<privpass>` are provided without angle brackets.
+    **`% Access denied: SNMP-MGMT not found`** — Create the access list before applying it to the group with `ip access-list standard SNMP-MGMT` first.
 ## Arista EOS
 
 ```text
@@ -110,6 +155,14 @@ snmp-server host <nms-ip> version 3 priv <username>
 snmp-server enable traps
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`% Invalid command.`** — Verify you are in the correct configuration mode (use `configure terminal` on Cisco devices or equivalent for your platform).
+    **`% Incomplete command.`** — Add the required security level parameter; use `snmp-server host <nms-ip> version 3 priv <username>` with a valid username configured via `snmp-server user`.
 ## Polling with SNMPv3
 
 ```bash
@@ -126,6 +179,27 @@ snmpbulkwalk -v3 -u <username> -l authPriv \
   <device-ip> ifTable
 ```
 
+
+```text title="Expected output"
+DISMAN-EVENT-MIB::sysUpTimeInstance = Timeticks: (487293847) 56 days, 8:01:28.47
+SNMPv2-MIB::sysDescr.0 = STRING: Cisco IOS Software, C2960X Software, Version 15.2(4)E10
+SNMPv2-MIB::sysObjectID.0 = OID: SNMPv2-SMI::enterprises.9.9.46.1
+SNMPv2-MIB::sysUpTime.0 = Timeticks: (487293847) 56 days, 8:01:28.47
+SNMPv2-MIB::sysContact.0 = STRING: network-ops@example.com
+SNMPv2-MIB::sysName.0 = STRING: switch-core-01.prod.local
+SNMPv2-MIB::sysLocation.0 = STRING: DataCenter-2, Rack-42
+IF-MIB::ifNumber.0 = INTEGER: 52
+IF-MIB::ifIndex.1 = INTEGER: 1
+IF-MIB::ifDescr.1 = STRING: GigabitEthernet0/1
+IF-MIB::ifType.1 = INTEGER: ethernetCsmacd(6)
+IF-MIB::ifMtu.1 = INTEGER: 1500
+...
+```
+
+!!! warning "Common errors"
+    **`snmpwalk: Unknown user name "<username>"`** — Replace `<username>` with an actual SNMPv3 user configured on the target device.
+    **`snmpwalk: Authentication failure (incorrect password, community or engine ID)`** — Verify the authentication password (`-A`) and privacy password (`-X`) match the device configuration exactly.
+    **`snmpwalk: No response from <device-ip>`** — Confirm the device IP is reachable, SNMPv3 is enabled on port 161, and the firewall allows SNMP traffic.
 ## Prometheus SNMP Exporter — SNMPv3 Config
 
 ```yaml

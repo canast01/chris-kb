@@ -223,6 +223,24 @@ echo "Exit code: $?"
 # 0 = success, 1 = partial failure, 2 = failure
 ```
 
+
+```text title="Expected output"
+Backup image verification started for client sql-prod-01.example.local
+Backup ID: 1716800000
+Backup type: FULL
+Start time: 05/01/2026 00:00:00
+Status: VERIFIED
+Verification completed successfully
+Total files verified: 2847
+Total size verified: 1.2 TB
+Elapsed time: 12 minutes 34 seconds
+Exit code: 0
+```
+
+!!! warning "Common errors"
+    **`bpverify: client sql-prod-01.example.local not found in client list`** — Verify the client hostname is correct and registered in the NetBackup master server with `bpplclients`.
+    **`bpverify: backup image 1716800000 not found or expired`** — Check that the backup ID exists and has not been pruned; use `bplist -client sql-prod-01.example.local` to list available backups.
+    **`bpverify: insufficient permissions to access backup catalog`** — Ensure your user account has NetBackup administrator privileges or is in the appropriate security group.
 ### `bpverify` Exit Code Reference
 
 | Code | Meaning | Action |
@@ -337,6 +355,18 @@ if [ $EXIT -ne 0 ]; then
 fi
 ```
 
+
+```text title="Expected output"
+NetBackup bpverify FAILED for prod-db-01 — Exit: 1
+Subject: ALERT: NBU Validation Failure — prod-db-01
+To: backup-alerts@corp.local
+Message sent
+```
+
+!!! warning "Common errors"
+    **`bpverify: command not found`** — Ensure NetBackup client binaries are in PATH or source the NetBackup environment setup script (typically `. /usr/openv/netbackup/bin/bp.env`).
+    **`mail: command not found`** — Install mailutils package (`apt-get install mailutils` on Debian/Ubuntu or `yum install mailx` on RHEL/CentOS) or configure an alternative mail transport.
+    **`Permission denied: /var/log/netbackup/verify_*.log`** — Create the log directory with write permissions (`mkdir -p /var/log/netbackup && chmod 755 /var/log/netbackup`) or run the script with appropriate privileges.
 ---
 
 ## Validation Report Template

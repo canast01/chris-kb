@@ -106,6 +106,56 @@ mount -t cifs //<server>/<share> /mnt/smb \
   -o username=<user>,password=<pass>,vers=3.0,domain=<domain>
 ```
 
+
+```text title="Expected output"
+ComputerName     : fileserver.corp.local
+RemoteAddress    : 192.168.1.50
+RemotePort       : 445
+TcpTestSucceeded : True
+
+The command completed successfully.
+
+Sharename        Type  Description
+---------        ----  -----------
+Data             Disk  Project files
+Backups          Disk  Weekly backups
+IPC$             Pipe  Remote IPC
+ADMIN$           Disk  Remote Admin
+
+Name             : Data
+Path             : D:\Data
+Description      :
+FullAccess       : DOMAIN\Admins
+ReadAccess       : DOMAIN\Users
+
+SessionId ComputerName   UserName              ConnectTime
+--------- ------------   --------              -----------
+1         fileserver     CORP\jsmith           12/15/2024 09:23:15 AM
+2         fileserver     CORP\mchen            12/15/2024 09:18:42 AM
+
+RequireSecuritySignature EncryptData
+------------------------ -----------
+True                     True
+
+EnableSMB1Protocol EnableSMB2Protocol
+------------------ ------------------
+False              True
+
+Enter DOMAIN password for user username:
+Domain=[WORKGROUP] OS=[Windows 6.1] Server=[Samba 4.15.9-ubuntu]
+
+	Sharename       Type      Comment
+	---------       ----      -------
+	Data            Disk      Project files
+	IPC$            IPC       IPC Service
+
+Mount point /mnt/smb created successfully.
+```
+
+!!! warning "Common errors"
+    **`Test-NetConnection : No MSDN online help found for the cmdlet`** — Run `Update-Help` or use `Get-Help Test-NetConnection -Online` in a newer PowerShell version.
+    **`System error 5 has occurred. (Access is denied)`** — Verify credentials and ensure the user has share-level permissions; run `net use` with `/user:domain\username` explicitly.
+    **`mount error(13): Permission denied`** — Check that the mount point exists (`mkdir -p /mnt/smb`), credentials are correct, and the SMB server allows the protocol version specified in `-o vers=`.
 ## Troubleshooting
 
 | Symptom | Check | Action |

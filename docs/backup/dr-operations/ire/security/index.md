@@ -31,6 +31,40 @@ az monitor diagnostic-settings create \
   --workspace <ire-log-analytics-workspace-id> \
   --logs '[{"category":"Administrative","enabled":true},{"category":"Security","enabled":true}]'
 ```
+
+```text title="Expected output"
+{
+  "id": "/subscriptions/a7c3f2e1-9d4b-4c2a-8f5e-1b6d9c3a2e4f/resourceGroups/ire-rg/providers/Microsoft.Insights/diagnosticSettings/ire-audit",
+  "name": "ire-audit",
+  "type": "Microsoft.Insights/diagnosticSettings",
+  "properties": {
+    "workspaceId": "/subscriptions/a7c3f2e1-9d4b-4c2a-8f5e-1b6d9c3a2e4f/resourcegroups/ire-rg/providers/microsoft.operationalinsights/workspaces/ire-law-prod",
+    "logs": [
+      {
+        "category": "Administrative",
+        "enabled": true,
+        "retentionPolicy": {
+          "enabled": false,
+          "days": 0
+        }
+      },
+      {
+        "category": "Security",
+        "enabled": true,
+        "retentionPolicy": {
+          "enabled": false,
+          "days": 0
+        }
+      }
+    ],
+    "metrics": []
+  }
+}
+```
+
+!!! warning "Common errors"
+    **`ResourceNotFound: The resource '/subscriptions/<ire-sub-id>/resourceGroups/ire-rg' could not be found.`** — Replace `<ire-sub-id>` with the actual subscription ID and verify the resource group exists with `az group show -n ire-rg`.
+    **`InvalidWorkspaceId: The workspace ID provided is invalid or the workspace does not exist in the specified resource group.`** — Confirm the Log Analytics workspace ID is correct and in the same subscription by running `az monitor log-analytics workspace show --resource-group ire-rg --workspace-name <workspace-name>`.
 ```bash
 # Azure: deallocate and delete IRE VMs after sign-off
 az vm list --resource-group ire-rg --output table

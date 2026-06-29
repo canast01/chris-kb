@@ -72,6 +72,35 @@ patronictl -c /etc/patroni/config.yml list
 psql -c "SELECT now() - pg_last_xact_replay_timestamp() AS replication_lag;"
 ```
 
+
+```text title="Expected output"
+version
+────────────────────────────────────────────────────────────────────────────────
+ PostgreSQL 14.8 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 9.4.0, 64-bit
+(1 row)
+
+ database | user    | cl_active | cl_waiting | sv_active | sv_idle | sv_used | sv_tested | sv_login | maxwait
+──────────┼─────────┼───────────┼────────────┼───────────┼─────────┼─────────┼───────────┼──────────┼────────
+ appdb    | appuser |         3 |          0 |         5 |       2 |       7 |         0 |        0 |      0
+(1 row)
+
++ Cluster: prod-pg-cluster (7227849263894729231)
+| Member          | Host           | Role    | State   | TL | Lag in MB
++-----------------+----------------+---------+---------+----+-----------
+| pg-primary-01   | 10.42.1.15     | Leader  | running |  4 | 0
+| pg-replica-01   | 10.42.1.16     | Replica | running |  4 | 12
+| pg-replica-02   | 10.42.1.17     | Replica | running |  4 | 8
+
+ replication_lag
+─────────────────
+ 00:00:00.234567
+(1 row)
+```
+
+!!! warning "Common errors"
+    **`psql: error: could not translate host name "<postgres-host>" to address: Name or service not known`** — Replace `<postgres-host>` with the actual PostgreSQL server hostname or IP address.
+    **`psql: error: FATAL: remaining connection slots are reserved for non-replication superuser connections`** — Increase `max_connections` in postgresql.conf or reduce active connections before retrying.
+    **`connection refused`** — Verify pgBouncer is running on port 6432 with `systemctl status pgbouncer` and check firewall rules allow access from the app server.
 ## See also
 
 - [PostgreSQL — Architecture](../how-it-works/)

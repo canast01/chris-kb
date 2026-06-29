@@ -114,6 +114,35 @@ setspn -A cifs/fileserver01 DOMAIN\fileserver01$
 setspn -A cifs/fileserver01.corp.example.com DOMAIN\fileserver01$
 ```
 
+
+```text title="Expected output"
+Ticket cache: FILE:/tmp/krb5cc_0
+Default principal: user@CORP.EXAMPLE.COM
+
+Valid starting       Expires              Service principal
+01/15/2025 09:23:47  01/15/2025 19:23:47  krbtgt/CORP.EXAMPLE.COM@CORP.EXAMPLE.COM
+01/15/2025 09:24:12  01/15/2025 19:23:47  cifs/fileserver01.corp.example.com@CORP.EXAMPLE.COM
+
+Kerberos cache purged.
+
+Checking for SPNs...
+CN=fileserver01,OU=Servers,DC=corp,DC=example,DC=com
+	host/fileserver01
+
+CN=fileserver01,OU=Servers,DC=corp,DC=example,DC=com
+	host/fileserver01.corp.example.com
+
+Registering SPN cifs/fileserver01 for DOMAIN\fileserver01$...
+Updated object "CN=fileserver01,OU=Servers,DC=corp,DC=example,DC=com"
+
+Registering SPN cifs/fileserver01.corp.example.com for DOMAIN\fileserver01$...
+Updated object "CN=fileserver01,OU=Servers,DC=corp,DC=example,DC=com"
+```
+
+!!! warning "Common errors"
+    **`klist: No credentials cache found while getting default principal`** — Run `kinit user@CORP.EXAMPLE.COM` to obtain initial Kerberos tickets before checking cache.
+    **`setspn: Unable to contact the Active Directory on domain.com`** — Ensure the client has network connectivity to a domain controller and DNS is resolving the domain correctly.
+    **`Access Denied: The user does not have permission to modify the object`** — Run setspn commands with domain administrator credentials or delegate SPN modification rights to the service account owner.
 ## Signing Mismatch
 
 ```powershell

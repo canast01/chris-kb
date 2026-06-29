@@ -186,6 +186,17 @@ openssl x509 -noout -dates -in idp-signing.crt
 openssl x509 -noout -dates -in sp-signing.crt
 ```
 
+
+```text title="Expected output"
+notBefore=Jan 15 10:23:45 2023 GMT
+notAfter=Jan 15 10:23:45 2025 GMT
+notBefore=Mar 22 14:57:12 2024 GMT
+notAfter=Mar 22 14:57:12 2026 GMT
+```
+
+!!! warning "Common errors"
+    **`unable to load certificate`** — Verify the certificate file exists and use the correct path; check file permissions with `ls -l idp-signing.crt`.
+    **`No such file or directory`** — Ensure you've downloaded the IdP certificate to the current working directory or provide the full path to the certificate file.
 **Rotation procedure:**
 1. Get new certificate from IdP (for IdP cert rotation) or generate new SP cert
 2. Add the new certificate alongside the existing one in both SP and IdP config

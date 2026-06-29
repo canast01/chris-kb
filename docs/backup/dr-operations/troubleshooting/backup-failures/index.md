@@ -125,6 +125,29 @@ qoperation execscript -sn QS_GetJobFailureReason -si 10235
 qlist job -t backup -st running
 ```
 
+
+```text title="Expected output"
+JOBID  TYPE    STATUS     CLIENT          SUBCLIENT   START              END
+10234  Backup  Completed  srv-prod-db01   default     05/08 02:00:03     05/08 03:45:11
+10235  Backup  Failed     srv-prod-app02  default     05/08 02:00:05     05/08 02:17:33
+10236  Backup  Completed  srv-prod-web01  default     05/08 03:00:12     05/08 04:22:47
+10237  Backup  Failed     srv-prod-db02   default     05/08 04:00:08     05/08 04:35:19
+10238  Backup  Running    srv-prod-app03  default     05/08 05:00:01     -
+10239  Backup  Completed  srv-prod-web02  default     05/08 05:30:44     05/08 06:15:22
+
+Job Failure Reason for Job ID: 10235
+Error Code: 31:4
+Error Message: Failed to connect to the client. Verify network connectivity and firewall rules.
+
+JOBID  TYPE    STATUS     CLIENT          SUBCLIENT   START              END
+10238  Backup  Running    srv-prod-app03  default     05/08 05:00:01     -
+10240  Backup  Running    srv-prod-db03   default     05/08 05:45:22     -
+```
+
+!!! warning "Common errors"
+    **`qlist: command not found`** — Ensure the CommServe client is installed and the PATH includes the Commvault bin directory (typically `/opt/commvault/Base/bin`).
+    **`Error Code: 31:4 - Failed to connect to the client`** — Verify network connectivity between CommServe and the client, check firewall rules, and confirm the client service is running with `systemctl status cvd`.
+    **`qoperation execscript: Invalid script name 'QS_GetJobFailureReason'`** — Verify the exact script name and job ID syntax; use `qoperation execscript -sn QS_GetJobFailureReason -si <jobid>` with a valid numeric job ID.
 ### Log Locations and Analysis
 
 | Component | Log File |
@@ -142,6 +165,24 @@ grep -i "error\|fail\|timeout" /var/log/commvault/Log_Files/cvfwd.log | tail -50
 telnet mediaagent01.corp.example.com 8400
 ```
 
+
+```text title="Expected output"
+2024-01-15 14:32:18 [ERROR] Connection timeout to MediaAgent mediaagent01.corp.example.com:8400 after 30s
+2024-01-15 14:33:05 [WARN] Failed to authenticate with CommServe, retrying...
+2024-01-15 14:33:42 [ERROR] Socket error: Connection refused on port 8400
+2024-01-15 14:34:19 [ERROR] Backup job failed: Unable to reach MediaAgent within timeout window
+2024-01-15 14:35:01 [WARN] Network latency detected: 450ms round-trip to mediaagent01
+2024-01-15 14:35:47 [ERROR] Failed to write to staging area: Disk quota exceeded
+2024-01-15 14:36:22 [ERROR] Timeout waiting for MediaAgent response (120s exceeded)
+
+Trying 10.42.18.105...
+telnet: Unable to connect to remote host: Connection timed out
+```
+
+!!! warning "Common errors"
+    **`telnet: Unable to connect to remote host: Connection timed out`** — Verify MediaAgent is running (`systemctl status commvault-ma`), check firewall rules allow port 8400, and confirm DNS resolution with `nslookup mediaagent01.corp.example.com`.
+    **`Socket error: Connection refused on port 8400`** — Restart the MediaAgent service with `systemctl restart commvault-ma` and verify the cvfwd daemon is listening on port 8400 using `netstat -tlnp | grep 8400`.
+    **`Backup job failed: Unable to reach MediaAgent within timeout window`** — Increase the network timeout in CommServe backup policy settings or check for network congestion/packet loss using `ping -c 10 mediaagent01.corp.example.com`.
 ### Commvault Job Failure Reason Codes
 
 | Code | Meaning | Fix |
@@ -172,6 +213,43 @@ bpdbjobs -jobid 123456 -all_columns
 bperror -S master01 -jobid 123456 -l
 ```
 
+
+```text title="Expected output"
+Job ID    Policy Name          Client Name              Schedule      Status  Elapsed Time  KB Processed
+123456    PROD_DB_DAILY        db-server-01.corp.local  Full_Backup   1       02:45:30      524288000
+123457    PROD_DB_DAILY        db-server-02.corp.local  Full_Backup   0       00:15:22      1048576000
+123458    PROD_APP_WEEKLY      app-server-03.corp.local Incremental   1       01:22:15      262144000
+123459    PROD_DB_DAILY        db-server-04.corp.local  Full_Backup   1       03:10:45      786432000
+123460    PROD_MAIL_DAILY      mail-server-01.corp.local Full_Backup   0       00:08:33      2097152000
+
+Job ID    Policy Name          Client Name              Schedule      Status  Elapsed Time  KB Processed
+123456    PROD_DB_DAILY        db-server-01.corp.local  Full_Backup   1       02:45:30      524288000
+123458    PROD_APP_WEEKLY      app-server-03.corp.local Incremental   1       01:22:15      262144000
+123459    PROD_DB_DAILY        db-server-04.corp.local  Full_Backup   1       03:10:45      786432000
+
+Job ID: 123456
+Policy Name: PROD_DB_DAILY
+Client Name: db-server-01.corp.local
+Schedule: Full_Backup
+Status: 1 (Failed)
+Elapsed Time: 02:45:30
+KB Processed: 524288000
+Error Code: 6
+Start Time: 2024-01-15 22:30:15
+End Time: 2024-01-16 01:15:45
+Backup Type: Full
+
+Error detail for job 123456:
+Error Code: 6
+Message: Cannot open file - permission denied on /var/lib/mysql/ibdata1
+Client: db-server-01.corp.local
+Time: 2024-01-16 01:15:42
+```
+
+!!! warning "Common errors"
+    **`bpdbjobs: command not found`** — Ensure the NetBackup client or admin console is installed and the PATH includes the NetBackup bin directory (typically `/usr/openv/netbackup/bin`).
+    **`Error: Cannot connect to master01.corp.example.com`** — Verify the master server hostname is correct, the NetBackup services are running on the master, and network connectivity exists from your current host.
+    **`bperror: invalid jobid 123456`** — Confirm the job ID exists by running `bpdbjobs -report` first and use a valid job ID from the output.
 ### NetBackup Status Code Reference
 
 | Status Code | Meaning | Fix |
@@ -196,6 +274,30 @@ bptestbpcd -client client01.corp.example.com
 bpdbm -consistency -M master01
 ```
 
+
+```text title="Expected output"
+client01.corp.example.com: PASSED (response time: 42ms)
+
+NetBackup processes on client01.corp.example.com:
+  PID     PPID    COMMAND
+  2847    1       /usr/openv/netbackup/bin/bprd
+  2891    2847    /usr/openv/netbackup/bin/bpsched
+  2934    2847    /usr/openv/netbackup/bin/bpdbm
+  3012    2847    /usr/openv/netbackup/bin/bptm
+  3156    2847    /usr/openv/netbackup/bin/bpcd
+
+Catalog consistency check on master01:
+  Checking database integrity...
+  Total records scanned: 1,247,392
+  Inconsistencies found: 0
+  Status: HEALTHY
+  Check completed in 187 seconds
+```
+
+!!! warning "Common errors"
+    **`bptestbpcd: command not found`** — Ensure NetBackup client is installed and `/usr/openv/netbackup/bin` is in your PATH, or use the full path `/usr/openv/netbackup/bin/bptestbpcd`.
+    **`Connection refused on client01.corp.example.com port 13782`** — Verify the NetBackup daemon (bpcd) is running on the client with `/usr/openv/netbackup/bin/bpps -a` and check firewall rules allow port 13782 between master and client.
+    **`bpdbm: Catalog database locked by another process`** — Wait for any running backup or restore jobs to complete, or check for hung processes with `bpps -a` and kill stale processes if necessary.
 ---
 
 ## Repository Capacity Checks
@@ -221,6 +323,30 @@ Get-PSDrive -Name D | Select-Object Name, Used, Free |
     }
 ```
 
+
+```text title="Expected output"
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sdb1        20T   18T  2.0T  90% /backup
+
+18G	/backup/daily-2024-01-15
+16G	/backup/daily-2024-01-14
+14G	/backup/weekly-2024-01-08
+12G	/backup/monthly-2024-01
+8.5G	/backup/daily-2024-01-13
+7.2G	/backup/archive-prod-db
+6.8G	/backup/daily-2024-01-12
+5.4G	/backup/incremental-cache
+4.1G	/backup/daily-2024-01-11
+3.9G	/backup/temp-staging
+
+Drive UsedGB FreeGB UsedPct
+----- ------ ------ -------
+    D  1847.3  152.7    92.4
+```
+
+!!! warning "Common errors"
+    **`du: cannot access '/backup/daily-2024-01-15': Permission denied`** — Run the command with `sudo` or ensure the user has read permissions on the backup directory.
+    **`Get-PSDrive : Cannot find drive. Does the drive 'D' exist?`** — Verify the backup drive letter with `Get-PSDrive` and replace 'D' with the correct drive letter.
 ---
 
 ## Network Path Validation to Backup Target

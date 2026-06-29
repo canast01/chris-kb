@@ -27,6 +27,46 @@ vdmadmin -A -dns desktop01.lab.local          # machine detail (state, pool, use
 vdmadmin -M -machine desktop01 -remove        # remove machine from inventory
 ```
 
+
+```text title="Expected output"
+Pool: mypool
+  Display Name: My Pool
+  Type: Dedicated
+  State: Available
+  Total Machines: 24
+  Available: 18
+  In Use: 6
+
+Pool Summary for mypool:
+  Pool ID: mypool
+  Machine Type: Windows 10
+  Provisioning: Manual
+  Sessions: 6/24
+
+User Entitlements:
+  domain\jsmith → mypool (Dedicated)
+  domain\achen → mypool (Floating)
+  domain\mrodriguez → engineering_pool (Dedicated)
+  ...
+
+User domain\username logged off from 2 sessions.
+
+Desktop desktop01 unassigned from user domain\user.
+
+Machine Details: desktop01.lab.local
+  State: Available
+  Pool: mypool
+  Current User: None
+  IP Address: 192.168.1.45
+  Last Heartbeat: 2024-01-15 14:32:18
+
+Machine desktop01 removed from inventory.
+```
+
+!!! warning "Common errors"
+    **`Error: Pool mypool not found`** — Verify the pool ID exists with `vdmadmin -L` and check for typos in the pool name.
+    **`Error: Access Denied. Administrator privileges required`** — Run the Command Prompt as Administrator or use an account with Horizon administrator role.
+    **`Error: Machine desktop01 is currently in use by domain\username`** — Log off the user first with `vdmadmin -O -u domain\username` before removing the machine.
 ## PowerShell (VMware.Hv.Helper module)
 
 ```powershell

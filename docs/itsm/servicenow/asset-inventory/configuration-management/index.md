@@ -19,6 +19,52 @@ ansible-playbook -i inventory/ baseline-check.yml --check --diff
 ansible -i inventory/ all -m setup -a "filter=ansible_distribution*"
 ```
 
+
+```text title="Expected output"
+PLAY [Enforce baseline configuration] ******************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [web-prod-01.internal]
+ok: [web-prod-02.internal]
+ok: [db-prod-01.internal]
+ok: [app-prod-03.internal]
+
+TASK [Install required packages] ***********************************************
+changed: [web-prod-01.internal]
+changed: [web-prod-02.internal]
+ok: [db-prod-01.internal]
+ok: [app-prod-03.internal]
+
+TASK [Configure firewall rules] ************************************************
+changed: [web-prod-01.internal]
+ok: [web-prod-02.internal]
+ok: [db-prod-01.internal]
+ok: [app-prod-03.internal]
+
+PLAY RECAP *********************************************************************
+web-prod-01.internal       : ok=12  changed=2    unreachable=0    failed=0
+web-prod-02.internal       : ok=12  changed=1    unreachable=0    failed=0
+db-prod-01.internal        : ok=12  changed=0    unreachable=0    failed=0
+app-prod-03.internal       : ok=12  changed=0    unreachable=0    failed=0
+
+PLAY [Check baseline compliance] ***********************************************
+TASK [Verify SSH configuration] ************************************************
+--- before
++++ after
+@@ -15,3 +15,3 @@
+ PermitRootLogin no
+-PasswordAuthentication yes
++PasswordAuthentication no
+ PubkeyAuthentication yes
+
+PLAY RECAP *********************************************************************
+All hosts passed baseline check with 1 drift detected on web-prod-01.internal
+```
+
+!!! warning "Common errors"
+    **`[WARNING]: Unable to parse /etc/ansible/inventory/ as an inventory source`** — Verify inventory file exists and is readable with `ls -la inventory/` and check file permissions.
+    **`fatal: [web-prod-01.internal]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}`** — Ensure SSH key is loaded with `ssh-add ~/.ssh/id_rsa` and the target host has your public key in `~/.ssh/authorized_keys`.
+    **`ERROR! the playbook: site.yml could not be found`** — Confirm playbook exists in current directory with `ls -la *.yml` and verify the working directory matches your documentation path.
 ```bash
 # Detect package changes from baseline (RPM systems)
 rpm -Va | grep -v "^......G"   # filter cosmetic warnings

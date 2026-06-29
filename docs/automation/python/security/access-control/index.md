@@ -49,6 +49,34 @@ aws iam simulate-principal-policy \
   --resource-arns arn:aws:s3:::my-bucket/*
 ```
 
+
+```text title="Expected output"
+{
+    "UserId": "AIDACKCEVSQ6C2EXAMPLE",
+    "Account": "123456789012",
+    "Arn": "arn:aws:iam::123456789012:user/automation-admin"
+}
+{
+    "EvaluationResults": [
+        {
+            "EvalActionName": "s3:GetObject",
+            "EvalResourceName": "arn:aws:s3:::my-bucket/*",
+            "EvalDecision": "allowed",
+            "MatchedStatements": [
+                {
+                    "SourceStatement": "arn:aws:iam::123456789012:role/automation-role inline policy"
+                }
+            ],
+            "EvalDecisionDetails": {},
+            "ResourceSpecificResults": []
+        }
+    ]
+}
+```
+
+!!! warning "Common errors"
+    **`An error occurred (NoSuchEntity) when calling the SimulatePrincipalPolicy operation: The role with name automation-role cannot be found.`** — Verify the role name and account ID match exactly, then check that the role exists in the target account using `aws iam get-role --role-name automation-role`.
+    **`An error occurred (AccessDenied) when calling the SimulatePrincipalPolicy operation: User: arn:aws:iam::123456789012:user/automation-admin is not authorized to perform: iam:SimulatePrincipalPolicy`** — Add the `iam:SimulatePrincipalPolicy` permission to your current user's IAM policy.
 ## Access Policies Reference
 
 | Principle | Practice |

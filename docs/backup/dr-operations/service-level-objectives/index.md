@@ -60,6 +60,44 @@ az monitor metrics list \
   --aggregation Average
 ```
 
+
+```text title="Expected output"
+{
+  "cost": 0.0,
+  "interval": "PT1H",
+  "namespace": "Microsoft.Web/sites",
+  "resourceregion": "eastus",
+  "timeseries": [
+    {
+      "data": [
+        {
+          "timeStamp": "2026-05-01T00:00:00+00:00",
+          "average": 99.87
+        },
+        {
+          "timeStamp": "2026-05-01T01:00:00+00:00",
+          "average": 99.92
+        },
+        {
+          "timeStamp": "2026-05-01T02:00:00+00:00",
+          "average": 98.45
+        },
+        {
+          "timeStamp": "2026-05-01T03:00:00+00:00",
+          "average": 99.99
+        }
+      ],
+      "metadatavalues": []
+    }
+  ],
+  "unit": "Percent",
+  "value": []
+}
+```
+
+!!! warning "Common errors"
+    **`ResourceNotFound: The resource '<app-resource-id>' could not be found.`** — Verify the resource ID is correct and exists in your subscription using `az resource show --ids <app-resource-id>`.
+    **`AuthorizationFailed: The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'microsoft.insights/metrics/read' over scope '<resource-scope>'.`** — Assign the "Monitoring Reader" role to your user or service principal on the target resource.
 ## SLO Dashboard Requirements
 
 Each SLO should have a dashboard panel showing:

@@ -55,6 +55,47 @@ az network nsg show \
   --output json
 ```
 
+
+```text title="Expected output"
+{
+  "defaultSecurityRules": [
+    {
+      "name": "AllowVnetInBound",
+      "priority": 65000,
+      "sourceAddressPrefix": "VirtualNetwork",
+      "destinationAddressPrefix": "VirtualNetwork"
+    },
+    {
+      "name": "AllowAzureLoadBalancerInBound",
+      "priority": 65001,
+      "sourceAddressPrefix": "AzureLoadBalancer",
+      "destinationAddressPrefix": "*"
+    },
+    {
+      "name": "DenyAllInBound",
+      "priority": 65500,
+      "sourceAddressPrefix": "*",
+      "destinationAddressPrefix": "*"
+    }
+  ],
+  "etag": "W/\"a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6\"",
+  "id": "/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/myRG/providers/Microsoft.Network/networkSecurityGroups/myNSG",
+  "location": "eastus",
+  "name": "myNSG",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "myRG",
+  "securityRules": [],
+  "type": "Microsoft.Network/networkSecurityGroups"
+}
+
+Name    Location    ResourceGroup    ProvisioningState
+------  ----------  ---------------  -------------------
+myNSG   eastus      myRG             Succeeded
+```
+
+!!! warning "Common errors"
+    **`ResourceGroupNotFound : Resource group 'myRG' could not be found.`** — Create the resource group first with `az group create --name myRG --location eastus`.
+    **`ResourceNotFound : The Resource 'Microsoft.Network/networkSecurityGroups/myNSG' under resource group 'myRG' was not found.`** — Verify the NSG name and resource group are correct, or create the NSG before querying it.
 ## Inbound and Outbound Rules
 
 ```bash
@@ -115,6 +156,60 @@ az network nsg rule create \
   --destination-port-ranges 443
 ```
 
+
+```text title="Expected output"
+{
+  "access": "Allow",
+  "destinationAddressPrefix": "*",
+  "destinationPortRange": "443",
+  "direction": "Inbound",
+  "etag": "W/\"a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6\"",
+  "id": "/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/myRG/providers/Microsoft.Network/networkSecurityGroups/myNSG/securityRules/Allow-HTTPS",
+  "name": "Allow-HTTPS",
+  "priority": 100,
+  "protocol": "Tcp",
+  "provisioningState": "Succeeded",
+  "sourceAddressPrefix": "Internet",
+  "sourcePortRange": "*",
+  "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+}
+{
+  "access": "Allow",
+  "destinationAddressPrefix": "*",
+  "destinationPortRange": "22",
+  "direction": "Inbound",
+  "etag": "W/\"b2c3d4e5-f6g7-48h9-i0j1-k2l3m4n5o6p7\"",
+  "id": "/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/myRG/providers/Microsoft.Network/networkSecurityGroups/myNSG/securityRules/Allow-SSH-Management",
+  "name": "Allow-SSH-Management",
+  "priority": 110,
+  "protocol": "Tcp",
+  "provisioningState": "Succeeded",
+  "sourceAddressPrefix": "10.0.0.0/24",
+  "sourcePortRange": "*",
+  "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+}
+{
+  "access": "Deny",
+  "destinationAddressPrefix": "*",
+  "destinationPortRange": "*",
+  "direction": "Inbound",
+  "etag": "W/\"c3d4e5f6-g7h8-49i0-j1k2-l3m4n5o6p7q8\"",
+  "id": "/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/myRG/providers/Microsoft.Network/networkSecurityGroups/myNSG/securityRules/Deny-All-Inbound",
+  "name": "Deny-All-Inbound",
+  "priority": 4000,
+  "protocol": "*",
+  "provisioningState": "Succeeded",
+  "sourceAddressPrefix": "*",
+  "sourcePortRange": "*",
+  "type": "Microsoft.Network/networkSecurityGroups/securityRules"
+}
+{
+  "access": "Allow",
+  "destinationAddressPrefix": "AzureMonitor",
+  "destinationPortRange": "443",
+  "direction": "Outbound",
+  "etag": "W/\"d4e5f6g7-h8i9-50j0-k1l2
+```
 ## Rule Priority and Default Rules
 
 | Priority Range | Guideline                                   |
@@ -166,6 +261,51 @@ az network nsg rule create \
   --destination-port-ranges 443
 ```
 
+
+```text title="Expected output"
+{
+  "id": "/subscriptions/12a34b56-c789-0d12-e345-f67890123456/resourceGroups/myRG/providers/Microsoft.Network/applicationSecurityGroups/web-servers-asg",
+  "location": "eastus",
+  "name": "web-servers-asg",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "myRG",
+  "tags": null,
+  "type": "Microsoft.Network/applicationSecurityGroups"
+}
+(no output — command completes silently)
+{
+  "access": "Allow",
+  "description": null,
+  "destinationAddressPrefixes": [],
+  "destinationApplicationSecurityGroups": [
+    {
+      "id": "/subscriptions/12a34b56-c789-0d12-e345-f67890123456/resourceGroups/myRG/providers/Microsoft.Network/applicationSecurityGroups/web-servers-asg",
+      "resourceGroup": "myRG"
+    }
+  ],
+  "destinationPortRanges": [
+    "443"
+  ],
+  "direction": "Inbound",
+  "etag": "W/\"a1b2c3d4-e5f6-7890-abcd-ef1234567890\"",
+  "id": "/subscriptions/12a34b56-c789-0d12-e345-f67890123456/resourceGroups/myRG/providers/Microsoft.Network/networkSecurityGroups/myNSG/securityRules/Allow-HTTPS-to-WebServers",
+  "name": "Allow-HTTPS-to-WebServers",
+  "priority": 120,
+  "protocol": "Tcp",
+  "provisioningState": "Succeeded",
+  "sourceAddressPrefixes": [
+    "Internet"
+  ],
+  "sourcePortRanges": [
+    "*"
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`(ResourceNotFound) The Resource 'Microsoft.Network/networkSecurityGroups/myNSG' under resource group 'myRG' was not found.`** — Verify the NSG name matches an existing NSG in the resource group using `az network nsg list --resource-group myRG`.
+    **`(InvalidResourceReference) The referenced application security group '/subscriptions/.../web-servers-asg' does not exist.`** — Ensure the ASG was created successfully in the same resource group before creating the NSG rule.
+    **`(BadRequest) The NIC 'myVM-nic' does not exist in resource group 'myRG'.`** — Confirm the NIC name is correct by listing NICs with `az network nic list --resource-group myRG`.
 ## NSG Flow Logs
 
 NSG Flow Logs record accepted and denied traffic for compliance analysis and troubleshooting.
@@ -183,6 +323,38 @@ az network watcher flow-log create \
   --resource-group myRG
 ```
 
+
+```text title="Expected output"
+{
+  "etag": "W/\"a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6\"",
+  "flowAnalyticsConfiguration": {
+    "networkWatcherFlowAnalyticsConfiguration": {
+      "enabled": true,
+      "trafficAnalyticsInterval": 10,
+      "workspaceResourceId": "/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/myRG/providers/Microsoft.OperationalInsights/workspaces/myWorkspace",
+      "workspaceRegion": "eastus",
+      "workspaceId": "a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6"
+    }
+  },
+  "id": "/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/myRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_eastus/flowLogs/myFlowLog",
+  "location": "eastus",
+  "name": "myFlowLog",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "myRG",
+  "retentionPolicy": {
+    "days": 0,
+    "enabled": false
+  },
+  "storageId": "/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/myRG/providers/Microsoft.Storage/storageAccounts/myStorageAccount",
+  "targetResourceId": "/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/myRG/providers/Microsoft.Network/networkSecurityGroups/myNSG",
+  "type": "Microsoft.Network/networkWatchers/flowLogs"
+}
+```
+
+!!! warning "Common errors"
+    **`The resource with name 'myNSG' and type 'networkSecurityGroups' could not be found in resource group 'myRG'.`** — Verify the NSG name and resource group are correct using `az network nsg list --resource-group myRG`.
+    **`The specified storage account does not exist or you do not have permission to access it.`** — Ensure the storage account exists in the same region and subscription, and the user has Storage Blob Data Contributor role on it.
+    **`The workspace resource ID is invalid or the workspace does not exist.`** — Confirm the Log Analytics workspace exists and use `az monitor log-analytics workspace list --resource-group myRG` to get the correct resource ID.
 ## Associating NSGs
 
 ```bash
@@ -199,3 +371,39 @@ az network nic update \
   --name myVM-nic \
   --network-security-group myNSG
 ```
+
+
+```text title="Expected output"
+{
+  "etag": "W/\"a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6\"",
+  "id": "/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/myRG/providers/Microsoft.Network/virtualNetworks/myVNet/subnets/mySubnet",
+  "name": "mySubnet",
+  "networkSecurityGroup": {
+    "id": "/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/myRG/providers/Microsoft.Network/networkSecurityGroups/myNSG",
+    "resourceGroup": "myRG"
+  },
+  "provisioningState": "Succeeded",
+  "type": "Microsoft.Network/virtualNetworks/subnets"
+}
+{
+  "dnsSettings": {
+    "appliedDnsServers": [],
+    "dnsServers": []
+  },
+  "enableAcceleratedNetworking": false,
+  "id": "/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/myRG/providers/Microsoft.Network/networkInterfaces/myVM-nic",
+  "ipConfigurations": [...],
+  "name": "myVM-nic",
+  "networkSecurityGroup": {
+    "id": "/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/myRG/providers/Microsoft.Network/networkSecurityGroups/myNSG",
+    "resourceGroup": "myRG"
+  },
+  "provisioningState": "Succeeded",
+  "type": "Microsoft.Network/networkInterfaces"
+}
+```
+
+!!! warning "Common errors"
+    **`(ResourceNotFound) The Resource 'Microsoft.Network/networkSecurityGroups/myNSG' under resource group 'myRG' was not found.`** — Verify the NSG exists in the correct resource group using `az network nsg list --resource-group myRG`.
+    **`(InvalidResourceReference) The resource '/subscriptions/.../subnets/mySubnet' does not exist.`** — Confirm the subnet name and virtual network name are correct and exist in the specified resource group.
+    **`(AuthorizationFailed) The client 'user@example.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have permission to perform action 'Microsoft.Network/networkSecurityGroups/join/action'.`** — Ensure your Azure account has Network Contributor or higher role assigned to the resource group.

@@ -64,6 +64,55 @@ curl -sk $AUTH $BASE/policy/api/v1/infra/domains/default/security-policies \
   | python3 -c "import sys,json; d=json.load(sys.stdin); print('Policies:', d['result_count'])"
 ```
 
+
+```text title="Expected output"
+{
+  "results": [
+    {
+      "id": "tz-1",
+      "display_name": "TZ-Overlay",
+      "transport_type": "OVERLAY",
+      "host_switch_name": "nvds-overlay"
+    },
+    {
+      "id": "tz-2",
+      "display_name": "TZ-VLAN",
+      "transport_type": "VLAN",
+      "host_switch_name": "nvds-vlan"
+    }
+  ],
+  "result_count": 2
+}
+{
+  "results": [
+    {
+      "id": "seg-web-prod",
+      "display_name": "Web-Production",
+      "subnets": [
+        {
+          "gateway_address": "10.1.0.1/24"
+        }
+      ]
+    },
+    {
+      "id": "seg-db-prod",
+      "display_name": "Database-Production",
+      "subnets": [
+        {
+          "gateway_address": "10.2.0.1/24"
+        }
+      ]
+    }
+  ],
+  "result_count": 2
+}
+Policies: 12
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification (already present; if error persists, verify NSX manager hostname resolves correctly).
+    **`jq: command not found`** — Install `python3-json.tool` or use `python3 -m json.tool` instead (the script already uses the latter, so verify Python 3 is installed).
+    **`401 Unauthorized`** — Verify credentials in `AUTH` variable match NSX admin account; reset password if needed via NSX UI or `set user admin password` CLI command.
 ## Edge Node
 
 | Command | Description | Example |

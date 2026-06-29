@@ -127,6 +127,24 @@ GRANT ALL PRIVILEGES ON DATABASE jira TO jira;
 \q
 ```
 
+
+```text title="Expected output"
+psql (14.8 (Ubuntu 14.8-1.pgdg22.04+1))
+Type "help" for help.
+
+postgres=# CREATE USER jira WITH PASSWORD 'secure-password-here';
+CREATE ROLE
+postgres=# CREATE DATABASE jira OWNER jira ENCODING 'UTF8' LC_COLLATE 'C' LC_CTYPE 'C' TEMPLATE template0;
+CREATE DATABASE
+postgres=# GRANT ALL PRIVILEGES ON DATABASE jira TO jira;
+GRANT
+postgres=# \q
+```
+
+!!! warning "Common errors"
+    **`ERROR: role "jira" already exists`** — Drop the existing role with `DROP ROLE jira;` before recreating it, or use `CREATE USER IF NOT EXISTS jira` (PostgreSQL 10+).
+    **`FATAL: Ident authentication failed for user "postgres"`** — Ensure you're running the command as the postgres system user with `sudo -u postgres` or configure pg_hba.conf to allow password authentication.
+    **`ERROR: database "jira" already exists`** — Drop the existing database with `DROP DATABASE jira;` first, or use `CREATE DATABASE IF NOT EXISTS jira`.
 **Run the Jira setup wizard:**
 
 1. Open a browser to `http://<jira-server>:8080`.
@@ -171,6 +189,14 @@ JVM_MINIMUM_MEMORY="2048m"
 JVM_MAXIMUM_MEMORY="8192m"
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`bash: JVM_MINIMUM_MEMORY: command not found`** — Ensure you are running these commands in a bash shell context, not pasting them into a non-shell environment.
+    **`export: command not found`** — If these variables need to be persistent across sessions, prefix each line with `export` (e.g., `export JVM_MINIMUM_MEMORY="2048m"`).
 Restart Jira: `sudo systemctl restart jira`
 
 ---
@@ -250,6 +276,34 @@ curl -I http://localhost:8080/status
 # Expected: HTTP 200, {"state":"RUNNING"}
 ```
 
+
+```text title="Expected output"
+● jira.service - Atlassian Jira
+     Loaded: loaded (/etc/systemd/system/jira.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2024-01-15 09:23:47 UTC; 2h 14min ago
+       Docs: https://confluence.atlassian.com/jira
+    Process: 4521 ExecStart=/opt/jira/bin/start-jira.sh (code=exited, status=0/SUCCESS)
+   Main PID: 4589 (java)
+      Tasks: 47 (limit: 4096)
+     Memory: 2.8G
+        CPU: 18min 34.231s
+     CGroup: /system.slice/jira.service
+             └─4589 /usr/lib/jvm/java-11-openjdk-amd64/bin/java -Djava.awt.headless=true...
+
+HTTP/1.1 200 OK
+Server: Apache-Coyote/1.1
+X-AREQUESTED-WITH: XMLHttpRequest
+Content-Type: application/json
+Content-Length: 28
+Date: Mon, 15 Jan 2024 11:38:12 GMT
+
+{"state":"RUNNING","version":"9.12.4"}
+```
+
+!!! warning "Common errors"
+    **`Unit jira.service could not be found.`** — Verify the Jira systemd service file exists at `/etc/systemd/system/jira.service` and run `sudo systemctl daemon-reload`.
+    **`curl: (7) Failed to connect to localhost port 8080: Connection refused`** — Check that Jira is actually running with `sudo systemctl start jira` and wait 30–60 seconds for the application to fully initialize.
+    **`HTTP/1.1 503 Service Unavailable`** — Jira is starting up; wait 2–3 minutes and retry, or check `/opt/jira/logs/catalina.out` for startup errors.
 **Web UI:**
 
 - Log in as admin and as an LDAP user — both must succeed
@@ -263,6 +317,18 @@ sudo -u postgres psql -d jira -c "SELECT count(*) FROM app_user;"
 # Should return the user count — confirms schema is populated
 ```
 
+
+```text title="Expected output"
+count
+-------
+  1247
+(1 row)
+```
+
+!!! warning "Common errors"
+    **`psql: error: FATAL: role "postgres" does not exist`** — Verify the PostgreSQL superuser name with `sudo -u postgres psql -l` or use the correct role name in the `-u` flag.
+    **`psql: error: FATAL: database "jira" does not exist`** — Confirm the JIRA database exists by running `sudo -u postgres psql -l` and create it if missing with `createdb -U postgres jira`.
+    **`psql: error: ERROR: relation "app_user" does not exist`** — Ensure the JIRA schema has been initialized by running the JIRA database setup script or checking that the application has completed its first-run configuration.
 **Email (if SMTP configured):**
 
 - Navigate to **Administration → System → Mail → Send test email**

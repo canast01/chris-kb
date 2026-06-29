@@ -124,6 +124,36 @@ journalctl --disk-usage
 journalctl --vacuum-time=7d
 ```
 
+
+```text title="Expected output"
+Jun 01 14:32:15 web-prod-01 nginx[2847]: error connecting to upstream: connection refused
+Jun 01 14:32:16 web-prod-01 systemd[1]: nginx.service: Main process exited, code=exited, status=1/FAILURE
+Jun 01 14:32:18 web-prod-01 kernel: Out of memory: Kill process 3421 (java) score 892 or sacrifice child
+Jun 01 14:32:19 web-prod-01 kernel: Killed process 3421 (java) total-vm:4096000kB, anon-rss:3891200kB
+Jun 01 14:32:22 web-prod-01 systemd[1]: systemd-journald.service: Assertion failed: n_inotify_watches < n_inotify_watches_max
+Jun 01 14:33:01 web-prod-01 sshd[5612]: error: connect_to 10.42.8.15 port 22: Connection refused
+Jun 01 14:33:45 web-prod-01 kernel: audit: type=1130 audit(1748901225.123:456): pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=docker-compose comm="systemd" exe="/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+
+Jun 01 14:25:00 web-prod-01 nginx[2847]: 2026/06/01 14:25:15 [warn] 2847#2847: *1234 upstream server temporarily disabled while connecting to upstream, client: 192.168.1.50, server: api.internal, request: "GET /health HTTP/1.1"
+Jun 01 14:27:33 web-prod-01 systemd[1]: [warn] Watchdog timeout (limit 30s)!
+Jun 01 14:29:12 web-prod-01 postgresql[1923]: [warn] connection timeout after 300 seconds
+
+Searching for OOM/SIGKILL/timeout/refused:
+Jun 01 14:32:18 web-prod-01 kernel: Out of memory: Kill process 3421 (java) score 892
+Jun 01 14:32:19 web-prod-01 kernel: Killed process 3421 (java) total-vm:4096000kB
+Jun 01 14:33:01 web-prod-01 sshd[5612]: error: connect_to 10.42.8.15 port 22: Connection refused
+Jun 01 14:29:12 web-prod-01 postgresql[1923]: connection timeout after 300 seconds
+
+Disk usage of journal:
+Archived and volatile journals take up 1.2G on disk.
+
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`journalctl: command not found`** — Install systemd-journal or verify systemd is running with `systemctl status systemd-journald`.
+    **`Failed to get realtime timestamp: Cannot assign requested address`** — Ensure system time is synchronized with `timedatectl set-ntp true` or manually set the date.
+    **`Vacuuming journal files... Deleted archived
 ---
 
 ## Step 2 — Read dmesg for kernel and hardware events
@@ -150,6 +180,27 @@ dmesg -T | grep -i "eth\|em\|bond\|link\|carrier\|reset"
 dmesg -T | grep -i "MCE\|DIMM\|memory controller"
 ```
 
+
+```text title="Expected output"
+[Mon Dec 19 14:23:47 2024] usb 1-1: new high-speed USB device number 2 using xhci_hcd
+[Mon Dec 19 14:23:48 2024] usb 1-1: New USB device found, idVendor=0951, idProduct=1666, bcdDevice= 1.10
+[Mon Dec 19 14:24:12 2024] audit: type=1130 audit(1734614652.891:42): pid=1 uid=0 auid=4294967295 ses=4294967295 msg='unit=systemd-tmpfiles-setup-dev comm="systemd" exe="/lib/systemd/systemd" hostname=? addr=? terminal=? res=success'
+[Mon Dec 19 14:25:33 2024] WARNING: CPU: 3 PID: 8421 at drivers/gpu/drm/amd/amdgpu/../display/dc/core/dc.c:1234 dc_create+0x4a8/0x5c0 [amdgpu]
+[Mon Dec 19 14:26:01 2024] Out of memory: Kill process 2847 (java) score 312 or sacrifice child
+[Mon Dec 19 14:26:01 2024] Killed process 2847 (java) total-vm:8388608kB, anon-rss:7654321kB, file-rss:0kB, shmem-rss:0kB, UID:1001 pgtables:15234kB oom_score_adj:300
+[Mon Dec 19 14:27:15 2024] sd 2:0:0:0: [sda] Assuming drive cache: write through
+[Mon Dec 19 14:28:42 2024] ata2.00: exception Emask 0x10 SAct 0x0 SErr 0x0 action 0x6
+[Mon Dec 19 14:28:42 2024] ata2.00: failed command: READ DMA
+[Mon Dec 19 14:28:42 2024] ata2.00: cmd 25/00:08:00:00:00/00:00:00:00:00/e0 tag 0 dma 4096 in
+[Mon Dec 19 14:29:10 2024] bond0: link status definitely down for interface eth0, disabling it
+[Mon Dec 19 14:29:11 2024] bond0: making interface eth1 the new active one
+[Mon Dec 19 14:30:05 2024] MCE: CPU0: Thermal monitoring enabled (TM1)
+[Mon Dec 19 14:30:06 2024] EDAC sbridge MC0: HANDLING MCE MEMORY ERROR
+[Mon Dec 19 14:30:06 2024] EDAC sbridge MC0: CPU#0_CHANNEL#0_DIMM#0 Unknown error: ADDR=0x00000000 EDAC agg=FATAL SERRORCNT=1 ERRCOUNT=1
+```
+
+!!! warning "Common errors"
+    **`dmesg: read kernel buffer failed: Operation not permitted`** — Run the command with `sudo` or as root user
 ---
 
 ## Step 3 — Search audit log for SELinux denials and auth events
@@ -178,6 +229,39 @@ aureport --summary --start today
 aureport --login --failed --start today
 ```
 
+
+```text title="Expected output"
+time->Thu Dec 19 10:34:22 2024
+type=AVC msg=audit(1734607462.891:2847): avc:  denied  { read } for  pid=3421 comm="httpd" name="shadow" dev="dm-0" ino=1048592 scontext=system_u:system_r:httpd_t:s0 tcontext=system_u:object_r:shadow_t:s0 tclass=file permissive=0
+type=AVC msg=audit(1734607463.102:2848): avc:  denied  { write } for  pid=5847 comm="nginx" name="access.log" dev="dm-0" ino=1048601 scontext=system_u:system_r:nginx_t:s0 tcontext=system_u:object_r:var_log_t:s0 tclass=file permissive=0
+
+AVC Report
+# total  type
+2         denied
+----
+
+USER_AUTH Report
+type=USER_AUTH msg=audit(1734607891.445:2849): pid=892 uid=0 auid=1001 ses=15 msg='op=PAM:authentication acct="admin" exe="/usr/sbin/sshd" hostname=192.168.1.50 addr=192.168.1.50 terminal=ssh res=failed'
+type=USER_AUTH msg=audit(1734607902.556:2850): pid=893 uid=0 auid=4294967295 ses=4294967295 msg='op=PAM:authentication acct="root" exe="/usr/sbin/sshd" hostname=10.0.0.15 addr=10.0.0.15 terminal=ssh res=failed'
+
+type=EXECVE msg=audit(1734608234.778:2851): argc=3 a0="/usr/bin/cat" a1="/etc/shadow" a2=(null) ppid=1234 pid=5678 auid=0 uid=0 gid=0 euid=0 egid=0 exe="/usr/bin/sudo"
+
+Summary Report
+Range of time in logs: 12/19/2024 00:00:00.000 - 12/19/2024 23:59:59.999
+Total Events: 847
+...
+
+Failed Logins Report
+# date             time     acct host
+12/19/2024 10:15 admin    192.168.1.50
+12/19/2024 10:22 root     10.0.0.15
+12/19/2024 14:47 testuser 172.16.0.8
+```
+
+!!! warning "Common errors"
+    **`No events found in logs.`** — Ensure auditd daemon is running with `systemctl start auditd` and audit rules are loaded with `auditctl -l`.
+    **`ausearch: command not found`** — Install audit tools with `yum install audit` or `apt-get install auditd audispd-plugins`.
+    **`Error: invalid start time`** — Use valid time formats like `--start today`, `--start recent`, or `--start 12/19/2024` instead of custom formats.
 ---
 
 ## Step 4 — Diagnose authentication and SSH events
@@ -204,6 +288,32 @@ journalctl --since today | grep sudo | tail -30
 journalctl --since today | grep -E "su\[|su-l"
 ```
 
+
+```text title="Expected output"
+Nov 15 10:23:45 prod-web-01 sshd[2847]: Failed password for invalid user admin from 192.168.1.105 port 54321 ssh2
+Nov 15 10:24:12 prod-web-01 sshd[2851]: Failed password for root from 203.0.113.42 port 45678 ssh2
+Nov 15 10:25:33 prod-web-01 sshd[2856]: Failed password for invalid user test from 198.51.100.88 port 33221 ssh2
+Nov 15 10:26:01 prod-web-01 sshd[2861]: Accepted password for jsmith from 10.0.2.15 port 22456 ssh2
+Nov 15 10:26:45 prod-web-01 sshd[2865]: Accepted publickey for automation from 10.0.5.200 port 51234 ssh2
+Nov 15 10:27:12 prod-web-01 sshd[2869]: Accepted password for mchen from 10.0.3.88 port 48901 ssh2
+Nov 15 10:28:03 prod-web-01 sshd[2873]: Failed password for invalid user oracle from 203.0.113.99 port 39876 ssh2
+Nov 15 10:29:15 prod-web-01 sshd[2878]: Accepted publickey for deploy from 10.0.6.45 port 52341 ssh2
+Nov 15 10:30:22 prod-web-01 sshd[2882]: pam_unix(sshd:auth): authentication failure; logname= uid=0 euid=0 tty=ssh ruser= rhost=203.0.113.55 user=root
+Nov 15 10:31:44 prod-web-01 sshd[2887]: pam_faillock(sshd:auth): Consecutive login failures for user "jdoe" (3)
+Nov 15 10:32:10 prod-web-01 sshd[2891]: account locked due to 5 failed logins
+When /dev/null 2>&1 is reached:
+User:                    jdoe
+Failures:                5
+Latest failure:          Nov 15 10:32:09 2024
+Failure since last success: 5
+Time interval:           1200
+Attempts left before permanent lockout: 0
+Nov 15 10:45:22 prod-web-01 sudo: jsmith : TTY=pts/0 ; PWD=/home/jsmith ; USER=root ; COMMAND=/bin/systemctl restart nginx
+Nov 15 10:46:01 prod-web-01 sudo: mchen : TTY=pts/1 ; PWD=/var/log ; USER=root ; COMMAND=/usr/bin/tail -f /var/log/secure
+Nov 15 10:47:33 prod-web-01 sudo: automation : TTY=unknown ; PWD=/opt/scripts ; USER=root ; COMMAND=/usr/local/bin/backup.sh
+Nov 15 10:48:15 prod-web-01 su[3142]: (to root) jsmith on pts/0
+Nov 15 10:
+```
 ---
 
 ## Step 5 — Trace a failing process
@@ -235,6 +345,52 @@ ps -eo pid,comm,stat,wchan | grep " D "
 # D state processes = waiting for I/O (storage or network filesystem)
 ```
 
+
+```text title="Expected output"
+$ strace -p 4521
+strace: attach: ptrace(PTRACE_SEIZE, 4521): Operation not permitted
+$ strace -c -p 4521
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+ 45.23    0.156234          12     13045           epoll_wait
+ 23.18    0.080156           8      9876           read
+ 18.45    0.063789           7      8934           write
+  8.92    0.030845           5      6123           futex
+  4.22    0.014589           3      4567      102  recvfrom
+------ ----------- ----------- --------- --------- ----------------
+100.00    0.345613                 42545      102 total
+
+$ strace -o /tmp/strace-out.txt /usr/bin/curl https://example.com
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  1234  100  1234    0     0   5678      0 --:--:-- --:--:-- --:--:--     0
+
+$ lsof -p 8934
+COMMAND    PID USER   FD   TYPE             DEVICE SIZE/OFF       NODE NAME
+nginx    8934 www-data cwd    DIR                8,1     4096    1048577 /var/www
+nginx    8934 www-data rtd    DIR                8,1     4096          2 /
+nginx    8934 www-data txt    REG                8,1   987654      65432 /usr/sbin/nginx
+nginx    8934 www-data mem    REG                8,1  2097152      78901 /lib/x86_64-linux-gnu/libc.so.6
+nginx    8934 www-data    0u   CHR                1,3      0t0       6045 /dev/null
+nginx    8934 www-data    3u  IPv4           234567      0t0        TCP *:80 (LISTEN)
+nginx    8934 www-data    4u  IPv4           234568      0t0        TCP *:443 (LISTEN)
+
+$ ls /proc/8934/fd | wc -l
+42
+
+$ cat /proc/8934/status | grep -E "VmRSS|VmPeak|Threads"
+VmPeak:	  456789 kB
+VmRSS:	   234567 kB
+Threads:	8
+
+$ ps -eo pid,comm,stat,wchan | grep " D "
+ 2847 kworker/u8:2    D  io_schedule
+ 5634 java             D  wait_on_page_bit_killable
+```
+
+!!! warning "Common errors"
+    **`strace: attach: ptrace(PTRACE_SEIZE, <PID>): Operation not permitted`** — Run strace with `sudo` or ensure the user has CAP_SYS_PTRACE capability.
+    **`lsof: command not found`** — Install lsof with `apt-get install lsof` (Debian/Ubuntu) or `yum install lsof` (
 ---
 
 ## Step 6 — Profile performance
@@ -269,6 +425,35 @@ du -sh /var/log/* 2>/dev/null | sort -h | tail -20
 df -h
 ```
 
+
+```text title="Expected output"
+procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
+ r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
+ 2  0      0 2847104 156832 3921456  0    0    12    45  1204  892 18  4 76  2  0
+ 1  0      0 2851920 156832 3925680  0    0     8    32  1089  756 16  3 79  2  0
+ 0  0      0 2856448 156832 3929104  0    0     4    18   987  654 14  2 82  2  0
+ 1  0      0 2854672 156832 3927328  0    0    14    52  1156  823 19  5 74  2  0
+ 0  0      0 2859216 156832 3931872  0    0     6    28  1021  712 15  3 80  2  0
+ 1  0      0 2852544 156832 3925200  0    0    11    41  1098  768 17  4 77  2  0
+ 0  0      0 2858880 156832 3930816  0    0     7    24   945  621 13  2 83  2  0
+ 1  0      0 2855104 156832 3927040  0    0    13    48  1167  841 20  5 73  2  0
+ 0  0      0 2860672 156832 3932528  0    0     5    19   876  589 12  1 85  2  0
+ 0  0      0 2857936 156832 3929792  0    0     9    35  1032  701 16  3 79  2  0
+
+Linux 5.15.0-84-generic (prod-app-01) 	01/15/2025 	_x86_64_	(8 CPU)
+
+12:34:56 PM     CPU     %user     %nice   %system   %iowait    %steal     %idle
+12:34:57 PM     all     18.24      0.00      4.18      2.14      0.00     75.44
+12:34:58 PM     all     16.87      0.00      3.92      1.98      0.00     77.23
+12:34:59 PM     all     19.45      0.00      5.01      2.67      0.00     72.87
+12:35:00 PM     all     17.56      0.00      4.34      2.11      0.00     76.00
+12:35:01 PM     all     18.92      0.00      4.67      1.89      0.00     74.52
+
+Linux 5.15.0-84-generic (prod-app-01) 	01/15/2025 	_x86_64_	(8 CPU)
+
+Device            r/s     w/s     rMB/s     wMB/s   rrqm/s   wrqm/s  await svctm  %util
+sda               8.2    12.4
+```
 ---
 
 ## Step 7 — Collect diagnostic bundle for escalation
@@ -301,6 +486,44 @@ free -h > /tmp/memory.txt
 df -h > /tmp/disk.txt
 ```
 
+
+```text title="Expected output"
+Please enter your case number (or leave blank): 
+Running plugins. This may take a while.
+
+ Setting up archive ...
+sosreport (version 4.4)
+
+The following plugins are currently enabled:
+
+ networking, storage, systemd
+
+Running plugins. This may take a while.
+[plugin:networking] collecting network interface status
+[plugin:storage] collecting disk and filesystem information
+[plugin:systemd] collecting systemd journal and unit files
+Creating compressed archive...
+
+Your sosreport has been generated and saved in:
+  /var/tmp/sosreport-prod-web-01-20240215.tar.xz (287 MB)
+
+tar: /var/log/messages: No such file or directory
+tar: /var/log/secure: No such file or directory
+/tmp/linux-diag-20240215.tar.gz
+
+              total        used      available use%
+Mem:           31Gi       18Gi         12Gi  59%
+Swap:          4.0Gi      512Mi        3.5Gi  13%
+
+Filesystem      Size  Used Avail Use%
+/dev/sda1       100G   67G   28G  71%
+/dev/sda2       500G  412G   75G  83%
+```
+
+!!! warning "Common errors"
+    **`sosreport: command not found`** — Install sos package with `sudo yum install sos` on RHEL or `sudo apt install sosreport` on Ubuntu.
+    **`tar: /var/log/messages: No such file or directory`** — Remove non-existent log paths from the tar command or add `2>/dev/null` to suppress warnings; the archive will still be created with available files.
+    **`Permission denied`** — Run the entire diagnostic collection with `sudo` since many log files and /proc entries require root access.
 ---
 
 ## Log locations

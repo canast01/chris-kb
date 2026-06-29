@@ -51,6 +51,43 @@ multipath -r
 cat /etc/multipath.conf | grep -A5 blacklist
 ```
 
+
+```text title="Expected output"
+mpatha (360a98000534d41386b6f6e65633a) dm-0 NETAPP,LUN C-Mode
+size=500G features='3 queue_if_no_path pg_init_retries 50' hwhandler='1 alua' wp=rw
+|-+- policy='service-time 0' prio=50 status=active
+| |-+- 2:0:0:0 sda 8:0  active ready running
+| `-+- 3:0:0:0 sdb 8:16 active ready running
+`-+- policy='service-time 0' prio=10 status=enabled
+  |-+- 4:0:0:0 sdc 8:32 active ready running
+  `-+- 5:0:0:0 sdd 8:48 active ready running
+
+mpathb (360a98000534d41386b6f6e65633b) dm-1 NETAPP,LUN C-Mode
+size=1T features='3 queue_if_no_path pg_init_retries 50' hwhandler='1 alua' wp=rw
+|-+- policy='service-time 0' prio=50 status=active
+| `-+- 2:0:1:0 sde 8:64 active ready running
+`-+- policy='service-time 0' prio=10 status=enabled
+  `-+- 4:0:1:0 sdf 8:80 active ready running
+
+mpatha: 4 paths
+mpathb: 2 paths
+
+mpatha (360a98000534d41386b6f6e65633a)
+mpathb (360a98000534d41386b6f6e65633b)
+
+(no output — command completes silently)
+
+blacklist {
+    devnode "^(ram|raw|loop|fd|md|dm-|sr|scd|st)[0-9]*"
+    devnode "^hd[a-z]"
+    wwn "360a98000534d41386b6f6e65633d"
+}
+```
+
+!!! warning "Common errors"
+    **`multipath: command not found`** — Install device-mapper-multipath package with `yum install device-mapper-multipath` or `apt install multipath-tools`.
+    **`device-mapper: reload ioctl failed: Device or resource busy`** — Ensure no processes are accessing the multipath devices and try `multipath -F` to flush before reload.
+    **`parse error in /etc/multipath.conf line 42`** — Check multipath.conf syntax with `multipath -t` to identify and fix configuration errors.
 ### ESXi
 
 ```bash
@@ -67,6 +104,32 @@ esxcli storage core path list | grep -c "Active (I/O)"
 esxcli storage core claimrule list
 ```
 
+
+```text title="Expected output"
+Name   Device                                    State   PluginName
+------  ----------------------------------------  ------  ----------
+vmhba2  naa.60001405d1234567890abcdef012345     Active  NMP
+vmhba3  naa.60001405d1234567890abcdef012346     Active  NMP
+vmhba4  naa.60001405d1234567890abcdef012347     Standby NMP
+vmhba5  naa.60001405d1234567890abcdef012348     Active  NMP
+vmhba6  naa.60001405d1234567890abcdef012349     Standby NMP
+
+Name   Device                                    State   PluginName
+------  ----------------------------------------  ------  ----------
+vmhba2  naa.60001405d1234567890abcdef012345     Active  NMP
+
+4
+
+ClaimRule  PluginName  DeviceType  VendorFilter  ModelFilter  Options
+---------  ----------  ----------  -----------   -----------  -------
+101        NMP         disk        NETAPP        LUN          iops=3
+102        NMP         disk        EMC           SYMMETRIX    iops=4
+103        NMP         disk        PURE           FlashArray   iops=3
+```
+
+!!! warning "Common errors"
+    **`Error: Unknown option or set of options: -d`** — Use the correct device identifier format without the `-d` flag; try `esxcli storage core path list | grep naa.<id>` instead.
+    **`Error: Unable to find a matching vm kernel nic for the management network`** — Ensure the ESXi host has network connectivity and the management interface is properly configured before running storage commands.
 ### Windows — MPIO
 
 ```powershell
@@ -110,3 +173,28 @@ esxcli storage core adapter rescan --all
 # Windows
 Update-StorageProviderCache -DiscoveryLevel Full
 ```
+
+
+```text title="Expected output"
+(no output — command completes silently)
+(no output — command completes silently)
+mpathb (36001405a1b2c3d4e5f6g7h8i9j0k1l2m) dm-0 NETAPP,LUN C-Mode
+mpathc (36001405b2c3d4e5f6g7h8i9j0k1l2m3n4) dm-1 NETAPP,LUN C-Mode
+mpatha (36001405c3d4e5f6g7h8i9j0k1l2m3n4o5) dm-2 NETAPP,LUN C-Mode
+size=500G features='3 queue_if_no_path pg_init_retries 50' hwhandler='1 alua' wp=rw
+`-+- policy='service-time 0' prio=50 status=active
+  |- 2:0:0:0 sdb 8:16 active ready running
+  `- 3:0:0:0 sdc 8:32 active ready running
+
+HBA Name    Driver   Link State   Speed
+vmhba0      lpfc     Link Up      16 Gbps
+vmhba1      lpfc     Link Up      16 Gbps
+vmhba2      bnx2fc   Link Up      10 Gbps
+
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`bash: /sys/class/scsi_host/host0/scan: Permission denied`** — Run the command with `sudo` or as root user.
+    **`esxcli: command not found`** — Verify you are connected to an ESXi host via SSH; this command only runs on ESXi, not vCenter.
+    **`Update-StorageProviderCache : The term 'Update-StorageProviderCache' is not recognized`** — Run PowerShell as Administrator and ensure the Storage module is loaded with `Import-Module Storage`.

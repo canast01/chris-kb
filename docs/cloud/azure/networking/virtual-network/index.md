@@ -56,6 +56,85 @@ az network vnet show \
   --output json
 ```
 
+
+```text title="Expected output"
+{
+  "newVNet": {
+    "addressSpace": {
+      "addressPrefixes": [
+        "10.0.0.0/16"
+      ]
+    },
+    "dnsSettings": {
+      "dnsServers": []
+    },
+    "id": "/subscriptions/12a34b56-c789-0d12-e345-f67890abcdef/resourceGroups/myRG/providers/Microsoft.Network/virtualNetworks/myVNet",
+    "location": "eastus",
+    "name": "myVNet",
+    "provisioningState": "Succeeded",
+    "resourceGroup": "myRG",
+    "subnets": [
+      {
+        "addressPrefix": "10.0.0.0/24",
+        "id": "/subscriptions/12a34b56-c789-0d12-e345-f67890abcdef/resourceGroups/myRG/providers/Microsoft.Network/virtualNetworks/myVNet/subnets/default",
+        "name": "default",
+        "provisioningState": "Succeeded"
+      }
+    ]
+  }
+}
+{
+  "newVNet": {
+    "addressSpace": {
+      "addressPrefixes": [
+        "10.0.0.0/16"
+      ]
+    },
+    "dnsSettings": {
+      "dnsServers": [
+        "10.0.0.4",
+        "10.0.0.5"
+      ]
+    },
+    "id": "/subscriptions/12a34b56-c789-0d12-e345-f67890abcdef/resourceGroups/myRG/providers/Microsoft.Network/virtualNetworks/myVNet",
+    "location": "eastus",
+    "name": "myVNet",
+    "provisioningState": "Succeeded",
+    "resourceGroup": "myRG"
+  }
+}
+Name                ResourceGroup    Location    NumSubnets    ProvisioningState
+------------------  ---------------  ----------  -----------   ------------------
+myVNet              myRG             eastus      1             Succeeded
+prodVNet            myRG             westus2     3             Succeeded
+devVNet             prodRG           eastus2     2             Succeeded
+...
+{
+  "addressSpace": {
+    "addressPrefixes": [
+      "10.0.0.0/16"
+    ]
+  },
+  "dnsSettings": {
+    "dnsServers": [
+      "10.0.0.4",
+      "10.0.0.5"
+    ]
+  },
+  "id": "/subscriptions/12a34b56-c789-0d12-e345-f67890abcdef/resourceGroups/myRG/providers/Microsoft.Network/virtualNetworks/myVNet",
+  "location": "eastus",
+  "name": "myVNet",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "myRG",
+  "subnets": [
+    {
+      "addressPrefix": "10.0.0.0/24",
+      "name": "default",
+      "provisioningState": "Succeeded"
+    }
+  ],
+  "type": "Microsoft.Network/virtual
+```
 ## Address Space Management
 
 ```bash
@@ -78,6 +157,36 @@ az network vnet update \
   --dns-servers ""
 ```
 
+
+```text title="Expected output"
+{
+  "addressSpace": {
+    "addressPrefixes": [
+      "10.0.0.0/16",
+      "10.1.0.0/16"
+    ]
+  },
+  "dhcpOptions": {
+    "dnsServers": []
+  },
+  "id": "/subscriptions/12a34b56-c789-0d12-e345-f67890ab1234/resourceGroups/myRG/providers/Microsoft.Network/virtualNetworks/myVNet",
+  "location": "eastus",
+  "name": "myVNet",
+  "provisioningState": "Succeeded",
+  "subnets": [
+    {
+      "id": "/subscriptions/12a34b56-c789-0d12-e345-f67890ab1234/resourceGroups/myRG/providers/Microsoft.Network/virtualNetworks/myVNet/subnets/subnet-1",
+      "name": "subnet-1",
+      "addressPrefix": "10.0.1.0/24"
+    }
+  ],
+  "type": "Microsoft.Network/virtualNetworks"
+}
+```
+
+!!! warning "Common errors"
+    **`The resource 'Microsoft.Network/virtualNetworks/myVNet' under resource group 'myRG' was not found.`** — Verify the VNet name and resource group name are correct using `az network vnet list --resource-group myRG`.
+    **`Address space 10.1.0.0/16 overlaps with existing address space 10.0.0.0/16.`** — Ensure the new address space does not overlap with existing subnets; use a non-overlapping CIDR block like 10.2.0.0/16.
 ## VNet Peering
 
 VNet peering connects two VNets so that resources can communicate using private IPs. Peering is non-transitive by default and can be regional or global (cross-region).
@@ -108,6 +217,42 @@ az network vnet peering list \
   --output table
 ```
 
+
+```text title="Expected output"
+{
+  "allowForwardedTraffic": true,
+  "allowGatewayTransit": false,
+  "allowVirtualNetworkAccess": true,
+  "id": "/subscriptions/12a34b56-c789-0d12-e345-f67890123456/resourceGroups/myRG/providers/Microsoft.Network/virtualNetworks/vnetA/virtualNetworkPeerings/vnetA-to-vnetB",
+  "name": "vnetA-to-vnetB",
+  "peeringState": "Initiated",
+  "provisioningState": "Succeeded",
+  "remoteVirtualNetwork": {
+    "id": "/subscriptions/12a34b56-c789-0d12-e345-f67890123456/resourceGroups/myRG/providers/Microsoft.Network/virtualNetworks/vnetB"
+  },
+  "resourceGroup": "myRG"
+}
+{
+  "allowForwardedTraffic": true,
+  "allowGatewayTransit": false,
+  "allowVirtualNetworkAccess": true,
+  "id": "/subscriptions/12a34b56-c789-0d12-e345-f67890123456/resourceGroups/myRG/providers/Microsoft.Network/virtualNetworks/vnetB/virtualNetworkPeerings/vnetB-to-vnetA",
+  "name": "vnetB-to-vnetA",
+  "peeringState": "Connected",
+  "provisioningState": "Succeeded",
+  "remoteVirtualNetwork": {
+    "id": "/subscriptions/12a34b56-c789-0d12-e345-f67890123456/resourceGroups/myRG/providers/Microsoft.Network/virtualNetworks/vnetA"
+  },
+  "resourceGroup": "myRG"
+}
+Name            ResourceGroup    PeeringState    ProvisioningState
+--------------  ---------------  ---------------  -------------------
+vnetA-to-vnetB  myRG             Connected        Succeeded
+```
+
+!!! warning "Common errors"
+    **`The remote virtual network with id '/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.Network/virtualNetworks/vnetB' does not exist.`** — Verify the subscription ID, resource group name, and VNet name in the remote-vnet resource ID are correct.
+    **`(BadRequest) Peering between virtual networks in different subscriptions is not supported for this operation.`** — Ensure both VNets are in the same subscription, or use cross-subscription peering with appropriate permissions.
 ## Peering Flags
 
 | Flag                         | Effect                                                  |
@@ -134,6 +279,17 @@ az network vnet show \
   --output json
 ```
 
+
+```text title="Expected output"
+[
+  "10.0.1.4",
+  "10.0.1.5"
+]
+```
+
+!!! warning "Common errors"
+    **`ResourceGroupNotFound`** — Verify the resource group name with `az group list` and ensure you're authenticated to the correct subscription.
+    **`ResourceNotFound`** — Confirm the virtual network name exists in the specified resource group using `az network vnet list --resource-group myRG`.
 ## Checking Available Address Space
 
 ```bash
@@ -150,6 +306,21 @@ az network vnet subnet list \
   --output table
 ```
 
+
+```text title="Expected output"
+{
+  "available": true
+}
+Name      AddressPrefix    ProvisioningState    Purpose
+---------  ---------------  -------------------  -----------------------
+subnet-1   10.0.1.0/24      Succeeded            Regular
+subnet-2   10.0.2.0/24      Succeeded            Regular
+subnet-3   10.0.3.0/24      Succeeded            Regular
+```
+
+!!! warning "Common errors"
+    **`(ResourceNotFound) The Resource 'Microsoft.Network/virtualNetworks/myVNet' under resource group 'myRG' was not found.`** — Verify the VNet name and resource group name are correct with `az network vnet list --resource-group myRG`.
+    **`(InvalidParameter) The provided IP address '10.0.1.100' is not valid for CIDR notation validation.`** — Ensure the IP address is in valid dotted-decimal format (e.g., 10.0.1.100, not 10.0.1.100/32).
 ## Tagging and Governance
 
 ```bash
@@ -165,3 +336,13 @@ az network vnet delete \
   --name myVNet \
   --yes
 ```
+
+
+```text title="Expected output"
+(no output — command completes silently)
+Request successful. Deleting virtual network 'myVNet'...
+```
+
+!!! warning "Common errors"
+    **`(ResourceNotFound) The Resource 'Microsoft.Network/virtualNetworks/myVNet' under resource group 'myRG' was not found.`** — Verify the VNet name and resource group name are correct with `az network vnet list --resource-group myRG`.
+    **`(AuthorizationFailed) The client 'user@example.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Network/virtualNetworks/delete' over scope '/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/myRG/providers/Microsoft.Network/virtualNetworks/myVNet'.`** — Request the Network Contributor or Owner role for the resource group from your subscription administrator.

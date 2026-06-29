@@ -23,6 +23,35 @@ tc qdisc add dev eth0 root netem loss 20%
 tc qdisc del dev eth0 root
 ```
 
+
+```text title="Expected output"
+$ kill -9 $(pgrep nginx)
+$ stress-ng --cpu 4 --cpu-load 95 --timeout 60s
+stress-ng: info: [8742] defaulting to a 60 second run per stressor
+stress-ng: info: [8742] dispatching hogs: 4 cpu
+stress-ng: info: [8742] successful run completed in 60.02s
+stress-ng: info: [8742] for a 60.02s run time:
+stress-ng: info: [8742]    4,287,456 bogo ops
+stress-ng: info: [8742] CPU: 95.2% user, 2.1% system, 2.7% idle
+$ stress-ng --vm 2 --vm-bytes 80% --timeout 60s
+stress-ng: info: [8751] defaulting to a 60 second run per stressor
+stress-ng: info: [8751] dispatching hogs: 2 vm
+stress-ng: info: [8751] successful run completed in 60.01s
+stress-ng: info: [8751] for a 60.01s run time:
+stress-ng: info: [8751]    156,892 bogo ops
+$ fio --name=fill --ioengine=posixaio --rw=randwrite --size=1G --numjobs=4 --runtime=60 --filename=/tmp/fio-test
+fill: (g=0): rw=randwrite, bs=(R) 4096B-4096B, (W) 4096B-4096B, ioengine=posixaio, iodepth=1
+...
+Run status group 0 (all jobs):
+  WRITE: bw=287MiB/s, iops=73.4k, runt=3584msec
+$ tc qdisc add dev eth0 root netem loss 20%
+$ tc qdisc del dev eth0 root
+```
+
+!!! warning "Common errors"
+    **`bash: pgrep: command not found`** — Install procps-ng package with `apt-get install procps-ng` or `yum install procps-ng`.
+    **`stress-ng: error: cannot allocate 80% of memory (requested 6442450944 bytes)`** — Reduce the percentage or number of workers; system lacks sufficient free memory for the test.
+    **`RTNETLINK answers: No such device`** — Verify the network interface name with `ip link show` and replace eth0 with the correct interface (e.g., ens0, wlan0).
 ```bash
 # Test graceful shutdown
 systemctl stop nginx

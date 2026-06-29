@@ -106,6 +106,68 @@ Add-DhcpServerv4Reservation -ScopeId 192.168.1.0 `
 Get-DhcpServerv4ScopeStatistics -ComputerName <dhcp-server>
 ```
 
+
+```text title="Expected output"
+# Linux: View current DHCP lease details
+lease {
+  interface "eth0";
+  fixed-address 192.168.1.105;
+  option subnet-mask 255.255.255.0;
+  option routers 192.168.1.1;
+  option domain-name-servers 8.8.8.8,8.8.4.4;
+  renew 4 2024/01/15 14:32:15;
+  expire 4 2024/01/15 22:32:15;
+}
+
+# Linux: Force DHCP renewal
+Listening on LPF/eth0/08:00:27:a4:c2:f1
+Sending on   LPF/eth0/08:00:27:a4:c2:f1
+Sending on   Socket/fallback
+DHCPDISCOVER on eth0 to 255.255.255.255 port 67 interval 3
+DHCPOFFER from 192.168.1.1
+DHCPACK from 192.168.1.1
+bound to 192.168.1.106 -- renewal in 28800 seconds.
+
+# View DHCP leases on ISC dhcpd server
+lease 192.168.1.50 {
+  starts 1 2024/01/15 10:15:22;
+  ends 1 2024/01/15 18:15:22;
+  hardware ethernet aa:bb:cc:dd:ee:ff;
+  uid "printer-01";
+  set vendor-string "Canon-MF445dw";
+  binding state active;
+}
+
+# Windows: View current IP configuration (shows lease expiry)
+Ethernet adapter Ethernet:
+   Connection-specific DNS Suffix: example.com
+   IPv4 Address: 192.168.1.42
+   Subnet Mask: 255.255.255.0
+   Default Gateway: 192.168.1.1
+   DHCP Server: 192.168.1.10
+   Lease Obtained: Monday, January 15, 2024 10:15:22 AM
+   Lease Expires: Monday, January 15, 2024 6:15:22 PM
+
+# Windows: Release and renew DHCP lease
+Successfully released the IPv4 address for adapter "Ethernet".
+Successfully renewed the IPv4 address for adapter "Ethernet".
+
+# Windows Server: List all DHCP scopes
+ScopeId         : 192.168.1.0
+Name            : Main-Office
+SubnetMask      : 255.255.255.0
+State            : Active
+StartRange       : 192.168.1.100
+EndRange         : 192.168.1.200
+ActivationState  : True
+
+# Windows Server: Show active leases in a scope
+IPAddress        HostName         ClientID                    LeaseExpiryTime
+---------        --------         --------                    ---------------
+192.168.1.105    ws-dev-01        5254001234ab                1/15/2024 6:15:22 PM
+192.168.1.110    printer-floor2   aabbccddeeff                1/15/2024 6:18:45 PM
+192.168.1.115    iot-sensor-03    001a2b3c4d5e
+```
 **ISC dhcpd scope example (/etc/dhcp/dhcpd.conf):**
 ```bash
 subnet 192.168.1.0 netmask 255.255.255.0 {
@@ -118,6 +180,14 @@ subnet 192.168.1.0 netmask 255.255.255.0 {
 }
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`subnet declaration not terminated with semicolon`** — Add a semicolon after the closing brace: `}`
+    **`unknown option domain-name-servers`** — Use the correct DHCP option syntax `domain-name-servers` without hyphens in the value list, or verify the dhcpd.conf man page for your ISC DHCP version.
 ## Troubleshooting
 
 | Symptom | Check | Action |

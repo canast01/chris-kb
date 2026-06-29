@@ -38,6 +38,91 @@ curl -sk $AUTH "$BASE/adapters" | python3 -m json.tool                    # adap
 curl -sk $AUTH -X POST "$BASE/adapters/<id>/monitoringstate/start"        # start adapter
 ```
 
+
+```text title="Expected output"
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhZG1pbiIsImlhdCI6MTcwOTMxNjU0MiwiZXhwIjoxNzA5MzIwMTQyfQ.x7kL9mN2pQrS5tUvWxYzAbCdEfGhIjKlMnOpQrStUv"
+}
+{
+  "pageInfo": {
+    "totalCount": 3,
+    "pageSize": 100,
+    "startIndex": 0
+  },
+  "alerts": [
+    {
+      "id": "alert-12345",
+      "alertDefinitionId": "AlertDef-CPU-High",
+      "resourceId": "res-vm-prod-01",
+      "severity": "CRITICAL",
+      "startDate": 1709316542000,
+      "cancelDate": null,
+      "message": "CPU usage is above 90%"
+    },
+    {
+      "id": "alert-12346",
+      "alertDefinitionId": "AlertDef-Memory-High",
+      "resourceId": "res-vm-prod-02",
+      "severity": "WARNING",
+      "startDate": 1709315000000,
+      "message": "Memory usage is above 85%"
+    }
+  ]
+}
+{
+  "pageInfo": {
+    "totalCount": 24,
+    "pageSize": 100
+  },
+  "resourceList": [
+    {
+      "identifier": "res-vm-prod-01",
+      "resourceName": "prod-web-server-01",
+      "resourceKind": "VirtualMachine",
+      "resourceStatus": "STARTED",
+      "creationTime": 1708900000000
+    },
+    {
+      "identifier": "res-vm-prod-02",
+      "resourceName": "prod-db-server-01",
+      "resourceKind": "VirtualMachine",
+      "resourceStatus": "STARTED"
+    }
+  ]
+}
+{
+  "statsList": [
+    {
+      "statKey": "cpu|usage_average",
+      "timestamps": [1709316300000, 1709316600000],
+      "values": [78.5, 82.3]
+    }
+  ]
+}
+{
+  "pageInfo": {
+    "totalCount": 2
+  },
+  "adapterInstancesList": [
+    {
+      "id": "adapter-vcenter-01",
+      "adapterKindKey": "VMware vCenter Adapter",
+      "name": "vCenter-Prod",
+      "state": "STARTED"
+    },
+    {
+      "id": "adapter-nsxt-01",
+      "adapterKindKey": "NSX-T Adapter",
+      "name": "NSX-T-Prod",
+      "state": "STOPPED"
+    }
+  ]
+}
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification (already present
 ## See also
 
 - [Aria Operations Procedures](../../../virtualization/vmware/aria-operations/operations/procedures/)

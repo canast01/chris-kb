@@ -125,6 +125,29 @@ for host in app1.corp.example.com app2.corp.example.com vcenter.corp.example.com
 done
 ```
 
+
+```text title="Expected output"
+notBefore=Jan 15 09:22:14 2023 GMT
+notAfter=Jan 15 09:22:14 2025 GMT
+subject=CN = app1.corp.example.com, O = Example Corp, C = US
+issuer=C = US, O = DigiCert Inc, CN = DigiCert Global G2 TLS RSA SHA256 2021 CA1
+
+notBefore=Feb 20 14:33:05 2022 GMT
+notAfter=Feb 20 14:33:05 2024 GMT
+subject=CN = *.internal.example.com, O = Example Corp, C = US
+issuer=C = US, O = Let's Encrypt, CN = R3
+
+247 days remaining
+
+app1.corp.example.com: Jan 15 09:22:14 2025 GMT
+app2.corp.example.com: Mar 22 16:45:30 2025 GMT
+vcenter.corp.example.com: Dec 10 11:18:22 2024 GMT
+```
+
+!!! warning "Common errors"
+    **`unable to load certificate`** — Verify the certificate file path is correct and readable with `ls -la cert.pem`.
+    **`Temporary failure in name resolution`** — Ensure the hostname resolves with `nslookup <host>` and check network connectivity to port 443.
+    **`date: invalid date`** — The certificate may be malformed; validate it with `openssl x509 -in cert.pem -text -noout` to inspect the enddate field format.
 ---
 
 ## Step 2 — Inspect certificate fields and SAN
@@ -151,6 +174,36 @@ openssl x509 -in cert.pem -noout -text | grep -A3 "Authority Information"
 openssl x509 -in cert.pem -noout -text | grep -A3 "CRL Distribution"
 ```
 
+
+```text title="Expected output"
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 0x4a7b9c2e1f5d8a3b
+        Signature Algorithm: sha256WithRSAEncryption
+        Issuer: C=US, ST=California, O=Example Corp, CN=Example Corp CA
+        Validity
+            Not Before: Jan 15 10:23:45 2023 GMT
+            Not After : Jan 15 10:23:45 2025 GMT
+        Subject: C=US, ST=California, O=Example Corp, CN=hostname.corp.example.com
+        X509v3 Subject Alternative Name:
+            DNS:hostname.corp.example.com, DNS:*.corp.example.com, IP Address:10.42.8.15
+        X509v3 Authority Information Access:
+            CA Issuers - URI:http://ca.example.com/certs/root.crt
+            OCSP - URI:http://ocsp.example.com
+        X509v3 CRL Distribution Points:
+            Full Name:
+              URI:http://crl.example.com/example-ca.crl
+        Public Key Algorithm: rsaEncryption
+            RSA Public-Key: (2048 bit)
+            Modulus:
+                00:a7:3f:2b:8c:d4:e1:9a:...
+```
+
+!!! warning "Common errors"
+    **`unable to load certificate`** — Verify the certificate file path is correct and the file contains valid PEM-formatted data (check for `-----BEGIN CERTIFICATE-----` header).
+    **`Verify return code: 21 (unable to verify the first certificate)`** — The server certificate chain is incomplete; ensure the full chain including intermediate certificates is installed on the server.
+    **`hostname.corp.example.com not found in Subject Alternative Name list`** — Add the hostname to the certificate's SAN extension or request a new certificate that includes all required hostnames.
 ---
 
 ## Step 3 — Verify the certificate chain
@@ -184,6 +237,34 @@ openssl storeutl -noout -text -certs /tmp/fullchain.pem | grep "Subject:"
 # Expected: leaf cert subject first, intermediate subject second
 ```
 
+
+```text title="Expected output"
+CONNECTED(00000000)
+depth=2 C = US, O = DigiCert Inc, OU = www.digicert.com, CN = DigiCert Global Root CA
+verify return:1
+depth=1 C = US, O = DigiCert Inc, CN = DigiCert SHA2 Secure Server CA
+verify return:1
+depth=0 C = US, ST = California, L = San Francisco, O = Example Corp, CN = api.example.com
+verify return:1
+-----BEGIN CERTIFICATE-----
+MIIFWTCCBEGgAwIBAgIQD8CSqAc/vTQH3o/QyLkDFjANBgkqhkiG9w0BAQsFADB1
+...
+-----END CERTIFICATE-----
+-----BEGIN CERTIFICATE-----
+MIIEsTCCA5mgAwIBAgIQBOHnpZ5l0X8ZyJD4tQ5ezDANBgkqhkiG9w0BAQsFADBh
+...
+-----END CERTIFICATE-----
+
+cert.pem: OK
+
+Subject: CN = api.example.com, O = Example Corp, ST = California, C = US
+Subject: CN = DigiCert SHA2 Secure Server CA, O = DigiCert Inc, C = US
+```
+
+!!! warning "Common errors"
+    **`unable to get local issuer certificate`** — Add the missing intermediate certificate to your trust store or use `openssl verify -untrusted intermediate.pem cert.pem`.
+    **`curl: (60) SSL certificate problem: unable to get local issuer certificate`** — Download the intermediate CA from the AIA URL in the certificate and add it to your fullchain bundle before the root.
+    **`openssl x509: Unable to load certificate`** — Verify the certificate file exists and is in PEM format; convert from DER if needed with `openssl x509 -inform DER -in cert.crt -out cert.pem`.
 ---
 
 ## Step 4 — Check OCSP and CRL
@@ -212,6 +293,41 @@ openssl ocsp -issuer intermediate.pem -cert cert.pem \
 # Expected: Response verify OK; cert status: good
 ```
 
+
+```text title="Expected output"
+OCSP response: no response text in server reply
+depth=0 /CN=api.example.com
+verify return:1
+
+Last Update: Jan 15 10:23:45 2025 GMT
+Next Update: Jan 22 10:23:45 2025 GMT
+
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Download Speed   Time    Time remaining
+100  1234  100  1234    0     0   8456      0 --:--:-- --:--:-- --:--:-- --:--:--
+Next Update: Jan 22 10:23:45 2025 GMT
+
+OCSP Response Data:
+    OCSP Response Status: successful (0x0)
+    Response Type: Basic OCSP Response
+    Version: 1 (0x0)
+    Responder Id: C = US, O = DigiCert Inc, CN = DigiCert OCSP Responder
+    Produced At: Jan 15 12:34:56 2025 GMT
+    Responses:
+    Certificate ID:
+      Hash Algorithm: sha1
+      Issuer Name Hash: 3D2A1B4C5E6F7A8B9C0D1E2F3A4B5C6D
+      Issuer Key Hash: 1A2B3C4D5E6F7A8B9C0D1E2F3A4B5C6D
+      Serial Number: 0A1B2C3D4E5F6A7B8C9D0E1F2A3B4C5D
+    Cert Status: good
+    This Update: Jan 15 12:34:56 2025 GMT
+    Next Update: Jan 16 12:34:56 2025 GMT
+```
+
+!!! warning "Common errors"
+    **`OCSP response: no response text in server reply`** — Verify the server supports OCSP stapling with `openssl s_client -connect <host>:443 -status` and check server configuration (nginx/Apache must have stapling enabled).
+    **`curl: (60) SSL certificate problem: unable to get local issuer certificate`** — Add the `-k` flag to curl or ensure your system CA bundle is current with `update-ca-certificates` on Linux.
+    **`unable to load Issuer certificate`** — Verify the intermediate.pem path is correct and contains the actual issuer certificate, not the end-entity cert, using `openssl x509 -in intermediate.pem -noout -subject`.
 ---
 
 ## Step 5 — Windows certificate store diagnostics
@@ -275,6 +391,40 @@ curl -v https://internal-service.corp.example.com/health
 # Expected: TLS handshake completes; no certificate verify error
 ```
 
+
+```text title="Expected output"
+# Debian / Ubuntu
+Reading package lists... Done
+Processing triggers for ca-certificates (20230311ubuntu0.22.04.1) ...
+Updating certificates in /etc/ssl/certs...
+1 added, 0 removed; done.
+Running hooks in /etc/ca-certificates/update.d...
+done.
+
+# RHEL / CentOS / Rocky
+(no output — command completes silently)
+
+# Verify the root CA is now trusted
+internal-server.crt: OK
+
+# Test a service that was failing (e.g., curl, git)
+*   Trying 10.42.8.15:443...
+* Connected to internal-service.corp.example.com (10.42.8.15) port 443 (#0)
+* TLS 1.3 connection using TLS_AES_256_GCM_SHA384
+* Server certificate:
+*  subject: CN=internal-service.corp.example.com
+*  issuer: CN=Internal Root CA
+*  SSL certificate verify ok.
+> GET /health HTTP/1.1
+< HTTP/1.1 200 OK
+< Content-Type: application/json
+{"status":"healthy"}
+```
+
+!!! warning "Common errors"
+    **`cp: cannot stat 'internal-root-ca.crt': No such file or directory`** — Verify the certificate file exists in the current directory or provide the full path to the source file.
+    **`error: certificate verify failed`** — Run `update-ca-certificates` (Debian/Ubuntu) or `update-ca-trust` (RHEL/CentOS) after copying the CA certificate, then retry the verification command.
+    **`curl: (60) SSL certificate problem: unable to get local issuer certificate`** — Ensure the root CA certificate was copied to the correct system trust store path and the update command completed successfully.
 ---
 
 ## Step 7 — Collect certificate diagnostic bundle
@@ -308,6 +458,43 @@ certutil -cainfo >> C:\Temp\certutil-verify.txt 2>&1
 # - Time the issue started and any recent CA or certificate changes
 ```
 
+
+```text title="Expected output"
+=== Date ===
+Thu Mar 14 09:47:23 UTC 2024
+=== Remote cert chain ===
+CONNECTED(00000003)
+depth=0 C = US, ST = California, L = San Francisco, O = Example Corp, CN = api.example.com
+verify return:1
+-----BEGIN CERTIFICATE-----
+MIIDXTCCAkWgAwIBAgIJAKp8Z7x9vQ2kMA0GCSqGSIb3DQEBCwUAMEUxCzAJBgNV
+BAYTAkFVMRMwEQYDVQQIDApTb21lLVN0YXRlMSEwHwYDVQQKDBhJbnRlcm5ldCBX
+...
+-----END CERTIFICATE-----
+=== Cert dates and subject ==="
+notBefore=Jan 15 00:00:00 2024 GMT
+notAfter=Jan 14 23:59:59 2025 GMT
+subject=C = US, ST = California, O = Example Corp, CN = api.example.com
+issuer=C = US, O = DigiCert Inc, CN = DigiCert Global G2 TLS RSA SHA256 2021 CA1
+=== Verify ===
+cert.pem: OK
+=== OCSP ===
+OCSP response: successful (0x0)
+Cert Status: good
+This Update: Mar 14 08:30:15 2024 GMT
+Next Update: Mar 21 08:30:15 2024 GMT
+
+C:\Users\Admin> Get-ChildItem Cert:\LocalMachine\My | Export-Csv C:\Temp\certs.csv
+C:\Users\Admin> certutil -verify cert.cer > C:\Temp\certutil-verify.txt 2>&1
+CertUtil: -verify command completed successfully.
+C:\Users\Admin> certutil -cainfo >> C:\Temp\certutil-verify.txt 2>&1
+CertUtil: -cainfo command completed successfully.
+```
+
+!!! warning "Common errors"
+    **`unable to load certificate`** — Verify the cert.pem file exists in the current directory and is readable with `ls -la cert.pem`.
+    **`error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed`** — The certificate chain is incomplete or the CA bundle is missing; add the intermediate CA to the chain or update `/etc/ssl/certs/ca-certificates.crt` with `sudo update-ca-certificates`.
+    **`OCSP response: unauthorized (0x6)`** — The OCSP responder rejected the request, likely due to network filtering; verify outbound HTTPS access to the OCSP responder URL or disable OCSP stapling validation temporarily.
 ---
 
 ## Log locations

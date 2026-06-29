@@ -87,6 +87,45 @@ dig _ldap._tcp.corp.example.com SRV
 dig _kerberos._tcp.dc._msdcs.corp.example.com SRV
 ```
 
+
+```text title="Expected output"
+; <<>> DiG 9.16.1-Ubuntu <<>> _kerberos._tcp.corp.example.com SRV
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 52847
+;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 2
+
+;; QUESTION SECTION:
+;_kerberos._tcp.corp.example.com. IN	SRV
+
+;; ANSWER SECTION:
+_kerberos._tcp.corp.example.com. 600 IN SRV 0 100 88 dc01.corp.example.com.
+_kerberos._tcp.corp.example.com. 600 IN SRV 0 100 88 dc02.corp.example.com.
+
+;; ADDITIONAL SECTION:
+dc01.corp.example.com.	3600 IN A	192.168.1.10
+dc02.corp.example.com.	3600 IN A	192.168.1.11
+
+; <<>> DiG 9.16.1-Ubuntu <<>> _ldap._tcp.corp.example.com SRV
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 41923
+
+;; ANSWER SECTION:
+_ldap._tcp.corp.example.com. 600 IN SRV 0 100 389 dc01.corp.example.com.
+_ldap._tcp.corp.example.com. 600 IN SRV 0 100 389 dc02.corp.example.com.
+
+; <<>> DiG 9.16.1-Ubuntu <<>> _kerberos._tcp.dc._msdcs.corp.example.com SRV
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 37654
+
+;; ANSWER SECTION:
+_kerberos._tcp.dc._msdcs.corp.example.com. 600 IN SRV 0 100 88 dc01.corp.example.com.
+```
+
+!!! warning "Common errors"
+    **`; <<>> DiG 9.16.1-Ubuntu <<>> _kerberos._tcp.corp.example.com SRV ... status: NXDOMAIN`** — Verify the domain name is correct and that DNS SRV records exist; check with your DNS administrator or use `nslookup -type=SRV` to confirm record presence.
+    **`; connection timed out; trying next origin`** — Confirm the DNS server is reachable and responding; add `@<dns-server-ip>` to the dig command to explicitly query a specific nameserver (e.g., `dig @8.8.8.8 _kerberos._tcp.corp.example.com SRV`).
 ---
 
 ## DNS Server Health Checks
@@ -149,6 +188,45 @@ rndc querylog on
 tail -f /var/log/named/queries.log
 ```
 
+
+```text title="Expected output"
+● named.service - Berkeley Internet Name Domain (DNS)
+     Loaded: loaded (/usr/lib/systemd/system/named.service; enabled; vendor preset: disabled)
+     Active: active (running) since Thu 2024-01-18 14:32:15 UTC; 2 days ago
+   Main PID: 2847 (named)
+      Tasks: 13 (limit: 4915)
+     Memory: 48.3M
+        CPU: 2min 34s
+     CGroup: /system.slice/named.service
+             └─2847 /usr/sbin/named -f -u named
+
+(no output — command completes silently)
+
+zone corp.example.com/IN: loaded serial 2024011801
+OK
+
+(no output — command completes silently)
+
+(no output — command completes silently)
+
+ ++  Statistics Dump  ++
+ (created Thu Jan 18 14:35:22 2024)
+ Success: 1247
+ AuthQuery: 892
+ RecursiveQuery: 355
+ QueryErrors: 3
+ Queries: 1250
+ Errors: 8
+
+query logging is now on
+Jan 18 14:35:45 ns1 named[2847]: client 192.168.1.105#54321 (mail.corp.example.com): query: mail.corp.example.com IN A +E (192.168.1.10)
+Jan 18 14:35:46 ns1 named[2847]: client 192.168.1.106#52847 (api.corp.example.com): query: api.corp.example.com IN A +E (192.168.1.11)
+```
+
+!!! warning "Common errors"
+    **`rndc: connect failed: 127.0.0.1#953: connection refused`** — Ensure named is running with `systemctl start named` and rndc key is configured in `/etc/rndc.conf`.
+    **`zone corp.example.com/IN: loading from master file /var/named/corp.example.com.zone failed: file not found`** — Verify the zone file path exists and the filename matches the zone name in `/etc/named.conf`.
+    **`named: error (SERVFAIL) resolving 'example.com/A/IN': 192.0.2.1#53: timed out`** — Check network connectivity to upstream nameservers and firewall rules allowing outbound DNS on port 53.
 ---
 
 ## Zone Transfer Verification
@@ -168,6 +246,47 @@ dig SOA corp.example.com @dc02.corp.example.com
 # Serial numbers must match after replication; mismatch = replication issue
 ```
 
+
+```text title="Expected output"
+; <<>> DiG 9.16.1-Ubuntu <<>> AXFR corp.example.com @dc01.corp.example.com
+; (1 server found)
+;; global options: +cmd
+corp.example.com.		3600	IN	SOA	dc01.corp.example.com. hostmaster.corp.example.com. 2024011501 3600 1800 604800 86400
+corp.example.com.		3600	IN	NS	dc01.corp.example.com.
+corp.example.com.		3600	IN	NS	dc02.corp.example.com.
+corp.example.com.		3600	IN	A	192.168.1.10
+mail.corp.example.com.		3600	IN	A	192.168.1.20
+web.corp.example.com.		3600	IN	A	192.168.1.30
+...
+corp.example.com.		3600	IN	SOA	dc01.corp.example.com. hostmaster.corp.example.com. 2024011501 3600 1800 604800 86400
+;; Query time: 2 msec
+;; SERVER: 192.168.1.5#53(192.168.1.5)
+;; WHEN: Mon Jan 15 14:32:18 UTC 2024
+;; XFR size: 12 records (messages 1, bytes 287)
+
+; <<>> DiG 9.16.1-Ubuntu <<>> SOA corp.example.com @dc01.corp.example.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 54321
+corp.example.com.		3600	IN	SOA	dc01.corp.example.com. hostmaster.corp.example.com. 2024011501 3600 1800 604800 86400
+;; Query time: 1 msec
+;; SERVER: 192.168.1.5#53(192.168.1.5)
+
+; <<>> DiG 9.16.1-Ubuntu <<>> SOA corp.example.com @dc02.corp.example.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 12345
+corp.example.com.		3600	IN	SOA	dc02.corp.example.com. hostmaster.corp.example.com. 2024011501 3600 1800 604800 86400
+;; Query time: 3 msec
+;; SERVER: 192.168.1.6#53(192.168.1.6)
+```
+
+!!! warning "Common errors"
+    **`; Transfer failed.`** — Verify the secondary DNS server is configured as an authorized zone transfer recipient in the primary's ACL (allow-transfer directive in named.conf).
+    **`; status: SERVFAIL`** — Check that the DNS server at the specified IP is running and listening on port 53 using `netstat -tuln | grep :53` or `ss -tuln | grep :53`.
+    **`connection timed out; no servers could be reached`**
 ---
 
 ## Conditional Forwarder Testing
@@ -184,6 +303,61 @@ dig @10.10.1.10 server.partner.com
 dig +trace @dc01 server.partner.com
 ```
 
+
+```text title="Expected output"
+; <<>> DiG 9.16.1-Ubuntu <<>> @10.10.1.10 host.corp.example.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 52847
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;host.corp.example.com.		IN	A
+
+;; ANSWER SECTION:
+host.corp.example.com.	300	IN	A	10.20.5.42
+
+;; Query time: 12 msec
+;; SERVER: 10.10.1.10#53(10.10.1.10)
+;; WHEN: Wed Jan 15 14:23:18 UTC 2025
+;; MSG SIZE  rcvd: 58
+
+; <<>> DiG 9.16.1-Ubuntu <<>> @10.10.1.10 server.partner.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 19234
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;server.partner.com.		IN	A
+
+;; ANSWER SECTION:
+server.partner.com.	3600	IN	A	203.45.67.89
+
+;; Query time: 45 msec
+;; SERVER: 10.10.1.10#53(10.10.1.10)
+;; WHEN: Wed Jan 15 14:23:19 UTC 2025
+;; MSG SIZE  rcvd: 54
+
+; <<>> DiG 9.16.1-Ubuntu <<>> +trace @dc01 server.partner.com
+; (trying to find the name server address for dc01)
+; (1 server found)
+;; global options: +cmd
+;.			518400	IN	NS	a.root-servers.net.
+;.			518400	IN	NS	b.root-servers.net.
+;; Received 512 bytes from 10.10.1.10#53(dc01) in 89 ms
+;com.			172800	IN	NS	a.gtld-servers.net.
+;; Received 512 bytes from a.root-servers.net#53(a.root-servers.net) in 78 ms
+;partner.com.		172800	IN	NS	ns1.partner.com.
+;; Received 512 bytes from a.gtld-servers.net#53(a.gtld-servers.net) in 92 ms
+;server.partner.com.	3600	IN	A	203.45.67.89
+;; Received 54 bytes from ns1.partner.com#53(ns1.partner.com) in 156 ms
+```
+
+!!! warning "Common errors"
+    **`dig: couldn't get address for 'dc01': not found`** — Use the full FQDN or IP address of the DNS server (e.g.,
 ---
 
 ## Split-Brain DNS Verification
@@ -206,6 +380,35 @@ dig @nameserver app.example.com +short  # from internal IP
 dig @nameserver app.example.com +short  # from external IP (via VPN off)
 ```
 
+
+```text title="Expected output"
+; <<>> DiG 9.16.1-Ubuntu <<>> @dc01.corp.example.com app.example.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 52847
+;; flags: qr aa rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 2, ADDITIONAL: 0
+
+;; ANSWER SECTION:
+app.example.com.		300	IN	A	10.42.1.15
+
+; <<>> DiG 9.16.1-Ubuntu <<>> @8.8.8.8 app.example.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 19234
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 4, ADDITIONAL: 0
+
+;; ANSWER SECTION:
+app.example.com.		3600	IN	A	203.0.113.42
+
+10.42.1.15
+203.0.113.42
+```
+
+!!! warning "Common errors"
+    **`dig: couldn't get address for 'dc01.corp.example.com': not known`** — Verify the internal nameserver hostname is resolvable or use its IP address directly (e.g., `dig @10.20.0.5 app.example.com`).
+    **`; <<>> DiG 9.16.1-Ubuntu <<>> @nameserver app.example.com` followed by `; connection timed out; trying next origin`** — Replace the placeholder `@nameserver` with an actual IP or hostname (e.g., `@10.20.0.5` or `@dc01.corp.example.com`).
 ---
 
 ## PTR Record Validation
@@ -230,6 +433,24 @@ Add-DnsServerResourceRecordPtr -ZoneName "1.10.10.in-addr.arpa" `
     -ComputerName dc01.corp.example.com
 ```
 
+
+```text title="Expected output"
+10.10.1.50 -> app01.corp.example.com.
+10.10.1.51 -> MISSING
+10.10.1.52 -> db01.corp.example.com.
+10.10.1.53 -> web02.corp.example.com.
+10.10.1.54 -> MISSING
+10.10.1.55 -> cache01.corp.example.com.
+10.10.1.56 -> MISSING
+10.10.1.57 -> ntp01.corp.example.com.
+10.10.1.58 -> MISSING
+10.10.1.59 -> app03.corp.example.com.
+10.10.1.60 -> mon01.corp.example.com.
+```
+
+!!! warning "Common errors"
+    **`dig: couldn't get address for 'dc01.corp.example.com': not known`** — Verify the DNS server hostname is resolvable or use its IP address instead in the -ComputerName parameter.
+    **`Access Denied`** — Ensure your user account has DNS admin privileges on the domain controller or run PowerShell as Administrator.
 ---
 
 ## Common Failure Scenarios
@@ -265,6 +486,36 @@ dig corp.example.com | grep "SERVER:"
 # ;; SERVER: 10.10.1.10#53(10.10.1.10)
 ```
 
+
+```text title="Expected output"
+; <<>> DiG 9.16.1-Ubuntu <<>> +dnssec corp.example.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 52847
+;; flags: qr rd ra ad; QUERY: 1, ANSWER: 2, AUTHORITY: 2, ADDITIONAL: 1
+
+;; QUESTION SECTION:
+;corp.example.com.		IN	A
+
+;; ANSWER SECTION:
+corp.example.com.	3600	IN	A	192.168.10.45
+corp.example.com.	3600	IN	RRSIG	A 8 3 3600 20240215120000 20240201120000 12847 example.com. M7x...
+
+;; AUTHORITY SECTION:
+example.com.		86400	IN	NS	ns1.example.com.
+example.com.		86400	IN	RRSIG	NS 8 2 86400 20240215120000 20240201120000 12847 example.com. K9p...
+
+;; Query time: 45 msec
+;; SERVER: 10.10.1.10#53(10.10.1.10)
+;; WHEN: Wed Feb 07 14:32:18 UTC 2024
+;; MSG SIZE  rcvd: 287
+```
+
+!!! warning "Common errors"
+    **`status: SERVFAIL`** — Check that the recursive resolver has DNSSEC validation enabled and can reach the root nameservers; disable DNSSEC temporarily with `dig +no-dnssec` to isolate the issue.
+    **`dig: couldn't get address for 'corp.example.com': not found`** — Verify the domain name spelling and that the resolver can reach authoritative nameservers using `dig @8.8.8.8 corp.example.com` to test with a public resolver.
+    **`flags: qr rd ra;` (no 'ad' flag present)`** — The resolver is not validating DNSSEC; check resolver configuration with `systemctl status systemd-resolved` on Linux or enable DNSSEC in `/etc/resolv.conf`.
 ---
 
 ## Escalation Criteria

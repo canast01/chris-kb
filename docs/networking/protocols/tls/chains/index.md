@@ -48,6 +48,35 @@ openssl crl2pkcs7 -nocrl -certfile bundle.pem | \
   openssl pkcs7 -print_certs -noout
 ```
 
+
+```text title="Expected output"
+depth=0 CN=web.example.com
+verify return:1
+depth=1 CN=Example Intermediate CA
+verify return:1
+depth=2 CN=Example Root CA
+verify return:1
+Certificate chain
+ 0 s:CN=web.example.com
+   i:CN=Example Intermediate CA
+ 1 s:CN=Example Intermediate CA
+   i:CN=Example Root CA
+ 2 s:CN=Example Root CA
+   i:CN=Example Root CA
+
+server.crt: OK
+
+subject=/CN=web.example.com
+issuer=/CN=Example Intermediate CA
+subject=/CN=Example Intermediate CA
+issuer=/CN=Example Root CA
+subject=/CN=Example Root CA
+issuer=/CN=Example Root CA
+```
+
+!!! warning "Common errors"
+    **`verify error:num=20:unable to get local issuer certificate`** — Add the missing intermediate CA to your chain.pem file or use `-CApath` to point to a directory containing root CAs.
+    **`error:0906D06C:PEM routines:PEM_read_bio:no start line`** — Ensure bundle.pem contains valid PEM-formatted certificates with proper `-----BEGIN CERTIFICATE-----` headers.
 ## Building a Chain Bundle
 
 The bundle should be ordered: server cert → intermediate(s) → (optionally root).
@@ -63,6 +92,14 @@ cat server.crt intermediate.crt root.crt > full-chain.pem
 openssl verify -CAfile root.crt -untrusted intermediate.crt server.crt
 ```
 
+
+```text title="Expected output"
+OK
+```
+
+!!! warning "Common errors"
+    **`error 20 at 0 depth lookup: unable to get local issuer certificate`** — Ensure the root certificate file path is correct and the certificate chain is complete; verify with `openssl x509 -in root.crt -text -noout`.
+    **`No such file or directory`** — Confirm all three certificate files (server.crt, intermediate.crt, root.crt) exist in the current working directory using `ls -la *.crt`.
 ## Configuring Chain in Common Web Servers
 
 ### nginx
@@ -91,6 +128,14 @@ SSLCACertificateFile  /etc/ssl/intermediate.crt  # or chain bundle
 cat server.crt intermediate.crt server.key > /etc/ssl/haproxy.pem
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`cat: server.crt: No such file or directory`** — Verify the certificate files exist in the current directory or provide absolute paths to their locations.
+    **`Permission denied`** — Run the command with `sudo` or ensure your user has write permissions to `/etc/ssl/`.
 ## Installing Internal CA Certificates
 
 To make an internal CA trusted by Linux hosts:
@@ -108,6 +153,21 @@ update-ca-certificates
 openssl verify -CAfile /etc/ssl/certs/ca-certificates.crt server.crt
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+(no output — command completes silently)
+Updating certificates in /etc/ssl/certs...
+rehashing... done.
+Running hooks in /etc/ca-certificates/update.d...
+done.
+verify OK
+```
+
+!!! warning "Common errors"
+    **`verify OK`** — Ignore this; it indicates successful verification, not an error.
+    **`error 20 at 0 depth lookup: unable to get local issuer certificate`** — The CA certificate was not properly installed; re-run `update-ca-certificates` after confirming the `.crt` file is in `/usr/local/share/ca-certificates/` with proper permissions.
+    **`cp: cannot stat 'internal-ca.crt': No such file or directory`** — Verify the CA certificate file exists in the current working directory or provide the full path to the source file.
 ## Online Chain Verification Tools
 
 ```bash
@@ -121,6 +181,27 @@ openssl s_client -connect <hostname>:443 -servername <hostname> -verify_return_e
 curl --cacert /path/to/ca-bundle.pem https://<hostname>/
 ```
 
+
+```text title="Expected output"
+depth=0 C = US, ST = California, L = San Francisco, O = Acme Corp, CN = api.example.com
+verify return:1
+depth=1 C = US, O = DigiCert Inc, CN = DigiCert Global G2 TLS RSA SHA256 CA
+verify return:1
+depth=2 C = US, O = DigiCert Inc, OU = www.digicert.com, CN = DigiCert Global Root CA
+verify return:1
+DONE
+---
+  % Total    % Received % Xferd  Average Speed   Time    Current Dload  Upload   Current Left Speed
+100   4521  100   4521    0     0   8432      0 --:--:-- 0:00:00 --:--:-- 0:00:00 100   4521  100   4521    0     0   8432      0 --:--:-- 0:00:00
+<!DOCTYPE html>
+<html>
+<head><title>200 OK</title></head>
+...
+```
+
+!!! warning "Common errors"
+    **`verify error:num=20:unable to get local issuer certificate`** — Add the missing intermediate CA certificate to your bundle or use the system CA bundle with `curl -k` (if testing) or obtain the complete chain from your certificate provider.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Either add the self-signed cert to your CA bundle with `cat /path/to/cert.pem >> /path/to/ca-bundle.pem`, or use `curl -k` for testing only.
 ## Common Issues
 
 | Symptom | Cause | Fix |

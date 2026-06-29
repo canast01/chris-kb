@@ -73,6 +73,29 @@ snc plugin upgrade --id com.snc.itsm.workspace --profile dev
 snc plugin upgrade --id com.snc.discovery --profile dev
 ```
 
+
+```text title="Expected output"
+Upgrading plugin: com.snc.itsm.workspace
+  Fetching plugin metadata... [OK]
+  Validating dependencies... [OK]
+  Downloading plugin version 2.4.1... [OK]
+  Installing plugin... [OK]
+  Plugin com.snc.itsm.workspace upgraded successfully to version 2.4.1
+
+Upgrading plugin: com.snc.discovery
+  Fetching plugin metadata... [OK]
+  Validating dependencies... [OK]
+  Downloading plugin version 5.8.3... [OK]
+  Installing plugin... [OK]
+  Plugin com.snc.discovery upgraded successfully to version 5.8.3
+
+Upgrade completed: 2 plugins upgraded, 0 failed
+```
+
+!!! warning "Common errors"
+    **`Error: Profile 'dev' not found in configuration`** — Verify the profile name exists in your snc config by running `snc profile list` and use the correct profile name.
+    **`Error: Plugin com.snc.itsm.workspace has unmet dependency: com.snc.platform >= 3.2.0`** — Check your current platform version with `snc plugin list` and upgrade the platform dependency before retrying the plugin upgrade.
+    **`Error: Connection timeout while downloading plugin from repository`** — Verify network connectivity and that your ServiceNow instance URL in the dev profile is correct using `snc profile show dev`.
 ---
 
 ## Post-Upgrade Testing Checklist

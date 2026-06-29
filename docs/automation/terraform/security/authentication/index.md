@@ -78,6 +78,22 @@ gcloud auth application-default login
 export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service-account.json
 ```
 
+
+```text title="Expected output"
+Go to the following link in your browser:
+
+    https://accounts.google.com/o/oauth2/auth?client_id=764086051850-6qr4p6gpi6hn506pt8ejuq83di341hur.apps.googleusercontent.com&...
+
+Enter verification code: ••••••••
+Authenticated with account: admin@example.com
+Your current project is set to: my-project-prod
+Credentials saved to: /home/terraform/.config/gcloud/application_default_credentials.json
+```
+
+!!! warning "Common errors"
+    **`ERROR: (gcloud.auth.application-default.login) User cancelled the web authorization flow.`** — Re-run the command and complete the browser authentication flow, or use a service account key instead.
+    **`ERROR: Could not open browser. Please visit the URL above manually.`** — Copy the provided URL into your browser manually, then paste the verification code back into the terminal.
+    **`gcloud: command not found`** — Install the Google Cloud SDK by following https://cloud.google.com/sdk/docs/install or add it to your PATH.
 ## CI/CD Credential Injection
 
 Credentials should be stored as CI/CD secrets and injected at runtime — never committed to source control.

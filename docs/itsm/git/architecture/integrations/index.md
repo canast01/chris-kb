@@ -57,6 +57,33 @@ git commit -m "PROJ-123 Add retry logic for payment API
 curl -s --header "PRIVATE-TOKEN: $GITLAB_TOKEN" \
   "https://gitlab.example.com/api/v4/projects/:id/integrations/jira"
 ```
+
+```text title="Expected output"
+{
+  "id": 7,
+  "title": "Jira",
+  "slug": "jira",
+  "created_at": "2024-01-15T09:32:44.521Z",
+  "updated_at": "2024-01-15T09:32:44.521Z",
+  "active": true,
+  "commit_events": true,
+  "push_events": true,
+  "issues_events": true,
+  "merge_requests_events": true,
+  "wiki_page_events": false,
+  "deployment_events": false,
+  "job_events": false,
+  "pipeline_events": true,
+  "url": "https://jira.example.com",
+  "username": "gitlab-bot",
+  "api_url": "https://jira.example.com/rest/api/2"
+}
+```
+
+!!! warning "Common errors"
+    **`{"message":"401 Unauthorized"}`** — Verify the `GITLAB_TOKEN` environment variable is set and contains a valid personal access token with `api` scope.
+    **`{"message":"404 Project Not Found"}`** — Replace `:id` with the actual numeric project ID or URL-encoded project path (e.g., `group%2Fproject`).
+    **`curl: (6) Could not resolve host: gitlab.example.com`** — Confirm network connectivity to the GitLab instance and update the hostname to match your actual GitLab URL.
 ```bash
 # Create webhook via API
 curl -X POST \
@@ -75,6 +102,35 @@ curl -X POST \
     }
   }'
 ```
+
+```text title="Expected output"
+{
+  "id": 487392156,
+  "name": "web",
+  "active": true,
+  "events": [
+    "push",
+    "pull_request",
+    "release"
+  ],
+  "config": {
+    "url": "https://hooks.example.com/github",
+    "content_type": "json",
+    "insecure_ssl": "0"
+  },
+  "updated_at": "2024-01-15T09:42:31Z",
+  "created_at": "2024-01-15T09:42:31Z",
+  "url": "https://api.github.com/repos/ORG/REPO/hooks/487392156",
+  "test_url": "https://api.github.com/repos/ORG/REPO/hooks/487392156/test",
+  "ping_url": "https://api.github.com/repos/ORG/REPO/hooks/487392156/pings",
+  "deliveries_url": "https://api.github.com/repos/ORG/REPO/hooks/487392156/deliveries"
+}
+```
+
+!!! warning "Common errors"
+    **`"message": "Bad credentials", "documentation_url": "https://docs.github.com/rest"`** — Verify `$GITHUB_TOKEN` is set, valid, and has `admin:repo_hook` permissions.
+    **`"message": "Validation Failed", "errors": [{"message": "Webhook URL is not reachable"}]`** — Ensure the endpoint `https://hooks.example.com/github` is publicly accessible and returns HTTP 200 on a GET request.
+    **`"message": "Not Found", "documentation_url": "https://docs.github.com/rest/reference/repos"`** — Confirm `ORG/REPO` exists and the token has access to that repository.
 ```bash
 # Create project webhook via API
 curl -X POST \
@@ -90,6 +146,33 @@ curl -X POST \
     "enable_ssl_verification": true
   }'
 ```
+
+```text title="Expected output"
+{
+  "id": 42,
+  "url": "https://hooks.example.com/gitlab",
+  "project_id": 8,
+  "push_events": true,
+  "issues_events": false,
+  "confidential_issues_events": false,
+  "merge_requests_events": true,
+  "wiki_page_events": false,
+  "deployment_events": false,
+  "job_events": false,
+  "pipeline_events": true,
+  "push_events_branch_filter": "",
+  "issues_events_confidential": false,
+  "token": "****",
+  "enable_ssl_verification": true,
+  "created_at": "2024-01-15T09:42:17.384Z",
+  "token_encrypted": true
+}
+```
+
+!!! warning "Common errors"
+    **`{"message":"401 Unauthorized"}`** — Verify `$GITLAB_TOKEN` is set and valid with `echo $GITLAB_TOKEN` and check token permissions include `api` scope.
+    **`{"message":"404 Project Not Found"}`** — Replace `:id` with the actual numeric project ID (e.g., `8`) or use URL-encoded project path like `group%2Fproject`.
+    **`{"message":"422 Unprocessable Entity","errors":["Url is invalid"]}`** — Ensure the webhook URL is publicly accessible and uses HTTPS; test connectivity with `curl -I https://hooks.example.com/gitlab`.
 ```bash
 # Bash — verify GitHub webhook signature
 verify_signature() {
@@ -174,6 +257,36 @@ docker push "$CI_REGISTRY_IMAGE/$CI_COMMIT_REF_SLUG:latest"
 curl -s --header "PRIVATE-TOKEN: $GITLAB_TOKEN" \
   "https://gitlab.example.com/api/v4/projects/:id/registry/repositories" | jq .
 ```
+
+```text title="Expected output"
+Login Succeeded
+Sending build context to Docker daemon  2.048 kB
+Step 1/10 : FROM ubuntu:22.04
+Step 10/10 : RUN apt-get clean
+Successfully built a1f2b3c4d5e6
+Successfully tagged registry.gitlab.example.com/myteam/myapp/main:7a8b9c0d
+The push refers to repository [registry.gitlab.example.com/myteam/myapp/main]
+7a8b9c0d: Pushed
+main: digest sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 size: 1234
+Successfully tagged registry.gitlab.example.com/myteam/myapp/main:latest
+The push refers to repository [registry.gitlab.example.com/myteam/myapp/main]
+latest: digest sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 size: 1234
+[
+  {
+    "id": 42,
+    "name": "myapp",
+    "path": "myteam/myapp",
+    "project_id": 156,
+    "location": "registry.gitlab.example.com/myteam/myapp",
+    "created_at": "2024-01-15T10:32:18.123Z"
+  }
+]
+```
+
+!!! warning "Common errors"
+    **`Error response from daemon: Get "https://registry.gitlab.example.com/v2/": unauthorized: HTTP Basic: Access Denied`** — Verify `$GITLAB_TOKEN` is set correctly and has `api` and `read_registry` scopes.
+    **`denied: requested access to the resource is denied`** — Ensure the GitLab project ID in the API endpoint matches your actual project and the token has `api` scope.
+    **`jq: parse error: Unexpected end of JSON input`** — Check that the API endpoint URL contains the correct numeric project ID (not a slug) and the token is valid.
 ```bash
 # Authenticate
 echo "$GITHUB_TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin

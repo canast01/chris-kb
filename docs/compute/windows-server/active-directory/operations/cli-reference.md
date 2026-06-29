@@ -77,6 +77,56 @@ repadmin /syncall /AdeP
 repadmin /queue
 ```
 
+
+```text title="Expected output"
+Replication Summary Start Time: 2024-01-15 14:32:18
+Beginning data collection for replication summary, this may take awhile on large enterprises with many servers...
+Source DSA          largest delta    fails/total    %-healthy
+DC1.corp.local      3m:22s           0/12           100%
+DC2.corp.local      5m:18s           0/12           100%
+DC3.corp.local      2m:47s           0/12           100%
+DC4.corp.local      12m:05s          1/12           91%
+...
+Replication Latency Summary
+Site                 ReplLatency(secs)
+Default-First-Site  45
+Branch-Site-01      187
+Branch-Site-02      312
+
+DSA Options: IS_GC IS_RODC
+Naming Context: CN=Configuration,DC=corp,DC=local
+    DC1.corp.local via RPC
+        Last attempt @ 2024-01-15 14:28:33 was successful.
+    DC2.corp.local via RPC
+        Last attempt @ 2024-01-15 14:29:15 was successful.
+    DC3.corp.local via RPC
+        Last attempt @ 2024-01-15 14:27:52 was successful.
+
+Source DSA: DC4.corp.local
+    CN=Configuration,DC=corp,DC=local
+        DC1.corp.local via RPC
+            Last attempt @ 2024-01-15 14:15:22 failed, result 8606 (DSA is unavailable).
+        DC2.corp.local via RPC
+            Last attempt @ 2024-01-15 14:20:44 was successful.
+
+SyncAll has started; please wait for completion...
+Syncing all NC's held on DC1.corp.local
+Syncing all NC's held on DC2.corp.local
+Syncing all NC's held on DC3.corp.local
+Syncing all NC's held on DC4.corp.local
+SyncAll terminated with success.
+
+Replication Queue
+    DC1.corp.local: 0 pending
+    DC2.corp.local: 0 pending
+    DC3.corp.local: 0 pending
+    DC4.corp.local: 3 pending
+```
+
+!!! warning "Common errors"
+    **`DsReplicaGetInfo() failed with status 8606 (DSA is unavailable).`** — Verify the DC is online and reachable on the network; check firewall rules for RPC ports 135, 445, and 49152-65535.
+    **`The naming context is invalid`** — Ensure the DC name is spelled correctly and exists in Active Directory; use `Get-ADDomainController` to list valid DC names.
+    **`Replication access was denied`** — Verify the account running repadmin has Domain Admin or Enterprise Admin credentials; run the command as Administrator.
 ---
 
 ## DC Diagnostics
@@ -104,6 +154,64 @@ nltest /sc_verify:<domain_name>
 nltest /sc_reset:<domain_name>
 ```
 
+
+```text title="Expected output"
+Directory Server Diagnosis
+
+Performing initial setup:
+   Trying to find home server...
+   Home Server = DC01.contoso.com
+   Identified AD Forest.
+   Trying to contact a DC in the domain...
+   DC contacted. Retrieving FSMO roles
+   Forest Role Owner = DC01.contoso.com
+   Domain Role Owner = DC01.contoso.com
+   PDC Role Owner = DC01.contoso.com
+   RID Role Owner = DC01.contoso.com
+   Infrastructure Role Owner = DC01.contoso.com
+
+   Doing initial required tests
+
+      Testing server: Default-First-Site-Name\DC01
+      Starting test: Connectivity
+         ......................... DC01 passed test Connectivity
+
+      Starting test: Advertising
+         ......................... DC01 passed test Advertising
+
+      Starting test: MachineAccount
+         ......................... DC01 passed test MachineAccount
+
+      Starting test: Services
+         ......................... DC01 passed test Services
+
+      Starting test: FsmoCheck
+         ......................... DC01 passed test FsmoCheck
+
+      Starting test: Replications
+         ......................... DC01 passed test Replications
+
+      Starting test: DFSREvent
+         ......................... DC01 passed test DFSREvent
+
+      Starting test: DNS
+         ......................... DC01 passed test DNS
+
+   Running enterprise tests on : contoso.com
+
+      Starting test: CheckSDRefDom
+         ......................... contoso.com passed test CheckSDRefDom
+
+      Starting test: CrossRefValidation
+         ......................... contoso.com passed test CrossRefValidation
+
+   Passed test ExecutionContext
+```
+
+!!! warning "Common errors"
+    **`'dcdiag' is not recognized as an internal or external command`** — Run dcdiag from a Windows command prompt or PowerShell on a domain-joined Windows Server with AD DS tools installed, not from a Linux/Unix bash shell.
+    **`The specified domain does not exist or could not be contacted`** — Verify the domain name is correct and the DC has network connectivity to DNS and domain controllers using `nslookup <domain_name>`.
+    **`Access Denied`** — Run the command with elevated privileges (Run as Administrator) or ensure the user account has sufficient AD permissions.
 ---
 
 ## FSMO Roles
@@ -119,6 +227,25 @@ Move-ADDirectoryServerOperationMasterRole -Identity <target_dc> -OperationMaster
 Move-ADDirectoryServerOperationMasterRole -Identity <target_dc> -OperationMasterRole PDCEmulator -Force
 ```
 
+
+```text title="Expected output"
+Schema Master               : dc1.corp.local
+Domain Naming Master        : dc1.corp.local
+PDC Emulator                : dc1.corp.local
+RID Master                  : dc2.corp.local
+Infrastructure Master       : dc2.corp.local
+
+WARNING: Transferring the PDC Emulator role to DC2.CORP.LOCAL...
+The operation completed successfully.
+
+WARNING: Seizing the PDC Emulator role to DC3.CORP.LOCAL...
+The operation completed successfully.
+```
+
+!!! warning "Common errors"
+    **`Move-ADDirectoryServerOperationMasterRole : Cannot find a domain controller for domain "corp.local".`** — Verify network connectivity to the target DC and ensure the domain name is correct.
+    **`Access Denied. The user does not have permission to perform this operation.`** — Run PowerShell as Domain Admin or Enterprise Admin and ensure the account has sufficient AD permissions.
+    **`The operation cannot be performed because the object referenced could not be found.`** — Confirm the target DC name exists in Active Directory using `Get-ADDomainController -Filter *`.
 ---
 
 ## Users & Groups
@@ -192,6 +319,28 @@ netdom trust <domain> /verify
 Get-ADTrust -Filter * | Select Name, TrustType, Direction, TrustAttributes
 ```
 
+
+```text title="Expected output"
+The command completed successfully.
+Verifying trust for domain: corp.example.com
+
+Trust Name: corp.example.com
+Trust Type: DOWNLEVEL
+Direction: BIDIRECTIONAL
+Status: OK
+
+Name                          TrustType Direction TrustAttributes
+----                          --------- --------- ---------------
+child.corp.example.com        UPLEVEL   INBOUND   TRANSITIVE
+partner.external.com          EXTERNAL  OUTBOUND  NONTRANSITIVE
+legacy.local                  DOWNLEVEL BIDIRECTIONAL TRANSITIVE
+forest.trusted.net            FOREST    BIDIRECTIONAL TRANSITIVE
+vendor-realm.com              REALM     OUTBOUND  NONTRANSITIVE
+```
+
+!!! warning "Common errors"
+    **`The specified domain could not be found.`** — Verify the domain name spelling and ensure the domain controller is reachable via DNS.
+    **`Access Denied`** — Run PowerShell as Administrator or ensure your user account has Domain Admin privileges.
 ---
 
 ## Verify

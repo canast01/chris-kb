@@ -108,6 +108,39 @@ nc -zv <db-host> 3306    # MySQL
 nc -zv <db-host> 1433    # SQL Server
 ```
 
+
+```text title="Expected output"
+psql (14.8, server 14.9)
+Type "help" for help.
+
+ alive
+-------
+     1
+(1 row)
+
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 47
+Server version: 8.0.35-0ubuntu0.22.04.1 (Ubuntu)
+
+| alive |
+|-------|
+|     1 |
+
+(1 rows affected)
+
+Connection successful
+
+Ncat: Version 7.93 ( https://nmap.org/ncat )
+Ncat: Connected to 192.168.1.50:5432.
+Sent 0, Rcvd 0
+Connection to 192.168.1.50 3306 port [tcp/mysql] succeeded!
+Connection to 192.168.1.50 1433 port [tcp/mssql-s] succeeded!
+```
+
+!!! warning "Common errors"
+    **`psql: error: could not translate host name "<host>" to address: Name or service not known`** — Replace `<host>` with the actual PostgreSQL server hostname or IP address.
+    **`mysql: [Warning] Using a password on the command line interface can be insecure.`** — Use a MySQL configuration file (~/.my.cnf) with restricted permissions instead of passing the password as a command-line argument.
+    **`nc: getaddrinfo: Name or service not known`** — Verify the database hostname is correct and resolvable; check DNS or use the IP address directly.
 ## Database — Capacity Monitoring
 
 ![Database — Capacity Monitoring](../../../../assets/compute-windows-server-sql-server-hc-database-capacity-monitoring.svg)
@@ -150,6 +183,39 @@ du -sh /var/lib/postgresql/data/pg_wal/
 du -sh /var/lib/mysql/mysql-bin.*
 mysql -u root -e "SHOW BINARY LOGS;"
 ```
+
+```text title="Expected output"
+Filesystem     Size  Used Avail Use% Mounted on
+/var/lib/postgresql  500G  387G  113G  78% /var/lib/postgresql
+/var/lib/mysql       1.0T  892G  108G  89% /var/lib/mysql
+/var/opt/mssql       2.0T  1.8T  200G  90% /var/opt/mssql
+
+Filesystem     Inodes IUsed IFree IUse% Mounted on
+/var/lib/postgresql  52M   48M  4.2M   92% /var/lib/postgresql
+
+4.2G	/var/lib/postgresql/data/base
+18G	/var/lib/postgresql/data/global
+156G	/var/lib/postgresql/data/pg_wal
+203G	/var/lib/postgresql/data/pg_tblspc
+
+892M	/var/lib/mysql/ibdata1
+156G	/var/lib/mysql/mysql-bin.000147
+142G	/var/lib/mysql/mysql-bin.000148
+89G	/var/lib/mysql/mysql-bin.000149
+
++------------------+----------+-----------+
+| Log_name         | File_size | Encrypted |
++------------------+----------+-----------+
+| mysql-bin.000147 | 156G      | N         |
+| mysql-bin.000148 | 142G      | N         |
+| mysql-bin.000149 | 89G       | N         |
++------------------+----------+-----------+
+```
+
+!!! warning "Common errors"
+    **`du: cannot access '/var/lib/postgresql/data/*': No such file or directory`** — Verify PostgreSQL is installed and the data directory path is correct, or adjust the path to match your actual PostgreSQL PGDATA location.
+    **`ERROR 1045 (28000): Access denied for user 'root'@'localhost'`** — Use the correct MySQL credentials (e.g., `mysql -u root -p` and enter the password, or use a .my.cnf file with stored credentials).
+    **`df: '/var/opt/mssql': No such file or directory`** — Remove `/var/opt/mssql` from the command if SQL Server is not installed, or verify the correct installation path with `find / -name mssql -type d 2>/dev/null`.
 ```bash
 # Weekly snapshots — capture to track growth
 psql -U postgres -Atc "SELECT pg_database_size('mydb');" >> /var/log/db-size-mydb.log
@@ -255,6 +321,21 @@ pg_basebackup -h <primary-host> -U replication -D /var/lib/postgresql/data-new -
 # -R writes recovery.conf / standby.signal automatically
 ```
 
+
+```text title="Expected output"
+pg_basebackup: initiating base backup, waiting for checkpoint to complete
+pg_basebackup: checkpoint completed
+24601/24601 kB (100%), 1/1 tablespace
+transaction log start point: 0/3000028 on timeline 1
+pg_basebackup: write-ahead log start point: 0/3000028 on timeline 1
+pg_basebackup: checksum: 8a4f2c91d7e3b5f6c9a1d2e3f4a5b6c7
+pg_basebackup: base backup completed
+```
+
+!!! warning "Common errors"
+    **`pg_basebackup: could not connect to server: FATAL: no pg_hba.conf entry for replication connection from "10.45.12.8" user "replication"`** — Add a replication entry to pg_hba.conf on the primary (e.g., `host replication replication 10.45.12.8/32 md5`) and reload PostgreSQL.
+    **`pg_basebackup: directory "/var/lib/postgresql/data-new" exists but is not empty`** — Remove or rename the target directory before running pg_basebackup, or use an empty path.
+    **`pg_basebackup: could not identify system: got 0 rows`** — Verify the replication user exists and has REPLICATION privilege on the primary with `ALTER USER replication WITH REPLICATION;`.
 ---
 
 ## Verify

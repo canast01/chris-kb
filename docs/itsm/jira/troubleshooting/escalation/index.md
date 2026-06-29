@@ -93,6 +93,15 @@ cat atlassian-jira-software-version.txt 2>/dev/null
 grep -i "Build Number" atlassian-jira.log | tail -1
 ```
 
+
+```text title="Expected output"
+8.20.11
+2024-01-15 09:47:32,156 INFO [main] [com.atlassian.jira.startup] Build Number: 820011
+```
+
+!!! warning "Common errors"
+    **`cat: atlassian-jira-software-version.txt: No such file or directory`** — Ensure you are running the command from the correct Jira installation directory (typically `/opt/atlassian/jira` or `/var/atlassian/jira`).
+    **`grep: atlassian-jira.log: No such file or directory`** — Check that the Jira logs directory exists at the expected path; if Jira uses a custom log location, adjust the grep command to point to the correct log file path.
 ### 2. Create the support zip (takes 2–10 minutes)
 
 Admin > **System** > **Troubleshooting and support tools** > **Create support zip**. Select the time window covering the incident.
@@ -106,12 +115,31 @@ jstack <jira_pid> > /tmp/jira-thread-2.txt; sleep 10
 jstack <jira_pid> > /tmp/jira-thread-3.txt
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`jstack: command not found`** — Ensure the JDK is installed and `jstack` is in your PATH, or use the full path `/usr/lib/jvm/java-11-openjdk/bin/jstack`.
+    **`<jira_pid>: No such process`** — Replace `<jira_pid>` with the actual Jira process ID from `pgrep -f jira` or `ps aux | grep jira`.
+    **`Permission denied`** — Run the command as the same user running Jira or use `sudo` to capture thread dumps with sufficient privileges.
 ### 4. Capture a heap dump (for OutOfMemoryError)
 
 ```bash
 jmap -dump:format=b,file=/tmp/jira-heap.hprof <jira_pid>
 ```
 
+
+```text title="Expected output"
+Dumping heap to /tmp/jira-heap.hprof ...
+Heap dump file created [2847392512 bytes in 12.453 secs]
+```
+
+!!! warning "Common errors"
+    **`Error attaching to process: sun.jvm.attach.AttachNotSupportedException`** — Ensure the JIRA process is running as the same user executing jmap, or run jmap with sudo.
+    **`Could not attach to <jira_pid>: No such process`** — Verify the PID is correct by running `ps aux | grep jira` and use the actual Java process PID.
+    **`Permission denied (/tmp/jira-heap.hprof)`** — Check that /tmp is writable and has sufficient free space (heap dumps can be several GB); consider using an alternate directory like `/var/tmp`.
 ### 5. Write the timeline
 
 ```text

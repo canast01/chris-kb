@@ -58,6 +58,37 @@ firewall-cmd --permanent --add-rich-rule='rule family="ipv4" source address="10.
 firewall-cmd --reload
 ```
 
+
+```text title="Expected output"
+PLAY [Apply CIS baseline] ******************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [prod-web-01.internal]
+
+TASK [Apply CIS baseline controls] *********************************************
+changed: [prod-web-01.internal]
+
+PLAY RECAP *********************************************************************
+prod-web-01.internal       : ok=2    changed=1    unreachable=0    failed=0
+
+SELinux policy in enforcing mode already.
+bluetooth.service: Unit not found.
+Removed /etc/systemd/system/multi-user.target.wants/avahi-daemon.service.
+Removed /etc/systemd/system/multi-user.target.wants/cups.service.
+Removed /etc/systemd/system/multi-user.target.wants/rpcbind.service.
+Removed /etc/systemd/system/multi-user.target.wants/postfix.service.
+success
+success
+success
+success
+success
+success
+```
+
+!!! warning "Common errors"
+    **`ansible-playbook: command not found`** — Install Ansible with `pip install ansible` or `yum install ansible`.
+    **`sed: can't read /etc/selinux/config: No such file or directory`** — Verify SELinux is installed with `yum install selinux-policy` before running sed.
+    **`Error: INVALID_ZONE: drop`** — Use a valid firewalld zone name like `drop` is valid; check firewall-cmd --get-zones and ensure firewalld service is running with `systemctl start firewalld`.
 ### CyberArk PAM Registration
 
 ```yaml
@@ -102,6 +133,28 @@ curl -s "http://prometheus:9090/api/v1/query?query=up{instance='<hostname>:9100'
   | python3 -c "import sys,json; r=json.load(sys.stdin)['data']['result']; print('UP' if r and r[0]['value'][1]=='1' else 'NOT VISIBLE')"
 ```
 
+
+```text title="Expected output"
+# node_exporter user created
+# Download and extraction complete
+# Binary installed to /usr/local/bin/node_exporter
+# Service file created
+# Systemd daemon reloaded
+Created symlink /etc/systemd/system/multi-user.target.wants/node_exporter.service → /etc/systemd/system/node_exporter.service.
+node_exporter.service enabled and started successfully.
+# HELP node_cpu_seconds_total Seconds the cpus spent in each mode.
+# TYPE node_cpu_seconds_total counter
+node_cpu_seconds_total{cpu="0",mode="user"} 1247.89
+# Syslog forwarding rule appended to rsyslog.conf
+# Rsyslog service restarted
+Redirecting to /bin/systemctl restart rsyslog.service
+UP
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to localhost port 9100: Connection refused`** — Wait 2–3 seconds after `systemctl enable --now node_exporter` for the service to start, then retry the curl command.
+    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Verify Prometheus is running and accessible at `http://prometheus:9090`, and replace `<hostname>` with the actual node hostname (e.g., `web-server-01`).
+    **`useradd: user 'node_exporter' already exists`** — Remove the existing user with `userdel node_exporter` before re-running the installation, or skip the useradd step if upgrading.
 ## 4. Backup Configuration
 
 ```powershell
@@ -136,6 +189,25 @@ EOF
 ansible <hostname>.example.com -i inventory/production/ -m ansible.builtin.ping
 ```
 
+
+```text title="Expected output"
+web-app-prod-01.example.com:
+      ansible_host: 10.42.18.156
+(no output — command completes silently)
+(no output — command completes silently)
+web-app-prod-01.example.com | SUCCESS => {
+    "ansible_facts": {
+        "discovered_interpreter_python": "/usr/bin/python3"
+    },
+    "changed": false,
+    "ping": "pong"
+}
+```
+
+!!! warning "Common errors"
+    **`[WARNING]: Unable to parse <hostname>.example.com as an inventory source`** — Replace `<hostname>` and `<ip>` placeholders with actual values before running the commands.
+    **`fatal: [web-app-prod-01.example.com]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}`** — Ensure the Ansible control node has SSH key-based authentication configured for the target host and the key is added to ssh-agent.
+    **`[ERROR]: inventory/production/hosts.yml is not a valid YAML file`** — Verify YAML indentation is consistent (use spaces, not tabs) and that the hostname entry aligns with existing inventory structure.
 ## 6. CMDB Entry
 
 | Field | Value |

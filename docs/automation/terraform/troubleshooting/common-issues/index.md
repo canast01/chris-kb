@@ -138,6 +138,21 @@ resource "aws_instance" "web" {
 }
 ```
 
+
+```text title="Expected output"
+default
+  staging
+* production
+
+staging
+
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: workspace "old-workspace" does not exist`** — Verify the workspace name with `terraform workspace list` before attempting deletion.
+    **`Error: Cannot delete the currently selected workspace`** — Switch to a different workspace with `terraform workspace select default` before deleting the target workspace.
 ## Common Error Reference
 
 | Error message | Cause | Fix |

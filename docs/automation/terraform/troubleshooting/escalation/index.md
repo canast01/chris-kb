@@ -86,6 +86,70 @@ terraform workspace show
 terraform providers 2>&1
 ```
 
+
+```text title="Expected output"
+Terraform v1.6.4
+on linux_amd64
+
+Your version of Terraform is out of date! The newest version
+is 1.7.2. You can update by downloading from https://www.terraform.io/downloads.html
+
+Terraform has been successfully initialized!
+
+Associated Terraform configuration files:
+
+.terraform/modules/vpc
+.terraform/modules/security_groups
+
+# lock file for terraform >= 1.2
+provider "registry.terraform.io/hashicorp/aws" {
+  version     = "5.31.0"
+  constraints = ">= 5.0"
+  hashes = [
+    "h1:LlUeeWvzHBIKS1UeTVzUTc1/ZYkiXRHV5qKbqSQIAE=",
+  ]
+}
+
+provider "registry.terraform.io/hashicorp/kubernetes" {
+  version     = "2.24.1"
+  constraints = "~> 2.24"
+  hashes = [
+    "h1:7VRKyqKxYrXR6lGKbB8UKPqKvJxKxKxKvJxKxKvJxK=",
+  ]
+}
+
+terraform {
+  required_version = ">= 1.5"
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = "~> 5.31"
+    }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "~> 2.24"
+    }
+  }
+}
+
+default
+
+Providers required by configuration:
+
+.
+├── provider[registry.terraform.io/hashicorp/aws] 5.31.0
+└── provider[registry.terraform.io/hashicorp/kubernetes] 2.24.1
+
+Providers required by state:
+
+.
+├── provider[registry.terraform.io/hashicorp/aws] 5.31.0
+└── provider[registry.terraform.io/hashicorp/kubernetes] 2.24.1
+```
+
+!!! warning "Common errors"
+    **`Error: Failed to query available provider packages`** — Run `terraform init` to download and cache the required providers before running diagnostics.
+    **`Error reading .terraform.lock.hcl: no such file or directory`** — Execute `terraform init` in the working directory to generate the lock file and download providers.
 ### 2. Collect debug-level logs
 
 ```bash
@@ -100,6 +164,21 @@ terraform plan -input=false 2>&1 | tee /tmp/terraform-plan.log
 unset TF_LOG TF_LOG_PATH
 ```
 
+
+```text title="Expected output"
+2024-01-15T09:47:32.123Z [INFO] Terraform version: 1.5.7
+2024-01-15T09:47:32.456Z [DEBUG] initiate new HTTP client
+2024-01-15T09:47:33.012Z [TRACE] provider.terraform-provider-aws: Calling provider defined Configure Type...
+2024-01-15T09:47:33.234Z [TRACE] EvalApply: aws_instance.web_server
+2024-01-15T09:47:33.567Z [DEBUG] No changes. Infrastructure is up to date.
+
+Plan: 0 to add, 0 to change, 0 to destroy.
+2024-01-15T09:47:34.890Z [TRACE] Context shutdown complete
+```
+
+!!! warning "Common errors"
+    **`Error: open /tmp/terraform-trace-*.log: permission denied`** — Verify `/tmp` is writable with `ls -ld /tmp` and check your user permissions.
+    **`Error: TF_LOG set to invalid log level "TRACE"`** — Use only valid levels: TRACE, DEBUG, INFO, WARN, ERROR; verify the export statement spelling.
 ### 3. Collect state file safely
 
 ```bash
@@ -119,6 +198,25 @@ for res in state.get('values',{}).get('root_module',{}).get('resources',[]):
 " > /tmp/state-structure.txt
 ```
 
+
+```text title="Expected output"
+state-backup-2024-01-15-143022.tfstate
+aws_instance.web_server
+aws_instance.db_replica
+aws_rds_cluster.primary
+aws_security_group.app_tier
+aws_vpc.main
+aws_subnet.private_a
+aws_subnet.private_b
+aws_iam_role.lambda_exec
+aws_lambda_function.processor
+aws_s3_bucket.artifacts
+```
+
+!!! warning "Common errors"
+    **`jq: command not found`** — Install `jq` or use the Python JSON parser as shown; if using Python, ensure `python3` is in PATH.
+    **`Error reading state file: stat /tmp/state-backup-*.tfstate: no such file or directory`** — Verify `/tmp` directory exists and has write permissions; check disk space with `df -h /tmp`.
+    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1`** — Ensure `terraform show -json` runs successfully before piping to Python; run `terraform show -json` standalone to verify state is valid.
 ### 4. Collect plan output in JSON format
 
 ```bash
@@ -140,6 +238,43 @@ print(dict(counts))
 "
 ```
 
+
+```text title="Expected output"
+Terraform used the remote state from s3://terraform-state-prod/main.tfstate
+
+Terraform will perform the following actions:
+
+  # aws_instance.web[0] will be created
+  + resource "aws_instance" "web" {
+      + ami           = "ami-0c55b159cbfafe1f0"
+      + instance_type = "t3.medium"
+      + tags          = {
+          + "Name" = "web-server-01"
+        }
+    }
+
+  # aws_security_group.app will be updated in-place
+  ~ resource "aws_security_group" "app" {
+      ~ ingress {
+          + cidr_blocks = ["10.0.0.0/8"]
+        }
+    }
+
+  # aws_rds_instance.db will be destroyed
+  - resource "aws_rds_instance" "db" {
+      - allocated_storage = 100
+      - engine            = "postgres"
+    }
+
+Plan: 1 to add, 1 to change, 1 to destroy.
+
+Saved the plan to: /tmp/tfplan
+{'create': 1, 'update': 1, 'delete': 1}
+```
+
+!!! warning "Common errors"
+    **`Error reading plan file: stat /tmp/tfplan: no such file or directory`** — Ensure `terraform plan -out=/tmp/tfplan` completes successfully before running `terraform show`; check disk space and write permissions on /tmp.
+    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Verify the plan file is valid by running `terraform show -json /tmp/tfplan` manually; the plan may be corrupted or the file path incorrect.
 ### 5. Write the timeline
 
 ```text
@@ -291,6 +426,70 @@ terraform init -backend-only -reconfigure 2>&1 | tail -5
 terraform workspace list
 ```
 
+
+```text title="Expected output"
+Terraform v1.5.7
+on linux_amd64
+
+default
+42
+
+{
+    "Item": {
+        "LockID": {
+            "S": "terraform-prod-bucket/prod/terraform.tfstate"
+        },
+        "Digest": {
+            "S": "a7f3e2c9b1d4f6e8a2c5d7f9e1b3a5c7"
+        },
+        "Operation": {
+            "S": "OperationTypeApply"
+        },
+        "Info": {
+            "S": "user@host"
+        },
+        "Who": {
+            "S": "terraform"
+        },
+        "Version": {
+            "N": "1"
+        },
+        "Created": {
+            "N": "1698765432"
+        }
+    }
+}
+
+a3f2e1c 'Add RDS subnet group for multi-AZ failover'
+b5d4c3a 'Update security group ingress rules'
+c7f6e5d 'Provision ALB target group'
+d9h8g7f 'Initial VPC and subnet configuration'
+e1j0i9h 'Add CloudWatch monitoring dashboards'
+
+resource "aws_security_group" "alb" {
+  ingress {
+-   from_port = 80
++   from_port = 443
+    to_port   = 443
+  }
+}
+
+Initializing the backend...
+
+Successfully configured the backend "s3" [bucket="terraform-prod-bucket"]
+Initializing provider plugins...
+- Reusing previous version of hashicorp/aws from the dependency lock file
+- Using previously-installed hashicorp/aws v5.12.0
+
+  default
+* prod
+  staging
+```
+
+!!! warning "Common errors"
+    **`Error: Error acquiring the state lock`** — Run `terraform force-unlock <LOCK_ID>` after verifying no other apply operations are running, then retry the command.
+    **`Error: error reading S3 Bucket in region <region>: AccessDenied: Access Denied`** — Verify IAM permissions include `s3:GetObject` and `s3:ListBucket` on the state bucket, and check the AWS credentials being used.
+    **`fatal: your current branch 'main' does not have any commits yet`** — Initialize the git repository with at least one commit before running git log commands.
 ---
 
 ## See also

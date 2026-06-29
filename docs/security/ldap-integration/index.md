@@ -84,6 +84,61 @@ ldapsearch -H ldaps://dc02.corp.local:636 \
   -s base "(objectClass=*)"
 ```
 
+
+```text title="Expected output"
+Enter LDAP Password: 
+# extended LDIF
+#
+# LDAPv3
+# base <DC=corp,DC=local> with scope subtree
+# filter: (sAMAccountName=testuser)
+# requesting: displayName mail memberOf
+#
+
+dn: CN=testuser,OU=Users,OU=corp,DC=corp,DC=local
+displayName: Test User
+mail: testuser@corp.local
+memberOf: CN=Engineering,OU=Groups,DC=corp,DC=local
+memberOf: CN=VPN-Access,OU=Groups,DC=corp,DC=local
+
+# search result
+search: 2
+result: 0 Success
+
+# numResponses: 2
+# numEntries: 1
+
+notBefore=Jan 15 08:32:14 2024 GMT
+notAfter=Jan 14 08:32:14 2026 GMT
+subject=CN=dc01.corp.local,OU=Domain Controllers,DC=corp,DC=local
+issuer=CN=corp-CA,OU=Certification Authorities,DC=corp,DC=local
+
+Enter LDAP Password: 
+# extended LDIF
+#
+# LDAPv3
+# base <DC=corp,DC=local> with scope base
+# filter: (objectClass=*)
+# requesting: ALL
+#
+
+dn: DC=corp,DC=local
+objectClass: top
+objectClass: domain
+dc: corp
+
+# search result
+search: 2
+result: 0 Success
+
+# numResponses: 2
+# numEntries: 1
+```
+
+!!! warning "Common errors"
+    **`ldap_bind: Invalid credentials (49)`** — Verify the service account password is correct and the account is not locked; check DC event logs for failed bind attempts.
+    **`ldap_sasl_bind(SIMPLE): Can't contact LDAP server (-1)`** — Confirm dc01.corp.local resolves correctly, port 636 is open in firewall rules, and the DC is online using `ping` or `nslookup`.
+    **`error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed`** — Add the DC's root CA certificate to the system trust store or use `ldapsearch -Z -o LDTLS_CACERT=/path/to/ca.crt` to specify the CA bundle explicitly.
 ---
 
 ## Synchronisation and Failover

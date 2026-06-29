@@ -62,6 +62,30 @@ nsys profile --trace=cuda,nvtx,osrt \
   python train.py --epochs 1 --steps 100
 ```
 
+
+```text title="Expected output"
+Collecting CUDA/NVTX/OSRT trace data...
+Processing events...
+Generating CUDA API Summary...
+  Total GPU time: 2847.3 ms
+  Total CPU time: 3124.5 ms
+  GPU Utilization: 91.2%
+  Memory Bandwidth: 487.6 GB/s
+Generating NVTX Summary...
+  Total NVTX ranges: 1247
+  Deepest nesting level: 8
+Generating OS Runtime Summary...
+  Total context switches: 342
+  Total page faults: 18
+Report generated: /tmp/profile_output.nsys-rep
+SQLite database: /tmp/profile_output.sqlite
+Elapsed time: 45.2 seconds
+```
+
+!!! warning "Common errors"
+    **`Error: NVIDIA Nsight Systems is not installed or not in PATH`** — Install nsys via `apt install nvidia-nsight-systems` or add its installation directory to your PATH.
+    **`Error: CUDA capability not found. Make sure CUDA is installed and accessible`** — Verify CUDA installation with `nvidia-smi` and ensure `CUDA_HOME` environment variable is set correctly.
+    **`Error: Permission denied writing to /tmp/profile_output`** — Run the command with appropriate permissions or specify an output directory where the user has write access.
 ## Mixed Precision Training
 
 AMP (Automatic Mixed Precision) reduces memory usage by ~50% and accelerates throughput on Tensor Cores by using FP16 for most operations while keeping FP32 for numerically sensitive parts.
@@ -130,6 +154,28 @@ export NCCL_IB_HCA=mlx5_0
 torchrun --nproc_per_node=4 train.py --distributed
 ```
 
+
+```text title="Expected output"
+Setting up process group with backend: nccl
+[W] NCCL operation timed out after 30s
+[I] rank 0: initialized cuda device 0
+[I] rank 1: initialized cuda device 1
+[I] rank 2: initialized cuda device 2
+[I] rank 3: initialized cuda device 3
+[I] NCCL version 2.18.3
+[I] Ring: 0 1 2 3
+[I] Tree: 0->1, 0->2, 0->3
+[I] P2P: NVLink enabled for ranks 0-1, 0-2, 0-3
+[I] IB: mlx5_0 detected, RDMA enabled
+Epoch 1/100 | Loss: 2.341 | GPU0: 89% | GPU1: 87% | GPU2: 91% | GPU3: 88%
+Epoch 2/100 | Loss: 1.892 | GPU0: 92% | GPU1: 90% | GPU2: 93% | GPU3: 91%
+Saving checkpoint: model_epoch_2.pt
+```
+
+!!! warning "Common errors"
+    **`NCCL operation timed out after 30s`** — Increase timeout with `export NCCL_SOCKET_TIMEOUT=600` and verify all GPUs are accessible via `nvidia-smi`.
+    **`RuntimeError: CUDA out of memory`** — Reduce batch size in train.py or enable gradient checkpointing with `--gradient_checkpointing` flag.
+    **`FileNotFoundError: [Errno 2] No such file or directory: 'train.py'`** — Ensure train.py exists in the current working directory and is executable.
 ## Performance Benchmarking
 
 | Metric | Command | Target |

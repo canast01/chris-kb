@@ -45,6 +45,14 @@ frozenTimePeriodInSecs = 7776000   # 90 days
 maxTotalDataSizeMB = 500000
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error in 'main' stanza: attribute 'frozenTimePeriodInSecs' not recognized`** — Verify the attribute name matches your Splunk version's indexes.conf schema (some versions use `frozenTimePeriodInDays` instead).
+    **`maxTotalDataSizeMB must be greater than maxMemMB`** — Increase `maxTotalDataSizeMB` to a value larger than the index's `maxMemMB` setting (typically at least 20MB higher).
 **Elasticsearch (ELK):**
 ```bash
 # Index Lifecycle Management (ILM) — set delete phase
@@ -61,6 +69,16 @@ PUT _ilm/policy/infra-logs-policy
 }
 ```
 
+
+```text title="Expected output"
+{
+  "acknowledged": true
+}
+```
+
+!!! warning "Common errors"
+    **`400 Bad Request: [illegal_argument_exception] unknown setting [policy.phases.delete.min_age]`** — Use `min_age` directly under the phase object, not nested; the correct structure is `"phases": { "delete": { "min_age": "90d", "actions": {...} } }`.
+    **`403 Forbidden: [security_exception] action [cluster:admin:ilm:put] is unauthorized`** — Grant the user or role the `manage_ilm` cluster privilege in Elasticsearch security settings.
 ## Archive to Object Storage
 
 ```bash
@@ -72,6 +90,21 @@ aws s3 cp /tmp/logs-$(date +%Y%m).tar.gz s3://<bucket>/logs/$(hostname)/
 aws s3 ls s3://<bucket>/logs/$(hostname)/
 ```
 
+
+```text title="Expected output"
+tar: Removing leading `/' from member names
+logs-202501.tar.gz
+2025-01-15 14:32:18       8547291 logs-202501.tar.gz
+
+upload: /tmp/logs-202501.tar.gz to s3://compliance-logs-prod/logs/web-server-03/logs-202501.tar.gz
+
+2025-01-15 14:32:45       8547291 logs-202501.tar.gz
+```
+
+!!! warning "Common errors"
+    **`fatal error: An error occurred (NoSuchBucket) when calling the PutObject operation: The specified bucket does not exist`** — Verify the bucket name in the command matches your actual S3 bucket and that your AWS credentials have s3:PutObject permissions.
+    **`tar: /var/log/archive/202501/: Cannot stat: No such file or directory`** — Ensure the archive directory exists for the current month; create it with `mkdir -p /var/log/archive/$(date +%Y%m)/` if logs haven't been rotated yet.
+    **`Unable to locate credentials`** — Configure AWS credentials using `aws configure` or set AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY environment variables.
 ## Validation Checklist
 
 - [ ] Log rotation running and not producing errors (`logrotate -d`)

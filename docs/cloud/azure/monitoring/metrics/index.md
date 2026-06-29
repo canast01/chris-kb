@@ -67,6 +67,63 @@ az monitor metrics list-definitions \
   --output table
 ```
 
+
+```text title="Expected output"
+Time                 Aggregation    Value
+-------------------  ---------------  -------
+2026-05-07T00:05:00Z  Average        12.45
+2026-05-07T00:10:00Z  Average        14.32
+2026-05-07T00:15:00Z  Average        11.89
+2026-05-07T00:20:00Z  Average        15.67
+2026-05-07T00:25:00Z  Average        13.21
+2026-05-07T00:30:00Z  Average        16.54
+...
+
+{
+  "value": [
+    {
+      "name": {
+        "value": "Percentage CPU",
+        "localizedValue": "Percentage CPU"
+      },
+      "type": "Microsoft.Insights/metrics",
+      "id": "/subscriptions/a1b2c3d4-e5f6-7890-abcd-ef1234567890/resourceGroups/myRG/providers/Microsoft.Compute/virtualMachines/myVM/providers/Microsoft.Insights/metrics/Percentage CPU",
+      "unit": "Percent",
+      "timeseries": [
+        {
+          "metadatavalues": [],
+          "data": [
+            {
+              "timeStamp": "2026-05-07T00:00:00Z",
+              "average": 12.45,
+              "maximum": 18.92
+            },
+            {
+              "timeStamp": "2026-05-07T00:01:00Z",
+              "average": 13.12,
+              "maximum": 19.34
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+
+Name                                  Type                                    Unit
+------------------------------------  ----------------------------------------  --------
+Percentage CPU                        Microsoft.Insights/metrics                Percent
+Available Memory Bytes                Microsoft.Insights/metrics                Bytes
+Network In Total                      Microsoft.Insights/metrics                Bytes
+Network Out Total                     Microsoft.Insights/metrics                Bytes
+Disk Read Bytes                       Microsoft.Insights/metrics                Bytes
+Disk Write Bytes                      Microsoft.Insights/metrics                Bytes
+```
+
+!!! warning "Common errors"
+    **`ResourceNotFound: The resource '/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.Compute/virtualMachines/myVM' could not be found.`** — Verify the subscription ID, resource group name, and VM name are correct using `az vm list --output table`.
+    **`InvalidMetricName: The metric 'Percentage CPU' is not valid for this resource type.`** — List available metrics for your resource type with `az monitor metrics list-definitions --resource <resource-id>` to find the correct metric name.
+    **`AuthorizationFailed: The client '<client-id>' with object id '<object-id>' does not have authorization to perform action 'microsoft.insights/metrics/read' over scope '<scope>'.`** — Ensure your Azure account has the "Monitoring Reader" role assigned to the resource group or subscription.
 ## Aggregation Types
 
 | Aggregation | Description                                     |
@@ -105,6 +162,71 @@ az monitor metrics alert create \
   --action /subscriptions/<sub-id>/resourceGroups/myRG/providers/microsoft.insights/actionGroups/ops-ag
 ```
 
+
+```text title="Expected output"
+{
+  "id": "/subscriptions/12a34b56-c789-0d12-e345-f67890ab1234/resourceGroups/myRG/providers/microsoft.insights/metricsAlerts/disk-latency-alert",
+  "location": "global",
+  "name": "disk-latency-alert",
+  "resourceGroup": "myRG",
+  "severity": 2,
+  "enabled": true,
+  "windowSize": "PT5M",
+  "evaluationFrequency": "PT1M",
+  "scopes": [
+    "/subscriptions/12a34b56-c789-0d12-e345-f67890ab1234/resourceGroups/myRG/providers/Microsoft.Compute/virtualMachines/myVM"
+  ],
+  "criteria": {
+    "allOf": [
+      {
+        "name": "Data Disk Read Operations/Sec",
+        "metricName": "Data Disk Read Operations/Sec",
+        "operator": "GreaterThan",
+        "threshold": 100,
+        "timeAggregation": "Average"
+      }
+    ]
+  },
+  "actions": [
+    {
+      "actionGroupId": "/subscriptions/12a34b56-c789-0d12-e345-f67890ab1234/resourceGroups/myRG/providers/microsoft.insights/actionGroups/ops-ag"
+    }
+  ]
+}
+{
+  "id": "/subscriptions/12a34b56-c789-0d12-e345-f67890ab1234/resourceGroups/myRG/providers/microsoft.insights/metricsAlerts/appgw-unhealthy-hosts",
+  "location": "global",
+  "name": "appgw-unhealthy-hosts",
+  "resourceGroup": "myRG",
+  "severity": 1,
+  "enabled": true,
+  "windowSize": "PT5M",
+  "evaluationFrequency": "PT1M",
+  "scopes": [
+    "/subscriptions/12a34b56-c789-0d12-e345-f67890ab1234/resourceGroups/myRG/providers/Microsoft.Network/applicationGateways/myAppGW"
+  ],
+  "criteria": {
+    "allOf": [
+      {
+        "name": "UnhealthyHostCount",
+        "metricName": "UnhealthyHostCount",
+        "operator": "GreaterThan",
+        "threshold": 0,
+        "timeAggregation": "Total"
+      }
+    ]
+  },
+  "actions": [
+    {
+      "actionGroupId": "/subscriptions/12a34b56-c789-0d12-e345-f67890ab1234/resourceGroups/myRG/providers/microsoft.insights/actionGroups/ops-ag"
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`(ResourceNotFound) The resource '/subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.Compute/virtualMachines/myVM' could not be found.`** — Verify the VM exists in the specified resource group and subscription using `az vm list -g myRG`.
+    **`
 ## Dimension Filtering
 
 Many metrics support dimensions — additional labels that let you filter or split data (e.g., per disk, per backend pool).
@@ -120,6 +242,23 @@ az monitor metrics list \
   --output table
 ```
 
+
+```text title="Expected output"
+Timestamp            Aggregation    Value
+-------------------  --------------  -------
+2024-01-15T14:30:00Z  Average         12.5
+2024-01-15T14:25:00Z  Average         14.2
+2024-01-15T14:20:00Z  Average         11.8
+2024-01-15T14:15:00Z  Average         13.7
+2024-01-15T14:10:00Z  Average         10.3
+2024-01-15T14:05:00Z  Average         15.1
+2024-01-15T14:00:00Z  Average         9.6
+```
+
+!!! warning "Common errors"
+    **`ResourceNotFound`** — Verify the subscription ID, resource group name, and VM name are correct using `az vm list --resource-group myRG`.
+    **`InvalidDimension`** — Replace `--dimension VMName` with a valid dimension like `--dimension "Processor Number"` or remove it if the metric doesn't support dimensions.
+    **`AuthorizationFailed`** — Ensure your Azure account has `Microsoft.Insights/metrics/read` permissions on the VM resource.
 ## Custom Metrics via REST
 
 Applications can emit custom metrics directly to the Azure Monitor ingestion endpoint.
@@ -143,6 +282,20 @@ curl -X POST \
   }'
 ```
 
+
+```text title="Expected output"
+{
+  "statusCode": 200,
+  "message": "Metric ingestion accepted",
+  "ingestionId": "a7f2c9e1-4b3d-47e8-9f21-6d8c5a2b1e9f",
+  "timestamp": "2026-05-07T10:00:01.234Z"
+}
+```
+
+!!! warning "Common errors"
+    **`401 Unauthorized`** — Verify the access token is valid and not expired by regenerating it with `az account get-access-token --resource https://monitoring.azure.com`.
+    **`400 Bad Request: Invalid metric namespace`** — Ensure the namespace matches your custom metrics namespace registered in Azure Monitor; check with `az monitor metrics list-definitions --resource /subscriptions/<sub-id>/resourceGroups/myRG/providers/Microsoft.Compute/virtualMachines/myVM`.
+    **`404 Not Found`** — Confirm the subscription ID, resource group name, and VM name are correct and that the resource exists in the specified region.
 ## Metric Explorer Tips
 
 - Pin charts directly to a shared dashboard from Metrics Explorer

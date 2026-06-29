@@ -37,6 +37,21 @@ rotate_secret "SLACK_BOT_TOKEN"       "secret/data/slack" "bot_token"
 echo "All secrets rotated."
 ```
 
+
+```text title="Expected output"
+Rotating DEPLOY_SSH_KEY...
+  ✓ DEPLOY_SSH_KEY rotated
+Rotating AWS_SECRET_ACCESS_KEY...
+  ✓ AWS_SECRET_ACCESS_KEY rotated
+Rotating SLACK_BOT_TOKEN...
+  ✓ SLACK_BOT_TOKEN rotated
+All secrets rotated.
+```
+
+!!! warning "Common errors"
+    **`Error making API request.`** — Verify `VAULT_ROLE_ID` and `VAULT_SECRET_ID` environment variables are set and the AppRole auth method is enabled on the Vault instance.
+    **`Error: authentication required`** — Ensure you are authenticated to GitHub CLI with `gh auth login` and have `admin:org_hook` permissions on the target repository.
+    **`jq: error (at <stdin>:1): Cannot index null with string "auth"`** — Check that the Vault login response is valid JSON; confirm the Vault server is reachable at `VAULT_ADDR` and AppRole credentials are correct.
 ```bash
 #!/bin/bash
 # audit-secrets.sh — List all secrets across repos and environments
@@ -70,6 +85,16 @@ gh repo list $ORG --limit 200 --json name -q '.[].name' | \
 echo "Audit written to $OUTPUT"
 wc -l "$OUTPUT"
 ```
+
+```text title="Expected output"
+Audit written to secret-audit-2025-01-15.csv
+201 secret-audit-2025-01-15.csv
+```
+
+!!! warning "Common errors"
+    **`gh: command not found`** — Install the GitHub CLI with `brew install gh` (macOS) or `apt-get install gh` (Linux), then authenticate with `gh auth login`.
+    **`HTTP 403: Resource not accessible by integration`** — Ensure your GitHub token has `admin:org_hook` and `repo` scopes by running `gh auth refresh -s admin:org_hook,repo`.
+    **`jq: parse error: Cannot index number with string "name"`** — The API response is malformed; add error handling with `| jq -r '.secrets[]? // empty | ...'` to skip empty or non-object responses.
 ```bash
 #!/bin/bash
 # notify-failures.sh — Check for recent failures and post to Slack
@@ -102,6 +127,30 @@ if [ "$COUNT" -gt 0 ]; then
     -d "{\"channel\": \"$SLACK_CHANNEL\", \"text\": \"$MESSAGE\"}"
 fi
 ```
+
+```text title="Expected output"
+[
+  {
+    "name": "build-and-test",
+    "id": 8472651293,
+    "branch": "main"
+  },
+  {
+    "name": "security-scan",
+    "id": 8472598447,
+    "branch": "feature/auth-refactor"
+  }
+]
+2 workflow failure(s) in the last 60m on `org/infra`
+• build-and-test (main): https://github.com/org/infra/actions/runs/8472651293
+• security-scan (feature/auth-refactor): https://github.com/org/infra/actions/runs/8472598447
+{"ok":true,"channel":"C04K9QKBLP2","ts":"1699564892.001200","message":{"type":"message","user":"U05LMKQ8Z9P","text":"*2 workflow failure(s) in the last 60m on `org/infra`*\n• build-and-test (main): https://github.com/org/infra/actions/runs/8472651293\n• security-scan (feature/auth-refactor): https://github.com/org/infra/actions/runs/8472598447\n","bot_id":"B05LMKQ8Z9P"}}
+```
+
+!!! warning "Common errors"
+    **`gh: command not found`** — Install the GitHub CLI with `brew install gh` (macOS) or `apt-get install gh` (Linux), then authenticate with `gh auth login`.
+    **`"error": "invalid_auth", "ok": false`** — Verify the `SLACK_BOT_TOKEN` environment variable is set to a valid token and has `chat:write` scope in Slack workspace settings.
+    **`jq: parse error: Invalid numeric literal at line 1 column 7`** — Ensure the GitHub API response is valid JSON by checking that `gh auth status` shows you are authenticated and the repo name is correct.
 ```bash
 #!/bin/bash
 # register-runner.sh — Register a new self-hosted runner

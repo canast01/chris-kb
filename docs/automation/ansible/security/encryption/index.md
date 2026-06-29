@@ -91,6 +91,33 @@ ansible-playbook site.yml \
   --vault-id staging@~/.vault_pass_staging
 ```
 
+
+```text title="Expected output"
+Encryption successful for group_vars/prod/vault.yml
+Encryption successful for group_vars/staging/vault.yml
+
+PLAY [all] *********************************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [prod-web-01.internal]
+ok: [prod-db-01.internal]
+ok: [staging-web-01.internal]
+
+TASK [Deploy application] ******************************************************
+changed: [prod-web-01.internal]
+changed: [prod-db-01.internal]
+changed: [staging-web-01.internal]
+
+PLAY RECAP *********************************************************************
+prod-web-01.internal       : ok=2    changed=1    unreachable=0    failed=0
+prod-db-01.internal        : ok=2    changed=1    unreachable=0    failed=0
+staging-web-01.internal    : ok=2    changed=1    unreachable=0    failed=0
+```
+
+!!! warning "Common errors"
+    **`Vault password file /home/user/.vault_pass_prod is not readable`** — Ensure the vault password file exists and has read permissions (chmod 600 ~/.vault_pass_prod).
+    **`Decryption failed, no vault secrets matched`** — Verify the vault ID label matches the one used during encryption and the password file contains the correct passphrase.
+    **`ERROR! Unexpected Exception: No vault secrets found`** — Add all required --vault-id arguments for every encrypted file referenced in the playbook.
 ### CI/CD Integration
 
 | Method | How | When |

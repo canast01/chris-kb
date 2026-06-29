@@ -17,6 +17,21 @@ git tag -a v1.4.2 -m "Pre-maintenance snapshot $(date -I)"
 git push origin v1.4.2
 ```
 
+
+```text title="Expected output"
+On branch main
+Your branch is up to date with 'origin/main'.
+
+nothing to commit, working tree clean
+
+Total 0 (delta 0), reused 0 (delta 0), pack-reused 0
+To github.com:ops-team/backup-restore.git
+ * [new tag]         v1.4.2 -> v1.4.2
+```
+
+!!! warning "Common errors"
+    **`fatal: No names found, cannot describe anything.`** — Ensure you have at least one commit in the repository before creating tags.
+    **`fatal: 'origin' does not appear to be a 'git' repository`** — Verify the remote is configured with `git remote -v` and add it with `git remote add origin <url>` if missing.
 ```bash
 # Download all packages for offline use
 pip download -r requirements.txt -d /opt/pip-cache/
@@ -24,6 +39,32 @@ pip download -r requirements.txt -d /opt/pip-cache/
 # Install from offline cache
 pip install --no-index --find-links /opt/pip-cache/ -r requirements.txt
 ```
+
+```text title="Expected output"
+Collecting setuptools==65.5.0
+Collecting wheel==0.38.4
+Collecting requests==2.28.1
+Collecting paramiko==3.0.0
+Collecting pyyaml==6.0
+Collecting cryptography==38.0.4
+Successfully downloaded setuptools-65.5.0-py3-none-any.whl (1.2MB)
+Successfully downloaded wheel-0.38.4-py3-none-any.whl (35KB)
+Successfully downloaded requests-2.28.1-py3-none-any.whl (62KB)
+Successfully downloaded paramiko-3.0.0-py3-none-any.whl (310KB)
+Successfully downloaded pyyaml-6.0.tar.gz (125KB)
+Successfully downloaded cryptography-38.0.4-py3-none-any.whl (3.8MB)
+...
+Collecting cffi==1.15.1 (from cryptography)
+Successfully downloaded cffi-1.15.1-cp39-cp39-linux_x86_64.whl (420KB)
+Processing /opt/pip-cache/setuptools-65.5.0-py3-none-any.whl
+Installing collected packages: cffi, pycparser, cryptography, paramiko, requests, pyyaml, wheel, setuptools
+Successfully installed setuptools-65.5.0 wheel-0.38.4 requests-2.28.1 paramiko-3.0.0 pyyaml-6.0 cryptography-38.0.4
+```
+
+!!! warning "Common errors"
+    **`ERROR: Could not find a version that satisfies the requirement <package> (from -r requirements.txt (line X))`** — Verify the package name and version in requirements.txt match PyPI, or add `--pre` flag if pre-release versions are needed.
+    **`ERROR: Could not install packages due to missing dependencies`** — Run `pip download` with `--no-deps` flag removed to ensure all transitive dependencies are cached, or manually add missing packages to requirements.txt.
+    **`error: Microsoft Visual C++ 14.0 or greater is required`** — On Windows systems, install the Microsoft C++ Build Tools or use pre-built wheels by upgrading pip and setuptools before running the download command.
 ```bash
 # Write a secret
 vault kv put secret/automation/widget-api \
@@ -134,6 +175,56 @@ crontab deploy/crontab/automation.crontab
 python -m pytest tests/ -x -q             # Run test suite
 python -m widget_automation --check        # Application health check
 ```
+
+```text title="Expected output"
+# pyenv installation and Python setup
+pyenv 2.3.25
+Python 3.12.3
+
+# Git clone
+Cloning into '/opt/automation'...
+remote: Enumerating objects: 2847, done.
+remote: Counting objects: 100% (2847/2847), done.
+Receiving objects: 100% (2847/2847), 1.24 MiB | 8.42 MiB/s, done.
+Resolving deltas: 100% (1156/1156), done.
+
+# Virtual environment and dependencies
+Successfully installed pip-24.0
+Collecting certifi==2024.2.2
+Collecting requests==2.31.0
+...
+Successfully installed 47 packages in 3.24s
+
+# Dependency check
+(no output — command completes silently)
+
+# Secrets restoration
+✓ Retrieved 12 secrets from Vault
+✓ .env file written to /opt/automation/.env
+
+# Configuration restore
+(no output — command completes silently)
+
+# Systemd setup
+(no output — command completes silently)
+
+# Cron verification and installation
+no crontab for root
+crontab: installing new crontab
+
+# Test suite and health check
+tests/unit/test_backup.py .....
+tests/integration/test_restore.py .....
+======================== 10 passed in 2.18s ========================
+✓ Application health check passed
+✓ Database connectivity: OK
+✓ Vault access: OK
+```
+
+!!! warning "Common errors"
+    **`pip install -r requirements.txt: ERROR: Could not find a version that satisfies the requirement`** — Update requirements.txt to compatible versions or run `pip install --upgrade pip setuptools wheel` before installing.
+    **`./scripts/restore-secrets.sh: Permission denied`** — Run `chmod +x ./scripts/restore-secrets.sh` to make the script executable.
+    **`sudo systemctl enable --now widget-sync.timer: Unit widget-sync.timer not found.`** — Verify the systemd timer file exists at `deploy/systemd/widget-sync.timer` and was copied to `/etc/systemd/system/` before enabling.
 ```bash
 # 1. Identify what ran and what failed
 journalctl -u widget-sync.service --since "1 hour ago"

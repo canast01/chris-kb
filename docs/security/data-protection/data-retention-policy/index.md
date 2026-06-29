@@ -98,6 +98,15 @@ Windows Event Logs forwarded to SIEM are retained per SIEM policy (1 year online
 }
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`/etc/logrotate.d/syslog: line 2: syntax error near unexpected token '{'`** — Ensure the logrotate configuration file uses proper syntax; this error typically occurs if the file is edited with incorrect line endings or missing newlines—use `dos2unix /etc/logrotate.d/syslog` to fix.
+    **`error: stat of /var/log/syslog failed: No such file or directory`** — Create the syslog file before applying logrotate rules with `touch /var/log/syslog && chown syslog:adm /var/log/syslog && chmod 640 /var/log/syslog`.
+    **`error: error executing postrotate script for /var/log/syslog`** — Verify that `/usr/lib/rsyslog/rsyslog-rotate` exists and is executable with `ls -la /usr/lib/rsyslog/rsyslog-rotate && chmod +x /usr/lib/rsyslog/rsyslog-rotate`.
 Remote forwarding to SIEM is required; local rotation is a buffer for connectivity loss.
 
 ---
@@ -160,6 +169,25 @@ symdev -sid 001 -dev <DeviceID> set secure_erase
 symdev -sid 001 -dev <DeviceID> show | grep -i erase
 ```
 
+
+```text title="Expected output"
+# Identify volume
+DeviceID VolumeID Size(MB) Pool Emulation Status
+0A1B     prod-db-vol-03 2048000 POOL_SSD VMAX enabled
+0A1C     prod-db-vol-04 2048000 POOL_SSD VMAX enabled
+
+# Mark volume for crypto-erase (requires array admin role)
+(no output — command completes silently)
+
+# Confirm erase completion
+Secure_Erase_Status: IN_PROGRESS
+Secure_Erase_Percent_Complete: 87
+Secure_Erase_Estimated_Time_Remaining: 45 minutes
+```
+
+!!! warning "Common errors"
+    **`symdev: Error: Device 0A1B not found in array 001`** — Verify the DeviceID exists on the specified array SID using `symdev -sid 001 list`.
+    **`symdev: Error: Insufficient privileges for secure_erase operation`** — Ensure your user account has array admin role; contact your storage administrator to grant permissions.
 ---
 
 ## Retention Compliance Monitoring
@@ -184,6 +212,22 @@ find /mnt/archive/audit_logs -type f -mtime +2190 -exec ls -lh {} \; > /tmp/expi
 wc -l /tmp/expired_audit_files.txt
 ```
 
+
+```text title="Expected output"
+-rw-r--r-- 1 root root 2.3M Jan 15 2018 /mnt/archive/audit_logs/2018/01/audit_20180115.log.gz
+-rw-r--r-- 1 root root 1.8M Jan 22 2018 /mnt/archive/audit_logs/2018/01/audit_20180122.log.gz
+-rw-r--r-- 1 root root 2.1M Feb 03 2018 /mnt/archive/audit_logs/2018/02/audit_20180203.log.gz
+-rw-r--r-- 1 root root 1.9M Feb 14 2018 /mnt/archive/audit_logs/2018/02/audit_20180214.log.gz
+-rw-r--r-- 1 root root 2.4M Mar 01 2018 /mnt/archive/audit_logs/2018/03/audit_20180301.log.gz
+-rw-r--r-- 1 root root 2.0M Mar 18 2018 /mnt/archive/audit_logs/2018/03/audit_20180318.log.gz
+...
+847 /tmp/expired_audit_files.txt
+```
+
+!!! warning "Common errors"
+    **`find: '/mnt/archive/audit_logs': No such file or directory`** — Verify the NFS share is mounted with `mount | grep archive` and mount it if necessary using `mount -t nfs server:/export/audit_logs /mnt/archive/audit_logs`.
+    **`Permission denied`** — Run the command with `sudo` or ensure your user has read permissions on the archive directory with `sudo chmod g+rx /mnt/archive/audit_logs`.
+    **`find: paths must begin with "." or "/"`** — Check for typos in the path and ensure `/mnt/archive/audit_logs` is an absolute path starting with `/`.
 ---
 
 ## Exceptions and Escalation

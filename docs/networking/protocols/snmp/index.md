@@ -91,6 +91,45 @@ snmptranslate -Of 1.3.6.1.2.1.1.1.0
 snmpbulkwalk -v2c -c <community> <host> 1.3.6.1.2.1.2
 ```
 
+
+```text title="Expected output"
+SNMPv2-MIB::sysDescr.0 = STRING: Linux router.example.com 5.10.0-8-amd64 #1 SMP Debian 5.10.46-4 (2021-08-03) x86_64
+SNMPv2-MIB::sysObjectID.0 = OID: SNMPv2-SMI::enterprises.9.9.46.1
+SNMPv2-MIB::sysUpTimeInstance = Timeticks: (847293847) 98 days, 2:09:47.47
+SNMPv2-MIB::sysContact.0 = STRING: admin@example.com
+SNMPv2-MIB::sysName.0 = STRING: router.example.com
+SNMPv2-MIB::sysLocation.0 = STRING: Data Center 1, Rack 42
+SNMPv2-MIB::sysServices.0 = INTEGER: 72
+SNMPv2-MIB::sysORLastChange.0 = Timeticks: (0) 0:00:00.00
+SNMPv2-MIB::sysORIndex.1 = INTEGER: 1
+...
+
+SNMPv2-MIB::sysDescr.0 = STRING: Linux router.example.com 5.10.0-8-amd64 #1 SMP Debian 5.10.46-4 (2021-08-03) x86_64
+
+IF-MIB::ifIndex.1 = INTEGER: 1
+IF-MIB::ifDescr.1 = STRING: eth0
+IF-MIB::ifType.1 = INTEGER: ethernetCsmacd(6)
+IF-MIB::ifMtu.1 = INTEGER: 1500
+IF-MIB::ifSpeed.1 = Gauge32: 1000000000
+IF-MIB::ifPhysAddress.1 = STRING: 08:00:27:a4:2b:c1
+IF-MIB::ifAdminStatus.1 = INTEGER: up(1)
+IF-MIB::ifOperStatus.1 = INTEGER: up(1)
+...
+
+SNMPv2-MIB::sysDescr.0 = STRING: Linux router.example.com 5.10.0-8-amd64 #1 SMP Debian 5.10.46-4 (2021-08-03) x86_64
+
+SNMPv2-MIB::sysUpTimeInstance = Timeticks: (847293847) 98 days, 2:09:47.47
+
+SNMP-COMMUNITY-MIB::snmpTrapAddress.0 = IpAddress: 192.168.1.100
+SNMP-COMMUNITY-MIB::snmpTrapCommunity.0 = STRING: public
+(no output — trap sent silently)
+
+SNMPv2-MIB::sysUpTimeInstance.0 = Timeticks: (847293847) 98 days, 2:09:47.47
+
+.1.3.6.1.2.1.1.1.0
+
+IF-M
+```
 **Common OIDs:**
 
 | OID | Name | Description |

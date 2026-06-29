@@ -74,6 +74,31 @@ gh api --method PUT /repos/OWNER/REPO/branches/main/protection \
 EOF
 ```
 
+
+```text title="Expected output"
+{
+  "url": "https://api.github.com/repos/acme-corp/deploy-service/branches/main/protection",
+  "required_status_checks": {
+    "url": "https://api.github.com/repos/acme-corp/deploy-service/branches/main/protection/required_status_checks",
+    "strict": true,
+    "contexts": [
+      "build",
+      "test"
+    ]
+  },
+  "enforce_admins": true,
+  "required_pull_request_reviews": {
+    "url": "https://api.github.com/repos/acme-corp/deploy-service/branches/main/protection/required_pull_request_reviews",
+    "required_approving_review_count": 1
+  },
+  "restrictions": null
+}
+```
+
+!!! warning "Common errors"
+    **`GraphQL: Resource not accessible by integration (403)`** — Ensure the GitHub token has `admin:repo_hook` and `repo` scopes, or use a PAT with full repo permissions instead of GITHUB_TOKEN.
+    **`Not Found (404)`** — Verify the repository owner and name are correct, and that the branch `main` exists in the repository.
+    **`Required status check context "build" does not exist (422)`** — Add the status check context names to the repository first by running at least one workflow that reports those check names, or use only contexts that have already reported to the branch.
 ## Hardening Reference
 
 | Control | Recommendation |

@@ -57,6 +57,51 @@ ldapsearch -H ldaps://dc01.corp.example.com:636 -x \
            -b "DC=corp,DC=example,DC=com" "(objectClass=domain)" dn
 ```
 
+
+```text title="Expected output"
+Connection to dc01.corp.example.com 389 port [tcp/ldap] succeeded!
+Connection to dc01.corp.example.com 636 port [tcp/ldaps] succeeded!
+# extended LDIF
+#
+# LDAPv3
+# base <DC=corp,DC=example,DC=com> with scope subtree
+# filter: (objectClass=domain)
+# requesting: dn
+#
+
+# DC=corp,DC=example,DC=com
+dn: DC=corp,DC=example,DC=com
+
+# search result
+search: 2
+result: 0 Success
+
+# numResponses: 2
+# numEntries: 1
+
+# extended LDIF
+#
+# LDAPv3
+# base <DC=corp,DC=example,DC=com> with scope subtree
+# filter: (objectClass=domain)
+# requesting: dn
+#
+
+# DC=corp,DC=example,DC=com
+dn: DC=corp,DC=example,DC=com
+
+# search result
+search: 2
+result: 0 Success
+
+# numResponses: 2
+# numEntries: 1
+```
+
+!!! warning "Common errors"
+    **`nc: getaddrinfo failed for dc01.corp.example.com: Name or service not known`** — Verify the hostname is correct and resolvable by running `nslookup dc01.corp.example.com` or update your DNS/hosts file.
+    **`ldap_bind: Invalid credentials (49)`** — Confirm the service account password is correct and the account is not locked; test with `ldapwhoami -H ldap://dc01.corp.example.com:389 -D "svc-ldap@corp.example.com" -w "password"`.
+    **`TLS: peer certificate cannot be authenticated with known CA certificates`** — Add the LDAPS server certificate to your system CA store or disable certificate verification by adding `-o LDAPTLS_REQCERT=never` to the ldapsearch command.
 ## Global Catalog Ports (3268 and 3269)
 
 The Global Catalog contains a partial replica of all objects across all domains in the AD forest. Use these ports when queries must span multiple domains.
@@ -78,6 +123,51 @@ ldapsearch -H ldaps://dc01.corp.example.com:3269 -x \
            "(sAMAccountName=jsmith)" memberOf
 ```
 
+
+```text title="Expected output"
+Connection to dc01.corp.example.com 3268 port [tcp/*] succeeded!
+# extended LDIF
+#
+# LDAPv3
+# base <DC=corp,DC=example,DC=com> with scope subtree
+# filter: (mail=jsmith@corp.example.com)
+# requesting: cn sAMAccountName
+#
+
+dn: CN=John Smith,OU=Users,OU=Corp,DC=corp,DC=example,DC=com
+cn: John Smith
+sAMAccountName: jsmith
+
+# search result
+search: 2
+result: 0 Success
+
+# numResponses: 2
+# numEntries: 1
+
+# extended LDIF
+#
+# LDAPv3
+# base <DC=corp,DC=example,DC=com> with scope subtree
+# filter: (sAMAccountName=jsmith)
+# requesting: memberOf
+#
+
+dn: CN=John Smith,OU=Users,OU=Corp,DC=corp,DC=example,DC=com
+memberOf: CN=Engineering,OU=Groups,DC=corp,DC=example,DC=com
+memberOf: CN=VPN-Users,OU=Groups,DC=corp,DC=example,DC=com
+
+# search result
+search: 2
+result: 0 Success
+
+# numResponses: 2
+# numEntries: 1
+```
+
+!!! warning "Common errors"
+    **`ldap_bind: Invalid credentials (49)`** — Verify the service account password is correct and the account is not locked; check DC event logs for failed bind attempts.
+    **`Can't contact LDAP server`** — Confirm port 3268/3269 is open in firewall rules between the client and domain controller, and that the DC hostname resolves correctly.
 ## Firewall Rules
 
 ```bash
@@ -94,6 +184,19 @@ netsh advfirewall firewall add rule name="LDAP-GC" protocol=TCP dir=in localport
 netsh advfirewall firewall add rule name="LDAPS-GC" protocol=TCP dir=in localport=3269 action=allow
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+Ok.
+Ok.
+Ok.
+Ok.
+```
+
+!!! warning "Common errors"
+    **`iptables: No chain/target/match by that name`** — Ensure iptables is installed and the kernel module is loaded with `modprobe iptable_filter`.
+    **`netsh: The filename, directory name, or volume name syntax is not correct`** — Run the netsh command from an elevated (Administrator) PowerShell or Command Prompt window.
+    **`iptables: Bad rule (does a matching rule exist?)`** — Verify the OUTPUT chain exists and no conflicting DROP rules precede these ACCEPT rules with `iptables -L OUTPUT -n`.
 ## StartTLS vs LDAPS
 
 ```bash
@@ -112,6 +215,28 @@ openssl s_client -connect dc01.corp.example.com:636 -showcerts </dev/null 2>/dev
     openssl x509 -noout -text | grep -E "Subject:|Issuer:|Not After"
 ```
 
+
+```text title="Expected output"
+# LDAP StartTLS Search
+dn: DC=corp,DC=example,DC=com
+
+# StartTLS Support Check
+dn: 
+supportedExtension: 1.3.6.1.4.1.1466.20037
+supportedExtension: 1.3.6.1.5.1.4.1.1466.20037
+supportedExtension: 1.3.6.1.4.1.1466.20037.8
+supportedExtension: 1.3.6.1.4.1.1466.20037.12
+
+# LDAPS Certificate Details
+        Subject: CN=dc01.corp.example.com, OU=Domain Controllers, O=Corp, C=US
+        Issuer: CN=Corp-CA, OU=Certification Authority, O=Corp, C=US
+            Not After : Dec 15 23:59:59 2025 GMT
+```
+
+!!! warning "Common errors"
+    **`ldap_start_tls: Connect error (-1)`** — Verify the LDAP server is listening on port 389 and StartTLS is enabled in the LDAP service configuration.
+    **`ldapsearch: Invalid credentials (49)`** — Confirm the service account password is correct and the account is not locked or expired in Active Directory.
+    **`error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed`** — Add the CA certificate to your system's trusted store or use `openssl s_client -connect dc01.corp.example.com:636 -CAfile /path/to/ca.crt` to verify with a specific CA bundle.
 ## Port Troubleshooting
 
 ```powershell

@@ -11,6 +11,14 @@ export USER="api_user"
 export PASS="your-password"
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`bash: export: `your-password': not a valid identifier`** — Wrap the password in quotes if it contains special characters: `export PASS="your-password"` or use single quotes for literal strings.
+    **`bash: mycompany.service-now.com: command not found`** — Remove the protocol from the INSTANCE variable or wrap the full URL in quotes: `export INSTANCE="https://mycompany.service-now.com"`.
 ```bash
 # Create an incident
 curl -s -u "$USER:$PASS" \
@@ -27,6 +35,18 @@ curl -s -u "$USER:$PASS" \
     "caller_id": "john.doe@example.com"
   }' | jq '.result | {sys_id, number}'
 ```
+
+```text title="Expected output"
+{
+  "sys_id": "d4c1a2f3b5e8c9d2a1f4e7b3c6d9a2f5",
+  "number": "INC0010847"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to servicenow-instance.service-now.com port 443: Connection refused`** — Verify the `$INSTANCE` variable is set correctly and the ServiceNow instance is accessible (e.g., `echo $INSTANCE`).
+    **`{"error":{"message":"Invalid field value","detail":"Invalid value for field 'impact': must be between 1 and 5"},"status":"failure"}`** — Ensure all field values conform to ServiceNow's constraints; check the incident table schema for valid impact/urgency ranges.
+    **`jq: parse error: Cannot index number with string "sys_id"`** — Verify the API response contains a `result` object by testing without the jq filter first (`curl ... | jq '.'`) to inspect the full response structure.
 ```bash
 # Assign an incident to a user and update state to In Progress
 curl -s -u "$USER:$PASS" \
@@ -40,6 +60,15 @@ curl -s -u "$USER:$PASS" \
     "work_notes": "Investigating database logs"
   }' | jq '.result.number'
 ```
+
+```text title="Expected output"
+INC0012847
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to instance.service-now.com port 443: Connection timed out`** — Verify the $INSTANCE variable is set correctly and the ServiceNow instance is accessible from your network.
+    **`{"error":{"message":"Invalid table API id","status":"failure"}}`** — Confirm the incident sys_id (abc123def456abc123def456abc12345) exists and is valid by querying the incident table first.
+    **`jq: parse error: Cannot index string with string "result"`** — Remove the `| jq '.result.number'` pipe if the API response is not JSON-formatted, or check that the PATCH request succeeded with a 200 status code.
 ```bash
 # Delete a record (use with caution; prefer closing/cancelling)
 curl -s -u "$USER:$PASS" \
@@ -48,18 +77,81 @@ curl -s -u "$USER:$PASS" \
   -o /dev/null -w "%{http_code}"
 # Expected: 204
 ```
+
+```text title="Expected output"
+204
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to instance.service-now.com port 443: Connection timed out`** — Verify the `$INSTANCE` variable is set correctly and the ServiceNow instance is accessible from your network.
+    **`{"error":{"message":"Invalid table API DELETE not allowed","status":"failure"}}`** — Check that the table allows DELETE operations in its ACL configuration; some tables restrict deletion for compliance reasons.
+    **`401 Unauthorized`** — Ensure `$USER` and `$PASS` credentials are valid and the user has the `rest_api_explorer` or appropriate delete role assigned in ServiceNow.
 ```bash
 # Count open incidents by priority
 curl -s -u "$USER:$PASS" \
   "$INSTANCE/api/now/stats/incident?sysparm_query=active=true&sysparm_count=true&sysparm_group_by=priority" \
   -H "Accept: application/json" | jq '.result.stats'
 ```
+
+```text title="Expected output"
+[
+  {
+    "priority": "1",
+    "count": "23"
+  },
+  {
+    "priority": "2",
+    "count": "87"
+  },
+  {
+    "priority": "3",
+    "count": "156"
+  },
+  {
+    "priority": "4",
+    "count": "312"
+  },
+  {
+    "priority": "5",
+    "count": "428"
+  }
+]
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to instance.service-now.com port 443: Connection timed out`** — Verify the `$INSTANCE` variable is set correctly and the ServiceNow instance is accessible from your network.
+    **`jq: parse error: Invalid JSON text at line 1`** — Remove the `-H "Accept: application/json"` header or ensure the API endpoint returns valid JSON; some ServiceNow versions require `Content-Type` instead.
+    **`401 Unauthorized`** — Verify that `$USER` and `$PASS` credentials are correct and the user account has API access permissions in ServiceNow.
 ```bash
 # Average resolution time for P1 incidents closed this month
 curl -s -u "$USER:$PASS" \
   "$INSTANCE/api/now/stats/incident?sysparm_query=priority=1^resolved_atONThis month@javascript:gs.beginningOfThisMonth()@javascript:gs.endOfThisMonth()&sysparm_avg_fields=resolve_time" \
   -H "Accept: application/json" | jq .
 ```
+
+```text title="Expected output"
+{
+  "result": {
+    "stats": [
+      {
+        "count": "12",
+        "sum": "432000",
+        "average": "36000",
+        "minimum": "1800",
+        "maximum": "86400",
+        "table": "incident"
+      }
+    ],
+    "query": "priority=1^resolved_atONThis month@javascript:gs.beginningOfThisMonth()@javascript:gs.endOfThisMonth()",
+    "offset": "0"
+  }
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to instance.service-now.com port 443: Connection refused`** — Verify the `$INSTANCE` variable is set correctly (e.g., `export INSTANCE="https://dev12345.service-now.com"`) and the instance is accessible.
+    **`{"error":{"message":"Invalid table API. (Hint: allowed tables are ...)","status":"failure"}}`** — Confirm the `/api/now/stats/` endpoint is available in your ServiceNow version; use `/api/now/table/incident` with aggregation parameters as an alternative.
+    **`jq: parse error: Invalid numeric literal at line 1 column 10`** — Remove the `-s` flag or check that the API response is valid JSON; add `-v` to curl to debug the raw response.
 ```bash
 # Push a CI record to the import set staging table
 curl -s -u "$USER:$PASS" \
@@ -175,12 +267,69 @@ curl -s -u "$USER:$PASS" \
   "$INSTANCE/api/mycompany/operations/mid_health" \
   -H "Accept: application/json" | jq .
 ```
+
+```text title="Expected output"
+{
+  "mid_servers": [
+    {
+      "name": "mid-prod-01",
+      "status": "operational",
+      "cpu_usage": 42.3,
+      "memory_usage": 68.5,
+      "last_heartbeat": "2024-01-15T14:32:18Z",
+      "version": "v2.1.4"
+    },
+    {
+      "name": "mid-prod-02",
+      "status": "operational",
+      "cpu_usage": 38.1,
+      "memory_usage": 71.2,
+      "last_heartbeat": "2024-01-15T14:32:22Z",
+      "version": "v2.1.4"
+    },
+    {
+      "name": "mid-dr-01",
+      "status": "degraded",
+      "cpu_usage": 89.7,
+      "memory_usage": 92.1,
+      "last_heartbeat": "2024-01-15T14:28:45Z",
+      "version": "v2.1.3"
+    }
+  ],
+  "summary": {
+    "total_servers": 3,
+    "operational": 2,
+    "degraded": 1,
+    "offline": 0
+  }
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to instance.service-now.com port 443: Connection refused`** — Verify the $INSTANCE variable is set correctly and the ServiceNow instance is accessible from your network.
+    **`jq: parse error: Invalid JSON text at line 1`** — Remove the `-s` flag temporarily to see the actual response; the API may be returning an error page or HTML instead of JSON.
+    **`curl: (401) Unauthorized`** — Ensure $USER and $PASS credentials are correct and the API user has the `mycompany_operations_read` role in ServiceNow.
 ```bash
 # macOS via Homebrew
 brew install servicenow-cli
 
 # Or download from developer.servicenow.com/dev.do#!/downloads
 ```
+
+```text title="Expected output"
+==> Downloading https://github.com/ServiceNow/servicenow-cli/releases/download/v2.4.1/servicenow-cli-2.4.1.tar.gz
+==> Downloading from https://ghcr.io/v2/servicenow/servicenow-cli
+######################################################################## 100.0%
+==> Installing servicenow-cli
+==> Pouring servicenow-cli--2.4.1.arm64_monterey.bottle.tar.gz
+🍺  /usr/local/Cellar/servicenow-cli/2.4.1 is now installed
+servicenow-cli 2.4.1 installed successfully
+Run 'snow --version' to verify installation
+```
+
+!!! warning "Common errors"
+    **`Error: servicenow-cli: no bottle available for this macOS version`** — Update Homebrew with `brew update` and try again, or install from developer.servicenow.com directly.
+    **`Error: Permission denied @ rb_sysopen - /usr/local/Cellar/servicenow-cli`** — Run the command with `sudo brew install servicenow-cli` or fix Homebrew permissions with `sudo chown -R $(whoami) /usr/local/Cellar`.
 ```bash
 snc configure profile set \
   --profile production \
@@ -190,6 +339,21 @@ snc configure profile set \
 
 snc configure profile activate --profile production
 ```
+
+```text title="Expected output"
+Profile 'production' configured successfully
+  URL: https://mycompany.service-now.com
+  Username: api_user
+  Instance: mycompany
+
+Profile 'production' activated
+Active profile: production
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid URL format. Expected https://[instance].service-now.com`** — Verify the URL matches the correct ServiceNow instance domain format without trailing slashes.
+    **`Error: Authentication failed - Invalid credentials`** — Confirm the API user account exists, is active, and the password stored in $SN_PASS is correct and not expired.
+    **`Error: Profile 'production' not found`** — Ensure the profile was successfully created in the first command before attempting to activate it; check with `snc configure profile list`.
 ```bash
 # Verify connectivity
 snc instance info

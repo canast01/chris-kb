@@ -88,6 +88,28 @@ lastlog | grep -v "Never logged in" | sort -k4 -r
 grep -E "^\w+.*ALL.*ALL" /etc/sudoers /etc/sudoers.d/* 2>/dev/null
 ```
 
+
+```text title="Expected output"
+alice 1000 /home/alice /bin/bash
+bob 1001 /home/bob /bin/bash
+charlie 1002 /home/charlie /bin/nologin
+diana 1003 /home/diana /bin/bash
+eve 1004 /home/eve /bin/bash
+
+alice                                    pts/0                192.168.1.45     Wed Dec 20 14:32:10 +0000 2024
+bob                                      pts/2                10.0.2.15        Tue Dec 19 09:18:22 +0000 2024
+charlie                                  pts/1                192.168.1.88     Mon Dec 18 16:45:01 +0000 2024
+diana                                    tty1                 -                 Sun Dec 17 11:22:33 +0000 2024
+
+/etc/sudoers:root	ALL=(ALL) ALL
+/etc/sudoers:alice	ALL=(ALL) NOPASSWD: ALL
+/etc/sudoers.d/admin-group:%admin	ALL=(ALL) ALL
+```
+
+!!! warning "Common errors"
+    **`grep: /etc/sudoers.d/*: No such file or directory`** — Create the `/etc/sudoers.d/` directory with `mkdir -p /etc/sudoers.d/` or remove the glob pattern if the directory doesn't exist.
+    **`awk: command not found`** — Install `gawk` or `mawk` package, or use `cut -d: -f1,3,6,7 /etc/passwd` as an alternative.
+    **`lastlog: command not found`** — Install the `util-linux` package which provides the `lastlog` utility.
 ## Review Workflow
 
 1. **Export** — generate user/access report from AD and relevant systems

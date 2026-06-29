@@ -132,6 +132,39 @@ psql -c "SHOW max_connections;"
 mysql -e "SHOW STATUS LIKE 'Threads_connected';"
 mysql -e "SHOW VARIABLES LIKE 'max_connections';"
 ```
+
+```text title="Expected output"
+count | state
+-------+--------
+     8 | active
+    12 | idle
+     3 | idle in transaction
+     2 | fastestartup
+(4 rows)
+
+ max_connections
+-----------------
+ 100
+(1 row)
+
++------------------+-------+
+| Variable_name    | Value |
++------------------+-------+
+| Threads_connected| 87    |
++------------------+-------+
+1 row in set (0.00 sec)
+
++------------------+-------+
+| Variable_name    | Value |
++------------------+-------+
+| max_connections  | 100   |
++------------------+-------+
+1 row in set (0.00 sec)
+```
+
+!!! warning "Common errors"
+    **`psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL: too many connections`** — Increase `max_connections` in postgresql.conf and restart PostgreSQL, or terminate idle connections with `SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE state = 'idle' AND query_start < now() - interval '10 minutes';`
+    **`ERROR 1040 (HY000): Too many connections`** — Increase `max_connections` in my.cnf under `[mysqld]` section and restart MySQL, or kill idle connections with `KILL CONNECTION_ID;`
 ![PostgreSQL — Common Issues — Diagram](../../../../assets/compute-linux-postgresql-troubleshooting-common-issues-diagram.svg)
 
 ---

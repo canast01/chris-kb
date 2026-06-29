@@ -35,6 +35,41 @@ EOF
 systemctl reload sshd
 ```
 
+
+```text title="Expected output"
+PLAY [localhost] ***************************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [localhost]
+
+TASK [Apply CIS baseline controls] *********************************************
+changed: [localhost] => (item=kernel_hardening)
+changed: [localhost] => (localhost) => (item=file_permissions)
+changed: [localhost] => (localhost) => (item=selinux_config)
+changed: [localhost] => (localhost) => (item=audit_daemon)
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=4 changed=4 unreachable=0 failed=0
+
+Removed /etc/systemd/system/multi-user.target.wants/bluetooth.service.
+Removed /etc/systemd/system/multi-user.target.wants/avahi-daemon.service.
+Removed /etc/systemd/system/multi-user.target.wants/cups.service.
+Removed /etc/systemd/system/multi-user.target.wants/rpcbind.service.
+
+success
+success
+success
+
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`ERROR! the playbook: cis-rhel9.yml could not be found`** — Verify the playbook path is correct and exists in the current working directory or use an absolute path.
+    **`Job for sshd.service failed because the control process exited with error code.`** — Check `/var/log/secure` for SSH config syntax errors and validate with `sshd -t` before reloading.
+    **`FirewallD is not running.`** — Start the firewall service with `systemctl start firewalld` before applying permanent rules.
 ```bash
 # Restrict AWX ingress — only allow from known CIDRs
 # Kubernetes NetworkPolicy example
@@ -59,6 +94,14 @@ spec:
           port: 8052
 EOF
 ```
+
+```text title="Expected output"
+networkpolicy.networking.k8s.io/awx-ingress-restrict created
+```
+
+!!! warning "Common errors"
+    **`error: unable to recognize "STDIN": no matches for kind "NetworkPolicy" in version "networking.k8s.io/v1"`** — Verify the Kubernetes cluster version supports networking.k8s.io/v1 (1.16+); use `kubectl api-resources | grep networkpolicies` to confirm availability.
+    **`Error from server (Forbidden): networkpolicies.networking.k8s.io is forbidden: User "system:serviceaccount:default:deployer" cannot create resource "networkpolicies"`** — Grant the service account cluster-admin or network-admin RBAC role with `kubectl create clusterrolebinding awx-netpol-admin --clusterrole=admin --serviceaccount=awx:default`.
 ```bash
 # Force TLS 1.2+ on AWX web service
 # /etc/tower/conf.d/tls.py
@@ -117,6 +160,15 @@ ansible ALL=(root) NOPASSWD: \
 # Disable requiretty for ansible (needed for pipelining)
 Defaults:ansible !requiretty
 ```
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`sudoers:1: syntax error near line 1`** — Remove the comment line; sudoers files cannot contain comments before the first rule, place comments after the first valid entry or use a separate documentation file.
+    **`sudo: parse error in /etc/sudoers.d/ansible near line 3`** — Use `visudo -f /etc/sudoers.d/ansible` to validate syntax; the wildcard `*` in dnf install requires quoting as `/usr/bin/dnf install -y \*` or replace with specific package names.
+    **`ansible: sorry, you must have a tty to run sudo`** — Ensure the `Defaults:ansible !requiretty` line is present and the file is validated with `visudo -f /etc/sudoers.d/ansible` before deployment.
 ```bash
 # Restrict by source IP using authorized_keys options
 # /home/ansible/.ssh/authorized_keys

@@ -45,6 +45,53 @@ df -h /var/lib/postgresql
 psql -U postgres -c "SELECT slot_name, active, pg_wal_lsn_diff(pg_current_wal_lsn(), restart_lsn) AS lag_bytes FROM pg_replication_slots;" 2>/dev/null
 ```
 
+
+```text title="Expected output"
+● postgresql.service - PostgreSQL Database Server
+     Loaded: loaded (/lib/systemd/system/postgresql.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2024-01-15 14:32:18 UTC; 2 days ago
+       Docs: https://www.postgresql.org/docs/
+    Process: 2847 ExecStart=/usr/lib/postgresql/15/bin/pg_ctl -D /var/lib/postgresql/15/main -l /var/log/postgresql/postgresql-15-main.log start (code=exited, status=0/SUCCESS)
+   Main PID: 2851 (postgres)
+      Tasks: 28 (limit: 4915)
+     Memory: 487.3M
+        CPU: 18m 42s
+     CGroup: /system.slice/postgresql.service
+             ├─2851 /usr/lib/postgresql/15/bin/postgres -D /var/lib/postgresql/15/main -c config_file=/etc/postgresql/15/main/postgresql.conf
+             └─2863 postgres: checkpointer
+
+ alive
+-------
+     1
+(1 row)
+
+ active | max
+--------+-----
+      8 | 100
+(1 row)
+
+ pid | usename | state  | wait_event_type | wait_event | duration | query
+-----+---------+--------+-----------------+------------+----------+-------
+(0 rows)
+
+ replay_lag
+------------
+ 00:00:00.234
+(1 row)
+
+Filesystem     Size  Used Avail Use% Mounted on
+/dev/sda2       50G   12G   35G  26% /var/lib/postgresql
+
+ slot_name | active | lag_bytes
+-----------+--------+-----------
+ replica_1 | t      |    245760
+(1 row)
+```
+
+!!! warning "Common errors"
+    **`psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed: FATAL: role "postgres" does not exist`** — Create the postgres role with `sudo -u postgres createuser postgres` or verify the role exists with `psql -U postgres -l`.
+    **`psql: error: FATAL: Ident authentication failed for user "postgres"`** — Update `/etc/postgresql/15/main/pg_hba.conf` to allow local connections (change `ident` to `trust` or `md5` for the local line) and reload with `systemctl reload postgresql`.
+    **`could not translate host name "localhost" to address: Name or service not known`** — Ensure PostgreSQL is listening on localhost by checking `listen_addresses = 'localhost'` in `postgresql.conf` and restart with `systemctl restart postgresql`.
 **Pass criteria:** service active, connectivity returns `1`, no sessions blocked >5 min, replication lag <30s, disk <80%, no inactive replication slots with large lag.
 
 ---
@@ -109,6 +156,30 @@ nc -zv <db-host> 3306    # MySQL
 nc -zv <db-host> 1433    # SQL Server
 ```
 
+
+```text title="Expected output"
+alive
+-------
+      1
+(1 row)
+
++-------+
+| alive |
++-------+
+|     1 |
++-------+
+
+(1 rows affected)
+
+Connection to db-prod-01.internal 5432 port [tcp/postgresql] succeeded!
+Connection to db-prod-02.internal 3306 port [tcp/mysql] succeeded!
+Connection to db-prod-03.internal 1433 port [tcp/mssql] succeeded!
+```
+
+!!! warning "Common errors"
+    **`psql: error: could not translate host name "<host>" to address: Name or service not known`** — Replace `<host>` with the actual database hostname or IP address.
+    **`Access denied for user '<user>'@'<host>' (using password: YES)`** — Verify the username and password are correct, or check that the user has connection privileges from that host.
+    **`nc: connect to <db-host> port 1433 (tcp) failed: Connection refused`** — Confirm the database service is running and listening on that port, or check firewall rules blocking the connection.
 ## Database — Capacity Monitoring
 
 ![Database — Capacity Monitoring](../../../../assets/compute-linux-postgresql-hc-database-capacity-monitoring.svg)
@@ -151,6 +222,41 @@ du -sh /var/lib/postgresql/data/pg_wal/
 du -sh /var/lib/mysql/mysql-bin.*
 mysql -u root -e "SHOW BINARY LOGS;"
 ```
+
+```text title="Expected output"
+Filesystem     Size  Used Avail Use% Mounted on
+/dev/sda1       500G  387G  113G  78% /var/lib/postgresql
+/dev/sdb1       250G  198G   52G  79% /var/lib/mysql
+/dev/sdc1       100G   45G   55G  45% /var/opt/mssql
+
+Filesystem     Inodes IUsed IFree IUse% Mounted on
+/dev/sda1     32768000 2847291 29920709    9%
+
+4.2G	/var/lib/postgresql/data/base
+2.8G	/var/lib/postgresql/data/global
+1.1G	/var/lib/postgresql/data/pg_wal
+892M	/var/lib/postgresql/data/pg_xact
+
+18G	/var/lib/mysql/ibdata1
+7.3G	/var/lib/mysql/mysql
+2.1G	/var/lib/mysql/performance_schema
+
+1.1G	/var/lib/postgresql/data/pg_wal/
+
+du: cannot access '/var/lib/mysql/mysql-bin.*': No such file or directory
+
++------------------+----------+
+| Log_name         | File_size|
++------------------+----------+
+| mysql-bin.000087 | 536870912|
+| mysql-bin.000088 | 536870912|
+| mysql-bin.000089 | 268435456|
++------------------+----------+
+```
+
+!!! warning "Common errors"
+    **`du: cannot access '/var/lib/mysql/mysql-bin.*': No such file or directory`** — Verify MySQL binary logging is enabled with `SHOW VARIABLES LIKE 'log_bin';` and confirm the log_bin_basename path.
+    **`ERROR 1045 (28000): Access denied for user 'root'@'localhost'`** — Add `-p` flag to prompt for password or use a user with SUPER privilege: `mysql -u root -p -e "SHOW BINARY LOGS;"`.
 ```bash
 # Weekly snapshots — capture to track growth
 psql -U postgres -Atc "SELECT pg_database_size('mydb');" >> /var/log/db-size-mydb.log
@@ -256,6 +362,18 @@ pg_basebackup -h <primary-host> -U replication -D /var/lib/postgresql/data-new -
 # -R writes recovery.conf / standby.signal automatically
 ```
 
+
+```text title="Expected output"
+pg_basebackup: initiating base backup, waiting for checkpoint to complete
+pg_basebackup: checkpoint completed
+24601/24601 kB (100%), 1/1 tablespace
+NOTICE:  pg_basebackup: base backup completed
+```
+
+!!! warning "Common errors"
+    **`pg_basebackup: could not connect to server: FATAL:  no pg_hba.conf entry for replication connection from "10.45.12.8" user "replication"`** — Add a replication entry to pg_hba.conf on the primary (e.g., `host replication replication 10.45.12.0/24 md5`) and reload PostgreSQL.
+    **`pg_basebackup: error: directory "/var/lib/postgresql/data-new" exists but is not empty`** — Remove or rename the target directory before running pg_basebackup, or use a different path.
+    **`pg_basebackup: error: could not get exclusive lock on file "/var/lib/postgresql/data-new/backup_label"`** — Ensure the target directory is owned by the postgres user with correct permissions (755) and no other PostgreSQL process is accessing it.
 ---
 
 ## Verify

@@ -99,6 +99,18 @@ faillock --user <username>
 faillock --user <username> --reset
 ```
 
+
+```text title="Expected output"
+Login Failures before reset:
+<username>              : 5
+
+Login Failures after reset:
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`pam_tally2: User not known`** — Verify the username exists with `id <username>` before running the command.
+    **`faillock: user '<username>' does not exist in /var/log/faillog`** — The user has no failed login attempts recorded; check spelling or confirm the user has attempted login.
 ## Checklist
 
 - [ ] Requester identity confirmed

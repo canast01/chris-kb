@@ -99,6 +99,28 @@ journalctl -u restic-backup.service --since "yesterday" | tail -20
 echo | openssl s_client -connect hostname:443 2>/dev/null | openssl x509 -noout -enddate
 ```
 
+
+```text title="Expected output"
+Filesystem     Size  Used Avail Use% Mounted on
+/dev/sda1      100G   82G   18G  82% /
+/dev/sdb1      500G  420G   80G  84% /var/backups
+
+● restic-backup.service loaded failed failed Backup service
+● postgresql.service   loaded failed failed PostgreSQL Database Server
+
+Dec 19 14:32:15 backup-srv restic-backup[2847]: backup completed successfully
+Dec 19 14:32:18 backup-srv restic-backup[2847]: 1250 files, 45.2 GB processed
+Dec 19 14:32:45 backup-srv restic-backup[2847]: snapshot 8f3a2c1d saved
+Dec 19 14:33:02 backup-srv systemd[1]: restic-backup.service: Main process exited, code=exited, status=0/SUCCESS
+
+notBefore=Dec 19 12:00:00 2024 GMT
+notAfter=Mar 18 12:00:00 2025 GMT
+```
+
+!!! warning "Common errors"
+    **`command not found: openssl`** — Install openssl with `apt install openssl` (Debian/Ubuntu) or `yum install openssl` (RHEL/CentOS).
+    **`Connection refused`** — Verify the hostname and port are correct, and the service is listening on that port with `netstat -tlnp | grep :443`.
+    **`journalctl: No entries found`** — Check that the service name matches exactly with `systemctl list-units --all | grep backup` and adjust the `--since` parameter if needed.
 Add environment-specific commands as you test and verify them.
 
 ## See also

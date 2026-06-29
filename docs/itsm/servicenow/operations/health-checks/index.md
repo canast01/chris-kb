@@ -116,6 +116,32 @@ sudo systemctl restart mid-server
 tail -f /opt/servicenow/mid/agent/logs/agent0.log.0
 ```
 
+
+```text title="Expected output"
+● mid-server.service - ServiceNow MID Server
+     Loaded: loaded (/etc/systemd/system/mid-server.service; enabled; vendor preset: enabled)
+     Active: active (running) since Wed 2024-01-17 14:32:18 UTC; 2 days ago
+       Docs: https://docs.servicenow.com/mid-server
+    Process: 4521 ExecStart=/opt/servicenow/mid/agent/bin/mid.sh start (code=exited, status=0/SUCCESS)
+   Main PID: 4589 (java)
+      Tasks: 47 (limit: 4915)
+     Memory: 1.2G
+     CGroup: /system.slice/mid-server.service
+             └─4589 /usr/bin/java -Xmx2048m -Xms512m -Dcom.sun.jndi.ldap.connect.pool=false...
+
+(no output — command completes silently)
+
+2024-01-17 14:35:42,891 INFO [MID.agent] - Agent started successfully
+2024-01-17 14:35:43,102 INFO [MID.agent] - Connecting to instance: prod-instance.service-now.com
+2024-01-17 14:35:44,567 INFO [MID.agent] - WebSocket connection established (UUID: a7f2c9e1-4b3d-11ee-be56-0242ac120002)
+2024-01-17 14:35:45,234 INFO [MID.agent] - Probe execution queue initialized with 12 pending probes
+2024-01-17 14:35:46,891 INFO [MID.agent] - Certificate validation: PASSED
+```
+
+!!! warning "Common errors"
+    **`Unit mid-server.service could not be found.`** — Verify the MID Server service file exists at `/etc/systemd/system/mid-server.service` and run `sudo systemctl daemon-reload`.
+    **`sudo: systemctl: command not found`** — Ensure you are running the command on the MID Server host (not a container without systemd) or use the appropriate service manager for your environment.
+    **`tail: cannot open '/opt/servicenow/mid/agent/logs/agent0.log.0' for reading: No such file or directory`** — Check that the MID Server installation path is correct and the agent has started; verify with `ls -la /opt/servicenow/mid/agent/logs/`.
 ### MID Server Service Check (Windows)
 
 ```powershell
@@ -146,6 +172,15 @@ curl -s -u "$SN_USER:$SN_PASS" \
   -H "Accept: application/json" | jq '.result.stats.count'
 ```
 
+
+```text title="Expected output"
+42
+```
+
+!!! warning "Common errors"
+    **`curl: (6) Could not resolve host: <instance_url>`** — Verify the `$INSTANCE` variable is set correctly and the ServiceNow instance hostname is reachable from your network.
+    **`jq: parse error: Invalid JSON text at line 1`** — Confirm your ServiceNow credentials are correct; an authentication failure returns HTML instead of JSON.
+    **`curl: (7) Failed to connect to port 443: Connection refused`** — Check that your ServiceNow instance is running and accessible; if behind a proxy, add proxy settings to the curl command.
 **Resolution steps:**
 
 1. Identify the MID Server referenced in the error record

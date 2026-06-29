@@ -141,6 +141,41 @@ ansible-playbook site.yml --list-tags
 ansible-playbook site.yml --check --diff
 ```
 
+
+```text title="Expected output"
+PLAY [all] *********************************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [web01.prod.local]
+ok: [web02.prod.local]
+ok: [db01.prod.local]
+
+TASK [Apply configuration] *****************************************************
+changed: [web01.prod.local]
+changed: [web02.prod.local]
+ok: [db01.prod.local]
+
+PLAY RECAP *********************************************************************
+web01.prod.local           : ok=8    changed=2    unreachable=0    failed=0
+web02.prod.local           : ok=8    changed=2    unreachable=0    failed=0
+db01.prod.local            : ok=7    changed=0    unreachable=0    failed=0
+
+playbook: site.yml
+  play #1 (all): all	TAGS: []
+    tasks:
+      config	TAGS: [config]
+      deploy	TAGS: [deploy]
+      packages	TAGS: [packages]
+      security	TAGS: [config,security]
+
+[CHECK] [DRY RUN] will change: [web01.prod.local]
+changed: [web01.prod.local] (dry run)
+```
+
+!!! warning "Common errors"
+    **`ERROR! Unable to parse site.yml as an Ansible YAML file.`** — Validate YAML syntax with `ansible-playbook site.yml --syntax-check` and fix indentation or quote issues.
+    **`fatal: [web01.prod.local]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}`** — Verify SSH key permissions are 600, the correct key is in `~/.ssh/`, and the remote user matches the inventory definition.
+    **`ERROR! the playbook: site.yml could not be found`** — Ensure `site.yml` exists in the current working directory or provide the full path with `ansible-playbook /path/to/site.yml`.
 ### Running Playbooks
 
 | Flag | Purpose |
@@ -165,6 +200,35 @@ ansible-playbook -i inventory/ site.yml --limit web01 -vv
 ansible-playbook -i inventory/ site.yml --tags deploy --limit production
 ```
 
+
+```text title="Expected output"
+PLAY [all] *********************************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [web01]
+ok: [web02]
+ok: [db01]
+
+TASK [Install packages] ********************************************************
+changed: [web01]
+changed: [web02]
+ok: [db01]
+
+TASK [Configure services] ******************************************************
+ok: [web01]
+ok: [web02]
+ok: [db01]
+
+PLAY RECAP *********************************************************************
+web01                      : ok=12   changed=3    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0
+web02                      : ok=12   changed=3    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0
+db01                       : ok=11   changed=0    unreachable=0    failed=0    skipped=3    rescued=0    ignored=0
+```
+
+!!! warning "Common errors"
+    **`[WARNING]: Unable to parse /etc/ansible/inventory/ as an inventory source`** — Verify the inventory directory path exists and contains valid inventory files (hosts, hosts.yml, or hosts.ini).
+    **`fatal: [web01]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}`** — Ensure SSH keys are properly configured and the ansible_user has passwordless SSH access to all target hosts.
+    **`ERROR! tag(s) not found in /path/to/site.yml: ['deploy']`** — Verify the tag name matches exactly (case-sensitive) and exists in at least one task within the playbook.
 ## Roles
 
 Roles provide a standardised way to organise tasks, variables, files, and templates.
@@ -189,12 +253,45 @@ roles/
     README.md
 ```
 
+
+```text title="Expected output"
+roles/
+├── nginx/
+│   ├── tasks/
+│   │   └── main.yml
+│   ├── handlers/
+│   │   └── main.yml
+│   ├── templates/
+│   │   └── nginx.conf.j2
+│   ├── files/
+│   │   └── index.html
+│   ├── vars/
+│   │   └── main.yml
+│   ├── defaults/
+│   │   └── main.yml
+│   ├── meta/
+│   │   └── main.yml
+│   └── README.md
+```
+
+!!! warning "Common errors"
+    **`fatal: [localhost]: FAILED! => {"msg": "Unable to retrieve file contents"}`** — Verify the template or file path exists in the correct subdirectory (templates/ or files/) and is readable by the Ansible user.
+    **`ERROR! the role 'nginx' was not found in /etc/ansible/roles:/usr/share/ansible/roles`** — Add the roles/ directory to the `roles_path` setting in ansible.cfg or ensure the playbook references the correct relative path with `roles_path: ./roles`.
+    **`fatal: [localhost]: FAILED! => {"msg": "Undefined variable"}`** — Check that variables referenced in tasks are defined in either vars/main.yml, defaults/main.yml, or passed via -e flags; verify variable names match exactly (case-sensitive).
 Create a skeleton with `ansible-galaxy`:
 
 ```bash
 ansible-galaxy role init roles/nginx
 ```
 
+
+```text title="Expected output"
+- Role roles/nginx was created successfully
+```
+
+!!! warning "Common errors"
+    **`ERROR! The directory roles/nginx already exists. You can use --force to overwrite`** — Run `ansible-galaxy role init roles/nginx --force` to recreate the role structure.
+    **`ERROR! 'roles' directory does not exist in /path/to/project`** — Create the roles directory first with `mkdir -p roles` before running the command.
 ### defaults and vars
 
 `defaults/main.yml` holds low-priority variables that callers can override. `vars/main.yml` holds higher-priority values not intended to be overridden.
@@ -295,6 +392,23 @@ ansible-galaxy install -r requirements.yml
 ansible-galaxy role install -r requirements.yml -p roles/
 ```
 
+
+```text title="Expected output"
+Starting galaxy role install process
+- downloading role from https://galaxy.ansible.com/api/v1/roles/?owner__username=geerlingguy&name=docker
+- extracting geerlingguy.docker to /home/ansible/.ansible/roles/geerlingguy.docker
+- geerlingguy.docker (4.2.1) was installed successfully
+- downloading role from https://galaxy.ansible.com/api/v1/roles/?owner__username=geerlingguy&name=java
+- extracting geerlingguy.java to /home/ansible/.ansible/roles/geerlingguy.java
+- geerlingguy.java (3.1.0) was installed successfully
+- downloading role from https://galaxy.ansible.com/api/v1/roles/?owner__username=geerlingguy&name=postgresql
+- extracting geerlingguy.postgresql to roles/geerlingguy.postgresql
+- geerlingguy.postgresql (5.0.2) was installed successfully
+```
+
+!!! warning "Common errors"
+    **`ERROR! the file requirements.yml does not exist, or it is not readable`** — Verify the requirements.yml file exists in the current directory and check file permissions with `ls -la requirements.yml`.
+    **`ERROR! - the specified path does not exist. Please check the path and try again.`** — Create the target roles directory first with `mkdir -p roles/` before running the install command.
 ## Inventory
 
 ### INI Format Inventory
@@ -438,6 +552,56 @@ ansible-inventory -i inventory/ --host web01.example.com
 ansible -i inventory/ --list-hosts webservers
 ```
 
+
+```text title="Expected output"
+{
+  "all": {
+    "hosts": {
+      "web01.example.com": {"ansible_host": "10.42.1.15", "env": "prod"},
+      "web02.example.com": {"ansible_host": "10.42.1.16", "env": "prod"},
+      "db01.example.com": {"ansible_host": "10.42.2.8", "env": "prod"},
+      "db02.example.com": {"ansible_host": "10.42.2.9", "env": "prod"}
+    },
+    "children": ["webservers", "databases"]
+  },
+  "_meta": {"hostvars": {...}}
+}
+
+@all:
+  |--@ungrouped:
+  |--@webservers:
+  |  |--web01.example.com
+  |  |--web02.example.com
+  |--@databases:
+  |  |--db01.example.com
+  |  |--db02.example.com
+
+web01.example.com | SUCCESS => {"ping": "pong"}
+web02.example.com | SUCCESS => {"ping": "pong"}
+db01.example.com | SUCCESS => {"ping": "pong"}
+db02.example.com | SUCCESS => {"ping": "pong"}
+
+web01.example.com | CHANGED | rc=0 >>
+ 10:24:33 up 187 days, 3:42, 2 users, load average: 0.18, 0.22, 0.19
+web02.example.com | CHANGED | rc=0 >>
+ 10:24:34 up 156 days, 12:15, 1 user, load average: 0.41, 0.38, 0.35
+
+{
+  "ansible_host": "10.42.1.15",
+  "env": "prod",
+  "ansible_user": "deploy",
+  "ansible_port": 22
+}
+
+  hosts (2):
+    web01.example.com
+    web02.example.com
+```
+
+!!! warning "Common errors"
+    **`[WARNING]: Unable to parse inventory/hosts as an YAML source`** — Verify inventory file syntax with `ansible-inventory -i inventory/ --list` and check for YAML formatting errors.
+    **`fatal: [web01.example.com]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey)."}`** — Ensure SSH key is loaded with `ssh-add` and the `ansible_user` variable matches the remote account.
+    **`[WARNING]: Could not match supplied host pattern, ignoring: webservers`** — Confirm the group name exists in your inventory with `ansible-inventory -i inventory/ --graph` and verify spelling.
 ## Variables
 
 ### Variable Precedence
@@ -491,6 +655,35 @@ ansible-playbook site.yml -e '{"app_port": 9090, "debug": true}'
 ansible-playbook site.yml -e @vars/prod.yml
 ```
 
+
+```text title="Expected output"
+PLAY [all] *********************************************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [web-01.prod.internal]
+ok: [web-02.prod.internal]
+ok: [db-01.prod.internal]
+
+TASK [Deploy application] ******************************************************
+changed: [web-01.prod.internal]
+changed: [web-02.prod.internal]
+skipped: [db-01.prod.internal]
+
+TASK [Verify deployment] *******************************************************
+ok: [web-01.prod.internal]
+ok: [web-02.prod.internal]
+ok: [db-01.prod.internal]
+
+PLAY RECAP *********************************************************************
+web-01.prod.internal       : ok=3    changed=1    unreachable=0    failed=0
+web-02.prod.internal       : ok=3    changed=1    unreachable=0    failed=0
+db-01.prod.internal        : ok=2    changed=0    unreachable=0    failed=0
+```
+
+!!! warning "Common errors"
+    **`ERROR! Syntax Error while loading YAML from string: mapping values are not allowed here`** — Escape special characters in key=value pairs or wrap the entire `-e` argument in single quotes.
+    **`ERROR! Unable to parse as an inventory source: /path/to/vars/prod.yml`** — Verify the vars file path is correct and use `@vars/prod.yml` with the `@` symbol to load from file.
+    **`fatal: [web-01.prod.internal]: FAILED! => {"msg": "Unexpected templating type error occurred on '{{ app_version }}': string indices must be integers"}`** — Ensure variable names in the playbook match exactly those passed via `-e` (case-sensitive).
 ### Register and Facts
 
 `register` captures a task's output as a variable for use in subsequent tasks.

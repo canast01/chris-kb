@@ -112,6 +112,34 @@ gh run watch <run-id>
 gh run view <run-id> --log | grep -i "error\|failed\|exit code"
 ```
 
+
+```text title="Expected output"
+$ gh run list --repo acme-corp/api-service --limit 20
+STATUS  TITLE                          WORKFLOW           BRANCH      EVENT       ID          ELAPSED
+✓       Merge pull request #1247       deploy.yml         main        push        8934521687  2m15s
+✓       Fix database migration         ci.yml             main        push        8934501234  1m42s
+✗       Add user authentication        ci.yml             feature/auth push        8934487651  3m8s
+✓       Update dependencies            ci.yml             develop     push        8934465432  2m31s
+✓       Release v2.1.0                 release.yml        main        workflow_dispatch 8934442198 5m12s
+...
+
+$ gh run view 8934487651
+NAME                    STATUS  CONCLUSION  STARTED             ELAPSED
+build                   ✓       success     2024-01-15 14:22:10 1m5s
+test-unit               ✓       success     2024-01-15 14:23:20 45s
+test-integration        ✗       failure     2024-01-15 14:24:10 2m3s
+lint                    ⊘       skipped     2024-01-15 14:26:15 0s
+
+$ gh run view 8934487651 --log | grep -i "error\|failed\|exit code"
+##[error] Test suite failed: 3 assertions failed in auth_test.go:127
+##[error] Exit code 1 returned from process: 'go test ./...'
+Error: connection refused on localhost:5432 (postgres not running)
+```
+
+!!! warning "Common errors"
+    **`Error: authentication required`** — Run `gh auth login` to authenticate with GitHub CLI before running workflow commands.
+    **`Error: HTTP 404: Not Found`** — Verify the repository owner/name is correct and you have access; check with `gh repo view <owner>/<repo>`.
+    **`Error: run not found`** — Confirm the run ID exists by listing recent runs with `gh run list --repo <owner>/<repo>` first.
 ---
 
 ## Step 2 — Enable debug logging
@@ -179,6 +207,32 @@ permissions:
 #   aud:  sts.amazonaws.com (AWS) or api://AzureADTokenExchange (Azure)
 ```
 
+
+```text title="Expected output"
+{
+    "UserId": "AIDACKCEVSQ6C2EXAMPLE",
+    "Account": "123456789012",
+    "Arn": "arn:aws:sts::123456789012:assumed-role/github-actions-role/github-actions-session"
+}
+{
+    "cloudName": "AzureCloud",
+    "homeTenantId": "12345678-1234-1234-1234-123456789012",
+    "id": "87654321-4321-4321-4321-210987654321",
+    "isDefault": true,
+    "name": "Production-Subscription",
+    "state": "Enabled",
+    "tenantId": "12345678-1234-1234-1234-123456789012",
+    "user": {
+        "name": "github-actions@example.onmicrosoft.com",
+        "type": "servicePrincipal"
+    }
+}
+```
+
+!!! warning "Common errors"
+    **`An error occurred (AccessDenied) when calling the GetCallerIdentity operation: User: arn:aws:iam::123456789012:role/github-actions-role is not authorized to perform: sts:GetCallerIdentity`** — Add `sts:GetCallerIdentity` permission to the IAM role's trust policy or inline policy.
+    **`ERROR: The subscription of account 'example@contoso.com' has been disabled.`** — Verify the Azure subscription is active and the service principal has the correct role assignment in that subscription.
+    **`InvalidParameterValue: Invalid OIDC request provided to STS AssumeRoleWithWebIdentity`** — Ensure the OIDC trust policy's `Subject` claim matches the exact GitHub token `sub` value (e.g., `repo:owner/repo:ref:refs/heads/main`), including branch or environment name.
 **If OIDC fails with "AccessDenied" or "InvalidIdentityToken":**
 1. Verify the workflow has `permissions: id-token: write`
 2. Check the cloud trust policy `Condition` block — the `sub` claim must match the exact branch or environment
@@ -202,6 +256,31 @@ gh secret list --org <org-name>
 gh secret set MY_SECRET --repo <owner>/<repo> < /path/to/secret-value.txt
 ```
 
+
+```text title="Expected output"
+NAME                          UPDATED AT
+DOCKER_REGISTRY_TOKEN         2024-01-15T09:42:31Z
+DATABASE_PASSWORD             2024-01-15T08:17:22Z
+API_KEY_PRODUCTION            2024-01-14T16:53:09Z
+SLACK_WEBHOOK_URL             2024-01-12T11:28:44Z
+SSH_PRIVATE_KEY               2024-01-10T14:05:18Z
+
+NAME                          UPDATED AT
+STAGING_DB_HOST               2024-01-15T10:12:05Z
+STAGING_API_TOKEN             2024-01-14T09:33:41Z
+
+NAME                          UPDATED AT
+ORG_SIGNING_KEY               2024-01-15T12:44:19Z
+SHARED_REGISTRY_CREDS         2024-01-14T15:22:08Z
+TERRAFORM_CLOUD_TOKEN         2024-01-13T08:19:33Z
+
+✓ Set secret MY_SECRET for repository owner/repo
+```
+
+!!! warning "Common errors"
+    **`Error: HTTP 404: Not Found (https://api.github.com/repos/owner/repo/actions/secrets)`** — Verify the repository name is correct and you have push access to the repository.
+    **`Error: authentication required`** — Ensure you are authenticated with `gh auth login` and have the appropriate token scopes (repo or org).
+    **`Error: HTTP 422: Validation Failed`** — Check that the secret name contains only alphanumeric characters and underscores, and does not start with a number.
 **Secret scope troubleshooting:**
 - If a secret is set at org level but the job uses it via an environment, confirm the environment has the org secret listed under "Inherited secrets"
 - If the secret is `***` in the log but the step still fails auth, the secret value itself may be wrong — re-set it
@@ -243,6 +322,46 @@ curl -v https://objects.githubusercontent.com  # Artifact/cache endpoint
 nslookup github.com                   # DNS must resolve
 ```
 
+
+```text title="Expected output"
+● actions.runner.myorg-myrepo.runner-01.service - GitHub Actions Runner
+     Loaded: loaded (/etc/systemd/system/actions.runner.myorg-myrepo.runner-01.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2024-01-15 09:42:33 UTC; 2 days ago
+   Main PID: 3847 (Runner.Listener)
+      Tasks: 12 (limit: 2048)
+     Memory: 156.3M
+        CPU: 2min 34s
+     CGroup: /system.slice/actions.runner.myorg-myrepo.runner-01.service
+             └─3847 /opt/actions-runner/bin/Runner.Listener run
+
+Jan 15 14:22:10 runner-host Runner.Listener[3847]: ##[group]Run initialize job
+Jan 15 14:22:11 runner-host Runner.Listener[3847]: Current runner version: '2.311.0'
+Jan 15 14:22:12 runner-host Runner.Listener[3847]: ##[group]Run git version
+
+_diag/:
+total 2840
+-rw-r--r-- 1 runner docker  524288 Jan 15 14:35 Runner_20240115-143501-utc.log
+-rw-r--r-- 1 runner docker  312456 Jan 15 14:22 Worker_20240115-142210-utc.log
+-rw-r--r-- 1 runner docker  289012 Jan 15 13:58 Worker_20240115-135847-utc.log
+
+tail -200 _diag/Runner_*.log | grep -i "error\|warn\|fail":
+2024-01-15T14:33:22.1234567Z [Warning] Runner is running in offline mode. Attempting reconnection in 30 seconds.
+2024-01-15T14:34:01.5678901Z [Info] Successfully registered with GitHub.
+
+* Connected to github.com (140.82.113.3) port 443 (#0)
+* TLSv1.3 (OUT), TLS handshake, Client hello (1):
+* TLSv1.3 (IN), TLS handshake, Server hello (1):
+* HTTP/1.1 200 OK
+* Connection #0 to host github.com left intact
+
+Server: GitHub.com
+Address: 140.82.113.4
+```
+
+!!! warning "Common errors"
+    **`sudo: systemctl: command not found`** — Verify the runner is on a systemd-based Linux system; on older systems or non-Linux hosts, use the appropriate service manager (e.g., `launchctl` on macOS, `Get-Service` on Windows).
+    **`curl: (7) Failed to connect to github.com port 443: Connection refused`** — Check that outbound HTTPS traffic is allowed on port 443 and no firewall/proxy is blocking access to GitHub's IP ranges.
+    **`ls: cannot access '_diag/': No such file or directory`** — Ensure you are in the correct runner installation directory (`/path/to/actions-runner`) where the `_diag` folder is created after the runner starts.
 **Common self-hosted runner problems:**
 - `Runner is offline` → runner service crashed or host rebooted without auto-start; check systemd service
 - `No runners matching labels` → job `runs-on` label doesn't match any registered runner; check label assignments

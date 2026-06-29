@@ -43,6 +43,46 @@ aws route53 get-health-check-status --health-check-id <id> \
   --query 'HealthCheckObservations[*].{Region:Region,Status:StatusReport.Status}'
 ```
 
+
+```text title="Expected output"
+{
+    "HealthCheck": {
+        "Id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+        "CallerReference": "1699564823",
+        "HealthCheckConfig": {
+            "Type": "HTTPS",
+            "FullyQualifiedDomainName": "app-host.example.com",
+            "Port": 443,
+            "ResourcePath": "/health",
+            "RequestInterval": 30,
+            "FailureThreshold": 3
+        },
+        "HealthCheckVersion": 1
+    }
+}
+[
+    {
+        "Region": "us-east-1",
+        "Status": "Success"
+    },
+    {
+        "Region": "us-west-2",
+        "Status": "Success"
+    },
+    {
+        "Region": "eu-west-1",
+        "Status": "Success"
+    },
+    {
+        "Region": "ap-southeast-1",
+        "Status": "Success"
+    }
+]
+```
+
+!!! warning "Common errors"
+    **`An error occurred (InvalidInput) when calling the CreateHealthCheck operation: Invalid health check configuration`** — Ensure the JSON is valid and the FullyQualifiedDomainName is a resolvable hostname without the `<>` brackets.
+    **`An error occurred (InvalidHealthCheckId) when calling the GetHealthCheckStatus operation: The health check ID '<id>' does not exist`** — Replace `<id>` with the actual health check ID returned from the create command output.
 ## Availability Incident Tracking
 
 ```markdown

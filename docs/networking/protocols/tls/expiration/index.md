@@ -35,6 +35,24 @@ for host in web01 web02 api01; do
 done
 ```
 
+
+```text title="Expected output"
+notAfter=Dec 15 23:59:59 2025 GMT
+depth=0 CN = api.example.com
+verify return:1
+notAfter=Dec 15 23:59:59 2025 GMT
+
+47 days remaining
+
+web01: Dec 15 23:59:59 2025 GMT
+web02: Jan 22 10:30:45 2026 GMT
+api01: Nov 8 14:17:22 2025 GMT
+```
+
+!!! warning "Common errors"
+    **`unable to load certificate`** — Verify the certificate file path is correct and the file contains valid PEM-formatted data.
+    **`connect: Connection refused`** — Confirm the hostname and port are correct, the service is running, and the host is reachable (check firewall rules and DNS resolution).
+    **`date: invalid date`** — Ensure the system date command supports the `-d` flag; on macOS use `date -j -f "%b %d %T %Y %Z" "<date_string>" +%s` instead.
 ## Expiry Monitoring
 
 ### Prometheus — Blackbox Exporter
@@ -82,6 +100,15 @@ check_ssl_cert -H <hostname> -p 443 -w 30 -c 7
 # -c 7:  critical at 7 days
 ```
 
+
+```text title="Expected output"
+SSL_CERT OK - x509 certificate valid for 45 days (until Jan 15 2025 14:32:01 GMT) |days_valid=45;30;7
+```
+
+!!! warning "Common errors"
+    **`SSL_CERT CRITICAL - x509 certificate valid for 3 days`** — The certificate is expiring soon; renew and deploy the certificate immediately, then restart the relevant service.
+    **`SSL_CERT WARNING - x509 certificate valid for 28 days`** — The certificate will expire within the warning threshold; schedule a certificate renewal and deployment within the next 28 days.
+    **`check_ssl_cert: command not found`** — Install the monitoring plugin package (e.g., `apt-get install monitoring-plugins` on Debian or `yum install nagios-plugins-all` on RHEL).
 ## Renewal Workflow
 
 ```d2
@@ -118,6 +145,22 @@ curl -s -X POST "https://venafi.example.com/vedsdk/certificates/renew" \
   -d '{"CertificateDN":"\\VED\\Policy\\Servers\\web.example.com"}'
 ```
 
+
+```text title="Expected output"
+Successfully renewed certificate
+Certificate ID: 7a3f8c2e-91b4-4d2a-b8f1-2c5e9d6a1b3f
+Status: ISSUED
+Renewal Date: 2024-01-15T10:32:47Z
+Expiration Date: 2025-01-15T10:32:47Z
+Subject: CN=web.example.com,O=Example Corp,C=US
+
+{"Success":true,"CertificateId":"7a3f8c2e-91b4-4d2a-b8f1-2c5e9d6a1b3f","RenewalId":"renewal-5892-x4k9","Status":"ISSUED","ValidFrom":"2024-01-15T10:32:47Z","ValidTo":"2025-01-15T10:32:47Z"}
+```
+
+!!! warning "Common errors"
+    **`Error: Certificate not found or access denied`** — Verify the cert-id or CertificateDN is correct and your API key has renewal permissions on that certificate object.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl or configure your CA bundle to trust the Venafi server's certificate.
+    **`Error: Certificate renewal not allowed - already renewed within 30 days`** — Check the last renewal date; Venafi policies may restrict renewal frequency to prevent abuse.
 ### Let's Encrypt — certbot
 
 ```bash
@@ -131,6 +174,31 @@ certbot renew --dry-run
 0 0,12 * * * certbot renew --quiet
 ```
 
+
+```text title="Expected output"
+Saving debug log to /var/log/letsencrypt/letsencrypt.log
+Starting new HTTPS connection (1): acme-v02.api.letsencrypt.org
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Processing /etc/letsencrypt/renewal/example.com.conf
+Cert not yet due for renewal
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Processing /etc/letsencrypt/renewal/api.example.com.conf
+Cert not yet due for renewal
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+The following certs are not due for renewal yet:
+  /etc/letsencrypt/live/example.com/fullchain.pem expires on 2025-04-15 (59 days)
+  /etc/letsencrypt/live/api.example.com/fullchain.pem expires on 2025-05-22 (96 days)
+No renewals were attempted.
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+```
+
+!!! warning "Common errors"
+    **`Error while running renew step for /etc/letsencrypt/renewal/example.com.conf`** — Check `/var/log/letsencrypt/letsencrypt.log` for detailed error and verify the renewal hook (e.g., web server restart) is configured correctly.
+    **`PermissionError: [Errno 13] Permission denied: '/etc/letsencrypt/renewal'`** — Run certbot with `sudo` or ensure the user has read/write access to `/etc/letsencrypt/`.
 ## Emergency Expired Certificate Response
 
 ```bash
@@ -152,6 +220,23 @@ openssl s_client -connect <hostname>:443 </dev/null 2>/dev/null \
   | openssl x509 -noout -dates
 ```
 
+
+```text title="Expected output"
+verify error:num=10:certificate has expired
+notAfter=Jan 15 12:34:56 2024 GMT
+notBefore=Jan 15 12:34:56 2023 GMT
+
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+
+notBefore=Jan 16 08:22:14 2024 GMT
+notAfter=Jan 15 08:22:14 2025 GMT
+```
+
+!!! warning "Common errors"
+    **`verify error:num=20:unable to get local issuer certificate`** — Add the intermediate CA certificate to your trust store or bundle it with the server certificate in nginx.conf.
+    **`nginx: [error] open() "/var/run/nginx.pid" failed (2: No such file or directory)`** — Start nginx with `nginx` before attempting reload, or use `systemctl start nginx` if managed by systemd.
+    **`error:0906D06C:PEM routines:PEM_read_bio:no start line`** — Verify the certificate file path is correct and the file contains valid PEM-formatted data (begins with `-----BEGIN CERTIFICATE-----`).
 ## Expiry Thresholds Reference
 
 | Days remaining | Action |

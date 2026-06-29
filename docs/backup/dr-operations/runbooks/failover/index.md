@@ -34,6 +34,33 @@ df -h | grep <expected-mount>
 systemctl start <service>
 systemctl status <service>
 ```
+
+```text title="Expected output"
+mpatha (36001405abc123def456789012345678) dm-0 NETAPP,LUN C-Mode
+size=500G features='3 queue_if_no_path pg_init_retries 50' hwhandler='1 alua' wp=rw
+`-+- policy='service-time 0' prio=50 status=active
+  |- 2:0:0:0 sda 8:0  active ready running
+  `- 3:0:0:0 sdb 8:16 active ready running
+
+NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sda      8:0    0  500G  0 disk
+└─sda1   8:1    0  500G  0 part /mnt/dr-data
+sdb      8:16   0  500G  0 disk
+└─sdb1   8:17   0  500G  0 part /mnt/dr-data
+
+Filesystem     Size  Used Avail Use% Mounted on
+/dev/mapper/mpatha-part1  500G  245G  255G  49% /mnt/dr-data
+
+● app-service.service - Application Service
+   Loaded: loaded (/etc/systemd/system/app-service.service; enabled; vendor preset: disabled)
+   Active: active (running) since Mon 2024-01-15 14:32:18 UTC; 2s ago
+   Main PID: 8742 (java)
+```
+
+!!! warning "Common errors"
+    **`multipath: command not found`** — Install device-mapper-multipath package with `yum install device-mapper-multipath` or `apt install multipath-tools`.
+    **`Unit <service> not found.`** — Verify the service name exists with `systemctl list-unit-files | grep <service>` and use the correct unit file name.
+    **`mount: /mnt/dr-data: No such file or directory`** — Create the mount point directory with `mkdir -p /mnt/dr-data` before mounting volumes.
 ```bash
 # HTTP health check
 curl -vk https://<dr-app-url>/health

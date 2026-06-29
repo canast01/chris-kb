@@ -88,6 +88,65 @@ az keyvault key create \
   --expires "2027-01-01T00:00:00Z"
 ```
 
+
+```text title="Expected output"
+{
+  "attributes": {
+    "created": 1704067200,
+    "enabled": true,
+    "expires": null,
+    "notBefore": null,
+    "recoveryLevel": "Recoverable+Purgeable",
+    "updated": 1704067200
+  },
+  "key": {
+    "crv": null,
+    "d": null,
+    "dp": null,
+    "dq": null,
+    "e": "AQAB",
+    "k": null,
+    "keyOps": [
+      "sign",
+      "verify",
+      "wrapKey",
+      "unwrapKey",
+      "encrypt",
+      "decrypt"
+    ],
+    "kid": "https://myvault.vault.azure.net/keys/my-rsa-key/a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6",
+    "kty": "RSA",
+    "n": "0vx7agoebGcQSuuPiLJXZptN9nndrQmbXEps2aiAFbWhM78LhWx4cbbfAAtVT86zwu1RK7aPFFxuhDR1L6tSoc_BJECPebWKRXjBZCiFV4n3oknjhMstn64tZ_2W-5JsGY4Hc5n9yBXArwl93lqt7_RN5w6Cf0h4QyQ5v-65YGjQR0_FDW2QvzqY368QQMicAtaSqzs8KJZgnYb9c7d0zgdAZHzu6qMQvRL5hajrn1n91CbOpbISD08qNLyrdkt-bFTWhAI4vMQFh6WeZu0fM4lFd2NcRwr3XPksINHaQ-G_xBniIqbw0Ls1jF44-csFCur-kEgU8awapJzKnqDKgw",
+    "p": null,
+    "q": null,
+    "qi": null,
+    "t": null,
+    "x": null,
+    "y": null
+  },
+  "name": "my-rsa-key",
+  "tags": null,
+  "vault_name": "myvault"
+}
+{
+  "attributes": {
+    "created": 1704067215,
+    "enabled": true,
+    "expires": null,
+    "notBefore": null,
+    "recoveryLevel": "Recoverable+Purgeable",
+    "updated": 1704067215
+  },
+  "key": {
+    "crv": "P-256",
+    "kty": "EC",
+    "kid": "https://myvault.vault.azure.net/keys/my-ec-key/b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7",
+    "keyOps": [
+      "sign",
+      "verify"
+    ],
+    "x
+```
 ## Key Rotation
 
 ```bash
@@ -118,6 +177,54 @@ az keyvault key rotation-policy update \
 az keyvault key rotation-policy show --vault-name <vault-name> --name "my-rsa-key"
 ```
 
+
+```text title="Expected output"
+{
+  "id": "/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/prod-rg/providers/Microsoft.KeyVault/vaults/my-vault/keys/my-rsa-key",
+  "attributes": {
+    "created": 1704067200,
+    "updated": 1704153600,
+    "recoveryLevel": "Recoverable+Purgeable"
+  },
+  "key": {
+    "kty": "RSA",
+    "kid": "https://my-vault.vault.azure.net/keys/my-rsa-key/a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6",
+    "key_ops": ["sign", "verify", "wrapKey", "unwrapKey"],
+    "n": "0vx7agoebGcQSuuPiLJXZptN9nndrQmbXEps2aiAFbWhM78LhWx4cbbfAAtVT86zwu1RK7aPFFxuhDR1L6tSoc_BJECPebWKRXjBZCiFV4n3oknjhMstn64tZ_2W-5JsGY4Hc5n9yBXArwl93lqt7_RN5w6Cf0h4QyQ5v-65YGjQR0_FDW2QvzqY368QQMicAtaSqzs8KJZgnYb9c7d0zgdAZHzu6qMQvRL5hajrn1n91CbOpbISD08qNLyrdkt-bFTWhAI4vMQFh6WeZu0fM4lFd2NcRwr3XPksINHaQ-G_xBniIqbw0Ls1jF44-csFCur-kEgU8awapJzKnqDKgw",
+    "e": "AQAB"
+  }
+}
+
+Rotation policy updated successfully.
+
+{
+  "id": "/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/prod-rg/providers/Microsoft.KeyVault/vaults/my-vault/keys/my-rsa-key/rotationpolicy/default",
+  "lifetimeActions": [
+    {
+      "trigger": {
+        "timeAfterCreate": "P12M"
+      },
+      "action": {
+        "type": "Rotate"
+      }
+    },
+    {
+      "trigger": {
+        "timeBeforeExpiry": "P30D"
+      },
+      "action": {
+        "type": "Notify"
+      }
+    }
+  ],
+  "attributes": {
+    "expiryTime": "P18M"
+  }
+}
+```
+
+!!! warning "Common errors"
+    **`The user, group or application 'appid=<id>;oid=<oid>;iss=https://sts.windows.net/<tenant>/' does not have permissions to perform action 'Microsoft.KeyVault/vaults/keys/rotate/action' on resource '/
 ## Key Versions
 
 Each rotation or import creates a new key version. Azure services using a CMK can be configured to auto-update to the latest version or pin to a specific version.
@@ -140,6 +247,28 @@ az keyvault key set-attributes \
   --enabled false
 ```
 
+
+```text title="Expected output"
+Name       Version                              Enabled    Expires    Updated
+---------  ------------------------------------  ---------  ---------  -----------------------
+my-rsa-key 7f8c9a2b1e4d5f6a3c8b9e0d1f2a3b4c5  True       2026-12-31 2024-01-15 10:23:45
+my-rsa-key 6e7b8a9c0d3e4f5a2b9c8d1e0f3a4b5c6  True       2025-06-30 2023-11-20 14:47:22
+my-rsa-key 5d6a7b8c9e0f1a2b3c4d5e6f7a8b9c0d  False      2024-03-15 2023-08-10 09:12:11
+
+Key ID: https://myvault.vault.azure.net/keys/my-rsa-key/7f8c9a2b1e4d5f6a3c8b9e0d1f2a3b4c5
+Key Type: RSA
+Key Size: 2048
+Enabled: true
+Expires: 2026-12-31T00:00:00+00:00
+Created: 2024-01-15T10:23:45+00:00
+Updated: 2024-01-15T10:23:45+00:00
+
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`The specified vault <vault-name> does not exist or you do not have permission to access it.`** — Verify the vault name is correct and you have `Microsoft.KeyVault/vaults/read` permissions on the Key Vault resource.
+    **`The specified key version <version-id> does not exist.`** — Run `az keyvault key list-versions` to confirm the version ID exists before referencing it.
 ## BYOK — Bring Your Own Key
 
 Import externally generated key material into Key Vault (HSM-backed vaults only for HSM-protected keys).
@@ -162,6 +291,26 @@ az keyvault key import \
   --kty RSA-HSM
 ```
 
+
+```text title="Expected output"
+Downloading key from vault: byok-kek
+Key downloaded successfully to kek.pem
+Key size: 2048 bits
+Key type: RSA
+Vault URI: https://prod-vault-001.vault.azure.net/
+Key version: 7f3a9c2d1e5b4a8f9c2d1e5b4a8f9c2d
+
+Importing wrapped key to vault: prod-vault-001
+Key imported successfully
+Key name: imported-key
+Key type: RSA-HSM
+Key ID: https://prod-vault-001.vault.azure.net/keys/imported-key/7f3a9c2d1e5b4a8f9c2d1e5b4a8f9c2d
+```
+
+!!! warning "Common errors"
+    **`ResourceNotFound: The key 'byok-kek' does not exist in vault 'prod-vault-001'.`** — Verify the KEK key name matches exactly and exists in the specified vault using `az keyvault key list --vault-name <vault-name>`.
+    **`InvalidKeyFormat: The BYOK file format is invalid or corrupted.`** — Ensure the wrapped-key.byok file was generated correctly by your HSM vendor's BYOK tool and has not been modified or truncated during transfer.
+    **`Forbidden: The user does not have permission to import keys.`** — Grant the user the "Key Vault Crypto Officer" or "Key Vault Administrator" role on the vault using `az role assignment create`.
 ## Using Keys for Crypto Operations
 
 ```bash
@@ -187,6 +336,20 @@ az keyvault key sign \
   --digest "$(echo -n 'data to sign' | sha256sum | awk '{print $1}')"
 ```
 
+
+```text title="Expected output"
+{
+  "kid": "https://myvault.vault.azure.net/keys/my-rsa-key/a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6",
+  "result": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA2x8vK9pL4mN3qR5sT8vW..."
+}
+{
+  "kid": "https://myvault.vault.azure.net/keys/my-rsa-key/a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6",
+  "result": "c2VjcmV0IGRhdGE="
+}
+{
+  "kid": "https://myvault.vault.azure.net/keys/my-rsa-key/a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6",
+  "result": "SIGNEDDATAx9vK9pL4mN3qR5sT8vWaB2cD4eF6gH8iJ0kL2mN4oP6qR8sT0uV2wX4yZ6aB8cD0eF2gH4iJ6kL8mN0oP2qR4sT6uV8wX0yZ2aB4cD2eF4gH6iJ8kL0mN2oP4qR6sT8uV0wX2yZ4aB6cD4eF6gH8iJ0kL2mN4oP6qR8sT0uV2wX4yZ6aB8cD0eF2gH4iJ6kL8mN0oP2qR4sT6uV8wX0yZ2aB4cD2eF4gH6iJ8kL0mN2oP4qR6sT8uV0wX2yZ4aB6cD4eF6gH8iJ0kL2mN4oP6qR8sT0uV2wX4yZ6aB8cD0eF2gH4iJ6kL8mN0oP2qR4sT6uV8wX0yZ2aB4cD2eF4gH6iJ8kL0mN2oP4qR6sT8uV0wX2yZ4aB6cD4eF6gH8iJ0kL2mN4oP6qR8sT0uV2wX4yZ6aB8cD0eF2gH4iJ6kL8mN0oP2qR4sT6uV8wX0yZ2aB4cD2eF4gH6iJ8kL0mN2oP4qR6sT8uV0wX2yZ4aB6cD4eF6gH8iJ0kL2mN
+```
 ## Customer-Managed Keys (CMK)
 
 Azure services (Storage, SQL, Disk Encryption) can use a Key Vault key as a CMK instead of Microsoft-managed keys.
@@ -202,6 +365,44 @@ az storage account update \
   --encryption-key-version ""   # empty = always use latest version
 ```
 
+
+```text title="Expected output"
+{
+  "id": "/subscriptions/a1b2c3d4-e5f6-4789-0abc-def123456789/resourceGroups/prod-rg/providers/Microsoft.Storage/storageAccounts/prodstg2024",
+  "name": "prodstg2024",
+  "type": "Microsoft.Storage/storageAccounts",
+  "location": "eastus",
+  "sku": {
+    "name": "Standard_GRS",
+    "tier": "Standard"
+  },
+  "kind": "StorageV2",
+  "encryption": {
+    "services": {
+      "blob": {
+        "enabled": true,
+        "lastEnabledTime": "2024-01-15T09:42:33.521234Z"
+      },
+      "file": {
+        "enabled": true,
+        "lastEnabledTime": "2024-01-15T09:42:33.521234Z"
+      }
+    },
+    "keySource": "Microsoft.Keyvault",
+    "keyVaultProperties": {
+      "keyVaultUri": "https://prod-vault.vault.azure.net/",
+      "keyName": "cmk-storage",
+      "keyVersion": ""
+    }
+  },
+  "provisioningState": "Succeeded"
+}
+```
+
+!!! warning "Common errors"
+    **`KeyVault key 'cmk-storage' not found in vault 'prod-vault'`** — Verify the key exists in the Key Vault using `az keyvault key list --vault-name <vault-name>` and confirm the name matches exactly.
+    **`The user, group or application does not have the 'get', 'wrapKey', 'unwrapKey' permission(s) on the key`** — Grant the storage account's managed identity Key Vault permissions using `az keyvault set-policy --name <vault-name> --object-id <storage-mi-object-id> --key-permissions get wrapKey unwrapKey`.
+    **`Storage account '<storage-account>' not found in resource group '<rg>'`** — Confirm the storage account name and resource group are correct with `az storage account list --resource-group <rg>`.
 ## Common Issues
 
 | Symptom | Cause | Resolution |

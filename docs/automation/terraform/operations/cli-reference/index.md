@@ -85,6 +85,50 @@ terraform graph | dot -Tsvg > graph.svg
 terraform graph -type=plan | dot -Tpng > plan.png
 ```
 
+
+```text title="Expected output"
+Success! The configuration is valid.
+
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+
+Providers required by this configuration:
+
+  provider[registry.terraform.io/hashicorp/aws]
+    version = "~> 5.0"
+    constraints = "~> 5.0"
+    hashes = [
+      "h1:R+ObqmweUWxJ/9tIore2p+VHxfDJN51eKtyrnLul5s=",
+      "zh:1d2b7693efadc0b1fd92145b510ce65c32c06ccd901617270bcc287f5e1f854",
+    ]
+
+  provider[registry.terraform.io/hashicorp/null]
+    version = "~> 3.2"
+    constraints = "~> 3.2"
+
+(no output — command completes silently)
+
+Downloading 1.2.0 from registry.terraform.io/terraform-aws-modules/vpc/aws...
+- vpc in .terraform/modules/vpc
+
+(no output — command completes silently)
+
+digraph {
+  compound = true
+  newrank = true
+  subgraph "root" {
+    "[root] aws_vpc.main" [label = "aws_vpc.main", shape = "box"]
+    "[root] aws_subnet.private" [label = "aws_subnet.private", shape = "box"]
+    "[root] aws_subnet.private" -> "[root] aws_vpc.main"
+  }
+}
+```
+
+!!! warning "Common errors"
+    **`Error: Invalid or unsupported characters in filename`** — Remove special characters from .tf file names; Terraform only accepts alphanumeric, hyphens, and underscores.
+    **`Error: Module not found`** — Verify the module source path in your configuration and run `terraform get` to download missing modules before validating.
+    **`Error: dot: command not found`** — Install graphviz with `apt-get install graphviz` (Ubuntu/Debian) or `brew install graphviz` (macOS) before piping terraform graph output to dot.
 ---
 
 ## State & Output
@@ -127,6 +171,54 @@ terraform output -json
 terraform output -raw <output_name>   # plain string without quotes
 ```
 
+
+```text title="Expected output"
+aws_instance.web_server
+aws_instance.db_server
+aws_security_group.main
+module.vpc.aws_vpc.primary
+module.vpc.aws_subnet.private[0]
+module.vpc.aws_subnet.private[1]
+
+# resource_type.name = {
+  "ami"           = "ami-0c55b159cbfafe1f0"
+  "availability_zone" = "us-east-1a"
+  "id"            = "i-0abcd1234efgh5678"
+  "instance_type" = "t3.medium"
+  "private_ip"    = "10.0.1.42"
+  "tags" = {
+    "Name" = "production-web"
+  }
+}
+
+(no output — command completes silently)
+
+(no output — command completes silently)
+
+State pulled and saved to backup.tfstate
+
+Successfully released lock ID: 7f8e9d0c-1a2b-3c4d-5e6f-7g8h9i0j1k2l
+
+aws_instance.imported_server: Importing from ID `i-0xyz9876abcd5432`...
+aws_instance.imported_server: Import complete!
+
+Generated configuration written to generated.tf
+
+database_url = "postgresql://prod-db.c9akciq32.us-east-1.rds.amazonaws.com:5432/maindb"
+api_endpoint = "https://api.example.com"
+
+{
+  "database_url": "postgresql://prod-db.c9akciq32.us-east-1.rds.amazonaws.com:5432/maindb",
+  "api_endpoint": "https://api.example.com"
+}
+
+postgresql://prod-db.c9akciq32.us-east-1.rds.amazonaws.com:5432/maindb
+```
+
+!!! warning "Common errors"
+    **`Error: resource resource_type.name not found in state`** — Verify the resource exists in state with `terraform state list` and use the exact name including module paths.
+    **`Error: Error acquiring the state lock: ConflictException: Resource of type 'LockID' with identifier '<lock_id>' does not exist`** — Confirm the lock ID is correct by checking the error message in your logs or cloud provider console before attempting force-unlock.
+    **`Error: resource_type.name: resource already exists in state`** — Use `terraform state rm` to remove the conflicting resource from state before importing, or choose a different resource address.
 ---
 
 ## Workspaces
@@ -148,6 +240,24 @@ terraform workspace show
 terraform workspace delete <name>
 ```
 
+
+```text title="Expected output"
+* default
+  staging
+  production
+
+(no output — command completes silently)
+
+(no output — command completes silently)
+
+staging
+
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: workspace "production" does not exist`** — Verify the workspace name with `terraform workspace list` before selecting.
+    **`Error: workspace cannot be deleted while it is the current workspace`** — Switch to a different workspace with `terraform workspace select <other-name>` before deleting.
 ---
 
 ## Console, Debug & Patterns
@@ -182,6 +292,45 @@ terraform plan -input=false -out=tfplan
 terraform apply -input=false tfplan
 ```
 
+
+```text title="Expected output"
+> module.vpc.subnet_id
+"subnet-0a1b2c3d4e5f6g7h8"
+> var.environment
+"production"
+> length(var.availability_zones)
+3
+> 
+
+2024-10-15T14:23:45.123Z [DEBUG] Initializing the backend...
+2024-10-15T14:23:46.456Z [DEBUG] Backend initialized successfully
+2024-10-15T14:23:47.789Z [DEBUG] Terraform has been successfully initialized!
+2024-10-15T14:23:48.012Z [DEBUG] Refreshing Terraform state in-memory prior to plan...
+2024-10-15T14:23:49.345Z [TRACE] Evaluating variable "instance_count"...
+
+Initializing the backend...
+Initializing provider plugins...
+Terraform has been successfully initialized!
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+  + create
+  - destroy
+  ~ modify
+
+Plan: 3 to add, 0 to destroy, 1 to modify.
+
+Saved a plan to: tfplan
+
+aws_instance.web[0]: Importing from ID "i-0123456789abcdef0"...
+aws_instance.web[0]: Import complete!
+
+Apply complete! Resources: 0 added, 0 destroyed, 0 modified.
+```
+
+!!! warning "Common errors"
+    **`Error: No configuration files`** — Run `terraform init` first to initialize the working directory and download provider plugins.
+    **`Error: Failed to read state file: stat .terraform/terraform.tfstate: no such file or directory`** — Ensure the backend is properly configured and initialized with `terraform init`, or check that the state file path is correct.
+    **`Error: resource_type.name: resource not found`** — Verify the resource address syntax matches your configuration (e.g., `aws_instance.example`) and that the resource exists in your Terraform code before importing.
 ---
 
 ## Verify

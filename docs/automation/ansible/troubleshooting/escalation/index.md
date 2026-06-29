@@ -101,6 +101,45 @@ uname -a
 cat /etc/os-release
 ```
 
+
+```text title="Expected output"
+ansible [core 2.15.3]
+  config file = /etc/ansible/ansible.cfg
+  configured module search path = ['/home/ansible/.ansible/plugins/modules']
+  ansible python module location = /usr/lib/python3.11/site-packages/ansible
+  executable location = /usr/bin/ansible
+  python version = 3.11.7 (main, Oct 2 2024, 14:17:27) [GCC 11.4.0]
+  jinja version = 3.1.2
+  libyaml = True
+
+# Collection(s) installed by user (2.15.3)
+Name                                    Version
+-------------------------------------------
+amazon.aws                              7.1.0
+community.general                       8.2.1
+kubernetes.core                         3.0.1
+
+Python 3.11.7
+Name: ansible
+Version: 2.15.3
+Summary: Radically simple IT automation
+Location: /usr/lib/python3.11/site-packages
+Name: ansible-core
+Version: 2.15.3
+Name: jinja2
+Version: 3.1.2
+
+Linux control-node-01 5.15.0-1067-aws #77-Ubuntu SMP Fri Oct 4 12:18:45 UTC 2024 x86_64 GNU/Linux
+NAME="Ubuntu"
+VERSION="22.04.3 LTS (Jammy Jellyfish)"
+ID=ubuntu
+ID_LIKE=debian
+PRETTY_NAME="Ubuntu 22.04.3 LTS"
+```
+
+!!! warning "Common errors"
+    **`pip show: WARNING: pip is configured with locations that require TLS/SSL, however the ssl module in Python is not available.`** — Reinstall Python with SSL support or use `apt install python3-dev libssl-dev` and rebuild Python.
+    **`ansible-galaxy collection list: [WARNING]: Unable to parse /etc/ansible/requirements.yml as an inventory source`** — Remove or fix the malformed requirements.yml file, or specify the correct inventory path in ansible.cfg.
 ### 2. Run the failing playbook with full verbosity
 
 ```bash
@@ -117,6 +156,44 @@ ansible <hostname> -m <module> -a "<args>" -vvv 2>&1 | tee /tmp/ansible-task.log
 ANSIBLE_DEBUG=1 ansible <winhost> -m win_ping -vvv 2>&1 | tee /tmp/ansible-winrm.log
 ```
 
+
+```text title="Expected output"
+PLAY [all] *********************************************************************
+
+TASK [Gathering Facts] *********************************************************
+task path: /etc/ansible/playbooks/deploy.yml:1
+<127.0.0.1> ESTABLISH SSH CONNECTION FOR USER: ansible
+<127.0.0.1> SSH: EXEC ssh -C -o ControlMaster=auto -o ControlPersist=60s -o StrictHostKeyChecking=no -vvv 127.0.0.1
+127.0.0.1 | SUCCESS => {
+    "ansible_facts": {
+        "ansible_os_family": "RedHat",
+        "ansible_distribution": "CentOS",
+        "ansible_distribution_version": "7.9.2009"
+    },
+    "changed": false
+}
+
+TASK [Install package] *********************************************************
+task path: /etc/ansible/playbooks/deploy.yml:12
+<prod-web-01> ESTABLISH SSH CONNECTION FOR USER: deploy
+<prod-web-01> SSH: EXEC ssh -C -o ControlMaster=auto prod-web-01
+prod-web-01 | FAILED! => {
+    "msg": "The following modules failed to execute: yum",
+    "rc": 1
+}
+
+PLAY RECAP *********************************************************************
+prod-web-01 : ok=1 changed=0 unreachable=0 failed=1 skipped=0 rescued=0 ignored=0
+
+Playbook run took 8.42 seconds
+```
+
+!!! warning "Common errors"
+    **`fatal: [hostname]: UNREACHABLE! => {"msg": "Failed to connect to the host via ssh: Permission denied (publickey,password)."}`** — Verify the SSH key path in inventory with `ansible-inventory --host <hostname>` and ensure the user has passwordless sudo or the correct `-u` flag is set.
+    
+    **`fatal: [hostname]: FAILED! => {"msg": "Timeout (12s) waiting for privilege escalation prompt"}`** — Add `ansible_become_pass` to inventory or use `--ask-become-pass` flag; check that `become_user` has sudo access without a password prompt.
+    
+    **`ERROR! the playbook: <failing-playbook.yml> could not be loaded as a file or dir`** — Verify the playbook path is correct and relative to the current working directory, or provide an absolute path.
 ### 3. Collect AWX job details (if using AWX)
 
 ```bash
@@ -138,6 +215,23 @@ curl -sk "${AWX_URL}/api/v2/jobs/${JOB_ID}/job_events/?page_size=50" \
   -H "Authorization: Bearer ${TOKEN}" | python3 -m json.tool > /tmp/awx-job-${JOB_ID}-events.json
 ```
 
+
+```text title="Expected output"
+% Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  2847  100  2847    0     0   8934      0 --:--:-- --:--:-- --:--:-- --:--:-- 100%
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 15234  100 15234    0     0  31456      0 --:--:-- --:--:-- --:--:-- --:--:-- 100%
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  8562  100  8562    0     0  18923      0 --:--:-- --:--:-- --:--:-- --:--:-- --:--:-- 100%
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to <awx-hostname> port 443: Connection refused`** — Verify the AWX_URL is correct and the AWX service is running with `systemctl status awx-service` or equivalent.
+    **`{"detail":"Invalid token","status_code":401}`** — Regenerate the OAuth token in AWX UI (Settings > Users > Tokens) and ensure it has not expired.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Remove the `-k` flag if using a valid certificate, or ensure your CA bundle is current; the `-k` flag bypasses verification for self-signed certs.
 ### 4. Collect AWX pod logs (for platform-level failures)
 
 ```bash
@@ -157,6 +251,34 @@ kubectl get events -n awx --sort-by='.lastTimestamp' | tail -50 > /tmp/awx-event
 # This is the primary artifact for Red Hat support — attach to all SR cases
 ```
 
+
+```text title="Expected output"
+NAME                                    READY   STATUS    RESTARTS   AGE
+awx-web-5d8c9f4b7-km2xj                 1/1     Running   0          2d14h
+awx-task-7f6e2a1c3-np9qr                1/1     Running   2          2d10h
+awx-ee-deployment-4b3e8d2f-lq5rs        1/1     Running   0          1d23h
+awx-postgres-15-0                       1/1     Running   0          5d8h
+awx-redis-0                             1/1     Running   1          3d12h
+awx-receptor-worker-6c4d9e1a-vx2k8      1/1     Running   0          18h
+awx-operator-controller-mgr-8f7b2c-9kl  1/1     Running   0          6d4h
+
+[Logs written to /tmp/awx-web.log (2847 lines)]
+[Logs written to /tmp/awx-task.log (5123 lines)]
+[Logs written to /tmp/awx-ee.log (412 lines)]
+[Logs written to /tmp/awx-db.log (1956 lines)]
+
+LAST SEEN   TYPE      REASON                 OBJECT                          MESSAGE
+2m          Warning   BackOff                pod/awx-task-7f6e2a1c3-np9qr    Back-off restarting failed container
+5m          Normal    Pulled                 pod/awx-web-5d8c9f4b7-km2xj     Container image already present on host
+12m         Warning   FailedScheduling       pod/awx-ee-deployment-4b3e8d2f  0/3 nodes available: insufficient memory
+18m         Normal    Created                pod/awx-postgres-15-0           Created container postgres
+25m         Warning   OOMKilled              pod/awx-task-7f6e2a1c3-np9qr    Container awx-task was OOMKilled
+```
+
+!!! warning "Common errors"
+    **`error: the server doesn't have a resource type "statefulset"`** — Verify the correct resource name with `kubectl get statefulsets -n awx` and use the exact name (e.g., `awx-postgres-15` vs `postgres-15`).
+    **`error: unable to upgrade connection: container not found ("awx-web")`** — The pod may not exist or the deployment hasn't rolled out yet; check pod status with `kubectl get pods -n awx` and wait for Ready status.
+    **`No resources found in awx namespace.`** — Ensure the AWX namespace exists with `kubectl get namespace awx` and that AWX is actually deployed in that namespace.
 ### 5. Write the timeline
 
 ```text
@@ -256,6 +378,42 @@ EOF
 ansible-playbook /tmp/repro.yml -vvv 2>&1 | tee /tmp/repro.log
 ```
 
+
+```text title="Expected output"
+PLAY [Reproduction case] *******************************************************
+
+TASK [Failing task] ************************************************************
+changed: [localhost] => {
+    "changed": true,
+    "cmd": [
+        "echo test"
+    ],
+    "delta": "0:00:00.012345",
+    "end": "2024-01-15 14:32:18.567890",
+    "invocation": {
+        "module_args": {
+            "cmd": "echo test",
+            "_raw_params": "echo test",
+            "_uses_shell": false
+        }
+    },
+    "rc": 0,
+    "start": "2024-01-15 14:32:18.555545",
+    "stderr": "",
+    "stdout": "test",
+    "stdout_lines": [
+        "test"
+    ]
+}
+
+PLAY RECAP *********************************************************************
+localhost                  : ok=1    changed=1    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+```
+
+!!! warning "Common errors"
+    **`ERROR! Unexpected Exception: 'NoneType' object is not subscriptable`** — Verify the playbook YAML syntax with `ansible-playbook --syntax-check /tmp/repro.yml` and ensure all task keys are properly indented.
+    **`fatal: [localhost]: FAILED! => {"msg": "The task includes an option with an undefined variable. Undefined variable: <variable_name>"}`** — Check that all variables referenced in the playbook are defined in group_vars, host_vars, or passed via `-e` flag.
+    **`[WARNING]: Unable to parse /tmp/repro.yml as an inventory source`** — Ensure the playbook file exists and is readable; use `cat /tmp/repro.yml` to verify the file was created correctly.
 GitHub issue must include:
 - `ansible --version` output
 - Python version and OS

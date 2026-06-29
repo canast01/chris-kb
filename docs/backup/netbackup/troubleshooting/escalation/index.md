@@ -82,6 +82,15 @@ cat /usr/openv/netbackup/bin/version
 type "C:\Program Files\Veritas\NetBackup\version.txt"
 ```
 
+
+```text title="Expected output"
+NetBackup 8.3.2.1
+NetBackup 8.3.2.1 (Build: 20210915)
+```
+
+!!! warning "Common errors"
+    **`cat: /usr/openv/netbackup/bin/version: No such file or directory`** — Verify NetBackup is installed on this system with `rpm -qa | grep netbackup` or check the correct installation path.
+    **`nbpem: command not found`** — Ensure the NetBackup PATH is set correctly by sourcing `/usr/openv/netbackup/bin/bp.env` or add `/usr/openv/netbackup/bin/goodies` to your PATH.
 ### 2. Collect failing job details
 
 ```bash
@@ -99,6 +108,52 @@ bppllist <policy-name> -L > /tmp/policy-config.txt
 nbstlutil list -storage_server <stu-name> > /tmp/stu-config.txt
 ```
 
+
+```text title="Expected output"
+Job ID    Policy                  Client          Status  Elapsed Time  GB
+--------  ----------------------  --------------  ------  -----------  ----
+12847561  PROD-DB-DAILY           db-prod-01      FAILED  02:34:12     245.3
+12847562  PROD-DB-DAILY           db-prod-02      FAILED  00:15:44     12.8
+12847559  WEEKLY-ARCHIVE          archive-srv-03  FAILED  01:22:05     1847.2
+12847548  INCREMENTAL-BACKUP      web-app-04      FAILED  00:08:33     3.1
+12847521  PROD-DB-DAILY           db-prod-01      FAILED  03:12:18     267.9
+
+Job ID: 12847561
+Policy: PROD-DB-DAILY
+Client: db-prod-01
+Status: FAILED
+Start Time: 2024-01-15 22:30:45
+End Time: 2024-01-16 01:05:12
+Elapsed Time: 02:34:27
+GB Processed: 245.3
+Reason: Network timeout during backup phase
+
+2024-01-16 22:31:02 db-prod-01: Connection refused (port 13782)
+2024-01-16 22:31:15 db-prod-01: Retrying connection attempt 1 of 3
+2024-01-16 22:31:45 db-prod-01: Retrying connection attempt 2 of 3
+2024-01-16 22:32:15 db-prod-01: Retrying connection attempt 3 of 3
+2024-01-16 22:32:45 db-prod-01: FATAL: Unable to establish connection to client
+
+Policy: PROD-DB-DAILY
+Enabled: Yes
+Backup Type: Full + Incremental
+Schedule: Daily 22:00
+Retention: 30 days
+Storage Unit: PROD-VAULT-01
+
+Storage Unit: PROD-VAULT-01
+Type: Disk
+Location: /netbackup/vault01
+Capacity: 10.0 TB
+Used: 8.7 TB
+Available: 1.3 TB
+Status: Online
+```
+
+!!! warning "Common errors"
+    **`bpdbjobs: command not found`** — Ensure the NetBackup client is installed and `/usr/openv/netbackup/bin` is in your PATH, or run the command with the full path `/usr/openv/netbackup/bin/bpdbjobs`.
+    **`cat: /usr/openv/netbackup/logs/user_ops/<jobid>: No such file or directory`** — Replace `<jobid>` with an actual numeric job ID (e.g., `12847561`) and verify the log directory exists with `ls -la /usr/openv/netbackup/logs/user_ops/`.
+    **`bppllist: policy <policy-name> does not exist`** — Verify the policy name is correct by running `bppllist -L` to list all available policies, then use the exact policy name from the output.
 ### 3. Run the nbsu support utility
 
 ```bash
@@ -114,6 +169,25 @@ ls -lh /usr/openv/support/nbsu_*.tar.gz
 # Bundle in C:\Program Files\Veritas\NetBackup\logs\nbsu_output\
 ```
 
+
+```text title="Expected output"
+NetBackup Support Utility (nbsu) v8.2.1
+Collecting diagnostic data from master server...
+[████████████████████████████████] 87%
+Collection complete. Processing...
+Creating compressed bundle: nbsu_20240115_143022.tar.gz
+Bundle size: 2.3 GB
+Location: /usr/openv/support/nbsu_20240115_143022.tar.gz
+Elapsed time: 8 minutes 34 seconds
+
+-rw-r--r-- 1 root root 2.3G Jan 15 14:30 /usr/openv/support/nbsu_20240115_143022.tar.gz
+-rw-r--r-- 1 root root 1.8G Jan 14 09:15 /usr/openv/support/nbsu_20240114_091502.tar.gz
+```
+
+!!! warning "Common errors"
+    **`/usr/openv/netbackup/bin/support/nbsu: Permission denied`** — Run the command with sudo or as root user.
+    **`ERROR: Unable to write to /usr/openv/support/ — disk full`** — Free up disk space on the /usr/openv partition (nbsu bundles typically require 3–5 GB free space).
+    **`ERROR: NetBackup services not running — cannot collect process data`** — Start NetBackup services with `systemctl start netbackup` or `/usr/openv/netbackup/bin/bpup -start` before running nbsu.
 ### 4. Collect key log files manually (if nbsu fails)
 
 ```bash
@@ -131,6 +205,39 @@ tpconfig -d 2>&1 > /tmp/tpconfig.txt
 vmquery -a 2>&1 | head -50 > /tmp/media-status.txt
 ```
 
+
+```text title="Expected output"
+tail: cannot open '/usr/openv/netbackup/logs/bpbrm/log.<today-date>' for reading: No such file or directory
+tail: cannot open '/usr/openv/netbackup/logs/bpsched/log.<today-date>' for reading: No such file or directory
+
+Consistency Check Report
+Database: /usr/openv/netbackup/db/NBDB
+Status: PASSED
+Checked Records: 47382
+Inconsistencies Found: 0
+Check Duration: 2m 34s
+
+Device Configuration Report
+Device Name: TLD0
+Device Type: LTO Tape Drive
+Status: READY
+Serial Number: LTO9-SN-0847392
+Robot: ADIC-Scalar-i500
+
+Media Status Summary (first 50 entries):
+Media ID          Pool          Status    Last Used
+000001            Default       FULL      2024-01-15 14:22:10
+000002            Default       FULL      2024-01-15 13:45:33
+000003            Default       AVAILABLE  2024-01-14 09:12:44
+000004            Default       AVAILABLE  2024-01-13 16:58:19
+000005            Offsite       FULL      2024-01-12 11:33:02
+...
+```
+
+!!! warning "Common errors"
+    **`tail: cannot open '/usr/openv/netbackup/logs/bpbrm/log.<today-date>' for reading: No such file or directory`** — Replace `<today-date>` with the actual date in YYYYMMDD format (e.g., `log.20240115`) or use `ls /usr/openv/netbackup/logs/bpbrm/` to find the correct filename.
+    **`bpdbm: command not found`** — Ensure the NetBackup client is installed and `/usr/openv/netbackup/bin` is in your PATH, or run the command with the full path `/usr/openv/netbackup/bin/bpdbm`.
+    **`vmquery: command not found`** — Run the command as root or with sudo, and verify NetBackup services are running with `bpps -a`.
 ### 5. Write the timeline
 
 ```text
@@ -239,6 +346,64 @@ bpps -a | grep bpcd
 bpdbjobs -hoursago 6 -report | awk '{print $NF}' | sort | uniq -c | sort -rn
 ```
 
+
+```text title="Expected output"
+NetBackup 10.1.1 (build 20230815)
+bpps output:
+  PID    PPID CMD
+ 2847       1 /usr/openv/netbackup/bin/bprd -d
+ 2951    2847 /usr/openv/netbackup/bin/bpsched
+ 3104    2847 /usr/openv/netbackup/bin/bpdbm
+ 3215    2847 /usr/openv/netbackup/bin/bptm
+ 3401    2847 /usr/openv/netbackup/bin/bpbackupdb
+
+Job Summary (last 24 hours):
+Policy                  Schedule  Status    Elapsed  GB
+prod-db-full            Full      COMPLETED 02:14:33 847.2
+prod-db-incr            Incr      COMPLETED 00:47:22 124.5
+app-tier-backup         Full      FAILED    01:33:18 0.0
+web-servers-incr        Incr      COMPLETED 00:22:11 89.3
+archive-monthly         Full      COMPLETED 03:02:55 2156.8
+...
+
+Catalog consistency check:
+Consistency check started at 2024-01-15 14:32:18
+Checking database integrity... OK
+Checking image catalog... OK (4,287 images)
+Consistency check completed successfully
+
+Database size: 45G    /usr/openv/db/
+
+MSDP Pool Status:
+Disk Type: PureDisk
+State: ONLINE
+Total: 50.0 TB
+Used: 38.7 TB
+Available: 11.3 TB
+
+Media server connectivity (media-srv-01):
+Host: media-srv-01.corp.local
+IP: 192.168.42.15
+Status: ACTIVE
+Connection time: 2024-01-15 14:28:42
+
+Active bpcd sessions:
+ 2847 root     /usr/openv/netbackup/bin/bpcd
+ 3521 root     /usr/openv/netbackup/bin/bpcd
+ 3689 root     /usr/openv/netbackup/bin/bpcd
+
+Recent error codes (last 6 hours):
+     12 0
+      3 1
+      2 6
+      1 13
+      1 24
+```
+
+!!! warning "Common errors"
+    **`bpps: command not found`** — Verify NetBackup is installed and /usr/openv/netbackup/bin is in PATH, or use full path /usr/openv/netbackup/bin/bpps.
+    **`bpdbjobs: Database connection failed`** — Check that the NetBackup database is running with bpdbm and verify disk space on /usr/openv/db/ is above 10%.
+    **`nbdevquery: No devices found matching filter`** — Confirm MSDP pool name is correct and PureDisk devices are configured in NetBackup Admin Console under Storage > Disk Pools.
 ---
 
 ## See also

@@ -101,6 +101,31 @@ psql -U postgres -c "SHOW ALL;" > /tmp/pg-config-$(date +%Y%m%d).txt
 psql -U postgres -c "SHOW data_directory; SHOW log_directory;"
 ```
 
+
+```text title="Expected output"
+version
+────────────────────────────────────────────────────────────────────────────────
+ PostgreSQL 14.8 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 11.2.0, 64-bit
+(1 row)
+
+              name              |            setting             | description
+─────────────────────────────────┼─────────────────────────────────┼──────────────────────────
+ allow_system_table_mods         | off                             | Allows modifications of...
+ application_name                | psql                            | Sets the application name
+ archive_command                 | (disabled)                      | Sets the shell command...
+ archive_mode                    | off                             | Allows archiving of WAL
+ ...
+(330 rows)
+
+ data_directory | /var/lib/postgresql/14/main
+ log_directory  | /var/log/postgresql
+(2 rows)
+```
+
+!!! warning "Common errors"
+    **`psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL: role "postgres" does not exist`** — Create the postgres superuser role with `sudo -u postgres createuser -s postgres` or verify the role exists with `psql -U postgres -l`.
+    **`psql: error: could not translate host name "localhost" to address: Name or service not known`** — Ensure PostgreSQL is running with `sudo systemctl status postgresql` and verify the connection parameters are correct.
+    **`Permission denied` when writing to `/tmp/pg-config-*.txt`** — Check `/tmp` directory permissions with `ls -ld /tmp` and ensure the PostgreSQL system user has write access, or redirect to a user-writable directory like `~/pg-config-$(date +%Y%m%d).txt`.
 ### 2. Save the PostgreSQL error log
 
 ```bash
@@ -115,6 +140,21 @@ sudo tail -500 /var/log/postgresql/postgresql-*.log > /tmp/pg-error-$(date +%Y%m
 grep -E "PANIC|FATAL|ERROR" /tmp/pg-error-$(date +%Y%m%d%H%M).log | tail -100
 ```
 
+
+```text title="Expected output"
+2024-01-15 09:47:23.156 UTC [8432] LOG:  database system was interrupted; last known up at 2024-01-15 09:45:12 UTC
+2024-01-15 09:47:24.892 UTC [8432] FATAL:  could not open file "pg_wal/000000010000000000000042": No such file or directory
+2024-01-15 09:47:25.103 UTC [8445] ERROR:  relation "public.users" does not exist at character 15
+2024-01-15 09:47:26.541 UTC [8450] PANIC:  write failed: No space left on device
+2024-01-15 09:47:27.234 UTC [8451] ERROR:  permission denied for schema public
+2024-01-15 09:47:28.667 UTC [8452] FATAL:  remaining connection slots are reserved for non-replication superuser connections
+2024-01-15 09:47:29.445 UTC [8453] ERROR:  deadlock detected
+2024-01-15 09:47:30.112 UTC [8454] LOG:  autovacuum launcher started
+```
+
+!!! warning "Common errors"
+    **`grep: /tmp/pg-error-202401151234.log: No such file or directory`** — Run the tail command first or use a fixed timestamp variable: `TS=$(date +%Y%m%d%H%M); sudo tail -500 /var/log/postgresql/postgresql-*.log > /tmp/pg-error-$TS.log; grep -E "PANIC|FATAL|ERROR" /tmp/pg-error-$TS.log | tail -100`
+    **`tail: cannot open '/var/log/postgresql/postgresql-*.log' for reading: No such file or directory`** — Check your PostgreSQL log directory location with `sudo -u postgres psql -c "SHOW log_directory;"` and adjust the path accordingly.
 ### 3. Capture active sessions and lock waits
 
 ```bash
@@ -143,6 +183,26 @@ WHERE NOT blocked.granted;
 SQL
 ```
 
+
+```text title="Expected output"
+pid  | usename  | application_name | client_addr | state  | query_duration | wait_event_type | wait_event |                query_text
+------+----------+------------------+-------------+--------+----------------+-----------------+------------+------------------------------------------
+ 4521 | postgres | psql             | 127.0.0.1   | active | 00:02:34.521   | IO              | DataFileRead | SELECT * FROM large_table WHERE id > 50
+ 3847 | appuser  | java-app         | 192.168.1.5 | active | 00:01:12.043   | Lock            | transactionid | UPDATE orders SET status = 'shipped' W
+ 2156 | postgres | pgAdmin          | 10.0.0.42   | active | 00:00:45.892   |                 |            | CREATE INDEX idx_orders_date ON orders(
+ 5234 | postgres | psql             | 127.0.0.1   | active | 00:00:08.156   | CPU             |            | VACUUM ANALYZE customers;
+(4 rows)
+
+ blocked_pid | blocked_query | blocking_pid | blocking_query | wait_duration
+-------------+---------------+--------------+----------------+---------------
+        3847 | UPDATE orders | 4521         | UPDATE invoices | 00:01:08.234
+(1 row)
+```
+
+!!! warning "Common errors"
+    **`psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed: FATAL: Ident authentication failed for user "postgres"`** — Ensure the postgres user has proper ident authentication configured in pg_hba.conf or use `psql -h localhost -U postgres` with password authentication.
+    **`ERROR: permission denied for schema pg_catalog`** — Grant necessary privileges with `GRANT USAGE ON SCHEMA pg_catalog TO postgres;` or run the query as a superuser.
+    **`ERROR: column "granted" does not exist`** — This query requires PostgreSQL 13+; for earlier versions, use `pg_locks` view instead of `pg_blocking_pids()`.
 ### 4. Capture replication state (if primary with replicas)
 
 ```bash
@@ -160,6 +220,25 @@ FROM pg_replication_slots;
 SQL
 ```
 
+
+```text title="Expected output"
+client_addr  | state     | sent_lsn   | write_lsn  | flush_lsn  | replay_lsn | lag_bytes | sync_state
+--------------+-----------+------------+------------+------------+------------+-----------+------------
+ 192.168.1.42 | streaming | 0/3A5B8F20 | 0/3A5B8F20 | 0/3A5B8F20 | 0/3A5B8D10 |    528400 | async
+ 192.168.1.43 | streaming | 0/3A5B8F20 | 0/3A5B8F20 | 0/3A5B8F20 | 0/3A5B8C00 |    737280 | sync
+(2 rows)
+
+ slot_name    | plugin | slot_type | active | restart_lsn | lag_bytes
+--------------+--------+-----------+--------+-------------+-----------
+ replica_slot | NULL   | physical  | t      | 0/3A5B0000  |    1048576
+ logical_slot | test   | logical   | f      | 0/39000000  |   33554432
+(2 rows)
+```
+
+!!! warning "Common errors"
+    **`psql: error: connection to server at "localhost" (127.0.0.1), port 5432 failed`** — Verify PostgreSQL is running with `systemctl status postgresql` and check `postgresql.conf` for the correct listen_addresses.
+    **`ERROR: permission denied for schema pg_catalog`** — Ensure the postgres user has superuser privileges or grant explicit SELECT permissions on `pg_stat_replication` and `pg_replication_slots` views.
+    **`ERROR: relation "pg_stat_replication" does not exist`** — Confirm this is a primary server with replication enabled; check `wal_level = replica` in `postgresql.conf` and restart if changed.
 ### 5. Capture disk usage and vacuum state
 
 ```bash
@@ -186,6 +265,37 @@ ORDER BY age(datfrozenxid) DESC;
 SQL
 ```
 
+
+```text title="Expected output"
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1       500G  387G  113G  78% /var/lib/postgresql
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda1       500G  387G  113G  78% /
+/dev/sdb1       2.0T  1.8T  200G  90% /mnt/wal
+/dev/sdc1       1.0T  856G  144G  86% /backup
+tmpfs           16G  8.2G  7.8G  51% /dev/shm
+
+ schemaname |        relname         | n_live_tup | n_dead_tup | dead_pct |     last_autovacuum     |     last_autoanalyze
+-------------+------------------------+------------+------------+----------+-------------------------+-------------------------
+ public      | orders_history         |    8945623 |    2156734 |     19.4 | 2024-01-15 03:22:18+00 | 2024-01-15 03:25:02+00
+ public      | transaction_log        |    5623412 |    1834562 |     24.6 | 2024-01-14 22:10:45+00 | 2024-01-14 22:15:33+00
+ public      | audit_events           |    3421098 |     987654 |     22.4 | 2024-01-15 02:45:12+00 | 2024-01-15 02:48:56+00
+ public      | user_sessions          |    2156734 |     654321 |     23.3 | 2024-01-15 01:33:27+00 | 2024-01-15 01:36:44+00
+ public      | event_queue            |    1234567 |     456789 |     27.0 | 2024-01-14 20:05:11+00 | 2024-01-14 20:08:22+00
+...
+
+ datname  |   xid_age   | xids_remaining
+----------+-------------+----------------
+ postgres |    1856234  |     2145627413
+ template1|     234567  |     2147248880
+ myapp_db |    1645892  |     2145837755
+(3 rows)
+```
+
+!!! warning "Common errors"
+    **`psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: No such file or directory`** — Verify PostgreSQL is running with `systemctl status postgresql` and check PGHOST/PGPORT environment variables.
+    **`ERROR: permission denied for schema public`** — Grant necessary privileges with `psql -U postgres -c "GRANT USAGE ON SCHEMA public TO postgres;"` or run the query as a superuser.
+    **`Disk space on PGDATA is critically low (>95% used)`** — Immediately run `VACUUM FULL;` on the largest tables or add storage; autovacuum may not keep pace with write-heavy workloads.
 ### 6. Write the timeline
 
 ```text
@@ -288,6 +398,57 @@ df -h $PGDATA
 tail -100 /var/log/postgresql/postgresql-*.log | grep -E "PANIC|FATAL|ERROR"
 ```
 
+
+```text title="Expected output"
+● postgresql.service - PostgreSQL Database Server
+     Loaded: loaded (/lib/systemd/postgresql.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2024-01-15 09:42:33 UTC; 18 days ago
+       Docs: https://www.postgresql.org/docs/15/static/
+    Process: 1247 ExecStartPost=/usr/lib/postgresql/15/bin/postgresql-15-check-db-dir (code=exited, status=0/SUCCESS)
+   Main PID: 1243 (postgres)
+      Tasks: 47 (limit: 4915)
+     Memory: 892.3M
+        CPU: 2h 14m 32s
+     CGroup: /system.slice/postgresql.service
+
+ state  | count
+--------+-------
+ active |    12
+ idle   |     8
+ idle in transaction |     2
+(3 rows)
+
+ count
+-------
+     0
+(1 row)
+
+ client_addr  |   state   | lag_bytes
+--------------+-----------+-----------
+ 10.42.18.105 | streaming |      4096
+ 10.42.18.106 | streaming |      8192
+(2 rows)
+
+ datname  |      age
+----------+----------------
+ postgres |  2147483647
+ template1|  2147483647
+ myapp_db |  1847392156
+(3 rows)
+
+Filesystem     Size  Used Avail Use% Mounted on
+/dev/sda1       500G  287G  213G  58% /var/lib/postgresql
+/dev/sda2       100G   45G   55G  45% /var/lib/postgresql/15/main/pg_wal
+
+2024-01-15 14:22:18 UTC [1847]: ERROR: deadlock detected
+2024-01-15 14:18:05 UTC [1823]: FATAL: remaining connection slots reserved for non-replication superuser connections
+2024-01-15 09:42:33 UTC [1243]: LOG: database system is ready to accept connections
+```
+
+!!! warning "Common errors"
+    **`psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed`** — Verify PostgreSQL is running with `systemctl status postgresql` and check socket permissions with `ls -la /var/run/postgresql/`.
+    **`ERROR: permission denied for schema public`** — Run the psql commands as the postgres user with `sudo -u postgres psql` or ensure your user has CONNECT privileges on the database.
+    **`tail: cannot open '/var/log/postgresql/postgresql-*.log' for reading: No such file or directory`** — Check the actual log file location with `find /var/log -name "postgresql*.log" 2>/dev/null` as the path varies by distribution.
 ---
 
 ## Wraparound Emergency Procedure
@@ -306,6 +467,36 @@ vacuumdb --dbname=app_prod --freeze --analyze --echo
 psql -U postgres -c "SELECT datname, age(datfrozenxid) FROM pg_database ORDER BY age DESC;"
 ```
 
+
+```text title="Expected output"
+vacuumdb: vacuuming database "postgres"
+VACUUM FREEZE ANALYZE;
+vacuumdb: vacuuming database "template1"
+VACUUM FREEZE ANALYZE;
+vacuumdb: vacuuming database "template0"
+VACUUM FREEZE ANALYZE;
+vacuumdb: vacuuming database "app_prod"
+VACUUM FREEZE ANALYZE;
+vacuumdb: vacuuming database "monitoring"
+VACUUM FREEZE ANALYZE;
+vacuumdb: vacuuming database "app_staging"
+VACUUM FREEZE ANALYZE;
+
+ datname  | age
+----------+----------
+ app_prod | 1847293
+ postgres | 1203847
+ app_staging | 892103
+ monitoring | 445021
+ template1 | 201
+ template0 | 201
+(6 rows)
+```
+
+!!! warning "Common errors"
+    **`vacuumdb: error: could not connect to database app_prod: FATAL: the database system is in recovery mode`** — Wait for the standby/replica to finish recovery or run the command on the primary server only.
+    **`vacuumdb: error: permission denied for schema public`** — Ensure you are connected as a PostgreSQL superuser (postgres) using `sudo -u postgres vacuumdb` or set PGUSER environment variable.
+    **`psql: error: FATAL: remaining connection slots are reserved for non-replication superuser connections`** — The database is nearly out of connection slots; kill idle sessions with `SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE state = 'idle';` before retrying.
 ---
 
 ## Support SLA Reference

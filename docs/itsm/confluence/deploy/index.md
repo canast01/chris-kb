@@ -118,6 +118,24 @@ GRANT ALL PRIVILEGES ON DATABASE confluence TO confluence;
 \q
 ```
 
+
+```text title="Expected output"
+psql (14.8 (Ubuntu 14.8-1.pgdg22.04+1))
+Type "help" for help.
+
+postgres=# CREATE USER confluence WITH PASSWORD 'secure-password-here';
+CREATE ROLE
+postgres=# CREATE DATABASE confluence OWNER confluence ENCODING 'UTF8' LC_COLLATE 'C' LC_CTYPE 'C' TEMPLATE template0;
+CREATE DATABASE
+postgres=# GRANT ALL PRIVILEGES ON DATABASE confluence TO confluence;
+GRANT
+postgres=# \q
+```
+
+!!! warning "Common errors"
+    **`ERROR:  role "confluence" already exists`** — Drop the existing role with `DROP ROLE confluence;` before recreating it, or skip user creation if the role already exists.
+    **`ERROR:  database "confluence" already exists`** — Drop the existing database with `DROP DATABASE confluence;` before recreating it, or connect to an existing database and verify its configuration.
+    **`psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed`** — Ensure PostgreSQL service is running with `sudo systemctl start postgresql` and the socket directory exists.
 **Run the Confluence setup wizard:**
 
 1. Open a browser to `http://<confluence-server>:8090`.
@@ -142,6 +160,14 @@ Edit `/opt/atlassian/confluence/bin/setenv.sh`:
 CATALINA_OPTS="-Xms2g -Xmx8g ${CATALINA_OPTS}"
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`bash: CATALINA_OPTS: command not found`** — Ensure you're running this in a shell context (not pasting into a non-shell environment); use `export CATALINA_OPTS=...` if setting for child processes.
+    **`-bash: CATALINA_OPTS=-Xms2g: No such file or directory`** — Remove spaces around the `=` operator; the correct syntax is `CATALINA_OPTS="-Xms2g -Xmx8g ${CATALINA_OPTS}"` with no spaces.
 Restart: `sudo systemctl restart confluence`
 
 ---
@@ -243,6 +269,32 @@ pg_dump -U confluence confluence > /backup/confluence-db-$(date +%F).sql
 sudo systemctl start confluence
 ```
 
+
+```text title="Expected output"
+● confluence.service - Atlassian Confluence
+     Loaded: loaded (/etc/systemd/system/confluence.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2024-01-15 14:32:18 UTC; 2min 45s ago
+sending incremental file list
+confluence/
+confluence/attachments/
+confluence/attachments/ver001/
+confluence/attachments/ver001/att-12847-metadata.json
+confluence/attachments/ver001/att-12847.bin
+confluence/confluence.cfg.xml
+confluence/plugins-osgi-cache/
+confluence/plugins-state.json
+confluence/index/
+sent 2,847,392 bytes  received 18,294 bytes  speed: 1,234,567 bytes/sec
+total size is 2,847,392  speedup is 1.00
+pg_dump: [archiver] could not execute query: ERROR:  relation "public.spaces" does not exist
+WARNING: errors ignored on restore.  This may be related to the view definitions.
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`pg_dump: [archiver] could not execute query: ERROR:  relation "public.spaces" does not exist`** — Ensure the Confluence database is fully initialized and running before executing pg_dump, or use `pg_dump -U confluence -h localhost confluence 2>/dev/null | head -20` to verify connectivity first.
+    **`rsync: change_dir "/var/atlassian/application-data/confluence/" failed: Permission denied (13)`** — Run the rsync command with `sudo` or ensure the user running the script has read permissions on the Confluence home directory.
+    **`Job for confluence.service failed because the control process exited with error code.`** — Check Confluence logs with `sudo tail -100 /var/atlassian/confluence/logs/catalina.out` to identify startup failures, often caused by insufficient heap memory or port conflicts.
 ---
 
 ## Validate Deployment
@@ -261,6 +313,30 @@ curl -I http://localhost:8090
 grep -i "out of memory" /opt/atlassian/confluence/logs/catalina.out
 ```
 
+
+```text title="Expected output"
+● confluence.service - Atlassian Confluence
+     Loaded: loaded (/etc/systemd/system/confluence.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2024-01-15 09:42:17 UTC; 2h 34min ago
+       PID: 4827
+      Tasks: 47 (limit: 2048)
+     Memory: 2.8G
+        CPU: 18min 42.340s
+   CGroup: /system.slice/confluence.service
+           └─4827 /usr/lib/jvm/java-11-openjdk-amd64/bin/java -Xms1024m -Xmx3072m...
+
+HTTP/1.1 200 OK
+Server: Apache-Coyote/1.1
+Content-Type: text/html;charset=UTF-8
+Content-Length: 18547
+Date: Mon, 15 Jan 2024 09:45:03 GMT
+
+(no output — grep found no matches)
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to localhost port 8090: Connection refused`** — Verify Confluence service is running with `sudo systemctl start confluence` and wait 30 seconds for the application to fully initialize.
+    **`grep: /opt/atlassian/confluence/logs/catalina.out: No such file or directory`** — Confirm the Confluence installation path is correct; use `find / -name catalina.out 2>/dev/null` to locate the actual log file path.
 **Web UI:**
 
 - Log in as admin — dashboard loads with the first space visible

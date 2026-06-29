@@ -39,6 +39,23 @@ https://vcenter/sdk
 https://esxi-host/sdk                         # hostd API
 ```
 
+
+```text title="Expected output"
+# vCenter REST API (new, preferred)
+GET https://vcenter/api/vcenter/vm
+GET https://vcenter/api/vcenter/host
+
+# vCenter SOAP API (legacy, used by older tools)
+https://vcenter/sdk
+
+# ESXi host agent (direct host access)
+https://esxi-host/sdk                         # hostd API
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to vcenter port 443: Connection refused`** — Verify vCenter is running and accessible on the network; check firewall rules and DNS resolution with `nslookup vcenter`.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl or import the vCenter SSL certificate into your trusted store with `curl -cacert /path/to/cert.pem`.
+    **`HTTP/1.1 401 Unauthorized`** — Authenticate with valid vCenter credentials using `-u username:password` or by obtaining a session token via the `/api/session` endpoint first.
 ## See also
 
 - [ESXi Cheat Sheet](../../cheat-sheets/esxi/)

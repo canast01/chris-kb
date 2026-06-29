@@ -56,6 +56,47 @@ snmptranslate .1.3.6.1.2.1.1.1.0            # OID info
 snmptranslate -Td sysDescr                  # detailed MIB info
 ```
 
+
+```text title="Expected output"
+SNMPv2-MIB::sysDescr.0 = STRING: "Cisco IOS Software, C2960X Software, Version 15.2(4)E10, RELEASE SOFTWARE"
+
+SNMPv2-MIB::sysDescr.0 = STRING: "Device Description"
+SNMPv2-MIB::sysObjectID.0 = OID: SNMPv2-SMI::enterprises.9.9.46.1
+SNMPv2-MIB::sysUpTime.0 = Timeticks: (487291840) 56 days, 8:08:08.00
+SNMPv2-MIB::sysContact.0 = STRING: "admin@example.com"
+SNMPv2-MIB::sysName.0 = STRING: "switch-core-01"
+SNMPv2-MIB::sysLocation.0 = STRING: "Data Center 2, Rack A12"
+
+IF-MIB::ifNumber.0 = INTEGER: 52
+IF-MIB::ifIndex.1 = INTEGER: 1
+IF-MIB::ifDescr.1 = STRING: "GigabitEthernet0/1"
+IF-MIB::ifType.1 = INTEGER: ethernetCsmacd(6)
+IF-MIB::ifMtu.1 = INTEGER: 1500
+IF-MIB::ifSpeed.1 = Gauge32: 1000000000
+...
+
+IF-MIB::ifIndex.48 = INTEGER: 48
+IF-MIB::ifDescr.48 = STRING: "GigabitEthernet0/48"
+
+SNMPv2-MIB::sysDescr.0 = STRING: "Cisco IOS Software"
+SNMPv2-MIB::sysObjectID.0 = OID: SNMPv2-SMI::enterprises.9.9.46.1
+SNMPv2-MIB::sysUpTime.0 = Timeticks: (487291840) 56 days, 8:08:08.00
+...
+
+.1.3.6.1.2.1.1.1.0
+SNMPv2-MIB::sysDescr.0
+
+sysDescr OBJECT-TYPE
+    SYNTAX      DisplayString (SIZE (0..255))
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "A textual description of the entity."
+```
+
+!!! warning "Common errors"
+    **`snmpget: Unknown host (192.0.2.1)`** — Verify the device IP address is reachable and correct; check network connectivity with `ping <device-ip>`.
+    **`Timeout: No Response from 192.0.2.1`** — Confirm the SNMP community string is correct and SNMP is enabled on the device; check firewall rules allowing UDP 161.
+    **`snmptranslate: Unknown Object Identifier ".1.3.6.1.2.1.1.1.0"`** — Load the appropriate MIB file using `snmptranslate -m +<MIB-NAME>` or ensure MIB files are installed in `/usr/share/snmp/mibs/`.
 ## Common OIDs for Polling
 
 | OID | Name | Metric |

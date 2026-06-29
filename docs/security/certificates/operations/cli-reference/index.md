@@ -72,6 +72,45 @@ openssl pkcs12 -info -in cert.p12 -noout
 openssl req -in request.csr -noout -text
 ```
 
+
+```text title="Expected output"
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 0a:1b:2c:3d:4e:5f:6a:7b
+        Signature Algorithm: sha256WithRSAEncryption
+        Issuer: C = US, O = DigiCert Inc, CN = DigiCert Global Root CA
+        Validity
+            Not Before: Jan 15 10:00:00 2023 GMT
+            Not After : Jan 15 10:00:00 2026 GMT
+        Subject: C = US, ST = California, L = San Francisco, O = Example Corp, CN = api.example.com
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                RSA Public-Key: (2048 bit)
+subject=C = US, ST = California, L = San Francisco, O = Example Corp, CN = api.example.com
+issuer=C = US, O = DigiCert Inc, CN = DigiCert Global Root CA
+notBefore=Jan 15 10:00:00 2023 GMT
+notAfter=Jan 15 10:00:00 2026 GMT
+                X509v3 Subject Alternative Name: 
+                    DNS:api.example.com, DNS:*.example.com, DNS:www.example.com
+SHA1 Fingerprint=A1:B2:C3:D4:E5:F6:7A:8B:9C:0D:1E:2F:3A:4B:5C:6D:7E:8F:9A:0B
+SHA256 Fingerprint=A1:B2:C3:D4:E5:F6:7A:8B:9C:0D:1E:2F:3A:4B:5C:6D:7E:8F:9A:0B:1C:2D:3E:4F:5A:6B:7C:8D:9E:0F:1A:2B
+MAC verified OK
+PKCS7 Encrypted data: pbeWithSHA1And3-KeyTripleDES-CBC, Iteration 2048
+Certificate bag
+Bag Attributes
+    localKeyID: 01 00 00 00 
+subject=/C=US/O=Example Corp/CN=api.example.com
+issuer=/C=US/O=DigiCert Inc/CN=DigiCert Global Root CA
+-----BEGIN CERTIFICATE REQUEST-----
+MIICljCCAX4CAQAwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALRiMLAA...
+-----END CERTIFICATE REQUEST-----
+```
+
+!!! warning "Common errors"
+    **`unable to load certificate`** — Verify the certificate file path is correct and the file contains valid PEM-formatted data (check for encoding issues or corruption).
+    **`MAC verification failure`** — Ensure the correct password is provided when prompted for the PKCS#12 bundle, or the file may be corrupted.
+    **`no start line:PEM routines:PEM_read_bio:no start line:../crypto/pem/pem_lib.c`** — Convert the certificate to PEM format using `openssl x509 -inform DER -in cert.der -
 ---
 
 ## openssl — Verification
@@ -91,6 +130,19 @@ openssl verify -CAfile root.pem -untrusted intermediate.pem cert.pem
 openssl x509 -enddate -noout -in cert.pem |   awk -F= '{print $2}' | xargs -I{} date -d "{}" +%s |   awk -v now=$(date +%s) '{print int(($1-now)/86400)" days remaining"}'
 ```
 
+
+```text title="Expected output"
+d8e8fca2dc0f896fd7cb4cb0031ba249
+d8e8fca2dc0f896fd7cb4cb0031ba249
+cert.pem: OK
+cert.pem: OK
+47 days remaining
+```
+
+!!! warning "Common errors"
+    **`unable to load certificate`** — Verify the certificate file path is correct and the file is in PEM format (not DER); use `file cert.pem` to check.
+    **`unable to load Private Key`** — Ensure the private key file exists and is readable; check permissions with `ls -l key.pem` and convert from DER if needed with `openssl rsa -in key.der -inform DER -out key.pem`.
+    **`error 20 at 0 depth lookup: unable to get local issuer certificate`** — Add the issuing CA certificate to the CA bundle or use `-partial_chain` flag if the full chain is not available.
 ---
 
 ## openssl — TLS Testing
@@ -113,6 +165,40 @@ openssl s_client -connect <ldap_host>:636
 openssl s_client -connect <smtp_host>:465 -starttls smtp
 ```
 
+
+```text title="Expected output"
+CONNECTED(00000003)
+depth=0 CN = api.example.com
+verify error:num=20:unable to get local issuer certificate
+verify return:1
+depth=0 CN = api.example.com
+verify return:1
+---
+Certificate chain
+ 0 s:CN = api.example.com
+   i:C = US, O = Let's Encrypt, CN = R3
+-----BEGIN CERTIFICATE-----
+MIIFWzCCBEOgAwIBAgISA7x8z/9k7z8z/9k7z8z/9k7z MA0GCSqGSIb3DQEBBQsF
+ADBLMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMTGV0J3MgRW5jcnlwdDEkMCIGA1UE
+...
+-----END CERTIFICATE-----
+subject=CN = api.example.com
+issuer=C = US, O = Let's Encrypt, CN = R3
+---
+Signature ok
+subject=CN = api.example.com
+issuer=C = US, O = Let's Encrypt, CN = R3
+Public-Key: (2048 bit, RSA)
+X509v3 Subject Alternative Name: 
+    DNS:api.example.com, DNS:*.api.example.com
+Not Before: Jan 15 08:22:14 2024 GMT
+Not After : Apr 14 08:22:13 2024 GMT
+```
+
+!!! warning "Common errors"
+    **`connect:errno=111 Connection refused`** — Verify the host is reachable and the port is open with `nc -zv <host> 443`.
+    **`error:14090086:SSL routines:SSL3_GET_SERVER_CERTIFICATE:certificate verify failed`** — Add `-CAfile /etc/ssl/certs/ca-certificates.crt` to verify against your system's CA bundle, or use `-showcerts` to inspect the chain.
+    **`error:1408F10B:SSL routines:SSL3_GET_RECORD:unexpected eof while reading`** — The service may not support TLS on that port; confirm the correct port and protocol with your service documentation.
 ---
 
 ## certutil — Windows
@@ -137,6 +223,44 @@ certutil -delstore My <thumbprint>
 certutil -store My
 ```
 
+
+```text title="Expected output"
+================ Certificate Information ================
+Certificate:
+    Version: V3
+    Serial Number: 0x4a2b8c9d1e5f7a3b
+    Signature Algorithm: sha256RSA
+    Issuer: CN=Example Root CA, O=Example Corp, C=US
+    Subject: CN=server.example.com, O=Example Corp, C=US
+    NotBefore: 1/15/2024 10:30 AM
+    NotAfter: 1/15/2025 10:30 AM
+    Public Key: RSA (2048 bits)
+    Thumbprint: a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0
+
+Verifying certificate chain...
+Certificate is valid.
+Revocation check: Good (OCSP responder: ocsp.example.com)
+
+Certificate "ca.crt" added to store.
+
+Certificate deleted.
+
+My "Personal" store has 3 certificates:
+  0. server.example.com
+     Serial: 0x4a2b8c9d1e5f7a3b
+     Thumbprint: a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0
+  1. client.example.com
+     Serial: 0x5b3c9d0e2f6g8b4c
+     Thumbprint: b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1
+  2. legacy.example.com
+     Serial: 0x6c4d0e1f3g7h9c5d
+     Thumbprint: c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2
+```
+
+!!! warning "Common errors"
+    **`CertUtil: -verify command FAILED: 0x80092012 (-2146885614)`** — Ensure the certificate file path is correct and the file is not corrupted; try `certutil -dump cert.pem` first to verify the file is readable.
+    **`CertUtil: -addstore command FAILED: 0x80070005 (E_ACCESSDENIED)`** — Run the command as Administrator (right-click Command Prompt and select "Run as administrator").
+    **`CertUtil: -delstore command FAILED: 0x80092004 (-2146885628)`** — Verify the thumbprint is correct by listing certificates with `certutil -store My` and copy the exact thumbprint value.
 ---
 
 ## PowerShell — Windows Certificate Store
@@ -191,6 +315,26 @@ EOF
 )
 ```
 
+
+```text title="Expected output"
+Generating RSA private key, 2048 bit long modulus (2 primes)
+.......+++
+...................+++
+e is 65537 (0x010001)
+Generating RSA private key, 4096 bit long modulus (4 primes)
+.............+++
+.........................+++
+e is 65537 (0x010001)
+(no output — command completes silently)
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`openssl: No such file or directory`** — Install OpenSSL with `apt-get install openssl` (Debian/Ubuntu) or `brew install openssl` (macOS).
+    **`unable to load Private Key`** — Verify the key file exists and the path is correct with `ls -la key.pem`.
+    **`error on line 1 of config request: unknown option`** — Ensure the heredoc syntax is correct and the config file is properly formatted without extra whitespace.
 ---
 
 ## Verify

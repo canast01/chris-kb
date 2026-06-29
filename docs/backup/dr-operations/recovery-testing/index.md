@@ -142,6 +142,23 @@ qoperation execute -af /opt/commvault/testsnap_template.xml
 # XML template specifies client, subclient, snap copy, and test mount options
 ```
 
+
+```text title="Expected output"
+Commvault Command Line Interface (v11.28.0)
+Job ID: 1234567890
+Operation: Execute
+Status: Submitted
+Client: prod-db-server-01
+Subclient: MySQL_Full
+Snapshot Copy: snap_copy_prod_20240115
+Test Mount Point: /mnt/testsnap_recovery_001
+Job submitted successfully. Monitor progress with: qoperation list -j 1234567890
+```
+
+!!! warning "Common errors"
+    **`Error: Unable to parse XML file /opt/commvault/testsnap_template.xml`** — Verify the XML file exists, is readable, and contains valid Commvault syntax using `xmllint /opt/commvault/testsnap_template.xml`.
+    **`Error: Client 'prod-db-server-01' not found in CommServe database`** — Confirm the client name in the XML template matches exactly with `qclient list` and that the client is registered with CommServe.
+    **`Error: Insufficient permissions to execute operation on subclient 'MySQL_Full'`** — Ensure your CommServe user account has "Backup & Restore" permissions for the specified client and subclient via the Admin Console.
 ---
 
 ## Regulatory Requirements for DR Testing

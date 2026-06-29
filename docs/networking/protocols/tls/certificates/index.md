@@ -70,6 +70,35 @@ openssl s_client -connect <hostname>:443 -servername <hostname> </dev/null 2>/de
 openssl x509 -in certificate.pem -noout -enddate
 ```
 
+
+```text title="Expected output"
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 04:a1:8f:2e:9c:d7:b3:44:e5:6f:21:9a
+        Signature Algorithm: sha256WithRSAEncryption
+        Issuer: C = US, O = DigiCert Inc, CN = DigiCert Global G2 TLS RSA SHA256 2021 CA1
+        Validity
+            Not Before: Jan 15 00:00:00 2024 GMT
+            Not After : Jan 14 23:59:59 2025 GMT
+        Subject: CN = api.example.com
+        X509v3 Subject Alternative Name:
+            DNS:api.example.com, DNS:*.api.example.com, DNS:example.com
+
+subject=CN = api.example.com
+issuer=C = US, O = DigiCert Inc, CN = DigiCert Global G2 TLS RSA SHA256 2021 CA1
+notBefore=Jan 15 00:00:00 2024 GMT
+notAfter=Jan 14 23:59:59 2025 GMT
+X509v3 Subject Alternative Name:
+    DNS:api.example.com, DNS:*.api.example.com
+
+notAfter=Jan 14 23:59:59 2025 GMT
+```
+
+!!! warning "Common errors"
+    **`unable to load certificate`** — Verify the certificate file path is correct and the file contains valid PEM-formatted data (check for `-----BEGIN CERTIFICATE-----` header).
+    **`error:14094410:SSL routines:ssl3_read_bytes:sslv3 alert handshake failure`** — Ensure the hostname matches the certificate's CN or SAN, and the server is reachable on port 443 with TLS enabled.
+    **`No certificate returned by server`** — Add `-showcerts` flag to `s_client` to debug the connection, or verify the server is responding to TLS handshakes on the specified port.
 ## Generating a CSR
 
 ```bash
@@ -91,6 +120,25 @@ openssl req -newkey rsa:4096 -keyout server.key -out server.csr \
   -config san.cnf -subj "/CN=web.example.com"
 ```
 
+
+```text title="Expected output"
+Generating a RSA private key
+.......................................................................................................................+++++
+.+++++
+writing new private key to 'server.key'
+-----
+(no output — command completes silently)
+Generating a RSA private key
+.......................................................................................................................+++++
+.+++++
+writing new private key to 'server.key'
+-----
+```
+
+!!! warning "Common errors"
+    **`Can't open config file: san.cnf`** — Ensure the config file is created in the current working directory before running the second openssl command.
+    **`unable to write 'random state'`** — Run the commands with appropriate write permissions to the working directory, or use a temporary directory with `cd /tmp` first.
+    **`req: Unrecognized flag -config`** — Verify your OpenSSL version supports the `-config` flag (available in OpenSSL 1.0.0+); use `openssl version` to check.
 ## Certificate Formats
 
 | Format | Extension | Description | Convert |
@@ -110,6 +158,19 @@ openssl pkcs12 -in server.pfx -nokeys -out cert.pem
 openssl pkcs12 -in server.pfx -nocerts -nodes -out key.pem
 ```
 
+
+```text title="Expected output"
+Enter Export Password:
+Verifying - Enter Export Password:
+(no output — command completes silently)
+MAC verified OK
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error outputting keys from pkcs12 file for writing`** — Ensure the PKCS#12 file is not corrupted and you entered the correct import password when prompted.
+    **`Mac verify error`** — The PKCS#12 file password is incorrect; re-run the command and enter the matching export password used during creation.
 ## Key Sizes and Algorithms
 
 | Algorithm | Minimum | Recommended | Notes |

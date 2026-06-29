@@ -64,6 +64,22 @@ openssl x509 -noout -dates -in /etc/ssl/certs/cert.crt
 openssl verify -CAfile /etc/ssl/certs/ca-certificates.crt cert.crt
 ```
 
+
+```text title="Expected output"
+verify ok
+subject=CN = host.example.com, O = Example Corp, C = US
+issuer=C = US, O = DigiCert Inc, CN = DigiCert Global G2 TLS RSA SHA256 CA
+Cipher : ECDHE-RSA-AES128-GCM-SHA256
+Protocol : TLSv1.3
+notBefore=Jan 15 08:22:14 2023 GMT
+notAfter=Jan 15 08:22:13 2025 GMT
+cert.crt: OK
+```
+
+!!! warning "Common errors"
+    **`verify error:num=20:unable to get local issuer certificate`** — Add the intermediate CA certificate to your trust store or use the `-CApath` flag pointing to the directory containing CA bundles.
+    **`error in x509 lookup`** — Ensure the certificate file path is correct and readable; verify with `ls -la /etc/ssl/certs/cert.crt`.
+    **`Verify return code: 1 (self signed certificate)`** — For self-signed certificates in testing, use `openssl verify -CAfile cert.crt cert.crt` or add the cert to your trust store.
 **Expected output:** Chain check shows `verify return:1` for each cert in the chain and `Verification: OK` at the end. `openssl verify` returns `cert.crt: OK`. Absence of `OK` or presence of `verify error:num=` indicates a chain or trust store problem.
 
 See [TLS Troubleshooting](../../protocols/tls/troubleshooting/) for detailed steps.
@@ -81,6 +97,23 @@ nc -zv vault.corp.local 1858
 sc query CyberArk_CPM   # Windows
 ```
 
+
+```text title="Expected output"
+Connection to vault.corp.local 1858 port [tcp/*] succeeded!
+(no output — command completes silently)
+SERVICE_NAME: CyberArk_CPM
+        TYPE               : 10  INTERACTIVE
+        STATE              : 4  RUNNING
+                                (STOPPABLE, PAUSABLE, ACCEPTS_SHUTDOWN)
+        WIN32_EXIT_CODE    : 0  (0x0)
+        SERVICE_EXIT_CODE  : 0  (0x0)
+        CHECKPOINT         : 0x0
+        WAIT_HINT          : 0x0
+```
+
+!!! warning "Common errors"
+    **`nc: getaddrinfo for name=vault.corp.local port=1858: Name or service not known`** — Verify DNS resolution with `nslookup vault.corp.local` and confirm the hostname is correct in your network.
+    **`SERVICE_NAME: CyberArk_CPM STATE              : 1  STOPPED`** — Start the CyberArk CPM service using `sc start CyberArk_CPM` or the Windows Services GUI.
 **Expected output:** `nc` returns `Connection to vault.corp.local port 1858 [tcp] succeeded`. `sc query CyberArk_CPM` shows `STATE: 4 RUNNING`. If connection refused, check firewall rule for TCP 1858 between the CPM server and the Vault.
 
 ## MFA / Duo Troubleshooting
@@ -112,3 +145,38 @@ klist
 setspn -L hostname   # Windows
 ldapsearch -H ldap://dc -D "CORP\admin" -W -b "DC=corp,DC=local" "(servicePrincipalName=HTTP/host.corp.local)"
 ```
+
+
+```text title="Expected output"
+Wed Jan 15 14:32:47 UTC 2025
+     remote           refid      st t when poll reach   delay   offset  jitter
+==============================================================================
+ntp.ubuntu.com      .POOL.          16 p    -   64    0    0.000    0.000   0.000
+0.ubuntu.pool.ntp.o 216.239.35.0     2 u   28   64  377   45.231   -2.145   3.821
+1.ubuntu.pool.ntp.o 129.6.15.28      2 u   26   64  377   52.104    1.832   2.456
+2.ubuntu.pool.ntp.o 132.163.96.1     2 u   31   64  377   48.567   -0.923   1.204
+
+               Local time: Wed 2025-01-15 14:32:47 UTC
+           Universal time: Wed 2025-01-15 14:32:47 UTC
+                 RTC time: Wed 2025-01-15 14:32:47
+                Time zone: UTC (UTC, +0000)
+System clock synchronized: yes
+              NTP service: active
+RTC in local TZ: no
+
+Ticket cache: FILE:/tmp/krb5cc_0
+Default principal: username@CORP.LOCAL
+
+Valid starting     Expires            Service principal
+01/15/25 14:32:47  01/16/25 00:32:47  krbtgt/CORP.LOCAL@CORP.LOCAL
+01/15/25 14:32:47  01/16/25 00:32:47  HTTP/host.corp.local@CORP.LOCAL
+
+servicePrincipalName: HTTP/host.corp.local
+servicePrincipalName: HTTP/host.corp.local:80
+objectClass: computer
+cn: hostname
+```
+
+!!! warning "Common errors"
+    **`kinit: Clients credentials have been revoked while getting initial credentials`** — Verify the user account is active in Active Directory and hasn't exceeded password expiration or failed login attempts.
+    **`ldapsearch: Invalid credentials (49)`** — Ensure the admin account credentials are correct and the LDAP bind DN format matches your domain structure (e.g., "CN=admin,CN=Users,DC=corp,DC=local").

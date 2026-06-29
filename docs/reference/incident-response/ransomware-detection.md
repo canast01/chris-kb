@@ -119,6 +119,22 @@ puresnapshot list --pgrouplist <pgroup> --sort created --reverse
 # Verify eradication period (default 24h) has not expired
 ```
 
+
+```text title="Expected output"
+Name                                    Created                 Size      State
+prod-db-backup-2024-01-15-0300         2024-01-15 03:00:12     487.3GB   active
+prod-db-backup-2024-01-14-0300         2024-01-14 03:00:08     487.1GB   active
+prod-db-backup-2024-01-13-0300         2024-01-13 03:00:15     486.9GB   active
+prod-db-backup-2024-01-12-0300         2024-01-12 03:00:11     487.2GB   active
+prod-db-backup-2024-01-11-0300         2024-01-11 03:00:09     486.8GB   active
+prod-db-backup-2024-01-10-0300         2024-01-10 03:00:14     487.0GB   active
+...
+Total: 47 snapshots | Eradication window expires: 2024-01-16 03:00:12 UTC
+```
+
+!!! warning "Common errors"
+    **`Error: Protection group '<pgroup>' not found`** — Verify the protection group name with `pureprotectiongroup list` and use the correct name.
+    **`Error: Command requires authentication token`** — Ensure you are authenticated to the Pure Storage array with `pureauth login` before running snapshot commands.
 Check Veeam Hardened Repository: confirm immutability lock is active and unexpired.
 
 ## Recovery Options
@@ -140,6 +156,24 @@ puresnapshot list --pgrouplist <pgroup>
 purevol copy <pgroup>.<snapshot>.<vol> <restore-vol-name> --overwrite
 ```
 
+
+```text title="Expected output"
+Name                           Created                  Serial                   Pgrouplist
+pgrouplist-prod-01.2024-01-15  2024-01-15 14:32:18 UTC  8a3f9c2e-b741-4d2a-9e1b  pgrouplist-prod-01
+pgrouplist-prod-01.2024-01-14  2024-01-14 14:32:18 UTC  7b2e8d1f-a630-3c1b-8d0a  pgrouplist-prod-01
+pgrouplist-prod-01.2024-01-13  2024-01-13 14:32:18 UTC  6c1d7c0e-9f52-2b0a-7c9f  pgrouplist-prod-01
+pgrouplist-prod-01.2024-01-12  2024-01-12 14:32:18 UTC  5d0c6b9d-8e41-1a9f-6b8e  pgrouplist-prod-01
+pgrouplist-prod-01.2024-01-11  2024-01-11 14:32:18 UTC  4e9b5a8c-7d30-0f8e-5a7d  pgrouplist-prod-01
+
+Volume copy started: restore-vol-prod-01
+Copy progress: 100%
+Volume restore-vol-prod-01 created successfully from pgrouplist-prod-01.2024-01-15.database-vol
+```
+
+!!! warning "Common errors"
+    **`Error: Protection group '<pgroup>' not found`** — Verify the protection group name with `pureprotectiongroup list` and ensure it exists on the array.
+    **`Error: Snapshot '<snapshot>' does not exist in protection group`** — Confirm the snapshot name is correct and hasn't been purged by checking the full snapshot list output above.
+    **`Error: Volume '<restore-vol-name>' already exists`** — Remove the `--overwrite` flag if you want to preserve the existing volume, or delete it first with `purevol destroy <restore-vol-name>`.
 ### Option B — Veeam Restore from Hardened Repository
 
 1. Veeam Console → Home → Backups → Disk

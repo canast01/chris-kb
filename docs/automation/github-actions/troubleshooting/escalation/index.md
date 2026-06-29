@@ -89,6 +89,31 @@ gh run download <run-id> --dir ./run-logs-$(date +%F)
 gh run list --status failure --limit 20
 ```
 
+
+```text title="Expected output"
+? What is your preferred protocol for git operations? HTTPS
+? Authenticate Git with your GitHub credentials? Yes
+? How would you like to authenticate GitHub CLI? Login with a web browser
+
+! First copy your one-time code: F4D2-A8C9
+Press Enter to open github.com in your browser...
+✓ Authentication complete. Logged in as devops-admin
+
+Name                                    Status      Conclusion  Workflow              Run ID    Created
+Deploy to Production                    completed   failure     deploy.yml            8472651   2024-01-15T14:32:10Z
+Build and Test Suite                    completed   failure     ci.yml                8472598   2024-01-15T13:18:45Z
+Security Scan                           completed   success     security.yml          8472547   2024-01-15T12:05:22Z
+Unit Tests                              completed   failure     test.yml              8472489   2024-01-15T11:42:18Z
+...
+
+Downloading logs for run 8472651...
+✓ Downloaded to ./run-logs-2024-01-15/
+```
+
+!!! warning "Common errors"
+    **`authentication required`** — Run `gh auth login` first to authenticate with GitHub.
+    **`HTTP 404: Not Found`** — Verify the run ID exists and you have access to the repository with `gh run list`.
+    **`permission denied while trying to connect to the Docker daemon`** — This is a workflow runtime issue, not a CLI issue; check the run logs with `gh run view <run-id> --log` to see the actual failure in the Actions environment.
 ### 2. Collect self-hosted runner diagnostics
 
 ```bash
@@ -112,6 +137,35 @@ launchctl list | grep actions.runner
 cat /opt/actions-runner/package.json | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('version','unknown'))"
 ```
 
+
+```text title="Expected output"
+total 2048
+drwxr-xr-x  8 runner runner    4096 Jan 15 10:42 .
+drwxr-xr-x  5 runner runner    4096 Jan 10 09:15 ..
+-rw-r--r--  1 runner runner  512000 Jan 15 10:42 Worker_20250115-104215_abc123de.log
+-rw-r--r--  1 runner runner  384000 Jan 15 10:15 Worker_20250115-101530_xyz789ab.log
+-rw-r--r--  1 runner runner  256000 Jan 15 09:45 Runner_20250115-094512_def456gh.log
+-rw-r--r--  1 runner runner  128000 Jan 15 09:12 Runner_20250115-091200_ijk012mn.log
+-rw-r--r--  1 runner runner   64000 Jan 15 08:30 Startup_20250115-083000_opq345rs.log
+...
+{
+  "runnerId": 42,
+  "runnerName": "ubuntu-runner-01",
+  "runnerGroupId": 1,
+  "workFolder": "_work"
+}
+● actions.runner.myorg.ubuntu-runner-01.service - GitHub Actions Runner (myorg.ubuntu-runner-01)
+     Loaded: loaded (/etc/systemd/system/actions.runner.myorg.ubuntu-runner-01.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2025-01-15 08:22:14 UTC; 2h 20min ago
+     Main PID: 3847 (Runner.Listener)
+       CGroup: /system.slice/actions.runner.myorg.ubuntu-runner-01.service
+2.315.0
+```
+
+!!! warning "Common errors"
+    **`cat: /opt/actions-runner/.runner: No such file or directory`** — Verify the runner is installed in /opt/actions-runner and re-run the installation script if the directory is missing.
+    **`sudo: systemctl: command not found`** — Use `launchctl list | grep actions.runner` on macOS instead, or verify systemd is available on Linux systems.
+    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Ensure /opt/actions-runner/package.json exists and is valid JSON; reinstall the runner if the file is corrupted.
 ### 3. Collect OIDC configuration (for OIDC/cloud auth issues)
 
 ```bash
@@ -125,6 +179,29 @@ gh api /orgs/{org}/actions/oidc/customization/issuer
 grep -A5 'permissions:' .github/workflows/failing-workflow.yml
 ```
 
+
+```text title="Expected output"
+{
+  "use_default": false,
+  "include_claim_keys": [
+    "repo",
+    "context",
+    "actor"
+  ]
+}
+{
+  "issuer_url": "https://token.actions.githubusercontent.com",
+  "audiance": "sts.amazonaws.com"
+}
+permissions:
+  id-token: write
+  contents: read
+  deployments: write
+```
+
+!!! warning "Common errors"
+    **`HTTP 404: Not Found`** — Verify the repository slug format is correct and the repo exists with `gh repo view {owner}/{repo}`.
+    **`Error: Not enough permissions to access this endpoint`** — Ensure your GitHub token has `admin:org_hook` and `repo` scopes by running `gh auth status`.
 ### 4. Export audit log (Enterprise only)
 
 ```bash
@@ -134,6 +211,20 @@ gh api "/orgs/{org}/audit-log?phrase=action:workflows&per_page=100" \
   > audit-log-$(date +%F).jsonl
 ```
 
+
+```text title="Expected output"
+{"timestamp":"2024-01-15T14:32:18Z","action":"workflows.approve_workflow_run","actor":"alice-dev","org":"acme-corp","repo":"backend-service","workflow_id":2847,"conclusion":"success"}
+{"timestamp":"2024-01-15T14:28:55Z","action":"workflows.disable_workflow","actor":"bob-admin","org":"acme-corp","repo":"infra-automation","workflow_name":"deploy-prod.yml","reason":"manual_disable"}
+{"timestamp":"2024-01-15T13:45:22Z","action":"workflows.create_workflow_run","actor":"ci-bot","org":"acme-corp","repo":"frontend-app","branch":"main","workflow_id":1923}
+{"timestamp":"2024-01-15T13:12:09Z","action":"workflows.approve_workflow_run","actor":"carol-lead","org":"acme-corp","repo":"data-pipeline","run_number":487}
+{"timestamp":"2024-01-15T12:58:33Z","action":"workflows.update_workflow","actor":"alice-dev","org":"acme-corp","repo":"backend-service","file":".github/workflows/test.yml"}
+...
+```
+
+!!! warning "Common errors"
+    **`gh: Unauthorized (HTTP 403)`** — Verify your GitHub token has `admin:org_hook` and `read:org` scopes, or request org admin to grant audit log access.
+    **`jq: parse error: Invalid JSON text at line 1`** — Remove the `python3` JSON processor and use `gh api --jq '.[] | @json'` instead for cleaner parsing.
+    **`No such file or directory`** — Ensure the output directory exists and you have write permissions; create it with `mkdir -p logs/` before running the command.
 ### 5. Write the timeline
 
 Create a plain text file:
@@ -240,6 +331,79 @@ gh api /repos/{owner}/{repo}/actions/permissions/workflow
 gh secret list --org {org}
 ```
 
+
+```text title="Expected output"
+GitHub: operational
+Actions: operational
+API Requests: operational
+Webhooks: operational
+Pages: operational
+Codespaces: operational
+
+[
+  {
+    "databaseId": 8947562341,
+    "displayTitle": "Deploy to production",
+    "conclusion": "failure",
+    "createdAt": "2026-06-14T18:32:15Z"
+  },
+  {
+    "databaseId": 8947501289,
+    "displayTitle": "Unit tests",
+    "conclusion": "failure",
+    "createdAt": "2026-06-14T14:21:09Z"
+  },
+  {
+    "databaseId": 8947445672,
+    "displayTitle": "Build and push image",
+    "conclusion": "failure",
+    "createdAt": "2026-06-14T09:15:43Z"
+  }
+]
+
+{
+  "runners": [
+    {
+      "id": 742,
+      "name": "ubuntu-runner-01",
+      "status": "online",
+      "busy": true
+    },
+    {
+      "id": 741,
+      "name": "ubuntu-runner-02",
+      "status": "online",
+      "busy": false
+    },
+    {
+      "id": 739,
+      "name": "macos-runner-prod",
+      "status": "offline",
+      "busy": false
+    }
+  ]
+}
+
+2026-06-14T18:32:15Z ##[error] Docker image build failed: exit code 1
+2026-06-14T18:32:16Z Error: failed to push image to registry.example.com/app:latest
+2026-06-14T18:32:17Z ##[error] Authentication token expired
+
+{
+  "enabled": true,
+  "allowed_actions": "all",
+  "selected_actions_url": ""
+}
+
+✓ SECRET_REGISTRY_TOKEN
+✓ SLACK_WEBHOOK_URL
+✓ DATABASE_PASSWORD
+✓ DEPLOY_KEY
+```
+
+!!! warning "Common errors"
+    **`gh: command not found`** — Install GitHub CLI with `brew install gh` (macOS) or `apt-get install gh` (Linux), then authenticate with `gh auth login`.
+    **`HTTP 401: Bad credentials`** — Verify your GitHub token is valid and has `repo` and `admin:org_hook` scopes by running `gh auth status`.
+    **`jq: command not found`** — Install jq with `brew install jq` (macOS) or `apt-get install jq` (Linux) for JSON filtering support.
 ---
 
 ## See also

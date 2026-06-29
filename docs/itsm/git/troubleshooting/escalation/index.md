@@ -128,6 +128,47 @@ echo "Diagnostics bundle: ${OUT_DIR}.tar.gz"
 echo "Review for secrets before uploading to vendor support portal."
 ```
 
+
+```text title="Expected output"
+Collecting diagnostics to /tmp/gitlab-diag-20240315-143022 ...
+run: gitaly: (pid 2847) 892s; run: logrotate: (pid 31456) 0s
+run: puma: (pid 2891) 887s; run: logrotate: (pid 31457) 0s
+run: sidekiq: (pid 2904) 882s; run: logrotate: (pid 31458) 0s
+run: postgresql: (pid 2756) 945s; run: logrotate: (pid 31459) 0s
+run: nginx: (pid 2834) 898s; run: logrotate: (pid 31460) 0s
+Filesystem     Size  Used Avail Use% Mounted on
+/dev/sda1       50G   38G   12G  76% /
+/var/opt/gitlab/git-data  200G  156G   44G  78% /var/opt/gitlab/git-data
+Checking GitLab Shell ... OK
+Checking GitLab API ... OK
+Checking Database Connection ... OK
+Checking Uploads directory ... OK
+Checking Artifacts directory ... OK
+GitLab version: 16.8.1-ee
+GitLab Shell version: 14.32.0
+PostgreSQL version: 14.10
+Redis version: 7.0.12
+Geo enabled: true
+Geo role: primary
+Geo node: gitlab-primary-01
+status: success
+Active background migrations: 3
+Queued background migrations: 1
+top - 14:30:22 up 15 days, 3:42, 1 user, load average: 2.14, 1.87, 1.65
+Tasks: 287 total, 2 running, 285 sleeping, 0 stopped, 0 zombie
+%Cpu(s): 18.2 us, 4.1 sy, 0.0 ni, 77.1 id, 0.5 wa, 0.0 hi, 0.1 si, 0.0 st
+MiB Mem : 64000.0 total, 52341.2 used, 11658.8 free, 2145.3 buffers
+MiB Swap: 8192.0 total, 1024.5 used, 7167.5 free, 18234.1 cached
+gitlab-ee: 16.8.1-ee-0~focal
+status: SERVING
+Diagnostics bundle: /tmp/gitlab-diag-20240315-143022.tar.gz
+Review for secrets before uploading to vendor support portal.
+```
+
+!!! warning "Common errors"
+    **`sudo: gitlab-ctl: command not found`** — Verify GitLab is installed with `which gitlab-ctl` and ensure the script runs on the GitLab server, not a client machine.
+    **`Permission denied: /var/opt/gitlab/git-data`** — Add the current user to the `gitlab-www` group with `sudo usermod -aG gitlab-www $USER` and log out/in, or run the entire script with `sudo`.
+    **`grpc_health_probe: command not found`** — Install the health probe tool with `sudo /opt/gitlab/embedded/bin/grpc_health_probe` or verify the embedded
 ### Data Collection Checklist
 
 - [ ] `gitlab-ctl status` output
@@ -156,6 +197,14 @@ sudo gitlab-rails runner "Gitlab::CurrentSettings.update!(maintenance_mode: true
 # Or via UI: Admin Area → Settings → General → Maintenance mode
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`sudo: gitlab-rails: command not found`** — Ensure GitLab is installed via the official package manager and the `gitlab-rails` executable is in PATH, or use the full path `/opt/gitlab/bin/gitlab-rails`.
+    **`ActiveRecord::ConnectionNotEstablished: could not connect to server`** — Verify PostgreSQL is running with `sudo systemctl status postgresql` and that GitLab's database configuration in `/etc/gitlab/gitlab.rb` is correct.
 ### Step 2 — Assess Damage
 
 ```bash
@@ -173,6 +222,32 @@ sudo -u git git -C "$REPO_PATH" branch -a
 sudo -u git git -C "$REPO_PATH" log --oneline -10 2>/dev/null || echo "HEAD not accessible"
 ```
 
+
+```text title="Expected output"
+Checking object database integrity...
+Checking object integrity...
+Checking commit/tag/tree/blob links...
+dangling commit 3a7f2e9c1b4d5e6f8a9b0c1d2e3f4a5b
+missing blob 5c8d1e2f3a4b5c6d7e8f9a0b1c2d3e4f
+error: refs/heads/feature-branch: invalid object type
+Checking connectivity: 342 objects, 18 errors
+12
+18
+* master
+  develop
+  refs/remotes/origin/main
+  refs/remotes/origin/staging
+  refs/remotes/origin/hotfix-v2.1.3
+a9f2e1c HEAD -> master: Merge pull request #847 from team/feature-auth
+b3d4c2e Fix critical security vulnerability in JWT validation
+c1e5f3a Add database migration for user_sessions table
+d7a8b4f Refactor authentication middleware
+e2f6g5h Update dependencies to latest stable versions
+```
+
+!!! warning "Common errors"
+    **`fatal: Not a valid object name`** — Verify the REPO_PATH points to a valid bare Git repository and check file permissions with `ls -la "$REPO_PATH"`.
+    **`fatal: your current branch 'master' does not have any commits yet`** — The repository is corrupted beyond recovery of the current branch; restore from backup or use `git reflog` to recover lost commits if available.
 ### Step 3 — Recover from Mirror/Backup
 
 ```bash
@@ -201,6 +276,43 @@ sudo chown -R git:git "$DEST"
 sudo gitlab-ctl start puma sidekiq
 ```
 
+
+```text title="Expected output"
+sending incremental file list
+objects/pack/pack-abc123def456.pack
+objects/pack/pack-abc123def456.idx
+objects/info/packs
+objects/17/
+objects/2a/
+objects/3f/
+...
+sent 1,247,384 bytes  received 12,847 bytes  speed: 2.4MB/s
+
+Checking object database for errors...
+Checking commits
+Checking trees
+Checking blobs
+Checking refs
+0 errors
+
+Cloning into bare repository '/var/opt/gitlab/git-data/repositories/group/project-recovered.git'...
+remote: Counting objects: 45821, done.
+remote: Compressing objects: 100% (12847/12847), done.
+remote: Total 45821 (delta 32154), reused 45821 (delta 32154)
+Receiving objects: 100% (45821/45821), done.
+Resolving deltas: 100% (32154/32154), done.
+
+Checking object database for errors...
+0 errors
+
+ok: run: puma: (pid 2847) 1s
+ok: run: sidekiq: (pid 2851) 1s
+```
+
+!!! warning "Common errors"
+    **`fatal: destination path '/var/opt/gitlab/git-data/repositories/group/project-recovered.git' already exists and is not an empty directory`** — Remove or rename the existing directory before cloning, or use a different destination path.
+    **`rsync: change_dir "/backup/git/project.git/objects" failed: No such file or directory (2)`** — Verify the mirror backup path exists and is accessible by running `ls -la "$MIRROR"`.
+    **`error: could not lock config file /var/opt/gitlab/git-data/repositories/group/project.git/config: Permission denied`** — Ensure the git user owns the repository directory by running `sudo chown -R git:git "$DEST"` before fsck.
 ### Step 4 — Recover a Deleted Branch (No Corruption)
 
 ```bash
@@ -222,6 +334,23 @@ curl -X POST \
   --data "branch=recovered-branch&ref=<sha>"
 ```
 
+
+```text title="Expected output"
+commit 1a2b3c4 Merge branch 'feature/auth-redesign' into main
+commit 5d6e7f8 Revert "Update login flow"
+commit 9g0h1i2 Fix: session timeout handling
+commit 3j4k5l6 WIP: experimental branch
+commit 7m8n9o0 Merge branch 'hotfix/security-patch' into main
+
+Branch created
+
+{"id":42,"name":"recovered-branch","commit":{"id":"1a2b3c4d5e6f7g8h9i0j","short_id":"1a2b3c4d","title":"Merge branch 'feature/auth-redesign' into main","message":"Merge branch 'feature/auth-redesign' into main\n","author_name":"DevOps Team","author_email":"devops@example.com","created_at":"2024-01-15T09:23:45.000Z"},"merged":false,"protected":false,"developers_can_push":false,"developers_can_merge":false,"can_delete":false,"web_url":"https://gitlab.example.com/group/project/-/tree/recovered-branch"}
+```
+
+!!! warning "Common errors"
+    **`fatal: your current branch 'main' does not have any commits yet`** — Ensure the repository is initialized with at least one commit before attempting reflog operations.
+    **`401 Unauthorized`** — Verify the `PRIVATE-TOKEN` is valid and has admin/maintainer access to the project by testing with `curl -H "PRIVATE-TOKEN: $ADMIN_TOKEN" https://gitlab.example.com/api/v4/user`.
+    **`Couldn't find Project with full_path=group/project`** — Confirm the project path is correct and the git user has read access by running `sudo -u git gitlab-rails runner "puts Project.find_by_full_path('group/project').inspect"`.
 ### Step 5 — Restore from GitLab Backup
 
 ```bash
@@ -235,6 +364,38 @@ sudo gitlab-ctl restart
 sudo gitlab-rake gitlab:check SANITIZE=true
 ```
 
+
+```text title="Expected output"
+ok: down
+ok: down
+Unpacking backup ... done
+Restoring database ... done
+Restoring repositories ... done
+Restoring uploads ... done
+Restoring builds ... done
+Restoring artifacts ... done
+Restoring pages ... done
+Restoring lfs objects ... done
+Restore task complete. Backup timestamp: 1703251847_2023_12_22_16.3.0
+(no output — command completes silently)
+* ruby_block[supervise_puma_sleep] action run
+* ruby_block[wait_for_puma_startup] action run
+ok: run: puma
+ok: run: sidekiq
+Checking GitLab Shell ... ok
+Checking GitLab API ... ok
+Checking Database Connection ... ok
+Checking Database Version ... ok (PostgreSQL 13.11)
+Checking Uploads ... ok
+Checking LFS Objects ... ok
+Checking GitLab Shell and Gitaly TCP/Unix sockets ... ok
+...
+```
+
+!!! warning "Common errors"
+    **`BACKUP=<timestamp>_gitlab_backup not found`** — Verify the backup file exists in `/var/opt/gitlab/backups/` and use the correct timestamp from `sudo gitlab-backup list`.
+    **`cp: cannot stat '/secure/gitlab-secrets.json': No such file or directory`** — Omit the secrets restore step if the file doesn't exist, or restore it from your secure backup location before running this script.
+    **`FATAL: database is locked`** — Wait 2-3 minutes for any running jobs to complete, then retry the restore; if persistent, run `sudo gitlab-ctl restart postgresql` first.
 ### Step 6 — Post-Recovery Validation
 
 ```bash
@@ -257,6 +418,47 @@ git -C /tmp/verify-clone fsck
 sudo gitlab-rails runner "Gitlab::CurrentSettings.update!(maintenance_mode: false)"
 ```
 
+
+```text title="Expected output"
+Checking repository integrity...
+Checking object database integrity...
+[master 8f3c2a1] Fix authentication timeout in session handler
+[master 7e9b1d4] Merge branch 'feature/api-v2' into master
+[master 6a2f5e8] Update dependencies to 2.4.1
+[master 5c1a3f9] Add rate limiting middleware
+[master 4d8e7c2] Refactor database connection pool
+[master 3b9f6a1] Initial commit
+42
+
+"Fix authentication timeout in session handler"
+"Merge branch 'feature/api-v2' into master"
+"Update dependencies to 2.4.1"
+"Add rate limiting middleware"
+"Fix database query performance"
+
+Cloning into '/tmp/verify-clone'...
+remote: Enumerating objects: 1247, done.
+remote: Counting objects: 100% (1247/1247), done.
+remote: Compressing objects: 100% (892/892), done.
+remote: Receiving objects: 100% (1247/1247), 3.45 MiB | 12.3 MiB/s, done.
+remote: Resolving deltas: 100% (634/634), done.
+8f3c2a1 Fix authentication timeout in session handler
+7e9b1d4 Merge branch 'feature/api-v2' into master
+6a2f5e8 Update dependencies to 2.4.1
+5c1a3f9 Add rate limiting middleware
+4d8e7c2 Refactor database connection pool
+3b9f6a1 Initial commit
+Checking object database integrity...
+Checking connectivity... done.
+Checking 1247 objects... done.
+
+Updating application settings...
+```
+
+!!! warning "Common errors"
+    **`fatal: could not read Username for 'https://gitlab.example.com': No such file or directory`** — Ensure SSH key is configured or use `git clone https://...` with embedded credentials instead of SSH.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `--insecure` flag to curl or configure GitLab's certificate in your CA bundle.
+    **`ActiveRecord::RecordNotFound: Couldn't find Gitlab::Setting`** — Verify GitLab is fully initialized by running `sudo gitlab-rake gitlab:check` before attempting to disable maintenance mode.
 ### Recovery Decision Tree
 
 ```d2

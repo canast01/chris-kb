@@ -165,6 +165,33 @@ Test-NetConnection -ComputerName <repo-server> -Port 2500
 Test-NetConnection -ComputerName <vm-ip> -Port 6160
 ```
 
+
+```text title="Expected output"
+200
+ComputerName     : backup-proxy-01.corp.local
+RemoteAddress    : 10.45.22.18
+RemotePort       : 9392
+TcpTestSucceeded : True
+
+Connection to vcenter.corp.local 443 port [tcp/https] succeeded!
+
+Connection to 10.50.15.42 902 port [tcp/*] succeeded!
+
+ComputerName     : repo-nas-02.corp.local
+RemoteAddress    : 10.60.8.44
+RemotePort       : 2500
+TcpTestSucceeded : True
+
+ComputerName     : prod-web-vm-07.corp.local
+RemoteAddress    : 10.72.44.19
+RemotePort       : 6160
+TcpTestSucceeded : True
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip certificate verification (already present in example, but verify VBR certificate is trusted on workstation if `-k` is removed).
+    **`TcpTestSucceeded : False`** — Verify firewall rules allow the source IP to reach the destination port, and confirm the service is running on the target host with `Get-NetTCPConnection -LocalPort <port>`.
+    **`nc: getaddrinfo: Name or service not known`** — Ensure the FQDN or IP address is correct and resolvable from the proxy server by testing with `nslookup <hostname>` first.
 ---
 
 ## See also

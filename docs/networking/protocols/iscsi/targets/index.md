@@ -48,6 +48,40 @@ iscsiadm -m node -o show
 iscsiadm -m node --targetname <IQN> -o show | grep portal
 ```
 
+
+```text title="Expected output"
+Node [192.168.1.100:3260,1 iqn.2020-04.com.example:storage.disk1.sys1] {
+	iface.iscsi_ifacename = default
+	iface.net_ifacename = <empty>
+	iface.ipaddress = <empty>
+	iface.hwaddress = <empty>
+	iface.transport_name = tcp
+	iface.initiator_name = iqn.1993-08.org.debian:01.a1b2c3d4e5f6
+	iface.state = <empty>
+	node.name = iqn.2020-04.com.example:storage.disk1.sys1
+	node.tpgt = 1
+	node.startup = manual
+	node.leading_login = No
+	node.session.auth.authmethod = None
+	node.conn[0].address = 192.168.1.100
+	node.conn[0].port = 3260
+	node.conn[0].startup = manual
+}
+Node [192.168.1.101:3260,2 iqn.2020-04.com.example:storage.disk2.sys1] {
+	node.conn[0].address = 192.168.1.101
+	node.conn[0].port = 3260
+	node.conn[0].startup = manual
+}
+
+portal.address = 192.168.1.100
+portal.port = 3260
+portal.address = 192.168.1.101
+portal.port = 3260
+```
+
+!!! warning "Common errors"
+    **`iscsiadm: No records found`** — Run `iscsiadm -m discovery -t st -p <portal_ip>` to discover targets before querying nodes.
+    **`iscsiadm: Invalid IQN format`** — Verify the target IQN syntax matches `iqn.YYYY-MM.reverse.domain:identifier` and use quotes if it contains special characters.
 ## Discovery Methods
 
 | Method | How it works | Use case |
@@ -67,6 +101,28 @@ iscsiadm -m node
 iscsiadm -m node -o delete -T <IQN> -p <ip>:3260
 ```
 
+
+```text title="Expected output"
+# Linux — SendTargets discovery
+iscsiadm -m discovery -t sendtargets -p 192.168.1.50:3260
+192.168.1.50:3260,1 iqn.2019-05.com.example:storage.disk1
+192.168.1.50:3260,1 iqn.2019-05.com.example:storage.disk2
+
+# Linux — list discovered targets
+iscsiadm -m node
+192.168.1.50:3260,1 iqn.2019-05.com.example:storage.disk1
+192.168.1.50:3260,1 iqn.2019-05.com.example:storage.disk2
+192.168.1.51:3260,1 iqn.2019-05.com.example:storage.disk3
+
+# Linux — remove stale target record
+iscsiadm -m node -o delete -T iqn.2019-05.com.example:storage.disk3 -p 192.168.1.51:3260
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`iscsiadm: cannot connect to discovery address 192.168.1.50:3260`** — Verify the target IP is reachable and the iSCSI daemon (iscsid) is running with `systemctl status iscsid`.
+    **`iscsiadm: No records found`** — Run discovery first with the sendtargets command before attempting to list or delete nodes.
+    **`iscsiadm: Error: cannot find record for node`** — Ensure the IQN and IP:port combination exactly match an existing record; verify with `iscsiadm -m node` first.
 ## Host / Initiator Group Mapping
 
 All storage arrays require the initiator IQN to be registered in a host or initiator group before a LUN is visible:
@@ -91,6 +147,27 @@ iscsiadm -m discovery -t sendtargets -p <target-ip>
 iscsiadm -m session -P 3 | grep -A10 <IQN>
 ```
 
+
+```text title="Expected output"
+Connection to 192.168.1.50 3260 port [tcp/iscsi] succeeded!
+Target: iqn.2024-01.com.storage:target.disk1
+	Current Portal: 192.168.1.50:3260,1
+	Persistent Portal: 192.168.1.50:3260,1
+
+iSCSI Transport: tcp
+Initiator Name: iqn.1993-08.org.debian:01.a1b2c3d4e5f6
+Initiator Alias: debian-host-01
+...
+	Attached scsi disk sdb	State: running
+	Current Portal: 192.168.1.50:3260,1
+	Persistent Portal: 192.168.1.50:3260,1
+	Iface Name: default
+```
+
+!!! warning "Common errors"
+    **`nc: connect to 192.168.1.50 port 3260 (tcp) failed: Connection refused`** — Verify the iSCSI target service is running on the target server with `systemctl status iscsid` and check firewall rules allow port 3260.
+    **`iscsiadm: No records found`** — Ensure the target IP is correct, the target portal is listening, and run `iscsiadm -m discovery -t sendtargets -p <target-ip>` to refresh discovery records.
+    **`iscsiadm: No active sessions`** — Log in to the target first using `iscsiadm -m node -T <IQN> -p <target-ip> --login` before querying session details.
 ## Common Issues
 
 | Symptom | Cause | Action |

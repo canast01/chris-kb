@@ -133,6 +133,56 @@ free -h
 top -b -n1 | grep java | head -5
 ```
 
+
+```text title="Expected output"
+{"state":"RUNNING"}
+2024-01-15 09:23:47,521 ERROR [http-nio-8080-exec-12] com.atlassian.jira.issue.search.SearchException - Search failed: timeout after 30s
+2024-01-15 09:18:12,334 WARN [scheduler_Worker-2] com.atlassian.jira.bc.issue.search.SearchService - OOM detected in query execution
+2024-01-15 08:45:01,221 ERROR [jira-request-incoming-1847] java.lang.OutOfMemoryError: Java heap space
+{
+  "baseUrl": "http://jira.company.local:8080",
+  "version": "8.20.11",
+  "versionNumbers": [8, 20, 11, 0],
+  "buildNumber": 820011,
+  "buildDate": "2023-12-10T14:32:00.000-0500",
+  "serverTime": "2024-01-15T14:47:22.156-0500",
+  "scmInfo": "abc1d2e3f4g5h6i7j8k9l0m1n2o3p4q5r6s7t8u9",
+  "displayName": "JIRA Production"
+}
+{
+  "nodes": [
+    {
+      "nodeId": "node-1",
+      "alive": true,
+      "healthy": true,
+      "state": "ACTIVE"
+    },
+    {
+      "nodeId": "node-2",
+      "alive": true,
+      "healthy": true,
+      "state": "ACTIVE"
+    }
+  ],
+  "clusterHealthy": true
+}
+{
+  "progressPercentage": 0,
+  "currentIndex": 0,
+  "totalIssues": 847293,
+  "description": "Reindex completed successfully",
+  "reindexTime": 3847000
+}
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/sda2       500G  387G  113G  78% /var/atlassian/application-data/jira
+total 2.1G
+drwxr-xr-x  512 jira jira 4.0K Jan 15 14:22 attachments
+-rw-r--r--    1 jira jira 2.1G Jan 15 14:15 attachments.tar.gz
+              total        used        free      shared  buff/cache   available
+                 32Gi       18Gi       8.2Gi      512Mi       5.8Gi       13Gi
+root      1847  2.3 28.4 5847392 9234560 ?  Sl  09:12   0:47 /usr/lib/jvm/java-11-openjdk-amd64/bin/java -Xms4g -Xmx10g
+root      2156  1.8 22.1 4923847 7234891 ?  Sl  09:15   0:32 /usr/lib/jvm/java-11-openjdk-amd64/bin/java -Xms2g -Xmx8g
+```
 ---
 
 ## Step 2 — JVM heap analysis
@@ -152,6 +202,36 @@ jmap -histo:live "${JIRA_PID}" | head -35
 jcmd "${JIRA_PID}" VM.flags | grep -E "HeapSize|Xmx|Xms"
 ```
 
+
+```text title="Expected output"
+24680
+ NumGC: 12
+ GC time (ms): 2847
+ Eden Space (bytes): 536870912
+ Survivor Space (bytes): 67108864
+ Tenured Gen (bytes): 1610612736
+ Metaspace (bytes): 134217728
+
+ num     #instances         #bytes  class name
+----------------------------------------------
+   1:       1847392      148592640  [C (char array)
+   2:        521847       83495520  java.lang.String
+   3:        312156       49945280  [Ljava/lang/Object;
+   4:        187643       30023040  java.util.HashMap$Node
+   5:        156821       25091360  [I (int array)
+   6:         98432       15749120  java.util.ArrayList
+   7:         67284       10765440  com.atlassian.jira.issue.Issue
+   8:         54921        8787360  java.util.LinkedHashMap$Entry
+...
+Total        8947283     1456789120
+
+-XX:InitialHeapSize=2147483648 -XX:MaxHeapSize=4294967296 -XX:+UseG1GC
+```
+
+!!! warning "Common errors"
+    **`pgrep: command not found`** — Install procps-ng package or use `ps aux | grep atlassian-jira` to locate the PID manually.
+    **`Could not attach to <PID>: Permission denied`** — Run the command as the same user running JIRA (typically `jira` user) or use `sudo`.
+    **`jcmd: command not found`** — Ensure JAVA_HOME is set correctly and jcmd is in PATH; verify JDK (not JRE) is installed.
 ### Capture heap dump
 
 ```bash
@@ -164,6 +244,16 @@ sudo -u jira jmap -dump:format=b,live,file="${DUMP_FILE}" "${JIRA_PID}"
 echo "Heap dump: ${DUMP_FILE} ($(du -sh ${DUMP_FILE} | cut -f1))"
 ```
 
+
+```text title="Expected output"
+Dump file size: 2.3G
+Heap dump: /tmp/jira-heap-20240115-143022.hprof (2.3G)
+```
+
+!!! warning "Common errors"
+    **`Could not attach to process`** — Ensure the JIRA process is running with `pgrep -f 'atlassian-jira'` and verify the PID is correct before running jmap.
+    **`Permission denied`** — Run the command with appropriate sudo privileges or ensure the jira user has permissions to write to /tmp.
+    **`jmap: command not found`** — Install the JDK (not just JRE) on the system, as jmap is part of the JDK tools.
 ### Analyse with Eclipse MAT
 
 1. Download [Eclipse Memory Analyser Tool (MAT)](https://eclipse.dev/mat/)
@@ -197,6 +287,26 @@ grep "Pause" "${GC_LOG}" | awk '{
 }'
 ```
 
+
+```text title="Expected output"
+247
+2.156s
+1.987s
+1.654s
+1.423s
+0.987s
+0.876s
+0.745s
+0.698s
+0.612s
+0.501s
+GC events: 1847, Total pause: 892.3s, Avg: 483ms
+```
+
+!!! warning "Common errors"
+    **`grep: /opt/atlassian/jira/logs/gc.log: No such file or directory`** — Verify the GC log path matches your JIRA installation; check `$JIRA_HOME/logs/` and update `GC_LOG` variable accordingly.
+    **`awk: syntax error in function printf near line 1`** — Ensure the awk script is properly quoted and newlines are preserved; use single quotes around the entire awk block or escape internal quotes.
+    **`command not found: awk`** — Install gawk or mawk package using your system package manager (e.g., `apt-get install gawk` on Debian/Ubuntu).
 ---
 
 ## Step 3 — Thread dump capture and analysis
@@ -221,6 +331,18 @@ done
 echo "Thread dumps in: ${DUMP_DIR}"
 ```
 
+
+```text title="Expected output"
+Captured dump 1: /tmp/jira-thread-dumps-20240315/dump-1-143022.txt
+Captured dump 2: /tmp/jira-thread-dumps-20240315/dump-2-143032.txt
+Captured dump 3: /tmp/jira-thread-dumps-20240315/dump-3-143042.txt
+Thread dumps in: /tmp/jira-thread-dumps-20240315
+```
+
+!!! warning "Common errors"
+    **`jcmd: command not found`** — Ensure the JDK (not just JRE) is installed and `JAVA_HOME` is set correctly in your environment.
+    **`Error: Could not attach to process`** — Verify the JIRA process is running with `ps aux | grep atlassian-jira` and that you have sufficient permissions (may require `sudo`).
+    **`No such file or directory`** — Check that `/tmp` is writable and has sufficient free space with `df -h /tmp`.
 ### Parse thread dumps
 
 ```bash
@@ -240,6 +362,45 @@ grep -B2 "http-nio-8080" "${DUMP_FILE}" | grep "Thread.State: RUNNABLE"
 grep -A10 "Found.*deadlock" "${DUMP_FILE}"
 ```
 
+
+```text title="Expected output"
+45 java.lang.Thread.State: WAITING
+     12 java.lang.Thread.State: RUNNABLE
+      8 java.lang.Thread.State: TIMED_WAITING
+      3 java.lang.Thread.State: BLOCKED
+      1 java.lang.Thread.State: NEW
+
+   java.lang.Thread.State: BLOCKED (on object monitor)
+	at com.atlassian.jira.issue.IssueManager.getIssue(IssueManager.java:234)
+	- waiting to lock <0x00007f8a2c4d5e90> (a java.lang.Object)
+	at com.atlassian.jira.rest.v2.issue.IssueResource.getIssue(IssueResource.java:156)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+
+   java.lang.Thread.State: RUNNABLE
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.read(SocketInputStream.java:152)
+	at org.apache.catalina.connector.http.HttpProcessor.process(HttpProcessor.java:876)
+	at org.apache.catalina.connector.http.HttpConnector$HttpRequestHandler.run(HttpConnector.java:682)
+
+   java.lang.Thread.State: RUNNABLE
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.read(SocketInputStream.java:152)
+
+Found one Java-level deadlock:
+=============================
+"http-nio-8080-exec-7":
+  waiting to lock monitor 0x00007f8a2c4d5e90 (object 0x00007f8a2c4d5e90, a java.lang.Object),
+  which is held by "http-nio-8080-exec-12"
+
+"http-nio-8080-exec-12":
+  waiting to lock monitor 0x00007f8a2c4d5f10 (object 0x00007f8a2c4d5f10, a java.lang.Object),
+  which is held by "http-nio-8080-exec-7"
+```
+
+!!! warning "Common errors"
+    **`grep: /var/dumps/dump-1-*.txt: No such file or directory`** — Verify the dump file exists in `${DUMP_DIR}` and matches the naming pattern, or use `ls ${DUMP_DIR}/dump-1-*.txt` to confirm the path.
+    **`grep: (standard input) is empty`** — The dump file is empty or the grep pattern doesn't match any content; regenerate the thread dump using `jstack <pid> > ${DUMP_DIR}/dump-1-$(date +%s).txt`.
+    **`DUMP_DIR: unbound variable`** — Set the `DUMP_DIR` variable before running the script with `export DUMP_DIR=/path/to/dumps` or define it inline.
 ### Thread states interpretation
 
 | State | Meaning | Concern |
@@ -370,6 +531,29 @@ curl -s -u "${JIRA_USER}:${JIRA_TOKEN}" \
   }' | python3 -m json.tool
 ```
 
+
+```text title="Expected output"
+{
+  "id": "support-zip-20240115-a7f3c9e2",
+  "status": "PROCESSING",
+  "createdAt": "2024-01-15T14:32:18.447Z",
+  "expiresAt": "2024-01-22T14:32:18.447Z",
+  "downloadUrl": "/secure/attachment/support-zip-20240115-a7f3c9e2.zip",
+  "size": null,
+  "includes": {
+    "logs": true,
+    "configuration": true,
+    "threadDump": true,
+    "plugins": true
+  },
+  "estimatedCompletionTime": "2024-01-15T14:37:18.447Z"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to jira.example.com port 443: Connection refused`** — Verify `${JIRA_URL}` is correct and the Jira instance is running and accessible from your network.
+    **`{"errorMessages":["User does not have permission to administer Jira"],"errors":{}}`** — Ensure `${JIRA_USER}` has Jira administrator privileges or use an API token from an admin account.
+    **`curl: (6) Could not resolve host: jira.example.com`** — Check that `${JIRA_URL}` hostname is resolvable and verify DNS or network connectivity.
 The zip file is created in `<jira-home>/export/support/`. Retrieve and attach to your Atlassian support ticket.
 
 ### What the Support ZIP contains
@@ -418,6 +602,15 @@ Enable JMX in `setenv.sh` for external monitoring:
 -Djava.rmi.server.hostname=<node-ip>
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Exception in thread "main" java.net.BindException: Address already in use`** — Change the JMX port (e.g., 9999 to 10000) if another process is already listening on that port.
+    **`java.rmi.ConnectException: Connection refused to host: <node-ip>`** — Verify the `java.rmi.server.hostname` is set to the actual resolvable IP or FQDN of the Jira node, not localhost or an internal IP if connecting remotely.
+    **`java.lang.SecurityException: Authentication disabled but password file not found`** — Set `jmxremote.authenticate=false` only in non-production environments; for production, create a jmxremote.password file and set authenticate=true instead.
 Key MBeans to monitor:
 
 | MBean | Attribute | Meaning |

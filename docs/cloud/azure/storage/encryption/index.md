@@ -76,6 +76,35 @@ az storage account show \
   --query "encryption.requireInfrastructureEncryption"
 ```
 
+
+```text title="Expected output"
+{
+  "keySource": "Microsoft.Storage",
+  "services": {
+    "blob": {
+      "enabled": true,
+      "lastEnabledTime": "2024-01-15T09:42:33.000000+00:00"
+    },
+    "file": {
+      "enabled": true,
+      "lastEnabledTime": "2024-01-15T09:42:33.000000+00:00"
+    },
+    "queue": {
+      "enabled": true,
+      "lastEnabledTime": "2024-01-15T09:42:33.000000+00:00"
+    },
+    "table": {
+      "enabled": true,
+      "lastEnabledTime": "2024-01-15T09:42:33.000000+00:00"
+    }
+  }
+}
+true
+```
+
+!!! warning "Common errors"
+    **`ResourceNotFound: The Resource 'Microsoft.Storage/storageAccounts/stprodblobs01' under resource group 'rg-storage-prod' was not found.`** — Verify the storage account name and resource group name are correct using `az storage account list --resource-group rg-storage-prod`.
+    **`AuthorizationFailed: The client 'user@contoso.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Storage/storageAccounts/read' over scope '/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/rg-storage-prod/providers/Microsoft.Storage/storageAccounts/stprodblobs01'.`** — Ensure your Azure account has at least Storage Account Contributor or Reader role assigned on the storage account or resource group.
 ## Enabling Customer-Managed Keys (CMK)
 
 CMK requires an Azure Key Vault with soft delete and purge protection enabled.
@@ -130,6 +159,44 @@ az storage account update \
   --encryption-key-version ""
 ```
 
+
+```text title="Expected output"
+{
+  "id": "/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/resourceGroups/rg-storage-prod/providers/Microsoft.KeyVault/vaults/kv-storage-prod",
+  "location": "eastus",
+  "name": "kv-storage-prod",
+  "properties": {
+    "enablePurgeProtection": true,
+    "enableSoftDelete": true,
+    "tenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47"
+  }
+}
+{
+  "attributes": {
+    "created": 1699564892,
+    "enabled": true,
+    "updated": 1699564892
+  },
+  "key": {
+    "crv": null,
+    "kid": "https://kv-storage-prod.vault.azure.net/keys/storage-cmk/a7f3c2e1b9d4f6a8c5e2b1d9f4a7c3e1",
+    "kty": "RSA",
+    "n": "0vx7agoebGcQSuuPiLJXZptN9nndrQmbXEps2aiAFbWhM78LhWx4cbbfAAtVT86zwu1RK7aPFFxuhDR1L6tSoc_BJECPebWKRXjBZCiFV4n3oknjhMstn64tZ_2W-5JsGY4Hc5n9yBXArwl93lqt7_RN5w6Cf0h4QyQ5v-65YGjQR0_FDW2QvzqY368QQMicAtaSqzs8KJZgnYb9c7d0zgdAZHzu6qMQvRL5hajrn1n91CbOpbISD08qNLyrdkt-bFTWhAI4vMQFh6WeZu0fM4lFd2NcRwr3XPksINHaQ-G_xBniIqbw0Ls1jF44-csFCur-kEgU8awapJzKnqDKgw",
+    "use": "enc"
+  }
+}
+{
+  "identity": {
+    "principalId": "f8c3d2e1-a9b4-4c7f-8e2d-1a5b9c3f7e2d",
+    "tenantId": "72f988bf-86f1-41af-91ab-2d7cd011db47",
+    "type": "SystemAssigned"
+  },
+  "name": "stprodblobs01"
+}
+f8c3d2e1-a9b4-4c7f-8e2d-1a5b9c3f7e2d
+{
+  "id": "/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/resourceGroups/
+```
 ## Key Rotation
 
 ```bash
@@ -153,6 +220,20 @@ az storage account show \
   --query "encryption.keyVaultProperties"
 ```
 
+
+```text title="Expected output"
+Key created successfully with kid: https://kv-storage-prod.vault.azure.net/keys/storage-cmk/a7f2c9e1b4d6f8a2c5e7g9h1j3k5m7n9.
+(no output — command completes silently)
+{
+  "keyName": "storage-cmk",
+  "keyVaultUri": "https://kv-storage-prod.vault.azure.net/",
+  "keyVersion": ""
+}
+```
+
+!!! warning "Common errors"
+    **`The user, group or application 'appid=12345678-1234-1234-1234-123456789012;oid=87654321-4321-4321-4321-210987654321' does not have access to key 'storage-cmk' in this vault.`** — Grant the storage account's managed identity Key Vault access with `az keyvault set-policy --name kv-storage-prod --object-id <storage-identity-oid> --key-permissions get unwrapKey wrapKey`.
+    **`(ResourceNotFound) The storage account 'stprodblobs01' could not be found.`** — Verify the storage account name and resource group are correct with `az storage account list --resource-group rg-storage-prod`.
 ## Infrastructure Encryption
 
 Infrastructure encryption adds a second independent encryption layer using a different algorithm at the storage infrastructure level.
@@ -174,6 +255,28 @@ az storage account show \
   --query "encryption.requireInfrastructureEncryption"
 ```
 
+
+```text title="Expected output"
+{
+  "id": "/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/resourceGroups/rg-storage-prod/providers/Microsoft.Storage/storageAccounts/stprodinfraenc01",
+  "name": "stprodinfraenc01",
+  "type": "Microsoft.Storage/storageAccounts",
+  "location": "eastus",
+  "sku": {
+    "name": "Standard_GRS"
+  },
+  "kind": "StorageV2",
+  "encryption": {
+    "requireInfrastructureEncryption": true
+  }
+}
+true
+```
+
+!!! warning "Common errors"
+    **`ResourceGroupNotFound : Resource group 'rg-storage-prod' could not be found.`** — Create the resource group first with `az group create --name rg-storage-prod --location eastus`.
+    **`StorageAccountAlreadyTaken : The storage account named 'stprodinfraenc01' is already taken.`** — Choose a unique storage account name (must be globally unique across Azure) and retry.
+    **`InvalidParameter : The value of parameter 'require-infrastructure-encryption' is invalid.`** — Use lowercase `true` or `false` as string values, or remove quotes if using boolean flags.
 ## Transport Encryption (TLS)
 
 ```bash
@@ -196,6 +299,17 @@ az storage account show \
   --query "{https:supportsHttpsTrafficOnly, tls:minimumTlsVersion}"
 ```
 
+
+```text title="Expected output"
+{
+  "https": true,
+  "tls": "TLS1_2"
+}
+```
+
+!!! warning "Common errors"
+    **`ResourceNotFound: The Resource 'Microsoft.Storage/storageAccounts/stprodblobs01' under resource group 'rg-storage-prod' was not found.`** — Verify the storage account name and resource group name are correct using `az storage account list --resource-group rg-storage-prod`.
+    **`AuthorizationFailed: The client 'user@contoso.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Storage/storageAccounts/write' over scope '/subscriptions/xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx/resourceGroups/rg-storage-prod/providers/Microsoft.Storage/storageAccounts/stprodblobs01'.`** — Ensure your Azure account has Storage Account Contributor or Owner role on the resource group using `az role assignment list --resource-group rg-storage-prod`.
 ## See also
 
 - [Azure — Overview](../../)

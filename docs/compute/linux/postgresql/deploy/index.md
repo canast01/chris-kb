@@ -54,6 +54,46 @@ sudo /usr/pgsql-16/bin/postgresql-16-setup initdb
 sudo systemctl enable --now postgresql-16
 ```
 
+
+```text title="Expected output"
+PostgreSQL 16 Repository Setup
+Last metadata expiration check: 0:00:42 ago on Thu 19 Dec 2024 02:15:33 PM UTC.
+Dependencies resolved.
+================================================================================
+ Package                    Arch      Version           Repository       Size
+================================================================================
+Installing:
+ pgdg-redhat-repo           noarch    latest-1          @commandline    9.2 kB
+
+Transaction Summary
+================================================================================
+Install  1 Package
+
+Complete!
+Resetting modules for package postgresql:16-devel
+Disabling module postgresql:16-devel
+Disabling module postgresql:16
+Dependencies resolved.
+================================================================================
+ Package                    Arch      Version           Repository       Size
+================================================================================
+Installing:
+ postgresql16-server        x86_64    16.1-1PGDG.rhel9  pgdg16           4.8 MB
+ postgresql16-contrib       x86_64    16.1-1PGDG.rhel9  pgdg16           652 kB
+ postgresql16-libs          x86_64    16.1-1PGDG.rhel9  pgdg16           412 kB
+
+Transaction Summary
+================================================================================
+Install  3 Packages
+
+Complete!
+Initializing database ... ok
+Created symlink /etc/systemd/system/multi-user.target.wants/postgresql-16.service → /usr/lib/systemd/system/postgresql-16.service.
+```
+
+!!! warning "Common errors"
+    **`Error: Failed to download repository metadata`** — Verify internet connectivity and ensure the PostgreSQL repository URL is accessible from your network.
+    **`Error: Package postgresql16-server not found`** — Confirm the module disable command completed successfully and that the pgdg repository was installed without errors.
 ## Install on Ubuntu
 
 ```bash
@@ -61,6 +101,25 @@ sudo apt install -y postgresql postgresql-contrib
 sudo systemctl enable --now postgresql
 ```
 
+
+```text title="Expected output"
+Reading package lists... Done
+Building dependency tree... Done
+The following NEW packages will be installed:
+  postgresql postgresql-contrib postgresql-client postgresql-common libpq5
+Setting up postgresql-common (15+248~deb12u1) ...
+Setting up postgresql-15 (15.6-1.pgdg120+1) ...
+Creating new PostgreSQL cluster 15/main ...
+  /usr/lib/postgresql/15/bin/initdb -D /var/lib/postgresql/15/main --auth-local peer --auth-host md5
+  Initializing database ... ok
+Created symlink /etc/systemd/system/multi-user.target.wants/postgresql.service → /etc/systemd/system/postgresql.service.
+postgresql.service enabled and set to start at system boot.
+postgresql.service started successfully.
+```
+
+!!! warning "Common errors"
+    **`E: Unable to locate package postgresql`** — Run `sudo apt update` before installing to refresh the package index.
+    **`Job for postgresql.service failed because the start code exited with error code 1.`** — Check `/var/log/postgresql/postgresql-15-main.log` for initialization errors, often caused by insufficient disk space or permission issues on `/var/lib/postgresql`.
 ## Initial Configuration (`postgresql.conf`)
 
 ```ini
@@ -94,6 +153,15 @@ sudo firewall-cmd --add-rich-rule='rule family=ipv4 source address=10.0.1.0/24 p
 sudo firewall-cmd --reload
 ```
 
+
+```text title="Expected output"
+success
+success
+```
+
+!!! warning "Common errors"
+    **`Error: INVALID_RULE: rule family=ipv4 source address=10.0.1.0/24 port port=5432 protocol=tcp accept: bad attribute port`** — Remove the duplicate "port" keyword; the correct syntax is `port protocol=tcp port=5432`.
+    **`Error: COMMAND_FAILED: '/usr/bin/firewall-cmd --reload' failed: org.fedoraproject.FirewallD1.Exception: INVALID_RULE`** — Verify the rich rule syntax is valid before running `--reload`, as malformed rules will prevent the daemon from reloading.
 ## Create Application User and Database
 
 ```sql
@@ -109,6 +177,27 @@ psql -U postgres -c "SELECT version(); SHOW shared_buffers;"
 psql -U appuser -h 127.0.0.1 -d app_prod -c "SELECT 1 AS alive;"
 ```
 
+
+```text title="Expected output"
+version                                                  
+────────────────────────────────────────────────────────────────────────────────────────────────────────
+ PostgreSQL 14.8 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 9.4.0, 64-bit
+(1 row)
+
+ shared_buffers 
+────────────────
+ 256MB
+(1 row)
+
+ alive 
+───────
+     1
+(1 row)
+```
+
+!!! warning "Common errors"
+    **`psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL: Ident authentication failed for user "postgres"`** — Ensure the postgres system user exists and pg_hba.conf allows local socket connections with trust or peer authentication.
+    **`psql: error: FATAL: password authentication failed for user "appuser"`** — Verify appuser exists in PostgreSQL and the password is correct, or configure .pgpass file with credentials for non-interactive connections.
 ---
 
 ## Verify

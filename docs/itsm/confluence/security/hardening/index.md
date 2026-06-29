@@ -43,6 +43,40 @@ curl -u admin:password \
   "https://confluence.example.local/rest/plugins/1.0/?os_authType=basic" \
   | python3 -m json.tool | grep -E "\"key\"|\"enabled\"|\"version\""
 ```
+
+```text title="Expected output"
+{
+  "key": "com.atlassian.confluence.plugins.confluence-mobile-plugin",
+  "enabled": true,
+  "version": "8.2.1"
+}
+{
+  "key": "com.atlassian.confluence.plugins.office-connector",
+  "enabled": true,
+  "version": "5.4.3"
+}
+{
+  "key": "com.atlassian.confluence.plugins.team-calendars",
+  "enabled": false,
+  "version": "4.1.8"
+}
+{
+  "key": "com.atlassian.confluence.plugins.confluence-content-formatting-macros",
+  "enabled": true,
+  "version": "8.2.1"
+}
+{
+  "key": "com.atlassian.confluence.plugins.confluence-default-user-macros",
+  "enabled": true,
+  "version": "8.2.1"
+}
+...
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl to skip certificate verification, or import the self-signed cert into your system's CA bundle.
+    **`jq: command not found`** — Install `jq` package (`apt-get install jq` or `yum install jq`) as an alternative to `python3 -m json.tool` for better JSON parsing.
+    **`HTTP 401 Unauthorized`** — Verify the admin credentials are correct and the user has API access permissions in Confluence administration settings.
 ```bash
 # Disable automatic plugin updates in production (require manual review)
 # Administration > Manage Apps > Settings > Disable automatic updates
@@ -79,6 +113,45 @@ input(type="imfile"
 
 local6.*  @@siem.example.local:514
 ```
+
+```text title="Expected output"
+% Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 2847k  100 2847k    0     0   1.2M      0  0:00:02  0:00:02 --:--:--  0:00:02
+{
+  "results": [
+    {
+      "createdDate": 1704067200000,
+      "author": {
+        "username": "admin",
+        "userKey": "557058:a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+      },
+      "summary": "User jsmith created page 'Security Policy v2.1'",
+      "description": "Page created in space SEC",
+      "objectType": "page",
+      "objectName": "Security Policy v2.1"
+    },
+    {
+      "createdDate": 1704053800000,
+      "author": {
+        "username": "svc-backup",
+        "userKey": "557058:f7g8h9i0-j1k2-3456-lmno-pq7890123456"
+      },
+      "summary": "Backup export completed",
+      "description": "Full space backup initiated",
+      "objectType": "space"
+    }
+  ],
+  "size": 2,
+  "limit": 1000,
+  "start": 0
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl or import the self-signed certificate into the system CA bundle.
+    **`jq: parse error: Invalid numeric literal at line 1 column 10`** — Verify the API response is valid JSON by testing `curl -u admin:password "https://confluence.example.local/rest/api/audit?limit=10"` directly first.
+    **`rsyslog: imfile: cannot open file '/var/log/confluence-audit-export.json'`** — Ensure the file exists and rsyslog process has read permissions; create it with `touch /var/log/confluence-audit-export.json && chmod 644 /var/log/confluence-audit-export.json`.
 ```bash
 # /opt/atlassian/confluence/confluence/WEB-INF/urlrewrite.xml
 # Restrict access to admin URLs from management IPs only
@@ -118,6 +191,15 @@ JVM_SUPPORT_RECOMMENDED_ARGS="
 # <Host name="localhost" ... >
 #   Remove manager and host-manager Context entries
 ```
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`setenv.sh: Permission denied`** — Run `chmod +x /opt/atlassian/confluence/bin/setenv.sh` to make the script executable before sourcing it.
+    **`server.xml: No such file or directory`** — Verify Confluence installation path with `ls -la /opt/atlassian/confluence/conf/` and confirm the correct CONFLUENCE_HOME directory.
+    **`Tomcat fails to start after server.xml edit`** — Validate XML syntax with `xmllint /opt/atlassian/confluence/conf/server.xml` before restarting the service.
 ```bash
 # Run Confluence as a dedicated non-root service account
 # Create service account

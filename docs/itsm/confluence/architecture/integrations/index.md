@@ -79,6 +79,15 @@ curl -u admin:password \
   "https://confluence.example.com/rest/api/user-directory/{directoryId}/sync"
 ```
 
+
+```text title="Expected output"
+{"status":"SYNC_IN_PROGRESS","directoryId":"12345","syncStartTime":"2024-01-15T14:32:18.742Z","estimatedDuration":"45 seconds"}
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to confluence.example.com port 443: Connection refused`** — Verify the Confluence server is running and accessible; check the hostname and port in your URL.
+    **`{"errorMessages":["You do not have permission to perform this operation"],"statusCode":403}`** — Ensure the credentials provided have admin privileges; verify the user account hasn't been restricted or disabled.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to bypass SSL verification for self-signed certificates, or import the certificate into your CA bundle.
 ### Nested Groups
 
 Enable **Nested Groups** if AD groups contain other groups as members. This has a performance cost on large directories — set a sync interval accordingly and consider flattening the group tree where possible.
@@ -125,6 +134,22 @@ with smtplib.SMTP('smtp.example.com', 587) as s:
 "
 ```
 
+
+```text title="Expected output"
+Trying 203.0.113.42...
+Connected to smtp.example.com.
+Escape character is '^]'.
+220 mail.example.com ESMTP Postfix
+^]
+telnet> quit
+Connection closed.
+Sent OK
+```
+
+!!! warning "Common errors"
+    **`telnet: Unable to connect to remote host: Connection refused`** — Verify the SMTP server is running and listening on port 587, or check firewall rules blocking outbound connections from the Confluence server.
+    **`smtplib.SMTPAuthenticationError: (535, b'5.7.8 Error: authentication failed')`** — Confirm the service account credentials (svc-confluence-mail@example.com) are correct and the account is not locked or expired in your mail system.
+    **`smtplib.SMTPException: SMTP AUTH extension not supported by server`** — Ensure the SMTP server supports STARTTLS on port 587; verify you're not connecting to a submission port that requires different authentication or TLS negotiation.
 ### Notification Troubleshooting
 
 - Check **Admin > Mail > Mail Queue** for stuck messages
@@ -218,6 +243,45 @@ curl -H "Authorization: Bearer <PAT>" \
   "https://confluence.example.com/rest/api/space"
 ```
 
+
+```text title="Expected output"
+{
+  "results": [
+    {
+      "id": "0",
+      "key": "INFRA",
+      "name": "Infrastructure",
+      "type": "global",
+      "status": "current"
+    },
+    {
+      "id": "1",
+      "key": "SEC",
+      "name": "Security",
+      "type": "global",
+      "status": "current"
+    },
+    {
+      "id": "2",
+      "key": "NET",
+      "name": "Networking",
+      "type": "global",
+      "status": "current"
+    }
+  ],
+  "start": 0,
+  "limit": 25,
+  "size": 3,
+  "_links": {
+    "self": "https://confluence.example.com/rest/api/space"
+  }
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to confluence.example.com port 443: Connection refused`** — Verify the Confluence instance hostname and that it is accessible from your network.
+    **`{"statusCode":401,"data":{"authorized":false},"message":"Unauthorized"}`** — Ensure the PAT token is valid, not expired, and correctly formatted in the Authorization header without extra whitespace.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip SSL verification for self-signed certificates, or install the proper CA certificate bundle.
 ### CQL (Confluence Query Language)
 
 CQL is analogous to Jira's JQL for searching content:
@@ -233,6 +297,10 @@ text ~ "runbook" AND creator = "chris.a" AND type = page
 type = blogpost ORDER BY created DESC
 ```
 
+
+```text title="Expected output"
+(no output — these are CQL query examples for documentation reference, not executable bash commands)
+```
 ---
 
 ## See also

@@ -257,6 +257,22 @@ grep -i "error\|exception\|fail" <mid-install-dir>/logs/agent0.log | tail -50
 curl -sk -o /dev/null -w "%{http_code}" https://<instance>.service-now.com/api/now/table/incident?sysparm_limit=1
 ```
 
+
+```text title="Expected output"
+200
+2024-01-15 09:23:44,512 ERROR [MIDServer] Connection timeout to instance.service-now.com:443 after 30000ms
+2024-01-15 09:24:12,687 EXCEPTION [HTTPClient] javax.net.ssl.SSLHandshakeException: sun.security.validator.ValidatorException: PKIX path building failed
+2024-01-15 09:25:01,334 ERROR [Scheduler] Failed to execute probe: com.snc.mid.discovery.DiscoveryProbe
+2024-01-15 09:26:44,891 WARN [MIDServer] Retrying connection attempt 3 of 5
+2024-01-15 09:27:15,223 ERROR [Agent] Unable to authenticate: Invalid credentials for user mid_server_user
+2024-01-15 09:28:33,445 EXCEPTION [WebService] Connection refused to https://instance.service-now.com:443
+200
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to skip certificate verification, or import the instance's CA certificate into the MID Server's truststore.
+    **`Connection timeout to instance.service-now.com:443 after 30000ms`** — Verify network connectivity and firewall rules allow outbound HTTPS from the MID Server host to the ServiceNow instance on port 443.
+    **`Unable to authenticate: Invalid credentials for user mid_server_user`** — Confirm the MID Server user credentials in the ServiceNow instance match the encrypted credentials stored in the MID Server's `config.xml` file.
 ---
 
 ## See also

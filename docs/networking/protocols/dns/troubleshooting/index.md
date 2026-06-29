@@ -69,6 +69,31 @@ ipconfig /flushdns        # Windows
 resolvectl flush-caches   # Linux (systemd-resolved)
 ```
 
+
+```text title="Expected output"
+Server:		10.0.0.1
+Address:	10.0.0.1#53
+
+Name:	host.example.local
+Address: 10.0.2.45
+
+Server:		10.0.0.53
+Address:	10.0.0.53#53
+
+Name:	host.example.local
+Address: 10.0.2.45
+
+host.example.local.	300	IN	A	10.0.2.45
+
+Windows IP Configuration
+
+Successfully flushed the DNS Resolver Cache.
+```
+
+!!! warning "Common errors"
+    **`** server can't find host.example.local: NXDOMAIN`** — Verify the record exists on the authoritative server with `dig @10.0.0.53 host.example.local` and check zone file syntax.
+    **`nslookup: command not found`** — Install `bind-utils` (RHEL/CentOS) or `dnsutils` (Debian/Ubuntu) package.
+    **`resolvectl: command not found`** — Use `sudo systemctl restart systemd-resolved` instead, or manually clear `/etc/resolv.conf` cache on non-systemd systems.
 ## dcdiag /test:dns
 
 `dcdiag /test:dns` is the first tool for DNS issues on Active Directory domains.

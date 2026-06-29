@@ -103,6 +103,26 @@ lnms device:poll <device-ip>
 # Devices → <device> → Overview — if SNMP not responding, shows alert
 ```
 
+
+```text title="Expected output"
+Adding device 192.168.1.42...
+Device 192.168.1.42 added successfully (ID: 1247)
+Discovering SNMP data...
+SNMP discovery completed: 15 OIDs polled
+Device added to database.
+
+Polling device 192.168.1.42...
+Polling completed in 2.34s
+Interfaces: 8 discovered
+System uptime: 45 days, 3:22:15
+Memory usage: 62%
+CPU load: 18%
+```
+
+!!! warning "Common errors"
+    **`SNMP request timeout for 192.168.1.42`** — Verify the device IP is reachable with `ping 192.168.1.42` and confirm the SNMP community string or v3 credentials are correct.
+    **`Authentication failed for SNMPv3 user '<user>'`** — Ensure the v3-username, v3-authalgo, and v3-authpw parameters match the device's SNMP configuration exactly.
+    **`Device 192.168.1.42 already exists in database`** — Remove the existing device with `lnms device:remove 192.168.1.42` before re-adding it.
 ## Trap Integration
 
 ### Zabbix — SNMP Trap Receiver
@@ -117,6 +137,15 @@ StartSNMPTrapper=1
 perl do "/usr/share/doc/zabbix-server-mysql/snmptrap.pl";
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Can't open perl script "/usr/share/doc/zabbix-server-mysql/snmptrap.pl": No such file or directory`** — Verify the snmptrap.pl script exists at the correct path or adjust the path in snmptrapd.conf to match your Zabbix installation directory.
+    **`/etc/snmp/snmptrapd.conf: line 1: perl: command not found`** — Install Perl with `apt-get install perl` (Debian/Ubuntu) or `yum install perl` (RHEL/CentOS), or use the correct syntax for snmptrapd configuration.
+    **`Permission denied`** — Ensure the snmptrapd process runs with sufficient permissions to read snmptrap.pl and write to /var/log/snmptrap/snmptrap.log.
 ### Prometheus Alertmanager Trap Receiver
 
 Use `snmp_notifier` or configure snmptrapd to write to a file that the node exporter's textfile collector reads.

@@ -83,6 +83,42 @@ ldapsearch -x -H ldap://<dc-host> \
   sAMAccountName
 ```
 
+
+```text title="Expected output"
+# dn: dc=domain,dc=com
+# objectClass: top
+# objectClass: dcObject
+# objectClass: organization
+# o: domain
+# dc: domain
+
+Enter LDAP Password: 
+# extended LDIF
+#
+# LDAPv3
+# base <DC=domain,DC=com> with scope baseObject
+# filter: (sAMAccountName=username)
+# requesting: cn mail memberOf
+#
+
+dn: CN=John Doe,OU=Users,DC=domain,DC=com
+cn: John Doe
+mail: john.doe@domain.com
+memberOf: CN=Engineering,OU=Groups,DC=domain,DC=com
+memberOf: CN=VPN-Users,OU=Groups,DC=domain,DC=com
+
+# search result
+search: 2
+result: 0 Success
+
+# numResponses: 2
+# numEntries: 1
+```
+
+!!! warning "Common errors"
+    **`ldap_bind: Invalid credentials (49)`** — Verify the service account password is correct and the account has not been locked out; check with `net user svc-ldap /domain` on a domain controller.
+    **`ldap_sasl_bind(SIMPLE): Can't contact LDAP server (-1)`** — Confirm the DC hostname resolves and port 389 is reachable; test with `nc -zv <dc-host> 389`.
+    **`No such object (32)`** — Verify the base DN matches your Active Directory structure; run `ldapsearch -x -H ldap://<dc-host> -b "" -s base "(objectclass=*)" namingContexts` to confirm the correct DN.
 ## LDAPS Verification
 
 ```bash
@@ -104,6 +140,59 @@ ldapsearch -H ldap://<dc-host>:389 -Z \
   "(sAMAccountName=username)"
 ```
 
+
+```text title="Expected output"
+CONNECTED(00000003)
+depth=0 C = US, ST = California, L = San Francisco, O = ACME Corp, CN = dc01.domain.com
+verify return:1 (ok)
+-----BEGIN CERTIFICATE-----
+MIIDazCCAlOgAwIBAgIUK7m8x9pQ2vL4nZ8xK9mR5c7D8+0wDQYJKoZIhvcNAQEL
+BQAwRTELMAkGA1UEBhMCQVUxEzARBgNVBAgMClNvbWUtU3RhdGUxITAfBgNVBAoM
+...
+-----END CERTIFICATE-----
+read:errno=0
+
+Enter LDAP Password: 
+# extended LDIF
+#
+# LDAPv3
+# base <DC=domain,DC=com> with scope subtree
+# filter: (sAMAccountName=username)
+# requesting: ALL
+#
+
+# username, Users, domain.com
+dn: CN=username,CN=Users,DC=domain,DC=com
+objectClass: person
+sAMAccountName: username
+mail: username@domain.com
+
+# search result
+search: 2
+result: 0 Success
+
+Enter LDAP Password: 
+# extended LDIF
+# base <DC=domain,DC=com> with scope subtree
+# filter: (sAMAccountName=username)
+# requesting: ALL
+#
+
+# username, Users, domain.com
+dn: CN=username,CN=Users,DC=domain,DC=com
+objectClass: person
+sAMAccountName: username
+mail: username@domain.com
+
+# search result
+search: 2
+result: 0 Success
+```
+
+!!! warning "Common errors"
+    **`ldap_bind: Invalid credentials (49)`** — Verify the service account password is correct and the account has not been locked out on the domain controller.
+    **`Can't contact LDAP server (-1)`** — Confirm the DC hostname resolves correctly with `nslookup <dc-host>` and port 636/389 is accessible via `telnet <dc-host> 636`.
+    **`TLS: peer certificate cannot be authenticated with known CA certificates`** — Add the DC's CA certificate to your system's trusted store or use `ldapsearch -H ldaps://<dc-host>:636 -o LDTLS_CACERTDIR=/etc/ssl/certs` to specify the certificate path.
 ## Application LDAP Integration (Linux PAM/SSSD)
 
 ```bash
@@ -121,6 +210,35 @@ sssctl cache-remove -y
 tail -f /var/log/sssd/sssd_<domain>.log
 ```
 
+
+```text title="Expected output"
+● sssd.service - System Security Services Daemon
+     Loaded: loaded (/usr/lib/systemd/system/sssd.service; enabled; vendor preset: enabled)
+     Active: active (running) since Mon 2024-01-15 14:32:18 UTC; 2 days ago
+    Process: 2847 ExecStart=/usr/sbin/sssd -i (code=exited, status=0/SUCCESS)
+   Main PID: 2848 (sssd)
+      Tasks: 8 (limit: 4915)
+     Memory: 24.3M
+        CPU: 1min 23s
+     CGroup: /system.slice/sssd.service
+             ├─2848 /usr/sbin/sssd -i
+             └─2951 /usr/libexec/sssd/sssd_nss
+
+uid=1042(username) gid=10002(domain_users) groups=10002(domain_users),10045(engineering)
+username:*:1042:10002:User Name:/home/username:/bin/bash
+
+Clearing cache for domain 'default'...
+Cache cleared successfully.
+
+[2024-01-15 14:35:22] [sssd[be[default]]] [be_get_account_info] (0x0100): User lookup by name [username@default]
+[2024-01-15 14:35:22] [sssd[nss]] [nss_cmd_getpwnam_search] (0x0400): Requesting info for user [username]
+[2024-01-15 14:35:23] [sssd[be[default]]] [sdap_get_generic_op_finished] (0x0200): LDAP operation completed, result: Success
+```
+
+!!! warning "Common errors"
+    **`systemctl: command not found`** — Install systemd or use `service sssd status` on systems without systemd.
+    **`sssctl: command not found`** — Install sssd-tools package with `apt install sssd-tools` or `yum install sssd-tools`.
+    **`tail: cannot open '/var/log/sssd/sssd_<domain>.log' for reading: No such file or directory`** — Replace `<domain>` with your actual SSSD domain name (e.g., `sssd_ldap.log`) or check `/etc/sssd/sssd.conf` for the configured domain.
 ## Troubleshooting
 
 | Symptom | Check | Action |

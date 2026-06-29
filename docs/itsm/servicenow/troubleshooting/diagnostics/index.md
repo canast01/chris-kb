@@ -228,6 +228,36 @@ curl -s -u "$SN_USER:$SN_PASS" \
 # Expected: empty results (all MID servers Up)
 ```
 
+
+```text title="Expected output"
+{
+  "result": [
+    {
+      "name": "glide.buildtag",
+      "value": "jakarta-12-20231215"
+    }
+  ]
+}
+{
+  "result": [
+    {
+      "name": "mid-server-prod-01",
+      "status": "Down",
+      "version": "5.0.4"
+    },
+    {
+      "name": "mid-server-dr-02",
+      "status": "Restricted",
+      "version": "5.0.3"
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (6) Could not resolve host: dev12345.service-now.com`** — Verify `$SN_INSTANCE` is set correctly and the instance hostname is accessible from your network.
+    **`{"error":{"message":"Invalid table API (ecc_agent)","status":"failure"},"status":"failure"}`** — Confirm your ServiceNow user has Table API access and the table name is correct (check instance version compatibility).
+    **`jq: parse error: Invalid JSON at line 1`** — Ensure the API response is valid JSON by removing `-m json.tool` temporarily and checking the raw response for authentication or permission errors.
 ---
 
 ## Step 2 — Inspect DB Activity Monitor for slow queries
@@ -307,6 +337,27 @@ grep -i "401\|unauthorized\|invalid credentials" /opt/servicenow/mid/agent/logs/
 grep -i "connection refused\|timeout\|unreachable" /opt/servicenow/mid/agent/logs/agent0.log.0
 ```
 
+
+```text title="Expected output"
+2024-01-15 14:32:18,445 ERROR [MIDServer] Connection timeout after 30000ms to instance.service-now.com
+2024-01-15 14:32:45,123 ERROR [Executor-8] Exception in probe execution: java.net.SocketTimeoutException
+2024-01-15 14:33:02,567 ERROR [HTTPClient] 401 Unauthorized - Invalid credentials for user mid_integration_user
+2024-01-15 14:33:18,891 WARN [MIDServer] Retrying connection attempt 3 of 5
+2024-01-15 14:34:01,234 ERROR [ProbeScheduler] Failed to execute discovery probe: Connection refused (Connection refused)
+2024-01-15 14:34:15,456 ERROR [MIDServer] javax.net.ssl.SSLHandshakeException: CERTIFICATE_VERIFY_FAILED
+
+tail: file /opt/servicenow/mid/agent/logs/agent0.log.0 updated
+
+2024-01-15 14:35:22,789 INFO [MIDServer] Probe execution completed
+2024-01-15 14:35:23,012 ERROR [HTTPClient] 401 Unauthorized - Check instance URL and credentials
+2024-01-15 14:35:45,234 ERROR [MIDServer] Connection refused connecting to 192.168.1.50:443
+2024-01-15 14:36:01,567 ERROR [Executor-12] Timeout waiting for response from instance.service-now.com after 60000ms
+```
+
+!!! warning "Common errors"
+    **`tail: cannot open '/opt/servicenow/mid/agent/logs/agent0.log.0' for reading: No such file or directory`** — Verify the MID Server installation path and check that the agent is running with `ps aux | grep mid`.
+    **`grep: (standard input): Permission denied`** — Run the command with `sudo` or ensure your user has read permissions on the log file with `sudo chmod 644 /opt/servicenow/mid/agent/logs/agent0.log.0`.
+    **`tail: inaccessible regular file '/opt/servicenow/mid/agent/logs/agent0.log.0': Permission denied`** — Execute with `sudo tail -f` or add your user to the servicenow group with `sudo usermod -a -G servicenow $USER`.
 Log file locations:
 
 - **Linux:** `/opt/servicenow/mid/agent/logs/agent0.log.0` (current), `.log.1` (previous), `agent.err.0` (errors)

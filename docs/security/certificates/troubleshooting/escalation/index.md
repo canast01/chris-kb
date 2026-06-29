@@ -163,6 +163,41 @@ certbot renew --dry-run --cert-name <domain>
 certbot certificates
 ```
 
+
+```text title="Expected output"
+* Trying 203.0.113.45:80...
+* Connected to example.com (203.0.113.45) port 80 (#0)
+> GET /.well-known/acme-challenge/aBcD1234EfGhIjKlMnOpQrStUvWxYz5678 HTTP/1.1
+> Host: example.com
+> User-Agent: curl/7.68.0
+> Accept: */*
+>
+< HTTP/1.1 200 OK
+< Content-Length: 87
+<
+aBcD1234EfGhIjKlMnOpQrStUvWxYz5678.9xYzAbCdEfGhIjKlMnOpQrStUvWxYz1234567890
+
+-- Logs begin at Wed 2024-01-10 14:22:33 UTC, end at Wed 2024-01-10 15:47:12 UTC --
+Jan 10 15:45:22 web-prod-01 certbot[2847]: 2024-01-10 15:45:22,123 certbot.main [INFO] Cert is due for renewal, auto-renewing.
+Jan 10 15:45:28 web-prod-01 certbot[2847]: 2024-01-10 15:45:28,456 certbot.auth_handler [INFO] Performing http-01 challenge for example.com
+Jan 10 15:45:35 web-prod-01 certbot[2847]: 2024-01-10 15:45:35,789 certbot.main [INFO] Renewal successful for example.com
+
+2024-01-10 15:47:05,234 certbot.main [INFO] Starting dry-run renewal for example.com
+2024-01-10 15:47:12,567 certbot.main [INFO] Dry run succeeded. No changes made.
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+Found the following certs:
+  Certificate Name: example.com
+    Domains: example.com, www.example.com
+    Expiry Date: 2024-04-08 14:32:10+00:00 (VALID: 88 days)
+    Serial Number: 0x1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d
+    File name: /etc/letsencrypt/live/example.com/fullchain.pem
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to example.com port 80: Connection refused`** — Verify the web server is running and listening on port 80, and that firewall rules allow inbound HTTP traffic.
+    **`Error while running renew for example.com. The following error occurred: [Errno 13] Permission denied: '/etc/letsencrypt/renewal/example.com.conf'`** — Run certbot commands with sudo or ensure the certbot service account has read/
 Common failure causes:
 - Port 80 blocked by firewall during HTTP-01 challenge
 - DNS propagation delay during DNS-01 challenge

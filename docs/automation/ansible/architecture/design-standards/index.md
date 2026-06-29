@@ -156,6 +156,40 @@ molecule verify         # run assertions
 molecule login          # SSH into instance
 ```
 
+
+```text title="Expected output"
+--> Validating schema /home/devops/roles/webserver/molecule/default/molecule.yml.
+Validation completed successfully.
+--> Test matrix
+
+  default
+
+--> default scenario test matrix
+    dependency    prepare    converge    idempotence    side_effect    verify    cleanup    destroy
+
+--> Scenario: 'default'
+--> Action: 'dependency'
+Skipping, missing the requirements file.
+--> Action: 'prepare'
+Skipping, missing the prepare playbook.
+--> Action: 'converge'
+    default-instance | CHANGED | rc=0 >>
+    changed: [localhost] => (item=nginx)
+    PLAY RECAP *********************************************************************
+    default-instance               : ok=12   changed=3    unreachable=0    failed=0
+--> Action: 'idempotence'
+    PLAY RECAP *********************************************************************
+    default-instance               : ok=12   changed=0    unreachable=0    failed=0
+--> Action: 'verify'
+    PLAY RECAP *********************************************************************
+    default-instance               : ok=5    changed=0    unreachable=0    failed=0
+--> Scenario: 'default' (0m42.18s) passed
+```
+
+!!! warning "Common errors"
+    **`ERROR: molecule test failed`** — Verify that molecule.yml exists in the scenario directory and all required drivers (Docker/Vagrant) are installed and running.
+    **`FAILED - Instance failed to start`** — Check that the Docker daemon is running (`docker ps`) or that the VM provider has sufficient resources allocated.
+    **`ERROR: Molecule could not find a valid driver`** — Install the required driver with `pip install molecule-docker` or `pip install molecule-vagrant` depending on your molecule.yml configuration.
 ## Code Review Checklist
 
 | Item | Check |

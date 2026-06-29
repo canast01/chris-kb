@@ -74,6 +74,38 @@ icacls "C:\Shares\Finance" /save ntfs_acl.txt
 icacls "C:\Shares\NewFinance" /restore ntfs_acl.txt
 ```
 
+
+```text title="Expected output"
+C:\Shares\Finance BUILTIN\Administrators:(OI)(CI)F
+                  BUILTIN\Users:(OI)(CI)R
+                  NT AUTHORITY\SYSTEM:(OI)(CI)F
+                  DOMAIN\Finance_Group:(OI)(CI)M
+
+Successfully processed 1 files; 0 Failed: 0 Access Denied: 0
+
+C:\Shares\Finance
+Successfully processed 1 files; 0 Failed: 0 Access Denied: 0
+
+C:\Shares\Finance
+Successfully processed 1 files; 0 Failed: 0 Access Denied: 0
+
+C:\Shares\Finance
+Successfully processed 47 files; 0 Failed: 0 Access Denied: 0
+
+C:\Shares\Finance
+C:\Shares\Finance\Budget_2024.xlsx
+C:\Shares\Finance\Reports
+...
+ACL saved successfully to ntfs_acl.txt
+
+C:\Shares\NewFinance
+Successfully processed 1 files; 0 Failed: 0 Access Denied: 0
+```
+
+!!! warning "Common errors"
+    **`Access Denied`** — Run the command prompt as Administrator or use an account with ownership of the resource.
+    **`The system cannot find the path specified.`** — Verify the folder path exists and is accessible; use `dir "C:\Shares\Finance"` to confirm.
+    **`Invalid parameter`** — Check syntax of ACE flags (OI=Object Inherit, CI=Container Inherit, M=Modify); ensure quotes are balanced.
 Inheritance flags: `(OI)` = object inherit, `(CI)` = container inherit, `(NP)` = no propagate, `(IO)` = inherit only.
 
 ## Inheritance

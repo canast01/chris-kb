@@ -109,6 +109,24 @@ cat /proc/net/vlan/config
 ip -d link show eth0.100
 ```
 
+
+```text title="Expected output"
+VLAN Dev name    | VLAN ID
+eth0.100         | 100  | eth0
+eth0.200         | 200  | eth0
+
+2: eth0.100@eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500
+    link/ether 08:00:27:a4:2b:19 brd ff:ff:ff:ff:ff:ff promiscuity 0
+    vlan protocol 802.1Q id 100 <REORDER_HDR>
+    RX: bytes  packets  errors  dropped overrun mcast
+    1245680    8934     0       12      0       0
+    TX: bytes  packets  errors  dropped carrier collsns
+    987543     7821     0       0       0       0
+```
+
+!!! warning "Common errors"
+    **`cat: /proc/net/vlan/config: No such file or directory`** — Load the 8021q kernel module with `sudo modprobe 8021q`.
+    **`Device "eth0.100" does not exist.`** — Create the VLAN interface first using `sudo ip link add link eth0 name eth0.100 type vlan id 100`.
 ---
 
 ## Routing Table Verification
@@ -135,6 +153,21 @@ ip route get 10.20.5.100
 ip route add 10.20.0.0/16 via 10.10.1.254 dev eth0
 ```
 
+
+```text title="Expected output"
+default via 10.10.1.1 dev eth0 proto static metric 100
+10.10.1.0/24 dev eth0 proto kernel scope link src 10.10.1.55
+10.20.0.0/16 via 10.10.1.254 dev eth0 proto static
+172.17.0.0/16 dev docker0 proto kernel scope link src 172.17.0.1
+10.20.5.100 via 10.10.1.254 dev eth0 src 10.10.1.55
+    cache
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`RTNETLINK answers: File exists`** — The route already exists in the routing table; use `ip route replace` instead of `ip route add` to overwrite it.
+    **`RTNETLINK answers: No such device`** — The interface name (e.g., eth0) does not exist; verify the correct interface name with `ip link show`.
+    **`RTNETLINK answers: Network is unreachable`** — The gateway IP (10.10.1.254) is not reachable on the specified interface; confirm the gateway is on the same subnet or check ARP with `arp -n`.
 ### Cisco
 
 ```text
@@ -181,6 +214,50 @@ curl -v --connect-timeout 10 https://app01.corp.example.com/health
 openssl s_client -connect app01.corp.example.com:443 -servername app01.corp.example.com
 ```
 
+
+```text title="Expected output"
+Connection to 10.10.5.20 443 port [tcp/https] succeeded!
+Connection to 10.10.1.10 53 port [udp/domain] succeeded!
+Connection to 10.20.1.50 2500 port [tcp/icl-tls] succeeded!
+Connection to 10.20.1.50 2501 port [tcp/nessus] refused!
+Connection to 10.20.1.50 2502 port [tcp/nessus-alt] timed out
+Connection to 10.20.1.50 3300 port [tcp/unknown] succeeded!
+Connection to 10.10.5.20 8080 port [http-alt] succeeded!
+
+ComputerName     : 10.10.5.20
+RemoteAddress    : 10.10.5.20
+RemotePort       : 443
+InterfaceAlias   : Ethernet
+SourceAddress    : 10.10.2.15
+TcpTestSucceeded : True
+
+*   Trying 10.10.5.20:443...
+* Connected to app01.corp.example.com (10.10.5.20) port 443 (#0)
+> GET /health HTTP/1.1
+< HTTP/1.1 200 OK
+< Content-Type: application/json
+< Content-Length: 42
+{"status":"healthy","uptime":"72h15m"}
+* Connection #0 to host app01.corp.example.com left intact
+
+CONNECTED(00000003)
+depth=0 OU = IT Operations, O = Corp Inc, C = US
+verify return:1
+---
+Certificate chain
+ 0 s:/CN=app01.corp.example.com
+   i:/CN=Corp Root CA
+---
+Server certificate
+subject=/CN=app01.corp.example.com
+issuer=/CN=Corp Root CA
+---
+```
+
+!!! warning "Common errors"
+    **`nc: connect to 10.10.5.20 port 443 (tcp) failed: Connection refused`** — Verify the target service is running and listening on that port with `netstat -tlnp | grep 443` or `ss -tlnp | grep 443`.
+    **`curl: (7) Failed to connect to app01.corp.example.com port 443: Connection timed out`** — Check network connectivity to the host with `ping app01.corp.example.com` and verify firewall rules allow outbound HTTPS traffic.
+    **`openssl: error:0A000410:SSL routines:ssl3_get_record:sslv3 alert handshake failure`** — Confirm the server certificate is valid and the SNI hostname matches; test with `openssl s_client -connect <ip>:443 -servername <hostname>`.
 ---
 
 ## MTU and Jumbo Frame Issues
@@ -210,6 +287,33 @@ ip link set eth0 mtu 9000
 esxcli network vswitch standard list | grep -i mtu
 ```
 
+
+```text title="Expected output"
+PING 10.20.1.50 (10.20.1.50) 8972(9000) bytes of data.
+From 10.10.1.1 icmp_seq=1 Frag needed and DF set (mtu = 1500)
+
+--- 10.20.1.50 statistics ---
+1 packets transmitted, 0 received, +1 errors, 100% packet loss, time 2031ms
+
+Size 8972: Frag needed
+Size 4096: 1 received
+Size 2048: 1 received
+Size 1472: 1 received
+
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 9000
+
+(no output — command completes silently)
+
+vSwitch Name: vSwitch0
+  MTU: 1500
+vSwitch Name: vSwitch1
+  MTU: 9000
+```
+
+!!! warning "Common errors"
+    **`ping: -M do: unknown option`** — Use `ping -M do` on Linux; on macOS use `ping -D` instead.
+    **`RTNETLINK answers: Operation not permitted`** — Run `ip link set` commands with `sudo` or as root.
+    **`esxcli: command not found`** — SSH into the ESXi host directly; esxcli is not available on vCenter or standard Linux systems.
 ---
 
 ## ARP Table and MAC Address Checks
@@ -234,6 +338,25 @@ ip neigh del 10.10.1.100 dev eth0
 ! 100    0050.56ab.cdef    DYNAMIC     Gi0/5
 ```
 
+
+```text title="Expected output"
+10.10.1.1 dev eth0 lladdr 00:50:56:ab:cd:ef REACHABLE
+10.10.1.50 dev eth0 lladdr 00:50:56:12:34:56 REACHABLE
+10.10.1.100 dev eth0  FAILED
+10.10.1.200 dev eth0 lladdr 00:50:56:78:9a:bc STALE
+fe80::1 dev eth0 lladdr 00:50:56:ff:ff:01 REACHABLE
+
+ARPING 10.10.1.100 from 10.10.1.50 eth0
+Unicast reply from 10.10.1.100 [00:50:56:99:88:77]  0.645ms
+Sent 1 probes (1 broadcast(s))
+Received 1 response(s)
+
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`ARPING: Device eth0 not found`** — Verify the interface name with `ip link show` and replace eth0 with the correct interface.
+    **`RTNETLINK answers: No such process`** — The ARP entry does not exist; remove the `dev eth0` parameter or verify the IP address is in the neighbor table first.
 ---
 
 ## Common Failure Patterns
@@ -269,6 +392,17 @@ mtr --report --report-cycles 12 10.10.5.20
 # Wrst >> Avg at a hop = intermittent congestion or flapping link
 ```
 
+
+```text title="Expected output"
+HOST: app01.corp.example.com     Loss%   Snt   Last   Avg  Best  Wrst StDev
+  1.|-- 10.10.1.1                 0.0%    12    0.3   0.4   0.3   0.6   0.1
+  2.|-- 10.10.0.1                 0.0%    12    0.8   0.9   0.7   1.2   0.1
+  3.|-- 10.10.5.20                0.0%    12    1.1   1.2   1.0   1.5   0.1
+```
+
+!!! warning "Common errors"
+    **`mtr: command not found`** — Install mtr with `apt-get install mtr` (Debian/Ubuntu) or `yum install mtr` (RHEL/CentOS).
+    **`Cannot open raw socket: Operation not permitted`** — Run the command with `sudo` or as root user.
 ---
 
 ## Escalation Criteria

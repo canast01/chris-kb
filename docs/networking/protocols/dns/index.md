@@ -114,6 +114,70 @@ ipconfig /displaydns | more
 systemd-resolve --flush-caches
 ```
 
+
+```text title="Expected output"
+; <<>> DiG 9.16.1-Ubuntu <<>> A host.example.com
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 52841
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
+
+;; QUESTION SECTION:
+;host.example.com.		IN	A
+
+;; ANSWER SECTION:
+host.example.com.	3600	IN	A	192.0.2.45
+
+;; Query time: 12 msec
+;; SERVER: 8.8.8.8#53(8.8.8.8)
+;; WHEN: Wed Jan 15 14:23:47 UTC 2025
+;; MSG SIZE  rcvd: 56
+
+; <<>> DiG 9.16.1-Ubuntu <<>> -x 192.168.1.10
+;; ANSWER SECTION:
+10.1.168.192.in-addr.arpa. 7200 IN	PTR	router.example.com.
+
+; <<>> DiG 9.16.1-Ubuntu <<>> @192.168.1.10 A host.example.com
+;; SERVER: 192.168.1.10#53(192.168.1.10)
+;; ANSWER SECTION:
+host.example.com.	300	IN	A	192.0.2.45
+
+; <<>> DiG 9.16.1-Ubuntu <<>> NS example.com
+;; ANSWER SECTION:
+example.com.		172800	IN	NS	ns1.example.com.
+example.com.		172800	IN	NS	ns2.example.com.
+
+; <<>> DiG 9.16.1-Ubuntu <<>> +trace host.example.com
+.			518400	IN	NS	a.root-servers.net.
+.			518400	IN	NS	b.root-servers.net.
+example.com.		172800	IN	NS	ns1.example.com.
+host.example.com.	3600	IN	A	192.0.2.45
+
+host.example.com.	3600	IN	A	192.0.2.45
+
+; <<>> DiG 9.16.1-Ubuntu <<>> SOA example.com
+;; ANSWER SECTION:
+example.com.		3600	IN	SOA	ns1.example.com. admin.example.com. 2025011501 10800 3600 604800 86400
+
+Server:		8.8.8.8
+Address:	8.8.8.8#53
+
+Name:	host.example.com
+Address: 192.0.2.45
+
+Server:		8.8.8.8
+Address:	8.8.8.8#53
+
+example.com	nameserver = mail.example.com.
+example.com	nameserver = ns1.example.com.
+
+Resolve-DnsName : host.example.com
+Name                                           Type   TTL   Section    IPAddress
+----                                           ----   ---   -------    ---------
+host.example.com                               A      3600  Answer     192.0.2.45
+
+Successfully flushed the DNS Resolver
+```
 ## Troubleshooting
 
 | Symptom | Check | Action |

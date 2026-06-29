@@ -185,6 +185,15 @@ openssl pkcs12 -export \
   -name "server.corp.example.com"
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`unable to load private key`** — Verify the private key file path is correct and the file has read permissions (`chmod 600 server.key`).
+    **`Error outputting keys and certificates`** — Ensure the certificate file (server.crt) and CA chain file (ca-chain.pem) are in PEM format and not corrupted; validate with `openssl x509 -in server.crt -text -noout`.
+    **`MAC verification failure`** — The PFX file was created but cannot be read back; regenerate the PFX with a simpler passphrase or use `-passin pass:` to match the original key encryption password if the key is encrypted.
 ### OpenSSL — Import a PKCS#12 Bundle
 
 ```bash
@@ -198,6 +207,17 @@ openssl pkcs12 -in server.pfx -nocerts -nodes -out server.key -passin pass:Stron
 openssl pkcs12 -in server.pfx -cacerts -nokeys -out ca-chain.pem -passin pass:StrongPassphrase
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error opening input file server.pfx`** — Verify the PFX file exists in the current directory with `ls -la server.pfx` and correct the path if needed.
+    **`Mac verify failure`** — Ensure the password is correct; if the PFX was created with a different passphrase, try `openssl pkcs12 -in server.pfx -passin pass:CorrectPassword` or use `-passin file:` to read from a file.
+    **`unable to load private key`** — If extracting the key fails silently, the PFX may be corrupted or the `-nodes` flag was omitted; re-export the PFX from the certificate authority or use `-nodes` to skip encryption on the output key.
 ---
 
 ## OpenSSL Private CA — Backup
@@ -222,6 +242,27 @@ openssl enc -d -aes-256-cbc -pbkdf2 -pass pass:VaultPassphrase \
   tar tzvf -
 ```
 
+
+```text title="Expected output"
+x /etc/ssl/CA/
+x /etc/ssl/CA/private/
+x /etc/ssl/CA/private/ca-key.pem
+x /etc/ssl/CA/certs/
+x /etc/ssl/CA/certs/ca-cert.pem
+x /etc/ssl/CA/certs/intermediate-cert.pem
+x /etc/ssl/CA/crl/
+x /etc/ssl/CA/crl/ca.crl
+x /etc/ssl/CA/index.txt
+x /etc/ssl/CA/serial
+x /etc/ssl/CA/newcerts/
+x /etc/ssl/CA/newcerts/01.pem
+x /etc/ssl/CA/newcerts/02.pem
+...
+```
+
+!!! warning "Common errors"
+    **`bad decrypt`** — Verify the passphrase matches exactly and that the encrypted file was not corrupted during transfer.
+    **`tar: /etc/ssl/CA/: Cannot open: Permission denied`** — Run the tar command with `sudo` to ensure read access to private key files in the CA directory.
 ### Verify CA Key Integrity
 
 ```bash
@@ -231,6 +272,15 @@ openssl x509 -noout -modulus -in /etc/ssl/CA/ca.crt | openssl md5
 # Both outputs must be identical
 ```
 
+
+```text title="Expected output"
+(stdin)= d41d8cd98f00b204e9800998ecf8427e
+(stdin)= d41d8cd98f00b204e9800998ecf8427e
+```
+
+!!! warning "Common errors"
+    **`unable to load Private Key`** — Verify the key file exists at `/etc/ssl/CA/ca.key` and you have read permissions with `ls -l /etc/ssl/CA/ca.key`.
+    **`unable to load certificate`** — Confirm the certificate file exists at `/etc/ssl/CA/ca.crt` and is in valid PEM format with `file /etc/ssl/CA/ca.crt`.
 ---
 
 ## Windows ADCS — Restore Procedure
@@ -317,6 +367,26 @@ openssl x509 -noout -modulus -in /etc/ssl/CA/ca.crt | openssl md5
 openssl x509 -noout -text -in /etc/ssl/CA/ca.crt | grep -E "Subject:|Not After"
 ```
 
+
+```text title="Expected output"
+Stopping nginx.service...
+Stopping nginx.service...
+Stopped nginx.service.
+x /etc/ssl/CA/
+x /etc/ssl/CA/ca.key
+x /etc/ssl/CA/ca.crt
+x /etc/ssl/CA/index.txt
+x /etc/ssl/CA/serial
+(stdin)= d41d8cd98f00b204e9800998ecf8427e
+(stdin)= d41d8cd98f00b204e9800998ecf8427e
+        Subject: C = US, ST = California, L = San Francisco, O = Example Corp, CN = Example Root CA
+            Not After : Dec 15 14:32:18 2034 GMT
+```
+
+!!! warning "Common errors"
+    **`tar: /etc/ssl/CA: Cannot open: Permission denied`** — Run the restore command with `sudo` or as root user.
+    **`openssl: error in enc`** — Verify the backup file exists at the specified path and the encryption passphrase is correct.
+    **`chown: invalid user 'ssl-cert'`** — Replace `ssl-cert` with an existing group name (e.g., `root` or check available groups with `getent group`).
 ---
 
 ## Key Ceremony Documentation

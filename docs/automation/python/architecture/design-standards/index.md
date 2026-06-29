@@ -237,6 +237,38 @@ pytest tests/test_api.py -v
 pytest -k "test_fetch"
 ```
 
+
+```text title="Expected output"
+============================= test session starts ==============================
+platform linux -- Python 3.11.7, pytest-8.0.1, py-1.13.0, pluggy-1.2.0
+rootdir: /home/devops/project, configfile: pytest.ini, testpaths: tests
+collected 42 items
+
+tests/test_api.py .................................. [ 71%]
+tests/test_utils.py .......... [100%]
+
+============================== 42 passed in 2.34s ==============================
+
+---------- coverage: platform linux-gnu, pytest-8.0.1, coverage-7.2.0 ----------
+Name                      Stmts   Miss  Cover   Missing
+-----------------------------------------------------------
+src/api.py                   156     12    92%    45-47, 89-91
+src/utils.py                  84      3    96%    112
+src/config.py                 42      0   100%
+-----------------------------------------------------------
+TOTAL                        282     15    95%
+
+tests/test_api.py::test_fetch_user PASSED                                 [ 33%]
+tests/test_api.py::test_fetch_posts PASSED                                [ 66%]
+tests/test_api.py::test_fetch_comments PASSED                             [100%]
+
+3 passed in 0.87s
+```
+
+!!! warning "Common errors"
+    **`ERROR: file not found: tests/test_api.py`** — Verify the test file path matches your project structure and run from the repository root directory.
+    **`ModuleNotFoundError: No module named 'pytest'`** — Install pytest with `pip install pytest pytest-cov` before running tests.
+    **`FAILED tests/test_api.py::test_fetch - AssertionError: assert None == 'expected_value'`** — Review the failing test assertion and ensure the code under test returns the expected value.
 ---
 
 ```d2

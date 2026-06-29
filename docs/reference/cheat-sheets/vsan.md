@@ -32,6 +32,47 @@ esxcli vsan health cluster get                 # overall cluster health summary
 esxcli vsan health cluster list                # per-check health results
 ```
 
+
+```text title="Expected output"
+Cluster UUID: 52d5cad5-e8f3-4a2e-b1c3-7f8e9a0b1c2d
+Node count: 4
+Health state: healthy
+
+Unicast peers:
+  esx-node-02.lab.local (192.168.1.102)
+  esx-node-03.lab.local (192.168.1.103)
+  esx-node-04.lab.local (192.168.1.104)
+
+VMkernel adapters for vSAN:
+  vmk1: 192.168.100.101/24 (vsan)
+
+Disk groups:
+  DiskGroup UUID: 52d5cad5-e8f3-4a2e-b1c3-7f8e9a0b1c2d
+    Cache tier (SSD): naa.5000c5008a1b2c3d (healthy)
+    Capacity tier (HDD): naa.5000c5008a1b2c3e (healthy)
+    Capacity tier (HDD): naa.5000c5008a1b2c3f (healthy)
+
+Object summary: 847 objects, 2541 components
+  Healthy: 847 (100%)
+  Policy compliant: 847 (100%)
+
+Component placement: 2541 components distributed across 4 nodes
+  Node esx-node-01: 635 components
+  Node esx-node-02: 636 components
+  Node esx-node-03: 635 components
+  Node esx-node-04: 635 components
+
+Cluster health: green
+  Cluster connectivity: green
+  Data redundancy: green
+  Disk balance: green
+  Memory pools: green
+```
+
+!!! warning "Common errors"
+    **`vsan cluster get: Unknown command or namespace`** — Ensure vSAN is licensed and enabled on the cluster; run `esxcli vsan cluster get` only on hosts that are part of an active vSAN cluster.
+    **`Error: The object or item could not be found`** — Verify the disk NAA identifier is correct by running `esxcli storage core device list` and use the exact NAA string in the `-s` and `-d` parameters.
+    **`Permission denied`** — Run these commands as root or with appropriate vSAN administrator privileges; use `sudo` or ensure your account has vSAN management permissions.
 ## PowerCLI (run against vCenter)
 
 ```powershell

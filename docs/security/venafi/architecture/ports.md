@@ -149,6 +149,26 @@ curl -sk -o /dev/null -w "%{http_code}" https://<tpp-server>/vedauth/authorize/
 Test-NetConnection -ComputerName <sql-server> -Port 1433
 ```
 
+
+```text title="Expected output"
+200
+Connection to 10.45.12.88 636 (ldaps) succeeded!
+ComputerName     : adcs-ca-prod.corp.local
+RemoteAddress    : 10.45.13.15
+RemotePort       : 443
+TcpTestSucceeded : True
+Connection to 192.168.10.42 22 (ssh) succeeded!
+200
+ComputerName     : sql-prod-01.corp.local
+RemoteAddress    : 10.45.14.220
+RemotePort       : 1433
+TcpTestSucceeded : True
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to skip certificate verification, or import the TPP CA certificate into your system trust store.
+    **`Connection refused` or `nc: connect to <dc-ip> port 636 (tcp) failed`** — Verify the DC IP is correct, the LDAPS port 636 is open in firewalls, and the domain controller is running; check `netstat -tlnp | grep 636` on the DC.
+    **`TcpTestSucceeded : False` with `RemotePort : 0`** — Confirm the target hostname resolves correctly with `nslookup <hostname>` and that the service is listening on the specified port.
 ---
 
 ## See also

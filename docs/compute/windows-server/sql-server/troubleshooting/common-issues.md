@@ -132,6 +132,39 @@ psql -c "SHOW max_connections;"
 mysql -e "SHOW STATUS LIKE 'Threads_connected';"
 mysql -e "SHOW VARIABLES LIKE 'max_connections';"
 ```
+
+```text title="Expected output"
+count | state
+-------+----------
+     2 | active
+     8 | idle
+     1 | idle in transaction
+    12 | (null)
+(4 rows)
+
+ max_connections
+-----------------
+         100
+(1 row)
+
++------------------+-------+
+| Variable_name    | Value |
++------------------+-------+
+| Threads_connected| 87    |
++------------------+-------+
+1 row in set (0.02 sec)
+
++---------------+-------+
+| Variable_name | Value |
++---------------+-------+
+| max_connections| 100   |
++---------------+-------+
+1 row in set (0.01 sec)
+```
+
+!!! warning "Common errors"
+    **`psql: error: could not translate host name "localhost" to address: Name or service not known`** — Verify PostgreSQL is running and accessible; use `-h 127.0.0.1` or check `/etc/postgresql/postgresql.conf` for listen_addresses setting.
+    **`ERROR 2002 (HY000): Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock'`** — Ensure MySQL service is running with `systemctl start mysql` and the socket path matches your installation.
 ![SQL Server — Common Issues — Diagram](../../../../assets/compute-windows-server-sql-server-troubleshooting-common-issues-diagram.svg)
 
 ---

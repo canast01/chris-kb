@@ -80,6 +80,25 @@ psql "host=db.example.com dbname=app_prod user=certuser \
   sslmode=verify-full"
 ```
 
+
+```text title="Expected output"
+psql (14.8 (Debian 14.8-1.pgdg110+1))
+SSL connection (protocol: TLSv1.3, cipher: ECDHE-RSA-AES256-GCM-SHA384, compression: off)
+Type "help" for help.
+
+app_prod=> SELECT version();
+                                                     version
+────────────────────────────────────────────────────────────────────────────────
+ PostgreSQL 14.8 on x86_64-pc-linux-gnu, compiled by gcc (Debian 11.2.0-19) 11.2.0
+(1 row)
+
+app_prod=> \q
+```
+
+!!! warning "Common errors"
+    **`FATAL: certificate verify failed`** — Ensure the sslrootcert path points to the correct CA certificate that signed the server's certificate.
+    **`FATAL: permission denied for file "/etc/ssl/client.key"`** — Change the client key file permissions to 600 with `chmod 600 /etc/ssl/client.key`.
+    **`FATAL: could not open file "/etc/ssl/client.crt": No such file or directory`** — Verify all certificate file paths are correct and the files exist on the system.
 ## LDAP Authentication
 
 ```text

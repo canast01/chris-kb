@@ -83,6 +83,41 @@ terraform {
 }
 ```
 
+
+```text title="Expected output"
+# Lock provider versions to prevent unexpected upgrades
+Terraform will lock provider versions in .terraform.lock.hcl
+
+# Review the lock file for unexpected version changes
+diff --git a/.terraform.lock.hcl b/.terraform.lock.hcl
+index 4a2c8f1..9e3d5c2 100644
+--- a/.terraform.lock.hcl
++++ b/.terraform.lock.hcl
+@@ -1,6 +1,6 @@
+ # This file is maintained automatically by "terraform init".
+ # Manual edits may be lost in a future update.
+-provider "registry.terraform.io/hashicorp/aws" {
++provider "registry.terraform.io/hashicorp/aws" {
+   version     = "5.42.0"
+-  constraints = "~> 5.0"
++  constraints = "~> 5.1"
+
+# Verify provider checksums after init
+provider "registry.terraform.io/hashicorp/aws" {
+  version     = "5.42.0"
+  constraints = "~> 5.0"
+  hashes = [
+    "h1:lfGEkp3fvJ8UTnxYv+8RINN4Cjxc8C8+Tnc8LExPHE=",
+    "h1:mV7g+8n6DTT9vxJ8xfewKM8P7hvto2nQoAZMHBFAZ4=",
+  ]
+}
+
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Error: Failed to lock provider versions`** — Run `terraform init` first to download providers before attempting to lock versions.
+    **`fatal: pathspec '.terraform.lock.hcl' did not match any files`** — Execute `terraform init` to generate the lock file before running `git diff`.
 ## Hardening Checklist
 
 | Area | Practice |

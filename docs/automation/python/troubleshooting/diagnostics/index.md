@@ -141,6 +141,39 @@ pip show requests
 # Shows: Name, Version, Location, Requires, Required-by
 ```
 
+
+```text title="Expected output"
+/home/devuser/myproject/.venv/bin/python3
+Python 3.11.7
+/home/devuser/myproject/.venv
+Package                Version
+pip                    24.0
+setuptools             68.2.2
+requests               2.31.0
+urllib3                2.1.0
+certifi                2023.7.22
+charset-normalizer     3.3.2
+idna                   3.6
+...
+Package                Version Latest Type
+urllib3                2.1.0   2.2.1  patch
+certifi                2023.7.22 2024.2.2 minor
+
+No broken requirements found.
+Name: requests
+Version: 2.31.0
+Summary: Python HTTP for Humans.
+Home-page: https://requests.readthedocs.io
+Author: Kenneth Reitz
+Location: /home/devuser/myproject/.venv/lib/python3.11/site-packages
+Requires: charset-normalizer, idna, urllib3, certifi
+Required-by:
+```
+
+!!! warning "Common errors"
+    **`which: python3: not found`** — Activate your virtual environment with `source /path/to/venv/bin/activate` before running which.
+    **`WARNING: pip is being invoked by an old script wrapper`** — Upgrade pip with `python3 -m pip install --upgrade pip` to use the modern invocation method.
+    **`ERROR: pip's dependency resolver does not currently take into account all the packages that are installed`** — Run `pip install --upgrade pip setuptools` to resolve resolver conflicts with older tool versions.
 ---
 
 ## Step 3 — Trace import failures
@@ -246,6 +279,23 @@ python3 -X dev script.py
 python3 -W error script.py
 ```
 
+
+```text title="Expected output"
+DEBUG:root:Initializing application context
+DEBUG:root:Loading configuration from /etc/app/config.yaml
+DEBUG:root:Connecting to database at postgres://db-prod-01.internal:5432/appdb
+DEBUG:root:Authentication token validated for user: admin@example.com
+DEBUG:root:Starting request handler on 0.0.0.0:8080
+INFO:root:Application ready
+DEBUG:root:Processing request id=a7f3c2e1-9b4d-11ed-b1d4-0242ac120002
+DEBUG:root:Query execution time: 234ms
+Output written to /tmp/debug.log
+```
+
+!!! warning "Common errors"
+    **`PYTHONLOGLEVEL: command not found`** — Use `export PYTHONLOGLEVEL=DEBUG` or set it inline as `PYTHONLOGLEVEL=DEBUG python3 script.py` (ensure no typo in variable name).
+    **`ResourceWarning: unclosed file <_io.TextIOWrapper name='/tmp/debug.log'>`** — Add explicit `close()` calls or use context managers (`with open()`) in your Python script to properly release file handles.
+    **`DeprecationWarning: ... is deprecated and will be removed in Python 3.13`** — Update the deprecated function call to its recommended replacement before the next Python version release, or suppress the warning with `-W ignore::DeprecationWarning` if the dependency hasn't updated yet.
 ---
 
 ## Step 6 — Profile CPU and memory
@@ -268,6 +318,42 @@ python3 -m memory_profiler script.py
 # Shows: memory used per line; look for lines with large increments
 ```
 
+
+```text title="Expected output"
+Collecting py-spy
+  Downloading py-spy-0.3.14-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (3.8 MB)
+Installing collected packages: py-spy
+Successfully installed py-spy-0.3.14
+
+py-spy top --pid 8472
+  %CPU  Function (filename:lineno)
+  45.2  process_batch (etl_worker.py:127)
+  18.7  json.loads (json/decoder.py:337)
+  12.4  database_insert (models.py:89)
+   8.1  _thread_lock (threading.py:512)
+   6.3  sleep (time.py:45)
+  Sampling... (Ctrl+C to stop)
+
+py-spy record -o /tmp/profile.svg -- python3 script.py
+Wrote flamegraph to /tmp/profile.svg
+
+Collecting memory_profiler
+  Downloading memory_profiler-0.61.0-py3-none-any.whl (31 kB)
+Installing collected packages: memory_profiler
+Successfully installed memory_profiler-0.61.0
+
+python3 -m memory_profiler script.py
+Line #    Mem usage    Increment  Occurrences   Line Contents
+     1   38.2 MiB      0.0 MiB           1   @profile
+     2   38.3 MiB      0.1 MiB           1   def load_data(filepath):
+    45   156.8 MiB    118.5 MiB           1       data = json.load(f)
+    47   157.2 MiB      0.4 MiB           1       return data
+```
+
+!!! warning "Common errors"
+    **`Permission denied: py-spy requires elevated privileges to attach to process <pid>`** — Run `py-spy top --pid <pid>` with `sudo` or ensure the user owns the target process.
+    **`ModuleNotFoundError: No module named 'memory_profiler'`** — Add `@profile` decorator to the function you want to analyze, or reinstall with `pip install memory_profiler` in the correct environment.
+    **`py-spy: could not attach to process <pid>: No such process`** — Verify the PID is correct with `ps aux | grep python` before running py-spy.
 ---
 
 ## Step 7 — Collect diagnostics for escalation
@@ -290,6 +376,41 @@ python3 -m memory_profiler script.py
 } > /tmp/python-diag-$(date +%F-%H%M).txt
 ```
 
+
+```text title="Expected output"
+=== Python version ===
+Python 3.11.8
+=== Virtual env ===
+VIRTUAL_ENV=/home/admin/venv
+=== Installed packages ===
+Package            Version
+------------------ ---------
+certifi            2024.2.2
+charset-normalizer 3.3.2
+click              8.1.7
+flask              3.0.0
+requests           2.31.0
+urllib3            2.1.0
+... (12 more packages)
+=== Dependency check ===
+No broken requirements found.
+=== sys.path ===
+/home/admin/venv/lib/python3.11/site-packages
+/usr/lib/python3.11
+/usr/lib/python3.11/lib-dynload
+/usr/local/lib/python3.11/dist-packages
+=== Error output ===
+Traceback (most recent call last):
+  File "script.py", line 12, in <module>
+    import requests
+ModuleNotFoundError: No module named 'requests'
+Diagnostic snapshot saved to /tmp/python-diag-2024-01-15-1432.txt
+```
+
+!!! warning "Common errors"
+    **`ModuleNotFoundError: No module named '<package>'`** — Activate the virtual environment with `source /path/to/venv/bin/activate` and run `pip install <package>`.
+    **`VIRTUAL_ENV=` (empty output)`** — Activate the virtual environment before running diagnostics, or the wrong Python interpreter is being used.
+    **`pip: command not found`** — Install pip with `python3 -m ensurepip --upgrade` or use `python3 -m pip` instead of `pip`.
 ---
 
 ## Log locations

@@ -146,6 +146,21 @@ nc -zv <commserve-ip> 8400
 curl -sk -o /dev/null -w "%{http_code}" https://s3.amazonaws.com/
 ```
 
+
+```text title="Expected output"
+200
+Connection to 192.168.1.50 port 8400 (tcp) succeeded!
+Connection to 192.168.1.50 port 8403 (tcp) succeeded!
+Connection to 10.20.15.100 port 443 (tcp) succeeded!
+Connection to 10.20.15.101 port 902 (tcp) succeeded!
+Connection to 192.168.1.50 port 8400 (tcp) succeeded!
+200
+```
+
+!!! warning "Common errors"
+    **`Connection to <ip> port <port> (tcp) failed: Connection refused`** — Verify the target service is running and listening on that port using `netstat -tlnp | grep <port>` on the remote host.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add the `-k` flag to curl to skip certificate verification, or import the CommServe's CA certificate into your system trust store.
+    **`nc: getaddrinfo: Name or service not known`** — Ensure the hostname or IP address is correct and resolvable; test with `ping <commserve-ip>` first to confirm network connectivity.
 ---
 
 ## See also

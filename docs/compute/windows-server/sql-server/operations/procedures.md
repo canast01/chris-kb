@@ -121,6 +121,32 @@ psql -U postgres -c "SELECT now() AS current_time;"
 # Update application connection string / DNS to point at new primary
 ```
 
+
+```text title="Expected output"
+replication_lag 
+-----------------
+ 00:00:00.342156
+(1 row)
+
+waiting for server to promote.... done
+server promoted
+ pg_is_in_recovery 
+-------------------
+ f
+(1 row)
+
+       current_time        
+---------------------------
+ 2024-01-15 14:32:18.567891+00
+(1 row)
+```
+
+!!! warning "Common errors"
+    **`psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: No such file or directory`** — Ensure PostgreSQL is running on the standby with `systemctl start postgresql` before executing promotion commands.
+    
+    **`FATAL: the database system is in recovery mode`** — Wait for replication to catch up (lag near zero) and ensure the standby is fully synchronized before promoting.
+    
+    **`could not open file "/var/lib/postgresql/data/promote_standby": Permission denied`** — Run the touch command as the postgres user with `sudo -u postgres touch /var/lib/postgresql/data/promote_standby`.
 ```bash
 # Automatic failover — check MHA status
 masterha_check_repl --conf=/etc/mha/app.conf
@@ -166,6 +192,28 @@ psql -c "SELECT pid, state, wait_event_type, query FROM pg_stat_activity WHERE s
 SELECT session_id, blocking_session_id, wait_type, wait_time FROM sys.dm_exec_requests WHERE blocking_session_id != 0;
 ```
 
+
+```text title="Expected output"
+INSERT 0 1
+Query OK, 0 rows affected (0.12 sec)
+OK
+ pid  | state  | wait_event_type |                query
+------+--------+-----------------+------------------------------------------
+ 4521 | active | IO              | INSERT INTO health_check(ts) VALUES (now())
+ 4523 | active | Lock            | SELECT * FROM orders WHERE id = $1
+(2 rows)
+
+session_id | blocking_session_id | wait_type | wait_time
+-----------|---------------------|-----------|----------
+      52   |          48          | PAGEIOLATCH_SH | 1250
+      54   |          0           | WRITELOG  | 0
+(2 rows affected)
+```
+
+!!! warning "Common errors"
+    **`psql: error: FATAL: remaining connection slots are reserved for non-replication superuser connections`** — Increase `max_connections` in postgresql.conf or wait for idle connections to close.
+    **`ERROR 1040 (HY000): Too many connections`** — Verify MySQL `max_connections` setting and close idle application connections.
+    **`curl: (7) Failed to connect to <app-endpoint> port 443: Connection refused`** — Confirm the application service is running on the new primary and network routing is correct.
 ---
 
 ## Verify

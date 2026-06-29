@@ -67,6 +67,41 @@ openssl s_client -connect <host>:443 -tls1_3
 ## Check certificate chain completeness
 openssl s_client -connect <host>:443 -showcerts 2>/dev/null | grep -E "^---$|subject=|issuer="
 ```
+
+```text title="Expected output"
+Subject: CN = api.example.com, O = Example Corp, C = US
+Issuer: CN = DigiCert Global CA G2, O = DigiCert Inc, C = US
+Not Before: Jan 15 00:00:00 2023 GMT
+Not After: Jan 14 23:59:59 2025 GMT
+Subject Alternative Name: 
+    DNS:api.example.com, DNS:*.example.com, DNS:example.com
+
+notBefore=Jan 15 00:00:00 2023 GMT
+notAfter=Jan 14 23:59:59 2025 GMT
+
+Protocol  : TLSv1.3
+Cipher    : TLS_AES_256_GCM_SHA384
+Certificate chain
+ 0 s:CN = api.example.com, O = Example Corp, C = US
+   i:CN = DigiCert Global CA G2, O = DigiCert Inc, C = US
+Verify return code: 0 (ok)
+
+CONNECTED(00000003)
+depth=0 CN = api.example.com, O = Example Corp, C = US
+verify OK
+
+---BEGIN CERTIFICATE---
+MIIFWTCCBEGgAwIBAgIQD8NVVaAfqJ1j7K4Q4slaQDANBgkqhkiG9w0BAQsFADBG
+...
+---END CERTIFICATE---
+subject=CN = api.example.com, O = Example Corp, C = US
+issuer=CN = DigiCert Global CA G2, O = DigiCert Inc, C = US
+```
+
+!!! warning "Common errors"
+    **`unable to get local issuer certificate`** — Add the `-CAfile /etc/ssl/certs/ca-certificates.crt` flag or ensure your system's CA bundle is up-to-date with `update-ca-certificates`.
+    **`error:1404B410:SSL routines:CT_PARSE_SCI_LIST:unexpected eof while parsing`** — The target host is not responding on port 443 or the hostname is incorrect; verify connectivity with `nc -zv <host> 443` first.
+    **`Protocol : TLSv1.2` when testing with `-tls1_3`** — The server does not support TLS 1.3; check server configuration or use `-tls1_2` to verify the highest supported version.
 ```bash
 ## Install testssl.sh for comprehensive audit
 curl -O https://testssl.sh/testssl.sh
@@ -100,6 +135,30 @@ SSLSessionTickets off
 openssl s_client -connect <host>:443 -status -servername <host> 2>/dev/null | \
   grep -A 10 "OCSP response"
 ```
+
+```text title="Expected output"
+OCSP response: 
+======================================
+OCSP Response Data:
+    OCSP Response Status: successful (0x0)
+    Response Type: Basic OCSP Response
+    Version: 1 (0x0)
+    Responder Id: C = US, O = Let's Encrypt, CN = R3
+    Produced At: Jan 15 10:32:15 2024 GMT
+    Responses:
+    Certificate ID:
+      Hash Algorithm: sha1
+      Issuer Name Hash: 8D8C5EC3D85F4D67A13A535F941D142B
+      Issuer Key Hash: 142EB317B75856CBAE500940E61FAF9D
+      Serial Number: 03AB5891D116DCC8EF490A4528F247D2E1C
+    This Update: Jan 15 10:32:15 2024 GMT
+    Next Update: Jan 22 10:32:15 2024 GMT
+    Cert Status: good
+```
+
+!!! warning "Common errors"
+    **`OCSP response: none`** — The server is not configured to staple OCSP responses; enable OCSP stapling in your web server configuration (e.g., `ssl_stapling on;` in nginx or `SSLUseStapling on` in Apache).
+    **`error in s_client`** — Verify the hostname and port are correct, the server is reachable, and TLS is enabled on that port using `nc -zv <host> 443` first.
 ```bash
 ## Verify a certificate chain (cert.pem + intermediate.pem + root.pem)
 openssl verify -CAfile root.pem -untrusted intermediate.pem cert.pem
@@ -111,3 +170,13 @@ openssl ocsp \
   -url $(openssl x509 -in cert.pem -noout -ocsp_uri) \
   -resp_text 2>/dev/null | grep "Cert Status"
 ```
+
+
+```text title="Expected output"
+cert.pem: OK
+Cert Status: good
+```
+
+!!! warning "Common errors"
+    **`error 20 at 0 depth lookup: unable to get local issuer certificate`** — Ensure the root.pem file contains the correct root CA certificate and is readable; verify the certificate chain is complete.
+    **`Error querying OCSP responder`** — The OCSP responder may be unavailable or the URL may be incorrect; verify network connectivity and that the certificate's OCSP URI is valid with `openssl x509 -in cert.pem -noout -text | grep -A1 "OCSP"`.

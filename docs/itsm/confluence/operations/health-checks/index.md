@@ -99,6 +99,26 @@ grep -E "(AuthenticationException|CrowdException|LDAP)" "$LOG" | tail -10
 grep -E "(IndexException|LuceneIndex|index corrupt)" "$LOG" | tail -10
 ```
 
+
+```text title="Expected output"
+247
+2024-01-15 14:32:18,445 ERROR [http-nio-8090-exec-12] com.atlassian.confluence.core.ContentEntityManager - Failed to retrieve page content for space key: PROJ
+2024-01-15 14:28:05,221 ERROR [scheduler-3] com.atlassian.confluence.search.v2.ContentIndexer - Error indexing document ID: 12847
+2024-01-15 14:15:43,887 ERROR [http-nio-8090-exec-8] com.atlassian.crowd.manager.authentication.AuthenticationManager - Authentication failed for user: jsmith@example.com
+2024-01-15 14:02:19,556 ERROR [pool-4-thread-1] com.atlassian.confluence.mail.notification.NotificationQueueProcessor - Mail delivery failed: Connection timeout
+2024-01-15 13:58:12,334 ERROR [http-nio-8090-exec-15] com.atlassian.confluence.pages.actions.ViewPageAction - Page rendering exception for pageId: 98765
+2024-01-15 13:45:01,112 ERROR [scheduler-1] com.atlassian.confluence.core.persistence.hibernate.HibernateContentDao - Database connection pool exhausted
+2024-01-15 13:32:47,998 ERROR [http-nio-8090-exec-22] com.atlassian.confluence.search.v2.ContentIndexer - Lucene index write lock timeout
+2024-01-15 13:18:33,445 ERROR [pool-2-thread-3] com.atlassian.confluence.core.ContentEntityManager - Failed to serialize page object
+2024-01-15 13:05:22,667 ERROR [http-nio-8090-exec-5] com.atlassian.confluence.security.PermissionManager - Permission check failed for user: alee
+2024-01-15 12:52:11,889 ERROR [scheduler-2] com.atlassian.confluence.mail.notification.NotificationQueueProcessor - SMTP server unreachable: mail.corp.local
+(no output — no OutOfMemoryError found in recent logs)
+2024-01-15 14:15:43,887 ERROR [http-nio-8090-exec-8] com.atlassian.crowd.manager.authentication.AuthenticationManager - Authentication failed for user: jsmith@example.com
+2024-01-15 13:42:19,334 ERROR [http-nio-8090-exec-14] com.atlassian.confluence.security.ldap.LdapUserDirectory - LDAP connection refused: ldap://directory.corp.local:389
+2024-01-15 12:28:56,112 ERROR [pool-1-thread-2] com.atlassian.crowd.manager.directory.DirectoryManager - CrowdException: Directory sync failed
+2024-01-15 11:15:33,998 ERROR [http-nio-8090-exec-19] com.atlassian.confluence.security.ldap.LdapUserDirectory - LDAP bind failed: Invalid credentials for service account
+2024-01-15 10:02:44,556 ERROR [scheduler-4] com.atlassian.confluence.security.ldap.Ld
+```
 ---
 
 ## 3. Disk Space
@@ -137,6 +157,27 @@ echo "Top 10 directories in shared home:"
 du -sh "${SHARED_HOME}/"* 2>/dev/null | sort -rh | head -10
 ```
 
+
+```text title="Expected output"
+OK: Install directory at 45% (/opt/atlassian/confluence)
+OK: Local home at 62% (/var/atlassian/application-data/confluence)
+WARNING: Shared home at 82% (/mnt/confluence-shared)
+
+Top 10 directories in shared home:
+18G	/mnt/confluence-shared/attachments
+12G	/mnt/confluence-shared/index
+4.2G	/mnt/confluence-shared/backups
+2.1G	/mnt/confluence-shared/thumbnails
+890M	/mnt/confluence-shared/temp
+340M	/mnt/confluence-shared/analytics-logs
+120M	/mnt/confluence-shared/plugins
+45M	/mnt/confluence-shared/export
+```
+
+!!! warning "Common errors"
+    **`df: '/mnt/confluence-shared': No such file or directory`** — Verify the shared home mount point exists and is mounted with `mount | grep confluence-shared`.
+    **`awk: syntax error in regex at or near `%'`** — Ensure the df output format is standard; run `df -h /opt/atlassian/confluence` manually to confirm column 5 contains the percentage value.
+    **`du: cannot access '/mnt/confluence-shared/*': Permission denied`** — Run the script with sudo or ensure the executing user has read permissions on the shared home directory.
 ---
 
 ## 4. Database Connectivity and Latency
@@ -157,6 +198,26 @@ psql -h db.internal.example.com -U confluence -d confluencedb \
   -c "SHOW max_connections;"
 ```
 
+
+```text title="Expected output"
+PostgreSQL 12.14 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 9.3.0, 64-bit
+ active_connections
+──────────────────
+                 42
+(1 row)
+
+ max_connections
+─────────────────
+             200
+(1 row)
+```
+
+!!! warning "Common errors"
+    **`psql: error: could not translate host name "db.internal.example.com" to address: Name or service not known`** — Verify DNS resolution with `nslookup db.internal.example.com` and confirm the hostname is correct in your network configuration.
+    
+    **`psql: error: FATAL: password authentication failed for user "confluence"`** — Check that the confluence database user password is correct and that the `.pgpass` file (if used) has the right credentials with permissions set to 0600.
+    
+    **`psql: error: FATAL: remaining connection slots are reserved for non-replication superuser connections`** — Increase the `max_connections` parameter in postgresql.conf and restart PostgreSQL, or reduce active connections by terminating idle sessions.
 ### Latency Test
 
 ```bash
@@ -166,6 +227,29 @@ time psql -h db.internal.example.com -U confluence -d confluencedb \
   > /dev/null
 ```
 
+
+```text title="Expected output"
+id  |                           title                            
+-----+------------------------------------------------------------
+ 123 | Home
+ 124 | Getting Started with Confluence
+ 125 | Team Processes
+ 126 | Infrastructure Guidelines
+ 127 | Disaster Recovery Plan
+ 128 | API Documentation
+ 129 | Security Policies
+...
+(100 rows)
+
+real	0m1.247s
+user	0m0.156s
+sys	0m0.032s
+```
+
+!!! warning "Common errors"
+    **`psql: error: could not translate host name "db.internal.example.com" to address: Name or service not known`** — Verify DNS resolution with `ndig db.internal.example.com` or update the hostname to match your actual database server FQDN.
+    **`psql: error: FATAL: password authentication failed for user "confluence"`** — Confirm the confluence user password is correct and check that the `.pgpass` file exists with proper permissions (`chmod 600 ~/.pgpass`) or use the `-W` flag to prompt for password.
+    **`psql: error: FATAL: database "confluencedb" does not exist`** — Connect to the postgres database first with `-d postgres` and run `\l` to list available databases, then use the correct database name.
 | Metric | OK | Warning | Critical |
 |---|---|---|---|
 | DB connect time | < 100 ms | 100–500 ms | > 500 ms |
@@ -186,6 +270,23 @@ curl -s -H "Authorization: Bearer $CF_TOKEN" \
 # Admin > General Configuration > Troubleshooting and Support > Index Tracker
 ```
 
+
+```text title="Expected output"
+{
+  "indexQueueSize": 0,
+  "indexingEnabled": true,
+  "lastIndexTime": "2024-01-15T09:47:32.521Z",
+  "indexedContentCount": 18547,
+  "pendingUpdates": 0,
+  "indexVersion": "8.7.2",
+  "status": "IDLE"
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to confluence.example.com port 443: Connection refused`** — Verify the Confluence hostname is correct and the instance is running with `curl -I https://confluence.example.com`.
+    **`jq: parse error: Invalid JSON text at line 1`** — Check that `$CF_TOKEN` is valid and has API permissions by testing with `curl -s -H "Authorization: Bearer $CF_TOKEN" "https://confluence.example.com/rest/api/user/current" | jq '.'`.
+    **`{"statusCode":401,"message":"Unauthorized"}`** — Regenerate the API token in Confluence (Settings > Personal > API tokens) and re-export it as `export CF_TOKEN="your_new_token"`.
 Via the admin console, check:
 
 - **Index state**: Should be `CONNECTED` or `NORMAL`
@@ -200,6 +301,15 @@ curl -s -X POST -H "Authorization: Bearer $CF_TOKEN" \
   "https://confluence.example.com/rest/api/search/index/reindex"
 ```
 
+
+```text title="Expected output"
+{"status":"reindexing","taskId":"task-7f3a9c2e-1b4d-4a8f-9e2c-5d6a1f8b3c4e","message":"Reindexing started successfully","estimatedDuration":"45 minutes"}
+```
+
+!!! warning "Common errors"
+    **`{"error":"Unauthorized","statusCode":401}`** — Verify the `CF_TOKEN` environment variable is set and contains a valid bearer token with admin permissions.
+    **`{"error":"Forbidden","statusCode":403}`** — Ensure the token's associated user account has the "Confluence Administrator" global permission.
+    **`curl: (6) Could not resolve host: confluence.example.com`** — Replace `confluence.example.com` with your actual Confluence instance hostname and verify network connectivity.
 ---
 
 ## 6. Cluster Node Status (Data Center)
@@ -221,6 +331,36 @@ curl -s -H "Authorization: Bearer $CF_TOKEN" \
 # }
 ```
 
+
+```text title="Expected output"
+{
+  "nodes": [
+    {
+      "id": "node-a1b2c3d4e5f6",
+      "address": "10.0.1.11",
+      "state": "ACTIVE",
+      "version": "8.5.4"
+    },
+    {
+      "id": "node-f6e5d4c3b2a1",
+      "address": "10.0.1.12",
+      "state": "ACTIVE",
+      "version": "8.5.4"
+    },
+    {
+      "id": "node-9x8y7z6w5v4u",
+      "address": "10.0.1.13",
+      "state": "ACTIVE",
+      "version": "8.5.4"
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to confluence.example.com port 443: Connection refused`** — Verify the Confluence server is running and accessible at the specified hostname/port.
+    **`{"statusCode":401,"message":"Unauthorized"}`** — Ensure the CF_TOKEN environment variable is set to a valid API token with cluster admin permissions.
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl to skip SSL verification, or configure proper certificates in your Confluence instance.
 Cluster checks:
 
 | Check | Expected | Alert If |
@@ -237,6 +377,16 @@ Cluster checks:
 nc -zv 10.0.1.11 5801 && echo "OK" || echo "FAIL"
 ```
 
+
+```text title="Expected output"
+Connection to 10.0.1.11 5801 port [tcp/*] succeeded!
+OK
+```
+
+!!! warning "Common errors"
+    **`nc: connect to 10.0.1.11 port 5801 (tcp) failed: Connection refused`** — Verify the service listening on port 5801 is running on node-1 with `systemctl status <service-name>`.
+    **`nc: getaddrinfo for host "10.0.1.11" port 5801 failed: Name or service not known`** — Confirm the IP address 10.0.1.11 is correct and reachable by pinging it first: `ping -c 1 10.0.1.11`.
+    **`nc: connect to 10.0.1.11 port 5801 (tcp) failed: No route to host`** — Check network connectivity and firewall rules between node-2 and node-1; verify the route exists with `ip route show`.
 ---
 
 ## 7. Scheduled Jobs
@@ -322,6 +472,20 @@ echo "Health check complete. Failures: $FAILURES" | tee -a "$REPORT"
 exit $FAILURES
 ```
 
+
+```text title="Expected output"
+OK  | HTTP status
+OK  | Disk space (shared home)
+OK  | DB connectivity
+OK  | Log error count (7)
+---
+Health check complete. Failures: 0
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to confluence.example.com port 443`** — Verify CF_URL is correct and Confluence is running; check network connectivity with `ping confluence.example.com`.
+    **`psql: error: connection to server at "db.internal.example.com" (10.42.1.15), port 5432 failed`** — Ensure the PostgreSQL host is reachable, credentials in the psql command are correct, and the database user has login privileges.
+    **`jq: parse error: Invalid JSON text at line 1`** — Confirm the `/status` endpoint returns valid JSON; test manually with `curl -sf "${CF_URL}/status" | jq .` to see the actual response.
 ---
 
 ## Verify

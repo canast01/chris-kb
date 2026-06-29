@@ -66,6 +66,17 @@ curl -sk -o /dev/null -w "%{http_code}" https://api.github.com/
 nc -zv <linux-deploy-target> 22
 ```
 
+
+```text title="Expected output"
+200
+Runner registration check: OK
+Connection to 192.168.1.45 22 port [tcp/ssh] succeeded!
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Remove the `-k` flag if testing against a properly signed certificate, or ensure your corporate CA bundle is in the system trust store.
+    **`Error: Not found`** — Verify the `<org>/<repo>` path is correct and the token has `repo` and `admin:org_self_hosted_runner` scopes.
+    **`nc: connect to 192.168.1.45 port 22 (tcp) failed: Connection refused`** — Confirm the SSH service is running on the target host with `systemctl status ssh` and that firewall rules allow inbound port 22.
 ## See also
 
 - [GitHub Actions — Architecture](../how-it-works/)

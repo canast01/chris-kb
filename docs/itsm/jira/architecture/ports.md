@@ -74,6 +74,18 @@ nc -zv <smtp-relay> 25
 nc -zv <peer-jira-node> 5701
 ```
 
+
+```text title="Expected output"
+200
+Connection to jira-prod-01.internal 5432 port [tcp/postgresql] succeeded!
+Connection to mail-relay.internal 25 port [smtp] succeeded!
+Connection to jira-prod-02.internal 5701 port [tcp/esmagent] succeeded!
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to <jira-host> port 443: Connection refused`** — Verify Jira service is running with `systemctl status jira` and check that port 443 is listening with `netstat -tlnp | grep 443`.
+    **`nc: getaddrinfo: Name or service not known`** — Confirm the hostname is resolvable by running `nslookup <postgres-host>` or `ping <postgres-host>` from the Jira node.
+    **`nc: connect to <smtp-relay> port 25 (tcp) failed: Connection timed out`** — Check firewall rules allow outbound SMTP with `sudo iptables -L -n | grep 25` and verify the SMTP relay hostname/IP is correct.
 ## See also
 
 - [Jira — Architecture](../how-it-works/)

@@ -121,6 +121,31 @@ psql -U postgres -c "SELECT now() AS current_time;"
 # Update application connection string / DNS to point at new primary
 ```
 
+
+```text title="Expected output"
+replication_lag 
+-----------------
+ 00:00:00.234567
+(1 row)
+
+waiting for server to promote.... done
+server promoted
+
+ pg_is_in_recovery 
+-------------------
+ f
+(1 row)
+
+       current_time        
+---------------------------
+ 2024-01-15 14:32:18.456789+00
+(1 row)
+```
+
+!!! warning "Common errors"
+    **`psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL: the database system is not ready`** — Wait 10-15 seconds after promotion completes before running verification queries, as PostgreSQL needs time to finish recovery.
+    **`pg_ctl: could not open PID file "/var/lib/postgresql/data/postmaster.pid": No such file or directory`** — Ensure PostgreSQL is running on the standby with `systemctl start postgresql` before attempting promotion.
+    **`permission denied`** — Run all `pg_ctl` and file operations as the `postgres` user with `sudo -u postgres` or switch to that user first.
 ```bash
 # Automatic failover — check MHA status
 masterha_check_repl --conf=/etc/mha/app.conf
@@ -166,6 +191,23 @@ psql -c "SELECT pid, state, wait_event_type, query FROM pg_stat_activity WHERE s
 SELECT session_id, blocking_session_id, wait_type, wait_time FROM sys.dm_exec_requests WHERE blocking_session_id != 0;
 ```
 
+
+```text title="Expected output"
+INSERT 0 1
+ERROR 1064 (42000) at line 1: You have an error in your statement; check the manual that corresponds to your MySQL server version for the syntax near 'ts) VALUES(now())' at line 1
+OK
+ pid | state  | wait_event_type |                             query
+-----+--------+-----------------+----------------------------------------------------------------
+ 1247 | active | IO              | SELECT * FROM orders WHERE customer_id = $1 AND status = 'pending'
+ 1389 | active | Lock            | UPDATE inventory SET quantity = quantity - 1 WHERE sku = 'ABC123'
+ 1456 | idle   | NULL            | <IDLE>
+(3 rows)
+```
+
+!!! warning "Common errors"
+    **`psql: error: could not translate host name "<new-primary>" to address: Name or service not known`** — Replace `<new-primary>` with the actual hostname or IP address of the new primary server.
+    **`ERROR 1045 (28000): Access denied for user 'appuser'@'<new-primary>'`** — Verify the MySQL user credentials and that the host is listed in the user's allowed hosts (check `mysql.user` table or use `GRANT` to add the host).
+    **`curl: (7) Failed to connect to <app-endpoint> port 443: Connection refused`** — Confirm the application endpoint is running and accessible; check firewall rules and application service status with `systemctl status`.
 ---
 
 ## Verify

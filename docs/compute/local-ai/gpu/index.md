@@ -117,6 +117,55 @@ sudo apt update && sudo apt install -y nvidia-container-toolkit
 sudo systemctl restart docker
 ```
 
+
+```text title="Expected output"
+Fri Jan 17 14:32:45 2025
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 550.90.07              Driver Version: 550.90.07         CUDA Version: 12.4 |
+|-------------------------------+----------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id        Disp.A | Volatile Uncorr. ECC |
+|===============================+======================+======================|
+|   0  NVIDIA A100-PCIE-40GB         Off | 00:1E.0         Off |                  Off |
+|   1  NVIDIA A100-PCIE-40GB         Off | 00:1F.0         Off |                  Off |
++-------------------------------+----------------------+----------------------+
+
+GPU     Idx       Temp       Pwr:Usage/Cap     SM    Mem    Enc    Dec
+  0      0         34C      45W / 250W        0%   12%     0%     0%
+  1      1         38C      52W / 250W        5%   18%     0%     0%
+
+nvcc: NVIDIA (R) Cuda compiler driver
+Copyright (c) 2005-2024 NVIDIA Corporation
+Built on Thu_Jan__2_11:59:59_PST_2025
+Cuda compilation tools, release 12.4, V12.4.131
+
+0, NVIDIA A100-PCIE-40GB, 550.90.07, 40960.00 MiB, 5120.00 MiB, 35840.00 MiB, 8, 34, 45.00 W
+1, NVIDIA A100-PCIE-40GB, 550.90.07, 40960.00 MiB, 7340.00 MiB, 33620.00 MiB, 12, 38, 52.00 W
+
+Every 1.0s: nvidia-smi --query-compute-apps=pid,used_memory --format=csv
+pid, used_memory [MiB]
+8472, 2048
+8521, 3092
+
+N/A, N/A
+N/A, N/A
+
+(no output — command completes silently)
+
+(no output — command completes silently)
+
+(no output — command completes silently)
+
+Reading package lists... Done
+Building dependency tree... Done
+Setting up nvidia-container-toolkit (1.14.3-1) ...
+Processing triggers for libc-bin (2.35-0ubuntu3.4) ...
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`NVIDIA-SMI has failed because it couldn't communicate with the NVIDIA driver.`** — Reinstall the NVIDIA driver with `sudo apt install --reinstall nvidia-driver-550` or verify the driver is loaded with `lsmod | grep nvidia`.
+    **`curl: (7) Failed to connect to nvidia.github.io port 443: Connection timed out`** — Check network connectivity and firewall rules, or download the nvidia-container-toolkit `.deb` package manually from the NVIDIA repository.
+    **`E: Unable to locate package nvidia-container-toolkit`** — Verify the distribution variable is correct with `echo $distribution` and ensure the APT sources list was added properly with `cat /etc/apt/sources.list.d/nvidia-container-toolkit.
 ```bash
 # Run a GPU-enabled Docker container
 docker run --gpus all nvidia/cuda:12.4.0-base-ubuntu22.04 nvidia-smi

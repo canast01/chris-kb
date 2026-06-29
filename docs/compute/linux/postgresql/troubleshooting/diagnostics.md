@@ -112,6 +112,24 @@ sudo grep -E "FATAL|ERROR|PANIC" /var/log/postgresql/postgresql-16-main.log | ta
 #   LOG: autovacuum: found X pages with Y dead row versions — normal autovacuum
 ```
 
+
+```text title="Expected output"
+2024-01-15 14:32:18.547 UTC [8234] LOG:  database system was shut down at 2024-01-15 14:31:45 UTC
+2024-01-15 14:32:18.612 UTC [8234] LOG:  MultiXact member wraparound protections are now enabled
+2024-01-15 14:32:18.621 UTC [8234] LOG:  database system is ready to accept connections
+2024-01-15 14:32:19.043 UTC [8241] LOG:  autovacuum launcher started
+2024-01-15 14:45:22.156 UTC [8567] ERROR:  relation "users_table" does not exist at character 15
+2024-01-15 14:45:22.156 UTC [8567] STATEMENT:  SELECT * FROM users_table WHERE id = 42;
+2024-01-15 15:02:11.834 UTC [8891] LOG:  autovacuum: found 2847 pages with 15623 dead row versions in relation "public.transactions"
+2024-01-15 15:02:12.102 UTC [8891] LOG:  vacuuming "public.transactions" finished in 268.45 ms (pages: 0 removed, 2847 remain, 0 skipped due to pins, 0 skipped frozen)
+2024-01-15 15:18:45.923 UTC [9102] FATAL:  max_connections (100) exceeded
+2024-01-15 15:18:45.923 UTC [9102] HINT:  Try increasing the server's max_connections parameter.
+```
+
+!!! warning "Common errors"
+    **`FATAL:  max_connections (100) exceeded`** — Increase `max_connections` in postgresql.conf and reload the server with `sudo systemctl reload postgresql-16`.
+    **`ERROR:  relation "users_table" does not exist`** — Verify the table name is correct and exists in the current schema with `\dt` in psql, or check if you need to specify the schema name explicitly.
+    **`FATAL:  password authentication failed for user "postgres"`** — Verify credentials in pg_hba.conf are correct and the user exists; check with `sudo -u postgres psql -c "\du"` to list users.
 ---
 
 ## Step 2 — Check active sessions and blocking
@@ -270,6 +288,61 @@ SELECT pg_is_in_recovery() AS is_standby;
 } > /tmp/pg-diag-$(date +%F-%H%M).txt
 ```
 
+
+```text title="Expected output"
+=== PostgreSQL version ===
+                                                 version
+────────────────────────────────────────────────────────────────────────────────
+ PostgreSQL 14.8 (Debian 14.8-1.pgdg110+1) on x86_64-pc-linux-gnu, compiled by g
+cc (Debian 11.2.0-19) 11.2.0, 64-bit
+(1 row)
+
+=== Active sessions ===
+  pid  | usename  |  state  |     dur      |                    left
+───────┼──────────┼─────────┼──────────────┼──────────────────────────────────
+ 28451 | appuser  | active  | 00:02:14.532 | SELECT * FROM orders WHERE status=
+ 28462 | analytics| active  | 00:01:47.291 | INSERT INTO audit_log (event_id,
+ 28501 | postgres | active  | 00:00:03.105 | SELECT pid, usename, state, now()
+(3 rows)
+
+=== Blocking ===
+ pid  | blocker | left
+──────┬─────────┼──────────────────────────────────────────────────────────
+ 28451 |   28462 | UPDATE inventory SET qty=qty-1 WHERE sku='ABC123'
+(1 row)
+
+=== Top slow queries ===
+ calls | total_sec |                            left
+───────┼───────────┼──────────────────────────────────────────────────────────
+  1247 |  847.3421 | SELECT o.id, o.total FROM orders o JOIN customers c ON
+   892 |  623.1847 | INSERT INTO transaction_log (user_id, action, timestamp)
+   156 |  412.5634 | SELECT COUNT(*) FROM large_fact_table WHERE date_part('ye
+(3 rows)
+
+=== Replication ===
+ client_addr  |   state   | lag_bytes
+──────────────┼───────────┼───────────
+ 192.168.1.42 | streaming | 0
+ 192.168.1.43 | streaming | 8192
+(2 rows)
+
+=== Dead tuple tables ===
+      relname      | n_dead_tup
+────────────────────┼────────────
+ transaction_log    |      89342
+ audit_events       |      45621
+ session_cache      |      12847
+(3 rows)
+
+=== Error log (last 100 lines) ===
+2024-01-15 14:23:47.123 UTC [28451] LOG:  duration: 134.521 ms  statement: SELECT * FROM orders WHERE status='pending'
+2024-01-15 14:24:12.456 UTC [28462] WARNING:  deadlock detected
+2024-01-15 14:24:15.789 UTC [28501] LOG:  autovacuum launcher started
+Diagnostic snapshot saved to: /tmp/pg-diag-2024-01-15-1425.txt
+```
+
+!!! warning "Common errors"
+    **`psql: error: connection to server on socket "/var/run/postgresql/.s.PGSQL.5432" failed: FATAL: Ident authentication failed for user
 ---
 
 ## Log locations

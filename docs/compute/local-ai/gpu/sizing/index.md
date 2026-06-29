@@ -111,3 +111,26 @@ nvidia-smi topo -m
 # Data parallelism replicates model across GPUs, splits batch
 # Use when model fits on one GPU and you need higher throughput
 ```
+
+
+```text title="Expected output"
+GPU0	GPU1	GPU2	GPU3	CPU Affinity	NUMA Affinity
+GPU0	 X 	 NV2	 NV1	 PHB	0-31	0
+GPU1	 NV2	 X 	 PHB	 NV1	32-63	0
+GPU2	 NV1	 PHB	 X 	 NV2	64-95	1
+GPU3	 PHB	 NV1	 NV2	 X 	96-127	1
+
+Legend:
+
+  X   = Self
+  SYS  = Connection traversing PCIe as well as the SMP interconnect between NUMA nodes
+  NODE = Connection traversing only the SMP interconnect between NUMA nodes (e.g., QPI/UPI)
+  PHB  = Connection traversing PCIe as well as a PCIe Host Bridge (typical for single-socket)
+  PXB  = Connection traversing multiple PCIe Host Bridges (typical for multi-socket)
+  PIX  = Connection traversing a PCIe switch
+  NV#  = Connection traversing a bonded set of # NVLinks
+```
+
+!!! warning "Common errors"
+    **`command not found: nvidia-smi`** — Install NVIDIA GPU drivers with `apt install nvidia-utils` (Ubuntu) or equivalent for your OS.
+    **`Failed to initialize NVML: Driver/library version mismatch`** — Reboot the system or reload the nvidia driver with `sudo modprobe -r nvidia && sudo modprobe nvidia`.

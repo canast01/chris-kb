@@ -50,6 +50,20 @@ umount /mnt/shared
 umount -f -l /mnt/shared
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`mount.nfs: mount to NFS server '192.168.10.10' failed: Connection refused`** — Verify the NFS server is running (`systemctl status nfs-server` on the server) and the firewall allows port 2049/tcp and 111/udp.
+    **`mount.nfs: access denied by server while mounting 192.168.10.10:/data/shared`** — Check the NFS server's `/etc/exports` file to ensure the client IP is listed with appropriate permissions (e.g., `192.168.1.0/24(rw,sync,no_subtree_check)`).
+    **`umount: /mnt/shared: target is busy`** — Close all open files on the mount point with `lsof /mnt/shared` and kill the processes, or use `umount -f -l` to force lazy unmount.
 ## /etc/fstab Options
 
 ```bash
@@ -60,6 +74,19 @@ umount -f -l /mnt/shared
 192.168.10.10:/data/logs  /mnt/logs  nfs  ro,soft,timeo=30,retrans=2,vers=3,_netdev  0 0
 ```
 
+
+```text title="Expected output"
+(no output — these are /etc/fstab entries that are parsed at boot or when mount -a is run)
+
+If executed with `mount -a`:
+/data/shared on /mnt/shared type nfs4 (rw,relatime,vers=4.2,rsize=131072,wsize=131072,namlen=255,hard,timeo=600,retrans=3,sec=sys,clientaddr=192.168.10.50,local_lock=none,addr=192.168.10.10)
+/data/logs on /mnt/logs type nfs (ro,relatime,vers=3,rsize=32768,wsize=32768,namlen=255,soft,timeo=30,retrans=2,addr=192.168.10.10)
+```
+
+!!! warning "Common errors"
+    **`mount.nfs: mount to NFS server '192.168.10.10' failed: server is down`** — Verify NFS server is running with `systemctl status nfs-server` on the server and check network connectivity with `ping 192.168.10.10`.
+    **`mount.nfs: access denied by server while mounting 192.168.10.10:/data/shared`** — Ensure the client IP is listed in the NFS server's `/etc/exports` file and reload exports with `exportfs -ra`.
+    **`mount.nfs: No such file or directory`** — Create the mount point directories with `mkdir -p /mnt/shared /mnt/logs` before running `mount -a`.
 ## Mount Option Reference
 
 | Option | Effect |
@@ -94,6 +121,43 @@ systemctl enable --now autofs
 systemctl reload autofs
 ```
 
+
+```text title="Expected output"
+Last metadata expiration check: 0:12:34 ago on Thu 19 Dec 2024 14:22:18 UTC.
+Dependencies resolved.
+================================================================================
+ Package            Arch         Version              Repository         Size
+================================================================================
+Installing:
+ autofs             x86_64       5.1.7-35.el9         baseos            188 k
+
+Transaction Summary
+================================================================================
+Install  1 Package
+
+Total download size: 188 k
+Installed size: 542 k
+Is this ok? [y/N]: y
+Downloading Packages:
+autofs-5.1.7-35.el9.x86_64.rpm                    1.2 MB/s | 188 kB     00:00
+Running transaction
+Preparing        :                                                        1/1
+Installing       : autofs-5.1.7-35.el9.x86_64                            1/1
+Running scriptlet: autofs-5.1.7-35.el9.x86_64                            1/1
+Verifying        : autofs-5.1.7-35.el9.x86_64                            1/1
+
+Installed:
+  autofs-5.1.7-35.el9.x86_64
+
+Complete!
+Created symlink /etc/systemd/system/multi-user.target.wants/autofs.service → /usr/lib/systemd/system/autofs.service.
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`automount[1234]: lookup(file): lookup for shared failed`** — Verify the NFS server IP and export paths are correct in `/etc/auto.nfs`, and confirm the NFS server is reachable with `ping 192.168.10.10`.
+    **`mount.nfs: access denied by server while mounting 192.168.10.10:/data/shared`** — Check NFS server export permissions in `/etc/exports` and ensure the client IP is listed with appropriate read/write flags, then run `exportfs -ra` on the server.
+    **`systemctl: Unit autofs.service not found`** — Install autofs first with `dnf install autofs` or `apt install autofs` before attempting to enable the service.
 ## Known Issues
 
 - `hard` mounts can cause processes to hang indefinitely if the NFS server goes offline. For non-critical mounts, use `soft` with a short `timeo` and handle errors in the application layer.

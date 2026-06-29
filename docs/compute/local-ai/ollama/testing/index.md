@@ -52,6 +52,30 @@ EOF
 )"
 ```
 
+
+```text title="Expected output"
+>>> Send a message (/help for help)
+What is the capital of France?
+The capital of France is Paris, a city located in the north-central part of the country along the Seine River. Paris is known for its iconic landmarks, rich history, and cultural significance.
+
+>>> Send a message (/help for help)
+/bye
+
+Explain TCP/IP in one paragraph
+TCP/IP (Transmission Control Protocol/Internet Protocol) is the fundamental suite of communication protocols used for transmitting data across networks and the internet. TCP ensures reliable, ordered delivery of data by establishing connections between devices, while IP handles the routing and logical addressing of packets across networks. Together, they form the backbone of modern networking, enabling everything from web browsing and email to video streaming and cloud services.
+
+What is 2+2?
+2 + 2 = 4. This is a basic arithmetic operation where two quantities of two are combined to produce a sum of four.
+
+You are a helpful assistant.
+Question: What are the main differences between TCP and UDP?
+TCP (Transmission Control Protocol) and UDP (User Datagram Protocol) are both transport layer protocols, but they differ significantly. TCP is connection-oriented, reliable, and ordered, making it suitable for applications like email and file transfer where accuracy is critical. UDP, conversely, is connectionless and faster but offers no delivery guarantees, making it ideal for real-time applications like video streaming and online gaming where speed matters more than perfect accuracy.
+```
+
+!!! warning "Common errors"
+    **`Error: model "llama3.1:8b" not found, try pulling it first`** — Run `ollama pull llama3.1:8b` to download the model before executing commands.
+    **`Error: connection refused`** — Start the Ollama service with `ollama serve` in another terminal or ensure the Ollama daemon is running.
+    **`Error: read "prompt.txt": no such file or directory`** — Verify the prompt file exists in the current directory with `ls -la prompt.txt` before piping it.
 ## REST API Testing with curl
 
 The Ollama REST API is compatible with the OpenAI API format.
@@ -85,6 +109,39 @@ curl http://localhost:11434/api/tags | jq '.models[].name'
 curl http://localhost:11434/api/ps | jq
 ```
 
+
+```text title="Expected output"
+"Kubernetes is an open-source container orchestration platform that automates the deployment, scaling, and management of containerized applications across clusters of machines. It provides declarative configuration and automation for container lifecycle management."
+
+"A container is a lightweight, standalone, executable package that includes an application and all its dependencies—libraries, runtime, and system tools. Containers provide process isolation and consistent environments across development, testing, and production."
+
+llama3.1:8b
+mistral:7b
+neural-chat:7b
+
+{
+  "models": [
+    {
+      "name": "llama3.1:8b",
+      "model": "llama3.1:8b",
+      "size": 4887990272,
+      "digest": "sha256:6a0746a1ec1aef3e7cf8e96b826ea6d61d083da1d5ade757076fcebe8290ff89",
+      "details": {
+        "format": "gguf",
+        "family": "llama",
+        "families": ["llama"],
+        "parameter_size": "8B",
+        "quantization_level": "Q4_0"
+      }
+    }
+  ]
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to localhost port 11434: Connection refused`** — Ensure Ollama is running with `ollama serve` or verify it's listening on port 11434 with `netstat -tuln | grep 11434`.
+    **`jq: parse error: Cannot index number with string "response"`** — The model may still be loading; wait a few seconds and retry, or check that the model is fully downloaded with `ollama list`.
+    **`error: "model 'llama3.1:8b' not found"`** — Pull the required model first using `ollama pull llama3.1:8b`.
 ## Streaming Responses
 
 ```python
@@ -123,6 +180,23 @@ curl -s http://localhost:11434/api/generate \
   }'
 ```
 
+
+```text title="Expected output"
+real	42.387s
+user	0.156s
+sys	0.089s
+{
+  "tokens_per_sec": 18.42,
+  "prompt_tokens": 12,
+  "output_tokens": 756,
+  "total_duration_s": 41.03
+}
+```
+
+!!! warning "Common errors"
+    **`error: model 'llama3.1:8b' not found, try pulling it first`** — Run `ollama pull llama3.1:8b` before executing the test.
+    **`curl: (7) Failed to connect to localhost port 11434: Connection refused`** — Ensure the Ollama service is running with `ollama serve` in another terminal or as a background service.
+    **`jq: parse error: Invalid numeric literal at line 1 column 7`** — Verify the API response is valid JSON by testing `curl -s http://localhost:11434/api/generate -d '{"model":"llama3.1:8b","prompt":"test","stream":false}'` without piping to jq first.
 ## Model Comparison Script
 
 ```python
@@ -176,3 +250,13 @@ curl http://localhost:11434/api/embed \
     "input": "The sky is blue"
   }' | jq '.embeddings[0] | length'
 ```
+
+
+```text title="Expected output"
+384
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to localhost port 11434: Connection refused`** — Ensure the Ollama service is running with `ollama serve` or check that it's listening on port 11434.
+    **`jq: parse error: Cannot index number with string "embeddings"`** — The model may not support embeddings or returned an error; verify the model exists with `ollama list` and that `nomic-embed-text` is pulled.
+    **`jq: error (at <stdin>:1): Cannot iterate over null (null)`** — The API response doesn't contain the expected `embeddings` field; check the Ollama API response with `curl http://localhost:11434/api/embed -d '{"model":"nomic-embed-text","input":"test"}'` to inspect the actual structure.

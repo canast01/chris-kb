@@ -134,6 +134,34 @@ realm list
 realm permit -g "Linux_Admins@corp.example.com"
 ```
 
+
+```text title="Expected output"
+Loaded plugins: fastestmirror, security
+Loading mirror speeds from cached hostfile
+Resolving Dependencies
+--> Running transaction check
+---> Package sssd.x86_64 0:1.16.5-13.el7 will be installed
+---> Package realmd.x86_64 0:0.16.3-5.el7 will be installed
+---> Package adcli.x86_64 0:0.8.2-8.el7 will be installed
+--> Processing Dependency: oddjob for package: sssd-ad-1.16.5-13.el7.x86_64
+Complete!
+ * Successfully enrolled machine in realm
+realm list
+  corp.example.com
+    domain-name: corp.example.com
+    configured: kerberos-member
+    server-software: active-directory
+    client-software: sssd
+    required-package: sssd-tools
+    login-formats: %U@corp.example.com
+    login-policy: allow-realm-logins
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`realm: Couldn't authenticate with server: SASL(-1): generic failure`** — Verify the service account credentials are correct and the account has domain join permissions in Active Directory.
+    **`Error: Could not resolve hostname corp.example.com`** — Ensure DNS is configured correctly on the Linux system and can resolve the AD domain name.
+    **`realm: Couldn't find a suitable server to join`** — Confirm the domain name is correct, the AD domain controller is reachable on port 389/636, and firewall rules allow LDAP/Kerberos traffic.
 Key `/etc/sssd/sssd.conf` settings:
 
 ```ini
@@ -167,6 +195,30 @@ update-ca-trust
 openssl s_client -connect dc01.corp.example.com:636 -showcerts
 ```
 
+
+```text title="Expected output"
+Connecting to dc01.corp.example.com:636 ...
+depth=0, CN = dc01.corp.example.com, O = CORP, C = US
+verify return:1
+---
+Certificate chain
+ 0 s:/CN=dc01.corp.example.com/O=CORP/C=US
+   i:/CN=CORP Issuing CA/O=CORP/C=US
+ 1 s:/CN=CORP Issuing CA/O=CORP/C=US
+   i:/CN=CORP Root CA/O=CORP/C=US
+---
+Server certificate
+subject=/CN=dc01.corp.example.com/O=CORP/C=US
+issuer=/CN=CORP Issuing CA/O=CORP/C=US
+---
+CONNECTED(00000003)
+read:errno=0
+```
+
+!!! warning "Common errors"
+    **`unable to load certificate`** — Verify the CA cert file exists at `/etc/pki/ca-trust/source/anchors/` and run `update-ca-trust` before testing.
+    **`connect: Connection refused`** — Confirm the Domain Controller is online, LDAPS port 636 is open, and the hostname resolves with `nslookup dc01.corp.example.com`.
+    **`verify error:num=20:unable to get local issuer certificate`** — Ensure the complete certificate chain (issuing CA and root CA) is imported into `/etc/pki/ca-trust/source/anchors/` and `update-ca-trust` was executed.
 ---
 
 ## Splunk Universal Forwarder on Domain Controllers

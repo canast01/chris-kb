@@ -59,6 +59,34 @@ curl -s -X POST http://zabbix.example.com/api_jsonrpc.php \
   -d '{"jsonrpc":"2.0","method":"host.update","params":{"hostid":"<id>","status":1},"auth":"<token>","id":1}'
 ```
 
+
+```text title="Expected output"
+[
+  {
+    "labels": {
+      "alertname": "HighCPUUsage",
+      "instance": "web-prod-04:9100",
+      "severity": "warning"
+    },
+    "state": "firing",
+    "value": "1"
+  },
+  {
+    "labels": {
+      "alertname": "DiskSpaceWarning",
+      "instance": "web-prod-04:9100",
+      "severity": "critical"
+    },
+    "state": "firing",
+    "value": "1"
+  }
+]
+{"jsonrpc":"2.0","result":{"hostids":["10084"]},"id":1}
+```
+
+!!! warning "Common errors"
+    **`curl: (7) Failed to connect to prometheus:9090: Connection refused`** — Verify Prometheus is running with `docker ps` or `systemctl status prometheus` and check the correct hostname/port in your environment.
+    **`"error":{"code":-32602,"message":"Invalid params.","data":"No permissions to referred object or it does not exist."}`** — Confirm the `<id>` (hostid) is correct by querying `host.get` method first, and verify the auth token has admin privileges.
 ## 5. Remove from Backup
 
 ```bash
@@ -74,6 +102,27 @@ Remove-VBRJobObject -Job $job -Objects $vm
 # CommCell Console: Client Computers → <hostname> → Retire Client
 ```
 
+
+```text title="Expected output"
+Get-VBRJob -Name "Production VMs" | Select-Object Name, ID, JobType
+
+Name              ID                                   JobType
+----              --                                   -------
+Production VMs    xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx Backup
+
+Get-VBRJobObject -Job $job | Where-Object Name -eq "web-prod-01"
+
+Name          ObjectType VirtualMachine
+----          ---------- --------------
+web-prod-01   VM         web-prod-01
+
+Remove-VBRJobObject -Job $job -Objects $vm
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`Get-VBRJob : The term 'Get-VBRJob' is not recognized as the name of a cmdlet, function, script file, or operable program.`** — Load the Veeam PowerShell snapin with `Add-PSSnapin VeeamPSSnapin` before running these commands.
+    **`Remove-VBRJobObject : Cannot remove object. Job must contain at least one object.`** — Verify the VM object exists in the job using `Get-VBRJobObject -Job $job | Format-Table Name` before attempting removal.
 ## 6. Revoke Access and Credentials
 
 ```bash
@@ -101,6 +150,28 @@ EOF
 nslookup <hostname>.example.com
 ```
 
+
+```text title="Expected output"
+Connection to 192.168.45.12 closed.
+(no output — command completes silently)
+(no output — command completes silently)
+(no output — command completes silently)
+> server dns.example.com
+> update delete web-prod-01.example.com A
+> update delete 45.168.192.in-addr.arpa. PTR
+> send
+(no output — DNS update sent)
+
+Server:		dns.example.com
+Address:	192.168.1.53#53
+
+** server can't find web-prod-01.example.com: NXDOMAIN
+```
+
+!!! warning "Common errors"
+    **`Permission denied (publickey).`** — Verify the root account has SSH key access to the target hostname and the key is loaded in your SSH agent.
+    **`Update failed: NOTAUTH`** — Ensure your nsupdate command includes proper TSIG authentication (key-file parameter) or that the DNS server allows unsigned updates from your source IP.
+    **`Disable-ADComputer : Cannot find an object with identity "<HOSTNAME>" under: "DC=example,DC=com".`** — Verify the exact hostname spelling matches the AD computer object name and confirm you are connected to the correct Active Directory domain.
 ## 7. Shutdown and Delete
 
 ### Virtual Machine
@@ -145,6 +216,28 @@ az disk delete --resource-group prod-rg --name <hostname>-osDisk --yes
 gcloud compute instances delete <hostname> --zone=europe-west1-b
 ```
 
+
+```text title="Expected output"
+# AWS
+An error occurred (InvalidInstanceID.NotFound) when calling the TerminateInstances operation: The instance ID 'i-1234567890abcdef0' does not exist
+(no output — command completes silently)
+
+# Azure
+Command group 'vm delete' is deprecated and will be removed in a future release. Use 'az vm delete' from 'azure-cli-core' instead.
+Are you sure you want to perform this operation? (y/N): y
+- Running ..
+Finished operation: vm delete
+(no output — command completes silently)
+
+# GCP
+ERROR: (gcloud.compute.instances.delete) Could not fetch resource:
+ - The resource 'projects/my-project/zones/europe-west1-b/instances/<hostname>' was not found
+```
+
+!!! warning "Common errors"
+    **`An error occurred (InvalidInstanceID.NotFound) when calling the TerminateInstances operation: The instance ID 'i-1234567890abcdef0' does not exist`** — Verify the instance ID is correct and still running with `aws ec2 describe-instances --filters "Name=instance-state-name,Values=running"`.
+    **`ERROR: (gcloud.compute.instances.delete) Could not fetch resource: The resource 'projects/my-project/zones/europe-west1-b/instances/<hostname>' was not found`** — Confirm the hostname and zone match the actual instance with `gcloud compute instances list --zones=europe-west1-b`.
+    **`ResourceNotFoundError: The Resource 'Microsoft.Compute/disks/<hostname>-osDisk' under resource group 'prod-rg' was not found`** — Ensure the disk name and resource group are correct by listing disks with `az disk list --resource-group prod-rg`.
 ## 8. CMDB and Ansible Cleanup
 
 ```bash
@@ -157,6 +250,27 @@ git push
 # CMDB entry: Status → Retired, Decommission date → YYYY-MM-DD
 ```
 
+
+```text title="Expected output"
+rm 'inventory/production/host_vars/db-prod-03.example.com/'
+[main 7a2f4c9] Decommission db-prod-03 — CHG-0047821
+ 1 file changed, 47 deletions(-)
+ delete mode 100644 inventory/production/host_vars/db-prod-03.example.com/ansible-vault.yml
+Enumerating objects: 5, done.
+Counting objects: 100% (5/5), done.
+Delta compression using 5 objects.
+Compressing objects: 100% (5/5), done.
+Writing objects: 100% (5/5), 1.24 KiB | 1.24 MiB/s, done.
+Total 5 (delta 3), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (3/3), done.
+To git.company.internal:infrastructure/ansible-inventory.git
+   4f8e1a2..7a2f4c9  main -> main
+```
+
+!!! warning "Common errors"
+    **`fatal: pathspec 'inventory/production/host_vars/<hostname>.example.com/' did not match any files`** — Replace `<hostname>` with the actual hostname (e.g., `db-prod-03`) before running the command.
+    **`error: pathspec 'inventory/production/host_vars/db-prod-03.example.com/' did not match any files`** — Verify the directory exists and the path is correct; check for typos or confirm the host_vars structure matches your inventory layout.
+    **`[main (root-commit) ...] fatal: your current branch 'main' does not have any commits yet`** — Ensure you are in the correct git repository directory and that the branch has been initialized with at least one commit.
 ## Decommission Checklist
 
 | Step | Done |

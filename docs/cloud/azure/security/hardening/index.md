@@ -63,6 +63,56 @@ az security pricing list --output table
 az security secure-score list --output table
 ```
 
+
+```text title="Expected output"
+{
+  "id": "/subscriptions/12a34b5c-6789-0def-1234-567890abcdef/providers/Microsoft.Security/autoProvisioningSettings/mma",
+  "name": "mma",
+  "autoProvision": "On",
+  "type": "Microsoft.Security/autoProvisioningSettings"
+}
+{
+  "id": "/subscriptions/12a34b5c-6789-0def-1234-567890abcdef/providers/Microsoft.Security/pricings/VirtualMachines",
+  "name": "VirtualMachines",
+  "pricingTier": "Standard"
+}
+{
+  "id": "/subscriptions/12a34b5c-6789-0def-1234-567890abcdef/providers/Microsoft.Security/pricings/StorageAccounts",
+  "name": "StorageAccounts",
+  "pricingTier": "Standard"
+}
+{
+  "id": "/subscriptions/12a34b5c-6789-0def-1234-567890abcdef/providers/Microsoft.Security/pricings/SqlServers",
+  "name": "SqlServers",
+  "pricingTier": "Standard"
+}
+{
+  "id": "/subscriptions/12a34b5c-6789-0def-1234-567890abcdef/providers/Microsoft.Security/pricings/AppServices",
+  "name": "AppServices",
+  "pricingTier": "Standard"
+}
+{
+  "id": "/subscriptions/12a34b5c-6789-0def-1234-567890abcdef/providers/Microsoft.Security/pricings/Containers",
+  "name": "Containers",
+  "pricingTier": "Standard"
+}
+Name                  PricingTier    FreeTrialRemainingDays
+--------------------  -----------    ----------------------
+VirtualMachines       Standard       0
+StorageAccounts       Standard       0
+SqlServers            Standard       0
+AppServices           Standard       0
+Containers            Standard       0
+KeyVaults             Free           -1
+ResourceManager       Free           -1
+CurrentSecureScore    MaxScore    Percentage    ControlsStatus
+------------------    --------    ----------    ---------------
+42                    100         42%           Healthy: 8, Unhealthy: 12, NotApplicable: 5
+```
+
+!!! warning "Common errors"
+    **`(AuthorizationFailed) The client '12a34b5c-6789-0def-1234-567890abcdef' with object id '98765432-1098-7654-3210-fedcba987654' does not have authorization to perform action 'Microsoft.Security/pricings/write' over scope '/subscriptions/12a34b5c-6789-0def-1234-567890abcdef'.`** — Ensure your user account or service principal has the Security Admin or Owner role on the subscription.
+    **`(InvalidResourceType) The resource type 'VirtualMachines' is not valid for the current subscription.`** — Verify the subscription has at least one VM deployed; Defender pricing cannot be enabled for resource types that don't exist in the subscription.
 ### Unhealthy Recommendations
 
 ```bash
@@ -80,6 +130,42 @@ az security assessment show \
 az security assessment list --output json > security-assessments-$(date +%Y%m%d).json
 ```
 
+
+```text title="Expected output"
+Name                                          Status      ResourceCount    Severity
+────────────────────────────────────────────  ──────────  ───────────────  ────────
+Ensure that 'Enforce SSL connection' is ON    Unhealthy   3                High
+Ensure MFA is enabled for all users           Unhealthy   12               High
+Ensure storage accounts use SAS tokens        Unhealthy   5                Medium
+Ensure Network Security Groups are hardened   Unhealthy   8                High
+Ensure Key Vault logging is enabled           Unhealthy   2                Medium
+...
+
+{
+  "id": "/subscriptions/a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6/providers/Microsoft.Security/assessments/mfa-enabled-assessment",
+  "name": "mfa-enabled-assessment",
+  "type": "Microsoft.Security/assessments",
+  "properties": {
+    "displayName": "Ensure MFA is enabled for all users",
+    "status": {
+      "code": "Unhealthy",
+      "cause": "OffByPolicy",
+      "firstEvaluationDate": "2024-01-15T08:30:00Z",
+      "statusChangeDate": "2024-01-20T14:22:15Z"
+    },
+    "resourceDetails": {
+      "id": "/subscriptions/a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachines/web-vm-01"
+    }
+  }
+}
+
+security-assessments-20240122.json
+```
+
+!!! warning "Common errors"
+    **`ERROR: The following arguments are required: --name, --assessed-resource-id`** — Provide the exact assessment name and resource ID from the list output, or use `az security assessment list --query "[0].[name,id]"` to retrieve them.
+    **`ERROR: No subscriptions found. Run 'az login' to set up account.`** — Authenticate with `az login` and set the correct subscription using `az account set --subscription <subscription-id>`.
+    **`ERROR: The client '<client-id>' does not have authorization to perform action 'Microsoft.Security/assessments/read'`** — Ensure your Azure account has the Security Reader or higher role assigned at the subscription scope.
 ---
 
 ## Network Security Groups
@@ -130,6 +216,62 @@ az network nic list-effective-nsg \
   --resource-group <rg-name>
 ```
 
+
+```text title="Expected output"
+{
+  "etag": "W/\"a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6\"",
+  "id": "/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/prod-rg/providers/Microsoft.Network/networkSecurityGroups/nsg-appsubnet",
+  "location": "eastus",
+  "name": "nsg-appsubnet",
+  "provisioningState": "Succeeded",
+  "resourceGroup": "prod-rg",
+  "type": "Microsoft.Network/networkSecurityGroups"
+}
+{
+  "access": "Allow",
+  "description": null,
+  "destinationAddressPrefix": "*",
+  "destinationPortRange": "443",
+  "direction": "Inbound",
+  "etag": "W/\"b2c3d4e5-f6g7-48h9-i0j1-k2l3m4n5o6p7\"",
+  "id": "/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/prod-rg/providers/Microsoft.Network/networkSecurityGroups/nsg-appsubnet/securityRules/Allow-HTTPS-Inbound",
+  "name": "Allow-HTTPS-Inbound",
+  "priority": 100,
+  "protocol": "Tcp",
+  "provisioningState": "Succeeded",
+  "sourceAddressPrefix": "10.0.0.0/8",
+  "type": "Microsoft.Network/securityRules"
+}
+{
+  "access": "Deny",
+  "description": null,
+  "destinationAddressPrefix": "*",
+  "destinationPortRange": "*",
+  "direction": "Inbound",
+  "etag": "W/\"c3d4e5f6-g7h8-49i0-j1k2-l3m4n5o6p7q8\"",
+  "name": "Deny-All-Inbound",
+  "priority": 4000,
+  "protocol": "*",
+  "provisioningState": "Succeeded",
+  "sourceAddressPrefix": "*",
+  "type": "Microsoft.Network/securityRules"
+}
+{
+  "etag": "W/\"d4e5f6g7-h8i9-50j0-k1l2-m3n4o5p6q7r8\"",
+  "id": "/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/prod-rg/providers/Microsoft.Network/virtualNetworks/prod-vnet/subnets/app-subnet",
+  "name": "app-subnet",
+  "provisioningState": "Succeeded",
+  "type": "Microsoft.Network/virtualNetworks/subnets"
+}
+[
+  {
+    "access": "Allow",
+    "destinationPortRange": "443",
+    "direction": "Inbound",
+    "name": "Allow-HTTPS-Inbound",
+    "priority": 100,
+    "protocol": "Tcp",
+```
 ### NSG Flow Logs
 
 Enable flow logs for all production NSGs. Required for security investigations and network anomaly detection.
@@ -155,6 +297,58 @@ az network watcher flow-log create \
   --workspace <log-analytics-workspace-id>
 ```
 
+
+```text title="Expected output"
+{
+  "accessTier": "Hot",
+  "creationTime": "2024-01-15T09:42:33.847391+00:00",
+  "customDomain": null,
+  "enableHttpsTrafficOnly": true,
+  "encryption": {
+    "keySource": "Microsoft.Storage",
+    "services": {
+      "blob": {
+        "enabled": true,
+        "lastEnabledTime": "2024-01-15T09:42:33.847391+00:00"
+      },
+      "file": {
+        "enabled": true,
+        "lastEnabledTime": "2024-01-15T09:42:33.847391+00:00"
+      }
+    }
+  },
+  "id": "/subscriptions/a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6/resourceGroups/rg-prod-eastus/providers/Microsoft.Storage/storageAccounts/sansgflowlogs2024",
+  "kind": "StorageV2",
+  "location": "eastus",
+  "name": "sansgflowlogs2024",
+  "primaryEndpoints": {
+    "blob": "https://sansgflowlogs2024.blob.core.windows.net/",
+    "file": "https://sansgflowlogs2024.file.core.windows.net/",
+    "queue": "https://sansgflowlogs2024.queue.core.windows.net/",
+    "table": "https://sansgflowlogs2024.table.core.windows.net/"
+  },
+  "resourceGroup": "rg-prod-eastus",
+  "sku": {
+    "name": "Standard_LRS",
+    "tier": "Standard"
+  },
+  "statusOfPrimary": "available"
+}
+{
+  "enabled": true,
+  "etag": "W/\"2024-01-15T10:18:22.5634521Z\"",
+  "format": "JSON",
+  "id": "/subscriptions/a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6/resourceGroups/rg-prod-eastus/providers/Microsoft.Network/networkWatchers/NetworkWatcher_eastus/flowLogs/flowlog-nsg-appsubnet",
+  "location": "eastus",
+  "name": "flowlog-nsg-appsubnet",
+  "provisioningState": "Succeeded",
+  "retentionPolicy": {
+    "days": 90,
+    "enabled": true
+  },
+  "storageId": "/subscriptions/a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6/resourceGroups/rg-prod-eastus/providers/Microsoft.Storage/storageAccounts/sansgflowlogs2024",
+  "targetResourceId": "/subscriptions/a1b2c3d4-e5f6-47g8-h9i0-j1k2l3m4n5o6/resourceGroups/rg-
+```
 ---
 
 ## Just-In-Time VM Access
@@ -201,6 +395,59 @@ az security jit-policy initiate \
   ]'
 ```
 
+
+```text title="Expected output"
+{
+  "id": "/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/resourceGroups/prod-rg/providers/Microsoft.Security/locations/eastus/jitNetworkAccessPolicies/default",
+  "name": "default",
+  "properties": {
+    "virtualMachines": [
+      {
+        "id": "/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachines/web-vm-01",
+        "ports": [
+          {
+            "number": 22,
+            "protocol": "TCP",
+            "allowedSourceAddressPrefix": "*",
+            "maxRequestAccessDuration": "PT3H"
+          },
+          {
+            "number": 3389,
+            "protocol": "TCP",
+            "allowedSourceAddressPrefix": "*",
+            "maxRequestAccessDuration": "PT3H"
+          }
+        ]
+      }
+    ],
+    "requests": []
+  },
+  "type": "Microsoft.Security/locations/jitNetworkAccessPolicies"
+}
+{
+  "properties": {
+    "virtualMachines": [
+      {
+        "id": "/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/resourceGroups/prod-rg/providers/Microsoft.Compute/virtualMachines/web-vm-01",
+        "ports": [
+          {
+            "number": 22,
+            "allowedSourceAddressPrefix": "203.0.113.45/32",
+            "endTimeUtc": "2024-01-01T14:00:00.0000000Z",
+            "duration": "PT2H",
+            "status": "Initiated"
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+!!! warning "Common errors"
+    **`(ResourceNotFound) The resource '/subscriptions/.../jitNetworkAccessPolicies/default' could not be found.`** — Ensure the VM exists in the specified resource group and region, and that Azure Security Center is enabled for the subscription.
+    **`(InvalidRequestContent) The request body is invalid.`** — Validate the JSON syntax in the ports array and ensure the endTimeUtc timestamp is in ISO 8601 format and in the future.
+    **`(AuthorizationFailed) The client 'user@example.com' with object id 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx' does not have authorization to perform action 'Microsoft.Security/locations/jitNetworkAccessPolicies/initiate/action'.`** — Assign the Security Admin or higher role to the user on the subscription or resource group.
 ---
 
 ## Azure Policy for Security
@@ -240,6 +487,40 @@ az policy state list \
   --output table
 ```
 
+
+```text title="Expected output"
+DisplayName                                          Name                                      PolicyType    Mode
+-------------------------------------------------    ------------------------------------       ---------     ------
+Require HTTPS in Storage Account                     e7d100dd-e89b-4265-bc78-24b1f824910c     BuiltIn       Indexed
+Require TLS version on Linux web apps                 f0e6e85b-9b9f-4a4b-b952-6b6b7d5c8e9a     BuiltIn       Indexed
+Secure transfer to storage accounts enabled          7414c4b6-fb4c-46c6-b00f-eb134e3e6e20     BuiltIn       Indexed
+...
+
+{
+  "id": "/subscriptions/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d/providers/Microsoft.Authorization/policyAssignments/require-tls12-storage",
+  "name": "require-tls12-storage",
+  "displayName": "Require TLS 1.2 on Storage Accounts",
+  "policyDefinitionId": "/providers/Microsoft.Authorization/policyDefinitions/fe83a0eb-a853-422d-aac2-1bffd182c5d0",
+  "scope": "/subscriptions/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d",
+  "enforcementMode": "Default"
+}
+
+{
+  "id": "/subscriptions/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d/providers/Microsoft.Authorization/policyAssignments/cis-azure-benchmark",
+  "name": "cis-azure-benchmark",
+  "displayName": "CIS Microsoft Azure Foundations Benchmark",
+  "policySetDefinitionId": "/providers/Microsoft.Authorization/policySetDefinitions/612b5213-9160-4969-8578-1518bd2a000c",
+  "scope": "/subscriptions/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d"
+}
+
+SubscriptionId                        ComplianceState    TotalResources    CompliantResources    NonCompliantResources
+------------------------------------  ----------------   ---------------   --------------------  ----------------------
+a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d  NonCompliant       47                 38                    9
+
+ResourceId                                                                                    ComplianceState    PolicyAssignmentId
+------------------------------------------------------------------------------------------------------  ----------------   -----------------------------------------------
+/subscriptions/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d/resourceGroups/prod-rg/providers/Microsoft.Storage/storageAccounts/prodstg001  NonCompliant  /subscriptions/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d/
+```
 ---
 
 ## Resource Locks
@@ -271,6 +552,37 @@ az lock delete \
   --resource-group <rg-name>
 ```
 
+
+```text title="Expected output"
+{
+  "id": "/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/resourceGroups/prod-rg/providers/Microsoft.Authorization/locks/lock-prod-rg",
+  "level": "CanNotDelete",
+  "name": "lock-prod-rg",
+  "notes": "Production resource group — cannot delete without removing lock",
+  "owner": {
+    "applicationId": null
+  },
+  "resourceGroup": "prod-rg",
+  "type": "Microsoft.Authorization/locks"
+}
+{
+  "id": "/subscriptions/a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d/resourceGroups/prod-rg/providers/Microsoft.Network/virtualNetworks/prod-vnet/providers/Microsoft.Authorization/locks/lock-prod-vnet-readonly",
+  "level": "ReadOnly",
+  "name": "lock-prod-vnet-readonly",
+  "resourceGroup": "prod-rg",
+  "type": "Microsoft.Authorization/locks"
+}
+Name                      ResourceGroup    ResourceName    ResourceType                      Level        Notes
+------------------------  ---------------  --------------  --------------------------------  -----------  -----------------------------------------------
+lock-prod-rg              prod-rg                                                             CanNotDelete  Production resource group — cannot delete...
+lock-prod-vnet-readonly   prod-rg          prod-vnet       Microsoft.Network/virtualNetworks ReadOnly
+
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`The resource group '<rg-name>' could not be found.`** — Replace `<rg-name>` with the actual resource group name, or verify it exists with `az group list`.
+    **`The resource 'Microsoft.Network/virtualNetworks/<vnet-name>' does not exist in resource group '<rg-name>'.`** — Verify the virtual network name and resource group are correct using `az network vnet list --resource-group <rg-name>`.
 Apply `CanNotDelete` locks to all production resource groups, key vaults, virtual networks, and storage accounts that hold critical data.
 
 ---
@@ -296,6 +608,25 @@ az security assessment list \
   --output table
 ```
 
+
+```text title="Expected output"
+Id                                          DisplayName                                      State
+--------------------------------------------  -----------------------------------------------  ---------
+/subscriptions/a1b2c3d4-e5f6-7890-abcd-ef1234567890/resourceGroups/prod-rg/providers/Microsoft.Security/assessments/endpoint-protection-001  Endpoint Protection should be installed on your machines  Healthy
+/subscriptions/a1b2c3d4-e5f6-7890-abcd-ef1234567890/resourceGroups/prod-rg/providers/Microsoft.Security/assessments/endpoint-protection-002  Endpoint Protection health issues should be resolved  Unhealthy
+/subscriptions/a1b2c3d4-e5f6-7890-abcd-ef1234567890/resourceGroups/prod-rg/providers/Microsoft.Security/assessments/endpoint-protection-003  Missing endpoint protection  Unhealthy
+
+ScanId                 Database      Server           Status      StartTime
+---------------------  -----------  ---------------  ----------  -------------------------
+scan-20240115-001      paymentdb    sql-prod-01      Completed   2024-01-15T09:30:22Z
+scan-20240115-002      inventorydb  sql-prod-01      Completed   2024-01-15T10:15:45Z
+scan-20240115-003      analyticsdb  sql-prod-02      In Progress 2024-01-15T11:00:10Z
+```
+
+!!! warning "Common errors"
+    **`The provided resource group <rg-name> does not exist.`** — Verify the resource group name with `az group list` and ensure it matches your subscription.
+    **`No assessments found matching the query.`** — Check that Defender for Cloud is enabled on your subscription with `az security auto-provisioning-setting list`.
+    **`Server '<server>' not found in resource group '<rg-name>'.`** — Confirm the SQL server name exists in the specified resource group using `az sql server list --resource-group <rg-name>`.
 ---
 
 ## Security Baseline Hardening Checklist
@@ -329,6 +660,17 @@ for a in accounts:
 "
 ```
 
+
+```text title="Expected output"
+storageacct001: HTTP allowed, TLS < 1.2
+proddata-storage: HTTP allowed, public blob access
+backupvault-east: TLS < 1.2
+```
+
+!!! warning "Common errors"
+    **`jq: command not found`** — Install jq with `apt-get install jq` or use the built-in Python JSON parser as shown in the example.
+    **`ERROR: The following arguments are required: --resource-group`** — Add `--resource-group <group-name>` or use `--query "[].{name:name, https:enableHttpsTrafficOnly}"` to filter specific subscriptions.
+    **`ModuleNotFoundError: No module named 'json'`** — The json module is built-in to Python 3; verify Python 3 is installed with `python3 --version` and that the script syntax is correct.
 ---
 
 ## See also

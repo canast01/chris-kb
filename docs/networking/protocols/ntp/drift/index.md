@@ -52,6 +52,17 @@ chronyc tracking | grep -E "Frequency|Skew|System time|Last offset"
 # Skew            :  0.123 ppm        ← uncertainty in the frequency estimate
 ```
 
+
+```text title="Expected output"
+System time     :  0.000012345 seconds fast of NTP time
+Last offset     : +0.000001234 seconds
+Frequency       : 12.345 ppm fast
+Skew            :  0.123 ppm
+```
+
+!!! warning "Common errors"
+    **`506 Cannot talk to daemon`** — Ensure chronyd is running with `systemctl start chronyd` and listening on the local socket.
+    **`No such file or directory`** — Install chrony with `apt-get install chrony` (Debian/Ubuntu) or `yum install chrony` (RHEL/CentOS).
 | Value | Healthy range | Concern |
 |---|---|---|
 | Frequency | ±500 ppm | > ±1000 ppm — hardware issue |
@@ -73,6 +84,15 @@ cat /var/lib/ntp/drift
 # 12.345678
 ```
 
+
+```text title="Expected output"
+12.345678
+cat: /var/lib/ntp/drift: No such file or directory
+```
+
+!!! warning "Common errors"
+    **`cat: /var/lib/ntp/drift: No such file or directory`** — The system is running chronyd instead of ntpd; check which NTP daemon is active with `systemctl status chronyd` or `systemctl status ntpd`.
+    **`Permission denied`** — Run the command with `sudo` since drift files are typically readable only by the ntp/chrony service user.
 If the drift file is deleted or corrupt, the daemon will start from zero correction and take longer to converge.
 
 ## Interpreting Drift History
@@ -84,6 +104,24 @@ chronyc sourcestats
 # Output columns: Name/IP, N, Polls, Reach, Last_Rx, Last sample, Est offset, Est error
 ```
 
+
+```text title="Expected output"
+210 Number of sources = 4
+                      .- Number of samples in measurement set.
+                     /    .- Number of runner cycles in measurement set.
+                    |    /     .- Number of measurements remaining in set.
+                    |   |      /
+Name/IP            NP  NR Span Frequency  Freq Skew Offset Std Dev
+==============================================================================
+ntp1.example.com   64  64  63m     +0.000ppm  ±0.020ppm  -2.345us   1.234us
+ntp2.example.com   64  64  63m     +0.015ppm  ±0.018ppm  +1.892us   0.987us
+time.google.com    32  32  31m     -0.008ppm  ±0.025ppm  -0.456us   1.567us
+169.254.169.123    16  16  15m     +0.042ppm  ±0.035ppm  +3.210us   2.145us
+```
+
+!!! warning "Common errors"
+    **`506 Cannot talk to daemon`** — Ensure chronyd is running with `sudo systemctl start chronyd` and listening on localhost.
+    **`No such file or directory`** — Install chrony with `sudo apt-get install chrony` (Debian/Ubuntu) or `sudo yum install chrony` (RHEL/CentOS).
 ## Drift After VM Operations
 
 VMs commonly accumulate clock drift after:
@@ -99,6 +137,15 @@ chronyc makestep
 makestep 1.0 3   # step if offset > 1s on first 3 updates
 ```
 
+
+```text title="Expected output"
+200 OK
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`506 Cannot talk to daemon`** — Ensure chronyd is running with `systemctl start chronyd` and listening on the local socket.
+    **`makestep: command not found`** — The `makestep` directive belongs in `/etc/chrony.conf` configuration file, not executed directly; remove it from the command line and add it to the config file instead.
 ## Windows Drift
 
 ```powershell

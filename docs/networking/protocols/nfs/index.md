@@ -142,6 +142,46 @@ umount -l /mnt/nfs
 mount | grep nfs
 ```
 
+
+```text title="Expected output"
+Export list for nfs-server.corp.local:
+/export/data     192.168.1.0/24
+/export/backup   10.0.0.0/8
+/export/home     *
+
+(no output — command completes silently)
+
+/dev/mapper/vg0-lv_root on / type ext4 (rw,relatime)
+nfs-server.corp.local:/export/data on /mnt/nfs type nfs4 (rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,hard,noatime)
+
+Server nfs-server.corp.local:
+  100003  3   tcp   2049  nfs
+  100003  4   tcp   2049  nfs
+  100005  1   udp    635  mountd
+  100005  3   tcp    635  mountd
+  100021  1   udp  45678  nlockmgr
+  100021  4   tcp  45678  nlockmgr
+
+(no output — command completes silently)
+
+Client nfs v3:
+        calls      retrans    authrefrsh
+        1247       12         1247
+Server nfs v4:
+        reads      writes     commits
+        5634       2891       156
+
+Mounts:
+  /mnt/nfs from nfs-server.corp.local:/export/data
+  Flags: vers=4.1,rsize=1048576,wsize=1048576,hard,noatime,proto=tcp
+
+nfs-server.corp.local:/export/data on /mnt/nfs type nfs4 (rw,relatime,vers=4.1,rsize=1048576,wsize=1048576,hard,noatime,proto=tcp)
+```
+
+!!! warning "Common errors"
+    **`mount.nfs: No such file or directory`** — Verify the NFS server hostname/IP is resolvable and the export path exists on the server with `showmount -e <nfs-server>`.
+    **`exportfs: /etc/exports:2: syntax error - unexpected end of line`** — Check `/etc/exports` for missing whitespace or invalid IP ranges; each export line must have server, path, and options separated by spaces.
+    **`umount: /mnt/nfs: target is busy`** — Use `umount -l /mnt/nfs` for lazy unmount, or kill processes accessing the mount with `lsof /mnt/nfs` first.
 **Example /etc/exports entry:**
 ```bash
 # /etc/exports
@@ -149,6 +189,14 @@ mount | grep nfs
 /data/readonly  10.0.0.0/8(ro,sync,no_subtree_check,all_squash)
 ```
 
+
+```text title="Expected output"
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`exportfs: /etc/exports:1: syntax error - unexpected character after netgroup`** — Ensure there is no space between the export path and the opening parenthesis in `/etc/exports`.
+    **`mount.nfs: access denied by server while mounting 192.168.1.50:/data/shared`** — Verify the client IP falls within the specified subnet (192.168.1.0/24) and run `exportfs -ra` on the NFS server after editing `/etc/exports`.
 ## Troubleshooting
 
 | Symptom | Check | Action |

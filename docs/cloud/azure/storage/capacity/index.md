@@ -56,6 +56,26 @@ az monitor metrics list \
   --output table
 ```
 
+
+```text title="Expected output"
+Name           Aggregation    ResourceId                                                                                                                                    Timestamp            Value
+-------------  -------------  ------------------------------------------------------------------------------------------------------------------------------------------  -------------------  -----------
+UsedCapacity   Average        /subscriptions/a7f3c2e1-9b4d-4f8a-b2c5-1e8d9f3a4b6c/resourceGroups/rg-storage-prod/providers/Microsoft.Storage/storageAccounts/stprodblobs01  2024-01-15T14:00:00Z  847362560000
+UsedCapacity   Average        /subscriptions/a7f3c2e1-9b4d-4f8a-b2c5-1e8d9f3a4b6c/resourceGroups/rg-storage-prod/providers/Microsoft.Storage/storageAccounts/stprodblobs01  2024-01-15T13:00:00Z  846891024000
+
+Name           Aggregation    ResourceId                                                                                                                                                      Timestamp            Value
+-------------  -------------  ------------------------------------------------------------------------------------------------------------------------------------------------------------------------  -------------------  -----------
+BlobCapacity   Average        /subscriptions/a7f3c2e1-9b4d-4f8a-b2c5-1e8d9f3a4b6c/resourceGroups/rg-storage-prod/providers/Microsoft.Storage/storageAccounts/stprodblobs01/blobServices/default  2024-01-15T00:00:00Z  847362560000
+
+Name            Aggregation    ResourceId                                                                                                                                                        Timestamp            Value
+--------------  -------------  -------------------------------------------------------------------------------------------------------------------------------------------------------------------------  -------------------  -----------
+FileCapacity    Average        /subscriptions/a7f3c2e1-9b4d-4f8a-b2c5-1e8d9f3a4b6c/resourceGroups/rg-storage-prod/providers/Microsoft.Storage/storageAccounts/stprodfiles01/fileServices/default  2024-01-15T00:00:00Z  124578816000
+```
+
+!!! warning "Common errors"
+    **`ResourceNotFound: The resource '/subscriptions/<sub-id>/resourceGroups/rg-storage-prod/providers/Microsoft.Storage/storageAccounts/stprodblobs01' does not exist.`** — Verify the subscription ID, resource group name, and storage account name are correct using `az storage account list`.
+    **`AuthorizationFailed: The client '<user-id>' with object id '<object-id>' does not have authorization to perform action 'Microsoft.Insights/metrics/read' over scope '/subscriptions/<sub-id>/resourceGroups/rg-storage-prod'.`** — Assign the "Monitoring Reader" role to your user or service principal on the storage account or resource group.
+    **`InvalidMetricName: The metric 'BlobCapacity' is not supported for this resource type.`** — Confirm the metric name matches the resource type; use `az monitor metrics list-definitions --resource <resource-id>` to list available metrics.
 Key storage capacity metrics:
 
 | Metric Name | Scope | Description |
@@ -93,6 +113,48 @@ az monitor metrics alert update \
   --enabled false
 ```
 
+
+```text title="Expected output"
+{
+  "actions": [
+    {
+      "actionGroupId": "/subscriptions/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d/resourceGroups/rg-storage-prod/providers/microsoft.insights/actionGroups/ag-storage-ops",
+      "webHookProperties": {}
+    }
+  ],
+  "criteria": {
+    "allOf": [
+      {
+        "metricName": "BlobCapacity",
+        "metricNamespace": "Microsoft.Storage/storageAccounts/blobServices",
+        "operator": "GreaterThan",
+        "threshold": 858993459200,
+        "timeAggregation": "Average"
+      }
+    ],
+    "odata.type": "Microsoft.Azure.Monitor.MultipleResourceMultipleMetricCriteria"
+  },
+  "description": "Blob storage exceeds 80% of 1 TiB",
+  "enabled": true,
+  "evaluationFrequency": "PT1H",
+  "id": "/subscriptions/a1b2c3d4-e5f6-4a5b-8c9d-0e1f2a3b4c5d/resourceGroups/rg-storage-prod/providers/microsoft.insights/metricalerts/blob-capacity-80pct",
+  "name": "blob-capacity-80pct",
+  "resourceGroup": "rg-storage-prod",
+  "windowSize": "PT1H"
+}
+
+Name                      ResourceGroup         Enabled    Severity
+------------------------  --------------------  ---------  ----------
+blob-capacity-80pct       rg-storage-prod       True       3
+storage-iops-threshold    rg-storage-prod       True       2
+egress-bandwidth-limit    rg-storage-prod       False      3
+
+(no output — command completes silently)
+```
+
+!!! warning "Common errors"
+    **`ResourceNotFound: The resource '/subscriptions/<sub-id>/resourceGroups/rg-storage-prod/providers/Microsoft.Storage/storageAccounts/stprodblobs01/blobServices/default' could not be found.`** — Verify the storage account name and subscription ID are correct, and that the blobServices/default resource exists.
+    **`InvalidActionGroup: The action group '/subscriptions/<sub-id>/resourceGroups/rg-storage-prod/providers/microsoft.insights/actionGroups/ag-storage-ops' does not exist or is in a different resource group.`** — Ensure the action group exists in the same resource group and subscription as the alert.
 ## Container-Level Capacity
 
 ```bash
@@ -123,6 +185,31 @@ az storage blob list \
   --output table
 ```
 
+
+```text title="Expected output"
+Name                Lease Status    Last Modified
+------------------- --------------- ---------------------------------
+backups             unlocked        2024-01-15T09:42:33+00:00
+logs                unlocked        2024-01-15T08:21:19+00:00
+archives            unlocked        2024-01-14T16:55:02+00:00
+temp-uploads        unlocked        2024-01-15T11:03:47+00:00
+2847
+
+1073741824000
+
+Name                                          Size
+------------------------------------------------- ----------------
+daily-backup-2024-01-15-prod.vhd              536870912000
+weekly-backup-2024-01-08-prod.vhd             268435456000
+monthly-backup-2024-01-01-prod.vhd            214748364800
+incremental-backup-2024-01-15-app.vhd         107374182400
+temp-restore-cache-20240115.tmp               53687091200
+...
+```
+
+!!! warning "Common errors"
+    **`ResourceNotFound: The specified account does not exist.`** — Verify the storage account name is correct and exists in the current subscription with `az storage account list`.
+    **`AuthorizationPermissionMismatch: This request is not authorized to perform this operation.`** — Ensure your Azure CLI session has Storage Blob Data Reader or higher role assigned via `az role assignment list --assignee $(az account show --query user.name -o tsv)`.
 ## Forecasting and Trend Analysis
 
 ```bash
@@ -146,6 +233,25 @@ for ts in data['value'][0]['timeseries'][0]['data']:
 "
 ```
 
+
+```text title="Expected output"
+2024-11-14T18:45:00Z: 487.34 GiB
+2024-11-15T18:45:00Z: 489.12 GiB
+2024-11-16T18:45:00Z: 491.87 GiB
+2024-11-17T18:45:00Z: 495.23 GiB
+2024-11-18T18:45:00Z: 498.56 GiB
+2024-11-19T18:45:00Z: 502.14 GiB
+2024-11-20T18:45:00Z: 505.78 GiB
+2024-11-21T18:45:00Z: 509.45 GiB
+2024-11-22T18:45:00Z: 513.92 GiB
+2024-11-23T18:45:00Z: 518.67 GiB
+...
+2024-12-14T18:45:00Z: 612.34 GiB
+```
+
+!!! warning "Common errors"
+    **`ResourceNotFound: The resource '/subscriptions/<sub-id>/resourceGroups/rg-storage-prod/providers/Microsoft.Storage/storageAccounts/stprodblobs01/blobServices/default' could not be found.`** — Verify the subscription ID, resource group name, and storage account name are correct and exist in your Azure tenant.
+    **`KeyError: 'timeseries'`** — Ensure the metric "BlobCapacity" returned data for the specified time range; if the storage account is new, metrics may not be available for the full 30-day window.
 ## Storage Account Limits Reference
 
 | Resource | Limit | Notes |
