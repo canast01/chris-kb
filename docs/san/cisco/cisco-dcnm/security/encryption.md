@@ -4,6 +4,8 @@ tags:
   - security
 ---
 # Cisco DCNM — Encryption
+
+*Applies to: Cisco MDS / NX-OS*
 ![Cisco DCNM — Encryption](../../../../assets/san-cisco-cisco-dcnm-security-encryption.svg)
 
 ```bash

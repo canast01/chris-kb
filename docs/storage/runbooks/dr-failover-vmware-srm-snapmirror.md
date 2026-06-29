@@ -12,6 +12,8 @@ tags:
 
 # DR Failover: VMware SRM with NetApp SnapMirror
 
+*Applies to: Storage (multi-vendor)*
+
 <div class="kb-summary">
 Cross-product runbook for executing a DR failover and failback using VMware Site Recovery Manager (SRM) with NetApp SnapMirror replication. Covers pre-failover checks, declaring DR, SRM recovery plan execution, SnapMirror break, VM validation, failback resynch, and escalation contacts.
 </div>

@@ -4,6 +4,8 @@ tags:
   - san
 ---
 # Cisco Nexus Dashboard — Operations Scripts
+
+*Applies to: Cisco MDS / NX-OS*
 ![Cisco Nexus Dashboard — Operations Scripts](../../../../assets/san-cisco-nexus-dashboard-operations-scripts.svg)
 
 ```bash

@@ -4,6 +4,8 @@ tags:
   - san
 ---
 # Brocade SANnav — Install and Upgrade
+
+*Applies to: Brocade FOS 9.x*
 ![Brocade SANnav — Install and Upgrade](../../../../assets/san-brocade-sannav-operations-install-upgrade.svg)
 
 ```bash

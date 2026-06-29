@@ -6,6 +6,8 @@ tags:
 ---
 # INC-001: vCenter Server Unreachable
 
+*Applies to: All products*
+
 <div class="kb-summary">
 P1 incident — vCenter Server is not responding to client connections. Follow the Triage → Isolate → Diagnose → Fix → Verify sequence. Do not reboot before checking service status.
 </div>

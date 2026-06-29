@@ -13,6 +13,8 @@ tags:
 
 # NSX-T Microsegmentation with Active Directory Integration
 
+*Applies to: Storage (multi-vendor)*
+
 <div class="kb-summary">
 Cross-product runbook for deploying NSX-T microsegmentation backed by Active Directory identity. Covers AD LDAP integration, security group creation from AD groups, Distributed Firewall (DFW) tier rules, Identity Firewall (IDFW) for user-based policies, and full connectivity validation with rollback steps.
 </div>

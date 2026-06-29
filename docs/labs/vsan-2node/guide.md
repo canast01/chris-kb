@@ -6,6 +6,8 @@ tags:
 ---
 # Lab 2 Guide — vSAN 2-node Step-by-Step
 
+*Applies to: Lab / Nested Environment*
+
 <div class="kb-summary">
 Complete procedure: add virtual disks to nested ESXi VMs, mark disks as SSD, deploy the witness appliance, enable vSAN, create a storage policy, and verify cluster health.
 </div>

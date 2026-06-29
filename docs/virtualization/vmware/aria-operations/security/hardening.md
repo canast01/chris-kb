@@ -5,6 +5,8 @@ tags:
   - vmware
 ---
 # Aria Operations Security Hardening
+
+*Applies to: VMware Aria 8.x*
 ![Aria Operations Security Hardening](../../../../assets/virtualization-vmware-aria-operations-security-hardening.svg)
 
 ```bash

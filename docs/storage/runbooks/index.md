@@ -39,7 +39,7 @@ B --> A: OK
 
 ## LUN Provisioning Runbook
 
-```text
+```text title="LUN provisioning steps"
 1. Confirm capacity available in storage pool
 2. Create volume: name = <hostname>_<purpose>_<size>GB (e.g. sql01_data_500GB)
 3. Set protection policy (replication, snapshots)
@@ -92,7 +92,7 @@ Latest snapshot age: 6h 32m (Schedule interval: 1h — ALERT: snapshot is 6.5× 
     **`symsnap: Invalid SID format`** — Verify the correct SymID with `symcfg list` and use the 12-digit format without leading zeros (e.g., `-sid 000297900001`).
 ## Replication Failover Runbook (Generic)
 
-```text
+```text title="Failover steps"
 PRE-FAILOVER (planned):
 1. Quiesce writes to source (stop application, flush I/O)
 2. Verify replication in sync (lag = 0)

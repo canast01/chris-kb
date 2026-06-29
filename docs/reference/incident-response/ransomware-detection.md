@@ -8,6 +8,8 @@ search:
 ---
 # INC-003: Ransomware / Crypto Attack Detected
 
+*Applies to: All products*
+
 <div class="kb-summary">
 P0 incident response for ransomware or crypto-locker activity detected on infrastructure. Priority: isolate, preserve evidence, recover from immutable backup. Do NOT reboot affected systems before evidence capture.
 </div>

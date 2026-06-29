@@ -6,6 +6,8 @@ tags:
 ---
 # Lab 1 Guide — Nested ESXi Step-by-Step
 
+*Applies to: Lab / Nested Environment*
+
 <div class="kb-summary">
 Complete procedure for Lab 1: configure the physical host, create nested ESXi VMs, install ESXi, deploy vCenter, and build a basic cluster.
 </div>

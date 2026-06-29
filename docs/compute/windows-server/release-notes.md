@@ -4,6 +4,8 @@ tags:
 ---
 # Windows Server — Release Notes
 
+*Applies to: Windows Server 2019 / 2022*
+
 <div class="kb-summary">
 Version history and release notes for Windows Server.
 </div>

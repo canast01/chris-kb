@@ -5,6 +5,8 @@ tags:
   - vmware
 ---
 # Aria Operations for Logs — Install and Upgrade
+
+*Applies to: VMware Aria 8.x*
 ![Aria Operations for Logs — Install and Upgrade](../../../../assets/virtualization-vmware-aria-operations-for-logs-operations-in.svg)
 
 ```bash

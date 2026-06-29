@@ -6,6 +6,8 @@ tags:
 ---
 # VMware vCenter — Release Notes
 
+*Applies to: VMware vCenter 7.x / 8.x*
+
 <div class="kb-summary">
 Version history and release notes for VMware vCenter.
 </div>

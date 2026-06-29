@@ -6,6 +6,8 @@ search:
   boost: 1.5
 ---
 # Cisco Nexus Dashboard — Troubleshooting Diagnostics
+
+*Applies to: Cisco MDS / NX-OS*
 ![Cisco Nexus Dashboard — Troubleshooting Diagnostics](../../../../assets/san-cisco-nexus-dashboard-troubleshooting-diagnostics.svg)
 
 

@@ -4,6 +4,8 @@ tags:
 ---
 # NetApp SnapMirror — Release Notes
 
+*Applies to: NetApp ONTAP 9.x · SnapMirror*
+
 <div class="kb-summary">
 Version history and release notes for NetApp SnapMirror.
 </div>

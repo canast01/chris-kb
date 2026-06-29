@@ -6,6 +6,8 @@ tags:
 ---
 # Performance — Baselining
 
+*Applies to: VMware Aria 8.x*
+
 ```bash
 # CPU — 30 days from sar
 # For each day's summary:

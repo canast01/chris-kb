@@ -4,6 +4,8 @@ tags:
   - san
 ---
 # Cisco DCNM — Backup and Restore
+
+*Applies to: Cisco MDS / NX-OS*
 ![Cisco DCNM — Backup and Restore](../../../../assets/san-cisco-cisco-dcnm-operations-backup-restore.svg)
 
 ```bash

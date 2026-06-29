@@ -4,6 +4,8 @@ tags:
 ---
 # SQL Server — Release Notes
 
+*Applies to: Windows Server 2022 · SQL Server*
+
 <div class="kb-summary">
 Version history and release notes for SQL Server.
 </div>

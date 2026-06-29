@@ -667,7 +667,6 @@ aws cloudwatch describe-alarms \
 | s3-replication-lag-critical            | Threshold Crossed: 4521ms > 3000ms| AWS/S3        | ReplicationLatency |
 +----------------------------------------+---------------------------+---------------+----------------+
 ```
-```text
 
 !!! warning "Common errors"
     **`Unable to locate credentials`** — Configure AWS credentials using `aws configure` or set `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` environment variables.

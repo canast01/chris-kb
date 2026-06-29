@@ -7,6 +7,8 @@ tags:
 ---
 # DR Tool Selection Decision Tree
 
+*Applies to: All products*
+
 <div class="kb-summary">
 Choose the right DR tool for your environment: SRM, vSphere Replication, or backup-based DR — based on RPO, RTO, application requirements, and licensing.
 </div>

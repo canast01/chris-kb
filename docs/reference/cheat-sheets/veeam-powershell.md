@@ -7,6 +7,8 @@ tags:
 ---
 # Veeam PowerShell Cheat Sheet
 
+*Applies to: All products*
+
 <div class="kb-summary">
 Essential Veeam Backup &amp; Replication PowerShell cmdlets for server connection, job management, repository operations, restores, backup copy, tape, and reporting.
 </div>

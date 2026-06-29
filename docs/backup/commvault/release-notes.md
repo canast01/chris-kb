@@ -4,6 +4,8 @@ tags:
 ---
 # Commvault — Release Notes
 
+*Applies to: Commvault 11.x*
+
 <div class="kb-summary">
 Version history and release notes for Commvault.
 </div>

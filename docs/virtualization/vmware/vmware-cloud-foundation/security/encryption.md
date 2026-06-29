@@ -5,6 +5,8 @@ tags:
   - vmware
 ---
 # VMware Cloud Foundation — Encryption
+
+*Applies to: VMware vSphere 7.x / 8.x*
 ![VMware Cloud Foundation — Encryption](../../../../assets/virtualization-vmware-vmware-cloud-foundation-security-encry.svg)
 
 ## Before you begin

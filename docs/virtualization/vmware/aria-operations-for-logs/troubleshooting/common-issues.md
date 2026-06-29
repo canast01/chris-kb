@@ -7,6 +7,8 @@ search:
   boost: 1.5
 ---
 # Aria Operations for Logs — Common Issues
+
+*Applies to: VMware Aria 8.x*
 ![Aria Operations for Logs — Common Issues](../../../../assets/virtualization-vmware-aria-operations-for-logs-troubleshooti.svg)
 
 ```bash

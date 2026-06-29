@@ -4,6 +4,8 @@ tags:
 ---
 # Nutanix — Release Notes
 
+*Applies to: Nutanix AOS 6.x · AHV*
+
 <div class="kb-summary">
 Version history and release notes for Nutanix.
 </div>

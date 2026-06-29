@@ -4,6 +4,8 @@ tags:
 ---
 # PostgreSQL — Release Notes
 
+*Applies to: Linux · PostgreSQL 16.x*
+
 <div class="kb-summary">
 Version history and release notes for PostgreSQL.
 </div>

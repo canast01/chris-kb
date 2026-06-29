@@ -7,6 +7,8 @@ tags:
 ---
 # Compute Domain — Interaction Map
 
+*Applies to: All products*
+
 <div class="kb-summary">
 How ESXi, vCenter, and PowerCLI interact — vSphere API protocols, hostd, govmomi, and integration with NSX, vSAN, VCF, and Tanzu.
 </div>

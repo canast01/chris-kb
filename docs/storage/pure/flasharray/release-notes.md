@@ -4,6 +4,8 @@ tags:
 ---
 # Pure FlashArray — Release Notes
 
+*Applies to: Pure Storage FlashArray*
+
 <div class="kb-summary">
 Version history and release notes for Pure FlashArray.
 </div>

@@ -6,6 +6,8 @@ tags:
 ---
 # NetApp SnapCenter — Frequently Asked Questions
 
+*Applies to: NetApp ONTAP 9.x*
+
 <div class="kb-summary">
 Common questions about NetApp SnapCenter operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

@@ -6,6 +6,8 @@ tags:
 ---
 # AWS — Frequently Asked Questions
 
+*Applies to: AWS*
+
 <div class="kb-summary">
 Common questions about AWS operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

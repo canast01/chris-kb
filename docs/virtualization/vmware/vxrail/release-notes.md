@@ -4,6 +4,8 @@ tags:
 ---
 # Dell VxRail — Release Notes
 
+*Applies to: Dell VxRail 7.x / 8.x*
+
 <div class="kb-summary">
 Version history and release notes for Dell VxRail.
 </div>

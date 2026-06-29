@@ -5,6 +5,8 @@ tags:
 ---
 # RecoverPoint — Health Checks
 
+*Applies to: Dell EMC Storage*
+
 ```bash
 # SSH to RPA cluster management IP
 ssh admin@<rpa-cluster-ip>

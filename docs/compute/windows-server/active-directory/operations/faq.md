@@ -6,6 +6,8 @@ tags:
 ---
 # Active Directory — Frequently Asked Questions
 
+*Applies to: Windows Server 2022 · Active Directory*
+
 <div class="kb-summary">
 Common questions about Active Directory operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

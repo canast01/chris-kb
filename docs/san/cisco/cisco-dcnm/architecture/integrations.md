@@ -4,6 +4,8 @@ tags:
   - san
 ---
 # Cisco DCNM — Integrations
+
+*Applies to: Cisco MDS / NX-OS*
 ![Cisco DCNM — Integrations](../../../../assets/san-cisco-cisco-dcnm-architecture-integrations.svg)
 
 ```bash

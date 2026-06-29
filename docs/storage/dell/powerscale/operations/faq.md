@@ -6,6 +6,8 @@ tags:
 ---
 # Dell PowerScale (Isilon) — Frequently Asked Questions
 
+*Applies to: Dell PowerScale (Isilon) 9.x*
+
 <div class="kb-summary">
 Common questions about Dell PowerScale (Isilon) operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

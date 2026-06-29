@@ -6,6 +6,8 @@ tags:
 ---
 # VMware ESXi — Frequently Asked Questions
 
+*Applies to: VMware ESXi 7.x / 8.x*
+
 <div class="kb-summary">
 Common questions about VMware ESXi operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

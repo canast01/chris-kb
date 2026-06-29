@@ -91,6 +91,42 @@ Health Checks reference covering Daily Checks, Health Check Commands, Change Rea
 
 ---
 
+## API Health Check
+
+Query the CloudIQ REST API to confirm connectivity and retrieve system health scores:
+
+```bash
+# Set your CloudIQ API token (generate in CloudIQ → Settings → API Keys)
+export CLOUDIQ_TOKEN="<your-api-token>"
+
+# List all storage systems and their health scores
+curl -s -X GET "https://cloudiq.apis.dell.com/cloudiq/rest/v1/storage-systems" \
+  -H "Authorization: Bearer $CLOUDIQ_TOKEN" \
+  -H "Content-Type: application/json" | \
+  jq '.results[] | {name, model, health_score, connectivity_status}'
+```
+
+```text title="Expected output"
+{
+  "name": "PowerStore-01",
+  "model": "PowerStore 1000T",
+  "health_score": 97,
+  "connectivity_status": "connected"
+}
+{
+  "name": "PowerMax-01",
+  "model": "PowerMax 2500",
+  "health_score": 100,
+  "connectivity_status": "connected"
+}
+```
+
+!!! warning "Common errors"
+    **`401 Unauthorized`** — Token expired or invalid; regenerate in CloudIQ → Settings → API Keys and update `$CLOUDIQ_TOKEN`.
+    **`curl: (6) Could not resolve host`** — Verify network access to `cloudiq.apis.dell.com` and that outbound HTTPS (port 443) is permitted from the management host.
+
+---
+
 ## Verify
 
 - Confirm the operation completed without errors in the log or management UI

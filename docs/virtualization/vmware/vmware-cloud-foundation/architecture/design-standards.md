@@ -5,6 +5,8 @@ tags:
   - vmware
 ---
 # VMware Cloud Foundation — Design Standards
+
+*Applies to: VMware vSphere 7.x / 8.x*
 ![VMware Cloud Foundation — Design Standards](../../../../assets/virtualization-vmware-vmware-cloud-foundation-architecture-d.svg)
 
 ```powershell

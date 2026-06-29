@@ -4,6 +4,8 @@ tags:
   - security
 ---
 # Cisco DCNM — Security Hardening
+
+*Applies to: Cisco MDS / NX-OS*
 ![Cisco DCNM — Security Hardening](../../../../assets/san-cisco-cisco-dcnm-security-hardening.svg)
 
 ```bash

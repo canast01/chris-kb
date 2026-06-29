@@ -6,6 +6,8 @@ tags:
 ---
 # Incident Handling — Frequently Asked Questions
 
+*Applies to: All products (Security)*
+
 <div class="kb-summary">
 Common questions about Incident Handling operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

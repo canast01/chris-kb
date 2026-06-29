@@ -7,6 +7,8 @@ search:
   boost: 1.5
 ---
 # Aria Automation — Common Issues
+
+*Applies to: VMware Aria 8.x*
 ![Aria Automation — Common Issues](../../../../assets/virtualization-vmware-aria-automation-troubleshooting-common.svg)
 
 ```bash

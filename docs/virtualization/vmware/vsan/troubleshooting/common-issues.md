@@ -8,6 +8,8 @@ search:
   boost: 2
 ---
 # vSAN — Common Issues
+
+*Applies to: VMware vSAN 7.x / 8.x*
 ![vSAN — Common Issues](../../../../assets/virtualization-vmware-vsan-troubleshooting-common-issues.svg)
 
 ```bash

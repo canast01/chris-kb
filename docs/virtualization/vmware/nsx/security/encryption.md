@@ -6,6 +6,8 @@ tags:
   - vmware
 ---
 # NSX — Encryption
+
+*Applies to: VMware NSX-T 3.x / 4.x*
 ![NSX — Encryption](../../../../assets/virtualization-vmware-nsx-security-encryption.svg)
 
 ```bash

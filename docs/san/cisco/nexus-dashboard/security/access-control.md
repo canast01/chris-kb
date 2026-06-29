@@ -4,6 +4,8 @@ tags:
   - security
 ---
 # Cisco Nexus Dashboard — Security Access Control
+
+*Applies to: Cisco MDS / NX-OS*
 ![Cisco Nexus Dashboard — Security Access Control](../../../../assets/san-cisco-nexus-dashboard-security-access-control.svg)
 
 ```bash

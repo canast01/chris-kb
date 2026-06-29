@@ -6,6 +6,8 @@ tags:
 ---
 # Linux — Frequently Asked Questions
 
+*Applies to: Linux (RHEL / Ubuntu / Debian)*
+
 <div class="kb-summary">
 Common questions about Linux operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

@@ -6,6 +6,8 @@ tags:
 ---
 # Dell PowerStore — Frequently Asked Questions
 
+*Applies to: Dell PowerStore 3.x*
+
 <div class="kb-summary">
 Common questions about Dell PowerStore operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

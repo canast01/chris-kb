@@ -4,6 +4,8 @@ tags:
   - operations
 ---
 # Dell Data Domain CLI Reference
+
+*Applies to: Dell EMC Storage*
 ![Dell Data Domain CLI Reference](../../../../assets/storage-dell-data-domain-operations-cli-reference.svg)
 
 ```bash

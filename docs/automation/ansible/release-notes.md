@@ -4,6 +4,8 @@ tags:
 ---
 # Ansible — Release Notes
 
+*Applies to: Ansible 2.x*
+
 <div class="kb-summary">
 Version history and release notes for Ansible.
 </div>

@@ -6,6 +6,8 @@ tags:
 ---
 # VMware Tanzu — Frequently Asked Questions
 
+*Applies to: VMware Tanzu*
+
 <div class="kb-summary">
 Common questions about VMware Tanzu operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

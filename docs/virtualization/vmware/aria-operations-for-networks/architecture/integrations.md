@@ -5,6 +5,8 @@ tags:
   - vmware
 ---
 # vRNI Integrations
+
+*Applies to: VMware Aria 8.x*
 ![vRNI Integrations](../../../../assets/virtualization-vmware-aria-operations-for-networks-architect.svg)
 
 ```bash

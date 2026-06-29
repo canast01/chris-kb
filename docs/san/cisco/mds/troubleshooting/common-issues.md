@@ -6,6 +6,8 @@ search:
   boost: 1.5
 ---
 # Cisco MDS — Troubleshooting Common Issues
+
+*Applies to: Cisco MDS / NX-OS*
 ![Cisco MDS — Troubleshooting Common Issues](../../../../assets/san-cisco-mds-troubleshooting-common-issues.svg)
 
 ```bash

@@ -7,6 +7,8 @@ search:
   boost: 1.5
 ---
 # Aria Operations Common Issues
+
+*Applies to: VMware Aria 8.x*
 ![Aria Operations Common Issues](../../../../assets/virtualization-vmware-aria-operations-troubleshooting-common.svg)
 
 ```bash

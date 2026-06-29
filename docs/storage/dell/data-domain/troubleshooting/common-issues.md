@@ -6,6 +6,8 @@ search:
   boost: 1.5
 ---
 # Dell Data Domain Common Issues
+
+*Applies to: Dell EMC Storage*
 ![Dell Data Domain Common Issues](../../../../assets/storage-dell-data-domain-troubleshooting-common-issues.svg)
 
 ```bash

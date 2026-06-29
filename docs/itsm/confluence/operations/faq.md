@@ -6,6 +6,8 @@ tags:
 ---
 # Confluence — Frequently Asked Questions
 
+*Applies to: Confluence*
+
 <div class="kb-summary">
 Common questions about Confluence operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

@@ -6,6 +6,8 @@ tags:
 ---
 # Terraform — Frequently Asked Questions
 
+*Applies to: Terraform 1.x*
+
 <div class="kb-summary">
 Common questions about Terraform operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

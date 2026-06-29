@@ -6,6 +6,8 @@ tags:
 ---
 # Venafi Trust Protection Platform — Frequently Asked Questions
 
+*Applies to: Venafi Trust Protection Platform*
+
 <div class="kb-summary">
 Common questions about Venafi Trust Protection Platform operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

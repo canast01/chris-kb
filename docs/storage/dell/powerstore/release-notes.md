@@ -4,6 +4,8 @@ tags:
 ---
 # Dell PowerStore — Release Notes
 
+*Applies to: Dell PowerStore 3.x*
+
 <div class="kb-summary">
 Version history and release notes for Dell PowerStore.
 </div>

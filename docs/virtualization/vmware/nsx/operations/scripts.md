@@ -6,6 +6,8 @@ tags:
   - vmware
 ---
 # NSX — Scripts
+
+*Applies to: VMware NSX-T 3.x / 4.x*
 ![NSX — Scripts](../../../../assets/virtualization-vmware-nsx-operations-scripts.svg)
 
 ```python

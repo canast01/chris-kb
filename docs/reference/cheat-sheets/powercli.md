@@ -5,6 +5,8 @@ tags:
 ---
 # PowerCLI Cheat Sheet
 
+*Applies to: All products*
+
 <div class="kb-summary">
 Top-10 PowerCLI one-liners for VM, host, storage, network, and cluster operations across vSphere environments.
 </div>

@@ -4,6 +4,8 @@ tags:
   - san
 ---
 # Brocade SANnav — Integrations
+
+*Applies to: Brocade FOS 9.x*
 ![Brocade SANnav — Integrations](../../../../assets/san-brocade-sannav-architecture-integrations.svg)
 
 ```bash

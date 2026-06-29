@@ -5,6 +5,8 @@ tags:
 ---
 # Aria Automation Cheat Sheet
 
+*Applies to: All products*
+
 <div class="kb-summary">
 Top-10 Aria Automation (vRA) commands for deployment lifecycle, ABX actions, and catalog management via REST API and vra-cli.
 </div>

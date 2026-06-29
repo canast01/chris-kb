@@ -6,6 +6,8 @@ tags:
 ---
 # Lab 3 Guide — NSX-T in Nested ESXi Step-by-Step
 
+*Applies to: Lab / Nested Environment*
+
 <div class="kb-summary">
 Deploy NSX Manager, register vCenter as a compute manager, prepare ESXi transport nodes, create overlay segments, and write a basic DFW allow/deny rule.
 </div>

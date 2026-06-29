@@ -4,6 +4,8 @@ tags:
   - san
 ---
 # Cisco MDS 9000 — CLI Reference
+
+*Applies to: Cisco MDS / NX-OS*
 ![Cisco MDS 9000 — CLI Reference](../../../../assets/san-cisco-mds-operations-cli-reference.svg)
 
 ```bash

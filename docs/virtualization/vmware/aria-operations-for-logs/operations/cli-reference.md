@@ -5,6 +5,8 @@ tags:
   - vmware
 ---
 # Aria Operations for Logs — CLI Reference
+
+*Applies to: VMware Aria 8.x*
 ![Aria Operations for Logs — CLI Reference](../../../../assets/virtualization-vmware-aria-operations-for-logs-operations-cl.svg)
 
 ```bash

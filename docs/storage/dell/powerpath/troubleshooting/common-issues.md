@@ -659,7 +659,6 @@ Link_Reset: 1
 Portname: 0
 Port_ID: 050601
 ```
-```text
 
 !!! warning "Common errors"
     **`grep: /var/log/messages: No such file or directory`** — Check the correct syslog location with `ls /var/log/syslog* /var/log/messages*` as it varies by distribution.

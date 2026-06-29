@@ -4,6 +4,8 @@ tags:
 ---
 # AWS — Release Notes
 
+*Applies to: AWS*
+
 <div class="kb-summary">
 Version history and release notes for AWS.
 </div>

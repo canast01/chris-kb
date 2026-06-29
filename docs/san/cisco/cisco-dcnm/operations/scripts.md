@@ -4,6 +4,8 @@ tags:
   - san
 ---
 # Cisco DCNM — Operations Scripts
+
+*Applies to: Cisco MDS / NX-OS*
 ![Cisco DCNM — Operations Scripts](../../../../assets/san-cisco-cisco-dcnm-operations-scripts.svg)
 
 ```bash

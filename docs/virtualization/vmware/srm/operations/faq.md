@@ -6,6 +6,8 @@ tags:
 ---
 # VMware Site Recovery Manager — Frequently Asked Questions
 
+*Applies to: VMware vSphere 7.x / 8.x*
+
 <div class="kb-summary">
 Common questions about VMware Site Recovery Manager operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

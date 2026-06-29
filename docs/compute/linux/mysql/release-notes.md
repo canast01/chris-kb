@@ -4,6 +4,8 @@ tags:
 ---
 # MySQL — Release Notes
 
+*Applies to: Linux · MySQL 8.x*
+
 <div class="kb-summary">
 Version history and release notes for MySQL.
 </div>

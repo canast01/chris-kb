@@ -4,6 +4,8 @@ tags:
   - san
 ---
 # Cisco Nexus Dashboard — Operations Backup & Restore
+
+*Applies to: Cisco MDS / NX-OS*
 ![Cisco Nexus Dashboard — Operations Backup & Restore](../../../../assets/san-cisco-nexus-dashboard-operations-backup-restore.svg)
 
 ```bash

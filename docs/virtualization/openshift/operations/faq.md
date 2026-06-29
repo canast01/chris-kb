@@ -6,6 +6,8 @@ tags:
 ---
 # Red Hat OpenShift — Frequently Asked Questions
 
+*Applies to: OpenShift 4.x*
+
 <div class="kb-summary">
 Common questions about Red Hat OpenShift operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

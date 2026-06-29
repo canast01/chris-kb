@@ -7,6 +7,8 @@ search:
   boost: 1.5
 ---
 # VMware Horizon — Common Issues
+
+*Applies to: VMware Horizon 8.x*
 ![VMware Horizon — Common Issues](../../../../assets/virtualization-vmware-horizon-troubleshooting-common-issues.svg)
 
 ```text

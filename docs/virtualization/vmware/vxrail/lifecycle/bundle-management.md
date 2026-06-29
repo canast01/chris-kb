@@ -4,6 +4,8 @@ tags:
 ---
 # VxRail — Bundle Management
 
+*Applies to: Dell VxRail 7.x / 8.x*
+
 ```text
                            │  upload via UI or SCP
 ```

@@ -6,6 +6,8 @@ search:
   boost: 1.5
 ---
 # Cisco DCNM — Troubleshooting Common Issues
+
+*Applies to: Cisco MDS / NX-OS*
 ![Cisco DCNM — Troubleshooting Common Issues](../../../../assets/san-cisco-cisco-dcnm-troubleshooting-common-issues.svg)
 
 ```bash

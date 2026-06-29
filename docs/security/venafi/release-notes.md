@@ -4,6 +4,8 @@ tags:
 ---
 # Venafi — Release Notes
 
+*Applies to: Venafi Trust Protection Platform*
+
 <div class="kb-summary">
 Version history and release notes for Venafi.
 </div>

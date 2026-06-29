@@ -5,6 +5,8 @@ tags:
 ---
 # vSAN Cheat Sheet
 
+*Applies to: All products*
+
 <div class="kb-summary">
 Top-10 vSAN commands for cluster health, disk groups, object status, and policy via <code>esxcli vsan</code> and PowerCLI.
 </div>

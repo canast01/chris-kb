@@ -105,7 +105,6 @@ cluster2-02    A300-48G         9.13.0         4069622000457
 
 Cluster UUID: 9z8y7x6w-5v4u-3t2s-1r0q-9p8o7n6m5l4k
 Cluster Name: cluster2-dr
-```text
 
 !!! warning "Common errors"
     **`Error: command failed: permission denied`** — Verify you have cluster admin credentials and are logged in with `security login show`.
@@ -307,7 +306,7 @@ Quorum Status: true
     **`Error: Mediator status is 'unreachable'`** — Check mediator IP address configuration with `snapmirror mediator show` and verify network connectivity from both clusters to the mediator IP address.
 ### 6. Write the timeline
 
-```text
+```text title="Timeline template"
 Source cluster: src-cluster-01 (AFF A400, ONTAP 9.13.1P5, SN: XXXXXXXX)
 Destination cluster: dst-cluster-01 (FAS2820, ONTAP 9.13.1P5, SN: XXXXXXXX)
 Relationship type: Async XDP (MirrorAllSnapshots policy)

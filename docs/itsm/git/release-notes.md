@@ -4,6 +4,8 @@ tags:
 ---
 # Git — Release Notes
 
+*Applies to: Git*
+
 <div class="kb-summary">
 Version history and release notes for Git.
 </div>

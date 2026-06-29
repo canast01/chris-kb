@@ -4,6 +4,8 @@ tags:
   - operations
 ---
 # CloudIQ — Reporting
+
+*Applies to: Dell CloudIQ*
 ![CloudIQ — Reporting](../../../../assets/storage-dell-cloudiq-operations-reports.svg)
 
 ```bash

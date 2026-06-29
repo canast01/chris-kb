@@ -6,6 +6,8 @@ tags:
 ---
 # ONTAP Day 1 — New Cluster Checklist
 
+*Applies to: All products*
+
 <div class="kb-summary">
 What to do in your first hour with a new ONTAP cluster. Covers cluster orientation, health validation, key metrics to capture, and the first operational tasks.
 </div>

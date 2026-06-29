@@ -4,6 +4,8 @@ tags:
   - san
 ---
 # Brocade SANnav — CLI Reference
+
+*Applies to: Brocade FOS 9.x*
 ![Brocade SANnav — CLI Reference](../../../../assets/san-brocade-sannav-operations-cli-reference.svg)
 
 ```bash

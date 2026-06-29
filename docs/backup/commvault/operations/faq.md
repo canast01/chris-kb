@@ -6,6 +6,8 @@ tags:
 ---
 # Commvault — Frequently Asked Questions
 
+*Applies to: Commvault 11.x*
+
 <div class="kb-summary">
 Common questions about Commvault operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

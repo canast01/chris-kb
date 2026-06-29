@@ -4,6 +4,8 @@ tags:
   - san
 ---
 # Brocade Fabric OS — Scripts
+
+*Applies to: Brocade FOS 9.x*
 ![Brocade Fabric OS — Scripts](../../../../assets/san-brocade-fabric-os-operations-scripts.svg)
 
 ```bash

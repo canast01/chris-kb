@@ -6,6 +6,8 @@ tags:
   - vmware
 ---
 # NSX — Backup and Restore
+
+*Applies to: VMware NSX-T 3.x / 4.x*
 ![NSX — Backup and Restore](../../../../assets/virtualization-vmware-nsx-operations-backup-restore.svg)
 
 ```bash

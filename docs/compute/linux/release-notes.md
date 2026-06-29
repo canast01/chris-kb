@@ -4,6 +4,8 @@ tags:
 ---
 # Linux — Release Notes
 
+*Applies to: Linux (RHEL / Ubuntu / Debian)*
+
 <div class="kb-summary">
 Version history and release notes for Linux.
 </div>

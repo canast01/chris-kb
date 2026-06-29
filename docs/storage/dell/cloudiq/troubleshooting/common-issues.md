@@ -6,6 +6,8 @@ search:
   boost: 1.5
 ---
 # Dell CloudIQ Common Issues
+
+*Applies to: Dell CloudIQ*
 ![Dell CloudIQ Common Issues](../../../../assets/storage-dell-cloudiq-troubleshooting-common-issues.svg)
 
 ```bash

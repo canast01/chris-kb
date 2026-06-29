@@ -4,6 +4,8 @@ tags:
   - operations
 ---
 # Dell COD Scripts
+
+*Applies to: Dell Cloud Object Detachment*
 ![Dell COD Scripts](../../../../assets/storage-dell-cod-operations-scripts.svg)
 
 ```bash

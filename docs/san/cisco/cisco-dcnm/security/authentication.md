@@ -4,6 +4,8 @@ tags:
   - security
 ---
 # Cisco DCNM — Authentication
+
+*Applies to: Cisco MDS / NX-OS*
 ![Cisco DCNM — Authentication](../../../../assets/san-cisco-cisco-dcnm-security-authentication.svg)
 
 ```bash

@@ -5,6 +5,8 @@ tags:
 ---
 # vCenter Cheat Sheet
 
+*Applies to: All products*
+
 <div class="kb-summary">
 Top-10 vCenter commands for appliance management, inventory queries, and service control via <code>govc</code> and <code>dcli</code>.
 </div>

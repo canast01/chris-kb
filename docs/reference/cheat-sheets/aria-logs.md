@@ -5,6 +5,8 @@ tags:
 ---
 # Aria Logs Cheat Sheet
 
+*Applies to: All products*
+
 <div class="kb-summary">
 Top-10 Aria Logs (Log Insight) commands for agent control, syslog configuration, and log queries via CLI and REST API.
 </div>

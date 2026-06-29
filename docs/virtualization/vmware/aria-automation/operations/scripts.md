@@ -5,6 +5,8 @@ tags:
   - vmware
 ---
 # Aria Automation — Scripts Reference
+
+*Applies to: VMware Aria 8.x*
 ![Aria Automation — Scripts Reference](../../../../assets/virtualization-vmware-aria-automation-operations-scripts.svg)
 
 ```powershell

@@ -6,6 +6,8 @@ tags:
 ---
 # Storage Domain — Interaction Map
 
+*Applies to: All products*
+
 <div class="kb-summary">
 How vSAN, vSphere Replication, and VxRail integrate — kernel modules, SPBM policies, replication protocols, and VCF-managed HCI lifecycle.
 </div>

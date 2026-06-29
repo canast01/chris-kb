@@ -59,6 +59,38 @@ Health Checks reference covering Daily Checks, Health Check Commands, Change Rea
 
 ---
 
+## Capacity Verification Commands
+
+Check COD-activated capacity via SYMCLI on the Solutions Enabler host:
+
+```bash
+# List all PowerMax arrays and confirm COD capacity is reflected
+symcfg list -v | grep -E "Sid|Capacity|COD"
+
+# Check licensed COD capacity for a specific array
+symcfg -sid <sid> show -capacity -gb
+
+# Verify SRP utilization has dropped after COD activation
+symcfg -sid <sid> list -srp -detail | grep -E "SRP|Used|Emulation"
+```
+
+```text title="Expected output"
+Symmetrix ID: 000297900001
+  Total System Capacity (GB): 98304
+  Total Licensed Capacity (GB): 65536
+  COD Activated Capacity (GB): 32768
+  Used Capacity (GB): 48291
+  Free Capacity (GB): 17245
+SRP_1
+  Used (%):  74
+```
+
+!!! warning "Common errors"
+    **`SYMAPI Server is not running`** — Start the daemon with `stordaemon start storapid` and retry.
+    **`<sid>: Not found`** — Verify the Symmetrix ID with `symcfg list` and use the 12-digit format without formatting characters.
+
+---
+
 ## Verify
 
 - Confirm the operation completed without errors in the log or management UI

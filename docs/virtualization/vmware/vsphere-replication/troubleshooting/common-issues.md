@@ -7,6 +7,8 @@ search:
   boost: 1.5
 ---
 # vSphere Replication — Common Issues
+
+*Applies to: VMware vSphere 7.x / 8.x*
 ![vSphere Replication — Common Issues](../../../../assets/virtualization-vmware-vsphere-replication-troubleshooting-co.svg)
 
 ```text

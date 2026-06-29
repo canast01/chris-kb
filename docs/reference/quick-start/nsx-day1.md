@@ -6,6 +6,8 @@ tags:
 ---
 # NSX-T Day 1 — New Environment Checklist
 
+*Applies to: All products*
+
 <div class="kb-summary">
 What to do in your first hour with a new NSX-T environment. Covers manager orientation, transport layer health, edge cluster status, and the first network tasks.
 </div>

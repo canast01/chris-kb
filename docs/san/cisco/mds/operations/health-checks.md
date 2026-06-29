@@ -5,6 +5,8 @@ tags:
 ---
 # Cisco MDS 9000 — Health Checks
 
+*Applies to: Cisco MDS / NX-OS*
+
 ```bash
 # Full daily health sweep — run on each MDS switch
 show interface brief

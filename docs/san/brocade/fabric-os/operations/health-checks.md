@@ -48,6 +48,29 @@ Health Checks reference covering Daily Checks, Health Check Checklist, Post-Chan
 
 ---
 
+## Quick SSH Health Sweep
+
+Run from the jump host (Linux) to collect switch status without logging in interactively:
+
+```bash
+# Collect key health data from each switch via SSH
+for SWITCH in switch01.san.local switch02.san.local; do
+  echo "=== $SWITCH ==="
+  ssh admin@"$SWITCH" "switchshow; fabricshow; porterrshow"
+done
+```
+
+```text title="Expected output"
+=== switch01.san.local ===
+switchName:	SAN-SW-01
+switchType:	183.1
+switchState:	Online
+switchRole:	Principal
+...
+```
+
+---
+
 ## Verify
 
 - Confirm the operation completed without errors in the log or management UI

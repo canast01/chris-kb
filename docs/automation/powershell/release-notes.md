@@ -4,6 +4,8 @@ tags:
 ---
 # PowerShell — Release Notes
 
+*Applies to: PowerShell 5.x / 7.x*
+
 <div class="kb-summary">
 Version history and release notes for PowerShell.
 </div>

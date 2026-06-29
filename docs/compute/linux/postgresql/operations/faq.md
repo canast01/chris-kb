@@ -6,6 +6,8 @@ tags:
 ---
 # PostgreSQL — Frequently Asked Questions
 
+*Applies to: Linux · PostgreSQL 16.x*
+
 <div class="kb-summary">
 Common questions about PostgreSQL operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

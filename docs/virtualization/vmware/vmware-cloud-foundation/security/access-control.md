@@ -5,6 +5,8 @@ tags:
   - vmware
 ---
 # VMware Cloud Foundation — Access Control
+
+*Applies to: VMware vSphere 7.x / 8.x*
 ![VMware Cloud Foundation — Access Control](../../../../assets/virtualization-vmware-vmware-cloud-foundation-security-acces.svg)
 
 ## Before you begin

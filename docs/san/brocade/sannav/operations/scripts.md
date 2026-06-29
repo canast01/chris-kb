@@ -4,6 +4,8 @@ tags:
   - san
 ---
 # Brocade SANnav — Operations Scripts
+
+*Applies to: Brocade FOS 9.x*
 ![Brocade SANnav — Operations Scripts](../../../../assets/san-brocade-sannav-operations-scripts.svg)
 
 ```bash

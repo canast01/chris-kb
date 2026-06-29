@@ -5,6 +5,8 @@ tags:
 ---
 # VMware Aria Operations for Networks — Release Notes
 
+*Applies to: VMware Aria 8.x*
+
 <div class="kb-summary">
 Version history and release notes for VMware Aria Operations for Networks.
 </div>

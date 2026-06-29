@@ -690,7 +690,6 @@ Standard_E2s_v3
 
 Standard_D4s_v3
 ```
-```text
 
 !!! warning "Common errors"
     **`The VM 'my-vm-01' with id '/subscriptions/12345678-1234-1234-1234-123456789012/resourceGroups/my-resource-group/providers/Microsoft.Compute/virtualMachines/my-vm-01' cannot be resized because it is still in a transitional state.`** — Wait for the deallocate operation to fully complete before attempting resize, or remove the custom wait condition if the VM is already deallocated.

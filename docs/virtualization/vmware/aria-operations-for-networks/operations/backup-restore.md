@@ -5,6 +5,8 @@ tags:
   - vmware
 ---
 # vRNI Backup & Restore
+
+*Applies to: VMware Aria 8.x*
 ![vRNI Backup & Restore](../../../../assets/virtualization-vmware-aria-operations-for-networks-operation.svg)
 
 ```bash

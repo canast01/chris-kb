@@ -8,6 +8,8 @@ tags:
 ---
 # Management Domain — Interaction Map
 
+*Applies to: All products*
+
 <div class="kb-summary">
 How VCF, Aria Suite Lifecycle, and vCenter SSO interact — lifecycle APIs, credential management, authentication federation, and workload domain orchestration.
 </div>

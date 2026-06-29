@@ -6,6 +6,8 @@ tags:
 ---
 # Dell Secure Connect Gateway — Frequently Asked Questions
 
+*Applies to: Dell EMC Storage*
+
 <div class="kb-summary">
 Common questions about Dell Secure Connect Gateway operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

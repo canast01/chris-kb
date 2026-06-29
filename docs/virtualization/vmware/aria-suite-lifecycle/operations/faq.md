@@ -6,6 +6,8 @@ tags:
 ---
 # VMware Aria Suite Lifecycle Manager — Frequently Asked Questions
 
+*Applies to: VMware Aria 8.x*
+
 <div class="kb-summary">
 Common questions about VMware Aria Suite Lifecycle Manager operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

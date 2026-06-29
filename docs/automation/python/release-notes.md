@@ -4,6 +4,8 @@ tags:
 ---
 # Python — Release Notes
 
+*Applies to: Python 3.x*
+
 <div class="kb-summary">
 Version history and release notes for Python.
 </div>

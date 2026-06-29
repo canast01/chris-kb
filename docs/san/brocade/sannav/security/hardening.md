@@ -4,6 +4,8 @@ tags:
   - security
 ---
 # Brocade SANnav — Security Hardening
+
+*Applies to: Brocade FOS 9.x*
 ![Brocade SANnav — Security Hardening](../../../../assets/san-brocade-sannav-security-hardening.svg)
 
 ```bash

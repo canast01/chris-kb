@@ -4,6 +4,8 @@ tags:
   - security
 ---
 # Cisco MDS — Security Encryption
+
+*Applies to: Cisco MDS / NX-OS*
 ![Cisco MDS — Security Encryption](../../../../assets/san-cisco-mds-security-encryption.svg)
 
 ```bash

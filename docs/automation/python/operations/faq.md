@@ -6,6 +6,8 @@ tags:
 ---
 # Python — Frequently Asked Questions
 
+*Applies to: Python 3.x*
+
 <div class="kb-summary">
 Common questions about Python operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

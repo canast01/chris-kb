@@ -6,6 +6,8 @@ tags:
 ---
 # Performance — Resource Optimisation
 
+*Applies to: VMware Aria 8.x*
+
 ```bash
 # List processes consuming > 1% CPU
 ps aux --sort=-%cpu | awk 'NR>1 && $3>1 {print $1, $3"%", $4"%", $11}'

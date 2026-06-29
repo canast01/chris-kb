@@ -5,6 +5,8 @@ tags:
   - vmware
 ---
 # Aria Automation — Integrations
+
+*Applies to: VMware Aria 8.x*
 ![Aria Automation — Integrations](../../../../assets/virtualization-vmware-aria-automation-architecture-integrati.svg)
 
 ```bash

@@ -6,6 +6,8 @@ search:
   boost: 1.5
 ---
 # Cisco MDS — Troubleshooting Diagnostics
+
+*Applies to: Cisco MDS / NX-OS*
 ![Cisco MDS — Troubleshooting Diagnostics](../../../../assets/san-cisco-mds-troubleshooting-diagnostics.svg)
 
 

@@ -5,6 +5,8 @@ tags:
   - vmware
 ---
 # VMware Cloud Foundation — Authentication
+
+*Applies to: VMware vSphere 7.x / 8.x*
 ![VMware Cloud Foundation — Authentication](../../../../assets/virtualization-vmware-vmware-cloud-foundation-security-authe.svg)
 
 ## Before you begin

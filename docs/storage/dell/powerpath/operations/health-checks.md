@@ -562,7 +562,6 @@ systemctl status multipathd
      Active: inactive (dead)
      Docs: man:multipathd(8)
 ```
-```text
 
 !!! warning "Common errors"
     **`Unit multipathd.service could not be found.`** — Install the device-mapper-multipath package with `yum install device-mapper-multipath` or `apt-get install multipath-tools`.

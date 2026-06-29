@@ -6,6 +6,8 @@ tags:
 ---
 # Veeam Day 1 — New Environment Checklist
 
+*Applies to: All products*
+
 <div class="kb-summary">
 What to do in your first hour with a new Veeam Backup & Replication environment. Covers server orientation, job health, repository capacity, and the first hands-on tasks.
 </div>

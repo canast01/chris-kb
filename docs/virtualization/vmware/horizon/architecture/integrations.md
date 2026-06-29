@@ -5,6 +5,8 @@ tags:
   - vmware
 ---
 # VMware Horizon — Integrations
+
+*Applies to: VMware Horizon 8.x*
 ![VMware Horizon — Integrations](../../../../assets/virtualization-vmware-horizon-architecture-integrations.svg)
 
 ```powershell

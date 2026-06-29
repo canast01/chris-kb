@@ -5,6 +5,8 @@ tags:
 ---
 # Aria Suite Lifecycle Cheat Sheet
 
+*Applies to: All products*
+
 <div class="kb-summary">
 Top-10 Aria Suite Lifecycle (LCM) REST API calls for product installation, upgrades, locker management, and certificate operations.
 </div>

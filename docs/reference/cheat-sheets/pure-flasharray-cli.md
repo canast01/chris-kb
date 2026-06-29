@@ -7,6 +7,8 @@ tags:
 ---
 # Pure Storage FlashArray CLI Cheat Sheet
 
+*Applies to: All products*
+
 <div class="kb-summary">
 Essential Pure Storage FlashArray CLI commands for array status, volume management, snapshots, host connections, protection groups, performance monitoring, and network configuration.
 </div>

@@ -6,6 +6,8 @@ search:
   boost: 1.5
 ---
 # Brocade SANnav — Troubleshooting Common Issues
+
+*Applies to: Brocade FOS 9.x*
 ![Brocade SANnav — Troubleshooting Common Issues](../../../../assets/san-brocade-sannav-troubleshooting-common-issues.svg)
 
 ```bash

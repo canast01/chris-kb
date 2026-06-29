@@ -4,6 +4,8 @@ tags:
   - security
 ---
 # Cisco Nexus Dashboard — Security Hardening
+
+*Applies to: Cisco MDS / NX-OS*
 ![Cisco Nexus Dashboard — Security Hardening](../../../../assets/san-cisco-nexus-dashboard-security-hardening.svg)
 
 ```bash

@@ -6,6 +6,8 @@ tags:
 ---
 # Pure Storage FlashBlade — Frequently Asked Questions
 
+*Applies to: Pure Storage FlashBlade*
+
 <div class="kb-summary">
 Common questions about Pure Storage FlashBlade operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

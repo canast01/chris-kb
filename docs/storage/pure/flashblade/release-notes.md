@@ -4,6 +4,8 @@ tags:
 ---
 # Pure FlashBlade — Release Notes
 
+*Applies to: Pure Storage FlashBlade*
+
 <div class="kb-summary">
 Version history and release notes for Pure FlashBlade.
 </div>

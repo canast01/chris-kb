@@ -6,6 +6,8 @@ tags:
 ---
 # Veritas NetBackup — Frequently Asked Questions
 
+*Applies to: NetBackup 10.x*
+
 <div class="kb-summary">
 Common questions about Veritas NetBackup operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

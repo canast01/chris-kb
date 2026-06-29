@@ -5,6 +5,8 @@ tags:
   - vmware
 ---
 # Aria Operations Backup & Restore
+
+*Applies to: VMware Aria 8.x*
 ![Aria Operations Backup & Restore](../../../../assets/virtualization-vmware-aria-operations-operations-backup-rest.svg)
 
 ```bash

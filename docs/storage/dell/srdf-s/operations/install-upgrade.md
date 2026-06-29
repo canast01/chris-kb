@@ -4,6 +4,8 @@ tags:
   - operations
 ---
 # SRDF/S — Install & Upgrade
+
+*Applies to: Dell EMC Storage*
 ![SRDF/S — Install & Upgrade](../../../../assets/storage-dell-srdf-s-operations-install-upgrade.svg)
 
 ```bash

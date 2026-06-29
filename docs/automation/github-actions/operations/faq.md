@@ -6,6 +6,8 @@ tags:
 ---
 # GitHub Actions — Frequently Asked Questions
 
+*Applies to: GitHub Actions*
+
 <div class="kb-summary">
 Common questions about GitHub Actions operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

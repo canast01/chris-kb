@@ -6,6 +6,8 @@ tags:
 ---
 # vCenter Outage Runbook
 
+*Applies to: VMware vSphere 7.x / 8.x*
+
 ```bash
 ping <vcenter-ip>
 nslookup <vcenter-fqdn>

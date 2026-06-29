@@ -6,6 +6,8 @@ tags:
 ---
 # Windows Server — Frequently Asked Questions
 
+*Applies to: Windows Server 2019 / 2022*
+
 <div class="kb-summary">
 Common questions about Windows Server operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

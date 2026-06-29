@@ -5,6 +5,8 @@ tags:
   - vmware
 ---
 # VMware Horizon — Encryption
+
+*Applies to: VMware Horizon 8.x*
 ![VMware Horizon — Encryption](../../../../assets/virtualization-vmware-horizon-security-encryption.svg)
 
 ```bash

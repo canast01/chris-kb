@@ -4,6 +4,8 @@ tags:
 ---
 # Security Monitoring — Release Notes
 
+*Applies to: All products (Security)*
+
 <div class="kb-summary">
 Version history and release notes for Security Monitoring.
 </div>

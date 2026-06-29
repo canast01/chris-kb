@@ -5,6 +5,8 @@ tags:
 ---
 # Aria Operations Cheat Sheet
 
+*Applies to: All products*
+
 <div class="kb-summary">
 Top-10 Aria Operations (vROps) commands for alerts, metrics, policy management, and adapter status via REST API.
 </div>

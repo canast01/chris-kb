@@ -191,7 +191,7 @@ naa.6001405a1a2b3c4d5e6f7g8h9i0j1k2l3  1.6TB  1.2TB  Healthy
 
 ## Horizon Connection Diagnosis
 
-```text
+```text title="Diagnosis steps"
 1. Check Connection Server health: https://cs01.corp.local/broker/xml
 2. Check event log in Horizon Admin console
 3. Verify pool composition (desktops powered on)

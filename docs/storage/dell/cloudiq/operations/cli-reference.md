@@ -4,6 +4,8 @@ tags:
   - operations
 ---
 # Dell CloudIQ CLI Reference
+
+*Applies to: Dell CloudIQ*
 ![Dell CloudIQ CLI Reference](../../../../assets/storage-dell-cloudiq-operations-cli-reference.svg)
 
 ```bash

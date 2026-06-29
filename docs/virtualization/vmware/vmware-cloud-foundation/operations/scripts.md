@@ -5,6 +5,8 @@ tags:
   - vmware
 ---
 # VMware Cloud Foundation — Operational Scripts
+
+*Applies to: VMware vSphere 7.x / 8.x*
 ![VMware Cloud Foundation — Operational Scripts](../../../../assets/virtualization-vmware-vmware-cloud-foundation-operations-scr.svg)
 
 ```powershell

@@ -6,6 +6,8 @@ tags:
 ---
 # Certificate Management — Frequently Asked Questions
 
+*Applies to: All products (Security)*
+
 <div class="kb-summary">
 Common questions about Certificate Management operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

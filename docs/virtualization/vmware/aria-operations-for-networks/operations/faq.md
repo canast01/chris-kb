@@ -6,6 +6,8 @@ tags:
 ---
 # VMware Aria Operations for Networks — Frequently Asked Questions
 
+*Applies to: VMware Aria 8.x*
+
 <div class="kb-summary">
 Common questions about VMware Aria Operations for Networks operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

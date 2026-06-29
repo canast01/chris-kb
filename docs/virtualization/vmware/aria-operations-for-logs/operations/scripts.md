@@ -5,6 +5,8 @@ tags:
   - vmware
 ---
 # Aria Operations for Logs — Scripts Reference
+
+*Applies to: VMware Aria 8.x*
 ![Aria Operations for Logs — Scripts Reference](../../../../assets/virtualization-vmware-aria-operations-for-logs-operations-sc.svg)
 
 ```bash

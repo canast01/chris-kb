@@ -4,6 +4,8 @@ tags:
 ---
 # Brocade Fabric OS — Release Notes
 
+*Applies to: Brocade FOS 9.x*
+
 <div class="kb-summary">
 Version history and release notes for Brocade Fabric OS.
 </div>

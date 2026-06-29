@@ -4,6 +4,8 @@ tags:
 ---
 # Ceph — Release Notes
 
+*Applies to: Ceph 18.x (Reef)*
+
 <div class="kb-summary">
 Version history and release notes for Ceph.
 </div>

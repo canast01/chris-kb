@@ -4,6 +4,8 @@ tags:
 ---
 # Dell SRDF/S — Release Notes
 
+*Applies to: Dell EMC Storage*
+
 <div class="kb-summary">
 Version history and release notes for Dell SRDF/S.
 </div>

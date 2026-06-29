@@ -6,6 +6,8 @@ tags:
   - vmware
 ---
 # NSX — Install and Upgrade
+
+*Applies to: VMware NSX-T 3.x / 4.x*
 ![NSX — Install and Upgrade](../../../../assets/virtualization-vmware-nsx-operations-install-upgrade.svg)
 
 ```bash

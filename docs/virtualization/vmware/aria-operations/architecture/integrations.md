@@ -5,6 +5,8 @@ tags:
   - vmware
 ---
 # Aria Operations Integrations
+
+*Applies to: VMware Aria 8.x*
 ![Aria Operations Integrations](../../../../assets/virtualization-vmware-aria-operations-architecture-integrati.svg)
 
 ```powershell

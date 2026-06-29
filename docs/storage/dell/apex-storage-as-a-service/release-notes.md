@@ -4,6 +4,8 @@ tags:
 ---
 # Dell Apex Storage-as-a-Service — Release Notes
 
+*Applies to: Dell EMC Storage*
+
 <div class="kb-summary">
 Version history and release notes for Dell Apex Storage-as-a-Service.
 </div>

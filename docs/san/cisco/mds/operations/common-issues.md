@@ -4,6 +4,8 @@ tags:
   - san
 ---
 # Cisco MDS 9000 — Common Operational Issues
+
+*Applies to: Cisco MDS / NX-OS*
 ![Cisco MDS 9000 — Common Operational Issues](../../../../assets/san-cisco-mds-operations-common-issues.svg)
 
 ```bash

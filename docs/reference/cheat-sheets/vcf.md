@@ -5,6 +5,8 @@ tags:
 ---
 # VCF Cheat Sheet
 
+*Applies to: All products*
+
 <div class="kb-summary">
 Top-10 VCF commands for SDDC Manager operations, workload domains, LCM upgrades, and password management via REST API and CLI.
 </div>

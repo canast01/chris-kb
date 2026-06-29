@@ -7,6 +7,8 @@ tags:
 ---
 # Lab 4 Guide — VCF on Nested ESXi Step-by-Step
 
+*Applies to: Lab / Nested Environment*
+
 <div class="kb-summary">
 Complete procedure: prepare nested ESXi hosts, fill in the VCF configuration workbook, deploy Cloud Builder, run pre-deployment validation, and deploy the VCF management domain.
 </div>

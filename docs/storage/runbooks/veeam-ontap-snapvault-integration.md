@@ -11,6 +11,8 @@ tags:
 
 # Veeam Backup with ONTAP SnapVault Integration
 
+*Applies to: Storage (multi-vendor)*
+
 <div class="kb-summary">
 Cross-product runbook for integrating Veeam Backup &amp; Replication with NetApp ONTAP SnapVault. Covers ONTAP SnapVault source/destination configuration, Veeam storage system registration, backup job creation with NFS datastore, SnapVault offload, restore testing, and RPO/RTO targets.
 </div>

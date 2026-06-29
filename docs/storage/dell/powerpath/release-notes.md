@@ -4,6 +4,8 @@ tags:
 ---
 # Dell PowerPath — Release Notes
 
+*Applies to: Dell PowerPath 7.x*
+
 <div class="kb-summary">
 Version history and release notes for Dell PowerPath.
 </div>

@@ -6,6 +6,8 @@ tags:
 ---
 # Jira — Frequently Asked Questions
 
+*Applies to: Jira*
+
 <div class="kb-summary">
 Common questions about Jira operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

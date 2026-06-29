@@ -5,6 +5,8 @@ tags:
 ---
 # NSX Cheat Sheet
 
+*Applies to: All products*
+
 <div class="kb-summary">
 Top-10 NSX commands for transport nodes, segments, T0/T1 gateways, and DFW via the NSX Manager CLI and REST API.
 </div>

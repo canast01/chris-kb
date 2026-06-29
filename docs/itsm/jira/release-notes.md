@@ -4,6 +4,8 @@ tags:
 ---
 # Jira — Release Notes
 
+*Applies to: Jira*
+
 <div class="kb-summary">
 Version history and release notes for Jira.
 </div>

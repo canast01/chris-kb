@@ -196,7 +196,6 @@ Snapshot "pre-migration-20240115-1203" removed successfully.
 
 Update failed: NOTAUTH
 ```
-```text
 
 !!! warning "Common errors"
     **`Update failed: NOTAUTH`** — Verify your nsupdate credentials and that the DNS server allows dynamic updates from your source IP; check firewall rules and TSIG key configuration if required.

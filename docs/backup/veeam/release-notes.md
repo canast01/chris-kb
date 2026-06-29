@@ -4,6 +4,8 @@ tags:
 ---
 # Veeam Backup & Replication — Release Notes
 
+*Applies to: Veeam Backup & Replication 12.x*
+
 <div class="kb-summary">
 Version history and release notes for Veeam Backup & Replication.
 </div>

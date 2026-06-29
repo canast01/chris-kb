@@ -5,6 +5,8 @@ tags:
   - vmware
 ---
 # VMware Cloud Foundation — How It Works
+
+*Applies to: VMware vSphere 7.x / 8.x*
 ![VMware Cloud Foundation — How It Works](../../../../assets/virtualization-vmware-vmware-cloud-foundation-architecture-h.svg)
 
 ```text

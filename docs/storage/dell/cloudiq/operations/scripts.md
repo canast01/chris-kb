@@ -4,6 +4,8 @@ tags:
   - operations
 ---
 # Dell CloudIQ Scripts
+
+*Applies to: Dell CloudIQ*
 ![Dell CloudIQ Scripts](../../../../assets/storage-dell-cloudiq-operations-scripts.svg)
 
 ```python

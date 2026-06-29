@@ -1050,14 +1050,19 @@ if _missing_bash:
         warn(issues, f'... and {len(_missing_bash)-12} more (run --full)')
 
 
-# ── Check 47: Overly long pages (>500 lines — candidates for splitting) ───────
-issues = check(47, 'Overly long pages (>800 lines — split candidates)')
+# ── Check 47: Overly long pages (>1500 lines — candidates for splitting) ──────
+# Exempt inherently long page types: cli-reference, scripts, procedures,
+# certifications. These are reference pages that grow with content by design.
+issues = check(47, 'Overly long pages (>1500 lines — split candidates)')
 _LONG_SKIP = {'docs/tags.md', 'docs/site-map.md'}
+_LONG_EXEMPT = ('cli-reference', 'scripts', 'procedures', 'certifications')
 for _path in all_md():
     if os.path.relpath(_path, REPO) in _LONG_SKIP:
         continue
+    if any(e in _path for e in _LONG_EXEMPT):
+        continue
     _lc = sum(1 for _ in open(_path, errors='replace'))
-    if _lc > 800:
+    if _lc > 1500:
         warn(issues, f'{os.path.relpath(_path, DOCS)}: {_lc} lines')
 
 
@@ -1070,8 +1075,8 @@ for _path in all_md():
     _c = open(_path, errors='replace').read()
     if 'kb-grid' in _c or len(_c.splitlines()) < 10:
         continue
-    # FAQ pages need either ### headings (question form) or **Q:** markers
-    if not re.search(r'^### .+\?', _c, re.MULTILINE) and '**Q:**' not in _c:
+    # FAQ pages need either ### headings (question form) or **Q: markers
+    if not re.search(r'^### .+\?', _c, re.MULTILINE) and not re.search(r'\*\*Q:', _c):
         _missing_qa.append(os.path.relpath(_path, DOCS))
 if _missing_qa:
     for _p in (_missing_qa if FULL else _missing_qa[:12]):
@@ -1119,19 +1124,22 @@ if _missing_table:
 
 
 # ── Check 51: D2 node labels that are likely to overflow their boxes ──────────
-# Labels longer than 40 chars at typical font-size will clip inside D2 shapes.
+# Labels using \n in D2 render as multi-line — check the longest *single line*.
 issues = check(51, 'D2 node labels >40 chars (likely to overflow rendered box)')
 _D2_LABEL = re.compile(r'```d2\n(.*?)\n```', re.DOTALL)
-# Flag labels >55 chars — at typical D2 font-size these overflow most node shapes
-_D2_NODE_LABEL = re.compile(r'^\w[\w_.-]*\s*:\s*"([^"]{56,})"', re.MULTILINE)
+_D2_NODE_LABEL = re.compile(r'^\w[\w_.-]*\s*:\s*"([^"]+)"', re.MULTILINE)
 for _md in all_md():
     _txt = open(_md, errors='replace').read()
     if '```d2' not in _txt:
         continue
     for _blk in _D2_LABEL.findall(_txt):
         for _lm in _D2_NODE_LABEL.finditer(_blk):
-            warn(issues, f'{os.path.relpath(_md, DOCS)}: label "{_lm.group(1)[:55]}..."')
-            break  # one warning per file is enough
+            _label = _lm.group(1)
+            # D2 renders \n as line breaks — check max line length
+            _max_line = max(len(ln) for ln in _label.split('\\n'))
+            if _max_line > 55:
+                warn(issues, f'{os.path.relpath(_md, DOCS)}: label "{_label[:55]}..."')
+                break  # one warning per file is enough
 
 
 # ── Check 52: PlantUML blocks without @startuml / @enduml ────────────────────

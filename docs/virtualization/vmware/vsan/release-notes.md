@@ -6,6 +6,8 @@ tags:
 ---
 # VMware vSAN — Release Notes
 
+*Applies to: VMware vSAN 7.x / 8.x*
+
 <div class="kb-summary">
 Version history and release notes for VMware vSAN.
 </div>

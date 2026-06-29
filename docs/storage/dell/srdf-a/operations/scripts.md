@@ -4,6 +4,8 @@ tags:
   - operations
 ---
 # SRDF/A — Scripts
+
+*Applies to: Dell EMC Storage*
 ![SRDF/A — Scripts](../../../../assets/storage-dell-srdf-a-operations-scripts.svg)
 
 ```bash

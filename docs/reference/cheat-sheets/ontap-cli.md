@@ -7,6 +7,8 @@ tags:
 ---
 # ONTAP CLI Cheat Sheet
 
+*Applies to: All products*
+
 <div class="kb-summary">
 Essential ONTAP CLI commands for cluster, SVM, volume, aggregate, network, SnapMirror, protocol, and health operations — one-line references for day-to-day storage administration.
 </div>

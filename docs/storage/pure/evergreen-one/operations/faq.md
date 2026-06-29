@@ -6,6 +6,8 @@ tags:
 ---
 # Pure Storage Evergreen//One — Frequently Asked Questions
 
+*Applies to: Pure Storage*
+
 <div class="kb-summary">
 Common questions about Pure Storage Evergreen//One operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

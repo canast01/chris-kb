@@ -4,6 +4,8 @@ tags:
 ---
 # VMware — Release Notes
 
+*Applies to: VMware vSphere 7.x / 8.x*
+
 <div class="kb-summary">
 Version history and release notes for VMware.
 </div>

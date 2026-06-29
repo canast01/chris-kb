@@ -4,6 +4,8 @@ tags:
 ---
 # OpenShift — Release Notes
 
+*Applies to: OpenShift 4.x*
+
 <div class="kb-summary">
 Version history and release notes for OpenShift.
 </div>

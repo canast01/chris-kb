@@ -6,6 +6,8 @@ tags:
 ---
 # INC-002: Storage Array / Datastore Full
 
+*Applies to: All products*
+
 <div class="kb-summary">
 P1/P2 incident — a datastore or storage array volume has hit capacity. VMs may be paused or failing writes. Stop space growth immediately, then diagnose the largest consumers, then expand or relocate.
 </div>

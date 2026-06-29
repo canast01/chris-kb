@@ -6,6 +6,8 @@ tags:
 ---
 # VMware Horizon — Frequently Asked Questions
 
+*Applies to: VMware Horizon 8.x*
+
 <div class="kb-summary">
 Common questions about VMware Horizon operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

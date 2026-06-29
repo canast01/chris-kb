@@ -4,6 +4,8 @@ tags:
   - operations
 ---
 # SRDF/A — Backup & Restore
+
+*Applies to: Dell EMC Storage*
 ![SRDF/A — Backup & Restore](../../../../assets/storage-dell-srdf-a-operations-backup-restore.svg)
 
 ```bash

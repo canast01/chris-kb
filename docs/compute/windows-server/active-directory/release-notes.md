@@ -4,6 +4,8 @@ tags:
 ---
 # Active Directory — Release Notes
 
+*Applies to: Windows Server 2022 · Active Directory*
+
 <div class="kb-summary">
 Version history and release notes for Active Directory.
 </div>

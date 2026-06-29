@@ -5,6 +5,8 @@ tags:
   - vmware
 ---
 # VMware Cloud Foundation — Install & Upgrade
+
+*Applies to: VMware vSphere 7.x / 8.x*
 ![VMware Cloud Foundation — Install & Upgrade](../../../../assets/virtualization-vmware-vmware-cloud-foundation-operations-ins.svg)
 
 ```bash

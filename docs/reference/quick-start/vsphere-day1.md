@@ -7,6 +7,8 @@ tags:
 ---
 # vSphere Day 1 — New Environment Checklist
 
+*Applies to: All products*
+
 <div class="kb-summary">
 What to do in your first hour with a new vSphere environment. Complete these steps in order to reach a safe, understood baseline before making any changes.
 </div>

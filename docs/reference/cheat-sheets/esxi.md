@@ -5,6 +5,8 @@ tags:
 ---
 # ESXi Cheat Sheet
 
+*Applies to: All products*
+
 <div class="kb-summary">
 Top-10 ESXi shell commands for host management, networking, storage, and VM control via <code>esxcli</code>.
 </div>

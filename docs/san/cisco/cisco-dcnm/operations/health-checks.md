@@ -5,6 +5,8 @@ tags:
 ---
 # Cisco DCNM — Health Checks
 
+*Applies to: Cisco MDS / NX-OS*
+
 ```bash
 ssh root@dcnm-dc1.corp.example.com
 

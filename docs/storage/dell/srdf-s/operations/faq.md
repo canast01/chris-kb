@@ -6,6 +6,8 @@ tags:
 ---
 # Dell SRDF/S (Synchronous Replication) — Frequently Asked Questions
 
+*Applies to: Dell EMC Storage*
+
 <div class="kb-summary">
 Common questions about Dell SRDF/S (Synchronous Replication) operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

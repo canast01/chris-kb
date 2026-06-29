@@ -3,6 +3,8 @@ tags:
   - vxrail
 ---
 # VxRail — Upgrade Planning
+
+*Applies to: Dell VxRail 7.x / 8.x*
 ![VxRail — Upgrade Planning](../../../../assets/virtualization-vmware-vxrail-lifecycle-upgrade-planning.svg)
 
 

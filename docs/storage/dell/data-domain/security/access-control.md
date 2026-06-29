@@ -4,6 +4,8 @@ tags:
   - security
 ---
 # Dell Data Domain Access Control
+
+*Applies to: Dell EMC Storage*
 ![Dell Data Domain Access Control](../../../../assets/storage-dell-data-domain-security-access-control.svg)
 
 ```bash

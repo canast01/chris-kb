@@ -5,6 +5,8 @@ tags:
 ---
 # VMware PowerCLI — Release Notes
 
+*Applies to: VMware PowerCLI 13.x*
+
 <div class="kb-summary">
 Version history and release notes for VMware PowerCLI.
 </div>

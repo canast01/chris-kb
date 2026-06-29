@@ -5,6 +5,8 @@ tags:
   - vmware
 ---
 # vRNI Install & Upgrade
+
+*Applies to: VMware Aria 8.x*
 ![vRNI Install & Upgrade](../../../../assets/virtualization-vmware-aria-operations-for-networks-operation.svg)
 
 ```bash

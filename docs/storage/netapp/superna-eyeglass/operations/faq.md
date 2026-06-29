@@ -6,6 +6,8 @@ tags:
 ---
 # Superna Eyeglass for NetApp — Frequently Asked Questions
 
+*Applies to: NetApp ONTAP 9.x*
+
 <div class="kb-summary">
 Common questions about Superna Eyeglass for NetApp operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

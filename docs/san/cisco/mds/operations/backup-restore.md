@@ -4,6 +4,8 @@ tags:
   - san
 ---
 # Cisco MDS 9000 — Backup and Restore
+
+*Applies to: Cisco MDS / NX-OS*
 ![Cisco MDS 9000 — Backup and Restore](../../../../assets/san-cisco-mds-operations-backup-restore.svg)
 
 ```bash

@@ -4,6 +4,8 @@ tags:
 ---
 # CyberArk — Release Notes
 
+*Applies to: CyberArk PAS 12.x*
+
 <div class="kb-summary">
 Version history and release notes for CyberArk.
 </div>

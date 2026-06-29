@@ -4,6 +4,8 @@ tags:
   - san
 ---
 # Cisco Nexus Dashboard — Architecture Integrations
+
+*Applies to: Cisco MDS / NX-OS*
 ![Cisco Nexus Dashboard — Architecture Integrations](../../../../assets/san-cisco-nexus-dashboard-architecture-integrations.svg)
 
 ```bash

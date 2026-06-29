@@ -6,6 +6,8 @@ tags:
 ---
 # VMware PowerCLI — Frequently Asked Questions
 
+*Applies to: VMware PowerCLI 13.x*
+
 <div class="kb-summary">
 Common questions about VMware PowerCLI operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

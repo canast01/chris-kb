@@ -4,6 +4,8 @@ tags:
   - security
 ---
 # Cisco Nexus Dashboard — Security Authentication
+
+*Applies to: Cisco MDS / NX-OS*
 ![Cisco Nexus Dashboard — Security Authentication](../../../../assets/san-cisco-nexus-dashboard-security-authentication.svg)
 
 ```bash

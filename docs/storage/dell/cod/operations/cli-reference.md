@@ -4,6 +4,8 @@ tags:
   - operations
 ---
 # Dell COD CLI Reference
+
+*Applies to: Dell Cloud Object Detachment*
 ![Dell COD CLI Reference](../../../../assets/storage-dell-cod-operations-cli-reference.svg)
 
 ```bash

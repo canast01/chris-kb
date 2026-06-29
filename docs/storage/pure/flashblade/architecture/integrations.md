@@ -4,6 +4,8 @@ tags:
   - pure
 ---
 # FlashBlade — Integrations
+
+*Applies to: Pure Storage FlashBlade*
 ![FlashBlade — Integrations](../../../../assets/storage-pure-flashblade-architecture-integrations.svg)
 
 ```sql

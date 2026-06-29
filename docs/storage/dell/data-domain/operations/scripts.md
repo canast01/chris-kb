@@ -4,6 +4,8 @@ tags:
   - operations
 ---
 # Dell Data Domain Scripts
+
+*Applies to: Dell EMC Storage*
 ![Dell Data Domain Scripts](../../../../assets/storage-dell-data-domain-operations-scripts.svg)
 
 ```bash

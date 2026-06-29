@@ -6,6 +6,8 @@ tags:
 ---
 # Cisco Nexus Dashboard — Frequently Asked Questions
 
+*Applies to: Cisco MDS / NX-OS*
+
 <div class="kb-summary">
 Common questions about Cisco Nexus Dashboard operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

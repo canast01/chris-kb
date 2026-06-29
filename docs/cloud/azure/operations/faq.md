@@ -6,6 +6,8 @@ tags:
 ---
 # Microsoft Azure — Frequently Asked Questions
 
+*Applies to: Azure*
+
 <div class="kb-summary">
 Common questions about Microsoft Azure operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

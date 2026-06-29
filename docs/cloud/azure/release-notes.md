@@ -4,6 +4,8 @@ tags:
 ---
 # Azure — Release Notes
 
+*Applies to: Azure*
+
 <div class="kb-summary">
 Version history and release notes for Azure.
 </div>

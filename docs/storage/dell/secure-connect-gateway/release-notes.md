@@ -4,6 +4,8 @@ tags:
 ---
 # Dell Secure Connect Gateway — Release Notes
 
+*Applies to: Dell EMC Storage*
+
 <div class="kb-summary">
 Version history and release notes for Dell Secure Connect Gateway.
 </div>

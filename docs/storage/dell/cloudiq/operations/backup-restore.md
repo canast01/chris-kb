@@ -4,6 +4,8 @@ tags:
   - operations
 ---
 # Dell CloudIQ Backup and Restore
+
+*Applies to: Dell CloudIQ*
 ![Dell CloudIQ Backup and Restore](../../../../assets/storage-dell-cloudiq-operations-backup-restore.svg)
 
 ```bash

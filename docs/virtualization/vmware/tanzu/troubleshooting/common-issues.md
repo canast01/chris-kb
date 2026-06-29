@@ -7,6 +7,8 @@ search:
   boost: 1.5
 ---
 # Virtualization Vmware Tanzu — Common Issues
+
+*Applies to: VMware Tanzu*
 ![Virtualization Vmware Tanzu — Common Issues](../../../../assets/virtualization-vmware-tanzu-troubleshooting-common-issues.svg)
 
 ```text

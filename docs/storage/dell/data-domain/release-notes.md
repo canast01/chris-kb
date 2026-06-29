@@ -4,6 +4,8 @@ tags:
 ---
 # Dell Data Domain — Release Notes
 
+*Applies to: Dell EMC Storage*
+
 <div class="kb-summary">
 Version history and release notes for Dell Data Domain.
 </div>

@@ -4,6 +4,8 @@ tags:
 ---
 # ServiceNow — Release Notes
 
+*Applies to: ServiceNow*
+
 <div class="kb-summary">
 Version history and release notes for ServiceNow.
 </div>

@@ -4,6 +4,8 @@ tags:
   - security
 ---
 # Brocade SANnav — Authentication
+
+*Applies to: Brocade FOS 9.x*
 ![Brocade SANnav — Authentication](../../../../assets/san-brocade-sannav-security-authentication.svg)
 
 ```bash

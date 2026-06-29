@@ -4,6 +4,8 @@ tags:
 ---
 # AWS EVS — Release Notes
 
+*Applies to: AWS Elastic VMware Service*
+
 <div class="kb-summary">
 Version history and release notes for AWS EVS.
 </div>

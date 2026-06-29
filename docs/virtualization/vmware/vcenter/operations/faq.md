@@ -6,6 +6,8 @@ tags:
 ---
 # VMware vCenter — Frequently Asked Questions
 
+*Applies to: VMware vCenter 7.x / 8.x*
+
 <div class="kb-summary">
 Common questions about VMware vCenter operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

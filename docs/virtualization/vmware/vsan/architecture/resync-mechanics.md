@@ -257,7 +257,6 @@ Resync UUID                          Object UUID                      Type  Prog
 3d6a1f8c-5e2b-9a4d-7c3f-1e8b2a5d9c6f 2e7a4f1c-9b3d-6a8e-5c2f-1d4a7b9e3c6f DELTA 92%
 1a4c7e9f-3b2d-8f5a-6e1c-4d9b2f3a7c5e 8f2c5a9d-1e7b-4f3a-6c8d-2a9e1b5f3c7d DELTA 56%
 ```
-```text
 
 !!! warning "Common errors"
     **`error: Unknown command or namespace`** — Ensure you are running this command on an ESXi host with vSAN enabled; the vsan namespace may not be available on non-vSAN clusters.

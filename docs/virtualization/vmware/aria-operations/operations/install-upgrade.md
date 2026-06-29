@@ -5,6 +5,8 @@ tags:
   - vmware
 ---
 # Aria Operations Install & Upgrade
+
+*Applies to: VMware Aria 8.x*
 ![Aria Operations Install & Upgrade](../../../../assets/virtualization-vmware-aria-operations-operations-install-upg.svg)
 
 ## Before you begin

@@ -5,6 +5,8 @@ tags:
 ---
 # SRDF/A — Health Checks
 
+*Applies to: Dell EMC Storage*
+
 ```bash
 # Show cycle state and lag for all devices in group 20
 symrdf -g 20 -type A query -detail

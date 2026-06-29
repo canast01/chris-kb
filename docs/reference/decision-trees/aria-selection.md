@@ -9,6 +9,8 @@ tags:
 ---
 # Aria Product Selection Decision Tree
 
+*Applies to: All products*
+
 <div class="kb-summary">
 Choose the right Aria product for your need: performance monitoring, log management, infrastructure automation, network visibility, or lifecycle management of the Aria Suite itself.
 </div>

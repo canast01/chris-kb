@@ -5,6 +5,8 @@ tags:
 ---
 # Horizon Cheat Sheet
 
+*Applies to: All products*
+
 <div class="kb-summary">
 Top-10 Horizon commands for desktop pool management, agent control, and session operations via <code>vdmadmin</code> and PowerShell.
 </div>

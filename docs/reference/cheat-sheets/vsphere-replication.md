@@ -5,6 +5,8 @@ tags:
 ---
 # vSphere Replication Cheat Sheet
 
+*Applies to: All products*
+
 <div class="kb-summary">
 Top-10 vSphere Replication commands for replication configuration, status monitoring, and recovery via PowerCLI and VRMS REST API.
 </div>

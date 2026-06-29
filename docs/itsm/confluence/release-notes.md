@@ -4,6 +4,8 @@ tags:
 ---
 # Confluence — Release Notes
 
+*Applies to: Confluence*
+
 <div class="kb-summary">
 Version history and release notes for Confluence.
 </div>

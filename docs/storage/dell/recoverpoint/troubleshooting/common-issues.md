@@ -6,6 +6,8 @@ search:
   boost: 1.5
 ---
 # RecoverPoint — Common Issues
+
+*Applies to: Dell EMC Storage*
 ![RecoverPoint — Common Issues](../../../../assets/storage-dell-recoverpoint-troubleshooting-common-issues.svg)
 
 ```bash

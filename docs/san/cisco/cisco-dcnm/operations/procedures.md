@@ -5,6 +5,8 @@ tags:
 ---
 # Cisco DCNM — Operations Procedures
 
+*Applies to: Cisco MDS / NX-OS*
+
 Cisco DCNM (Data Center Network Manager) is the management and automation platform for Cisco MDS FC SAN fabrics, providing fabric discovery, zoning, configuration deployment, compliance checking, and VXLAN overlay management for IP fabrics.
 
 ---

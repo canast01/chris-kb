@@ -6,6 +6,8 @@ search:
   boost: 1.5
 ---
 # Cisco Nexus Dashboard — Troubleshooting Common Issues
+
+*Applies to: Cisco MDS / NX-OS*
 ![Cisco Nexus Dashboard — Troubleshooting Common Issues](../../../../assets/san-cisco-nexus-dashboard-troubleshooting-common-issues.svg)
 
 ```bash

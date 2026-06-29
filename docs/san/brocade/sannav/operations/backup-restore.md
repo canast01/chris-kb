@@ -4,6 +4,8 @@ tags:
   - san
 ---
 # Brocade SANnav — Backup and Restore
+
+*Applies to: Brocade FOS 9.x*
 ![Brocade SANnav — Backup and Restore](../../../../assets/san-brocade-sannav-operations-backup-restore.svg)
 
 ```bash

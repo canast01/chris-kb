@@ -5,6 +5,8 @@ tags:
   - vmware
 ---
 # vRNI Security Hardening
+
+*Applies to: VMware Aria 8.x*
 ![vRNI Security Hardening](../../../../assets/virtualization-vmware-aria-operations-for-networks-security-.svg)
 
 ```bash

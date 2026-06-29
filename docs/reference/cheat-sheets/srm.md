@@ -5,6 +5,8 @@ tags:
 ---
 # SRM Cheat Sheet
 
+*Applies to: All products*
+
 <div class="kb-summary">
 Top-10 SRM commands for protection groups, recovery plans, test failover, and failover operations via PowerCLI and REST API.
 </div>

@@ -6,6 +6,8 @@ tags:
 ---
 # vSAN Storage Policy Decision Tree
 
+*Applies to: All products*
+
 <div class="kb-summary">
 Choose the right vSAN storage policy: FTT level, RAID type (mirror vs erasure coding), encryption, and dedup/compression based on cluster size and requirements.
 </div>

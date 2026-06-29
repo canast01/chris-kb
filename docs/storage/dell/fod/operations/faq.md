@@ -6,6 +6,8 @@ tags:
 ---
 # Dell Features on Demand — Frequently Asked Questions
 
+*Applies to: Dell EMC Storage*
+
 <div class="kb-summary">
 Common questions about Dell Features on Demand operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

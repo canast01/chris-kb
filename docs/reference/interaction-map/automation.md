@@ -9,6 +9,8 @@ tags:
 ---
 # Automation Domain — Interaction Map
 
+*Applies to: All products*
+
 <div class="kb-summary">
 How Aria Automation, Aria Operations, Aria Logs, Aria Networks, Tanzu, and Horizon connect to the vSphere and NSX layers — APIs, data flows, and authentication.
 </div>

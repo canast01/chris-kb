@@ -8,6 +8,8 @@ search:
 ---
 # INC-005: ESXi Host Disconnected from vCenter
 
+*Applies to: All products*
+
 <div class="kb-summary">
 Response procedure for an ESXi host showing "Not Responding" or "Disconnected" in vCenter. Severity depends on whether VMs are running and inaccessible on that host.
 </div>

@@ -6,6 +6,8 @@ tags:
   - vmware
 ---
 # NSX — Access Control
+
+*Applies to: VMware NSX-T 3.x / 4.x*
 ![NSX — Access Control](../../../../assets/virtualization-vmware-nsx-security-access-control.svg)
 
 ```bash

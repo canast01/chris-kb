@@ -6,6 +6,8 @@ tags:
   - vmware
 ---
 # NSX — Hardening
+
+*Applies to: VMware NSX-T 3.x / 4.x*
 ![NSX — Hardening](../../../../assets/virtualization-vmware-nsx-security-hardening.svg)
 
 ```bash

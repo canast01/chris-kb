@@ -4,6 +4,8 @@ tags:
   - security
 ---
 # FlashBlade — Encryption
+
+*Applies to: Pure Storage FlashBlade*
 ![FlashBlade — Encryption](../../../../assets/storage-pure-flashblade-security-encryption.svg)
 
 ![FlashBlade — Encryption — Diagram](../../../../assets/storage-pure-flashblade-security-encryption-diagram.svg)

@@ -6,6 +6,8 @@ tags:
 ---
 # Dell Capacity on Demand — Frequently Asked Questions
 
+*Applies to: Dell Cloud Object Detachment*
+
 <div class="kb-summary">
 Common questions about Dell Capacity on Demand operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

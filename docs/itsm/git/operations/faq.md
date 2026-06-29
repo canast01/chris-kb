@@ -6,6 +6,8 @@ tags:
 ---
 # Git — Frequently Asked Questions
 
+*Applies to: Git*
+
 <div class="kb-summary">
 Common questions about Git operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

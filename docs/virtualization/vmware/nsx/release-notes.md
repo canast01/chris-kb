@@ -6,6 +6,8 @@ tags:
 ---
 # VMware NSX — Release Notes
 
+*Applies to: VMware NSX-T 3.x / 4.x*
+
 <div class="kb-summary">
 Version history and release notes for VMware NSX.
 </div>

@@ -6,6 +6,8 @@ tags:
 ---
 # Ansible — Frequently Asked Questions
 
+*Applies to: Ansible 2.x*
+
 <div class="kb-summary">
 Common questions about Ansible operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

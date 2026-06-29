@@ -4,6 +4,8 @@ tags:
   - san
 ---
 # Cisco Nexus Dashboard — Operations Common Issues
+
+*Applies to: Cisco MDS / NX-OS*
 ![Cisco Nexus Dashboard — Operations Common Issues](../../../../assets/san-cisco-nexus-dashboard-operations-common-issues.svg)
 
 ```bash

@@ -4,6 +4,8 @@ tags:
   - san
 ---
 # Brocade Fabric OS — CLI Reference
+
+*Applies to: Brocade FOS 9.x*
 ![Brocade Fabric OS — CLI Reference](../../../../assets/san-brocade-fabric-os-operations-cli-reference.svg)
 
 ```bash

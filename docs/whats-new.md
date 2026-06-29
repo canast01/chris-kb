@@ -6,6 +6,8 @@ search:
 ---
 # What's New
 
+*Applies to: All products*
+
 <div class="kb-summary">
 Recent additions and updates to the knowledge base. Major changes by date — newest first.
 

@@ -4,6 +4,8 @@ tags:
   - dell
 ---
 # SRDF/A — Design Standards
+
+*Applies to: Dell EMC Storage*
 ![SRDF/A — Design Standards](../../../../assets/storage-dell-srdf-a-architecture-design-standards.svg)
 
 ```bash

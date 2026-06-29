@@ -6,6 +6,8 @@ tags:
 ---
 # Network Domain — Interaction Map
 
+*Applies to: All products*
+
 <div class="kb-summary">
 How NSX and vSphere networking (vDS) interact — GENEVE overlay, BGP uplinks to physical switches, DFW, and integration with ESXi and vCenter.
 </div>

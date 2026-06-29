@@ -6,6 +6,8 @@ tags:
 ---
 # Dell Data Domain — Frequently Asked Questions
 
+*Applies to: Dell EMC Storage*
+
 <div class="kb-summary">
 Common questions about Dell Data Domain operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

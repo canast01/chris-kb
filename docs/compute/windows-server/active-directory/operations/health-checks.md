@@ -104,6 +104,33 @@ Run these commands each morning to verify Active Directory health before issues 
 
 ---
 
+## Linux Connectivity Check
+
+Run from any Linux host joined to the domain or with network access to a DC:
+
+```bash
+# Verify AD DNS SRV records resolve (replace example.com with your domain)
+nslookup -type=SRV _ldap._tcp.example.com
+nslookup -type=SRV _kerberos._tcp.example.com
+
+# Confirm LDAP port reachable on each DC
+for DC in dc01.example.com dc02.example.com; do
+  nc -zv "$DC" 389 && echo "$DC LDAP OK" || echo "$DC LDAP FAIL"
+done
+```
+
+```text title="Expected output"
+_ldap._tcp.example.com	service = 0 100 389 dc01.example.com.
+_ldap._tcp.example.com	service = 0 100 389 dc02.example.com.
+_kerberos._tcp.example.com	service = 0 100 88 dc01.example.com.
+Connection to dc01.example.com 389 port [tcp/ldap] succeeded!
+dc01.example.com LDAP OK
+Connection to dc02.example.com 389 port [tcp/ldap] succeeded!
+dc02.example.com LDAP OK
+```
+
+---
+
 ## Verify
 
 - Confirm the operation completed without errors in the log or management UI

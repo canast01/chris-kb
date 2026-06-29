@@ -5,6 +5,8 @@ tags:
 ---
 # Tanzu Cheat Sheet
 
+*Applies to: All products*
+
 <div class="kb-summary">
 Top-10 Tanzu commands for cluster lifecycle, package management, and Kubernetes operations in TKG environments.
 </div>

@@ -8,6 +8,8 @@ search:
   boost: 2
 ---
 # NSX — Common Issues
+
+*Applies to: VMware NSX-T 3.x / 4.x*
 ![NSX — Common Issues](../../../../assets/virtualization-vmware-nsx-troubleshooting-common-issues.svg)
 
 ```bash

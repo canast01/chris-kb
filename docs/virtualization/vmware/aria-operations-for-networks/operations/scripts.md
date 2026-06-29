@@ -5,6 +5,8 @@ tags:
   - vmware
 ---
 # vRNI Scripts
+
+*Applies to: VMware Aria 8.x*
 ![vRNI Scripts](../../../../assets/virtualization-vmware-aria-operations-for-networks-operation.svg)
 
 ```python

@@ -4,6 +4,8 @@ tags:
   - san
 ---
 # Cisco Nexus Dashboard — Operations CLI Reference
+
+*Applies to: Cisco MDS / NX-OS*
 ![Cisco Nexus Dashboard — Operations CLI Reference](../../../../assets/san-cisco-nexus-dashboard-operations-cli-reference.svg)
 
 ```bash

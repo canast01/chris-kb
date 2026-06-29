@@ -6,6 +6,8 @@ tags:
 ---
 # Dell PowerMax — Frequently Asked Questions
 
+*Applies to: Dell PowerMax · VMAX*
+
 <div class="kb-summary">
 Common questions about Dell PowerMax operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

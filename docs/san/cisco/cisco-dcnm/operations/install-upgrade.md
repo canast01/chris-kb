@@ -4,6 +4,8 @@ tags:
   - san
 ---
 # Cisco DCNM — Install and Upgrade
+
+*Applies to: Cisco MDS / NX-OS*
 ![Cisco DCNM — Install and Upgrade](../../../../assets/san-cisco-cisco-dcnm-operations-install-upgrade.svg)
 
 ```bash

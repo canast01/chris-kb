@@ -4,6 +4,8 @@ tags:
   - operations
 ---
 # RecoverPoint — Scripts
+
+*Applies to: Dell EMC Storage*
 ![RecoverPoint — Scripts](../../../../assets/storage-dell-recoverpoint-operations-scripts.svg)
 
 ```python

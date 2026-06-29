@@ -6,6 +6,8 @@ tags:
 ---
 # VMware NSX — Frequently Asked Questions
 
+*Applies to: VMware NSX-T 3.x / 4.x*
+
 <div class="kb-summary">
 Common questions about VMware NSX operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

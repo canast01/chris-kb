@@ -4,6 +4,8 @@ tags:
   - operations
 ---
 # NetApp Keystone — Operations: CLI Reference
+
+*Applies to: NetApp ONTAP 9.x*
 ![NetApp Keystone — Operations: CLI Reference](../../../../assets/storage-netapp-keystone-operations-cli-reference.svg)
 
 ```bash

@@ -7,6 +7,8 @@ tags:
 ---
 # NSX-T CLI Cheat Sheet
 
+*Applies to: All products*
+
 <div class="kb-summary">
 Essential NSX-T CLI commands for NSX Manager, transport nodes, logical networking, Distributed Firewall, and Edge node operations — plus curl REST API examples for key queries.
 </div>

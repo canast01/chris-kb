@@ -4,6 +4,8 @@ tags:
   - security
 ---
 # Cisco Nexus Dashboard — Security Encryption
+
+*Applies to: Cisco MDS / NX-OS*
 ![Cisco Nexus Dashboard — Security Encryption](../../../../assets/san-cisco-nexus-dashboard-security-encryption.svg)
 
 ```bash

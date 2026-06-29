@@ -4,6 +4,8 @@ tags:
 ---
 # Superna Eyeglass — Release Notes
 
+*Applies to: NetApp ONTAP 9.x*
+
 <div class="kb-summary">
 Version history and release notes for Superna Eyeglass.
 </div>

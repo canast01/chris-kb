@@ -6,6 +6,8 @@ tags:
 ---
 # VMware ESXi — Release Notes
 
+*Applies to: VMware ESXi 7.x / 8.x*
+
 <div class="kb-summary">
 Version history and release notes for VMware ESXi.
 </div>

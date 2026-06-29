@@ -6,6 +6,8 @@ tags:
 ---
 # CyberArk PAM — Frequently Asked Questions
 
+*Applies to: CyberArk PAS 12.x*
+
 <div class="kb-summary">
 Common questions about CyberArk PAM operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

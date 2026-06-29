@@ -4,6 +4,8 @@ tags:
 ---
 # Dell PowerMax — Release Notes
 
+*Applies to: Dell PowerMax · VMAX*
+
 <div class="kb-summary">
 Version history and release notes for Dell PowerMax.
 </div>

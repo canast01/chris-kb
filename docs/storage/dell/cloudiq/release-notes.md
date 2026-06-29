@@ -4,6 +4,8 @@ tags:
 ---
 # Dell CloudIQ — Release Notes
 
+*Applies to: Dell CloudIQ*
+
 <div class="kb-summary">
 Version history and release notes for Dell CloudIQ.
 </div>

@@ -6,6 +6,8 @@ tags:
 ---
 # Veeam Backup & Replication — Frequently Asked Questions
 
+*Applies to: Veeam Backup & Replication 12.x*
+
 <div class="kb-summary">
 Common questions about Veeam Backup & Replication operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

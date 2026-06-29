@@ -4,6 +4,8 @@ tags:
   - operations
 ---
 # RecoverPoint — Backup & Restore
+
+*Applies to: Dell EMC Storage*
 ![RecoverPoint — Backup & Restore](../../../../assets/storage-dell-recoverpoint-operations-backup-restore.svg)
 
 ```bash

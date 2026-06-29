@@ -6,6 +6,8 @@ tags:
   - vmware
 ---
 # NSX — CLI Reference
+
+*Applies to: VMware NSX-T 3.x / 4.x*
 ![NSX — CLI Reference](../../../../assets/virtualization-vmware-nsx-operations-cli-reference.svg)
 
 ```bash

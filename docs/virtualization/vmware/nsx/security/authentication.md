@@ -6,6 +6,8 @@ tags:
   - vmware
 ---
 # NSX — Authentication
+
+*Applies to: VMware NSX-T 3.x / 4.x*
 ![NSX — Authentication](../../../../assets/virtualization-vmware-nsx-security-authentication.svg)
 
 ```bash

@@ -4,6 +4,8 @@ tags:
   - san
 ---
 # Cisco DCNM — CLI Reference
+
+*Applies to: Cisco MDS / NX-OS*
 ![Cisco DCNM — CLI Reference](../../../../assets/san-cisco-cisco-dcnm-operations-cli-reference.svg)
 
 ```bash

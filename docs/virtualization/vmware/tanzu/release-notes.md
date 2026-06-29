@@ -5,6 +5,8 @@ tags:
 ---
 # VMware Tanzu — Release Notes
 
+*Applies to: VMware Tanzu*
+
 <div class="kb-summary">
 Version history and release notes for VMware Tanzu.
 </div>

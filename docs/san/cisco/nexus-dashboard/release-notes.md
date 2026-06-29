@@ -4,6 +4,8 @@ tags:
 ---
 # Cisco Nexus Dashboard — Release Notes
 
+*Applies to: Cisco MDS / NX-OS*
+
 <div class="kb-summary">
 Version history and release notes for Cisco Nexus Dashboard.
 </div>

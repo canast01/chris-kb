@@ -4,6 +4,8 @@ tags:
 ---
 # GitHub Actions — Release Notes
 
+*Applies to: GitHub Actions*
+
 <div class="kb-summary">
 Version history and release notes for GitHub Actions.
 </div>

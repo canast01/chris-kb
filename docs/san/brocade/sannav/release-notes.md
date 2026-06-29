@@ -4,6 +4,8 @@ tags:
 ---
 # Brocade SANnav — Release Notes
 
+*Applies to: Brocade FOS 9.x*
+
 <div class="kb-summary">
 Version history and release notes for Brocade SANnav.
 </div>

@@ -146,6 +146,36 @@ Get-VM | Where-Object { $_.PowerState -eq 'PoweredOn' } |
 
 ---
 
+## Run via Shell
+
+Invoke the health-check script from a Linux/macOS jump host with PowerShell installed:
+
+```bash
+# Install PowerShell (Ubuntu) if not already present
+which pwsh || sudo snap install powershell --classic
+
+# Run the full vSphere health check
+pwsh -File vsphere-health-check.ps1 \
+  -vCenter vcenter.example.com \
+  -Cluster Production
+```
+
+```text title="Expected output"
+=== vSphere Health Check: vcenter.example.com ===
+Cluster filter: Production
+
+PASS  Disconnected hosts: 0
+PASS  Hosts in maintenance: 0
+PASS  VMs with issues: 0
+PASS  Old snapshots (>7d): 0
+PASS  Datastores >80% full: 0
+PASS  HA admission control: ok
+
+Summary: 6 PASS  0 WARN  0 FAIL
+```
+
+---
+
 ## See also
 
 - [PowerCLI — Common Issues](../../troubleshooting/common-issues/)

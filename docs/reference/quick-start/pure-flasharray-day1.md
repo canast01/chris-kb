@@ -6,6 +6,8 @@ tags:
 ---
 # Pure FlashArray Day 1 — New Environment Checklist
 
+*Applies to: All products*
+
 <div class="kb-summary">
 What to do in your first hour with a new Pure Storage FlashArray. Covers array orientation, drive and hardware health, protection group schedules, SafeMode status, and the first operational tasks.
 </div>

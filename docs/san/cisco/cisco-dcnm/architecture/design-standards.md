@@ -4,6 +4,8 @@ tags:
   - san
 ---
 # Cisco DCNM — Design Standards
+
+*Applies to: Cisco MDS / NX-OS*
 ![Cisco DCNM — Design Standards](../../../../assets/san-cisco-cisco-dcnm-architecture-design-standards.svg)
 
 ```bash

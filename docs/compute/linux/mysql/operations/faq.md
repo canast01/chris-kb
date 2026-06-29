@@ -6,6 +6,8 @@ tags:
 ---
 # MySQL — Frequently Asked Questions
 
+*Applies to: Linux · MySQL 8.x*
+
 <div class="kb-summary">
 Common questions about MySQL operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

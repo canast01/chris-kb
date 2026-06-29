@@ -13,6 +13,8 @@ tags:
 
 # Pure Storage FlashArray with Veeam and Pure Protection
 
+*Applies to: Storage (multi-vendor)*
+
 <div class="kb-summary">
 Cross-product runbook integrating Pure Storage FlashArray, Veeam Backup and Replication, and Pure Protection with SafeMode immutable snapshots. Covers FlashArray volume and protection group prep, Veeam storage snapshot integration, SafeMode immutability verification, and restore testing across crash-consistent and app-consistent scenarios.
 </div>

@@ -13,6 +13,8 @@ tags:
 
 # vSAN Stretched Cluster Setup and Validation
 
+*Applies to: Storage (multi-vendor)*
+
 <div class="kb-summary">
 Cross-product runbook for deploying and validating a VMware vSAN stretched cluster across two sites with a third-site witness host. Covers witness appliance deployment, fault domain configuration, SPBM storage policy creation, network validation, failover simulation, and optional SRM integration for RPO=0 protection.
 </div>

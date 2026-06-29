@@ -4,6 +4,8 @@ tags:
   - san
 ---
 # Brocade SANnav — Design Standards
+
+*Applies to: Brocade FOS 9.x*
 ![Brocade SANnav — Design Standards](../../../../assets/san-brocade-sannav-architecture-design-standards.svg)
 
 ```bash

@@ -4,6 +4,8 @@ tags:
   - security
 ---
 # Cisco MDS — Security Hardening
+
+*Applies to: Cisco MDS / NX-OS*
 ![Cisco MDS — Security Hardening](../../../../assets/san-cisco-mds-security-hardening.svg)
 
 ```bash

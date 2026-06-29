@@ -58,3 +58,10 @@ python3 scripts/site_audit.py --full   # include all issue details
 mkdocs build --strict                  # strict build check
 mkdocs serve                           # local preview
 ```
+
+```text title="Expected output"
+SUMMARY: 55/55 checks clean
+INFO - Building documentation...
+INFO - Documentation built in 12.3 seconds
+INFO - Serving on http://127.0.0.1:8000
+```

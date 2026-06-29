@@ -5,6 +5,8 @@ tags:
 ---
 # VMware Horizon — Release Notes
 
+*Applies to: VMware Horizon 8.x*
+
 <div class="kb-summary">
 Version history and release notes for VMware Horizon.
 </div>

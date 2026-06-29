@@ -6,6 +6,8 @@ tags:
 ---
 # Nutanix AOS — Frequently Asked Questions
 
+*Applies to: Nutanix AOS 6.x · AHV*
+
 <div class="kb-summary">
 Common questions about Nutanix AOS operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

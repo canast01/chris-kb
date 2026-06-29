@@ -6,6 +6,8 @@ tags:
 ---
 # Microsoft SQL Server — Frequently Asked Questions
 
+*Applies to: Windows Server 2022 · SQL Server*
+
 <div class="kb-summary">
 Common questions about Microsoft SQL Server operations, configuration, and troubleshooting. For step-by-step procedures, see the <a href="index.md">Operations</a> section.
 </div>

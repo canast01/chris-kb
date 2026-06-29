@@ -4,6 +4,8 @@ tags:
 ---
 # Veritas NetBackup — Release Notes
 
+*Applies to: NetBackup 10.x*
+
 <div class="kb-summary">
 Version history and release notes for Veritas NetBackup.
 </div>

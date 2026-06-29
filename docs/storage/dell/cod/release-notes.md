@@ -4,6 +4,8 @@ tags:
 ---
 # Dell COD — Release Notes
 
+*Applies to: Dell Cloud Object Detachment*
+
 <div class="kb-summary">
 Version history and release notes for Dell COD.
 </div>

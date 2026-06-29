@@ -4,6 +4,8 @@ tags:
   - san
 ---
 # Cisco Nexus Dashboard — Operations Install & Upgrade
+
+*Applies to: Cisco MDS / NX-OS*
 ![Cisco Nexus Dashboard — Operations Install & Upgrade](../../../../assets/san-cisco-nexus-dashboard-operations-install-upgrade.svg)
 
 ```bash

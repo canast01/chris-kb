@@ -5,6 +5,8 @@ tags:
 ---
 # Aria Networks Cheat Sheet
 
+*Applies to: All products*
+
 <div class="kb-summary">
 Top-10 Aria Networks (vRNI) REST API calls for network entity queries, path analysis, flow data, and event management.
 </div>

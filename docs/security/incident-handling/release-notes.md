@@ -4,6 +4,8 @@ tags:
 ---
 # Incident Handling — Release Notes
 
+*Applies to: All products (Security)*
+
 <div class="kb-summary">
 Version history and release notes for Incident Handling.
 </div>

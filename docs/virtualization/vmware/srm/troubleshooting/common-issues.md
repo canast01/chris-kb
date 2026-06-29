@@ -7,6 +7,8 @@ search:
   boost: 1.5
 ---
 # VMware SRM — Common Issues
+
+*Applies to: VMware vSphere 7.x / 8.x*
 ![VMware SRM — Common Issues](../../../../assets/virtualization-vmware-srm-troubleshooting-common-issues.svg)
 
 ```python

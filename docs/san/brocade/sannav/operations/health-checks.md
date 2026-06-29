@@ -5,6 +5,8 @@ tags:
 ---
 # Brocade SANnav — Health Checks
 
+*Applies to: Brocade FOS 9.x*
+
 ```bash
 # SSH to appliance
 ssh admin@sannav-dc1.corp.example.com

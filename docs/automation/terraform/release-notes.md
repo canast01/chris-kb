@@ -4,6 +4,8 @@ tags:
 ---
 # Terraform — Release Notes
 
+*Applies to: Terraform 1.x*
+
 <div class="kb-summary">
 Version history and release notes for Terraform.
 </div>

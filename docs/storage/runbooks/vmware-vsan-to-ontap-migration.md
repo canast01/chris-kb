@@ -11,6 +11,8 @@ tags:
 
 # Migrate VM Workloads from vSAN to ONTAP NFS
 
+*Applies to: Storage (multi-vendor)*
+
 <div class="kb-summary">
 Cross-product runbook for migrating virtual machine workloads from VMware vSAN to a NetApp ONTAP NFS datastore using Storage vMotion. Covers SVM provisioning, NFS export policy, datastore mount, per-VM and per-datastore migration, validation, cutover, and rollback.
 </div>

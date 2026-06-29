@@ -4,6 +4,8 @@ tags:
   - san
 ---
 # Cisco MDS 9000 — Install and Upgrade
+
+*Applies to: Cisco MDS / NX-OS*
 ![Cisco MDS 9000 — Install and Upgrade](../../../../assets/san-cisco-mds-operations-install-upgrade.svg)
 
 ```bash

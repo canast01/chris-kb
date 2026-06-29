@@ -4,6 +4,8 @@ tags:
 ---
 # Dell PowerScale — Release Notes
 
+*Applies to: Dell PowerScale (Isilon) 9.x*
+
 <div class="kb-summary">
 Version history and release notes for Dell PowerScale.
 </div>

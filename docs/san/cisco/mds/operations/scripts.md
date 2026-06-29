@@ -4,6 +4,8 @@ tags:
   - san
 ---
 # Cisco MDS 9000 — Operations Scripts
+
+*Applies to: Cisco MDS / NX-OS*
 ![Cisco MDS 9000 — Operations Scripts](../../../../assets/san-cisco-mds-operations-scripts.svg)
 
 ```bash

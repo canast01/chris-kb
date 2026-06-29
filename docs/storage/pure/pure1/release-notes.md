@@ -4,6 +4,8 @@ tags:
 ---
 # Pure1 — Release Notes
 
+*Applies to: Pure Storage*
+
 <div class="kb-summary">
 Version history and release notes for Pure1.
 </div>

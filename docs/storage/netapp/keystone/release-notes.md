@@ -4,6 +4,8 @@ tags:
 ---
 # NetApp Keystone — Release Notes
 
+*Applies to: NetApp ONTAP 9.x*
+
 <div class="kb-summary">
 Version history and release notes for NetApp Keystone.
 </div>

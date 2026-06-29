@@ -4,6 +4,8 @@ tags:
   - security
 ---
 # FlashArray — Encryption
+
+*Applies to: Pure Storage FlashArray*
 ![FlashArray — Encryption](../../../../assets/storage-pure-flasharray-security-encryption.svg)
 
 ```text
