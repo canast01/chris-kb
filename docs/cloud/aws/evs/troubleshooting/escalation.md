@@ -113,6 +113,48 @@ aws ec2 describe-subnets \
 # Include: last successful operation timestamp, first error observed, any DX/VPN changes
 ```
 
+
+```text title="Expected output"
+prod-analytics-env	ACTIVE
+hostId                          instanceType    state
+──────────────────────────────  ──────────────  ───────
+host-0a7f2c1b9e4d5f3a          m5.2xlarge      RUNNING
+host-1b8e3d2c0f5e6g4b          m5.2xlarge      RUNNING
+host-2c9f4e3d1g6f7h5c          m5.xlarge       STOPPED
+host-3d0g5f4e2h7g8i6d          m5.2xlarge      RUNNING
+
+{
+  "Events": [
+    {
+      "EventId": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "EventName": "CreateEnvironment",
+      "EventSource": "evs.amazonaws.com",
+      "EventTime": "2024-01-15T14:32:18Z",
+      "Username": "arn:aws:iam::123456789012:user/devops-admin"
+    },
+    {
+      "EventId": "b2c3d4e5-f6g7-8901-bcde-f12345678901",
+      "EventName": "UpdateEnvironmentHosts",
+      "EventSource": "evs.amazonaws.com",
+      "EventTime": "2024-01-15T18:47:52Z",
+      "Username": "arn:aws:iam::123456789012:role/EVSAutomation"
+    }
+  ],
+  "ResponseMetadata": {
+    "RequestId": "req-9f8e7d6c5b4a3210",
+    "HTTPStatusCode": 200
+  }
+}
+
+(output written to ec2-instance-status.json)
+
+(output written to vpc-subnets.json)
+```
+
+!!! warning "Common errors"
+    **`An error occurred (InvalidParameterValue) when calling the ListEnvironmentHosts operation: Invalid environment ID format`** — Verify that `$ENV_ID` is set correctly with `echo $ENV_ID` and matches the format `env-xxxxxxxxxxxxxxxx`.
+    **`An error occurred (UnauthorizedOperation) when calling the DescribeInstanceStatus operation: You are not authorized to perform: ec2:DescribeInstanceStatus`** — Add `ec2:DescribeInstanceStatus` permission to your IAM user/role policy.
+    **`date: illegal time format`** — Use `date -u -d '24 hours ago' +%Y-%m-%dT%H:%M:%SZ` on Linux systems instead of the BSD `-v` flag.
 For networking issues (HCX tunnel down, BGP failure), also include:
 
 ```bash
@@ -131,6 +173,57 @@ aws directconnect describe-connections \
   --output table
 ```
 
+
+```text title="Expected output"
+{
+    "RouteTables": [
+        {
+            "RouteTableId": "rtb-0a7f2c8e9d1b4f6a2",
+            "VpcId": "vpc-047e3f9c2d8b1a5e6",
+            "Routes": [
+                {
+                    "DestinationCidrBlock": "10.0.0.0/16",
+                    "GatewayId": "local",
+                    "State": "active"
+                },
+                {
+                    "DestinationCidrBlock": "0.0.0.0/0",
+                    "GatewayId": "igw-0c2f8a1d9e7b3f4a5",
+                    "State": "active"
+                }
+            ]
+        }
+    ]
+}
+{
+    "NetworkInterfaces": [
+        {
+            "NetworkInterfaceId": "eni-0f3a8c2d1b9e7f4a6",
+            "SubnetId": "subnet-0d7e2f1a9c8b3e5f4",
+            "Status": "in-use",
+            "PrivateIpAddress": "10.0.12.47",
+            "Association": {
+                "PublicIp": "203.0.113.42"
+            }
+        },
+        {
+            "NetworkInterfaceId": "eni-0a1b2c3d4e5f6g7h8",
+            "SubnetId": "subnet-0d7e2f1a9c8b3e5f4",
+            "Status": "available",
+            "PrivateIpAddress": "10.0.12.89"
+        }
+    ]
+}
+|  connectionId          | connectionName      | connectionState | bandwidth   |
+|------------------------|---------------------|-----------------|-------------|
+|  dxcon-0f8a2c1d9e7b3f4 |  EVS-Primary-DX     |  available      |  10Gbps     |
+|  dxcon-0a1b2c3d4e5f6g7 |  EVS-Backup-DX      |  down           |  10Gbps     |
+```
+
+!!! warning "Common errors"
+    **`An error occurred (InvalidParameterValue) when calling the DescribeRouteTables operation: The filter 'vpc-id' is invalid`** — Verify the filter name is correct; use `Name=vpc-id` (not `vpcId`) and ensure `$EVS_VPC_ID` variable is set with `echo $EVS_VPC_ID`.
+    **`Unable to locate credentials`** — Configure AWS credentials using `aws configure` or set `AWS_PROFILE`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY` environment variables.
+    **`An error occurred (InvalidSubnetID.NotFound) when calling the DescribeNetworkInterfaces operation: The subnet ID 'subnet-xxx' does not exist`** — Confirm the subnet ID in `$EVS_MGMT_SUBNET_ID` exists in the correct region with `aws ec2 describe-subnets --region <region>`.
 ## VMware Support Case Requirements
 
 ```bash
@@ -154,6 +247,30 @@ curl -sk -u "$SDDC_USER:$SDDC_PASS" \
 # vCenter → Cluster → vSAN → Skyline Health → Export Health Data
 ```
 
+
+```text title="Expected output"
+{
+  "resource_type": "SupportBundle",
+  "id": "support-bundle-20240115-093847",
+  "status": "COLLECTING",
+  "bundle_size": 0,
+  "created_time": "2024-01-15T09:38:47.123Z",
+  "estimated_completion": "2024-01-15T09:48:47.123Z"
+}
+{
+  "id": "support-bundle-sddc-2024-01-15-093852",
+  "status": "IN_PROGRESS",
+  "progress_percentage": 0,
+  "created_at": "2024-01-15T09:38:52Z",
+  "bundle_location": "/var/log/sddc-manager/support-bundles/",
+  "estimated_size_mb": 450
+}
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip certificate verification (already present; verify NSX_URL and NSX_PASSWORD environment variables are set correctly).
+    **`jq: command not found`** — Install python3-json or use `python3 -m json.tool` instead of piping to `jq` for JSON formatting.
+    **`curl: (7) Failed to connect to sddc-manager.vcf.internal port 443: Name or service not known`** — Verify SDDC Manager hostname resolves and is reachable from the management network; check `/etc/hosts` or DNS configuration.
 Additional data for VMware support cases:
 
 ```powershell
@@ -205,6 +322,34 @@ Steps taken: <what has been tried>
 CloudTrail export attached. EC2 instance status attached."
 ```
 
+
+```text title="Expected output"
+{
+    "caseId": "case-1234567890abcdef0",
+    "displayId": "us-east-1/1234567890",
+    "subject": "EVS Production Cluster Outage - Environment prod-evs-cluster-02",
+    "status": "opened",
+    "serviceCode": "aws-elastic-vmware-service",
+    "severityCode": "critical",
+    "submittedBy": "arn:aws:iam::123456789012:user/admin-user",
+    "timeCreated": "2024-01-15T14:32:18.000Z",
+    "recentCommunications": {
+        "communications": [
+            {
+                "body": "Environment ID: prod-evs-cluster-02\nHost IDs: h-0a1b2c3d4e5f6g7h8, h-1i2j3k4l5m6n7o8p9\nIssue: Cluster nodes unreachable\nImpact: Production workloads unavailable since 2024-01-15T13:45:00Z\nSteps taken: Verified network connectivity, checked security groups\n\nCloudTrail export attached. EC2 instance status attached.",
+                "submittedBy": "arn:aws:iam::123456789012:user/admin-user",
+                "timeCreated": "2024-01-15T14:32:18.000Z",
+                "attachmentSet": []
+            }
+        ]
+    }
+}
+```
+
+!!! warning "Common errors"
+    **`An error occurred (ValidationException) when calling the CreateCase operation: Invalid severity code 'critical' for service 'aws-elastic-vmware-service'`** — Use `--severity-code "urgent"` instead, as EVS support cases require the "urgent" severity level.
+    **`An error occurred (AccessDeniedException) when calling the CreateCase operation: User is not authorized to perform: support:CreateCase`** — Attach the `AWSSupportAccess` IAM policy to the user or role executing this command.
+    **`An error occurred (InvalidParameterException) when calling the CreateCase operation: Service code 'aws-elastic-vmware-service' is not valid`** — Verify the correct service code with `aws support describe-services --query 'services[?name==`VMware Cloud on AWS`]'` and use the returned serviceCode value.
 Expected response times by support tier:
 
 | Plan | Critical | High | Medium |

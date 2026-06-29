@@ -298,6 +298,37 @@ $summary.Groups | Where-Object {$_.GroupHealth -ne "green"} | Select GroupName, 
 Get-VMHost | Select Name, ConnectionState, PowerState | Where-Object {$_.ConnectionState -ne "Connected"}
 ```
 
+
+```text title="Expected output"
+root@vcsa-prod-01 [ ~ ]# vmon-cli -l | grep -v STARTED
+root@vcsa-prod-01 [ ~ ]# tail -100 /var/log/vmware/vpxd/vpxd.log | grep -i "error\|fail\|exception"
+2024-01-15T09:42:33.847Z [7F2A1C5D9E00 verbose 'vpxd:00FB:00000B24'] [VpxdVmomi] Exception caught in function 'QueryVsanClusterHealthSummary': Connection timeout to host esx-node-03.prod.local
+2024-01-15T09:41:12.521Z [7F2A1C5D9E00 warning 'vpxd:00FB:00000B1F'] Failed to retrieve cluster inventory from esx-node-02.prod.local: RPC timeout
+root@vcsa-prod-01 [ ~ ]# 
+
+PowerCLI C:\> Connect-VIServer -Server vcenter.prod.local -User administrator@vsphere.local -Password $PASS
+
+Name                           Port  User
+----                           ----  ----
+vcenter.prod.local             443   VSPHERE.LOCAL\Administrator
+
+PowerCLI C:\> $summary.OverallHealth
+green
+
+PowerCLI C:\> $summary.Groups | Where-Object {$_.GroupHealth -ne "green"} | Select GroupName, GroupHealth
+
+PowerCLI C:\> Get-VMHost | Select Name, ConnectionState, PowerState | Where-Object {$_.ConnectionState -ne "Connected"}
+
+Name                ConnectionState PowerState
+----                --------------- ----------
+esx-node-03.prod    NotResponding   On
+esx-node-07.prod    Disconnected    On
+```
+
+!!! warning "Common errors"
+    **`Exception caught in function 'QueryVsanClusterHealthSummary': Connection timeout to host esx-node-03.prod.local`** — Verify network connectivity to the ESXi host, check firewall rules blocking port 443, and restart the vpxd service if the host remains unreachable.
+    **`Failed to retrieve cluster inventory from esx-node-02.prod.local: RPC timeout`** — Increase the RPC timeout value in vpxd.cfg or restart the affected ESXi host's management agents using `services.sh restart`.
+    **`Get-VMHost returns hosts with ConnectionState -ne "Connected"`** — Reconnect the disconnected host in vCenter, verify vSAN network connectivity, and check for certificate or authentication issues in the vpxd.log.
 ---
 
 ## Step 5 — Check NSX-T health in EVS
@@ -329,6 +360,21 @@ for n in json.load(sys.stdin).get('results',[]):
 # Expected: all peers ESTABLISHED
 ```
 
+
+```text title="Expected output"
+Cluster: STABLE
+PROBLEM: esxi-host-02.lab.local state=DEGRADED
+PROBLEM: esxi-host-04.lab.local state=UNKNOWN
+172.31.0.1: ESTABLISHED
+172.31.0.2: ESTABLISHED
+172.31.1.1: ESTABLISHED
+172.31.1.2: IDLE
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command or set `export CURL_CA_BUNDLE=""` to skip certificate validation.
+    **`json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)`** — Verify `$NSX_URL` is set correctly (e.g. `https://nsx-manager.local`) and the NSX-T API endpoint is reachable with `curl -sk -u "admin:$NSX_PASSWORD" "$NSX_URL/api/v1/cluster/status"`.
+    **`KeyError: 'results'`** — Check that the API endpoint path is correct for your NSX-T version; some versions use `result` (singular) instead of `results` (plural) in the JSON response.
 ---
 
 ## Step 6 — Collect vSphere, NSX-T, and SDDC Manager bundles
@@ -363,6 +409,35 @@ vm-support -w /tmp
 # HCX Manager UI → Support → Download Log Bundle
 ```
 
+
+```text title="Expected output"
+root@vcsa-prod-01:~# vc-support.sh -L /tmp/vc-support
+Collecting support bundle...
+Collecting vCenter Server logs...
+Collecting ESXi host information...
+Collecting vSAN cluster data...
+Support bundle created: /tmp/vc-support/vc-support-2024-01-15-14-32-45.tar.gz
+Size: 487 MB
+
+RUNNING
+SUCCEEDED
+
+vcf@sddc-mgr-01:~$ tail -100 /var/log/vmware/vcf/lcm/lcm.log | grep -i "error\|fail"
+2024-01-15 14:22:18 ERROR [lcm-worker-12] Failed to apply patch to cluster-1: Connection timeout
+2024-01-15 14:18:45 WARN [lcm-worker-08] Retry attempt 2/3 for host esx-06.lab.local
+
+2024-01-15 14:15:22 ERROR [domainmanager] Domain configuration failed: Invalid vSAN witness configuration
+
+root@esx-prod-04:~# vm-support -w /tmp
+Gathering support information...
+Creating tar archive...
+/tmp/esx-prod-04-2024-01-15-14-45-22.tgz
+```
+
+!!! warning "Common errors"
+    **`curl: (60) SSL certificate problem: self signed certificate`** — Add `-k` flag to curl command to skip SSL verification for self-signed NSX-T certificates.
+    **`bash: python3: command not found`** — Install python3 on the VCSA/NSX-T appliance or use `python` instead if Python 2 is available.
+    **`Permission denied (publickey,password)`** — Verify SSH credentials and ensure the target user (root for VCSA/ESXi, vcf for SDDC Manager) has SSH access enabled.
 ---
 
 ## Step 7 — Diagnose HCX and collect escalation data
@@ -393,6 +468,36 @@ aws evs list-environments --query 'environmentSummaries[*].[name,environmentId,s
 # - HCX log bundle (for HCX-related issues)
 ```
 
+
+```text title="Expected output"
+admin@hcx-manager-01:~$ tail -100 /opt/vmware/log/edge/edge-main.log | grep -i "error\|fail\|warn"
+2024-01-15T09:47:23.456Z WARN  [EdgeService] Tunnel state transition: ACTIVE → DEGRADED
+2024-01-15T09:48:12.789Z ERROR [IPSecHandler] Failed to establish Phase 1 negotiation with 203.0.113.42:500
+2024-01-15T09:49:05.123Z WARN  [BGPSession] Route flapping detected on peer 10.0.1.254
+2024-01-15T09:50:31.567Z ERROR [TunnelMonitor] Health check timeout after 30s, marking tunnel unhealthy
+
+admin@hcx-manager-01:~$ aws sts get-caller-identity
+{
+    "UserId": "AIDAI7EXAMPLE9ABCDEF",
+    "Account": "123456789012",
+    "Arn": "arn:aws:iam::123456789012:user/hcx-automation"
+}
+
+admin@hcx-manager-01:~$ aws evs list-environments --query 'environmentSummaries[*].[name,environmentId,state]' --output table
+---------------------------------------------------------------------------------------------------------
+|                                    ListEnvironments                                                   |
++---------------------------+----------------------------------+------------------+
+|  name                     |  environmentId                   |  state           |
++---------------------------+----------------------------------+------------------+
+|  prod-sddc-us-east-1a     |  env-0a1b2c3d4e5f6g7h8i9j0k1l2m   |  AVAILABLE       |
+|  dr-sddc-us-west-2b       |  env-9z8y7x6w5v4u3t2s1r0q9p8o7n   |  AVAILABLE       |
+|  staging-sddc-eu-west-1c  |  env-5m4l3k2j1i0h9g8f7e6d5c4b3a   |  DEGRADED        |
++---------------------------+----------------------------------+------------------+
+```
+
+!!! warning "Common errors"
+    **`Unable to locate credentials`** — Configure AWS credentials via `aws configure` or set `AWS_PROFILE` environment variable.
+    **`An error occurred (InvalidParameterException) when calling the ListEnvironments operation: Invalid query parameter`** — Verify the `--query` syntax matches your AWS CLI version; use `aws evs list-environments --output table` without filtering if query fails.
 ---
 
 ## Log locations
